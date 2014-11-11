@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>465F9187-9528-43A1-ABD9-61187B4411CD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Woke</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>55628C687A39F9A4DE15E22BD83F76A91216C65A</key>
+		<string>github.com:callzhang/WokeAlarm.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Woke.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>55628C687A39F9A4DE15E22BD83F76A91216C65A</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:callzhang/WokeAlarm.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>55628C687A39F9A4DE15E22BD83F76A91216C65A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>55628C687A39F9A4DE15E22BD83F76A91216C65A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Woke</string>
+		</dict>
+	</array>
+</dict>
+</plist>

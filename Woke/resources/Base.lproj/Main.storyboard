@@ -30,7 +30,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-splash-logo" translatesAutoresizingMaskIntoConstraints="NO" id="PZQ-5O-S3O">
                                 <rect key="frame" x="197" y="104" width="207" height="212"/>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rWn-H2-vla" userLabel="35 height spacer">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWn-H2-vla" userLabel="35 height spacer">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="sdk-iw-hh3"/>
@@ -83,9 +83,9 @@
     <resources>
         <image name="woke-background" width="320" height="568"/>
         <image name="woke-login-info-button" width="8" height="17"/>
-        <image name="woke-rectangle-button" width="48" height="48"/>
-        <image name="woke-rectangle-button-disabled" width="48" height="48"/>
-        <image name="woke-rectangle-button-pressed" width="48" height="48"/>
+        <image name="woke-rectangle-button" width="9" height="9"/>
+        <image name="woke-rectangle-button-disabled" width="9" height="9"/>
+        <image name="woke-rectangle-button-pressed" width="9" height="9"/>
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>
 </document>
