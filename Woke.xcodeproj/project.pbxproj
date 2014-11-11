@@ -49,6 +49,7 @@
 		09A777281A11E2BD004AF902 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		09A777291A11E2BD004AF902 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		09A7772B1A11E2BD004AF902 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		09A7773A1A11E7C9004AF902 /* LucidaGrande.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; path = LucidaGrande.ttc; sourceTree = "<group>"; };
 		0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.debug.xcconfig"; sourceTree = "<group>"; };
 		1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.release.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.release.xcconfig"; sourceTree = "<group>"; };
 		568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
@@ -196,6 +197,7 @@
 		09A7771B1A11E2BD004AF902 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				09A777391A11E7A6004AF902 /* fonts */,
 				09A7771C1A11E2BD004AF902 /* LaunchScreen.xib */,
 				09A7771E1A11E2BD004AF902 /* Main.storyboard */,
 				09A777201A11E2BD004AF902 /* Images.xcassets */,
@@ -267,6 +269,14 @@
 			children = (
 			);
 			path = helpers;
+			sourceTree = "<group>";
+		};
+		09A777391A11E7A6004AF902 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				09A7773A1A11E7C9004AF902 /* LucidaGrande.ttc */,
+			);
+			path = fonts;
 			sourceTree = "<group>";
 		};
 		AA1A75AA2E60E49CC73E6319 /* Frameworks */ = {
