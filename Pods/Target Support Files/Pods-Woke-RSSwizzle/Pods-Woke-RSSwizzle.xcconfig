@@ -1,0 +1,1 @@
+PODS_WOKE_RSSWIZZLE_OTHER_LDFLAGS = -framework "Foundation"

@@ -1,0 +1,1 @@
+PODS_WOKE_BLOCKSKIT_OTHER_LDFLAGS = -framework "MessageUI"
