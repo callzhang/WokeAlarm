@@ -12,9 +12,11 @@ target 'Woke' do
   pod 'BlocksKit', '~> 2.2.5'
   pod 'CrashlyticsFramework', '~> 2.2.5.1'
   pod 'RHAddressBook', '~> 1.1.1'
-  pod 'KZBootstrap', '~> 0.5.2'
-  pod 'KZBootstrap/Logging', '~> 0.5.2'
-  pod 'KZBootstrap/Debug', '~> 0.5.2'
+  pod 'KZBootstrap', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
+  pod 'KZBootstrap/Logging', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
+
+  pod 'KZBootstrap/Debug', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
+
 end
 
 target 'WokeTests' do
