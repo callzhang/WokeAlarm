@@ -7,8 +7,16 @@
 //
 
 #import "EWMainViewController.h"
+#import "VBFPopFlatButton.h"
+
+typedef NS_ENUM(NSUInteger, MainViewMenuState) {
+    MainViewMenuStateOpen,
+    MainViewMenuStateClosed,
+};
 
 @interface EWMainViewController ()
+@property (weak, nonatomic) IBOutlet VBFPopFlatButton *menuButton;
+@property (nonatomic, assign) MainViewMenuState menuState;
 
 @end
 
@@ -16,6 +24,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.menuButton.currentButtonType = buttonMenuType;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -25,4 +35,18 @@
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
+#pragma mark -
+#pragma mark - Action
+- (IBAction)onMenuButton:(id)sender {
+    if (self.menuState == MainViewMenuStateOpen) {
+        self.menuState = MainViewMenuStateClosed;
+        [self.menuButton animateToType:buttonCloseType];
+    }
+    else if (self.menuState == MainViewMenuStateClosed) {
+        self.menuState = MainViewMenuStateOpen;
+        [self.menuButton animateToType:buttonMenuType];
+    }
+}
+
+
 @end

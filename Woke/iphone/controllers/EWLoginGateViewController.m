@@ -18,8 +18,6 @@
     [super viewDidLoad];
 }
 
-
-
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }
