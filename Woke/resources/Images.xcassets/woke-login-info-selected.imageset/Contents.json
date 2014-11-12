@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "woke-text-input-field-clear-button.png"
+      "filename" : "woke-login-info-selected.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "woke-text-input-field-clear-button@2x.png"
+      "filename" : "woke-login-info-selected@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "woke-text-input-field-clear-button@3x.png"
+      "filename" : "woke-login-info-selected@3x.png"
     }
   ],
   "info" : {

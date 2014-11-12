@@ -42,16 +42,17 @@
                                     <constraint firstAttribute="height" constant="48" id="1Sy-BR-Tjj"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="18"/>
-                                <state key="normal" title="Continue with Facebook" backgroundImage="woke-rectangle-button">
+                                <state key="normal" title="Continue with Facebook" backgroundImage="woke-rectangle-normal">
                                     <color key="titleColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <state key="disabled" backgroundImage="woke-rectangle-button-disabled"/>
-                                <state key="highlighted" backgroundImage="woke-rectangle-button-pressed">
+                                <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
+                                <state key="selected" backgroundImage="woke-login-info-selected"/>
+                                <state key="highlighted" backgroundImage="woke-rectangle-selected">
                                     <color key="titleColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
                                 </state>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-login-info-button" translatesAutoresizingMaskIntoConstraints="NO" id="gS8-3f-geL">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-login-info" translatesAutoresizingMaskIntoConstraints="NO" id="gS8-3f-geL">
                                 <rect key="frame" x="296" y="568" width="8" height="17"/>
                             </imageView>
                         </subviews>
@@ -82,10 +83,11 @@
     </scenes>
     <resources>
         <image name="woke-background" width="320" height="568"/>
-        <image name="woke-login-info-button" width="8" height="17"/>
-        <image name="woke-rectangle-button" width="9" height="9"/>
-        <image name="woke-rectangle-button-disabled" width="9" height="9"/>
-        <image name="woke-rectangle-button-pressed" width="9" height="9"/>
+        <image name="woke-login-info" width="8" height="17"/>
+        <image name="woke-login-info-selected" width="8" height="17"/>
+        <image name="woke-rectangle-disabled" width="9" height="9"/>
+        <image name="woke-rectangle-normal" width="9" height="9"/>
+        <image name="woke-rectangle-selected" width="9" height="9"/>
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>
 </document>

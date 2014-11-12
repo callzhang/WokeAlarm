@@ -16,7 +16,7 @@
         }
       },
       "idiom" : "universal",
-      "filename" : "woke-rectangle-button-pressed.png",
+      "filename" : "woke-rectangle-selected.png",
       "scale" : "1x"
     },
     {
@@ -35,7 +35,7 @@
         }
       },
       "idiom" : "universal",
-      "filename" : "woke-rectangle-button-pressed@2x.png",
+      "filename" : "woke-rectangle-selected@2x.png",
       "scale" : "2x"
     },
     {
@@ -54,7 +54,7 @@
         }
       },
       "idiom" : "universal",
-      "filename" : "woke-rectangle-button-pressed@3x.png",
+      "filename" : "woke-rectangle-selected@3x.png",
       "scale" : "3x"
     }
   ],
