@@ -149,7 +149,7 @@
         if (![newAlarms[i] isEqual:@NO]){
             //remove duplicacy
             DDLogVerbose(@"@@@ Duplicated alarm found. Delete! %@", a.time.date2detailDateString);
-            [a deleteEntity];
+            [a MR_deleteEntity];
             hasChange = YES;
             continue;
         }else if (![a validate]){

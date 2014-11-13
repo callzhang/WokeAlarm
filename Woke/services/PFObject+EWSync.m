@@ -259,13 +259,13 @@
     if (!context) {
         context = mainContext;
     }
-    NSMutableArray *MOs = [[NSClassFromString(self.localClassName) findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
-    //NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId inContext:context];
+    NSMutableArray *MOs = [[NSClassFromString(self.localClassName) findByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context] mutableCopy];
+    //NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
     while (MOs.count > 1) {
         NSLog(@"Find duplicated MO for ID %@", self.objectId);
         NSManagedObject *mo_ = MOs.lastObject;
         [MOs removeLastObject];
-        [mo_ deleteEntityInContext:context];
+        [mo_ MR_deleteEntityInContext:context];
         
         [[EWSync sharedInstance].deleteToLocalItems addObject:self.objectId];
         

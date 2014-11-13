@@ -68,7 +68,7 @@
 }
 
 - (EWSocialGraph *)createSocialGraphForPerson:(EWPerson *)person{
-    EWSocialGraph *sg = [EWSocialGraph createEntityInContext:person.managedObjectContext];
+    EWSocialGraph *sg = [EWSocialGraph MR_createEntityInContext:person.managedObjectContext];
     sg.updatedAt = [NSDate date];
 
     //data

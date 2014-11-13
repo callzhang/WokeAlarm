@@ -201,7 +201,7 @@
     self.isSchedulingTask = YES;
     
     //check necessity
-    EWPerson *localPerson = [[EWSession sharedSession].currentUser inContext:context];
+    EWPerson *localPerson = [[EWSession sharedSession].currentUser MR_inContext:context];
     NSMutableArray *tasks = [localPerson.tasks mutableCopy];
     NSArray *alarms = [[EWAlarmManager sharedInstance] alarmsForUser:localPerson];
     if (alarms.count != 7) {
@@ -230,7 +230,7 @@
         for (PFObject *t in objects) {
             EWTaskItem *task = (EWTaskItem *)[t managedObjectInContext:context];
             [task refresh];
-            task.owner = [[EWSession sharedSession].currentUser inContext:context];
+            task.owner = [[EWSession sharedSession].currentUser MR_inContext:context];
             BOOL good = [EWTaskManager validateTask:task];
             if (!good) {
                 [self removeTask:task];
@@ -330,7 +330,7 @@
 		//call back
 		[[EWSync sharedInstance].saveCallbacks addObject:^{
             for (EWTaskItem *t in newTask) {
-				EWTaskItem *task = (EWTaskItem *)[t inContext:mainContext];
+				EWTaskItem *task = (EWTaskItem *)[t MR_inContext:mainContext];
                 // remote notification
                 [EWTaskManager scheduleNotificationOnServerForTask:task];
 				//check
@@ -382,7 +382,7 @@
     
     NSLog(@"=== Start checking past tasks ===");
     //First get outdated current task and move to past
-    EWPerson *localMe = [[EWSession sharedSession].currentUser inContext:localContext];
+    EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
     NSMutableSet *tasks = localMe.tasks.mutableCopy;
     
     //nullify old task's relation to alarm
@@ -391,7 +391,7 @@
     for (EWTaskItem *t in outDatedTasks) {
         t.alarm = nil;
         t.owner = nil;
-        t.pastOwner = [[EWSession sharedSession].currentUser inContext:t.managedObjectContext];
+        t.pastOwner = [[EWSession sharedSession].currentUser MR_inContext:t.managedObjectContext];
         [tasks removeObject:t];
         NSLog(@"=== Task(%@) on %@ moved to past", t.objectId, [t.time date2dayString]);
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDeleteNotification object:t];
@@ -438,17 +438,17 @@
                 pastTaskDic[day] = t;
             }else{
                 if (!t.completed) {
-                    [t deleteEntityInContext:localContext];
+                    [t MR_deleteEntityInContext:localContext];
                     DDLogWarn(@"duplicated past(%@) task deleted: %@", t.objectId, t.time);
                 }else{
                     EWTaskItem *t0 = (EWTaskItem *)pastTaskDic[day];
                     NSDate *c0 = [t0 completed];
                     if (!c0 || [t.completed isEarlierThan:c0]) {
                         pastTaskDic[day] = t;
-                        [t0 deleteEntityInContext:localContext];
+                        [t0 MR_deleteEntityInContext:localContext];
                         DDLogWarn(@"duplicated past(%@) task deleted: %@", t.objectId, t.time);
                     }else{
-                        [t deleteEntityInContext:localContext];
+                        [t MR_deleteEntityInContext:localContext];
                         DDLogWarn(@"duplicated past(%@) task deleted: %@", t.objectId, t.time);
                     }
                 }
@@ -483,10 +483,10 @@
 #pragma mark - NEW
 - (EWTaskItem *)newTaskInContext:(NSManagedObjectContext *)context{
     
-    EWTaskItem *t = [EWTaskItem createEntityInContext:context];
+    EWTaskItem *t = [EWTaskItem MR_createEntityInContext:context];
     t.updatedAt = [NSDate date];
     //relation
-    t.owner = [[EWSession sharedSession].currentUser inContext:context];
+    t.owner = [[EWSession sharedSession].currentUser MR_inContext:context];
     //others
     t.createdAt = [NSDate date];
     //[EWSync save];
@@ -595,7 +595,7 @@
 - (void)deleteAllTasks{
     NSLog(@"*** Deleting all tasks");
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        for (EWTaskItem *t in [self getTasksByPerson:[[EWSession sharedSession].currentUser inContext:localContext]]) {
+        for (EWTaskItem *t in [self getTasksByPerson:[[EWSession sharedSession].currentUser MR_inContext:localContext]]) {
             //post notification
             dispatch_async(dispatch_get_main_queue(), ^{
                 EWTaskItem *task = (EWTaskItem *)[mainContext objectWithID:t.objectID];
@@ -767,7 +767,7 @@
         }
         if (!task.pastOwner) {
             DDLogError(@"*** task missing pastOwner: %@", task);
-            task.pastOwner = [[EWSession sharedSession].currentUser inContext:task.managedObjectContext];
+            task.pastOwner = [[EWSession sharedSession].currentUser MR_inContext:task.managedObjectContext];
             //good = NO;
         }else if(!task.pastOwner.isMe){
             //NSParameterAssert(task.pastOwner.isMe);
@@ -799,7 +799,7 @@
         if (!task.owner) {
             task.owner = task.alarm.owner;
             if (!task.owner) {
-                task.owner = [[EWSession sharedSession].currentUser inContext:task.managedObjectContext]?:task.alarm.owner;
+                task.owner = [[EWSession sharedSession].currentUser MR_inContext:task.managedObjectContext]?:task.alarm.owner;
                 if (!task.owner) {
                     DDLogError(@"*** task (%@) missing owner", task.serverID);
                 }

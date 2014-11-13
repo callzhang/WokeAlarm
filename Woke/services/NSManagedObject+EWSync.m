@@ -285,7 +285,7 @@
         
         
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            NSManagedObject *currentMO = [self inContext:localContext];
+            NSManagedObject *currentMO = [self MR_inContext:localContext];
             if (!currentMO) {
                 DDLogError(@"*** Failed to obtain object from database: %@", self);
                 return;

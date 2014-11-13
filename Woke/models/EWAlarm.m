@@ -7,7 +7,7 @@
 //
 
 #import "EWAlarm.h"
-
+#import "EWSession.h"
 
 @implementation EWAlarm
 
@@ -18,8 +18,8 @@
     NSParameterAssert([NSThread isMainThread]);
     DDLogVerbose(@"Create new Alarm");
     
-    //add relation
-    EWAlarm *a = [EWAlarm createEntity];
+    //add relationMagicalRecord
+    EWAlarm *a = [EWAlarm MR_createEntity];
     a.updatedAt = [NSDate date];
     a.owner = [EWSession sharedSession].currentUser;
     a.state = @YES;
@@ -31,7 +31,7 @@
 #pragma mark - DELETE
 - (void)remove{
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmDelete object:self userInfo:nil];
-    [self deleteEntity];
+    [self MR_deleteEntity];
     [EWSync save];
 }
 
@@ -39,7 +39,7 @@
     //delete
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
-            EWAlarm *localAlarm = [alarm inContext:localContext];
+            EWAlarm *localAlarm = [alarm MR_inContext:localContext];
             [localAlarm remove];
         }
     }];
@@ -50,7 +50,7 @@
     BOOL good = YES;
     if (!self.owner) {
         DDLogError(@"Alarm（%@）missing owner", self.serverID);
-        self.owner = [[EWSession sharedSession].currentUser inContext:self.managedObjectContext];
+        self.owner = [[EWSession sharedSession].currentUser MR_inContext:self.managedObjectContext];
     }
     if (!self.time) {
         DDLogError(@"Alarm（%@）missing time", self.serverID);
@@ -129,11 +129,9 @@
 #pragma mark - Tools
 //update saved time in user defaults
 - (void)setSavedAlarmTime{
-	NSInteger wkd = [self.time weekdayNumber];
-	NSCalendar *cal = [NSCalendar currentCalendar];
-	NSDateComponents *comp = [cal components: (NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:self.time];
-	double hour = comp.hour;
-	double minute = comp.minute;
+	NSInteger wkd = self.time.mt_weekdayOfWeek;
+	double hour = self.time.mt_hourOfDay;
+	double minute = self.time.mt_minuteOfHour;
 	double number = round(hour*100 + minute)/100.0;
     NSMutableArray *alarmTimes = [[[NSUserDefaults standardUserDefaults] objectForKey:kSavedAlarms] mutableCopy];
 	[alarmTimes setObject:[NSNumber numberWithDouble:number] atIndexedSubscript:wkd];
@@ -149,7 +147,7 @@
     NSMutableDictionary *timeTable = [cache[kCachedAlarmTimes] mutableCopy]?:[NSMutableDictionary new];
     for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
         if (alarm.state) {
-            NSString *wkday = alarm.time.weekday;
+            NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
             timeTable[wkday] = alarm.time;
         }
     }
@@ -164,7 +162,7 @@
     NSMutableDictionary *statements = [cache[kCachedStatements] mutableCopy]?:[NSMutableDictionary new];
     for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
         if (alarm.state) {
-            NSString *wkday = alarm.time.weekday;
+            NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
             statements[wkday] = alarm.statement;
         }
     }
@@ -227,11 +225,11 @@
 			
 			if (i == nWeeksToSchedule - 1) {
 				//if this is the last one, schedule to be repeat
-				localNotif.repeatInterval = NSWeekCalendarUnit;
+				localNotif.repeatInterval = NSCalendarUnitWeekOfYear;
 			}
 			
 			[[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
-			NSLog(@"Local Notif scheduled at %@", localNotif.fireDate.date2detailDateString);
+			DDLogInfo(@"Local Notif scheduled at %@", localNotif.fireDate.date2detailDateString);
 		}
 	}
 	

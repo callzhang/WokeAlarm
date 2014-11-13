@@ -379,7 +379,7 @@
 //after fb login, fetch user managed object
 + (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *person = [[EWSession sharedSession].currentUser inContext:localContext];
+        EWPerson *person = [[EWSession sharedSession].currentUser MR_inContext:localContext];
         
         NSParameterAssert(person);
         
@@ -453,7 +453,7 @@
         //get social graph of current user
         //if not, create one
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWSession sharedSession].currentUser inContext:localContext];
+            EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
             EWSocialGraph *graph = [[EWSocialGraphManager sharedInstance] socialGraphForPerson:localMe];
             //skip if checked within a week
             if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {

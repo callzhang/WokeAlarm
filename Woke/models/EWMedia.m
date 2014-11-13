@@ -13,7 +13,7 @@
 #pragma mark - create media
 + (EWMedia *)newMedia{
     NSParameterAssert([NSThread isMainThread]);
-    EWMedia *m = [EWMedia createEntity];
+    EWMedia *m = [EWMedia MR_createEntity];
     m.updatedAt = [NSDate date];
     m.author = [EWSession sharedSession].currentUser;
     return m;
@@ -63,7 +63,7 @@
 
 #pragma mark - DELETE
 - (void)remove{
-    [self deleteEntity];
+    [self MR_deleteEntity];
     [EWSync save];
 }
 

@@ -17,7 +17,7 @@
 
 + (EWNotification *)newNotification {
     NSParameterAssert([NSThread isMainThread]);
-    EWNotification *notice = [EWNotification createEntity];
+    EWNotification *notice = [EWNotification MR_createEntity];
     notice.updatedAt = [NSDate date];
     notice.owner = [EWSession sharedSession].currentUser;
     notice.importance = 0;
@@ -39,7 +39,7 @@
 
 - (void)remove {
     DDLogInfo(@"Notification of type %@ deleted", self.type);
-    [self deleteEntity];
+    [self MR_deleteEntity];
     [EWSync save];
 }
 @end

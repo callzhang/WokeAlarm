@@ -192,7 +192,7 @@ NSManagedObjectContext *mainContext;
     //start background update
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         for (NSManagedObject *MO in workingObjects) {
-            NSManagedObject *localMO = [MO inContext:localContext];
+            NSManagedObject *localMO = [MO MR_inContext:localContext];
             if (!localMO) {
                 DDLogVerbose(@"*** MO %@(%@) to upload haven't saved", MO.entity.name, MO.serverID);
                 continue;

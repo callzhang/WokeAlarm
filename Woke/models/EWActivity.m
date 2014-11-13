@@ -22,7 +22,7 @@ const struct EWActivityTypes EWActivityTypes = {
 }
 
 - (void)remove{
-    [self deleteEntity];
+    [self MR_deleteEntity];
     [EWSync save];
 }
 

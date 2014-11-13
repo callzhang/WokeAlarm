@@ -74,7 +74,7 @@
         PFQuery *q = [[[PFUser currentUser] relationForKey:EWPersonRelationships.medias] query];
         [EWSync findServerObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
             [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-                EWPerson *localMe = [[EWSession sharedSession].currentUser inContext:localContext];
+                EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
                 NSArray *newMedias = [objects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [localMe.medias valueForKey:kParseObjectID]]];
                 for (PFObject *m in newMedias) {
                     EWMedia *media = (EWMedia *)[m managedObjectInContext:localContext];
@@ -165,7 +165,7 @@
         //create a notification
 		if (!notified) {
 			dispatch_async(dispatch_get_main_queue(), ^{
-				EWMedia *media = (EWMedia *)[mo inContext:mainContext];
+				EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
 				[EWNotification newNotificationForMedia:media];
 			});
 			newMedia = YES;

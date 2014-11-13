@@ -78,7 +78,7 @@
     //fetch from sever
     [self getEveryoneInContext:mainContext];
     
-    NSArray *allPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
+    NSArray *allPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] MR_inContext:mainContext];
     everyone = [allPerson sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"score" ascending:NO]]];
     return everyone;
     
@@ -89,7 +89,7 @@
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         [self getEveryoneInContext:localContext];
     }completion:^(BOOL success, NSError *error) {
-        NSArray *allPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
+        NSArray *allPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] MR_inContext:mainContext];
         everyone = [allPerson sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"score" ascending:NO]]];
         if (block) {
             block();
@@ -109,7 +109,7 @@
     
     NSMutableArray *allPerson = [NSMutableArray new];
     
-    EWPerson *localMe = [[EWSession sharedSession].currentUser inContext:context];
+    EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:context];
     NSString *parseObjectId = [localMe valueForKey:kParseObjectID];
     NSError *error;
     
@@ -156,7 +156,7 @@
     }
     
     //make sure the rest of people's score is revert back to 0
-    NSArray *otherLocalPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"(NOT %K IN %@) AND score > 0 AND %K != %@", kParseObjectID, [people valueForKey:kParseObjectID], kParseObjectID, [EWSession sharedSession].currentUser.objectId] inContext:context];
+    NSArray *otherLocalPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"(NOT %K IN %@) AND score > 0 AND %K != %@", kParseObjectID, [people valueForKey:kParseObjectID], kParseObjectID, [EWSession sharedSession].currentUser.objectId] MR_inContext:context];
     for (EWPerson *person in otherLocalPerson) {
         person.score = 0;
     }

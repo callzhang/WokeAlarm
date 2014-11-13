@@ -43,11 +43,7 @@ install_resource()
       ;;
   esac
 }
-          install_resource "GPUImage/framework/Resources/lookup.png"
-                    install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
-                    install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
-                    install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"
-                    install_resource "GPUImage/framework/Resources/lookup_soft_elegance_2.png"
+          install_resource "JGProgressHUD/JGProgressHUD/JGProgressHUD/JGProgressHUD Resources.bundle"
                     install_resource "KZBootstrap/Pod/Assets/Scripts/bootstrap.sh"
                     install_resource "KZBootstrap/Pod/Assets/Scripts/buildNumber.sh"
                     install_resource "KZBootstrap/Pod/Assets/Scripts/iconVersioning.sh"

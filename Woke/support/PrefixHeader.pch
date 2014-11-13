@@ -14,5 +14,12 @@
 @import UIKit;
 @import Foundation;
 #import "KZBootstrapUserMacros.h"
+#import <CocoaLumberjack/CocoaLumberjack.h>
+#import "CoreData+MagicalRecord.h"
+#import "EWDefines.h"
+#import "EWSync.h"
+#import "NSManagedObjectContext+ChainSave.h"
+#import <MTDates/NSDate+MTDates.h>
 
+static NSUInteger ddLogLevel = DDLogLevelAll;
 #endif

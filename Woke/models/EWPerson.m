@@ -215,7 +215,7 @@
         }
         
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWSession sharedSession].currentUser inContext:localContext];
+            EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
             [localMe refreshRelatedWithCompletion:^{
                 
                 [EWPerson updateCachedFriends];
