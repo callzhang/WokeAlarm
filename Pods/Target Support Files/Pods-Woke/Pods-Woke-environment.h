@@ -127,6 +127,12 @@
 #define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 20
 #define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 0
 
+// GPUImage
+#define COCOAPODS_POD_AVAILABLE_GPUImage
+#define COCOAPODS_VERSION_MAJOR_GPUImage 0
+#define COCOAPODS_VERSION_MINOR_GPUImage 1
+#define COCOAPODS_VERSION_PATCH_GPUImage 6
+
 // JGProgressHUD
 #define COCOAPODS_POD_AVAILABLE_JGProgressHUD
 #define COCOAPODS_VERSION_MAJOR_JGProgressHUD 1
@@ -180,6 +186,12 @@
 #define COCOAPODS_VERSION_MAJOR_MagicalRecord_Core 2
 #define COCOAPODS_VERSION_MINOR_MagicalRecord_Core 3
 #define COCOAPODS_VERSION_PATCH_MagicalRecord_Core 0
+
+// MagicalRecord/Shorthand
+#define COCOAPODS_POD_AVAILABLE_MagicalRecord_Shorthand
+#define COCOAPODS_VERSION_MAJOR_MagicalRecord_Shorthand 2
+#define COCOAPODS_VERSION_MINOR_MagicalRecord_Shorthand 3
+#define COCOAPODS_VERSION_PATCH_MagicalRecord_Shorthand 0
 
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse

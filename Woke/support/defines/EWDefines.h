@@ -23,6 +23,19 @@
 #define kColorMediumGray                EWSTR2COLOR(@"7e7e7e")
 #define kCustomLightGray                EWSTR2COLOR(@"#DDDDDD")
 
+//blocks
+typedef void (^DictionaryBlock)(NSDictionary *dictionary);
+typedef void (^BoolBlock)(BOOL success);
+typedef void (^BoolErrorBlock)(BOOL success, NSError *error);
+typedef void (^DictionaryErrorBlock)(NSDictionary *dictioanry, NSError *error);
+typedef void (^ErrorBlock)(NSError *error);
+typedef void (^VoidBlock)(void);
+typedef void (^UIImageBlock)(UIImage *image);
+typedef void (^ArrayBlock)(NSArray *array);
+typedef void (^FloatBlock)(float percent);
+typedef void (^SenderBlock)(id sender);
+
+
 
 // Keys
 #define kParseKeyDevelopment            @"4757c535-5583-46f9-8a55-3b8276d96f06"
@@ -69,10 +82,6 @@
 #define kServerUpdateInterval			7200
 
 //DEFAULT DATA
-#define ringtoneNameList                @[@"Autumn Spring.caf", @"Daybreak.caf", @"Drive.caf", @"Parisian Dream.caf", @"Sunny Afternoon.caf", @"Tropical Delight.caf"]
-#define weekdays                        @[@"Sunday", @"Monday",@"Tuesday", @"Wednesday", @"Thursday", @"Friday", @"Saturday"]
-#define weekdayshort                    @[@"Sun", @"Mon",@"Tue", @"Wed", @"Thur", @"Fri", @"Sat"]
-#define monthShort                      @[@"Jan.",@"Feb.",@"Mar.",@"Apr.",@"May.",@"Jun.",@"Jul.",@"Aug.",@"Sept.",@"Oct.",@"Nov.",@"Dec."]
 #define defaultAlarmTimes               @[@8.00, @8.00, @8.00, @8.00, @8.00, @8.00, @8.00]
 #define kUserDefaults                   @{@"DefaultTone": @"Autumn Spring.caf", @"SleepDuration":@8.0, kSocialLevel:kSocialLevelEveryone, @"FirstTime":@YES, @"SkipTutorial":@NO, @"buzzSound":@"default", @"BedTimeNotification":@YES}
 #define kSocialLevel                    @"SocialLevel"

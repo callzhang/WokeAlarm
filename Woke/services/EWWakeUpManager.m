@@ -8,7 +8,7 @@
 
 #import "EWWakeUpManager.h"
 #import "EWPersonManager.h"
-#import "AVManager.h"
+#import "EWAVManager.h"
 #import "EWAppDelegate.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
@@ -246,7 +246,7 @@
     [EWSync save];
 	
 	//set volume
-	[[AVManager sharedManager] setDeviceVolume:1.0];
+	[[EWAVManager sharedManager] setDeviceVolume:1.0];
     
     //cancel local alarm
     [alarm cancelLocalNotification];
@@ -273,7 +273,7 @@
         [[UIApplication sharedApplication] scheduleLocalNotification:note];
         
         //play sound
-        [[AVManager sharedManager] playSoundFromFileName:[EWSession sharedSession].currentUser.preference[@"DefaultTone"]];
+        [[EWAVManager sharedManager] playSoundFromFileName:[EWSession sharedSession].currentUser.preference[@"DefaultTone"]];
         
         //play sounds after 30s - time for alarm
         double d = 10;
@@ -282,7 +282,7 @@
 #endif
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(d * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //present wakeupVC and paly when displayed
-            [[AVManager sharedManager] volumeFadeWithCompletion:^{
+            [[EWAVManager sharedManager] volumeFadeWithCompletion:^{
                 [EWWakeUpManager presentWakeUpViewWithActivity:activity];
             }];
             

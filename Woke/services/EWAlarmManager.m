@@ -15,7 +15,6 @@
 #import "EWPerson.h"
 #import "EWPersonManager.h"
 #import "EWUserManagement.h"
-#import "EWAppDelegate.h"
 #import "EWAlarmScheduleViewController.h"
 
 #import "AFNetworking.h"
@@ -171,7 +170,7 @@
     }
     
     //start add alarm if blank
-    for (NSInteger i=0; i<newAlarms.count; i++) {
+    for (NSUInteger i=0; i<newAlarms.count; i++) {
         if (![newAlarms[i] isEqual:@NO]) {
             //skip if alarm exists
             continue;
@@ -217,11 +216,11 @@
     NSDateComponents *comp = [NSDateComponents new];//used as a dic to hold time diff
     comp.day = targetDay - today.weekdayNumber;
     NSDate *time = [cal dateByAddingComponents:comp toDate:today options:0];//set the weekday
-    comp = [cal components:(NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit) fromDate:time];//get the target date
+    comp = [cal components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:time];//get the target date
     NSArray *alarmTimes = [self getSavedAlarmTimes];
     double number = [(NSNumber *)alarmTimes[targetDay] doubleValue];
-    NSInteger hour = floor(number);
-    NSInteger minute = round((number - hour)*100);
+    NSInteger hour = (NSInteger)floor(number);
+    NSInteger minute = (NSInteger)round((number - hour)*100);
     comp.hour = hour;
     comp.minute = minute;
     time = [cal dateFromComponents:comp];
@@ -310,11 +309,11 @@
     //check local schedule records before make the REST call
     __block NSMutableDictionary *timeTable = [[[NSUserDefaults standardUserDefaults] objectForKey:kScheduledAlarmTimers] mutableCopy] ?:[NSMutableDictionary new];
     for (NSString *objectId in timeTable.allKeys) {
-        EWAlarm *alarm = [EWAlarm findFirstByAttribute:kParseObjectID withValue:objectId];
-        if (alarm.time.timeElapsed > 0) {
+        EWAlarm *a = [EWAlarm findFirstByAttribute:kParseObjectID withValue:objectId];
+        if (a.time.timeElapsed > 0) {
             //delete from time table
             [timeTable removeObjectForKey:objectId];
-            DDLogInfo(@"Past task on %@ has been removed from schedule table", alarm.time.date2detailDateString);
+            DDLogInfo(@"Past task on %@ has been removed from schedule table", a.time.date2detailDateString);
         }
     }
     //add scheduled time to task

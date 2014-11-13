@@ -9,7 +9,6 @@
 //
 
 #import "EWServer.h"
-#import "UIAlertView+.h"
 
 //model
 #import "EWDataStore.h"
@@ -18,15 +17,13 @@
 //#import "EWTaskManager.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
-#import "EWDownloadManager.h"
 #import "EWNotification.h"
 #import "EWNotificationManager.h"
 #import "EWWakeUpManager.h"
 
 //view
-#import "EWWakeUpViewController.h"
-#import "EWAppDelegate.h"
-#import "AVManager.h"
+//TODO: #import "EWWakeUpViewController.h"
+#import "EWAVManager.h"
 #import "UIAlertView+.h"
 #import "EWSleepViewController.h"
 

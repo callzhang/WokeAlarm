@@ -8,7 +8,7 @@
 
 #import "NavigationControllerDelegate.h"
 #import "GPUImageAnimator.h"
-#import "AVManager.h"
+#import "EWAVManager.h"
 
 static NSString * PushSegueIdentifier = @"push segue identifier";
 

@@ -15,11 +15,11 @@
 #pragma mark - Server sync
 - (void)updateValueAndRelationFromParseObject:(PFObject *)parseObject{
     if (!parseObject) {
-        NSLog(@"*** PO is nil, please check!");
+        DDLogWarn(@"*** PO is nil, please check!");
         return;
     }
     if (!parseObject.isDataAvailable) {
-        NSLog(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
+        DDLogWarn(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
         return;
     }
     
@@ -60,17 +60,17 @@
             NSArray *relatedParseObjects = [[toManyRelation query] findObjects:&err];
             //TODO: handle error
             if ([err code] == kPFErrorObjectNotFound) {
-                NSLog(@"*** Uh oh, we couldn't find the related PO!");
+                DDLogWarn(@"*** Uh oh, we couldn't find the related PO!");
                 NSManagedObject *trueSelf = [self.managedObjectContext existingObjectWithID:self.objectID error:NULL];
                 if (trueSelf) {
                     [self setValue:nil forKey:key];
                 }
                 return;
             } else if ([err code] == kPFErrorConnectionFailed) {
-                NSLog(@"Uh oh, we couldn't even connect to the Parse Cloud!");
+                DDLogWarn(@"Uh oh, we couldn't even connect to the Parse Cloud!");
                 [self uploadEventually];
             } else if (err) {
-                NSLog(@"Error: %@", [err userInfo][@"error"]);
+                DDLogError(@"Error: %@", [err userInfo][@"error"]);
                 return;
             }
             
@@ -158,7 +158,7 @@
     NSError *err;
     [object fetchIfNeeded:&err];
     if (!object.isDataAvailable) {
-        NSLog(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", object.parseClassName, object.objectId);
+        DDLogWarn(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", object.parseClassName, object.objectId);
         if (err.code == kPFErrorObjectNotFound) {
             NSManagedObject *trueSelf = [self.managedObjectContext existingObjectWithID:self.objectID error:NULL];
             if (trueSelf) {
@@ -342,7 +342,7 @@
 
 - (void)refreshRelatedWithCompletion:(void (^)(void))block{
     if (![EWSync isReachable]) {
-        NSLog(@"Network not reachable, refresh later.");
+        DDLogWarn(@"Network not reachable, refresh later.");
         //refresh later
         [self refreshEventually];
         return;
@@ -380,7 +380,7 @@
 
 - (void)refreshShallowWithCompletion:(void (^)(void))block{
     if (![EWSync isReachable]) {
-        NSLog(@"Network not reachable, refresh later.");
+        DDLogInfo(@"Network not reachable, refresh later.");
         //refresh later
         [self refreshEventually];
         return;
@@ -395,7 +395,7 @@
         NSError *err;
         NSManagedObject *backMO = [localContext existingObjectWithID:ID error:&err];
         if (err) {
-            NSLog(@"*** Failed to get back MO: %@", err.description);
+            DDLogError(@"*** Failed to get back MO: %@", err.description);
             return ;
         }
         
@@ -436,7 +436,7 @@
             }
         }];
         
-        NSLog(@"Shallow refreshed MO %@(%@) in backgound", PO.parseClassName, PO.objectId);
+        DDLogInfo(@"Shallow refreshed MO %@(%@) in backgound", PO.parseClassName, PO.objectId);
         
     }completion:^(BOOL success, NSError *error) {
         if (block) {
@@ -451,19 +451,19 @@
 - (void)uploadEventually{
     if (self.serverID) {
         //update
-        NSLog(@"%s: updated %@ eventually", __func__, self.entity.name);
+        DDLogInfo(@"%s: updated %@ eventually", __func__, self.entity.name);
         [[EWSync sharedInstance] appendUpdateQueue:self];
     }
     else{
         //insert
-        NSLog(@"%s: insert %@ eventually", __func__, self.entity.name);
+        DDLogInfo(@"%s: insert %@ eventually", __func__, self.entity.name);
         [[EWSync sharedInstance] appendInsertQueue:self];
     }
 }
 
 - (void)deleteEventually{
     PFObject *po = [PFObject objectWithoutDataWithClassName:self.entity.name objectId:self.serverID];
-    NSLog(@"%s: delete %@ eventually", __func__, self.entity.name);
+    DDLogInfo(@"%s: delete %@ eventually", __func__, self.entity.name);
     [[EWSync sharedInstance] appendObjectToDeleteQueue:po];
     
     //delete

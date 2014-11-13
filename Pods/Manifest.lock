@@ -47,6 +47,7 @@ PODS:
   - CrashlyticsFramework (2.2.5.1)
   - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
+  - GPUImage (0.1.6)
   - JGProgressHUD (1.2.2)
   - KZAsserts (1.0)
   - KZBootstrap (0.5.2):
@@ -61,6 +62,7 @@ PODS:
   - MagicalRecord (2.3.0-beta.5):
     - MagicalRecord/Core (= 2.3.0-beta.5)
   - MagicalRecord/Core (2.3.0-beta.5)
+  - MagicalRecord/Shorthand (2.3.0-beta.5)
   - MTDates (0.14.3)
   - Parse (1.5.0):
     - Bolts (~> 1.1.3)
@@ -77,11 +79,13 @@ DEPENDENCIES:
   - CocoaLumberjack (~> 2.0.0-beta4)
   - CrashlyticsFramework (~> 2.2.5.1)
   - Facebook-iOS-SDK (~> 3.20.0)
+  - GPUImage (~> 0.1.6)
   - JGProgressHUD
   - KZBootstrap (from `https://github.com/krzysztofzablocki/KZBootstrap.git`, commit `aa5deb50655beef31364ee77ff835f12dfee793d`)
   - KZBootstrap/Debug (from `https://github.com/krzysztofzablocki/KZBootstrap.git`, commit `aa5deb50655beef31364ee77ff835f12dfee793d`)
   - KZBootstrap/Logging (from `https://github.com/krzysztofzablocki/KZBootstrap.git`, commit `aa5deb50655beef31364ee77ff835f12dfee793d`)
   - MagicalRecord (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
+  - MagicalRecord/Shorthand (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
   - MTDates
   - Parse (~> 1.5.0)
   - Reachability
@@ -103,6 +107,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 24153b24b17d853d7182b22b128971fb98e8cb18
   CrashlyticsFramework: 195dfef587ade7a3954ce8effd483a3879d35877
   Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
+  GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398
   KZAsserts: 008f2f37ba7dcb4ce87bb262a7f91406812a66e5
   KZBootstrap: 12feef4f3d704bb253f626214177e26bcf3b3434
