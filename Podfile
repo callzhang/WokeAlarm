@@ -17,7 +17,7 @@ target 'Woke' do
   pod 'KZBootstrap/Logging', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
 
   pod 'KZBootstrap/Debug', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
-
+  pod 'VBFPopFlatButton', '~> 0.0.5'
 end
 
 target 'WokeTests' do
