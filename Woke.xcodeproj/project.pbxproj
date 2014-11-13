@@ -16,7 +16,6 @@
 		09A777311A11E2BD004AF902 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09A777201A11E2BD004AF902 /* Images.xcassets */; };
 		09A777321A11E2BD004AF902 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 09A777211A11E2BD004AF902 /* Settings.bundle */; };
 		09A777341A11E2BD004AF902 /* KZBEnvironments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 09A777271A11E2BD004AF902 /* KZBEnvironments.plist */; };
-		09A777351A11E2BD004AF902 /* .DS_Store in Resources */ = {isa = PBXBuildFile; fileRef = 09A7772B1A11E2BD004AF902 /* .DS_Store */; };
 		8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B95C7310A02172389FEF1951 /* libPods-Woke.a */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +47,6 @@
 		09A777271A11E2BD004AF902 /* KZBEnvironments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = KZBEnvironments.plist; sourceTree = "<group>"; };
 		09A777281A11E2BD004AF902 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		09A777291A11E2BD004AF902 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		09A7772B1A11E2BD004AF902 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
 		09A7773A1A11E7C9004AF902 /* LucidaGrande.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; path = LucidaGrande.ttc; sourceTree = "<group>"; };
 		0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.debug.xcconfig"; sourceTree = "<group>"; };
 		1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.release.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.release.xcconfig"; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 				09A777221A11E2BD004AF902 /* shared */,
 				09A777251A11E2BD004AF902 /* support */,
 				09A7772A1A11E2BD004AF902 /* vendor */,
-				09A7772B1A11E2BD004AF902 /* .DS_Store */,
 			);
 			path = Woke;
 			sourceTree = "<group>";
@@ -385,7 +382,6 @@
 				09A777311A11E2BD004AF902 /* Images.xcassets in Resources */,
 				09A7772F1A11E2BD004AF902 /* LaunchScreen.xib in Resources */,
 				09A777341A11E2BD004AF902 /* KZBEnvironments.plist in Resources */,
-				09A777351A11E2BD004AF902 /* .DS_Store in Resources */,
 				09A777301A11E2BD004AF902 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
