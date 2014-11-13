@@ -187,12 +187,6 @@
 #define COCOAPODS_VERSION_MINOR_MagicalRecord_Core 3
 #define COCOAPODS_VERSION_PATCH_MagicalRecord_Core 0
 
-// MagicalRecord/Shorthand
-#define COCOAPODS_POD_AVAILABLE_MagicalRecord_Shorthand
-#define COCOAPODS_VERSION_MAJOR_MagicalRecord_Shorthand 2
-#define COCOAPODS_VERSION_MINOR_MagicalRecord_Shorthand 3
-#define COCOAPODS_VERSION_PATCH_MagicalRecord_Shorthand 0
-
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1

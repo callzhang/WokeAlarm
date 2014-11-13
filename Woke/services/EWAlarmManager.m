@@ -245,6 +245,14 @@
     return alarmTimes;
 }
 
+#pragma mark - Person cachedInfo updates
+- (void)updateCachedAlarmTimes{
+    //TODO
+}
+- (void)updateCachedStatements{
+    //TODO
+}
+
 
 
 #pragma mark - Alarm timer local notofication
@@ -281,7 +289,7 @@
     //TODO
 }
 
-- (void)cancelSleepNotificationss{
+- (void)cancelSleepNotifications{
     //TODO
 }
 
@@ -309,7 +317,7 @@
     //check local schedule records before make the REST call
     __block NSMutableDictionary *timeTable = [[[NSUserDefaults standardUserDefaults] objectForKey:kScheduledAlarmTimers] mutableCopy] ?:[NSMutableDictionary new];
     for (NSString *objectId in timeTable.allKeys) {
-        EWAlarm *a = [EWAlarm findFirstByAttribute:kParseObjectID withValue:objectId];
+        EWAlarm *a = [EWAlarm MR_findFirstByAttribute:kParseObjectID withValue:objectId];
         if (a.time.timeElapsed > 0) {
             //delete from time table
             [timeTable removeObjectForKey:objectId];
