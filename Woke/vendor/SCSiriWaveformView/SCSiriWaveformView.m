@@ -59,7 +59,7 @@
 -(void)updateWithLevel:(CGFloat)level
 {
     self.phase += self.phaseShift;
-    self.amplitude = fmax( level, self.idleAmplitude);
+    self.amplitude = (float)fmax( level, self.idleAmplitude);
     
     [self setNeedsDisplay];
 }
@@ -89,9 +89,9 @@
 		for(CGFloat x = 0; x<width + self.density; x += self.density) {
 			
 			// We use a parable to scale the sinus wave, that has its peak in the middle of the view.
-			CGFloat scaling = -pow(1 / mid * (x - mid), 2) + 1;
+			CGFloat scaling = -(float)pow(1 / mid * (x - mid), 2) + 1;
 						
-			CGFloat y = scaling * maxAmplitude * normedAmplitude * sin(2 * M_PI *(x / width) * self.frequency + self.phase) + halfHeight;
+			CGFloat y = scaling * maxAmplitude * normedAmplitude * (float)sin(2 * M_PI *(x / width) * self.frequency + self.phase) + halfHeight;
 			
 			if (x==0) {
                 CGContextMoveToPoint(context, x, y);
