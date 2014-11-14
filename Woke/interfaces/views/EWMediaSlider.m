@@ -70,11 +70,11 @@
 }
 
 - (void)play{
-    NSLog(@"Slider is called for play");
+    DDLogInfo(@"Slider is called for play");
 }
 
 - (void)stop{
-    NSLog(@"Slider is called to stop");
+    DDLogInfo(@"Slider is called to stop");
 }
 
 @end

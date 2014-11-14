@@ -7,12 +7,12 @@
 //
 
 #import "EWRecordingViewController.h"
-#import "EWAppDelegate.h"
+//#import "EWAppDelegate.h"
 
 //Util
 #import "NSDate+Extend.h"
-#import "MBProgressHUD.h"
-#import "EWCollectionPersonCell.h"
+//#import "MBProgressHUD.h"
+//#import "EWCollectionPersonCell.h"
 #import "SCSiriWaveformView.h"
 #import "EWUIUtil.h"
 //#import "EWTaskManager.h"
@@ -38,7 +38,6 @@
 @interface EWRecordingViewController (){
     NSArray *personSet;
     NSURL *recordingFileUrl;
-    AVManager *manager;
     
     BOOL  everPlayed;
     BOOL  everRecord;
@@ -49,14 +48,13 @@
 
 @implementation EWRecordingViewController
 @synthesize playBtn, recordBtn;
-@synthesize manager = manager;
 
 - (EWRecordingViewController *)initWithPerson:(EWPerson *)user{
     self = [super init];
     if (self) {
         //person
         personSet = @[user];
-        manager = [AVManager sharedManager];
+        _manager = [EWAVManager sharedManager];
     }
     return self;
 }
@@ -65,7 +63,7 @@
     self = [super init];
     if (self) {
         personSet = [ps allObjects];
-        manager = [AVManager sharedManager];
+        _manager = [EWAVManager sharedManager];
     }
     return self;
 }
@@ -89,10 +87,10 @@
 
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
-    [AVManager sharedManager].waveformView = self.waveformView;
+    [EWAVManager sharedManager].waveformView = self.waveformView;
 
-    [AVManager sharedManager].playStopBtn = playBtn;
-    [AVManager sharedManager].recordStopBtn = recordBtn;
+    [EWAVManager sharedManager].playStopBtn = playBtn;
+    [EWAVManager sharedManager].recordStopBtn = recordBtn;
 }
 
 -(void)initProgressView{
@@ -200,7 +198,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [[AVManager sharedManager] registerRecordingAudioSession];
+    [[EWAVManager sharedManager] registerRecordingAudioSession];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -210,12 +208,14 @@
 }
 
 #pragma mark - collection view
+//TODO: remove below methods?
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
-    cell.showName = NO;
-    EWPerson *receiver = personSet[indexPath.row];
-    cell.person = receiver;
-    return cell;
+//    EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
+//    cell.showName = NO;
+//    EWPerson *receiver = personSet[indexPath.row];
+//    cell.person = receiver;
+//    return cell;
+    return nil;
 }
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
@@ -230,10 +230,11 @@
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
     
-    NSInteger numberOfCells = personSet.count;
-    NSInteger edgeInsets = (self.peopleView.frame.size.width - (numberOfCells * kCollectionViewCellWidth) - numberOfCells * 10) / 2;
-    edgeInsets = MAX(edgeInsets, 20);
-    return UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets);
+//    NSInteger numberOfCells = personSet.count;
+//    NSInteger edgeInsets = (self.peopleView.frame.size.width - (numberOfCells * kCollectionViewCellWidth) - numberOfCells * 10) / 2;
+//    edgeInsets = MAX(edgeInsets, 20);
+//    return UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets);
+    return UIEdgeInsetsZero;
 }
 
 #pragma mark- Actions
@@ -253,35 +254,35 @@
         return;
     }
     
-    if ([manager.recorder isRecording]) {
+    if ([self.manager.recorder isRecording]) {
         return;
     }
     
-    if (!manager.player.isPlaying) {
+    if (!self.manager.player.isPlaying) {
 
         everPlayed = YES;
-        [manager playSoundFromURL:recordingFileUrl];
+        [self.manager playSoundFromURL:recordingFileUrl];
         self.playLabel.text = @"Stop";
         [self.playBtn setImage:[UIImage imageNamed:@"Stop Button"] forState:UIControlStateNormal];
         
     }else{
         
         self.playLabel.text = @"Play";
-        [self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];     [manager stopAllPlaying];
+        [self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];     [self.manager stopAllPlaying];
     }
 }
 
 - (IBAction)record:(id)sender {
     
-    if (manager.player.isPlaying) {
+    if (self.manager.player.isPlaying) {
         
         return ;
     }
     
     
-    recordingFileUrl = [manager record];
+    recordingFileUrl = [self.manager record];
     
-    if (manager.recorder.isRecording) {
+    if (self.manager.recorder.isRecording) {
         if (!everRecord) {
             // 第一次进入 直接改变
             [self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
@@ -397,32 +398,33 @@
     }
     else{
 
-        [self dismissBlurViewControllerWithCompletionHandler:NULL];
+        //TODO: check
+//        [self dismissBlurViewControllerWithCompletionHandler:NULL];
     }
 }
 
 
 - (void)updateProgress:(NSTimer *)timer {
     
-    if ([manager.recorder isRecording]) {
+    if ([self.manager.recorder isRecording]) {
         
-        float progress = (float) manager.recorder.currentTime /kMaxRecordTime;
-        [self.progressView  setProgress:progress>0.999?0.999:progress];
+        CGFloat progress = (CGFloat) self.manager.recorder.currentTime /kMaxRecordTime;
+        [self.progressView  setProgress:(float) (progress>0.999?0.999:progress)];
     
     }
-    if(manager.player.isPlaying)
+    if(self.manager.player.isPlaying)
     {
-        float progress = (float) manager.player.currentTime /kMaxRecordTime;
-        [self.progressView  setProgress:progress>0.999?0.999:progress];
+        CGFloat progress = (CGFloat) self.manager.player.currentTime /kMaxRecordTime;
+        [self.progressView  setProgress:(float) (progress>0.999?0.999:progress)];
    
     }
-    if (!manager.player.isPlaying&&everPlayed&&!manager.recorder.recording) {
+    if (!self.manager.player.isPlaying&&everPlayed&&!self.manager.recorder.recording) {
         [playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
 //        [self.progressView  setProgress: 0];
         
         [self.playLabel setText:@"Play"];
     }
-    if (!manager.recorder.isRecording && recordingFileUrl) {
+    if (!self.manager.recorder.isRecording && recordingFileUrl) {
         [recordBtn setTitle:@"Retake" forState:UIControlStateNormal];
     }
   

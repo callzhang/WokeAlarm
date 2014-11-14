@@ -7,9 +7,11 @@
 //
 
 //#import "EWTaskItem.h"
-#import "EWAlarm.h"
-#import "EWMedia.h"
-#import "EWPerson.h"
+//#import "EWAlarm.h"
+//#import "EWMedia.h"
+//#import "EWPerson.h"
+
+#import "EWTaskItem.h"
 
 
 @implementation EWTaskItem

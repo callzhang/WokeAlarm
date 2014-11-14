@@ -7,7 +7,7 @@
 //
 
 //#import "EWViewController.h"
-#import "AVManager.h"
+#import "EWAVManager.h"
 #import "UAProgressView.h"
 @class EWTaskItem;
 @class SCSiriWaveformView;
@@ -15,7 +15,7 @@
 
 @interface EWRecordingViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
-@property (strong,nonatomic)     AVManager *manager;
+@property (strong,nonatomic)     EWAVManager *manager;
 
 
 @property (strong, nonatomic) IBOutlet UIButton *playBtn;

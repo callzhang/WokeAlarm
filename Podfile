@@ -14,19 +14,18 @@ target 'Woke' do
   pod 'BlocksKit', '~> 2.2.5'
   pod 'CrashlyticsFramework', '~> 2.2.5.1'
   pod 'RHAddressBook', '~> 1.1.1'
-  pod 'KZBootstrap', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
-  pod 'KZBootstrap/Logging', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
-
-  pod 'KZBootstrap/Debug', :git => "https://github.com/krzysztofzablocki/KZBootstrap.git", :commit => "aa5deb50655beef31364ee77ff835f12dfee793d"
+  pod 'KZBootstrap', '~> 0.5.2' 
+  #pod 'KZBootstrap/Logging', '~> 0.5.2'
+  #pod 'KZBootstrap/Debug','~> 0.5.2'
   pod 'VBFPopFlatButton', '~> 0.0.5'
-  pod 'MTDates'
-  pod 'JGProgressHUD'
-  pod 'Reachability'
-  pod 'CocoaLumberjack'
-  pod 'CrashlyticsLumberjack'
-  pod 'IDMPhotoBrowser'
-  pod 'apptentive-ios'
-  pod 'APAddressBook'
+  pod 'MTDates', '~> 0.14.3'
+  pod 'JGProgressHUD', '~> 1.2.2'
+  pod 'Reachability', '~> 3.1.1'
+  pod 'CocoaLumberjack', '~> 1.9.2'
+  pod 'CrashlyticsLumberjack', '~> 1.0.2'
+  pod 'IDMPhotoBrowser', '~> 1.4'
+  pod 'apptentive-ios', '~> 1.6.0'
+  pod 'APAddressBook', '~> 0.1.4'
 end
 
 target 'WokeTests' do

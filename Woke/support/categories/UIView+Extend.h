@@ -16,11 +16,11 @@ typedef enum{
 
 @interface UIView(HUD)
 
-- (void)showNotification:(NSString *)alert WithStyle:(HUDStyle)style;
-- (void)showSuccessNotification:(NSString *)alert;
-- (void)showFailureNotification:(NSString *)alert;
+//- (void)showNotification:(NSString *)alert WithStyle:(HUDStyle)style;
+//- (void)showSuccessNotification:(NSString *)alert;
+//- (void)showFailureNotification:(NSString *)alert;
 @end
 
 @interface UIView (Sreenshot)
-- (UIImage *)screenshot;
+//- (UIImage *)screenshot;
 @end

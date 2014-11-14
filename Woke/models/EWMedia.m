@@ -53,11 +53,11 @@
     [acl setReadAccess:YES forUser:(PFUser *)PO];
     [acl setReadAccess:YES forUser:(PFUser *)PO];
     m.ACL = acl;
-    NSLog(@"ACL created for media(%@) with access for %@", self.objectId, self.receiver.serverID);
+    DDLogVerbose(@"ACL created for media(%@) with access for %@", self.objectId, self.receiver.serverID);
 }
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID{
-    return [EWMedia findByAttribute:kParseObjectID withValue:mediaID].firstObject;
+    return [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID].firstObject;
 }
 
 

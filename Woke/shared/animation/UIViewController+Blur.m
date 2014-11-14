@@ -9,7 +9,6 @@
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
 #import "NavigationControllerDelegate.h"
-#import "EWAppDelegate.h"
 
 
 static NavigationControllerDelegate *delegate = nil;
