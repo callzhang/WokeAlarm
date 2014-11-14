@@ -56,7 +56,7 @@
  Compares two dates
  */
 - (BOOL)isEarlierThan:(NSDate *)date;
-- (NSInteger)weekdayNumber;
+- (NSInteger)weekdayNumber __deprecated;
 /**
  Returns a future time in n weeks from now that has the same weekday and time of the input date.
  @param n Weeks in the future from this time
@@ -151,5 +151,5 @@
 - (NSDate *)beginingOfDay;
 - (NSDate *)endOfDay;
 
-+ (NSString *)getStringFromTime:(float)time;
++ (NSString *)getStringFromTime:(NSTimeInterval)time;
 @end

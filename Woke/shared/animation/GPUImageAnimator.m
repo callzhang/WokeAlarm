@@ -18,10 +18,10 @@
 //#import "EWAppDelegate.h"
 
 
-static const float duration = 0.3;
-static const float delay = 0.1;
-static const float zoom = 1.5;
-static const float initialDownSampling = 2;
+static const CGFloat duration = 0.3;
+static const CGFloat delay = 0.1;
+static const CGFloat zoom = 1.5;
+static const CGFloat initialDownSampling = 2;
 
 
 @interface GPUImageAnimator (){
@@ -234,7 +234,7 @@ static const float initialDownSampling = 2;
 - (void)updateProgress:(CADisplayLink*)link
 {
     if (self.interactive) return;
-	float progress;
+	CGFloat progress;
 	
     if (self.startTime == 0) {
         self.startTime = link.timestamp;
