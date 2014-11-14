@@ -5377,3 +5377,1097 @@ fi
 	<string>09A776D71A11D8D9004AF902</string>
 </dict>
 </plist>
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDE1A1316580048DC44 /* Lato-Light.ttf */; };
+		09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DE01A1316640048DC44 /* Lato-Hairline.ttf */; };
+		09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDF1A1316580048DC44 /* Lato-Regular.ttf */; };
+		09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A776FE1A11D8D9004AF902 /* WokeTests.m */; };
+		09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777101A11E2BD004AF902 /* AppDelegate.m */; };
+		09A7772D1A11E2BD004AF902 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777111A11E2BD004AF902 /* main.m */; };
+		09A7772E1A11E2BD004AF902 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777181A11E2BD004AF902 /* ViewController.m */; };
+		09A7772F1A11E2BD004AF902 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A7771C1A11E2BD004AF902 /* LaunchScreen.xib */; };
+		09A777301A11E2BD004AF902 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09A7771E1A11E2BD004AF902 /* Main.storyboard */; };
+		09A777311A11E2BD004AF902 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09A777201A11E2BD004AF902 /* Images.xcassets */; };
+		09A777321A11E2BD004AF902 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 09A777211A11E2BD004AF902 /* Settings.bundle */; };
+		09A777341A11E2BD004AF902 /* KZBEnvironments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 09A777271A11E2BD004AF902 /* KZBEnvironments.plist */; };
+		09ABE17A1A1326F300989ECA /* EWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE1791A1326F300989ECA /* EWMainViewController.m */; };
+		09ABE17D1A13270000989ECA /* EWLoginGateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE17C1A13270000989ECA /* EWLoginGateViewController.m */; };
+		09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE17F1A13285400989ECA /* EWBaseViewController.m */; };
+		09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */; };
+		09E17AFD1A15AE1A00317F8D /* EWAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E17AFC1A15AE1A00317F8D /* EWAccountManager.m */; };
+		8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B95C7310A02172389FEF1951 /* libPods-Woke.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		09A776F91A11D8D9004AF902 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 09A776D71A11D8D9004AF902 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09A776DE1A11D8D9004AF902;
+			remoteInfo = Woke;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		09269DDE1A1316580048DC44 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
+		09269DDF1A1316580048DC44 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
+		09269DE01A1316640048DC44 /* Lato-Hairline.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Hairline.ttf"; sourceTree = "<group>"; };
+		09A776DF1A11D8D9004AF902 /* Woke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woke.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		09A776F81A11D8D9004AF902 /* WokeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WokeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		09A776FD1A11D8D9004AF902 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		09A776FE1A11D8D9004AF902 /* WokeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WokeTests.m; sourceTree = "<group>"; };
+		09A7770F1A11E2BD004AF902 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		09A777101A11E2BD004AF902 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		09A777111A11E2BD004AF902 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		09A777171A11E2BD004AF902 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		09A777181A11E2BD004AF902 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		09A7771D1A11E2BD004AF902 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		09A7771F1A11E2BD004AF902 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		09A777201A11E2BD004AF902 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		09A777211A11E2BD004AF902 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		09A777261A11E2BD004AF902 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		09A777271A11E2BD004AF902 /* KZBEnvironments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = KZBEnvironments.plist; sourceTree = "<group>"; };
+		09A777281A11E2BD004AF902 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
+		09A777291A11E2BD004AF902 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		09ABE1781A1326F300989ECA /* EWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainViewController.h; sourceTree = "<group>"; };
+		09ABE1791A1326F300989ECA /* EWMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMainViewController.m; sourceTree = "<group>"; };
+		09ABE17B1A13270000989ECA /* EWLoginGateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWLoginGateViewController.h; sourceTree = "<group>"; };
+		09ABE17C1A13270000989ECA /* EWLoginGateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWLoginGateViewController.m; sourceTree = "<group>"; };
+		09ABE17E1A13285400989ECA /* EWBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseViewController.h; sourceTree = "<group>"; };
+		09ABE17F1A13285400989ECA /* EWBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseViewController.m; sourceTree = "<group>"; };
+		09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseNavigationController.h; sourceTree = "<group>"; };
+		09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseNavigationController.m; sourceTree = "<group>"; };
+		09E17AFB1A15AE1A00317F8D /* EWAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAccountManager.h; sourceTree = "<group>"; };
+		09E17AFC1A15AE1A00317F8D /* EWAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAccountManager.m; sourceTree = "<group>"; };
+		0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.debug.xcconfig"; sourceTree = "<group>"; };
+		1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.release.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.release.xcconfig"; sourceTree = "<group>"; };
+		568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
+		B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.adhoc.xcconfig"; sourceTree = "<group>"; };
+		B95C7310A02172389FEF1951 /* libPods-Woke.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Woke.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		09A776DC1A11D8D9004AF902 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09A776F51A11D8D9004AF902 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		09A776D61A11D8D9004AF902 = {
+			isa = PBXGroup;
+			children = (
+				09A776E11A11D8D9004AF902 /* Woke */,
+				09A776FB1A11D8D9004AF902 /* WokeTests */,
+				09A776E01A11D8D9004AF902 /* Products */,
+				D36CBA141A78EB696382308E /* Pods */,
+				AA1A75AA2E60E49CC73E6319 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		09A776E01A11D8D9004AF902 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				09A776DF1A11D8D9004AF902 /* Woke.app */,
+				09A776F81A11D8D9004AF902 /* WokeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		09A776E11A11D8D9004AF902 /* Woke */ = {
+			isa = PBXGroup;
+			children = (
+				09A7770E1A11E2BD004AF902 /* app */,
+				09A777221A11E2BD004AF902 /* shared */,
+				09A777151A11E2BD004AF902 /* iphone */,
+				09A7771A1A11E2BD004AF902 /* models */,
+				09A7771B1A11E2BD004AF902 /* resources */,
+				09A777251A11E2BD004AF902 /* support */,
+				09A7772A1A11E2BD004AF902 /* vendor */,
+				09A777121A11E2BD004AF902 /* ipad */,
+			);
+			path = Woke;
+			sourceTree = "<group>";
+		};
+		09A776FB1A11D8D9004AF902 /* WokeTests */ = {
+			isa = PBXGroup;
+			children = (
+				09A776FE1A11D8D9004AF902 /* WokeTests.m */,
+				09A776FC1A11D8D9004AF902 /* Supporting Files */,
+			);
+			path = WokeTests;
+			sourceTree = "<group>";
+		};
+		09A776FC1A11D8D9004AF902 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				09A776FD1A11D8D9004AF902 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		09A7770E1A11E2BD004AF902 /* app */ = {
+			isa = PBXGroup;
+			children = (
+				09A7770F1A11E2BD004AF902 /* AppDelegate.h */,
+				09A777101A11E2BD004AF902 /* AppDelegate.m */,
+				09A777111A11E2BD004AF902 /* main.m */,
+			);
+			path = app;
+			sourceTree = "<group>";
+		};
+		09A777121A11E2BD004AF902 /* ipad */ = {
+			isa = PBXGroup;
+			children = (
+				09A777131A11E2BD004AF902 /* controllers */,
+				09A777141A11E2BD004AF902 /* views */,
+			);
+			path = ipad;
+			sourceTree = "<group>";
+		};
+		09A777131A11E2BD004AF902 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		09A777141A11E2BD004AF902 /* views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		09A777151A11E2BD004AF902 /* iphone */ = {
+			isa = PBXGroup;
+			children = (
+				09A777161A11E2BD004AF902 /* controllers */,
+				09A777191A11E2BD004AF902 /* views */,
+			);
+			path = iphone;
+			sourceTree = "<group>";
+		};
+		09A777161A11E2BD004AF902 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				09A777171A11E2BD004AF902 /* ViewController.h */,
+				09A777181A11E2BD004AF902 /* ViewController.m */,
+				09ABE17B1A13270000989ECA /* EWLoginGateViewController.h */,
+				09ABE17C1A13270000989ECA /* EWLoginGateViewController.m */,
+				09ABE1781A1326F300989ECA /* EWMainViewController.h */,
+				09ABE1791A1326F300989ECA /* EWMainViewController.m */,
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		09A777191A11E2BD004AF902 /* views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		09A7771A1A11E2BD004AF902 /* models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		09A7771B1A11E2BD004AF902 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				09A777391A11E7A6004AF902 /* fonts */,
+				09A7771C1A11E2BD004AF902 /* LaunchScreen.xib */,
+				09A7771E1A11E2BD004AF902 /* Main.storyboard */,
+				09A777201A11E2BD004AF902 /* Images.xcassets */,
+				09A777211A11E2BD004AF902 /* Settings.bundle */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		09A777221A11E2BD004AF902 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				09E17AFA1A15AE0800317F8D /* services */,
+				09A777231A11E2BD004AF902 /* controllers */,
+				09A777241A11E2BD004AF902 /* views */,
+			);
+			path = shared;
+			sourceTree = "<group>";
+		};
+		09A777231A11E2BD004AF902 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				09ABE17E1A13285400989ECA /* EWBaseViewController.h */,
+				09ABE17F1A13285400989ECA /* EWBaseViewController.m */,
+				09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */,
+				09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */,
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		09A777241A11E2BD004AF902 /* views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		09A777251A11E2BD004AF902 /* support */ = {
+			isa = PBXGroup;
+			children = (
+				09A777361A11E334004AF902 /* categories */,
+				09A777371A11E334004AF902 /* defines */,
+				09A777381A11E334004AF902 /* helpers */,
+				09A777261A11E2BD004AF902 /* Info.plist */,
+				09A777271A11E2BD004AF902 /* KZBEnvironments.plist */,
+				09A777281A11E2BD004AF902 /* KZBootstrapUserMacros.h */,
+				09A777291A11E2BD004AF902 /* PrefixHeader.pch */,
+			);
+			path = support;
+			sourceTree = "<group>";
+		};
+		09A7772A1A11E2BD004AF902 /* vendor */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = vendor;
+			sourceTree = "<group>";
+		};
+		09A777361A11E334004AF902 /* categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = categories;
+			sourceTree = "<group>";
+		};
+		09A777371A11E334004AF902 /* defines */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = defines;
+			sourceTree = "<group>";
+		};
+		09A777381A11E334004AF902 /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = helpers;
+			sourceTree = "<group>";
+		};
+		09A777391A11E7A6004AF902 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				09269DE01A1316640048DC44 /* Lato-Hairline.ttf */,
+				09269DDE1A1316580048DC44 /* Lato-Light.ttf */,
+				09269DDF1A1316580048DC44 /* Lato-Regular.ttf */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
+		09E17AFA1A15AE0800317F8D /* services */ = {
+			isa = PBXGroup;
+			children = (
+				09E17AFB1A15AE1A00317F8D /* EWAccountManager.h */,
+				09E17AFC1A15AE1A00317F8D /* EWAccountManager.m */,
+			);
+			path = services;
+			sourceTree = "<group>";
+		};
+		AA1A75AA2E60E49CC73E6319 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B95C7310A02172389FEF1951 /* libPods-Woke.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D36CBA141A78EB696382308E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */,
+				1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */,
+				B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */,
+				568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		09A776DE1A11D8D9004AF902 /* Woke */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 09A777021A11D8D9004AF902 /* Build configuration list for PBXNativeTarget "Woke" */;
+			buildPhases = (
+				9CD61C4D16EF52D8A3FCCDDB /* Check Pods Manifest.lock */,
+				09A776DB1A11D8D9004AF902 /* Sources */,
+				09A776DC1A11D8D9004AF902 /* Frameworks */,
+				09A776DD1A11D8D9004AF902 /* Resources */,
+				A6ACF7036880B6CF269077FB /* Copy Pods Resources */,
+				E93DC57A1C384A7E8FEAF65F /* KZBootstrap setup */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Woke;
+			productName = Woke;
+			productReference = 09A776DF1A11D8D9004AF902 /* Woke.app */;
+			productType = "com.apple.product-type.application";
+		};
+		09A776F71A11D8D9004AF902 /* WokeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 09A777051A11D8D9004AF902 /* Build configuration list for PBXNativeTarget "WokeTests" */;
+			buildPhases = (
+				09A776F41A11D8D9004AF902 /* Sources */,
+				09A776F51A11D8D9004AF902 /* Frameworks */,
+				09A776F61A11D8D9004AF902 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				09A776FA1A11D8D9004AF902 /* PBXTargetDependency */,
+			);
+			name = WokeTests;
+			productName = WokeTests;
+			productReference = 09A776F81A11D8D9004AF902 /* WokeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		09A776D71A11D8D9004AF902 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = wokealarm;
+				TargetAttributes = {
+					09A776DE1A11D8D9004AF902 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+					09A776F71A11D8D9004AF902 = {
+						CreatedOnToolsVersion = 6.1;
+						TestTargetID = 09A776DE1A11D8D9004AF902;
+					};
+				};
+			};
+			buildConfigurationList = 09A776DA1A11D8D9004AF902 /* Build configuration list for PBXProject "Woke" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 09A776D61A11D8D9004AF902;
+			productRefGroup = 09A776E01A11D8D9004AF902 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				09A776DE1A11D8D9004AF902 /* Woke */,
+				09A776F71A11D8D9004AF902 /* WokeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		09A776DD1A11D8D9004AF902 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09A777321A11E2BD004AF902 /* Settings.bundle in Resources */,
+				09A777311A11E2BD004AF902 /* Images.xcassets in Resources */,
+				09A7772F1A11E2BD004AF902 /* LaunchScreen.xib in Resources */,
+				09A777341A11E2BD004AF902 /* KZBEnvironments.plist in Resources */,
+				09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */,
+				09A777301A11E2BD004AF902 /* Main.storyboard in Resources */,
+				09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */,
+				09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09A776F61A11D8D9004AF902 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9CD61C4D16EF52D8A3FCCDDB /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A6ACF7036880B6CF269077FB /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Woke/Pods-Woke-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E93DC57A1C384A7E8FEAF65F /* KZBootstrap setup */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "KZBootstrap setup";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/Pods/KZBootstrap/Pod/Assets/Scripts/bootstrap.sh";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		09A776DB1A11D8D9004AF902 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09ABE17D1A13270000989ECA /* EWLoginGateViewController.m in Sources */,
+				09E17AFD1A15AE1A00317F8D /* EWAccountManager.m in Sources */,
+				09A7772E1A11E2BD004AF902 /* ViewController.m in Sources */,
+				09ABE17A1A1326F300989ECA /* EWMainViewController.m in Sources */,
+				09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */,
+				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
+				09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */,
+				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09A776F41A11D8D9004AF902 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		09A776FA1A11D8D9004AF902 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09A776DE1A11D8D9004AF902 /* Woke */;
+			targetProxy = 09A776F91A11D8D9004AF902 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		09A7771C1A11E2BD004AF902 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				09A7771D1A11E2BD004AF902 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		09A7771E1A11E2BD004AF902 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				09A7771F1A11E2BD004AF902 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		09A777001A11D8D9004AF902 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME_SUFFIX = dev;
+				BUNDLE_ID_SUFFIX = .dev;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				KZBEnv = QA;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				WARNING_CFLAGS = (
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-unused-macros",
+					"-Wno-disabled-macro-expansion",
+					"-Wno-gnu-statement-expression",
+					"-Wno-language-extension-token",
+					"-Wno-overriding-method-mismatch",
+				);
+			};
+			name = Debug;
+		};
+		09A777011A11D8D9004AF902 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME_SUFFIX = adhoc;
+				BUNDLE_ID_SUFFIX = .adhoc;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				KZBEnv = QA;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				WARNING_CFLAGS = (
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-unused-macros",
+					"-Wno-disabled-macro-expansion",
+					"-Wno-gnu-statement-expression",
+					"-Wno-language-extension-token",
+					"-Wno-overriding-method-mismatch",
+				);
+			};
+			name = Release;
+		};
+		09A777031A11D8D9004AF902 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"KZBDefaultEnv=${KZBEnv}",
+				);
+				INFOPLIST_FILE = Woke/support/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		09A777041A11D8D9004AF902 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"KZBDefaultEnv=${KZBEnv}",
+				);
+				INFOPLIST_FILE = Woke/support/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		09A777061A11D8D9004AF902 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WokeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Woke.app/Woke";
+			};
+			name = Debug;
+		};
+		09A777071A11D8D9004AF902 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WokeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Woke.app/Woke";
+			};
+			name = Release;
+		};
+		2738B373D9E3409781FFBE87 /* adhoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WokeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Woke.app/Woke";
+			};
+			name = adhoc;
+		};
+		36533C93ADC54C2F8C03C451 /* profiling */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WokeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Woke.app/Woke";
+			};
+			name = profiling;
+		};
+		50A0A4275D3E4AC4AF49E97D /* adhoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME_SUFFIX = adhoc;
+				BUNDLE_ID_SUFFIX = .adhoc;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				KZBEnv = QA;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				WARNING_CFLAGS = (
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-unused-macros",
+					"-Wno-disabled-macro-expansion",
+					"-Wno-gnu-statement-expression",
+					"-Wno-language-extension-token",
+					"-Wno-overriding-method-mismatch",
+				);
+			};
+			name = adhoc;
+		};
+		86CF145E8486450799717E47 /* profiling */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME_SUFFIX = dev;
+				BUNDLE_ID_SUFFIX = .dev;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				KZBEnv = QA;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				WARNING_CFLAGS = (
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-unused-macros",
+					"-Wno-disabled-macro-expansion",
+					"-Wno-gnu-statement-expression",
+					"-Wno-language-extension-token",
+					"-Wno-overriding-method-mismatch",
+				);
+			};
+			name = profiling;
+		};
+		B1F3F60FFC3647879EA4CE2D /* profiling */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME_SUFFIX = dev;
+				BUNDLE_ID_SUFFIX = .dev;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				KZBEnv = QA;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				WARNING_CFLAGS = (
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-unused-macros",
+					"-Wno-disabled-macro-expansion",
+					"-Wno-gnu-statement-expression",
+					"-Wno-language-extension-token",
+					"-Wno-overriding-method-mismatch",
+				);
+			};
+			name = profiling;
+		};
+		C6B55ABCC357471F8A39AEAB /* profiling */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"KZBDefaultEnv=${KZBEnv}",
+				);
+				INFOPLIST_FILE = Woke/support/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = profiling;
+		};
+		DE458F44A2974B8C82603021 /* adhoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME_SUFFIX = adhoc;
+				BUNDLE_ID_SUFFIX = .adhoc;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				KZBEnv = QA;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				WARNING_CFLAGS = (
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-unused-macros",
+					"-Wno-disabled-macro-expansion",
+					"-Wno-gnu-statement-expression",
+					"-Wno-language-extension-token",
+					"-Wno-overriding-method-mismatch",
+				);
+			};
+			name = adhoc;
+		};
+		E8EFDEBA57C3467EBFD6D61E /* adhoc */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"KZBDefaultEnv=${KZBEnv}",
+				);
+				INFOPLIST_FILE = Woke/support/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = adhoc;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		09A776DA1A11D8D9004AF902 /* Build configuration list for PBXProject "Woke" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09A777001A11D8D9004AF902 /* Debug */,
+				09A777011A11D8D9004AF902 /* Release */,
+				DE458F44A2974B8C82603021 /* adhoc */,
+				50A0A4275D3E4AC4AF49E97D /* adhoc */,
+				86CF145E8486450799717E47 /* profiling */,
+				B1F3F60FFC3647879EA4CE2D /* profiling */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		09A777021A11D8D9004AF902 /* Build configuration list for PBXNativeTarget "Woke" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09A777031A11D8D9004AF902 /* Debug */,
+				09A777041A11D8D9004AF902 /* Release */,
+				E8EFDEBA57C3467EBFD6D61E /* adhoc */,
+				C6B55ABCC357471F8A39AEAB /* profiling */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		09A777051A11D8D9004AF902 /* Build configuration list for PBXNativeTarget "WokeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09A777061A11D8D9004AF902 /* Debug */,
+				09A777071A11D8D9004AF902 /* Release */,
+				2738B373D9E3409781FFBE87 /* adhoc */,
+				36533C93ADC54C2F8C03C451 /* profiling */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 09A776D71A11D8D9004AF902 /* Project object */;
+}
