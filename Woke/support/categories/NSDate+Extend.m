@@ -119,9 +119,10 @@
 }
 
 - (NSInteger)weekdayNumber{
-	NSCalendar *cal = [NSCalendar currentCalendar];
-	NSInteger weekdayOfDate = [cal ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:self];
-	return weekdayOfDate - 1; //0:sunday ... 6:saturday
+//	NSCalendar *cal = [NSCalendar currentCalendar];
+//	NSInteger weekdayOfDate = [cal ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:self];
+//	return weekdayOfDate - 1; //0:sunday ... 6:saturday
+    return 0;
 }
 
 - (NSDate *)nextOccurTime:(NSInteger)n withExtraSeconds:(NSInteger)seconds{
@@ -231,7 +232,7 @@
 	NSDateComponents* deltaComps = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:self];
 	NSInteger min = deltaComps.hour * 60 + deltaComps.minute;
 	if (min % 10 != 0) {
-		NSLog(@"Something wrong with the time input: %@", self.date2detailDateString);
+		DDLogError(@"Something wrong with the time input: %@", self.date2detailDateString);
 	}
 	return min;
 }
@@ -243,7 +244,7 @@
 }
 
 - (NSString *)timeLeft{
-	NSInteger left = [self timeIntervalSinceNow];
+	NSTimeInterval left = [self timeIntervalSinceNow];
 	if (left<0) {
 		return @"";
 	}
@@ -251,15 +252,15 @@
 	return [NSDate getStringFromTime:left];
 }
 
-+ (NSString *)getStringFromTime:(float)time{
++ (NSString *)getStringFromTime:(NSTimeInterval)time{
 	
 	NSString *timeStr;
-	time = abs(time);
+	time = fabs(time);
 	NSInteger t = (NSInteger)time;
-	float days = time / 3600 / 24;
-	float hours = (t % (3600*24)) / 3600;
-	float minutes = floor((t % 3600)/60);
-	float seconds = t % 60;
+	CGFloat days = time / 3600 / 24;
+	CGFloat hours = (t % (3600*24)) / 3600;
+	CGFloat minutes = floor((t % 3600)/60);
+	CGFloat seconds = t % 60;
 	
 	if (days >=2) {
 		timeStr = [NSString stringWithFormat:@"%ld days", (long)days];

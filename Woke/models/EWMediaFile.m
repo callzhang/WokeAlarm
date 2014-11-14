@@ -44,7 +44,7 @@
     CGRect newRect = CGRectMake(0, 0, 40, 40);
     
     //ratio
-    float ratio = MAX(newRect.size.width/origImageSize.width, newRect.size.height/origImageSize.height);
+    CGFloat ratio = MAX(newRect.size.width/origImageSize.width, newRect.size.height/origImageSize.height);
     
     //****Creates a bitmap-based graphics context with the specified options.
     UIGraphicsBeginImageContextWithOptions(newRect.size, NO, 0.0);
