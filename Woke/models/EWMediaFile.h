@@ -8,5 +8,5 @@
 + (EWMediaFile *)newMediaFile;
 //- (void)remove;
 + (EWMediaFile *)findMediaFileByID:(NSString *)ID;
-- (BOOL)validate;
+
 @end

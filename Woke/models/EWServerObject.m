@@ -13,6 +13,9 @@
     NSParameterAssert(YES);
     return NO;
 }
-// Custom logic goes here.
+
+- (NSString *)serverID{
+    return self.objectId;
+}
 
 @end

@@ -7,6 +7,7 @@
 extern const struct EWMediaFileAttributes {
 	__unsafe_unretained NSString *audio;
 	__unsafe_unretained NSString *image;
+	__unsafe_unretained NSString *owner;
 	__unsafe_unretained NSString *thumbnail;
 	__unsafe_unretained NSString *video;
 } EWMediaFileAttributes;
@@ -38,6 +39,10 @@ extern const struct EWMediaFileRelationships {
 
 //- (BOOL)validateImage:(id*)value_ error:(NSError**)error_;
 
+@property (nonatomic, strong) NSString* owner;
+
+//- (BOOL)validateOwner:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) id thumbnail;
 
 //- (BOOL)validateThumbnail:(id*)value_ error:(NSError**)error_;
@@ -67,6 +72,9 @@ extern const struct EWMediaFileRelationships {
 
 - (id)primitiveImage;
 - (void)setPrimitiveImage:(id)value;
+
+- (NSString*)primitiveOwner;
+- (void)setPrimitiveOwner:(NSString*)value;
 
 - (id)primitiveThumbnail;
 - (void)setPrimitiveThumbnail:(id)value;

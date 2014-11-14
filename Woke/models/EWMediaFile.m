@@ -14,7 +14,9 @@
 
 + (EWMediaFile *)newMediaFile{
     EWMediaFile *mediaFile = [EWMediaFile MR_createEntity];
-    mediaFile.owner
+    mediaFile.owner = [EWSession sharedSession].currentUser.serverID;
+    mediaFile.updatedAt = [NSDate date];
+    return mediaFile;
 }
 
 - (NSString *)audioKey{
@@ -44,7 +46,7 @@
     CGRect newRect = CGRectMake(0, 0, 40, 40);
     
     //ratio
-    float ratio = MAX(newRect.size.width/origImageSize.width, newRect.size.height/origImageSize.height);
+    CGFloat ratio = MAX(newRect.size.width/origImageSize.width, newRect.size.height/origImageSize.height);
     
     //****Creates a bitmap-based graphics context with the specified options.
     UIGraphicsBeginImageContextWithOptions(newRect.size, NO, 0.0);
@@ -78,5 +80,10 @@
     return smallImage;
 }
 
+
+- (BOOL)validate{
+    //TODO
+    return YES;
+}
 
 @end
