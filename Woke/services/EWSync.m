@@ -53,7 +53,7 @@ NSManagedObjectContext *mainContext;
     //core data
     [MagicalRecord setupCoreDataStack];
     [MagicalRecord setLoggingLevel:MagicalRecordLoggingLevelWarn];
-    _context = [NSManagedObjectContext defaultContext];
+    _context = [NSManagedObjectContext MR_defaultContext];
     mainContext = _context;
     
     //observe context change to update the modifiedData of that MO. (Only observe the main context)
@@ -662,7 +662,7 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Core Data
-+ (NSManagedObject *)managedObjectWithClass:(NSString *)className withID:(NSString *)serverID{
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID{
 	NSParameterAssert([NSThread isMainThread]);
     if (serverID == nil) {
         NSLog(@"!!! Passed in nil to get current MO");
@@ -683,9 +683,9 @@ NSManagedObjectContext *mainContext;
 }
 
 + (void)save{
-	NSAssert([NSThread isMainThread], @"Calling +[self save] on background context is not allowed. Use [context saveToPersistantStoreAndSave] instead");
+	NSAssert([NSThread isMainThread], @"Calling +[self save] on background context is not allowed. Use [context saveWithBlock:] instead");
 	if (mainContext.hasChanges) {
-		[mainContext saveToPersistentStoreAndWait];
+		[mainContext saveWithBlock:nil];
 	}
 }
 

@@ -13,7 +13,6 @@
 #import "EWUIUtil.h"
 #import "UIViewController+Blur.h"
 #import "NSDate+Extend.h"
-#import "FTWCache.h"
 
 // Model
 #import "EWPerson.h"

@@ -24,12 +24,14 @@
 //view
 //TODO: #import "EWWakeUpViewController.h"
 #import "EWAVManager.h"
-#import "UIAlertView+.h"
+//#import "UIAlertView+.h"
 #import "EWSleepViewController.h"
 
 //Tool
 #import "EWUIUtil.h"
 #import "EWAlarmManager.h"
+#import "FBRequestConnection.h"
+#import "FBSession.h"
 
 @implementation EWServer
 
@@ -102,7 +104,7 @@
 
 
 #pragma mark - Send Voice tone
-+ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person{
++ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block{
     
     NSString *mediaId = media.objectId;
     NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
@@ -131,11 +133,11 @@
     
     //push
     [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            [rootViewController.view showSuccessNotification:@"Sent"];
-        }else{
+        if (!succeeded) {
             NSLog(@"Send push message about media %@ failed. Reason:%@", mediaId, error.description);
-            [rootViewController.view showFailureNotification:@"Failed"];
+        }
+        if (block) {
+            block(succeeded);
         }
     }];
     
@@ -190,12 +192,13 @@
 
 + (void)registerAPNS{
     //push
-#if TARGET_IPHONE_SIMULATOR
-    //Code specific to simulator
-#else
-    //pushClient = [[SMPushClient alloc] initWithAPIVersion:@"0" publicKey:kStackMobKeyDevelopment privateKey:kStackMobKeyDevelopmentPrivate];
+#if !TARGET_IPHONE_SIMULATOR
     //register everytime in case for events like phone replacement
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNewsstandContentAvailability | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeNone;
+    UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+
 #endif
 }
 
@@ -318,61 +321,61 @@
 
 {
     
-    [FBRequestConnection startForUploadStagingResourceWithImage:image completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        //__block NSString *alertText;
-        //__block NSString *alertTitle;
-        __block NSString *urlString ;
-        if(!error) {
-            
-            NSArray *image = @[@{@"url": [result objectForKey:@"uri"], @"user_generated" : @"true" }];
-            
-            urlString = [result objectForKey:@"uri"];
-   
-            // Package image inside a dictionary, inside an array like we'll need it for the object
-            
-            
-            // Create an object
-            NSMutableDictionary<FBOpenGraphObject> *place = [FBGraphObject openGraphObjectForPost];
-            
-            // specify that this Open Graph object will be posted to Facebook
-            place.provisionedForPost = YES;
-            
-            // Add the standard object properties
-            place[@"og"] = @{ @"title":@"Woke Now", @"type":@"woke_alarm:people", @"description":@"Woke up", @"image":image };
-            
-            // Add the properties restaurant inherits from place
-            place[@"place"] = @{ @"location" : @{ @"longitude": @"-58.381667", @"latitude":@"-34.603333"} };
-            
-            // Add the properties particular to the type restaurant.restaurant
-            place[@"restaurant"] = @{@"category": @[@"Mexican"],
-                                          @"contact_info": @{@"street_address": @"123 Some st",
-                                                             @"locality": @"Menlo Park",
-                                                             @"region": @"CA",
-                                                             @"phone_number": @"555-555-555",
-                                                             @"website": @"http://www.example.com"}};
-            
-            // Make the Graph API request to post the object
-            FBRequest *request = [FBRequest requestForPostWithGraphPath:@"me/objects/woke_alarm:people"
-                                                            graphObject:@{@"object":place}];
-            [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                if (!error) {
-                    // Success! Include your code to handle the results here
-                    NSLog(@"result: %@", result);
-                    NSString *  _objectID = [result objectForKey:@"id"];
-                    [EWServer publishOpenGraphUsingAPICallsWithObjectId:_objectID andUrlString:urlString];
-                    
-                } else {
-                    // An error occurred, we need to handle the error
-                    // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                    NSLog(@"error %@", error.description);
-                }
-            }];
-        } else {
-            // An error occurred, we need to handle the error
-            // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-            NSLog(@"error %@", error.description);
-        }
-    }];
+//    [FBRequestConnection startForUploadStagingResourceWithImage:image completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//        //__block NSString *alertText;
+//        //__block NSString *alertTitle;
+//        __block NSString *urlString ;
+//        if(!error) {
+//            
+//            NSArray *_image = @[@{@"url": [result objectForKey:@"uri"], @"user_generated" : @"true" }];
+//            
+//            urlString = [result objectForKey:@"uri"];
+//   
+//            // Package image inside a dictionary, inside an array like we'll need it for the object
+//            
+//            
+//            // Create an object
+//            NSMutableDictionary<FBOpenGraphObject> *place = [FBGraphObject openGraphObjectForPost];
+//            
+//            // specify that this Open Graph object will be posted to Facebook
+//            place.provisionedForPost = YES;
+//            
+//            // Add the standard object properties
+//            place[@"og"] = @{ @"title":@"Woke Now", @"type":@"woke_alarm:people", @"description":@"Woke up", @"image":_image };
+//            
+//            // Add the properties restaurant inherits from place
+//            place[@"place"] = @{ @"location" : @{ @"longitude": @"-58.381667", @"latitude":@"-34.603333"} };
+//            
+//            // Add the properties particular to the type restaurant.restaurant
+//            place[@"restaurant"] = @{@"category": @[@"Mexican"],
+//                                          @"contact_info": @{@"street_address": @"123 Some st",
+//                                                             @"locality": @"Menlo Park",
+//                                                             @"region": @"CA",
+//                                                             @"phone_number": @"555-555-555",
+//                                                             @"website": @"http://www.example.com"}};
+//            
+//            // Make the Graph API request to post the object
+//            FBRequest *request = [FBRequest requestForPostWithGraphPath:@"me/objects/woke_alarm:people"
+//                                                            graphObject:@{@"object":place}];
+//            [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//                if (!error) {
+//                    // Success! Include your code to handle the results here
+//                    NSLog(@"result: %@", result);
+//                    NSString *  _objectID = [result objectForKey:@"id"];
+//                    [EWServer publishOpenGraphUsingAPICallsWithObjectId:_objectID andUrlString:urlString];
+//                    
+//                } else {
+//                    // An error occurred, we need to handle the error
+//                    // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+//                    NSLog(@"error %@", error.description);
+//                }
+//            }];
+//        } else {
+//            // An error occurred, we need to handle the error
+//            // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+//            NSLog(@"error %@", error.description);
+//        }
+//    }];
 
 }
 
@@ -393,27 +396,27 @@
         action[@"people"] = objectId;
         
         // Post the action to Facebook
-        [FBRequestConnection startForPostWithGraphPath:@"me/woke_alarm:woke"
-                                           graphObject:action
-                                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                         __block NSString *alertText;
-                                         __block NSString *alertTitle;
-                                         if (!error) {
-                                             // Success, the restaurant has been liked
-                                             NSLog(@"Posted OG action, id: %@", [result objectForKey:@"id"]);
-                                             alertText = [NSString stringWithFormat:@"Posted OG action, id: %@", [result objectForKey:@"id"]];
-                                             alertTitle = @"Success";
-                                             [[[UIAlertView alloc] initWithTitle:alertTitle
-                                                                         message:alertText
-                                                                        delegate:self
-                                                               cancelButtonTitle:@"OK!"
-                                                               otherButtonTitles:nil] show];
-                                         } else {
-                                             // An error occurred, we need to handle the error
-                                             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                             NSLog(@"error %@", error.description);
-                                         }
-                                     }];
+//        [FBRequestConnection startForPostWithGraphPath:@"me/woke_alarm:woke"
+//                                           graphObject:action
+//                                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//                                         __block NSString *alertText;
+//                                         __block NSString *alertTitle;
+//                                         if (!error) {
+//                                             // Success, the restaurant has been liked
+//                                             NSLog(@"Posted OG action, id: %@", [result objectForKey:@"id"]);
+//                                             alertText = [NSString stringWithFormat:@"Posted OG action, id: %@", [result objectForKey:@"id"]];
+//                                             alertTitle = @"Success";
+//                                             [[[UIAlertView alloc] initWithTitle:alertTitle
+//                                                                         message:alertText
+//                                                                        delegate:self
+//                                                               cancelButtonTitle:@"OK!"
+//                                                               otherButtonTitles:nil] show];
+//                                         } else {
+//                                             // An error occurred, we need to handle the error
+//                                             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+//                                             NSLog(@"error %@", error.description);
+//                                         }
+//                                     }];
         
     }
     

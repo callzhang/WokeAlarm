@@ -48,6 +48,18 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 4
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 1
 
+// APAddressBook
+#define COCOAPODS_POD_AVAILABLE_APAddressBook
+#define COCOAPODS_VERSION_MAJOR_APAddressBook 0
+#define COCOAPODS_VERSION_MINOR_APAddressBook 1
+#define COCOAPODS_VERSION_PATCH_APAddressBook 4
+
+// APAddressBook/Core
+#define COCOAPODS_POD_AVAILABLE_APAddressBook_Core
+#define COCOAPODS_VERSION_MAJOR_APAddressBook_Core 0
+#define COCOAPODS_VERSION_MINOR_APAddressBook_Core 1
+#define COCOAPODS_VERSION_PATCH_APAddressBook_Core 4
+
 // BlocksKit
 #define COCOAPODS_POD_AVAILABLE_BlocksKit
 #define COCOAPODS_VERSION_MAJOR_BlocksKit 2
@@ -121,6 +133,18 @@
 // Please contact the author.
 // Version: 2.2.5.1.
 
+// CrashlyticsLumberjack
+#define COCOAPODS_POD_AVAILABLE_CrashlyticsLumberjack
+#define COCOAPODS_VERSION_MAJOR_CrashlyticsLumberjack 1
+#define COCOAPODS_VERSION_MINOR_CrashlyticsLumberjack 0
+#define COCOAPODS_VERSION_PATCH_CrashlyticsLumberjack 1
+
+// DACircularProgress
+#define COCOAPODS_POD_AVAILABLE_DACircularProgress
+#define COCOAPODS_VERSION_MAJOR_DACircularProgress 2
+#define COCOAPODS_VERSION_MINOR_DACircularProgress 2
+#define COCOAPODS_VERSION_PATCH_DACircularProgress 0
+
 // Facebook-iOS-SDK
 #define COCOAPODS_POD_AVAILABLE_Facebook_iOS_SDK
 #define COCOAPODS_VERSION_MAJOR_Facebook_iOS_SDK 3
@@ -132,6 +156,12 @@
 #define COCOAPODS_VERSION_MAJOR_GPUImage 0
 #define COCOAPODS_VERSION_MINOR_GPUImage 1
 #define COCOAPODS_VERSION_PATCH_GPUImage 6
+
+// IDMPhotoBrowser
+#define COCOAPODS_POD_AVAILABLE_IDMPhotoBrowser
+#define COCOAPODS_VERSION_MAJOR_IDMPhotoBrowser 1
+#define COCOAPODS_VERSION_MINOR_IDMPhotoBrowser 4
+#define COCOAPODS_VERSION_PATCH_IDMPhotoBrowser 0
 
 // JGProgressHUD
 #define COCOAPODS_POD_AVAILABLE_JGProgressHUD
@@ -193,6 +223,13 @@
 #define COCOAPODS_VERSION_MINOR_Parse 5
 #define COCOAPODS_VERSION_PATCH_Parse 0
 
+// ParseFacebookUtils
+#define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 1.5.0.1.
+
 // RHAddressBook
 #define COCOAPODS_POD_AVAILABLE_RHAddressBook
 #define COCOAPODS_VERSION_MAJOR_RHAddressBook 1
@@ -216,6 +253,18 @@
 #define COCOAPODS_VERSION_MAJOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_MINOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_PATCH_VBFPopFlatButton 5
+
+// apptentive-ios
+#define COCOAPODS_POD_AVAILABLE_apptentive_ios
+#define COCOAPODS_VERSION_MAJOR_apptentive_ios 1
+#define COCOAPODS_VERSION_MINOR_apptentive_ios 6
+#define COCOAPODS_VERSION_PATCH_apptentive_ios 0
+
+// apptentive-ios/arc-files
+#define COCOAPODS_POD_AVAILABLE_apptentive_ios_arc_files
+#define COCOAPODS_VERSION_MAJOR_apptentive_ios_arc_files 1
+#define COCOAPODS_VERSION_MINOR_apptentive_ios_arc_files 6
+#define COCOAPODS_VERSION_PATCH_apptentive_ios_arc_files 0
 
 // pop
 #define COCOAPODS_POD_AVAILABLE_pop

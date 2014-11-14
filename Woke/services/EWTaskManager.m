@@ -152,7 +152,7 @@
 - (EWTaskItem *)getTaskByID:(NSString *)taskID{
     if (!taskID) return nil;
     
-    EWTaskItem *task = (EWTaskItem *)[EWSync managedObjectWithClass:@"EWTaskItem" withID:taskID];
+    EWTaskItem *task = (EWTaskItem *)[EWSync findObjectWithClass:@"EWTaskItem" withID:taskID];
     return task;
 }
 

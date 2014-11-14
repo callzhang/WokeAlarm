@@ -7,8 +7,6 @@
 //
 
 #import "EWMessage.h"
-#import "EWGroup.h"
-//#import "EWPerson.h"
 
 
 

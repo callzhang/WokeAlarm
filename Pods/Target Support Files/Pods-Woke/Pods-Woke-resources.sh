@@ -48,6 +48,8 @@ install_resource()
                     install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
                     install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"
                     install_resource "GPUImage/framework/Resources/lookup_soft_elegance_2.png"
+                    install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
+                    install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
                     install_resource "JGProgressHUD/JGProgressHUD/JGProgressHUD/JGProgressHUD Resources.bundle"
                     install_resource "KZBootstrap/Pod/Assets/Scripts/bootstrap.sh"
                     install_resource "KZBootstrap/Pod/Assets/Scripts/buildNumber.sh"
@@ -56,6 +58,7 @@ install_resource()
                     install_resource "KZBootstrap/Pod/Assets/Scripts/processEnvironments.swift"
                     install_resource "KZBootstrap/Pod/Assets/Scripts/todo.sh"
                     install_resource "KZBootstrap/Pod/Assets/Scripts/user.sh"
+                    install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
           
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 if [[ "${ACTION}" == "install" ]]; then

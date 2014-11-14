@@ -14,8 +14,6 @@
 #import "EWAlarmManager.h"
 //#import "EWTaskManager.h"
 #import "NSDate+Extend.h"
-#import "EWAppDelegate.h"
-#import "EWLogInViewController.h"
 #import "EWDataStore.h"
 #import "EWUserManagement.h"
 #import "EWNotificationManager.h"
@@ -53,7 +51,7 @@
 -(EWPerson *)getPersonByServerID:(NSString *)ID{
     NSParameterAssert([NSThread isMainThread]);
     if(!ID) return nil;
-    EWPerson *person = (EWPerson *)[EWSync managedObjectWithClass:@"EWPerson" withID:ID];
+    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:@"EWPerson" withID:ID];
     
     return person;
 }
@@ -78,7 +76,7 @@
     //fetch from sever
     [self getEveryoneInContext:mainContext];
     
-    NSArray *allPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] MR_inContext:mainContext];
+    NSArray *allPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
     everyone = [allPerson sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"score" ascending:NO]]];
     return everyone;
     
@@ -89,7 +87,7 @@
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         [self getEveryoneInContext:localContext];
     }completion:^(BOOL success, NSError *error) {
-        NSArray *allPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] MR_inContext:mainContext];
+        NSArray *allPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
         everyone = [allPerson sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"score" ascending:NO]]];
         if (block) {
             block();
@@ -156,7 +154,7 @@
     }
     
     //make sure the rest of people's score is revert back to 0
-    NSArray *otherLocalPerson = [EWPerson findAllWithPredicate:[NSPredicate predicateWithFormat:@"(NOT %K IN %@) AND score > 0 AND %K != %@", kParseObjectID, [people valueForKey:kParseObjectID], kParseObjectID, [EWSession sharedSession].currentUser.objectId] MR_inContext:context];
+    NSArray *otherLocalPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"(NOT %K IN %@) AND score > 0 AND %K != %@", kParseObjectID, [people valueForKey:kParseObjectID], kParseObjectID, [EWSession sharedSession].currentUser.objectId] inContext:context];
     for (EWPerson *person in otherLocalPerson) {
         person.score = 0;
     }

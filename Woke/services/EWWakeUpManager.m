@@ -161,7 +161,7 @@
         NSParameterAssert(alarmID || alarmLocalID);
         if (alarmID) {
             isLaunchedFromRemoteNotification = YES;
-            alarm = (EWAlarm *)[EWSync managedObjectWithClass:@"EWAlarm" withID:alarmID];
+            alarm = (EWAlarm *)[EWSync findObjectWithClass:@"EWAlarm" withID:alarmID];
         }else if (alarmLocalID){
             isLaunchedFromLocalNotification = YES;
             NSURL *url = [NSURL URLWithString:alarmLocalID];

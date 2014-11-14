@@ -17,10 +17,6 @@
 #pragma mark - Handle Local Notification
 + (void)handleLocalNotification:(UILocalNotification *)localNotif;
 
-/**
- Send buzz
- */
-+ (void)buzz:(NSArray *)users;
 
 /**
  Send push notification for media
@@ -28,7 +24,7 @@
  @params users: array of EWPerson
  @params taskId: taskId
  */
-+ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person;
++ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block;
 
 #pragma mark - Push methods
 + (void)broadcastMessage:(NSString *)msg onSuccess:(void (^)(void))block onFailure:(void (^)(void))failureBlock;
@@ -77,11 +73,11 @@
 
 + (void)searchForFriendsOnServer;
 
-+(void)publishOpenGraphUsingAPICallsWithObjectId:(NSString *)objectId andUrlString:(NSString *)url;
+//+(void)publishOpenGraphUsingAPICallsWithObjectId:(NSString *)objectId andUrlString:(NSString *)url;
 
-+(void)publishOpenGraphUsingShareDialog;// un wirte
+//+(void)publishOpenGraphUsingShareDialog;// un wirte
 
-+(void)makeRequestToPostStory;
+//+(void)makeRequestToPostStory;
 
 +(void)updatingStatusInFacebook:(NSString *)status;
 

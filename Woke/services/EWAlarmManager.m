@@ -142,7 +142,7 @@
     for (EWAlarm *a in alarms) {
         
         //get the day alarm represents
-        NSInteger i = [a.time weekdayNumber];
+        NSInteger i = a.time.mt_weekdayOfWeek;
         
         //see if that day has alarm already
         if (![newAlarms[i] isEqual:@NO]){
@@ -214,7 +214,7 @@
     NSDate *today = [NSDate date];
     NSCalendar *cal = [NSCalendar currentCalendar];//TIMEZONE
     NSDateComponents *comp = [NSDateComponents new];//used as a dic to hold time diff
-    comp.day = targetDay - today.weekdayNumber;
+    comp.day = targetDay - today.mt_weekdayOfWeek;
     NSDate *time = [cal dateByAddingComponents:comp toDate:today options:0];//set the weekday
     comp = [cal components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:time];//get the target date
     NSArray *alarmTimes = [self getSavedAlarmTimes];
