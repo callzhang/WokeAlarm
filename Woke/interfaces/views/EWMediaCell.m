@@ -75,7 +75,7 @@
         double len = p.duration;
         double ratio = len/30/2 + 0.5;
         if (ratio > 1.0) ratio = 1.0;
-        self.mediaBar.width = progressBarLength * ratio;
+        self.mediaBar.width = progressBarLength * (float)ratio;
         
         [self setNeedsDisplay];
     }else{

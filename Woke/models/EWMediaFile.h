@@ -6,7 +6,7 @@
 @property (nonatomic, retain) NSString *audioKey;
 
 + (EWMediaFile *)newMediaFile;
-- (void)remove;
+//- (void)remove;
 + (EWMediaFile *)findMediaFileByID:(NSString *)ID;
 - (BOOL)validate;
 @end

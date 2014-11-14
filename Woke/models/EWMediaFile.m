@@ -12,6 +12,11 @@
 @synthesize audioKey;
 @dynamic image;
 
++ (EWMediaFile *)newMediaFile{
+    EWMediaFile *mediaFile = [EWMediaFile MR_createEntity];
+    mediaFile.owner
+}
+
 - (NSString *)audioKey{
     if (audioKey) {
         return audioKey;
