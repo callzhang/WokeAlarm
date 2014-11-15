@@ -6,25 +6,26 @@
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
 
-#import "EWSocialGraphManager.h"
+#import "EWSocialManager.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 #import "APAddressBook.h"
 #import "APContact.h"
+#import "NSArray+BlocksKit.h"
 
-@interface EWSocialGraphManager()
+@interface EWSocialManager()
 @property (nonatomic, strong) APAddressBook *addressBook;
 @end
 
-@implementation EWSocialGraphManager
+@implementation EWSocialManager
 
-+ (EWSocialGraphManager *)sharedInstance{
-    static EWSocialGraphManager *manager;
++ (EWSocialManager *)sharedInstance{
+    static EWSocialManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!manager) {
-            manager = [[EWSocialGraphManager alloc] init];
+            manager = [[EWSocialManager alloc] init];
         }
     });
     
@@ -39,15 +40,15 @@
     return _addressBook;
 }
 
-- (EWSocialGraph *)mySocialGraph{
-    EWSocialGraph *sg = [EWSession sharedSession].currentUser.socialGraph;
+- (EWSocial *)mySocialGraph{
+    EWSocial *sg = [EWSession sharedSession].currentUser.socialGraph;
     if (!sg) {
         sg = [self  createSocialGraphForPerson:[EWSession sharedSession].currentUser];
     }
     return sg;
 }
 
-- (EWSocialGraph *)socialGraphForPerson:(EWPerson *)person{
+- (EWSocial *)socialGraphForPerson:(EWPerson *)person{
     if (person.socialGraph) {
         return person.socialGraph;
     }
@@ -56,10 +57,10 @@
         //first check from PFUser
         PFObject *sg = [PFUser currentUser][EWPersonRelationships.socialGraph];
         if (sg) {
-            EWSocialGraph *socialGraph = [sg managedObjectInContext:mainContext];
+            EWSocial *socialGraph = [sg managedObjectInContext:mainContext];
         }
         //need to create one for self
-        EWSocialGraph *graph = [self createSocialGraphForPerson:person];
+        EWSocial *graph = [self createSocialGraphForPerson:person];
         return graph;
     }
 
@@ -67,8 +68,8 @@
     return person.socialGraph;
 }
 
-- (EWSocialGraph *)createSocialGraphForPerson:(EWPerson *)person{
-    EWSocialGraph *sg = [EWSocialGraph MR_createEntityInContext:person.managedObjectContext];
+- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person{
+    EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
     sg.updatedAt = [NSDate date];
 
     //data

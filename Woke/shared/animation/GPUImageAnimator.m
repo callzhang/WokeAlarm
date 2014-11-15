@@ -16,6 +16,7 @@
 #import "GPUImageToneCurveFilter.h"
 #import "GPUImageNormalBlendFilter.h"
 //#import "EWAppDelegate.h"
+#import "UIView+Extend.h"
 
 
 static const CGFloat duration = 0.3;

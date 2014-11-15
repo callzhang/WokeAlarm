@@ -14,7 +14,7 @@
 #import "EWAlarm.h"
 #import "EWAlarmManager.h"
 #import "EWDataStore.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 #import "EWPersonManager.h"
 #import "AFNetworking.h"
 #import "EWStatisticsManager.h"

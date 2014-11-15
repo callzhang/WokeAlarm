@@ -7,7 +7,7 @@
 //
 
 #import "EWDataStore.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 #import "EWPersonManager.h"
 #import "EWMediaManager.h"
 //#import "EWTaskManager.h"
@@ -89,11 +89,11 @@
     
     //updating facebook friends
     DDLogVerbose(@"5. Updating facebook friends");
-    [EWUserManagement getFacebookFriends];
+    [EWUserManager getFacebookFriends];
     
     //update facebook info
     //DDLogVerbose(@"6. Updating facebook info");
-    //[EWUserManagement updateFacebookInfo];
+    //[EWUserManager updateFacebookInfo];
 	DDLogVerbose(@"6. Check scheduled local notifications");
 	[[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
     
@@ -103,7 +103,7 @@
 	
 	//location
 	DDLogVerbose(@"8. Start location recurring update");
-	[EWUserManagement registerLocation];
+	[EWUserManager registerLocation];
 	
     
     //update data with timely updates
@@ -140,7 +140,7 @@
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
 		DDLogVerbose(@"[2] Start location recurring update");
-		[EWUserManagement registerLocation];
+		[EWUserManager registerLocation];
 	}
     
 }

@@ -17,7 +17,6 @@
 #define kAppVersion                     @"0.8.0"
 #define BACKGROUND_TEST                 YES
 
-
 #define kCustomWhite                    EWSTR2COLOR(@"#F5F5F5")
 #define kCustomGray                     EWSTR2COLOR(@"48494B")
 #define kColorMediumGray                EWSTR2COLOR(@"7e7e7e")
@@ -35,7 +34,7 @@ typedef void (^ArrayBlock)(NSArray *array);
 typedef void (^FloatBlock)(float percent);
 typedef void (^SenderBlock)(id sender);
 
-
+#define ringtoneNameList                @[@"Autumn Spring.caf", @"Daybreak.caf", @"Drive.caf", @"Parisian Dream.caf", @"Sunny Afternoon.caf", @"Tropical Delight.caf"]
 
 // Keys
 #define kParseKeyDevelopment            @"4757c535-5583-46f9-8a55-3b8276d96f06"
@@ -66,7 +65,7 @@ typedef void (^SenderBlock)(id sender);
 #define TOCK                            NSLog(@"Time: %f", -[startTime timeIntervalSinceNow]);
 
 //Logging
-#define NSLog                           EWLog
+//#define NSLog                           EWLog
 
 //Global parameters
 #define nWeeksToSchedule				1

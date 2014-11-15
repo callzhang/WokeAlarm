@@ -45,7 +45,7 @@ extern const struct EWPersonFetchedProperties {
 @class EWPerson;
 @class EWMedia;
 @class EWNotification;
-@class EWSocialGraph;
+@class EWSocial;
 @class EWMedia;
 
 @class NSObject;
@@ -306,7 +306,7 @@ extern const struct EWPersonFetchedProperties {
 
 
 
-@property (nonatomic, strong) EWSocialGraph *socialGraph;
+@property (nonatomic, strong) EWSocial *socialGraph;
 
 //- (BOOL)validateSocialGraph:(id*)value_ error:(NSError**)error_;
 
@@ -507,8 +507,8 @@ extern const struct EWPersonFetchedProperties {
 
 
 
-- (EWSocialGraph*)primitiveSocialGraph;
-- (void)setPrimitiveSocialGraph:(EWSocialGraph*)value;
+- (EWSocial*)primitiveSocialGraph;
+- (void)setPrimitiveSocialGraph:(EWSocial*)value;
 
 
 

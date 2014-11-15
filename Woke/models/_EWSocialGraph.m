@@ -23,16 +23,16 @@ const struct EWSocialGraphRelationships EWSocialGraphRelationships = {
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"EWSocialGraph" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"EWSocial" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"EWSocialGraph";
+	return @"EWSocial";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"EWSocialGraph" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"EWSocial" inManagedObjectContext:moc_];
 }
 
 - (EWSocialGraphID*)objectID {

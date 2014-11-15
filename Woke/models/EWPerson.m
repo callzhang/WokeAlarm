@@ -10,7 +10,7 @@
 #import "EWPersonManager.h"
 #import "EWAlarm.h"
 #import "EWNotificationManager.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 #import "EWStatisticsManager.h"
 
 @implementation EWPerson
@@ -83,7 +83,7 @@
 }
 
 + (EWAlarm *)myNextAlarm {
-    float interval;
+    float interval = CGFLOAT_MAX;
     EWAlarm *next;
     for (EWAlarm *alarm in [self myAlarms]) {
         float timeLeft = alarm.time.nextOccurTime.timeIntervalSinceNow;
@@ -105,8 +105,8 @@
     NSMutableArray *alarms = [[user.alarms allObjects] mutableCopy];
     
     NSComparator alarmComparator = ^NSComparisonResult(id obj1, id obj2) {
-        NSInteger wkd1 = [(EWAlarm *)obj1 time].weekdayNumber;
-        NSInteger wkd2 = [(EWAlarm *)obj2 time].weekdayNumber;
+        NSInteger wkd1 = [(EWAlarm *)obj1 time].mt_weekdayOfWeek;
+        NSInteger wkd2 = [(EWAlarm *)obj2 time].mt_weekdayOfWeek;
         if (wkd1 > wkd2) {
             return NSOrderedDescending;
         }else if (wkd1 < wkd2){
@@ -219,7 +219,7 @@
             [localMe refreshRelatedWithCompletion:^{
                 
                 [EWPerson updateCachedFriends];
-                [EWUserManagement updateFacebookInfo];
+                [EWUserManager updateFacebookInfo];
             }];
             //TODO: we need a better sync method
             //1. query for medias
@@ -273,7 +273,7 @@
     }
     
     if (needRefreshFacebook) {
-        [EWUserManagement updateFacebookInfo];
+        [EWUserManager updateFacebookInfo];
     }
     
     //preference

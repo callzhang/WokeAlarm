@@ -9,6 +9,7 @@
 #import "EWSync.h"
 #import "EWUIUtil.h"
 #import "EWServerObject.h"
+#import "PFFacebookUtils.h"
 
 #define kPFQueryCacheLife		60*60;
 
@@ -79,13 +80,14 @@ NSManagedObjectContext *mainContext;
         NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh];
         for (NSManagedObject *MO in MOs) {
             [MO refreshInBackgroundWithCompletion:^{
-                NSLog(@"%@(%@) refreshed after network resumed.", MO.entity.name, MO.serverID);
+                DDLogInfo(@"%@(%@) refreshed after network resumed.", MO.entity.name, MO.serverID);
             }];
         }
     };
     self.reachability.unreachableBlock = ^(Reachability * reachability){
         DDLogInfo(@"====== Network is unreachable ======");
-        [EWUIUtil showHUDWithString:@"Offline"];
+        //TODO
+        //[EWUIUtil showHUDWithString:@"Offline"];
     };
     
     //facebook

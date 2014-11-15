@@ -11,8 +11,11 @@
 #import <AdSupport/ASIdentifierManager.h>
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
-//#import "TestFlightLogger.h"
 #import <CrashlyticsLogger.h>
+#import "DDLog.h"
+#import "DDASLLogger.h"
+#import "DDTTYLogger.h"
+#import "DDFileLogger.h"
 
 //static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
@@ -127,14 +130,14 @@
     
     [NSURLConnection sendAsynchronousRequest:request queue:nil completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if (connectionError) {
-            NSLog(@"Failed to delete photo: %@", connectionError);
+            DDLogError(@"Failed to delete photo: %@", connectionError);
         }
     }];
     
 }
 
-//
-//#pragma mark - Logging
+
+#pragma mark - Logging
 //void EWLog(NSString *format, ...){
 //    
 //    
@@ -157,34 +160,34 @@
 //	}
 //	
 //}
-//
-//void EWLogInit(){
-//#ifdef DEBUG
-//    [DDLog addLogger:[DDASLLogger sharedInstance]];
-//	
-//    DDTTYLogger *log = [DDTTYLogger sharedInstance];
-//    [DDLog addLogger:log];
-//    
-//    // we also enable colors in Xcode debug console
-//    // because this require some setup for Xcode, commented out here.
-//    // https://github.com/CocoaLumberjack/CocoaLumberjack/wiki/XcodeColors
-//    [log setColorsEnabled:YES];
-//    [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:LOG_FLAG_ERROR];
-//	[log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:LOG_FLAG_WARN];
-//	[log setForegroundColor:[UIColor orangeColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
-//	//white for debug
-//	[log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
-//#endif
-//    
-//    //file logger
-//    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
-//    fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
-//    fileLogger.logFileManager.maximumNumberOfLogFiles = 7;//keep a week's log
-//    [DDLog addLogger:fileLogger];
-//    
-//    //crashlytics logger
-//    [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
-//}
+
+void EWLogInit(){
+#ifdef DEBUG
+    [DDLog addLogger:[DDASLLogger sharedInstance]];
+	
+    DDTTYLogger *log = [DDTTYLogger sharedInstance];
+    [DDLog addLogger:log];
+    
+    // we also enable colors in Xcode debug console
+    // because this require some setup for Xcode, commented out here.
+    // https://github.com/CocoaLumberjack/CocoaLumberjack/wiki/XcodeColors
+    [log setColorsEnabled:YES];
+    [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:LOG_FLAG_ERROR];
+	[log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:LOG_FLAG_WARN];
+	[log setForegroundColor:[UIColor orangeColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
+	//white for debug
+	[log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
+#endif
+    
+    //file logger
+    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
+    fileLogger.logFileManager.maximumNumberOfLogFiles = 7;//keep a week's log
+    [DDLog addLogger:fileLogger];
+    
+    //crashlytics logger
+    [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
+}
 
 
 

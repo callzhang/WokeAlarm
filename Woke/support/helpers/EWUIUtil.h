@@ -42,8 +42,8 @@
 
 + (BOOL)isMultitaskingSupported;
 
-+ (void)showHUDWithCheckMark:(NSString *)str;
-+ (void)showHUDWithString:(NSString *)str;
+//+ (void)showHUDWithCheckMark:(NSString *)str;
+//+ (void)showHUDWithString:(NSString *)str;
 
 + (NSString *)toString:(NSDictionary *)dic;
 
@@ -73,5 +73,5 @@
 
 + (UIImage *)resizeImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
-
++ (void)dismissHUDinView:(UIView *)view;
 @end

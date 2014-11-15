@@ -26,6 +26,8 @@ target 'Woke' do
   pod 'IDMPhotoBrowser', '~> 1.4'
   pod 'apptentive-ios', '~> 1.6.0'
   pod 'APAddressBook', '~> 0.1.4'
+  pod 'IDMPhotoBrowser', '~> 1.4'
+  pod 'MYBlurIntroductionView', '~> 1.0'
 end
 
 target 'WokeTests' do

@@ -32,6 +32,8 @@ extern const struct EWPersonRelationships {
 	__unsafe_unretained NSString *friends;
 	__unsafe_unretained NSString *medias;
 	__unsafe_unretained NSString *notifications;
+	__unsafe_unretained NSString *receivedMessages;
+	__unsafe_unretained NSString *sentMessages;
 	__unsafe_unretained NSString *socialGraph;
 	__unsafe_unretained NSString *unreadMedias;
 } EWPersonRelationships;
@@ -42,7 +44,9 @@ extern const struct EWPersonRelationships {
 @class EWPerson;
 @class EWMedia;
 @class EWNotification;
-@class EWSocialGraph;
+@class EWMessage;
+@class EWMessage;
+@class EWSocial;
 @class EWMedia;
 
 @class NSObject;
@@ -168,7 +172,15 @@ extern const struct EWPersonRelationships {
 
 - (NSMutableSet*)notificationsSet;
 
-@property (nonatomic, strong) EWSocialGraph *socialGraph;
+@property (nonatomic, strong) EWMessage *receivedMessages;
+
+//- (BOOL)validateReceivedMessages:(id*)value_ error:(NSError**)error_;
+
+@property (nonatomic, strong) EWMessage *sentMessages;
+
+//- (BOOL)validateSentMessages:(id*)value_ error:(NSError**)error_;
+
+@property (nonatomic, strong) EWSocial *socialGraph;
 
 //- (BOOL)validateSocialGraph:(id*)value_ error:(NSError**)error_;
 
@@ -311,8 +323,14 @@ extern const struct EWPersonRelationships {
 - (NSMutableSet*)primitiveNotifications;
 - (void)setPrimitiveNotifications:(NSMutableSet*)value;
 
-- (EWSocialGraph*)primitiveSocialGraph;
-- (void)setPrimitiveSocialGraph:(EWSocialGraph*)value;
+- (EWMessage*)primitiveReceivedMessages;
+- (void)setPrimitiveReceivedMessages:(EWMessage*)value;
+
+- (EWMessage*)primitiveSentMessages;
+- (void)setPrimitiveSentMessages:(EWMessage*)value;
+
+- (EWSocial*)primitiveSocialGraph;
+- (void)setPrimitiveSocialGraph:(EWSocial*)value;
 
 - (NSMutableSet*)primitiveUnreadMedias;
 - (void)setPrimitiveUnreadMedias:(NSMutableSet*)value;

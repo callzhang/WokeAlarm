@@ -15,10 +15,11 @@
 //#import "EWTaskItem.h"
 //#import "EWTaskManager.h"
 #import "EWPersonViewController.h"
-#import "EWAppDelegate.h"
 #import "EWWakeUpManager.h"
 #import "EWServer.h"
 #import "EWStatisticsManager.h"
+#import "UIViewController+Blur.h"
+#import "UIView+Extend.h"
 
 #define kNextTaskHasMediaAlert      1011
 #define kFriendRequestAlert         1012
@@ -102,7 +103,7 @@
         if (notification.completed) {
             EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:person];
             UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-            [rootViewController presentWithBlur:navController withCompletion:^{
+            [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
                 //
             }];
         }else{
@@ -163,13 +164,13 @@
                 [[EWSession sharedSession].currentUser addFriendsObject:self.person];
                 [self.person addFriendsObject:[EWSession sharedSession].currentUser];
                 [EWNotificationManager sendFriendAcceptNotificationToUser:self.person];
-                [rootViewController.view showSuccessNotification:@"Accepted"];
+                [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"Accepted"];
                 break;
             }
             case 2:{ //profile
                 EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:self.person];
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-                [rootViewController presentWithBlur:navController withCompletion:^{
+                [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
                     //
                 }];
                 break;
@@ -188,7 +189,7 @@
             case 1:{//view profile
                 EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:self.person];
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-                [rootViewController presentWithBlur:navController withCompletion:^{
+                [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
                     //
                 }];
             }
@@ -244,7 +245,7 @@
              NSLog(@"Failed sending friendship request: %@", error.description);
              EWAlert(@"Network error, please send it later");
          }else{
-             [rootViewController.view showSuccessNotification:@"sent"];
+             [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
          }
      }];
 }
@@ -270,7 +271,7 @@
             NSLog(@"Failed sending friendship acceptance: %@", error.description);
             EWAlert(@"Network error, please send it later");
         }else{
-            [rootViewController.view showSuccessNotification:@"sent"];
+            [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
         }
         
     }];

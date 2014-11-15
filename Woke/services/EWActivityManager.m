@@ -10,6 +10,7 @@
 #import "EWPerson.h"
 #import "EWActivity.h"
 #import "EWAlarm.h"
+#import "NSArray+BlocksKit.h"
 
 NSString *const EWActivityTypeAlarm = @"alarm";
 NSString *const EWActivityTypeFriendship = @"friendship";

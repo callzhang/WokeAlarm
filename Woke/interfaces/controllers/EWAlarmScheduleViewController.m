@@ -20,7 +20,8 @@
 
 //backend
 #import "EWDataStore.h"
-#import "EWCostumTextField.h"
+//#import "EWCostumTextField.h"
+#import "UIView+Extend.h"
 
 static NSString *cellIdentifier = @"scheduleAlarmCell";
 
@@ -58,7 +59,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     if ([EWAlarmManager sharedInstance].isSchedulingAlarms) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [self.view showLoopingWithTimeout:0];
     }
 }
 
@@ -78,20 +79,20 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
             if ([keyPath isEqualToString:@"isSchedulingAlarm"]) {
                 if (![EWSession sharedSession].isSchedulingAlarm) {
                     DDLogInfo(@"Schedule view detected alarm finished scheduling");
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                    [EWUIUtil dismissHUDinView:self.view];
                     [self initData];
                     
                 }else{
                     DDLogInfo(@"Schedule View detect alarm schedule");
-                    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                    [self.view showLoopingWithTimeout:0];
                 }
             }
         });
         
     }else if (object == [EWSession sharedSession].currentUser){
-        [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+        [EWUIUtil dismissHUDinView:self.view];
         [self initData];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [self.view showLoopingWithTimeout:0];
     }
 }
 
@@ -107,12 +108,12 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
 }
 
 - (void)save{
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.view showLoopingWithTimeout:0];
     
     BOOL hasChanges = NO;
     
     
-    for (NSInteger i=0; i<alarms.count; i++) {
+    for (NSUInteger i=0; i < alarms.count; i++) {
         NSIndexPath *path = [NSIndexPath indexPathForItem:i inSection:0];
         EWAlarmEditCell *cell = (EWAlarmEditCell *)[_tableView cellForRowAtIndexPath:path];
         if (!cell ) {
@@ -154,7 +155,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
 		//save
     }
     
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [EWUIUtil dismissHUDinView:self.view];
 }
 
 #pragma mark - UI events

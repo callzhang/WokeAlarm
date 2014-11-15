@@ -9,12 +9,11 @@
 #import "EWWakeUpManager.h"
 #import "EWPersonManager.h"
 #import "EWAVManager.h"
-#import "EWAppDelegate.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
 #import "EWNotificationManager.h"
 #import "EWPerson.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 #import "EWServer.h"
 #import "ATConnect.h"
 #import "EWBackgroundingManager.h"
@@ -27,6 +26,11 @@
 #import "EWPostWakeUpViewController.h"
 #import "EWActivityManager.h"
 #import "EWAlarmManager.h"
+#import "AppDelegate.h"
+#import "UIView+Extend.h"
+#import "UIView+Blur.h"
+#import "NSTimer+BlocksKit.h"
+#import "UIViewController+Blur.h"
 
 
 @interface EWWakeUpManager()
@@ -293,7 +297,7 @@
 #pragma mark - Utility
 + (BOOL)isRootPresentingWakeUpView{
     //determin if WakeUpViewController is presenting
-    UIViewController *vc = rootViewController.presentedViewController;
+    UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
     if ([vc isKindOfClass:[EWWakeUpViewController class]]) {
         return YES;
     }else if ([vc isKindOfClass:[EWPostWakeUpViewController class]]){
@@ -317,7 +321,7 @@
         [EWWakeUpManager sharedInstance].controller = controller;
         
         //dispatch to main thread
-        [rootViewController presentWithBlur:controller withCompletion:NULL];
+        [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:controller withCompletion:NULL];
         
     }else{
         DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
@@ -331,7 +335,7 @@
     [EWWakeUpManager sharedInstance].isWakingUp = NO;
     
     //handle wakeup signel
-    [[ATConnect sharedConnection] engage:kWakeupSuccess fromViewController:rootViewController];
+    [[ATConnect sharedConnection] engage:kWakeupSuccess fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
     
     //set wakeup time, move to past, schedule and save
     [EWActivityManager completeActivity:activity];
@@ -407,10 +411,10 @@
         BOOL nextTaskMatched = [alarm.objectID.URIRepresentation.absoluteString isEqualToString:taskID];
         NSInteger h = alarm.time.timeIntervalSinceNow/3600;
         BOOL needSleep = h < duration.floatValue && h > 1;
-        BOOL presenting = rootViewController.presentedViewController;
+        BOOL presenting = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
         if (nextTaskMatched && needSleep && !presenting) {
             EWSleepViewController *controller = [[EWSleepViewController alloc] initWithNibName:nil bundle:nil];
-            [rootViewController presentViewControllerWithBlurBackground:controller];
+            [[UIApplication sharedApplication].delegate.window.rootViewController presentViewControllerWithBlurBackground:controller];
         }
         
     }

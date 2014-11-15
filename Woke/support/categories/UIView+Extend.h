@@ -11,16 +11,18 @@
 typedef enum{
     hudStyleSuccess,
     hudStyleFailed,
-    hudStyleWarning
+    hudStyleWarning,
+    HUDStyleInfo
 }HUDStyle;
-
+@class JGProgressHUD;
 @interface UIView(HUD)
 
-//- (void)showNotification:(NSString *)alert WithStyle:(HUDStyle)style;
-//- (void)showSuccessNotification:(NSString *)alert;
-//- (void)showFailureNotification:(NSString *)alert;
+- (JGProgressHUD *)showNotification:(NSString *)alert WithStyle:(HUDStyle)style audoHide:(float)timeout;
+- (JGProgressHUD *)showSuccessNotification:(NSString *)alert;
+- (JGProgressHUD *)showFailureNotification:(NSString *)alert;
+- (JGProgressHUD *)showLoopingWithTimeout:(float)timeout;
 @end
 
 @interface UIView (Sreenshot)
-//- (UIImage *)screenshot;
+- (UIImage *)screenshot;
 @end

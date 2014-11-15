@@ -7,18 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "EWSocialGraph.h"
+#import "EWSocial.h"
 @class EWPerson;
-@interface EWSocialGraphManager : NSObject
+@interface EWSocialManager : NSObject
 
-+ (EWSocialGraphManager *)sharedInstance;
++ (EWSocialManager *)sharedInstance;
 
 //Search
-- (EWSocialGraph *)mySocialGraph;
-- (EWSocialGraph *)socialGraphForPerson:(EWPerson *)person;
+- (EWSocial *)mySocialGraph;
+- (EWSocial *)socialGraphForPerson:(EWPerson *)person;
 
 //Create
-- (EWSocialGraph *)createSocialGraphForPerson:(EWPerson *)person;
+- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person;
 
 - (void)testFindWithUsersCompletion:(void (^)(NSArray *users))completion;
 - (BOOL)hasAddressBookAccess;

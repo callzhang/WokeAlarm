@@ -57,8 +57,8 @@
         <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="media" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWMedia" inverseName="messages" inverseEntity="EWMedia" syncable="YES"/>
-        <relationship name="recipient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" syncable="YES"/>
-        <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" syncable="YES"/>
+        <relationship name="recipient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="receivedMessages" inverseEntity="EWPerson" syncable="YES"/>
+        <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="sentMessages" inverseEntity="EWPerson" syncable="YES"/>
     </entity>
     <entity name="EWNotification" representedClassName="EWNotification" parentEntity="EWServerObject" syncable="YES">
         <attribute name="completed" optional="YES" attributeType="Date" syncable="YES"/>
@@ -94,7 +94,9 @@
         <relationship name="friends" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="friends" inverseEntity="EWPerson" syncable="YES"/>
         <relationship name="medias" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMedia" inverseName="author" inverseEntity="EWMedia" syncable="YES"/>
         <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWNotification" inverseName="owner" inverseEntity="EWNotification" syncable="YES"/>
-        <relationship name="socialGraph" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWSocialGraph" inverseName="owner" inverseEntity="EWSocialGraph" syncable="YES"/>
+        <relationship name="receivedMessages" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWMessage" inverseName="recipient" inverseEntity="EWMessage" syncable="YES"/>
+        <relationship name="sentMessages" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWMessage" inverseName="sender" inverseEntity="EWMessage" syncable="YES"/>
+        <relationship name="socialGraph" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWSocial" inverseName="owner" inverseEntity="EWSocial" syncable="YES"/>
         <relationship name="unreadMedias" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMedia" inverseName="receiver" inverseEntity="EWMedia" syncable="YES"/>
     </entity>
     <entity name="EWServerObject" representedClassName="EWServerObject" isAbstract="YES" syncable="YES">
@@ -102,7 +104,7 @@
         <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
-    <entity name="EWSocialGraph" representedClassName="EWSocialGraph" parentEntity="EWServerObject" syncable="YES">
+    <entity name="EWSocial" representedClassName="EWSocial" parentEntity="EWServerObject" syncable="YES">
         <attribute name="facebookFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="facebookToken" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="facebookUpdated" optional="YES" attributeType="Date" syncable="YES"/>
@@ -113,14 +115,14 @@
     </entity>
     <elements>
         <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="EWActivity" positionX="18" positionY="162" width="128" height="178"/>
-        <element name="EWAlarm" positionX="0" positionY="0" width="128" height="148"/>
-        <element name="EWMedia" positionX="0" positionY="0" width="128" height="223"/>
-        <element name="EWMediaFile" positionX="9" positionY="153" width="128" height="135"/>
-        <element name="EWMessage" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="EWActivity" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="EWMedia" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="EWMessage" positionX="0" positionY="0" width="128" height="163"/>
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="128" height="433"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="128" height="463"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="EWSocialGraph" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="EWSocial" positionX="0" positionY="0" width="128" height="150"/>
     </elements>
 </model>

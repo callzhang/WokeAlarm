@@ -79,24 +79,24 @@
 #pragma mark - Handle Local Notification
 + (void)handleLocalNotification:(UILocalNotification *)notification{
     NSString *type = notification.userInfo[kLocalNotificationTypeKey];
-    NSLog(@"Received local notification: %@", type);
+    DDLogVerbose(@"Received local notification: %@", type);
     
     if ([type isEqualToString:kLocalNotificationTypeAlarmTimer]) {
         [EWWakeUpManager handleAlarmTimerEvent:notification.userInfo];
 		
     }else if([type isEqualToString:kLocalNotificationTypeReactivate]){
-        DDLogInfo(@"==================> Reactivated Woke <======================");
+        DDLogVerbose(@"==================> Reactivated Woke <======================");
         EWAlert(@"You brought me back!");
 		
     }else if ([type isEqualToString:kLocalNotificationTypeSleepTimer]){
-        NSLog(@"=== Received Sleep timer local notification, broadcasting sleep event, and enter sleep mode... \n%@", notification);
+        DDLogVerbose(@"=== Received Sleep timer local notification, broadcasting sleep event, and enter sleep mode... \n%@", notification);
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
         
         [EWWakeUpManager handleSleepTimerEvent:notification];
     }
     else{
-        NSLog(@"Unexpected Local Notification Type. Detail: %@", notification);
+        DDLogWarn(@"Unexpected Local Notification Type. Detail: %@", notification);
     }
 
 }
@@ -134,7 +134,7 @@
     //push
     [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error) {
         if (!succeeded) {
-            NSLog(@"Send push message about media %@ failed. Reason:%@", mediaId, error.description);
+            DDLogError(@"Send push message about media %@ failed. Reason:%@", mediaId, error.description);
         }
         if (block) {
             block(succeeded);
@@ -164,7 +164,7 @@
         if (succeeded && block) {
             block();
         }else if (failureBlock){
-            NSLog(@"Failed to broadcast push message: %@", error.description);
+            DDLogError(@"Failed to broadcast push message: %@", error.description);
             failureBlock();
         }
     }];

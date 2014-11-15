@@ -31,6 +31,8 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	.friends = @"friends",
 	.medias = @"medias",
 	.notifications = @"notifications",
+	.receivedMessages = @"receivedMessages",
+	.sentMessages = @"sentMessages",
 	.socialGraph = @"socialGraph",
 	.unreadMedias = @"unreadMedias",
 };
@@ -189,6 +191,10 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	[self didAccessValueForKey:@"notifications"];
 	return result;
 }
+
+@dynamic receivedMessages;
+
+@dynamic sentMessages;
 
 @dynamic socialGraph;
 

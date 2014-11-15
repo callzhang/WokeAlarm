@@ -15,7 +15,7 @@
 //#import "EWTaskManager.h"
 #import "NSDate+Extend.h"
 #import "EWDataStore.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 #import "EWNotificationManager.h"
 #import "EWNotification.h"
 #import "EWStatisticsManager.h"
@@ -128,7 +128,7 @@
                                     error:&error];
     
     if (error && list.count == 0) {
-        NSLog(@"*** Failed to get relavent user list: %@", error.description);
+        DDLogError(@"*** Failed to get relavent user list: %@", error.description);
         //get cached person
         error = nil;
         list = localMe.cachedInfo[kEveryone];

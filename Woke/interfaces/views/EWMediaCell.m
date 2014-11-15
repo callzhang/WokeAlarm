@@ -70,7 +70,7 @@
         NSError *err;
         AVAudioPlayer *p = [[AVAudioPlayer alloc] initWithData:media.audio error:&err];
         if (err) {
-            NSLog(@"Failed to init av audio player:%@", err);
+            DDLogError(@"Failed to init av audio player:%@", err);
         }
         double len = p.duration;
         double ratio = len/30/2 + 0.5;

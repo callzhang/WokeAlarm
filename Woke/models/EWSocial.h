@@ -1,5 +1,5 @@
 #import "_EWSocialGraph.h"
 
-@interface EWSocialGraph : _EWSocialGraph {}
+@interface EWSocial : _EWSocialGraph {}
 // Custom logic goes here.
 @end

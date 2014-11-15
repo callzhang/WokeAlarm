@@ -29,22 +29,18 @@
 #import "EWMediaManager.h"
 #import "EWStatisticsManager.h"
 #import "EWNotificationManager.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 
 //view
 #import "EWRecordingViewController.h"
 #import "EWLogInViewController.h"
-#import "EWTaskHistoryCell.h"
-#import "EWCollectionPersonCell.h"
-#import "EWAppDelegate.h"
-#import "EWMyFriendsViewController.h"
-#import "EWMyProfileViewController.h"
-#import "EWActivityHeadView.h"
+#import "EWFriendsViewController.h"
 #import "NavigationControllerDelegate.h"
 #import "EWSettingsViewController.h"
 #import "GKImagePicker.h"
 // ImageBrowser
 #import "IDMPhotoBrowser.h"
+#import "UIView+Extend.h"
 
 #define kProfileTableArray              @[@"Friends", @"People woke me up", @"People I woke up", @"Last Seen", @"Next wake-up time", @"Wake-ability Score", @"Average wake up time"]
 
@@ -88,11 +84,11 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 
 //- (void)setPerson:(EWPerson *)p{
-//    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    //[self.view showLoopingWithTimeout:0];
 //    person = p;
 //    [self initData];
 //    [self initView];
-//    //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//    //[EWUIUtil dismissHUDinView:self.view];
 //}
 
 
@@ -396,10 +392,10 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         [self.navigationController pushViewController:prefView animated:YES];
         
     }else if ([title isEqualToString:@"Log out"]){
-        [EWUserManagement logout];
+        [EWUserManager logout];
         EWLogInViewController *loginVC = [EWLogInViewController new];
-        [rootViewController dismissBlurViewControllerWithCompletionHandler:^{
-            [rootViewController presentViewControllerWithBlurBackground:loginVC];
+        [[UIApplication sharedApplication].delegate.window.rootViewController dismissBlurViewControllerWithCompletionHandler:^{
+            [[UIApplication sharedApplication].delegate.window.rootViewController presentViewControllerWithBlurBackground:loginVC];
         }];
     }
     else if([title isEqualToString:@"Take Photo"])
@@ -428,7 +424,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 - (void)showSuccessNotification:(NSString *)alert{
     [self initView];
-    [self.view showNotification:alert WithStyle:hudStyleSuccess];
+    [self.view showSuccessNotification:nil];
 }
 
 - (void)sendVoice{
@@ -663,7 +659,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         case 0:
         {
             if (self.navigationController.viewControllers.count < kMaxPersonNavigationConnt && [person.friends count]>0) {
-                EWMyFriendsViewController *tempVc= [[EWMyFriendsViewController alloc] initWithPerson:person];
+                EWFriendsViewController *tempVc= [[EWFriendsViewController alloc] initWithPerson:person];
                 controller = tempVc;
                 
                 [self.navigationController pushViewController:controller animated:YES];
@@ -679,20 +675,20 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (tabView.selectedSegmentIndex == 0) {
-        
-        return  [[UIView alloc] initWithFrame:CGRectZero];
-        
-    }else if (tabView.selectedSegmentIndex == 1){
-        
-        NSDictionary *activity = _taskActivity[dates[section]];
-        NSDate *time = activity[kTaskTime];
-        
-        EWActivityHeadView *headView = [[EWActivityHeadView alloc]initWithFrame:CGRectMake(0, 0, 320, 80)];
-        headView.titleLabel.text = [time date2dayString];
-    
-        return headView;
-    }
+//    if (tabView.selectedSegmentIndex == 0) {
+//        
+//        return  [[UIView alloc] initWithFrame:CGRectZero];
+//        
+//    }else if (tabView.selectedSegmentIndex == 1){
+//        
+//        NSDictionary *activity = _taskActivity[dates[section]];
+//        NSDate *time = activity[kTaskTime];
+//        
+//        EWActivityHeadView *headView = [[EWActivityHeadView alloc]initWithFrame:CGRectMake(0, 0, 320, 80)];
+//        headView.titleLabel.text = [time date2dayString];
+//    
+//        return headView;
+//    }
     
     return nil;
 }
@@ -777,13 +773,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     [EWUtil deleteFileFromParseRESTwithURL:url];
     [_photos removeObjectAtIndex:path-1];
     
-    [MBProgressHUD showHUDAddedTo:_photoBrower.view animated:YES];
-    
     [photoBrowser reloadData];
-    
-
-    
-     [MBProgressHUD hideAllHUDsForView:_photoBrower.view animated:YES];
     
      [_photoBrower.view showSuccessNotification:@"Deleted"];
 }
@@ -805,8 +795,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 {
     
     [picker dismissViewControllerAnimated:YES completion:^(){
-        
-        [MBProgressHUD showHUDAddedTo:_photoBrower.view animated:YES];
+        [_photoBrower.view showLoopingWithTimeout:0];
         UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
         image = [EWUIUtil resizeImageWithImage:image scaledToSize:CGSizeMake(640, 960)];
         
@@ -819,7 +808,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
             [EWSession sharedSession].currentUser.images = _photos;
             //        [EWSync save];
             
-            [MBProgressHUD hideAllHUDsForView:_photoBrower.view animated:YES];
+            [EWUIUtil dismissHUDinView:_photoBrower.view];
             
             [_photoBrower.view showSuccessNotification:@"Uploaded"];
             
@@ -876,7 +865,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 {
 	[_imagePicker.imagePickerController dismissViewControllerAnimated:YES completion:^(){
     
-        [MBProgressHUD showHUDAddedTo:_photoBrower.view animated:YES];
+        [_photoBrower.view showLoopingWithTimeout:0];
 		
         NSMutableString *urlString = [NSMutableString string];
         [urlString appendString:kParseUploadUrl];
@@ -911,7 +900,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         [EWSession sharedSession].currentUser.images = _photos;
         [EWSync save];
         
-        [MBProgressHUD hideAllHUDsForView:_photoBrower.view animated:YES];
+        [EWUIUtil dismissHUDinView:_photoBrower.view];
         
         [_photoBrower.view showSuccessNotification:@"Uploaded"];
         

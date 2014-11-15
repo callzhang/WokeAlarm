@@ -249,7 +249,7 @@
     }
     
     if (!recordingFileUrl){
-        NSLog(@"Recording url empty");
+        DDLogError(@"Recording url empty");
         
         return;
     }
@@ -330,7 +330,7 @@
 //        //NSString *fileName = [NSString stringWithFormat:@"voice_%@_%@.m4a", me.username, [[NSDate date] date2numberDateString]];
 //        
 //        //save data to task
-//        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//        [self.view showLoopingWithTimeout:0];
 //        
 //        [[ATConnect sharedConnection] engage:kRecordVoiceSuccess fromViewController:self];
 //        
@@ -377,10 +377,10 @@
 //        recordingFileUrl = nil;
 //        
 //        //dismiss hud
-//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//        [EWUIUtil dismissHUDinView:self.view];
 //        
 //        //dismiss
-//        [rootViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+//        [[UIApplication sharedApplication].delegate.window.rootViewController dismissBlurViewControllerWithCompletionHandler:NULL];
     }
 }
 

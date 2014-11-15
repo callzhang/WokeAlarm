@@ -259,7 +259,7 @@
     if (!context) {
         context = mainContext;
     }
-    NSMutableArray *MOs = [[NSClassFromString(self.localClassName) findByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context] mutableCopy];
+    NSMutableArray *MOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
     //NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
     while (MOs.count > 1) {
         NSLog(@"Find duplicated MO for ID %@", self.objectId);
@@ -293,7 +293,7 @@
 
 - (BOOL)isNewerThanMO{
     NSDate *updatedPO = [self valueForKey:kUpdatedDateKey];
-    NSManagedObject *mo = [NSClassFromString(self.localClassName) findFirstByAttribute:kParseObjectID withValue:self.objectId];
+    NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId];
     NSDate *updatedMO = [mo valueForKey:kUpdatedDateKey];
     if (updatedPO && updatedMO) {
         if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {

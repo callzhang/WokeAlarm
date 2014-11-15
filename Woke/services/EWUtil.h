@@ -28,6 +28,6 @@
 + (void)deleteFileFromParseRESTwithURL:(NSURL *)url;
 
 void EWLogInit();
-void EWLog(NSString *format,...);
+//void EWLog(NSString *format,...);
 
 @end

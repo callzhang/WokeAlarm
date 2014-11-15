@@ -14,7 +14,7 @@
 #import "EWAlarm.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
-#import "EWUserManagement.h"
+#import "EWUserManager.h"
 #import "EWAlarmScheduleViewController.h"
 
 #import "AFNetworking.h"
@@ -259,7 +259,7 @@
 - (void)checkScheduledLocalNotifications{
 	NSParameterAssert([NSThread isMainThread]);
 	NSMutableArray *allNotification = [[[UIApplication sharedApplication] scheduledLocalNotifications] mutableCopy];
-	NSLog(@"There are %ld scheduled local notification", (long)allNotification.count);
+	DDLogInfo(@"There are %ld scheduled local notification", (long)allNotification.count);
 	
 	//delete redundant alarm notif
 	for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
