@@ -18,9 +18,6 @@ const struct EWActivityRelationships EWActivityRelationships = {
 	.owner = @"owner",
 };
 
-const struct EWActivityFetchedProperties EWActivityFetchedProperties = {
-};
-
 @implementation EWActivityID
 @end
 
@@ -46,7 +43,7 @@ const struct EWActivityFetchedProperties EWActivityFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"friendedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"friended"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -56,26 +53,11 @@ const struct EWActivityFetchedProperties EWActivityFetchedProperties = {
 	return keyPaths;
 }
 
-
-
-
 @dynamic completed;
-
-
-
-
-
 
 @dynamic friendID;
 
-
-
-
-
-
 @dynamic friended;
-
-
 
 - (BOOL)friendedValue {
 	NSNumber *result = [self friended];
@@ -83,7 +65,7 @@ const struct EWActivityFetchedProperties EWActivityFetchedProperties = {
 }
 
 - (void)setFriendedValue:(BOOL)value_ {
-	[self setFriended:[NSNumber numberWithBool:value_]];
+	[self setFriended:@(value_)];
 }
 
 - (BOOL)primitiveFriendedValue {
@@ -92,61 +74,29 @@ const struct EWActivityFetchedProperties EWActivityFetchedProperties = {
 }
 
 - (void)setPrimitiveFriendedValue:(BOOL)value_ {
-	[self setPrimitiveFriended:[NSNumber numberWithBool:value_]];
+	[self setPrimitiveFriended:@(value_)];
 }
-
-
-
-
 
 @dynamic sleepTime;
 
-
-
-
-
-
 @dynamic statement;
-
-
-
-
-
 
 @dynamic time;
 
-
-
-
-
-
 @dynamic type;
-
-
-
-
-
 
 @dynamic medias;
 
-	
 - (NSMutableSet*)mediasSet {
 	[self willAccessValueForKey:@"medias"];
-  
+
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medias"];
-  
+
 	[self didAccessValueForKey:@"medias"];
 	return result;
 }
-	
 
 @dynamic owner;
 
-	
-
-
-
-
-
-
 @end
+

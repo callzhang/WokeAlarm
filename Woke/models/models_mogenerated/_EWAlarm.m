@@ -16,9 +16,6 @@ const struct EWAlarmRelationships EWAlarmRelationships = {
 	.owner = @"owner",
 };
 
-const struct EWAlarmFetchedProperties EWAlarmFetchedProperties = {
-};
-
 @implementation EWAlarmID
 @end
 
@@ -44,7 +41,7 @@ const struct EWAlarmFetchedProperties EWAlarmFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"importantValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"important"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -59,12 +56,7 @@ const struct EWAlarmFetchedProperties EWAlarmFetchedProperties = {
 	return keyPaths;
 }
 
-
-
-
 @dynamic important;
-
-
 
 - (BOOL)importantValue {
 	NSNumber *result = [self important];
@@ -72,7 +64,7 @@ const struct EWAlarmFetchedProperties EWAlarmFetchedProperties = {
 }
 
 - (void)setImportantValue:(BOOL)value_ {
-	[self setImportant:[NSNumber numberWithBool:value_]];
+	[self setImportant:@(value_)];
 }
 
 - (BOOL)primitiveImportantValue {
@@ -81,16 +73,10 @@ const struct EWAlarmFetchedProperties EWAlarmFetchedProperties = {
 }
 
 - (void)setPrimitiveImportantValue:(BOOL)value_ {
-	[self setPrimitiveImportant:[NSNumber numberWithBool:value_]];
+	[self setPrimitiveImportant:@(value_)];
 }
 
-
-
-
-
 @dynamic state;
-
-
 
 - (BOOL)stateValue {
 	NSNumber *result = [self state];
@@ -98,7 +84,7 @@ const struct EWAlarmFetchedProperties EWAlarmFetchedProperties = {
 }
 
 - (void)setStateValue:(BOOL)value_ {
-	[self setState:[NSNumber numberWithBool:value_]];
+	[self setState:@(value_)];
 }
 
 - (BOOL)primitiveStateValue {
@@ -107,48 +93,18 @@ const struct EWAlarmFetchedProperties EWAlarmFetchedProperties = {
 }
 
 - (void)setPrimitiveStateValue:(BOOL)value_ {
-	[self setPrimitiveState:[NSNumber numberWithBool:value_]];
+	[self setPrimitiveState:@(value_)];
 }
-
-
-
-
 
 @dynamic statement;
 
-
-
-
-
-
 @dynamic time;
-
-
-
-
-
 
 @dynamic todo;
 
-
-
-
-
-
 @dynamic tone;
-
-
-
-
-
 
 @dynamic owner;
 
-	
-
-
-
-
-
-
 @end
+

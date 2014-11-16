@@ -13,6 +13,7 @@
 #import "APAddressBook.h"
 #import "APContact.h"
 #import "NSArray+BlocksKit.h"
+#import "EWSocial.h"
 
 @interface EWSocialManager()
 @property (nonatomic, strong) APAddressBook *addressBook;

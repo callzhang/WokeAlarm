@@ -105,6 +105,7 @@
         <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
     <entity name="EWSocial" representedClassName="EWSocial" parentEntity="EWServerObject" syncable="YES">
+        <attribute name="addressBookFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="facebookFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="facebookToken" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="facebookUpdated" optional="YES" attributeType="Date" syncable="YES"/>
@@ -123,6 +124,6 @@
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>
         <element name="EWPerson" positionX="0" positionY="0" width="128" height="463"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="EWSocial" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="EWSocial" positionX="0" positionY="0" width="128" height="165"/>
     </elements>
 </model>

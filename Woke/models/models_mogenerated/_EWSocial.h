@@ -1,21 +1,22 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to EWSocialGraph.h instead.
+// Make changes to EWSocial.h instead.
 
-#import <CoreData/CoreData.h>
+@import CoreData;
 #import "EWServerObject.h"
 
-extern const struct EWSocialGraphAttributes {
+extern const struct EWSocialAttributes {
+	__unsafe_unretained NSString *addressBookFriends;
 	__unsafe_unretained NSString *facebookFriends;
 	__unsafe_unretained NSString *facebookToken;
 	__unsafe_unretained NSString *facebookUpdated;
 	__unsafe_unretained NSString *weiboFriends;
 	__unsafe_unretained NSString *weiboToken;
 	__unsafe_unretained NSString *weiboUpdated;
-} EWSocialGraphAttributes;
+} EWSocialAttributes;
 
-extern const struct EWSocialGraphRelationships {
+extern const struct EWSocialRelationships {
 	__unsafe_unretained NSString *owner;
-} EWSocialGraphRelationships;
+} EWSocialRelationships;
 
 @class EWPerson;
 
@@ -23,14 +24,20 @@ extern const struct EWSocialGraphRelationships {
 
 @class NSObject;
 
-@interface EWSocialGraphID : EWServerObjectID {}
+@class NSObject;
+
+@interface EWSocialID : EWServerObjectID {}
 @end
 
-@interface _EWSocialGraph : EWServerObject {}
+@interface _EWSocial : EWServerObject {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-@property (nonatomic, readonly, strong) EWSocialGraphID* objectID;
+@property (nonatomic, readonly, strong) EWSocialID* objectID;
+
+@property (nonatomic, strong) id addressBookFriends;
+
+//- (BOOL)validateAddressBookFriends:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) id facebookFriends;
 
@@ -62,7 +69,10 @@ extern const struct EWSocialGraphRelationships {
 
 @end
 
-@interface _EWSocialGraph (CoreDataGeneratedPrimitiveAccessors)
+@interface _EWSocial (CoreDataGeneratedPrimitiveAccessors)
+
+- (id)primitiveAddressBookFriends;
+- (void)setPrimitiveAddressBookFriends:(id)value;
 
 - (id)primitiveFacebookFriends;
 - (void)setPrimitiveFacebookFriends:(id)value;

@@ -1,9 +1,10 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to EWSocialGraph.m instead.
+// Make changes to EWSocial.m instead.
 
-#import "_EWSocialGraph.h"
+#import "_EWSocial.h"
 
-const struct EWSocialGraphAttributes EWSocialGraphAttributes = {
+const struct EWSocialAttributes EWSocialAttributes = {
+	.addressBookFriends = @"addressBookFriends",
 	.facebookFriends = @"facebookFriends",
 	.facebookToken = @"facebookToken",
 	.facebookUpdated = @"facebookUpdated",
@@ -12,95 +13,54 @@ const struct EWSocialGraphAttributes EWSocialGraphAttributes = {
 	.weiboUpdated = @"weiboUpdated",
 };
 
-const struct EWSocialGraphRelationships EWSocialGraphRelationships = {
+const struct EWSocialRelationships EWSocialRelationships = {
 	.owner = @"owner",
 };
 
-const struct EWSocialGraphFetchedProperties EWSocialGraphFetchedProperties = {
-};
-
-@implementation EWSocialGraphID
+@implementation EWSocialID
 @end
 
-@implementation _EWSocialGraph
+@implementation _EWSocial
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"EWSocialGraph" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"EWSocial" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"EWSocialGraph";
+	return @"EWSocial";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"EWSocialGraph" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"EWSocial" inManagedObjectContext:moc_];
 }
 
-- (EWSocialGraphID*)objectID {
-	return (EWSocialGraphID*)[super objectID];
+- (EWSocialID*)objectID {
+	return (EWSocialID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
+@dynamic addressBookFriends;
 
 @dynamic facebookFriends;
 
-
-
-
-
-
 @dynamic facebookToken;
-
-
-
-
-
 
 @dynamic facebookUpdated;
 
-
-
-
-
-
 @dynamic weiboFriends;
-
-
-
-
-
 
 @dynamic weiboToken;
 
-
-
-
-
-
 @dynamic weiboUpdated;
-
-
-
-
-
 
 @dynamic owner;
 
-	
-
-
-
-
-
-
 @end
+

@@ -21,9 +21,6 @@ const struct EWMediaRelationships EWMediaRelationships = {
 	.receiver = @"receiver",
 };
 
-const struct EWMediaFetchedProperties EWMediaFetchedProperties = {
-};
-
 @implementation EWMediaID
 @end
 
@@ -49,7 +46,7 @@ const struct EWMediaFetchedProperties EWMediaFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"likedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"liked"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -64,12 +61,7 @@ const struct EWMediaFetchedProperties EWMediaFetchedProperties = {
 	return keyPaths;
 }
 
-
-
-
 @dynamic liked;
-
-
 
 - (BOOL)likedValue {
 	NSNumber *result = [self liked];
@@ -77,7 +69,7 @@ const struct EWMediaFetchedProperties EWMediaFetchedProperties = {
 }
 
 - (void)setLikedValue:(BOOL)value_ {
-	[self setLiked:[NSNumber numberWithBool:value_]];
+	[self setLiked:@(value_)];
 }
 
 - (BOOL)primitiveLikedValue {
@@ -86,30 +78,14 @@ const struct EWMediaFetchedProperties EWMediaFetchedProperties = {
 }
 
 - (void)setPrimitiveLikedValue:(BOOL)value_ {
-	[self setPrimitiveLiked:[NSNumber numberWithBool:value_]];
+	[self setPrimitiveLiked:@(value_)];
 }
-
-
-
-
 
 @dynamic message;
 
-
-
-
-
-
 @dynamic played;
 
-
-
-
-
-
 @dynamic priority;
-
-
 
 - (int64_t)priorityValue {
 	NSNumber *result = [self priority];
@@ -117,7 +93,7 @@ const struct EWMediaFetchedProperties EWMediaFetchedProperties = {
 }
 
 - (void)setPriorityValue:(int64_t)value_ {
-	[self setPriority:[NSNumber numberWithLongLong:value_]];
+	[self setPriority:@(value_)];
 }
 
 - (int64_t)primitivePriorityValue {
@@ -126,66 +102,33 @@ const struct EWMediaFetchedProperties EWMediaFetchedProperties = {
 }
 
 - (void)setPrimitivePriorityValue:(int64_t)value_ {
-	[self setPrimitivePriority:[NSNumber numberWithLongLong:value_]];
+	[self setPrimitivePriority:@(value_)];
 }
-
-
-
-
 
 @dynamic response;
 
-
-
-
-
-
 @dynamic targetDate;
-
-
-
-
-
 
 @dynamic type;
 
-
-
-
-
-
 @dynamic activity;
-
-	
 
 @dynamic author;
 
-	
-
 @dynamic mediaFile;
-
-	
 
 @dynamic messages;
 
-	
 - (NSMutableSet*)messagesSet {
 	[self willAccessValueForKey:@"messages"];
-  
+
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"messages"];
-  
+
 	[self didAccessValueForKey:@"messages"];
 	return result;
 }
-	
 
 @dynamic receiver;
 
-	
-
-
-
-
-
-
 @end
+

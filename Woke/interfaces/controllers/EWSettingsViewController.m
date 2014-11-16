@@ -18,6 +18,7 @@
 #import "EWAVManager.h"
 #import "EWAlarmManager.h"
 #import "UIViewController+Blur.h"
+#import "NSString+Extend.h"
 
 static const NSArray *sleepDurations;
 static const NSArray *socialLevels;
@@ -227,9 +228,9 @@ static const NSArray *pref;
             UILabel *titleLabel = (UILabel *)[vc.picker viewForRow:row forComponent:0];
             self.preference[@"DefaultTone"] = titleLabel.text;
             [_tableView reloadData];
-            [[EWAvmanager sharedManager] stopAllPlaying];
+            [[EWAVManager sharedManager] stopAllPlaying];
         } andCancelHandler:^(EWSelectionViewController *vc) {
-            [[EWAvmanager sharedManager] stopAllPlaying];
+            [[EWAVManager sharedManager] stopAllPlaying];
             DDLogInfo(@"Date selection was canceled (with block)");
         }];
     }
@@ -337,7 +338,7 @@ static const NSArray *pref;
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if ([selectedCellTitle isEqualToString:@"Morning tone"]) {
         NSString *tone = [ringtoneList objectAtIndex:row];
-        [EWAvmanager.sharedManager playSoundFromFileName:tone];
+        [EWAVManager.sharedManager playSoundFromFileName:tone];
     }
 }
 
