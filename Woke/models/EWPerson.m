@@ -13,6 +13,8 @@
 #import "EWUserManager.h"
 #import "EWStatisticsManager.h"
 
+NSString * const EWPersonDefaultName = @"New User";
+
 @implementation EWPerson
 @dynamic lastLocation;
 @dynamic profilePic;

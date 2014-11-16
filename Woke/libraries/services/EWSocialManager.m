@@ -41,45 +41,45 @@
     return _addressBook;
 }
 
-//- (EWSocial *)mySocialGraph{
-//    EWSocial *sg = [EWSession sharedSession].currentUser.socialGraph;
-//    if (!sg) {
-//        sg = [self  createSocialGraphForPerson:[EWSession sharedSession].currentUser];
-//    }
-//    return sg;
-//}
-//
-//- (EWSocial *)socialGraphForPerson:(EWPerson *)person{
-//    if (person.socialGraph) {
-//        return person.socialGraph;
-//    }
-//    
-//    if (person.isMe) {
-//        //first check from PFUser
-//        PFObject *sg = [PFUser currentUser][EWPersonRelationships.socialGraph];
-//        if (sg) {
-//            EWSocial *socialGraph = [sg managedObjectInContext:mainContext];
-//        }
-//        //need to create one for self
-//        EWSocial *graph = [self createSocialGraphForPerson:person];
-//        return graph;
-//    }
-//
-//    
-//    return person.socialGraph;
-//}
-//
-//- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person{
-//    EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
-//    sg.updatedAt = [NSDate date];
-//
-//    //data
-//    sg.owner = person;
-//    //save
-//    //[EWSync save];
-//    NSLog(@"Created new social graph for user %@", person.name);
-//    return sg;
-//}
+- (EWSocial *)mySocialGraph{
+    EWSocial *sg = [EWSession sharedSession].currentUser.socialGraph;
+    if (!sg) {
+        sg = [self  createSocialGraphForPerson:[EWSession sharedSession].currentUser];
+    }
+    return sg;
+}
+
+- (EWSocial *)socialGraphForPerson:(EWPerson *)person{
+    if (person.socialGraph) {
+        return person.socialGraph;
+    }
+    
+    if (person.isMe) {
+        //first check from PFUser
+        PFObject *sg = [PFUser currentUser][EWPersonRelationships.socialGraph];
+        if (sg) {
+            EWSocial *socialGraph = [sg managedObjectInContext:mainContext];
+        }
+        //need to create one for self
+        EWSocial *graph = [self createSocialGraphForPerson:person];
+        return graph;
+    }
+
+    
+    return person.socialGraph;
+}
+
+- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person{
+    EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
+    sg.updatedAt = [NSDate date];
+
+    //data
+    sg.owner = person;
+    //save
+    //[EWSync save];
+    NSLog(@"Created new social graph for user %@", person.name);
+    return sg;
+}
 
 - (BOOL)hasAddressBookAccess {
     return [APAddressBook access] == APAddressBookAccessGranted;
@@ -122,7 +122,7 @@
         }];
         
         //FIXME: set address book friends to person object?
-//        self.mySocialGraph.addressBookFriends = mapContacts;
+        self.mySocialGraph.addressBookFriends = mapContacts;
         
         [EWSync save];
         

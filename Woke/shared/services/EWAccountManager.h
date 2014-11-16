@@ -7,7 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GCDSingleton.h"
+
+extern NSString * const EWAccountManagerDidLoginNotification;
+extern NSString * const EWAccountManagerDidLogoutNotification;
+
 
 @interface EWAccountManager : NSObject
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 
+- (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion;
 @end

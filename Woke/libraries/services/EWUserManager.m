@@ -419,7 +419,6 @@
         //update friends
         [EWUserManager getFacebookFriends];
     }];
-    
 }
 
 + (void)getFacebookFriends{

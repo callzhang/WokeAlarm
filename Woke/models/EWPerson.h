@@ -13,6 +13,9 @@
 @import CoreLocation;
 
 @class EWAlarm;
+
+extern NSString * const EWPersonDefaultName;
+
 @interface EWPerson : _EWPerson
 @property (nonatomic, strong) CLLocation* lastLocation;
 @property (nonatomic, strong) UIImage *profilePic;
