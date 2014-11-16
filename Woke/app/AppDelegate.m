@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "EWUtil.h"
+
+UIViewController *rootViewController;
 
 @interface AppDelegate ()
 
@@ -16,7 +19,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    EWLogInit();
+    
     return YES;
 }
 
@@ -32,6 +36,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    rootViewController = self.window.rootViewController;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

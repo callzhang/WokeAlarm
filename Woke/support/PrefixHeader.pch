@@ -11,6 +11,20 @@
 
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+@import UIKit;
+@import Foundation;
 #import "KZBootstrapUserMacros.h"
-
+//#import <CocoaLumberjack/CocoaLumberjack.h>
+#import "DDLog.h"
+#import "CoreData+MagicalRecord.h"
+#import "EWDefines.h"
+#import "EWSync.h"
+#import "NSManagedObjectContext+ChainSave.h"
+#import <MTDates/NSDate+MTDates.h>
+#import "NSDate+Extend.h"
+#import "EWSession.h"
+#import <CocoaLumberjack/DDLog.h>
+#import "UIView+Extend.h"
+//static NSUInteger ddLogLevel = DDLogLevelAll;
+static NSUInteger ddLogLevel = LOG_LEVEL_VERBOSE;
 #endif

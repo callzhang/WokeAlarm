@@ -20,6 +20,12 @@ PODS:
   - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - APAddressBook (0.1.4):
+    - APAddressBook/Core (= 0.1.4)
+  - APAddressBook/Core (0.1.4)
+  - apptentive-ios (1.6.0):
+    - apptentive-ios/arc-files (= 1.6.0)
+  - apptentive-ios/arc-files (1.6.0)
   - BlocksKit (2.2.5):
     - BlocksKit/All (= 2.2.5)
   - BlocksKit/All (2.2.5):
@@ -36,74 +42,101 @@ PODS:
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
   - Bolts (1.1.3)
-  - CocoaLumberjack (2.0.0-beta4):
-    - CocoaLumberjack/Default (= 2.0.0-beta4)
-    - CocoaLumberjack/Extensions (= 2.0.0-beta4)
-  - CocoaLumberjack/Core (2.0.0-beta4)
-  - CocoaLumberjack/Default (2.0.0-beta4):
+  - CocoaLumberjack (1.9.2):
+    - CocoaLumberjack/Extensions (= 1.9.2)
+  - CocoaLumberjack/Core (1.9.2)
+  - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.0-beta4):
-    - CocoaLumberjack/Default
   - CrashlyticsFramework (2.2.5.1)
+  - CrashlyticsLumberjack (1.0.2):
+    - CocoaLumberjack/Core (~> 1.9)
+  - DACircularProgress (2.2.0)
+  - Expecta (0.3.1)
   - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
   - GPUImage (0.1.6)
+  - IDMPhotoBrowser (1.4):
+    - AFNetworking
+    - DACircularProgress
+    - pop
+  - JGProgressHUD (1.2.2)
   - KZAsserts (1.0)
   - KZBootstrap (0.5.2):
     - KZBootstrap/Core (= 0.5.2)
   - KZBootstrap/Core (0.5.2):
     - KZAsserts (~> 1.0)
-  - KZBootstrap/Debug (0.5.2):
-    - KZAsserts (~> 1.0)
-    - RSSwizzle
-  - KZBootstrap/Logging (0.5.2):
-    - CocoaLumberjack (~> 2.0.0-beta4)
-  - MagicalRecord (2.2):
-    - MagicalRecord/Core (= 2.2)
-  - MagicalRecord/Core (2.2)
+  - MagicalRecord (2.3.0-beta.5):
+    - MagicalRecord/Core (= 2.3.0-beta.5)
+  - MagicalRecord/Core (2.3.0-beta.5)
+  - MTDates (0.14.3)
+  - MYBlurIntroductionView (1.0.3)
+  - OCMock (3.1.1)
   - Parse (1.5.0):
     - Bolts (~> 1.1.3)
+  - ParseFacebookUtils (1.5.0.1):
+    - Facebook-iOS-SDK (~> 3.20)
+    - Parse (~> 1.5.0)
   - pop (1.0.7)
+  - Reachability (3.1.1)
   - RHAddressBook (1.1.1)
-  - RSSwizzle (0.1.0)
   - VBFPopFlatButton (0.0.5):
     - pop
 
 DEPENDENCIES:
   - AFNetworking (~> 2.4.1)
+  - APAddressBook (~> 0.1.4)
+  - apptentive-ios (~> 1.6.0)
   - BlocksKit (~> 2.2.5)
-  - CocoaLumberjack (~> 2.0.0-beta4)
+  - CocoaLumberjack (~> 1.9.2)
   - CrashlyticsFramework (~> 2.2.5.1)
+  - CrashlyticsLumberjack (~> 1.0.2)
+  - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.20.0)
   - GPUImage (~> 0.1.6)
-  - KZBootstrap (from `https://github.com/krzysztofzablocki/KZBootstrap.git`, commit `aa5deb50655beef31364ee77ff835f12dfee793d`)
-  - KZBootstrap/Debug (from `https://github.com/krzysztofzablocki/KZBootstrap.git`, commit `aa5deb50655beef31364ee77ff835f12dfee793d`)
-  - KZBootstrap/Logging (from `https://github.com/krzysztofzablocki/KZBootstrap.git`, commit `aa5deb50655beef31364ee77ff835f12dfee793d`)
-  - MagicalRecord (~> 2.2)
+  - IDMPhotoBrowser (~> 1.4)
+  - JGProgressHUD (~> 1.2.2)
+  - KZBootstrap (~> 0.5.2)
+  - MagicalRecord (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
+  - MTDates (~> 0.14.3)
+  - MYBlurIntroductionView (~> 1.0)
+  - OCMock (~> 3.1.1)
   - Parse (~> 1.5.0)
+  - ParseFacebookUtils
+  - Reachability (~> 3.1.1)
   - RHAddressBook (~> 1.1.1)
   - VBFPopFlatButton (~> 0.0.5)
 
 EXTERNAL SOURCES:
-  KZBootstrap:
-    :commit: aa5deb50655beef31364ee77ff835f12dfee793d
-    :git: https://github.com/krzysztofzablocki/KZBootstrap.git
+  MagicalRecord:
+    :git: https://github.com/magicalpanda/MagicalRecord
+    :tag: v2.3.0-beta.5
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
+  APAddressBook: 2b23557950065f8eb048e421dd4a18373f69949b
+  apptentive-ios: 64d3b3ae343c103bd407f6c4ef667641b0f6488a
   BlocksKit: 4439e7f30a9f90743462ca63545a15c1f4304cef
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
-  CocoaLumberjack: 24153b24b17d853d7182b22b128971fb98e8cb18
+  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CrashlyticsFramework: 195dfef587ade7a3954ce8effd483a3879d35877
+  CrashlyticsLumberjack: 192a08e07648e4e09d44052356b53ab839cc8a1b
+  DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
+  Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
+  IDMPhotoBrowser: da2110d99ea8735ad9a0ba52f2d184e756104a71
+  JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398
   KZAsserts: 008f2f37ba7dcb4ce87bb262a7f91406812a66e5
-  KZBootstrap: 12feef4f3d704bb253f626214177e26bcf3b3434
-  MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
+  KZBootstrap: 078347aec98e8a4f0c09d064e177ed10b0c90c8d
+  MagicalRecord: edcc27277d4c15874cc565fb5d91576c146cb2f1
+  MTDates: 947c49f09b174e38dcefbd2ba3bf8a7aa8419d33
+  MYBlurIntroductionView: 6caf60805eaa555538aba9e2615820fd6f07cd23
+  OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
   Parse: 7de25b6f70f0b233e5d25835f62eabfa91e4f9d7
+  ParseFacebookUtils: df2c8634a66883326629099af3690f1862fe126d
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
+  Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
-  RSSwizzle: ab39962b7ec56d19c2318ec1127e253797121363
   VBFPopFlatButton: 023eb57c9c8e0a77d1cf926621085b0727b70b15
 
 COCOAPODS: 0.35.0.rc2

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -18,13 +18,7 @@
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="a7O-6l-F28">
                             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                         </imageView>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Copyright (c) 2014 wokealarm. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="8ie-xW-0ye">
-                            <rect key="frame" x="120" y="448" width="240" height="12"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iMK-Hn-tpW" userLabel="35 height spacer">
+                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iMK-Hn-tpW" userLabel="35 height spacer">
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" id="cGm-c7-AC6"/>
@@ -38,12 +32,10 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="a7O-6l-F28" secondAttribute="trailing" id="2Yt-tD-KE0"/>
                         <constraint firstItem="iMK-Hn-tpW" firstAttribute="top" secondItem="V8w-qw-pm2" secondAttribute="top" id="2kR-mx-pTA"/>
-                        <constraint firstAttribute="centerX" secondItem="8ie-xW-0ye" secondAttribute="centerX" id="BSc-QT-zZC"/>
                         <constraint firstAttribute="centerX" secondItem="iMK-Hn-tpW" secondAttribute="centerX" id="Drc-e8-Q4f"/>
                         <constraint firstItem="a7O-6l-F28" firstAttribute="leading" secondItem="V8w-qw-pm2" secondAttribute="leading" id="VD5-3m-4dA"/>
                         <constraint firstAttribute="bottom" secondItem="a7O-6l-F28" secondAttribute="bottom" id="ejJ-0x-uwo"/>
                         <constraint firstItem="iMK-Hn-tpW" firstAttribute="centerX" secondItem="ye9-98-l78" secondAttribute="centerX" id="hxV-QV-zhE"/>
-                        <constraint firstAttribute="bottom" secondItem="8ie-xW-0ye" secondAttribute="bottom" constant="20" id="jci-UV-Hnq"/>
                         <constraint firstItem="a7O-6l-F28" firstAttribute="top" secondItem="V8w-qw-pm2" secondAttribute="top" id="lhh-xK-3ju"/>
                         <constraint firstItem="ye9-98-l78" firstAttribute="centerY" secondItem="iMK-Hn-tpW" secondAttribute="bottom" id="rM4-nI-NT3"/>
                         <constraint firstAttribute="height" secondItem="iMK-Hn-tpW" secondAttribute="height" multiplier="100/35" id="vAQ-hD-vg4"/>
