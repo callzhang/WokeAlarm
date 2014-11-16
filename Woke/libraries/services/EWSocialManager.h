@@ -13,12 +13,12 @@
 
 + (EWSocialManager *)sharedInstance;
 
-//Search
-- (EWSocial *)mySocialGraph;
-- (EWSocial *)socialGraphForPerson:(EWPerson *)person;
-
-//Create
-- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person;
+////Search
+//- (EWSocial *)mySocialGraph;
+//- (EWSocial *)socialGraphForPerson:(EWPerson *)person;
+//
+////Create
+//- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person;
 
 - (void)testFindWithUsersCompletion:(void (^)(NSArray *users))completion;
 - (BOOL)hasAddressBookAccess;

@@ -423,87 +423,87 @@
 }
 
 + (void)getFacebookFriends{
-    DDLogVerbose(@"Updating facebook friends");
-    //check facebook id exist
-    if (![EWSession sharedSession].currentUser.facebook) {
-        DDLogWarn(@"Current user doesn't have facebook ID, skip checking fb friends");
-        return;
-    }
-    
-    FBSessionState state = [FBSession activeSession].state;
-    if (state != FBSessionStateOpen && state != FBSessionStateOpenTokenExtended) {
-        
-        //session not open, need to open
-        DDLogVerbose(@"facebook session state: %d", state);
-        [EWUserManager openFacebookSessionWithCompletion:^{
-            DDLogVerbose(@"Facebook session opened: %d", [FBSession activeSession].state);
-            
-            [EWUserManager getFacebookFriends];
-        }];
-        
-        return;
-    }else{
-        
-        //get social graph of current user
-        //if not, create one
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
-            EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:localMe];
-            //skip if checked within a week
-            if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
-                DDLogVerbose(@"Facebook friends check skipped.");
-                return;
-            }
-            
-            //get the data
-            __block NSMutableDictionary *friends = [NSMutableDictionary new];
-            [EWUserManager getFacebookFriendsWithPath:@"/me/friends" withReturnData:friends];
-        } completion:^(BOOL success, NSError *error) {
-            //
-        }];
-        
-    }
+//    DDLogVerbose(@"Updating facebook friends");
+//    //check facebook id exist
+//    if (![EWSession sharedSession].currentUser.facebook) {
+//        DDLogWarn(@"Current user doesn't have facebook ID, skip checking fb friends");
+//        return;
+//    }
+//    
+//    FBSessionState state = [FBSession activeSession].state;
+//    if (state != FBSessionStateOpen && state != FBSessionStateOpenTokenExtended) {
+//        
+//        //session not open, need to open
+//        DDLogVerbose(@"facebook session state: %d", state);
+//        [EWUserManager openFacebookSessionWithCompletion:^{
+//            DDLogVerbose(@"Facebook session opened: %d", [FBSession activeSession].state);
+//            
+//            [EWUserManager getFacebookFriends];
+//        }];
+//        
+//        return;
+//    }else{
+//        
+//        //get social graph of current user
+//        //if not, create one
+//        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+//            EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
+//            EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:localMe];
+//            //skip if checked within a week
+//            if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
+//                DDLogVerbose(@"Facebook friends check skipped.");
+//                return;
+//            }
+//            
+//            //get the data
+//            __block NSMutableDictionary *friends = [NSMutableDictionary new];
+//            [EWUserManager getFacebookFriendsWithPath:@"/me/friends" withReturnData:friends];
+//        } completion:^(BOOL success, NSError *error) {
+//            //
+//        }];
+//        
+//    }
     
 }
 
 + (void)getFacebookFriendsWithPath:(NSString *)path withReturnData:(NSMutableDictionary *)friendsHolder{
-    [FBRequestConnection startWithGraphPath:path completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        
-        DDLogVerbose(@"Got facebook friends list, start processing");
-        if (!error){
-            NSArray *friends = (NSArray *)result[@"data"];
-            NSString *nextPage = (NSString *)result[@"paging"][@"next"]	;
-            //parse
-            if (friends) {
-                for (NSDictionary *pair in friends) {
-                    NSString *fb_id = pair[@"id"];
-                    NSString *name = pair[@"name"];
-                    [friendsHolder setObject:name forKey:fb_id];
-                }
-            }
-            
-            //next page
-            if (nextPage) {
-                //continue loading facebook friends
-                //NSLog(@"Continue facebook friends request: %@", nextPage);
-                [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder];
-            }else{
-                DDLogVerbose(@"Finished loading friends from facebook, transfer to social graph.");
-                EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWSession sharedSession].currentUser];
-                graph.facebookFriends = [friendsHolder copy];
-                graph.facebookUpdated = [NSDate date];
-                
-                //save
-                [EWSync save];
-            }
-            
-        } else {
-            // An error occurred, we need to handle the error
-            // See: https://developers.facebook.com/docs/ios/errors
-            
-            [EWUserManager handleFacebookException:error];
-        }
-    }];
+//    [FBRequestConnection startWithGraphPath:path completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//        
+//        DDLogVerbose(@"Got facebook friends list, start processing");
+//        if (!error){
+//            NSArray *friends = (NSArray *)result[@"data"];
+//            NSString *nextPage = (NSString *)result[@"paging"][@"next"]	;
+//            //parse
+//            if (friends) {
+//                for (NSDictionary *pair in friends) {
+//                    NSString *fb_id = pair[@"id"];
+//                    NSString *name = pair[@"name"];
+//                    [friendsHolder setObject:name forKey:fb_id];
+//                }
+//            }
+//            
+//            //next page
+//            if (nextPage) {
+//                //continue loading facebook friends
+//                //NSLog(@"Continue facebook friends request: %@", nextPage);
+//                [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder];
+//            }else{
+//                DDLogVerbose(@"Finished loading friends from facebook, transfer to social graph.");
+//                EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWSession sharedSession].currentUser];
+//                graph.facebookFriends = [friendsHolder copy];
+//                graph.facebookUpdated = [NSDate date];
+//                
+//                //save
+//                [EWSync save];
+//            }
+//            
+//        } else {
+//            // An error occurred, we need to handle the error
+//            // See: https://developers.facebook.com/docs/ios/errors
+//            
+//            [EWUserManager handleFacebookException:error];
+//        }
+//    }];
     
 }
 
