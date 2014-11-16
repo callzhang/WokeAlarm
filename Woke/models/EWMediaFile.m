@@ -21,6 +21,7 @@
 
 + (EWMediaFile *)findMediaFileByID:(NSString *)ID{
     EWMediaFile *m = (EWMediaFile *)[EWSync findObjectWithClass:@"EWMediaFile" withID:ID];
+    return m;
 }
 
 - (NSString *)audioKey{

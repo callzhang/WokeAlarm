@@ -31,6 +31,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
     //tableview
     _tableView.dataSource = self;
     _tableView.delegate = self;

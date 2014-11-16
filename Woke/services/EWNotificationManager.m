@@ -58,7 +58,7 @@
         return;
     }
     
-    NSDictionary *userInfo = notification.userInfo;
+//    NSDictionary *userInfo = notification.userInfo;
     [EWNotificationManager sharedInstance].notification = notification;
     
     if ([notification.type isEqualToString:kNotificationTypeNextTaskHasMedia]) {

@@ -599,7 +599,6 @@ void RouteChangeListener(	void *inClientData,
 }
 
 void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
-    DDLogVerbose(@"System audio playback fnished");
     
     if ([EWAVManager sharedManager].media) {
         //[[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerDidFinishPlaying object:nil];
