@@ -7,6 +7,8 @@
 //
 
 #import "EWLoginGateViewController.h"
+#import "EWAccountManager.h"
+#import "EWErrorManager.h"
 
 @interface EWLoginGateViewController ()
 
@@ -20,6 +22,22 @@
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
+}
+- (IBAction)onContinueWithFacebookButton:(id)sender {
+    [[EWAccountManager shared] loginFacebookCompletion:^(BOOL isNewUser, NSError *error) {
+        if (error) {
+            [EWErrorManager handleError:error];
+        }
+        else {
+            [[EWAccountManager shared] updateFromFacebookCompletion:^(NSError *error2) {
+                if (error2) {
+                    [EWErrorManager handleError:error2];
+                }
+            }];
+            
+            [self performSegueWithIdentifier:@"TempShowMainViewSegue" sender:self];
+        }
+    }];
 }
 
 @end
