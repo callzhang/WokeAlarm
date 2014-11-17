@@ -40,8 +40,11 @@
 
 //local notification
 - (void)checkScheduledLocalNotifications;
+- (void)scheduleAlarmTimerNotifications;
 - (void)scheduleSleepNotifications;
+- (void)cancelAlarmTimerNotifications;
 - (void)cancelSleepNotifications;
+
 
 /*
  Use REST to create a notification on server

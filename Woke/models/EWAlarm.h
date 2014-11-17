@@ -22,8 +22,18 @@
 - (BOOL)validate;
 
 //timer local notification
+/**
+ Schedule both timer and sleep notification
+ */
 - (void)scheduleLocalNotification;
+- (void)scheduleAlarmTimerLocalNotification;
+- (void)scheduleSleepLocalNotification;
+/**
+ cancel both timer and sleep notification
+ */
 - (void)cancelLocalNotification;
+- (void)cancelAlarmTimerLocalNotification;
+- (void)cancelSleepLocalNotification;
 - (NSArray *)localNotifications;//both sleep and timer
 
 @end

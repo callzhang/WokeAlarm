@@ -283,17 +283,34 @@
 }
 
 
-#pragma mark - Sleep notification
+#pragma mark - Local notification
+- (void)scheduleAlarmTimerNotifications{
+    NSArray *alarms = [EWPerson myAlarms];
+    for (EWAlarm *alarm in alarms) {
+        [alarm scheduleAlarmTimerLocalNotification];
+    }
+}
 
 - (void)scheduleSleepNotifications{
-    //TODO
+    NSArray *alarms = [EWPerson myAlarms];
+    for (EWAlarm *alarm in alarms) {
+        [alarm scheduleSleepLocalNotification];
+    }
 }
 
 - (void)cancelSleepNotifications{
-    //TODO
+    NSArray *alarms = [EWPerson myAlarms];
+    for (EWAlarm *alarm in alarms) {
+        [alarm cancelSleepLocalNotification];
+    }
 }
 
-
+- (void)cancelAlarmTimerNotifications{
+    NSArray *alarms = [EWPerson myAlarms];
+    for (EWAlarm *alarm in alarms) {
+        [alarm cancelAlarmTimerLocalNotification];
+    }
+}
 
 #pragma mark - Schedule Alarm Timer
 
