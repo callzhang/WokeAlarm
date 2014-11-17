@@ -9,7 +9,6 @@
 //#import "EWViewController.h"
 #import "EWAVManager.h"
 #import "UAProgressView.h"
-@class EWTaskItem;
 @class SCSiriWaveformView;
 @class EWPerson;
 

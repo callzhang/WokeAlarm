@@ -72,20 +72,6 @@
 - (NSDate *)nextOccurTime:(NSInteger)n withExtraSeconds:(NSInteger)seconds;
 - (NSDate *)nextOccurTime:(NSInteger)n;
 - (NSDate *)nextOccurTime;
-/**
- Weekday in long format
- */
-- (NSString *)weekday;
-
-/**
- Weekday in short format
- */
-- (NSString *)weekdayShort;
-
-/**
- Time in string format HHMM
- */
-- (NSString *)timeInString;
 
 /**
  Tells if time interval since the receiver is less than serverUpdateInterval

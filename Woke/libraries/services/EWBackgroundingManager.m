@@ -64,6 +64,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 		player = [AVPlayer playerWithURL:path];
 		[player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
 		player.volume = 0.01;
+        
     }
     
     return self;
@@ -258,7 +259,21 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 	
 	//audio session
-	[[AVAudioSession sharedInstance] setDelegate: self];
+	//[[AVAudioSession sharedInstance] setDelegate: self];
+    
+    
+    //audio session notification
+    [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioSessionInterruptionNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        NSNumber *type = (NSNumber *)note.userInfo[AVAudioSessionInterruptionTypeKey];
+        if (type.integerValue == AVAudioSessionInterruptionTypeEnded) {
+            NSNumber *option = note.userInfo[AVAudioSessionInterruptionOptionKey];
+            NSInteger optionValue = option.integerValue;
+            [self endInterruptionWithFlags:optionValue];
+        }else if (type.integerValue == AVAudioSessionInterruptionTypeBegan){
+            [self beginInterruption];
+        }
+    }];
+    
 	NSError *error = nil;
 	//set category
 	BOOL success = [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback

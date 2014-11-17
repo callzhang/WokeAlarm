@@ -11,10 +11,8 @@
 #import "EWServer.h"
 
 //model
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 #import "EWPersonManager.h"
-//#import "EWTaskItem.h"
-//#import "EWTaskManager.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
 #import "EWNotification.h"
@@ -258,8 +256,8 @@
                                       // Ask for the missing permissions
                                       [FBSession.activeSession requestNewPublishPermissions:requestPermissions
                                                                             defaultAudience:FBSessionDefaultAudienceFriends
-                                                                          completionHandler:^(FBSession *session, NSError *error) {
-                                                                              if (!error) {
+                                                                          completionHandler:^(FBSession *session, NSError *err) {
+                                                                              if (!err) {
                                                                                   // Permission granted
                                                                                   NSLog(@"new permissions %@", [FBSession.activeSession permissions]);
                                                                                   // We can request the user information
@@ -269,7 +267,7 @@
                                                                               } else {
                                                                                   // An error occurred, we need to handle the error
                                                                                   // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                                                                  NSLog(@"error %@", error.description);
+                                                                                  NSLog(@"error %@", err.description);
                                                                               }
                                                                           }];
                                   } else {

@@ -11,9 +11,9 @@
 #import <Foundation/Foundation.h>
 #import "EWSync.h"
 
-@interface EWDataStore : NSObject
+@interface EWStartUpSequence : NSObject
 @property (nonatomic, retain) NSDate *lastChecked;//The date that last sync with server
-+ (EWDataStore *)sharedInstance;
++ (EWStartUpSequence *)sharedInstance;
 @end
 
 

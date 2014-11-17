@@ -7,7 +7,7 @@
 //
 
 #import "EWUserManager.h"
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 #import "EWUtil.h"
 //TODO:#import "EWFirstTimeViewController.h"
 @import CoreLocation;
@@ -17,7 +17,6 @@
 #import "EWPersonManager.h"
 #import "EWServer.h"
 #import "EWAlarmManager.h"
-//#import "EWTaskManager.h"
 
 //View
 #import "EWLogInViewController.h"
@@ -92,13 +91,13 @@
 + (void)showLoginPanel{
 
 
-//    if ([PFUser currentUser]) {
-//        
-//        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:YES completion:NULL];
-//    }else{
-//        
-//        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:NO completion:NULL];
-//    }
+    if ([PFUser currentUser]) {
+        
+        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:YES completion:NULL];
+    }else{
+        
+        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:NO completion:NULL];
+    }
     
 }
 
@@ -226,21 +225,7 @@
 }
 
 
-//#pragma mark - userLoginEventHandler
-////handled by DataStore
-//- (void)userLoginEventHandler{
-//    NSLog(@"=== [%s] Logged in, performing login tasks.===", __func__);
-//    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-//    if (![currentInstallation[@"username"] isEqualToString: me.username]){
-//        currentInstallation[@"username"] = me.username;
-//        [currentInstallation saveInBackground];
-//    };
-//    
-//    [EWUserManager registerLocation];
-//    [EWUserManager updateLastSeen];
-//    [EWUserManager getFacebookFriends];
-//    
-//}
+
 
 //
 ////Danger Zone

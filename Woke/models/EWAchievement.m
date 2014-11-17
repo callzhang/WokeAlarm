@@ -8,7 +8,7 @@
 
 #import "EWAchievement.h"
 #import "EWPerson.h"
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 
 @implementation EWAchievement
 

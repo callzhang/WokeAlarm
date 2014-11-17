@@ -13,15 +13,12 @@
 @class EWCostumTextField;
 @interface EWAlarmEditCell : UITableViewCell<EWRingtoneSelectionDelegate,UITextFieldDelegate>
 //container
-//@property (nonatomic) BOOL alarmEnable;
 @property (strong, nonatomic) IBOutlet UITextView *statementText;
-//@property (nonatomic) EWTaskItem *task;
 @property (nonatomic) EWAlarm *alarm;
 @property (nonatomic, weak) UIViewController *presentingViewController;
 //data
 @property (nonatomic) NSDate *myTime;
 @property (nonatomic) NSString *myStatement;
-//@property (nonatomic) BOOL alarmOn;
 @property (strong, nonatomic) IBOutlet UITextField *statement;
 
 //outlet

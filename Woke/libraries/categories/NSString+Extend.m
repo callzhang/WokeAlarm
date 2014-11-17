@@ -41,7 +41,7 @@
     
     NSArray *days = [self componentsSeparatedByString:@", "];
     
-    for (NSInteger i=0; i<days.count; i++) {
+    for (NSUInteger i=0; i < days.count; i++) {
         NSString *dayToFind = [days objectAtIndex:i];
         NSInteger j = [weekdaysString indexOfObject:dayToFind];
         if (j==NSNotFound) {

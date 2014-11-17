@@ -10,7 +10,7 @@
 //TODO:#import "EWWakeUpViewController.h"
 #import "EWAVManager.h"
 #import "EWMediaSlider.h"
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 #import "EWPersonViewController.h"
 #import "EWUIUtil.h"
 #import "UIView+Layout.h"

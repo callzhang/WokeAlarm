@@ -12,7 +12,7 @@
 #define kCachedStatements                @"statements"
 
 
-@class EWAlarm, EWPerson, EWTaskItem;
+@class EWAlarm, EWPerson;
 
 @interface EWAlarmManager : NSObject
 @property BOOL isSchedulingAlarms;

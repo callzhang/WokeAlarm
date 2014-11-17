@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-@class EWTaskItem;
 
 @interface EWWakeUpManager : NSObject
 @property BOOL isWakingUp;
@@ -61,7 +60,7 @@
  Release the reference to wakeupVC
  Post notification: kWokeNotification
  */
-+ (void)woke:(EWTaskItem *)task;
++ (void)woke:(EWActivity *)task;
 
 /**
  Timely alarm timer check task

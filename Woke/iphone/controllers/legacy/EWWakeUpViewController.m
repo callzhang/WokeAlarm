@@ -233,7 +233,7 @@
             //show
             [UIView animateWithDuration:0.5 animations:^{
                 _shakeProgress.alpha = 0;
-            } completion:^(BOOL finished) {
+            } completion:^(BOOL success) {
                 
                 [_wakeupButton setTitle:@"Wake up!" forState:UIControlStateNormal];
                 [_wakeupButton addTarget:self action:@selector(presentPostWakeUpVC) forControlEvents:UIControlEventTouchUpInside];
@@ -305,7 +305,7 @@
     EWMediaCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     //get media item
     EWMedia *mi;
-    if (indexPath.row >= medias.count) {
+    if (indexPath.row >= (NSInteger)medias.count) {
         NSLog(@"@@@ WakupView asking for deleted media");
         mi = nil;
     }else{
@@ -514,7 +514,7 @@
         NSIndexPath *path;
         NSInteger nextCellIndex = currentCellPlaying + 1;
         
-        if (nextCellIndex < medias.count){
+        if (nextCellIndex < (NSInteger)medias.count){
             //get next cell
             NSLog(@"Play next song (%ld)", (long)nextCellIndex);
             path = [NSIndexPath indexPathForRow:nextCellIndex inSection:0];

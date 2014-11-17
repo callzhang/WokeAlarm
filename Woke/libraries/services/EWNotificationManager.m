@@ -12,8 +12,6 @@
 #import "EWPersonManager.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
-//#import "EWTaskItem.h"
-//#import "EWTaskManager.h"
 #import "EWPersonViewController.h"
 #import "EWWakeUpManager.h"
 #import "EWServer.h"
@@ -32,7 +30,6 @@
 
 @interface EWNotificationManager()
 @property EWPerson *person;
-@property EWTaskItem *task;
 @property EWMedia *media;
 @property (nonatomic)  EWNotification *notification;
 @end

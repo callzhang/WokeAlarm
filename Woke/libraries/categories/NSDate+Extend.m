@@ -168,22 +168,7 @@
 	NSDate *time = [[NSCalendar currentCalendar] dateByAddingComponents:deltaComps toDate:self options:0];
 	return time;
 }
-- (NSString *)weekday{
-	NSArray *weekdayArray = weekdays;
-	return weekdayArray[self.weekdayNumber];
-}
--(NSString *)weekdayShort
-{
-	NSArray *weekdayArray = weekdayshort;
-	return weekdayArray[self.weekdayNumber];
-}
 
-- (NSString *)timeInString{
-	NSCalendar *cal = [NSCalendar currentCalendar];
-	NSDateComponents *comp = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute | NSWeekdayCalendarUnit) fromDate:self];
-	NSString *HHMM = [NSString stringWithFormat:@"%ld:%ld", (long)comp.hour, (long)comp.minute];
-	return HHMM;
-}
 - (BOOL)isUpToDated{
 	BOOL upToDate = self.timeElapsed < kServerUpdateInterval;
 	return upToDate;
@@ -198,7 +183,7 @@
 
 - (NSInteger)HHMM{
 	NSCalendar *cal = [NSCalendar currentCalendar];
-	NSDateComponents *comp = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute | NSWeekdayCalendarUnit) fromDate:self];
+	NSDateComponents *comp = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitWeekday) fromDate:self];
 	NSInteger hhmm = comp.hour*100 + comp.minute;
 	return hhmm;
 }
@@ -267,7 +252,7 @@
 		//    }else if (days >=1) {
 		//        timeStr = [NSString stringWithFormat:@"1 day %d hours", (NSInteger)hours];
 	}else if (hours > 10) {
-		timeStr = [NSString stringWithFormat:@"%ld hours", (NSInteger)hours + (NSInteger)days*24];
+		timeStr = [NSString stringWithFormat:@"%ld hours", (NSInteger)(hours + days*24)];
 	}else if (hours >= 1){
 		timeStr = [NSString stringWithFormat:@"%.1f hours", hours + minutes/60];
 	}else if(minutes >= 1){

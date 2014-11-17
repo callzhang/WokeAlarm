@@ -6,15 +6,13 @@
 //  Copyright (c) 2013 Shens. All rights reserved.
 //
 
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 #import "EWUserManager.h"
 #import "EWPersonManager.h"
 #import "EWMediaManager.h"
-//#import "EWTaskManager.h"
 #import "EWAlarmManager.h"
 #import "EWWakeUpManager.h"
 #import "EWServer.h"
-//#import "EWTaskItem.h"
 #import "EWMedia.h"
 #import "EWNotification.h"
 #import "EWUIUtil.h"
@@ -22,14 +20,14 @@
 #import "EWBackgroundingManager.h"
 
 
-@implementation EWDataStore
+@implementation EWStartUpSequence
 
-+ (EWDataStore *)sharedInstance{
++ (EWStartUpSequence *)sharedInstance{
     
-    static EWDataStore *sharedStore_ = nil;
+    static EWStartUpSequence *sharedStore_ = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedStore_ = [[EWDataStore alloc] init];
+        sharedStore_ = [[EWStartUpSequence alloc] init];
     });
     return sharedStore_;
 }

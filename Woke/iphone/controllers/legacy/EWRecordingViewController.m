@@ -11,23 +11,17 @@
 
 //Util
 #import "NSDate+Extend.h"
-//#import "MBProgressHUD.h"
-//#import "EWCollectionPersonCell.h"
 #import "SCSiriWaveformView.h"
 #import "EWUIUtil.h"
-//#import "EWTaskManager.h"
 #import "EWDefines.h"
 #import "UAProgressView.h"
-//object
-//#import "EWTaskItem.h"
-//#import "EWTaskManager.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
 
 //backend
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 #import "EWServer.h"
 #import "ATConnect.h"
 #import "EWBackgroundingManager.h"

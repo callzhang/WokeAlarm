@@ -163,10 +163,10 @@
                         PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
                             //the relation can only be additive, which is not a problem for new relation
                             [blockParseRelation addObject:object];
-                            [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e   ) {
                                 NSLog(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, object.parseClassName, object.objectId);
-                                if (error) {
-                                    NSLog(@"Failed to save: %@", error.description);
+                                if (e) {
+                                    NSLog(@"Failed to save: %@", e.description);
                                     @try {
                                         [blockObject saveEventually];
                                     }
@@ -213,10 +213,10 @@
                     //set up a saving block
                     PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
                         [blockObject setObject:object forKey:key];
-                        [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e) {
                             //relationship can be saved regardless of network condition.
-                            if (error) {
-                                NSLog(@"Failed to save: %@", error.description);
+                            if (e) {
+                                NSLog(@"Failed to save: %@", e.description);
                                 @try {
                                     [blockObject saveEventually];
                                 }

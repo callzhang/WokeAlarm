@@ -8,10 +8,9 @@
 
 #import "EWAVManager.h"
 #import "EWMediaCell.h"
-//#import "EWTaskItem.h"
 #import "EWMedia.h"
 #import "EWMediaFile.h"
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 #import "EWMediaSlider.h"
 #import "EWMediaManager.h"
 #import "EWBackgroundingManager.h"
@@ -618,7 +617,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
         if (!m) m = media;
         EWAlarm *nextAlarm = [EWPerson myNextAlarm];
         
-        NSString *title = nextAlarm.time.weekday;
+        NSString *title = nextAlarm.time.mt_stringFromDateWithFullWeekdayTitle;
         
         //info
         NSMutableDictionary *dict = [NSMutableDictionary new];

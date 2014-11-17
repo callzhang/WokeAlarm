@@ -411,7 +411,7 @@
         BOOL nextTaskMatched = [alarm.objectID.URIRepresentation.absoluteString isEqualToString:taskID];
         NSInteger h = alarm.time.timeIntervalSinceNow/3600;
         BOOL needSleep = h < duration.floatValue && h > 1;
-        BOOL presenting = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
+        BOOL presenting = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController != nil;
         if (nextTaskMatched && needSleep && !presenting) {
             EWSleepViewController *controller = [[EWSleepViewController alloc] initWithNibName:nil bundle:nil];
             [[UIApplication sharedApplication].delegate.window.rootViewController presentViewControllerWithBlurBackground:controller];

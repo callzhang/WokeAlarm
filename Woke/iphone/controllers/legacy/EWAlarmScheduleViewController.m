@@ -7,8 +7,6 @@
 //
 
 #import "EWAlarmScheduleViewController.h"
-//#import "EWTaskManager.h"
-//#import "EWTaskItem.h"
 #import "EWAlarmManager.h"
 #import "EWAlarm.h"
 #import "EWAlarmEditCell.h"
@@ -19,7 +17,7 @@
 #import "EWUIUtil.h"
 
 //backend
-#import "EWDataStore.h"
+#import "EWStartUpSequence.h"
 //#import "EWCostumTextField.h"
 #import "UIView+Extend.h"
 
@@ -128,7 +126,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
         }
         //state
         if (cell.alarmToggle.selected != alarm.stateValue) {
-            NSLog(@"Change alarm state for %@ to %@", alarm.time.weekday, cell.alarmToggle.selected?@"ON":@"OFF");
+            NSLog(@"Change alarm state for %ld to %@", (long)alarm.time.mt_weekdayOfWeek, cell.alarmToggle.selected?@"ON":@"OFF");
             alarm.stateValue = cell.alarmToggle.selected?YES:NO;
             //[[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChangedNotification object:alarm userInfo:@{@"alarm": alarm}];
             hasChanges = YES;

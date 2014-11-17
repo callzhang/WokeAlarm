@@ -42,7 +42,6 @@ NSString * const selectAllCellId = @"selectAllCellId";
 
 //click action
 -(IBAction)wakeEm:(id)sender;
--(IBAction)buzzEm:(id)sender;
 -(IBAction)cancel:(id)sender;
 
 @end
@@ -54,7 +53,7 @@ NSString * const selectAllCellId = @"selectAllCellId";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        personArray = [NSArray new];
+        _personArray = [NSArray new];
         _selectedPersonSet = [NSMutableSet new];
         time = 0;
     }
@@ -124,7 +123,7 @@ NSString * const selectAllCellId = @"selectAllCellId";
     //take the cached value or a new value
     [[EWPersonManager sharedInstance] getEveryoneInBackgroundWithCompletion:^{
         NSArray *allPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
-        personArray = [allPerson sortedArrayUsingComparator:^NSComparisonResult(EWPerson *obj1, EWPerson *obj2) {
+        _personArray = [allPerson sortedArrayUsingComparator:^NSComparisonResult(EWPerson *obj1, EWPerson *obj2) {
             NSDate *time1 = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:obj1]?:[[NSDate date] timeByAddingMinutes:60];
             NSDate *time2 = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:obj2]?:[[NSDate date] timeByAddingMinutes:60];
             if ([time1 isEarlierThan:time2]) {
@@ -181,7 +180,7 @@ NSString * const selectAllCellId = @"selectAllCellId";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [personArray count]+1;
+    return [_personArray count]+1;
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
@@ -189,7 +188,7 @@ NSString * const selectAllCellId = @"selectAllCellId";
 {
     EWCollectionPersonCell * cell ;
     
-    if (indexPath.row == [personArray count]) {
+    if (indexPath.row == [_personArray count]) {
         //last one, select all
         cell = [cView  dequeueReusableCellWithReuseIdentifier:selectAllCellId forIndexPath:indexPath];
         [cell applyHexagonMask];
@@ -208,20 +207,20 @@ NSString * const selectAllCellId = @"selectAllCellId";
     [cell applyHexagonMask];
 
     //person
-    EWPerson * person = [personArray objectAtIndex:indexPath.row];
+    EWPerson * person = [_personArray objectAtIndex:indexPath.row];
     cell.person = person;
     return cell;
 }
 
 -(void)collectionView:(UICollectionView *)cView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == [personArray count]) {
+    if (indexPath.row == [_personArray count]) {
         [self selectAllCell];
         return;
     }
     
     EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[cView cellForItemAtIndexPath:indexPath];
-    EWPerson * person = [personArray objectAtIndex:indexPath.row];
+    EWPerson * person = [_personArray objectAtIndex:indexPath.row];
     if ([_selectedPersonSet containsObject:person])
     {
         //取消被选中状态
@@ -256,14 +255,14 @@ NSString * const selectAllCellId = @"selectAllCellId";
 -(void)selectAllCell
 {
     BOOL selectAll = YES;
-    if (_selectedPersonSet.count == personArray.count) {
+    if (_selectedPersonSet.count == _personArray.count) {
         //all selected, deselect all
         selectAll = NO;
     }
-    for (int i =0 ; i < [personArray count]; i++) {
+    for (NSUInteger i =0 ; i < [_personArray count]; i++) {
         NSIndexPath *selectedPath = [NSIndexPath indexPathForRow:i inSection:0];
         EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView cellForItemAtIndexPath:selectedPath];
-        EWPerson * person = [personArray objectAtIndex:selectedPath.row];
+        EWPerson * person = [_personArray objectAtIndex:selectedPath.row];
         
         if (selectAll)
         {

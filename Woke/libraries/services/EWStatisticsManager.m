@@ -7,8 +7,6 @@
 //
 
 #import "EWStatisticsManager.h"
-//#import "EWActivity.h"
-//#import "EWTaskManager.h"
 #import "EWUIUtil.h"
 #import "EWMediaManager.h"
 #import "EWMedia.h"
@@ -171,7 +169,7 @@
 
 #pragma mark - Update Activity
 + (void)updateActivityCacheWithCompletion:(void (^)(void))block{
-    //test
+    //TODO
     //return
     /*
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {

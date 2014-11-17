@@ -7,7 +7,6 @@
 //
 
 #import "EWAlarmEditCell.h"
-//#import "EWTaskItem.h"
 #import "EWAlarmManager.h"
 #import "EWAlarm.h"
 #import "NSDate+Extend.h"
@@ -48,33 +47,6 @@
     // Configure the view for the selected state
 }
 
-//- (void)setTask:(EWTaskItem *)t{
-//    if (task == t) {
-//        return;
-//    }
-//    //data
-//    task = t;
-//    alarm = task.alarm;
-//    //alarmOn = self.alarm.state;
-//    myTime = self.task.time ;
-//   
-//    myStatement = self.task.statement;
-//    
-//    self.statement.text = myStatement;
-//    
-//    
-//    //view
-//    self.time.text = [myTime date2timeShort];
-//    self.AM.text = [myTime date2am];
-//    self.weekday.text = [myTime weekdayShort];
-//
-//    
-//    //NSString *alarmState = alarmOn ? @"ON":@"OFF";
-//    //[self.alarmToggle setTitle:alarmState forState:UIControlStateNormal];
-//    
-//    self.alarmToggle.selected = task.state;
-//    [self toggleAlarm:nil];
-//}
 
 - (void)setAlarm:(EWAlarm *)a{
     //data
@@ -87,12 +59,12 @@
     //view
     self.time.text = [myTime date2timeShort];
     self.AM.text = [myTime date2am];
-    self.weekday.text = [myTime weekdayShort];
+    self.weekday.text = myTime.mt_stringFromDateWithShortWeekdayTitle;
     self.statement.text = myStatement;
     //NSString *alarmState = alarmOn ? @"ON":@"OFF";
     //[self.alarmToggle setTitle:alarmState forState:UIControlStateNormal];
     
-    self.alarmToggle.selected = alarm.state;
+    self.alarmToggle.selected = alarm.stateValue;
     if (self.alarmToggle.selected) {
         [self.alarmToggle setImage:[UIImage imageNamed:@"On_Btn"] forState:UIControlStateNormal];
     }else{

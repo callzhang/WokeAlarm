@@ -53,7 +53,7 @@
 		096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAAB1A195A3900B4CBFF /* EWAlarmManager.m */; };
 		096AAADE1A195A3900B4CBFF /* EWAVManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAAD1A195A3900B4CBFF /* EWAVManager.m */; };
 		096AAADF1A195A3900B4CBFF /* EWBackgroundingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAAF1A195A3900B4CBFF /* EWBackgroundingManager.m */; };
-		096AAAE01A195A3900B4CBFF /* EWDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAB21A195A3900B4CBFF /* EWDataStore.m */; };
+		096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAB21A195A3900B4CBFF /* EWStartUpSequence.m */; };
 		096AAAE11A195A3900B4CBFF /* EWImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAB41A195A3900B4CBFF /* EWImageStore.m */; };
 		096AAAE21A195A3900B4CBFF /* EWMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAB61A195A3900B4CBFF /* EWMediaManager.m */; };
 		096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAB81A195A3900B4CBFF /* EWNotificationManager.m */; };
@@ -63,7 +63,6 @@
 		096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC01A195A3900B4CBFF /* EWSocialManager.m */; };
 		096AAAE81A195A3900B4CBFF /* EWStatisticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC21A195A3900B4CBFF /* EWStatisticsManager.m */; };
 		096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC41A195A3900B4CBFF /* EWSync.m */; };
-		096AAAEA1A195A3900B4CBFF /* EWTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC61A195A3900B4CBFF /* EWTaskManager.m */; };
 		096AAAEB1A195A3900B4CBFF /* EWUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC81A195A3900B4CBFF /* EWUserManager.m */; };
 		096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACA1A195A3900B4CBFF /* EWUtil.m */; };
 		096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACC1A195A3900B4CBFF /* EWWakeUpManager.m */; };
@@ -206,8 +205,8 @@
 		096AAAAE1A195A3900B4CBFF /* EWBackgroundingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBackgroundingManager.h; sourceTree = "<group>"; };
 		096AAAAF1A195A3900B4CBFF /* EWBackgroundingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBackgroundingManager.m; sourceTree = "<group>"; };
 		096AAAB01A195A3900B4CBFF /* EWBlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlockTypes.h; sourceTree = "<group>"; };
-		096AAAB11A195A3900B4CBFF /* EWDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWDataStore.h; sourceTree = "<group>"; };
-		096AAAB21A195A3900B4CBFF /* EWDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWDataStore.m; sourceTree = "<group>"; };
+		096AAAB11A195A3900B4CBFF /* EWStartUpSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStartUpSequence.h; sourceTree = "<group>"; };
+		096AAAB21A195A3900B4CBFF /* EWStartUpSequence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStartUpSequence.m; sourceTree = "<group>"; };
 		096AAAB31A195A3900B4CBFF /* EWImageStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWImageStore.h; sourceTree = "<group>"; };
 		096AAAB41A195A3900B4CBFF /* EWImageStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWImageStore.m; sourceTree = "<group>"; };
 		096AAAB51A195A3900B4CBFF /* EWMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMediaManager.h; sourceTree = "<group>"; };
@@ -226,8 +225,6 @@
 		096AAAC21A195A3900B4CBFF /* EWStatisticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStatisticsManager.m; sourceTree = "<group>"; };
 		096AAAC31A195A3900B4CBFF /* EWSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSync.h; sourceTree = "<group>"; };
 		096AAAC41A195A3900B4CBFF /* EWSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSync.m; sourceTree = "<group>"; };
-		096AAAC51A195A3900B4CBFF /* EWTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWTaskManager.h; sourceTree = "<group>"; };
-		096AAAC61A195A3900B4CBFF /* EWTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWTaskManager.m; sourceTree = "<group>"; };
 		096AAAC71A195A3900B4CBFF /* EWUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWUserManager.h; sourceTree = "<group>"; };
 		096AAAC81A195A3900B4CBFF /* EWUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWUserManager.m; sourceTree = "<group>"; };
 		096AAAC91A195A3900B4CBFF /* EWUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWUtil.h; sourceTree = "<group>"; };
@@ -521,8 +518,8 @@
 				096AAAAE1A195A3900B4CBFF /* EWBackgroundingManager.h */,
 				096AAAAF1A195A3900B4CBFF /* EWBackgroundingManager.m */,
 				096AAAB01A195A3900B4CBFF /* EWBlockTypes.h */,
-				096AAAB11A195A3900B4CBFF /* EWDataStore.h */,
-				096AAAB21A195A3900B4CBFF /* EWDataStore.m */,
+				096AAAB11A195A3900B4CBFF /* EWStartUpSequence.h */,
+				096AAAB21A195A3900B4CBFF /* EWStartUpSequence.m */,
 				096AAAB31A195A3900B4CBFF /* EWImageStore.h */,
 				096AAAB41A195A3900B4CBFF /* EWImageStore.m */,
 				096AAAB51A195A3900B4CBFF /* EWMediaManager.h */,
@@ -541,8 +538,6 @@
 				096AAAC21A195A3900B4CBFF /* EWStatisticsManager.m */,
 				096AAAC31A195A3900B4CBFF /* EWSync.h */,
 				096AAAC41A195A3900B4CBFF /* EWSync.m */,
-				096AAAC51A195A3900B4CBFF /* EWTaskManager.h */,
-				096AAAC61A195A3900B4CBFF /* EWTaskManager.m */,
 				096AAAC71A195A3900B4CBFF /* EWUserManager.h */,
 				096AAAC81A195A3900B4CBFF /* EWUserManager.m */,
 				096AAAC91A195A3900B4CBFF /* EWUtil.h */,
@@ -1171,7 +1166,6 @@
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
 				096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */,
 				9B8139751A15D65900F1A56C /* GKResizeableCropOverlayView.m in Sources */,
-				096AAAEA1A195A3900B4CBFF /* EWTaskManager.m in Sources */,
 				096AAAD91A195A3900B4CBFF /* UIViewController+Blur.m in Sources */,
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
 				09DF4F831A1434AF00BEA328 /* _EWActivity.m in Sources */,
@@ -1203,7 +1197,7 @@
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
 				096AAAE81A195A3900B4CBFF /* EWStatisticsManager.m in Sources */,
-				096AAAE01A195A3900B4CBFF /* EWDataStore.m in Sources */,
+				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
