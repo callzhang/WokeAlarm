@@ -125,18 +125,16 @@ NSString * const EWPersonDefaultName = @"New User";
 }
 
 + (void)requestFriend:(EWPerson *)person{
-    [EWPersonManager getFriendsForPerson:[EWSession sharedSession].currentUser];
     [[EWSession sharedSession].currentUser addFriendsObject:person];
-    [EWPerson updateCachedFriends];
+    [EWPerson updateMyCachedFriends];
     [EWNotificationManager sendFriendRequestNotificationToUser:person];
     
     [EWSync save];
 }
 
 + (void)acceptFriend:(EWPerson *)person{
-    [EWPersonManager getFriendsForPerson:[EWSession sharedSession].currentUser];
     [[EWSession sharedSession].currentUser addFriendsObject:person];
-    [EWPerson updateCachedFriends];
+    [EWPerson updateMyCachedFriends];
     [EWNotificationManager sendFriendAcceptNotificationToUser:person];
     
     //update cache
@@ -146,10 +144,13 @@ NSString * const EWPersonDefaultName = @"New User";
 }
 
 + (void)unfriend:(EWPerson *)person{
-    [EWPersonManager getFriendsForPerson:[EWSession sharedSession].currentUser];
     [[EWSession sharedSession].currentUser removeFriendsObject:person];
-    [EWPerson updateCachedFriends];
+    [EWPerson updateMyCachedFriends];
     [EWSync save];
+}
+
++ (void)updateMyCachedFriends{
+    [[EWSession sharedSession].currentUser updateMyFriends];
 }
 
 - (void)updateMyFriends {
@@ -177,7 +178,7 @@ NSString * const EWPersonDefaultName = @"New User";
         }
         self.friends = [friendsMO copy];
         if (self.isMe) {
-            [EWPerson updateCachedFriends];
+            [EWPerson updateMyCachedFriends];
         }
     }
 }
@@ -206,7 +207,7 @@ NSString * const EWPersonDefaultName = @"New User";
 //check my relation, used for new installation with existing user
 + (void)updateMe{
     NSDate *lastCheckedMe = [[NSUserDefaults standardUserDefaults] valueForKey:kLastCheckedMe];
-    BOOL good = [EWPersonManager validatePerson:[EWSession sharedSession].currentUser];
+    BOOL good = [[EWSession sharedSession].currentUser validate];
     if (!good || !lastCheckedMe || lastCheckedMe.timeElapsed > kCheckMeInternal) {
         if (!good) {
             DDLogError(@"Failed to validate me, refreshing from server");
@@ -220,7 +221,7 @@ NSString * const EWPersonDefaultName = @"New User";
             EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
             [localMe refreshRelatedWithCompletion:^{
                 
-                [EWPerson updateCachedFriends];
+                [EWPerson updateMyCachedFriends];
                 [EWUserManager updateFacebookInfo];
             }];
             //TODO: we need a better sync method
@@ -286,7 +287,7 @@ NSString * const EWPersonDefaultName = @"New User";
     //friends
     NSArray *friendsID = self.cachedInfo[kFriended];
     if (self.friends.count != friendsID.count) {
-        [EWPersonManager getFriendsForPerson:self];
+        [EWPerson updateMyCachedFriends];
     }
     
     return good;

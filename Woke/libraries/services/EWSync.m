@@ -283,7 +283,7 @@ NSManagedObjectContext *mainContext;
     NSSet *objects = [updatedObjects setByAddingObjectsFromSet:insertedObjects];
     
     //for updated mo
-    for (NSManagedObject *MO in objects) {
+    for (EWServerObject *MO in objects) {
         //check if it's our guy
         if (![MO isKindOfClass:[EWServerObject class]]) {
             continue;
@@ -374,7 +374,7 @@ NSManagedObjectContext *mainContext;
 #pragma mark - Upload worker
 
 
-- (void)updateParseObjectFromManagedObject:(NSManagedObject *)managedObject{
+- (void)updateParseObjectFromManagedObject:(EWServerObject *)managedObject{
     NSError *error;
     
     //validation

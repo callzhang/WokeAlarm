@@ -31,7 +31,7 @@
 @property BOOL isFetchingEveryone;
 
 + (EWPersonManager *)sharedInstance;
-- (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
+//- (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
 - (EWPerson *)getPersonByServerID:(NSString *)ID;
 - (void)getEveryoneInBackgroundWithCompletion:(void (^)(void))block;
 
@@ -42,15 +42,5 @@
  Check if any change is needed.
  */
 //+ (void)updateMe;
-
-//friend
-//TODO: move to EWPerson
-+ (void)requestFriend:(EWPerson *)person;
-+ (void)acceptFriend:(EWPerson *)person;
-+ (void)unfriend:(EWPerson *)person;
-+ (void)getFriendsForPerson:(EWPerson *)person;
-
-+ (BOOL)validatePerson:(EWPerson *)person;
-
 
 @end

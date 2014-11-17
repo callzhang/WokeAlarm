@@ -133,7 +133,7 @@
 		9B81397C1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396E1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed.png */; };
 		9B81397D1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396F1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed@2x.png */; };
 		9B840A201A1705CE00D6C2A3 /* EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A1F1A1705CE00D6C2A3 /* EWSocial.m */; };
-		9B840A291A170AE800D6C2A3 /* EWSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* EWSelectionViewController.m */; };
+		9B840A291A170AE800D6C2A3 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B840A2A1A170AE800D6C2A3 /* RMDateSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A281A170AE800D6C2A3 /* RMDateSelectionViewController.m */; };
 		A3428B2612EFBC90CE29A819 /* libPods-WokeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */; };
 /* End PBXBuildFile section */
@@ -359,8 +359,8 @@
 		9B81396F1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetDoneButtonPressed@2x.png"; sourceTree = "<group>"; };
 		9B840A1E1A1705CE00D6C2A3 /* EWSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSocial.h; sourceTree = "<group>"; };
 		9B840A1F1A1705CE00D6C2A3 /* EWSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSocial.m; sourceTree = "<group>"; };
-		9B840A251A170AE800D6C2A3 /* EWSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSelectionViewController.h; sourceTree = "<group>"; };
-		9B840A261A170AE800D6C2A3 /* EWSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWSelectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		9B840A251A170AE800D6C2A3 /* RDSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSelectionViewController.h; sourceTree = "<group>"; };
+		9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RDSelectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9B840A271A170AE800D6C2A3 /* RMDateSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMDateSelectionViewController.h; sourceTree = "<group>"; };
 		9B840A281A170AE800D6C2A3 /* RMDateSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMDateSelectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.adhoc.xcconfig"; sourceTree = "<group>"; };
@@ -849,8 +849,8 @@
 		9B840A241A170AE800D6C2A3 /* RMSelectionView */ = {
 			isa = PBXGroup;
 			children = (
-				9B840A251A170AE800D6C2A3 /* EWSelectionViewController.h */,
-				9B840A261A170AE800D6C2A3 /* EWSelectionViewController.m */,
+				9B840A251A170AE800D6C2A3 /* RDSelectionViewController.h */,
+				9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */,
 				9B840A271A170AE800D6C2A3 /* RMDateSelectionViewController.h */,
 				9B840A281A170AE800D6C2A3 /* RMDateSelectionViewController.m */,
 			);
@@ -1188,7 +1188,7 @@
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
 				096AAB121A1972B800B4CBFF /* EWPersonViewController.m in Sources */,
 				096AAAE21A195A3900B4CBFF /* EWMediaManager.m in Sources */,
-				9B840A291A170AE800D6C2A3 /* EWSelectionViewController.m in Sources */,
+				9B840A291A170AE800D6C2A3 /* RDSelectionViewController.m in Sources */,
 				096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */,
 				096AAB101A1972B800B4CBFF /* EWFriendsViewController.m in Sources */,
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,

@@ -10,8 +10,6 @@
 
 @interface EWPostWakeUpViewController : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource>
 {
-    
-    NSArray * personArray;
     __weak IBOutlet UICollectionView *collectionView;
     IBOutlet UIButton *buzzButton;
     IBOutlet UIButton *voiceMessageButton;

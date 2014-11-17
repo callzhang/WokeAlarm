@@ -32,14 +32,21 @@ extern NSString * const EWPersonDefaultName;
 
 - (BOOL)validate;
 
+//my stuff
 + (NSArray *)myActivities;
 + (NSArray *)myNotifications;
 + (NSArray *)myUnreadNotifications;
+//+ (void)getFriendsForPerson:(EWPerson *)person;
+
 + (NSArray *)myAlarms;
 + (EWAlarm *)myNextAlarm;
-
 + (NSArray *)myFriends;
-+ (void)updateCachedFriends;
+
+//friend
++ (void)requestFriend:(EWPerson *)person;
++ (void)acceptFriend:(EWPerson *)person;
++ (void)unfriend:(EWPerson *)person;
++ (void)updateMyCachedFriends;
 
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
 @end

@@ -106,7 +106,7 @@
 + (void)loginWithServerUser:(PFUser *)user withCompletionBlock:(void (^)(void))completionBlock{
 
     //fetch or create
-    EWPerson *person = [[EWPersonManager sharedInstance] findOrCreatePersonWithParseObject:user];
+    EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
     
     //save me
     [EWSession sharedSession].currentUser = person;
@@ -275,17 +275,17 @@
         
         //reverse search address
         CLGeocoder *geoloc = [[CLGeocoder alloc] init];
-        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
             
             [EWSession sharedSession].currentUser.lastLocation = location;
             
-            if (error == nil && [placemarks count] > 0) {
+            if (err == nil && [placemarks count] > 0) {
                 CLPlacemark *placemark = [placemarks lastObject];
                 //get info
                 [EWSession sharedSession].currentUser.city = placemark.locality;
                 [EWSession sharedSession].currentUser.region = placemark.country;
             } else {
-                NSLog(@"%@", error.debugDescription);
+                NSLog(@"%@", err.debugDescription);
             }
             [EWSync save];
 

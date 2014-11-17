@@ -53,9 +53,9 @@
         [media refresh];
         //save
         NSMutableDictionary *cache = [[EWSession sharedSession].currentUser.cachedInfo mutableCopy];
-        NSMutableArray *voices = [mediasFromWoke mutableCopy];
-        [voices addObject:media.objectId];
-        [cache setObject:voices forKey:kWokeVoiceReceived];
+        NSMutableArray *receivedVoices = [mediasFromWoke mutableCopy];
+        [receivedVoices addObject:media.objectId];
+        [cache setObject:receivedVoices forKey:kWokeVoiceReceived];
         [EWSession sharedSession].currentUser.cachedInfo = [cache copy];
         [EWSync save];
         

@@ -113,5 +113,9 @@
     self.profileView.image = [UIImage imageNamed:@"profile"];
 }
 
+- (IBAction)skip:(id)sender{
+    //
+}
+
 
 @end
