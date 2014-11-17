@@ -87,7 +87,8 @@
     
     //updating facebook friends
     DDLogVerbose(@"5. Updating facebook friends");
-    [EWUserManager getFacebookFriends];
+    //TODO: why?
+//    [EWUserManager getFacebookFriends];
     
     //update facebook info
     //DDLogVerbose(@"6. Updating facebook info");

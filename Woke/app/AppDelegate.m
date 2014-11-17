@@ -8,6 +8,11 @@
 
 #import "AppDelegate.h"
 #import "EWUtil.h"
+#import "EWSync.h"
+#import "EWStartUpSequence.h"
+#import "FBSession.h"
+#import "FBAppCall.h"
+#import "PFFacebookUtils.h"
 
 UIViewController *rootViewController;
 
@@ -20,7 +25,9 @@ UIViewController *rootViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     EWLogInit();
+    [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
+    [EWStartUpSequence sharedInstance];
     return YES;
 }
 
@@ -47,4 +54,17 @@ UIViewController *rootViewController;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - Facebook
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    
+    BOOL handled_1 = [FBSession.activeSession handleOpenURL:url];
+    BOOL handled_2 =  [FBAppCall handleOpenURL:url
+                             sourceApplication:sourceApplication
+                                   withSession:[PFFacebookUtils session]];
+    
+    return handled_1 && handled_2;
+}
 @end

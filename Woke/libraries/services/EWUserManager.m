@@ -91,13 +91,13 @@
 + (void)showLoginPanel{
 
 
-    if ([PFUser currentUser]) {
-        
-        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:YES completion:NULL];
-    }else{
-        
-        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:NO completion:NULL];
-    }
+//    if ([PFUser currentUser]) {
+//        
+//        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:YES completion:NULL];
+//    }else{
+//        
+//        [[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:[EWFirstTimeViewController new] animated:NO completion:NULL];
+//    }
     
 }
 

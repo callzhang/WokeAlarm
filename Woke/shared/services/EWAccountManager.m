@@ -116,7 +116,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             person.birthday = [formatter dateFromString:user[@"birthday"]];
         }
         //facebook link
-        person.facebook = user.id;
+        person.facebook = user.objectID;
         //gender
         person.gender = user[@"gender"];
         //city
@@ -245,7 +245,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 }
 #pragma mark -
 + (NSArray *)facebookPermissions{
-    NSArray *permissions = @[@"basic_info",
+    NSArray *permissions = @[@"public_profile",
                              @"user_location",
                              @"user_birthday",
                              @"email",

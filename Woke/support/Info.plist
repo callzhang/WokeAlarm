@@ -18,8 +18,37 @@
 	<string>1.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string>1</string>
+			<key>CFBundleURLName</key>
+			<string>com.weibo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wb314286162</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.facebook</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb878112625538046</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>878112625538046</string>
+	<key>FacebookDisplayName</key>
+	<string>Woke</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
