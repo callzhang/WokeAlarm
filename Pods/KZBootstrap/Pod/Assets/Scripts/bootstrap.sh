@@ -3,7 +3,7 @@
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "${DIR}" ]]; then DIR="${PWD}"; fi
 . "${DIR}/iconVersioning.sh"
-. "${DIR}/lines.sh"
+#. "${DIR}/lines.sh"
 . "${DIR}/todo.sh"
 . "${DIR}/user.sh"
 

@@ -376,7 +376,7 @@
             person.birthday = [formatter dateFromString:user[@"birthday"]];
         }
         //facebook link
-        person.facebook = user.id;
+        person.facebook = user.objectID;
         //gender
         person.gender = user[@"gender"];
         //city
@@ -390,7 +390,7 @@
         if (!person.profilePic) {
             //download profile picture if needed
             //profile pic, async download, need to assign img to person before leave
-            NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", user.id];
+            NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", user.objectID];
             
             NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
             UIImage *img = [UIImage imageWithData:data];
