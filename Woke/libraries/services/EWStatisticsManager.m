@@ -170,91 +170,90 @@
 #pragma mark - Update Activity
 + (void)updateActivityCacheWithCompletion:(void (^)(void))block{
     //TODO
-    //return
-    /*
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *localMe = [[EWSession sharedSession].currentUser inContext:localContext];
-        [[EWTaskManager sharedInstance] checkPastTasks];
-        NSArray *tasks = [[EWTaskManager sharedInstance] pastTasksByPerson:localMe];//newest on top
+        EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
+        NSArray *activities = [EWActivityManager myActivities];//newest on top
         NSMutableDictionary *cache = localMe.cachedInfo.mutableCopy;
-        NSMutableDictionary *activity = [cache[kTaskActivityCache] mutableCopy]?:[NSMutableDictionary new];
-        if (activity.count == tasks.count) {
-            NSLog(@"=== cached _activity activities count is same as past _activity count (%ld)", (long)tasks.count);
+        NSMutableDictionary *activityCache = [cache[kActivityCache] mutableCopy]?:[NSMutableDictionary new];
+        if (activityCache.count == activities.count) {
+            NSLog(@"=== cached _activity activities count is same as past _activity count (%ld)", (long)activities.count);
             return;
         }
         
-        for (NSInteger i =0; i<tasks.count; i++) {
+        for (NSUInteger i =0; i<activities.count; i++) {
             //start from the newest task
-            EWActivity *_activity = tasks[i];
-            
-            NSDate *wakeTime;
-            NSArray *wokeTo;
-            
-            
-            if (task.completed && [task.completed timeIntervalSinceDate:task.time] < kMaxWakeTime) {
-                wakeTime = task.completed;
-            }else{
-                wakeTime = [task.time dateByAddingTimeInterval:kMaxWakeTime];
-            }
-            
-            NSDate *eod = task.time.endOfDay;
-            NSDate *bod = task.time.beginingOfDay;
-            
-            //woke to receivers
-            NSMutableArray *receivers = [NSMutableArray new];
-            for (EWMedia *m in [EWSession sharedSession].currentUser.medias.copy) {
-				if (![mainContext existingObjectWithID:m.objectID error:NULL]) return;
-                for (EWActivity *t in m.activity.copy) {
-					if (![mainContext existingObjectWithID:t.objectID error:NULL]) return;
-                    if ([t.time isEarlierThan:eod] && [bod isEarlierThan:t.time]) {
-                        NSString *receiver = t.owner.objectId;
-                        if (receiver) {
-                            [receivers addObject:receiver];
-                        }
-                    }
+            EWActivity *_activity = activities[i];
+            if ([_activity.type isEqualToString:EWActivityTypes.media]) {
+                NSDate *wakeTime;
+                //NSArray *wokeTo;
+                
+                
+                if (_activity.completed && [_activity.completed timeIntervalSinceDate:_activity.time] < kMaxWakeTime) {
+                    wakeTime = _activity.completed;
+                }else{
+                    wakeTime = [_activity.time dateByAddingTimeInterval:kMaxWakeTime];
+                }
+                
+                //NSDate *eod = _activity.time.endOfDay;
+                //NSDate *bod = _activity.time.beginingOfDay;
+                
+                ////woke to receivers
+                //            NSMutableArray *receivers = [NSMutableArray new];
+                //            for (EWMedia *m in [EWSession sharedSession].currentUser.medias.copy) {
+                //				if (![mainContext existingObjectWithID:m.objectID error:NULL]) return;
+                //                for (EWActivity *t in m.activity.copy) {
+                //					if (![mainContext existingObjectWithID:t.objectID error:NULL]) return;
+                //                    if ([t.time isEarlierThan:eod] && [bod isEarlierThan:t.time]) {
+                //                        NSString *receiver = t.owner.objectId;
+                //                        if (receiver) {
+                //                            [receivers addObject:receiver];
+                //                        }
+                //                    }
+                //                }
+                //            }
+                //            wokeTo = receivers.copy;
+                
+                
+                //woke by sender
+                NSArray *wokeBy = [NSArray new];
+                NSMutableArray *senders = [NSMutableArray new];
+                for (EWMedia *m in _activity.medias) {
+                    NSString *sender = m.author.objectId;
+                    if (!sender) continue;
+                    [senders addObject:sender];
+                }
+                wokeBy = senders.copy;
+                
+                @try {
+                    NSDictionary *taskActivity = @{kActivityType: _activity.type,
+                                                   kActivityTime: _activity.time,
+                                                   kWokeTime: wakeTime,
+                                                   kWokeBy: wokeBy};
+                    
+                    NSString *dateKey = _activity.time.date2YYMMDDString;
+                    activityCache[dateKey] = taskActivity;
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"*** Failed to generate _activity activity: %@", exception.description);
                 }
             }
-            wokeTo = receivers.copy;
             
             
-            //woke by sender
-            NSArray *wokeBy;
-            NSMutableArray *senders = [NSMutableArray new];
-            for (EWMedia *m in task.medias) {
-                NSString *sender = m.author.objectId;
-                if (!sender) continue;
-                [senders addObject:sender];
-            }
-            wokeBy = senders.copy;
-            
-            @try {
-                NSDictionary *taskActivity = @{kTaskState: @(task.state),
-                                               kTaskTime: task.time,
-                                               kWokeTime: wakeTime,
-                                               kWokeBy: wokeBy.count?wokeBy:@0,
-                                               kWokeTo: wokeTo.count?wokeTo:@0};
-                
-                NSString *dateKey = task.time.date2YYMMDDString;
-                activity[dateKey] = taskActivity;
-            }
-            @catch (NSException *exception) {
-                NSLog(@"*** Failed to generate _activity activity: %@", exception.description);
-            }
             
         }
         
-        cache[kTaskActivityCache] = [activity copy];
+        cache[kActivityCache] = [activityCache copy];
         localMe.cachedInfo = [cache copy];
         
-        NSLog(@"_activity activity cache updated with %d records", activity.count);
+        NSLog(@"_activity activity cache updated with %lu records", (unsigned long)activityCache.count);
 
     } completion:^(BOOL success, NSError *error) {
-        NSLog(@"Finished updating _activity activity cache");
+        NSLog(@"Finished updating activity cache");
         if (block) {
             block();
         }
     }];
-    */
+    
 }
 
 + (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs{

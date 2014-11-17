@@ -18,10 +18,11 @@
 #define kSuccessRate        @"ave_success_rate"
 #define kWakeability        @"wakeability"
 
-//task activity
-#define kTaskActivityCache  @"task_activity_cache"
-#define kTaskState          @"state"
-#define kTaskTime           @"time"
+//activity
+#define kActivityCache      @"task_activity_cache"
+//dictionary keys
+#define kActivityType       @"type"
+#define kActivityTime       @"time"
 #define kWokeTime           @"wake"
 #define kWokeBy             @"woke_by"
 #define kWokeTo             @"woke_to"
