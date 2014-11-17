@@ -18,7 +18,7 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
 
 @interface EWFriendsViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 {
-    NSArray *friends;
+    NSArray *friendIDs;
     NSArray *mutualFriends;
 }
 
@@ -65,17 +65,13 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
     _friendsCollectionView.dataSource = self;
     
     [self.view showLoopingWithTimeout:0];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [EWPersonManager getFriendsForPerson:_person];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            friends = [_person.friends allObjects];
-            NSMutableSet *myFriends = [[EWSession sharedSession].currentUser.friends mutableCopy];
-            [myFriends intersectSet:[NSSet setWithArray:friends]];
-            mutualFriends = [myFriends allObjects];
-            [_friendsCollectionView reloadData];
-            [EWUIUtil dismissHUDinView:self.view];
-        });
-    });
+    
+    friendIDs = _person.cachedInfo[kCachedFriends];
+    NSMutableSet *myFriendIDs = [NSMutableSet setWithArray:[EWSession sharedSession].currentUser.cachedInfo[kCachedFriends]];
+    [myFriendIDs intersectSet:[NSSet setWithArray:friendIDs]];
+    mutualFriends = [myFriendIDs allObjects];
+    [_friendsCollectionView reloadData];
+    [EWUIUtil dismissHUDinView:self.view];
     
 
 }
@@ -103,7 +99,7 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
     [_friendsTableView registerNib:[UINib nibWithNibName:@"EWFriendsTableCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:tableViewCellId];
     
     //
-    if ([friends count]==1 || self.person.isMe) {
+    if ([friendIDs count]==1 || self.person.isMe) {
         _tabView.hidden = YES;
         [EWUIUtil applyAlphaGradientForView:_friendsCollectionView withEndPoints:@[@0.15]];
         _friendsCollectionView.contentInset = UIEdgeInsetsMake(60, 0, 0, 0);
@@ -166,7 +162,7 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [friends count];
+    return [friendIDs count];
     
 }
 
@@ -175,7 +171,7 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
     
     EWCollectionPersonCell * cell = [_friendsCollectionView dequeueReusableCellWithReuseIdentifier:collectViewCellId forIndexPath:indexPath];
     cell.showName = YES;
-    EWPerson * friend = [friends objectAtIndex:indexPath.row];
+    EWPerson * friend = [friendIDs objectAtIndex:indexPath.row];
     
     cell.person = friend;
 
@@ -228,7 +224,7 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
 {
     if ([self.navigationController.viewControllers count] <kMaxPersonNavigationConnt) {
         
-        EWPerson * friend = [friends objectAtIndex:number];
+        EWPerson * friend = [friendIDs objectAtIndex:number];
         EWPersonViewController *viewController = [[EWPersonViewController alloc] initWithPerson:friend ];
         [self.navigationController pushViewController:viewController animated:YES];
         

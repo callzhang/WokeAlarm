@@ -1,13 +1,13 @@
 
 
-#import "EWSelectionViewController.h"
+#import "RDSelectionViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define EW_PICKER_HEIGHT_PORTRAIT 150
 #define EW_PICKER_HEIGHT_LANDSCAPE 100
 
 
-@interface  EWSelectionViewController ()
+@interface  RDSelectionViewController ()
 
 @property (nonatomic, weak) UIViewController *rootViewController;
 
@@ -39,13 +39,13 @@
 
 @end
 
-@implementation EWSelectionViewController
+@implementation RDSelectionViewController
 
 @synthesize selectedBackgroundColor = _selectedBackgroundColor;
 
 #pragma mark - Class
 + (instancetype)dateSelectionController {
-    return [[EWSelectionViewController alloc] init];
+    return [[RDSelectionViewController alloc] init];
 }
 
 static NSString *_localizedNowTitle = @"Now";
@@ -76,7 +76,7 @@ static NSString *_localizedSelectTitle = @"Select";
     _localizedSelectTitle = newLocalizedTitle;
 }
 
-+ (void)showDateSelectionViewController:(EWSelectionViewController *)aViewController fromViewController:(UIViewController *)rootViewController {
++ (void)showDateSelectionViewController:(RDSelectionViewController *)aViewController fromViewController:(UIViewController *)rootViewController {
     aViewController.backgroundView.alpha = 0;
     [rootViewController.view addSubview:aViewController.backgroundView];
     
@@ -137,7 +137,7 @@ static NSString *_localizedSelectTitle = @"Select";
     }];
 }
 
-+ (void)dismissDateSelectionViewController:(EWSelectionViewController *)aViewController fromViewController:(UIViewController *)rootViewController {
++ (void)dismissDateSelectionViewController:(RDSelectionViewController *)aViewController fromViewController:(UIViewController *)rootViewController {
     
     [rootViewController.view removeConstraint:aViewController.yConstraint];
     aViewController.yConstraint = [NSLayoutConstraint constraintWithItem:aViewController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:rootViewController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
@@ -173,7 +173,7 @@ static NSString *_localizedSelectTitle = @"Select";
 }
 -(id)initWithPickerDelegate:(id)vc;
 {
-    EWSelectionViewController *selectionVC = [[EWSelectionViewController alloc] init];
+    RDSelectionViewController *selectionVC = [[RDSelectionViewController alloc] init];
     selectionVC.picker.delegate =vc;
     selectionVC.picker.dataSource = vc;
     
@@ -215,7 +215,7 @@ static NSString *_localizedSelectTitle = @"Select";
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.numberOfLines = 0;
     
-    [self.nowButton setTitle:[EWSelectionViewController localizedTitleForNowButton] forState:UIControlStateNormal];
+    [self.nowButton setTitle:[RDSelectionViewController localizedTitleForNowButton] forState:UIControlStateNormal];
     [self.nowButton setTitleColor:[UIColor colorWithRed:0 green:122./255. blue:1 alpha:1] forState:UIControlStateNormal];
     [self.nowButton addTarget:self action:@selector(nowButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     self.nowButton.backgroundColor = [UIColor whiteColor];
@@ -241,7 +241,7 @@ static NSString *_localizedSelectTitle = @"Select";
     self.cancelAndSelectButtonSeperator.backgroundColor = [UIColor lightGrayColor];
     self.cancelAndSelectButtonSeperator.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.cancelButton setTitle:[EWSelectionViewController localizedTitleForCancelButton] forState:UIControlStateNormal];
+    [self.cancelButton setTitle:[RDSelectionViewController localizedTitleForCancelButton] forState:UIControlStateNormal];
 //    [self.cancelButton setTitleColor:[UIColor colorWithRed:0 green:122./255. blue:1 alpha:1] forState:UIControlStateNormal];
     [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
@@ -250,7 +250,7 @@ static NSString *_localizedSelectTitle = @"Select";
     self.cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.cancelButton setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     
-    [self.selectButton setTitle:[EWSelectionViewController localizedTitleForSelectButton] forState:UIControlStateNormal];
+    [self.selectButton setTitle:[RDSelectionViewController localizedTitleForSelectButton] forState:UIControlStateNormal];
 //    [self.selectButton setTitleColor:[UIColor colorWithRed:0 green:122./255. blue:1 alpha:1] forState:UIControlStateNormal];
     [self.selectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
@@ -383,7 +383,7 @@ static NSString *_localizedSelectTitle = @"Select";
         [self.picker layoutIfNeeded];
         
         [self.rootViewController.view setNeedsUpdateConstraints];
-        __weak EWSelectionViewController *blockself = self;
+        __weak RDSelectionViewController *blockself = self;
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             [blockself.rootViewController.view layoutIfNeeded];
         } completion:^(BOOL finished) {
@@ -529,11 +529,11 @@ static NSString *_localizedSelectTitle = @"Select";
     }
     
     self.rootViewController = aViewController;
-    [EWSelectionViewController showDateSelectionViewController:self fromViewController:aViewController];
+    [RDSelectionViewController showDateSelectionViewController:self fromViewController:aViewController];
 }
 
 - (void)dismiss {
-    [EWSelectionViewController dismissDateSelectionViewController:self fromViewController:self.rootViewController];
+    [RDSelectionViewController dismissDateSelectionViewController:self fromViewController:self.rootViewController];
 }
 
 #pragma mark - Actions

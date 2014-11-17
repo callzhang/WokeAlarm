@@ -3,7 +3,7 @@
 
 
 
-@class EWSelectionViewController;
+@class RDSelectionViewController;
 
 /**
  This block is called when the user selects a certain date if blocks are used.
@@ -13,14 +13,14 @@
  @param aDate The selected date.
  */
 
-typedef void (^EWSelectionBlock)(EWSelectionViewController *vc);
+typedef void (^EWSelectionBlock)(RDSelectionViewController *vc);
 
 /**
  This block is called when the user cancels if blocks are used.
  
  @param vc The date selection view controller that just got canceled.
  */
-typedef void (^EWCancelBlock)(EWSelectionViewController *vc);
+typedef void (^EWCancelBlock)(RDSelectionViewController *vc);
 
 @protocol EWSelectionViewControllerDelegate <NSObject>
 
@@ -33,14 +33,14 @@ typedef void (^EWCancelBlock)(EWSelectionViewController *vc);
  
  @param aDate The selected date.
  */
-- (void)dateSelectionViewController:(EWSelectionViewController *)vc;
+- (void)dateSelectionViewController:(RDSelectionViewController *)vc;
 
 /**
  This delegate method is called when the user selects the cancel button or taps the darkened background (if `backgroundTapsDisabled` is set to NO).
  
  @param vc The date selection view controller that just canceled.
  */
-- (void)dateSelectionViewControllerDidCancel:(EWSelectionViewController *)vc;
+- (void)dateSelectionViewControllerDidCancel:(RDSelectionViewController *)vc;
 
 @optional
 
@@ -55,7 +55,7 @@ typedef void (^EWCancelBlock)(EWSelectionViewController *vc);
 
 @end
 
-@interface EWSelectionViewController : UIViewController
+@interface RDSelectionViewController : UIViewController
 
 /// @name Properties
 

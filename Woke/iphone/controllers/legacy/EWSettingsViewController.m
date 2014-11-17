@@ -13,7 +13,7 @@
 #import "EWFirstTimeViewController.h"
 #import "EWLogInViewController.h"
 #import "EWUserManager.h"
-#import "EWSelectionViewController.h"
+#import "RDSelectionViewController.h"
 #import "RMDateSelectionViewController.h"
 #import "EWAVManager.h"
 #import "EWAlarmManager.h"
@@ -35,7 +35,7 @@ static const NSArray *pref;
 @interface EWSettingsViewController (UITableView) <UITableViewDataSource, UITableViewDelegate>
 @end
 
-@interface EWSelectionViewController()<UIPickerViewDataSource,UIPickerViewDelegate,EWSelectionViewControllerDelegate>
+@interface RDSelectionViewController()<UIPickerViewDataSource,UIPickerViewDelegate,EWSelectionViewControllerDelegate>
 @end
 
 @implementation EWSettingsViewController
@@ -54,6 +54,7 @@ static const NSArray *pref;
     [self initView];
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [EWSession sharedSession].currentUser.preference = [preference mutableCopy];
     [EWSync save];
 }
@@ -221,38 +222,38 @@ static const NSArray *pref;
     NSString *title = pref[indexPath.row];
     selectedCellTitle = title;
     if ([title isEqualToString:@"Morning tone"]){
-        EWSelectionViewController *selectionVC = [[EWSelectionViewController alloc] initWithPickerDelegate:self];
+        RDSelectionViewController *selectionVC = [[RDSelectionViewController alloc] initWithPickerDelegate:self];
         selectionVC.hideNowButton = YES;
-        [selectionVC showWithSelectionHandler:^(EWSelectionViewController *vc) {
+        [selectionVC showWithSelectionHandler:^(RDSelectionViewController *vc) {
             NSUInteger row =[vc.picker selectedRowInComponent:0];
             UILabel *titleLabel = (UILabel *)[vc.picker viewForRow:row forComponent:0];
             self.preference[@"DefaultTone"] = titleLabel.text;
             [_tableView reloadData];
             [[EWAVManager sharedManager] stopAllPlaying];
-        } andCancelHandler:^(EWSelectionViewController *vc) {
+        } andCancelHandler:^(RDSelectionViewController *vc) {
             [[EWAVManager sharedManager] stopAllPlaying];
             DDLogInfo(@"Date selection was canceled (with block)");
         }];
     }
     else if ([title isEqualToString:@"Social"]){//depreciated
-        EWSelectionViewController *selectionVC = [[EWSelectionViewController alloc] initWithPickerDelegate:self];
+        RDSelectionViewController *selectionVC = [[RDSelectionViewController alloc] initWithPickerDelegate:self];
         selectionVC.hideNowButton = YES;
-        [selectionVC showWithSelectionHandler:^(EWSelectionViewController *vc) {
+        [selectionVC showWithSelectionHandler:^(RDSelectionViewController *vc) {
             NSUInteger row =[vc.picker selectedRowInComponent:0];
             NSString *level = socialLevels[row];
             self.preference[@"SocialLevel"] = level;
             [_tableView reloadData];
             DDLogInfo(@"Successfully selected date: %ld (With block)",(long)[vc.picker selectedRowInComponent:0]);
-       } andCancelHandler:^(EWSelectionViewController *vc) {
+       } andCancelHandler:^(RDSelectionViewController *vc) {
            DDLogInfo(@"Date selection was canceled (with block)");
        }];
         
     }
     else if ([title isEqualToString:@"Sleep duration"]){
-        EWSelectionViewController *selectionVC = [[EWSelectionViewController alloc] initWithPickerDelegate:self];
+        RDSelectionViewController *selectionVC = [[RDSelectionViewController alloc] initWithPickerDelegate:self];
         selectionVC.hideNowButton = YES;
         
-        [selectionVC showWithSelectionHandler:^(EWSelectionViewController *vc) {
+        [selectionVC showWithSelectionHandler:^(RDSelectionViewController *vc) {
             NSUInteger row =[vc.picker selectedRowInComponent:0];
             
             float d = [(NSNumber *)sleepDurations[row] floatValue];
@@ -264,7 +265,7 @@ static const NSArray *pref;
                 [_tableView reloadData];
                 [[EWAlarmManager sharedInstance] scheduleSleepNotifications];
             }
-        } andCancelHandler:^(EWSelectionViewController *vc) {
+        } andCancelHandler:^(RDSelectionViewController *vc) {
             DDLogInfo(@"Date selection was canceled (with block)");
         }];
         

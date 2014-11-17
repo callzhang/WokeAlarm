@@ -99,7 +99,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     profileItemsArray = kProfileTableArray;
 
     //login event
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedIn) name:kPersonLoggedIn object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedIn:) name:kPersonLoggedIn object:nil];
     
     //table view
     taskTableView.dataSource = self;
@@ -126,6 +126,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     //navigation
     [EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
@@ -365,18 +366,18 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     if ([title isEqualToString:@"Add friend"]) {
         
         //friend
-        [EWPersonManager requestFriend:person];
+        [EWPerson requestFriend:person];
         [self.view showSuccessNotification:@"Request sent"];
         
     }else if ([title isEqualToString:@"Unfriend"]){
         
         //unfriend
-        [EWPersonManager unfriend:person];
+        [EWPerson unfriend:person];
         [self.view showSuccessNotification:@"Unfriended"];
         
     }else if ([title isEqualToString:@"Accept friend"]){
         
-        [EWPersonManager acceptFriend:person];
+        [EWPerson acceptFriend:person];
         [self.view showSuccessNotification:@"Added"];
         
     }else if ([title isEqualToString:@"Send Voice Greeting"]){
@@ -697,7 +698,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 
 #pragma mark - USER LOGIN EVENT
-- (void)userLoggedIn{
+- (void)userLoggedIn:(NSNotification *)note{
     if (self.person.isMe) {
         NSLog(@"PersonVC: user logged in, starting refresh");
         [self initData];

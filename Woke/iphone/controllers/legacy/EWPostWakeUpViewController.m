@@ -188,7 +188,7 @@ NSString * const selectAllCellId = @"selectAllCellId";
 {
     EWCollectionPersonCell * cell ;
     
-    if (indexPath.row == [_personArray count]) {
+    if (indexPath.row == (NSInteger)[_personArray count]) {
         //last one, select all
         cell = [cView  dequeueReusableCellWithReuseIdentifier:selectAllCellId forIndexPath:indexPath];
         [cell applyHexagonMask];
@@ -214,7 +214,7 @@ NSString * const selectAllCellId = @"selectAllCellId";
 
 -(void)collectionView:(UICollectionView *)cView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == [_personArray count]) {
+    if (indexPath.row == (NSInteger)[_personArray count]) {
         [self selectAllCell];
         return;
     }

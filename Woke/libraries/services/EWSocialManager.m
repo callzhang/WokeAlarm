@@ -57,11 +57,13 @@
     if (person.isMe) {
         //first check from PFUser
         PFObject *sg = [PFUser currentUser][EWPersonRelationships.socialGraph];
+        EWSocial *graph;
         if (sg) {
-            EWSocial *socialGraph = [sg managedObjectInContext:mainContext];
+            graph = (EWSocial *)[sg managedObjectInContext:mainContext];
+        }else{
+            //need to create one for self
+            graph = [self createSocialGraphForPerson:person];
         }
-        //need to create one for self
-        EWSocial *graph = [self createSocialGraphForPerson:person];
         return graph;
     }
 
