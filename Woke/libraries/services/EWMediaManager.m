@@ -8,7 +8,7 @@
 
 #import "EWMediaManager.h"
 #import "EWMedia.h"
-#import "EWImageStore.h"
+#import "EWImageManager.h"
 #import "EWPerson.h"
 #import "EWUserManager.h"
 #import "EWNotificationManager.h"

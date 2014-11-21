@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface EWImageStore : NSObject
+@interface EWImageManager : NSObject
 
 @property (nonatomic) NSMutableDictionary *allImages;
 
-+ (EWImageStore *)sharedInstance;
++ (EWImageManager *)sharedInstance;
 - (void)setImage:(UIImage *)i forKey:(NSString *)key;
 - (void)deleteImageForKey:(NSString *)key;
 - (UIImage *)imageForKey:(NSString *)key;

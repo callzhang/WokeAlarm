@@ -7,16 +7,16 @@
 //
 //  ImageStore is not using CoreData tech. It saves image info in disctionary. Then it saves the image file in Documents folder as CGData, and also keeps a copy as UIImage in dictionary.
 
-#import "EWImageStore.h"
+#import "EWImageManager.h"
 
-@implementation EWImageStore
+@implementation EWImageManager
 @synthesize allImages;
 
-+ (EWImageStore *)sharedInstance {
-    static EWImageStore *sharedStore_ = nil;
++ (EWImageManager *)sharedInstance {
+    static EWImageManager *sharedStore_ = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedStore_ = [[EWImageStore alloc] init];
+        sharedStore_ = [[EWImageManager alloc] init];
     });
     return sharedStore_;
 }
