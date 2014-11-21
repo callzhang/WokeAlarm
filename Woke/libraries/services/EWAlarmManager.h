@@ -21,12 +21,12 @@
 + (EWAlarmManager *)sharedInstance;
 
 
-//TODO: discuss
 //Get next alarm time from person's cachedInfo
 - (NSDate *)nextAlarmTimeForPerson:(EWPerson *)person;
-//TODO: discuss
 //Get next alarm statement from person's cachedInfo
 - (NSString *)nextStatementForPerson:(EWPerson *)person;
+//currentAlarm
+- (EWAlarm *)currentAlarm;
 
 // schedule
 - (NSArray *)scheduleAlarm;
