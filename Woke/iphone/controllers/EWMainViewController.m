@@ -8,6 +8,8 @@
 
 #import "EWMainViewController.h"
 #import "VBFPopFlatButton.h"
+#import "EWMenuViewController.h"
+#import "UIStoryboard+Extensions.h"
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -17,7 +19,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 @interface EWMainViewController ()
 @property (weak, nonatomic) IBOutlet VBFPopFlatButton *menuButton;
 @property (nonatomic, assign) MainViewMenuState menuState;
-
+@property (nonatomic, strong) EWMenuViewController *menuViewController;
 @end
 
 @implementation EWMainViewController
@@ -26,6 +28,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     [super viewDidLoad];
     
     self.menuButton.currentButtonType = buttonMenuType;
+    self.menuViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMenuViewController"];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -41,10 +44,14 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     if (self.menuState == MainViewMenuStateOpen) {
         self.menuState = MainViewMenuStateClosed;
         [self.menuButton animateToType:buttonCloseType];
+        [self addChildViewController:self.menuViewController];
+        [self.view insertSubview:self.menuViewController.view belowSubview:self.menuButton];
     }
     else if (self.menuState == MainViewMenuStateClosed) {
         self.menuState = MainViewMenuStateOpen;
         [self.menuButton animateToType:buttonMenuType];
+        [self.menuViewController removeFromParentViewController];
+        [self.menuViewController.view removeFromSuperview];
     }
 }
 

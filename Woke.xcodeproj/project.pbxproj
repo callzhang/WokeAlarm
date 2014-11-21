@@ -24,6 +24,8 @@
 		09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDE1A1316580048DC44 /* Lato-Light.ttf */; };
 		09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DE01A1316640048DC44 /* Lato-Hairline.ttf */; };
 		09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDF1A1316580048DC44 /* Lato-Regular.ttf */; };
+		09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */; };
+		09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */; };
 		096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */; };
 		096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA4B1A19593300B4CBFF /* EWMainViewController.m */; };
 		096AAA7C1A19593300B4CBFF /* EWAlarmEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA5E1A19593300B4CBFF /* EWAlarmEditCell.m */; };
@@ -90,6 +92,7 @@
 		09A777311A11E2BD004AF902 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09A777201A11E2BD004AF902 /* Images.xcassets */; };
 		09A777321A11E2BD004AF902 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 09A777211A11E2BD004AF902 /* Settings.bundle */; };
 		09A777341A11E2BD004AF902 /* KZBEnvironments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 09A777271A11E2BD004AF902 /* KZBEnvironments.plist */; };
+		09A86FD21A1ACDDB0075DFF4 /* EWMainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */; };
 		09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE17F1A13285400989ECA /* EWBaseViewController.m */; };
 		09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */; };
 		09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5B1E51A166162006EA46C /* UAProgressView.m */; };
@@ -152,6 +155,10 @@
 		09269DDE1A1316580048DC44 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		09269DDF1A1316580048DC44 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		09269DE01A1316640048DC44 /* Lato-Hairline.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Hairline.ttf"; sourceTree = "<group>"; };
+		09285A3A1A1F0E8100C808C0 /* EWMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMenuViewController.h; sourceTree = "<group>"; };
+		09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMenuViewController.m; sourceTree = "<group>"; };
+		09285A3D1A1F115000C808C0 /* UIStoryboard+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Extensions.h"; sourceTree = "<group>"; };
+		09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStoryboard+Extensions.m"; sourceTree = "<group>"; };
 		096AAA461A19593300B4CBFF /* EWLoginGateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWLoginGateViewController.h; sourceTree = "<group>"; };
 		096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWLoginGateViewController.m; sourceTree = "<group>"; };
 		096AAA4A1A19593300B4CBFF /* EWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainViewController.h; sourceTree = "<group>"; };
@@ -279,6 +286,8 @@
 		09A777271A11E2BD004AF902 /* KZBEnvironments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = KZBEnvironments.plist; sourceTree = "<group>"; };
 		09A777281A11E2BD004AF902 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		09A777291A11E2BD004AF902 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		09A86FD01A1ACDDB0075DFF4 /* EWMainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainNavigationController.h; sourceTree = "<group>"; };
+		09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMainNavigationController.m; sourceTree = "<group>"; };
 		09ABE17E1A13285400989ECA /* EWBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseViewController.h; sourceTree = "<group>"; };
 		09ABE17F1A13285400989ECA /* EWBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseViewController.m; sourceTree = "<group>"; };
 		09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseNavigationController.h; sourceTree = "<group>"; };
@@ -408,6 +417,8 @@
 				096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */,
 				096AAA4A1A19593300B4CBFF /* EWMainViewController.h */,
 				096AAA4B1A19593300B4CBFF /* EWMainViewController.m */,
+				09285A3A1A1F0E8100C808C0 /* EWMenuViewController.h */,
+				09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -470,6 +481,8 @@
 		096AAA911A195A3900B4CBFF /* categories */ = {
 			isa = PBXGroup;
 			children = (
+				09285A3D1A1F115000C808C0 /* UIStoryboard+Extensions.h */,
+				09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */,
 				096AAAF11A195CF300B4CBFF /* GCDSingleton.h */,
 				096AAA921A195A3900B4CBFF /* NSDate+Extend.h */,
 				096AAA931A195A3900B4CBFF /* NSDate+Extend.m */,
@@ -702,6 +715,8 @@
 				09ABE17F1A13285400989ECA /* EWBaseViewController.m */,
 				09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */,
 				09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */,
+				09A86FD01A1ACDDB0075DFF4 /* EWMainNavigationController.h */,
+				09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -1113,6 +1128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09DF4F8A1A1434AF00BEA328 /* _EWNotification.m in Sources */,
+				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
 				096AAB0F1A1972B800B4CBFF /* EWFirstTimeViewController.m in Sources */,
 				09DF4F891A1434AF00BEA328 /* _EWMessage.m in Sources */,
@@ -1125,6 +1141,7 @@
 				096AAA7C1A19593300B4CBFF /* EWAlarmEditCell.m in Sources */,
 				096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */,
 				096AAADE1A195A3900B4CBFF /* EWAVManager.m in Sources */,
+				09A86FD21A1ACDDB0075DFF4 /* EWMainNavigationController.m in Sources */,
 				9B8139731A15D65900F1A56C /* GKImageCropViewController.m in Sources */,
 				09DF4F7D1A1434AF00BEA328 /* EWMessage.m in Sources */,
 				096AAAE11A195A3900B4CBFF /* EWImageStore.m in Sources */,
@@ -1192,6 +1209,7 @@
 				096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */,
 				096AAB101A1972B800B4CBFF /* EWFriendsViewController.m in Sources */,
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,
+				09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */,
 				096AAB111A1972B800B4CBFF /* EWLogInViewController.m in Sources */,
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
