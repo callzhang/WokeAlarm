@@ -10,6 +10,7 @@
 #import "VBFPopFlatButton.h"
 #import "EWMenuViewController.h"
 #import "UIStoryboard+Extensions.h"
+#import <pop/pop.h>
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -41,17 +42,45 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 #pragma mark -
 #pragma mark - Action
 - (IBAction)onMenuButton:(id)sender {
+    static BOOL animating = NO;
+    
+    if (animating) {
+        return;
+    }
+    
+    animating = YES;
     if (self.menuState == MainViewMenuStateOpen) {
         self.menuState = MainViewMenuStateClosed;
         [self.menuButton animateToType:buttonCloseType];
         [self addChildViewController:self.menuViewController];
         [self.view insertSubview:self.menuViewController.view belowSubview:self.menuButton];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            animating = NO;
+        });
     }
     else if (self.menuState == MainViewMenuStateClosed) {
         self.menuState = MainViewMenuStateOpen;
         [self.menuButton animateToType:buttonMenuType];
-        [self.menuViewController removeFromParentViewController];
-        [self.menuViewController.view removeFromSuperview];
+        
+        POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
+        anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        anim.fromValue = @(1.0);
+        anim.toValue = @(0.0);
+        
+        @weakify(self)
+        anim.completionBlock = ^(POPAnimation *animation, BOOL finished) {
+            @strongify(self)
+            [self.menuViewController removeFromParentViewController];
+            [self.menuViewController.view removeFromSuperview];
+            self.menuViewController.view.alpha = 1.0;
+            animating = NO;
+        };
+        
+        [self.menuViewController.view pop_addAnimation:anim forKey:@"fade"];
+        
+        [self.menuViewController collapseMenuWithComletion:^{
+            
+        }];
     }
 }
 

@@ -10,4 +10,7 @@
 
 @interface EWMenuViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIView *backgroundView;
+
+- (void)collapseMenuWithComletion:(void (^)(void))completion;
 @end

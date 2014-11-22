@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.4.1):
-    - AFNetworking/NSURLConnection (= 2.4.1)
-    - AFNetworking/NSURLSession (= 2.4.1)
-    - AFNetworking/Reachability (= 2.4.1)
-    - AFNetworking/Security (= 2.4.1)
-    - AFNetworking/Serialization (= 2.4.1)
-    - AFNetworking/UIKit (= 2.4.1)
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
   - AFNetworking/NSURLConnection (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -21,13 +21,13 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - APAddressBook (0.1.4):
-    - APAddressBook/Core (= 0.1.4)
+    - APAddressBook/Core
   - APAddressBook/Core (0.1.4)
-  - apptentive-ios (1.6.0):
-    - apptentive-ios/arc-files (= 1.6.0)
-  - apptentive-ios/arc-files (1.6.0)
+  - apptentive-ios (1.6.1):
+    - apptentive-ios/arc-files
+  - apptentive-ios/arc-files (1.6.1)
   - BlocksKit (2.2.5):
-    - BlocksKit/All (= 2.2.5)
+    - BlocksKit/All
   - BlocksKit/All (2.2.5):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
@@ -43,7 +43,7 @@ PODS:
     - BlocksKit/DynamicDelegate
   - Bolts (1.1.3)
   - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions (= 1.9.2)
+    - CocoaLumberjack/Extensions
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
@@ -51,6 +51,9 @@ PODS:
   - CrashlyticsLumberjack (1.0.2):
     - CocoaLumberjack/Core (~> 1.9)
   - DACircularProgress (2.2.0)
+  - dyci (0.1.5.6):
+    - dyci/Injections
+  - dyci/Injections (0.1.5.6)
   - Expecta (0.3.1)
   - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
@@ -61,12 +64,47 @@ PODS:
     - pop
   - JGProgressHUD (1.2.2)
   - KZAsserts (1.0)
-  - KZBootstrap (0.5.2):
-    - KZBootstrap/Core (= 0.5.2)
-  - KZBootstrap/Core (0.5.2):
+  - KZBootstrap (0.5.3):
+    - KZBootstrap/Core
+  - KZBootstrap/Core (0.5.3):
     - KZAsserts (~> 1.0)
+  - libextobjc (0.4.1):
+    - libextobjc/EXTADT
+    - libextobjc/EXTConcreteProtocol
+    - libextobjc/EXTKeyPathCoding
+    - libextobjc/EXTNil
+    - libextobjc/EXTSafeCategory
+    - libextobjc/EXTScope
+    - libextobjc/EXTSelectorChecking
+    - libextobjc/EXTSynthesize
+    - libextobjc/NSInvocation+EXT
+    - libextobjc/NSMethodSignature+EXT
+    - libextobjc/RuntimeExtensions
+    - libextobjc/UmbrellaHeader
+  - libextobjc/EXTADT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTConcreteProtocol (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTKeyPathCoding (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTNil (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSafeCategory (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTScope (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSelectorChecking (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSynthesize (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSInvocation+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSMethodSignature+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/RuntimeExtensions (0.4.1)
+  - libextobjc/UmbrellaHeader (0.4.1)
   - MagicalRecord (2.3.0-beta.5):
-    - MagicalRecord/Core (= 2.3.0-beta.5)
+    - MagicalRecord/Core
   - MagicalRecord/Core (2.3.0-beta.5)
   - MTDates (0.14.3)
   - MYBlurIntroductionView (1.0.3)
@@ -90,12 +128,14 @@ DEPENDENCIES:
   - CocoaLumberjack (~> 1.9.2)
   - CrashlyticsFramework (~> 2.2.5.1)
   - CrashlyticsLumberjack (~> 1.0.2)
+  - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.20.0)
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
   - JGProgressHUD (~> 1.2.2)
   - KZBootstrap (~> 0.5.2)
+  - libextobjc (~> 0.4.1)
   - MagicalRecord (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
   - MTDates (~> 0.14.3)
   - MYBlurIntroductionView (~> 1.0)
@@ -107,6 +147,8 @@ DEPENDENCIES:
   - VBFPopFlatButton (~> 0.0.5)
 
 EXTERNAL SOURCES:
+  dyci:
+    :git: https://github.com/DyCI/dyci-main.git
   MagicalRecord:
     :git: https://github.com/magicalpanda/MagicalRecord
     :tag: v2.3.0-beta.5
@@ -114,20 +156,22 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   APAddressBook: 2b23557950065f8eb048e421dd4a18373f69949b
-  apptentive-ios: 64d3b3ae343c103bd407f6c4ef667641b0f6488a
+  apptentive-ios: 930b98bb3d43dc05e8479e854d5cbde51861cf1d
   BlocksKit: 4439e7f30a9f90743462ca63545a15c1f4304cef
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CrashlyticsFramework: 195dfef587ade7a3954ce8effd483a3879d35877
   CrashlyticsLumberjack: 192a08e07648e4e09d44052356b53ab839cc8a1b
   DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
+  dyci: 63f19224ff515c438e26387546c9301af917953c
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: da2110d99ea8735ad9a0ba52f2d184e756104a71
   JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398
   KZAsserts: 008f2f37ba7dcb4ce87bb262a7f91406812a66e5
-  KZBootstrap: 078347aec98e8a4f0c09d064e177ed10b0c90c8d
+  KZBootstrap: 353e1e3788dbbf18a173fdc20a744f3c39200b72
+  libextobjc: d6146fce3ebea986b7f75fcb4c967639200b88b0
   MagicalRecord: edcc27277d4c15874cc565fb5d91576c146cb2f1
   MTDates: 947c49f09b174e38dcefbd2ba3bf8a7aa8419d33
   MYBlurIntroductionView: 6caf60805eaa555538aba9e2615820fd6f07cd23
@@ -139,4 +183,4 @@ SPEC CHECKSUMS:
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
   VBFPopFlatButton: 023eb57c9c8e0a77d1cf926621085b0727b70b15
 
-COCOAPODS: 0.35.0.rc2
+COCOAPODS: 0.34.4
