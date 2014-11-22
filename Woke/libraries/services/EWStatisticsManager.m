@@ -15,15 +15,23 @@
 
 
 @implementation EWStatisticsManager
+//TODO: There is unfinished work
+//The manager should monitor my activities and update the statistics automatically
 
-- (void)setPerson:(EWPerson *)p{
-    _person = p;
++ (EWStatisticsManager *)managerWithPerson:(EWPerson *)p{
+    EWStatisticsManager *manager = [EWStatisticsManager new];
+    manager.person = p;
     if (p.isMe) {
         //newest on top
-        _activities = [EWPerson myActivities];
+        manager.activities = [EWPerson myActivities];
     }else{
-        [self getStatsFromCache];
+        [manager getStatsFromCache];
     }
+    return manager;
+}
+
++ (EWStatisticsManager *)myStats{
+    return [EWStatisticsManager managerWithPerson:[EWPerson me]];
 }
 
 - (void)getStatsFromCache{
@@ -96,17 +104,18 @@
     if (_activities.count) {
         float rate = 0.0;
         float wakes = 0;
-        float validTasks = 0;
-//        
-//        for (EWActivity *_activity in self.tasks) {
-//            if (ac.state == YES) {
-//                validTasks++;
-//                if (task.completed && [task.completed timeIntervalSinceDate:task.time] < kMaxWakeTime) {
-//                    wakes++;
-//                }
-//            }
-//        }
-        rate = wakes / validTasks;
+        float totalWakes = 0;
+        
+        for (EWActivity *activity in self.activities) {
+            if ([activity.type isEqualToString:EWActivityTypes.alarm]) {
+                totalWakes++;
+                if (activity.completed && [activity.completed timeIntervalSinceDate:activity.time] < kMaxWakeTime) {
+                    wakes++;
+                }
+            }
+           
+        }
+        rate = wakes / totalWakes;
         
         _successRate =  [NSNumber numberWithFloat:rate];
         [self setStatsToCache];
@@ -234,7 +243,7 @@
                     activityCache[dateKey] = taskActivity;
                 }
                 @catch (NSException *exception) {
-                    NSLog(@"*** Failed to generate _activity activity: %@", exception.description);
+                    NSLog(@"*** Failed to generate activity: %@", exception.description);
                 }
             }
             

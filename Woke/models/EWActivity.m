@@ -3,7 +3,8 @@
 
 const struct EWActivityTypes EWActivityTypes = {
     .media = @"media",
-    .friendship = @"friendship"
+    .friendship = @"friendship",
+    .alarm = @"alarm"
 };
 
 @interface EWActivity ()
