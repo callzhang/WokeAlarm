@@ -27,6 +27,8 @@
 #import "EWBackgroundingManager.h"
 #import "UAProgressView.h"
 #import "EWAlarmManager.h"
+#import "EWMediaFile.h"
+#import "UIViewController+Blur.h"
 #define BUTTONCENTER  CGPointMake(470, EWScreenWidth/2)
 
 @interface EWRecordingViewController (){
@@ -316,65 +318,45 @@
         
         
         //finished recording, prepare for data
-//        NSError *err;
-//        NSData *recordData = [NSData dataWithContentsOfFile:[recordingFileUrl path] options:0 error:&err];
-//        if (!recordData) {
-//            return;
-//        }
-//        //NSString *fileName = [NSString stringWithFormat:@"voice_%@_%@.m4a", me.username, [[NSDate date] date2numberDateString]];
-//        
-//        //save data to task
-//        [self.view showLoopingWithTimeout:0];
-//        
-//        [[ATConnect sharedConnection] engage:kRecordVoiceSuccess fromViewController:self];
-//        
-//        EWMedia *media = [EWMedia newMedia];
-//        media.author = [EWSession sharedSession].currentUser;
-//        media.type = kMediaTypeVoice;
-////        media.message = self.message.text;
-//        
-//        //Add to media queue instead of task
-//        media.receiver = personSet;
-//        
-//        media.audio = recordData;
-//        media.createdAt = [NSDate date];
-//        
-//        
-//        //save
-//        [EWSync saveWithCompletion:^{
-//            
-//            //set ACL
-//            PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
-//            if ([[EWSession sharedSession].currentUser.objectId isEqualToString:WokeUserID]) {
-//                //if WOKE, set public
-//                [acl setPublicReadAccess:YES];
-//                [acl setPublicWriteAccess:YES];
-//            }else{
-//                for (NSString *userID in [personSet valueForKey:kParseObjectID]) {
-//                    [acl setReadAccess:YES forUserId:userID];
-//                    [acl setWriteAccess:YES forUserId:userID];
-//                }
-//            }
-//            
-//            PFObject *object = media.parseObject;
-//            [object setACL:acl];
-//            [object saveInBackground];
-//            
-//            //send push notification
-//            for (EWPerson *receiver in personSet) {
-//                [EWServer pushVoice:media toUser:receiver];
-//            }
-//        }];
-//        
-//        
-//        //clean up
-//        recordingFileUrl = nil;
-//        
-//        //dismiss hud
-//        [EWUIUtil dismissHUDinView:self.view];
-//        
-//        //dismiss
-//        [[UIApplication sharedApplication].delegate.window.rootViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+        NSError *err;
+        NSData *recordData = [NSData dataWithContentsOfFile:[recordingFileUrl path] options:0 error:&err];
+        if (!recordData) {
+            //TODO: Warning
+            return;
+        }
+        //NSString *fileName = [NSString stringWithFormat:@"voice_%@_%@.m4a", me.username, [[NSDate date] date2numberDateString]];
+        
+        //save data to task
+        [self.view showLoopingWithTimeout:0];
+        
+        [[ATConnect sharedConnection] engage:kRecordVoiceSuccess fromViewController:self];
+        
+        EWMediaFile *mediaFile = [EWMediaFile newMediaFile];
+        mediaFile.audio = recordData;
+        
+        for (EWPerson *receiver in personSet) {
+            EWMedia *media = [EWMedia newMedia];
+            media.type = kMediaTypeVoice;
+            //media.message = self.message.text;
+            
+            //Add to media queue instead of task
+            media.receiver = receiver;
+            
+            media.mediaFile = mediaFile;
+            
+            [EWServer pushVoice:media toUser:receiver withCompletion:^(BOOL success) {
+                //TODO: voice send
+            }];
+        }
+        
+        //clean up
+        recordingFileUrl = nil;
+        
+        //dismiss hud
+        //[EWUIUtil dismissHUDinView:self.view];
+        
+        //dismiss
+        //[self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
     }
 }
 

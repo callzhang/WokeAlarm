@@ -18,6 +18,6 @@ extern NSString *const EWActivityTypeMedia;
 @interface EWActivityManager : NSObject
 + (EWActivityManager *)sharedManager;
 + (NSArray *)myActivities;
-+ (void)completeActivity:(EWActivity *)activity;
+- (void)completeAlarmActivity:(EWActivity *)activity;
 @property (nonatomic, strong) EWActivity *currentAlarmActivity;
 @end

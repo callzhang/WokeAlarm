@@ -57,6 +57,7 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (void)completeAlarmActivity:(EWActivity *)activity{
+    NSParameterAssert([activity.type isEqualToString:EWActivityTypeAlarm]);
     //TODO
     activity.completed = [NSDate date];
     self.currentAlarmActivity = nil;

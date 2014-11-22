@@ -104,43 +104,66 @@
 #pragma mark - Send Voice tone
 + (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block{
     
-    NSString *mediaId = media.objectId;
-    NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
     
-    NSMutableDictionary *pushMessage = [@{@"badge": @"Increment",
-                                 @"alert": @"Someone has sent you an voice greeting",
-                                 @"content-available": @1,
-                                 kPushType: kPushTypeMedia,
-                                 kPushMediaType: kPushMediaTypeVoice,
-                                 kPushPersonID: [EWSession sharedSession].currentUser.objectId,
-                                 kPushMediaID: mediaId} mutableCopy];
-    
-    //form push payload
-    if ([[NSDate date] isEarlierThan:time]) {
-        //early, silent message
-
-    }else if(time.timeElapsed < kMaxWakeTime){
-        //struggle state
-        pushMessage[@"sound"] = @"media.caf";
-        pushMessage[@"alert"] = @"Someone has sent you an voice greeting";
-        
-    }else{
-        //send silent push for next task
-        
-    }
-    
-    //push
-    [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error) {
-        if (!succeeded) {
-            DDLogError(@"Send push message about media %@ failed. Reason:%@", mediaId, error.description);
-        }
-        if (block) {
-            block(succeeded);
-        }
-    }];
     
     //save
-    [EWSync save];
+    [EWSync saveWithCompletion:^{
+        
+        //set ACL
+        PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
+        if ([[EWSession sharedSession].currentUser.objectId isEqualToString:WokeUserID]) {
+            //if WOKE, set public
+            [acl setPublicReadAccess:YES];
+            [acl setPublicWriteAccess:YES];
+        }else{
+            
+            [acl setReadAccess:YES forUserId:person.objectId];
+            [acl setWriteAccess:YES forUserId:person.objectId];
+        }
+        
+        PFObject *object = media.parseObject;
+        [object setACL:acl];
+        //[object saveInBackground];
+        
+        NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
+        
+        NSMutableDictionary *pushMessage = [@{@"badge": @"Increment",
+                                              @"alert": @"Someone has sent you an voice greeting",
+                                              @"content-available": @1,
+                                              kPushType: kPushTypeMedia,
+                                              kPushMediaType: kPushMediaTypeVoice,
+                                              kPushPersonID: [EWSession sharedSession].currentUser.objectId,
+                                              kPushMediaID: media.objectId} mutableCopy];
+        
+        //form push payload
+        if ([[NSDate date] isEarlierThan:time]) {
+            //early, silent message
+            
+        }else if(time.timeElapsed < kMaxWakeTime){
+            //struggle state
+            pushMessage[@"sound"] = @"media.caf";
+            pushMessage[@"alert"] = @"Someone has sent you an voice greeting";
+            
+        }else{
+            //send silent push for next task
+            
+        }
+        
+        //push
+        [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error) {
+            if (!succeeded) {
+                DDLogError(@"Send push message about media %@ failed. Reason:%@", media.objectId, error.description);
+            }
+            if (block) {
+                block(succeeded);
+            }
+        }];
+        
+        //save
+        [EWSync save];
+    }];
+    
+    
     
 }
 
