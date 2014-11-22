@@ -177,12 +177,15 @@
 
 
 #pragma mark - Update Activity
-+ (void)updateActivityCacheWithCompletion:(void (^)(void))block{
+- (void)updateActivityCacheWithCompletion:(void (^)(void))block{
     //TODO
+    NSParameterAssert([_person isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
-        NSArray *activities = [EWActivityManager myActivities];//newest on top
-        NSMutableDictionary *cache = localMe.cachedInfo.mutableCopy;
+        EWPerson *localPerson = [_person MR_inContext:localContext];
+        NSArray *activities = [localPerson.activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];//newest on top
+        
+        NSSet *medias = localPerson.medias;
+        NSMutableDictionary *cache = localPerson.cachedInfo.mutableCopy;
         NSMutableDictionary *activityCache = [cache[kActivityCache] mutableCopy]?:[NSMutableDictionary new];
         if (activityCache.count == activities.count) {
             NSLog(@"=== cached _activity activities count is same as past _activity count (%ld)", (long)activities.count);
@@ -203,24 +206,11 @@
                     wakeTime = [_activity.time dateByAddingTimeInterval:kMaxWakeTime];
                 }
                 
-                //NSDate *eod = _activity.time.endOfDay;
-                //NSDate *bod = _activity.time.beginingOfDay;
+                NSDate *eod = _activity.time.endOfDay;
+                NSDate *bod = _activity.time.beginingOfDay;
                 
-                ////woke to receivers
-                //            NSMutableArray *receivers = [NSMutableArray new];
-                //            for (EWMedia *m in [EWSession sharedSession].currentUser.medias.copy) {
-                //				if (![mainContext existingObjectWithID:m.objectID error:NULL]) return;
-                //                for (EWActivity *t in m.activity.copy) {
-                //					if (![mainContext existingObjectWithID:t.objectID error:NULL]) return;
-                //                    if ([t.time isEarlierThan:eod] && [bod isEarlierThan:t.time]) {
-                //                        NSString *receiver = t.owner.objectId;
-                //                        if (receiver) {
-                //                            [receivers addObject:receiver];
-                //                        }
-                //                    }
-                //                }
-                //            }
-                //            wokeTo = receivers.copy;
+                //woke to receivers
+                NSSet *wokeTo = [medias filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"%K < %@ & %K > %@", EWServerObjectAttributes.updatedAt, eod, EWServerObjectAttributes.updatedAt, bod]];
                 
                 
                 //woke by sender
@@ -237,6 +227,7 @@
                     NSDictionary *taskActivity = @{kActivityType: _activity.type,
                                                    kActivityTime: _activity.time,
                                                    kWokeTime: wakeTime,
+                                                   kWokeTo: wokeTo.allObjects,
                                                    kWokeBy: wokeBy};
                     
                     NSString *dateKey = _activity.time.date2YYMMDDString;
@@ -252,7 +243,7 @@
         }
         
         cache[kActivityCache] = [activityCache copy];
-        localMe.cachedInfo = [cache copy];
+        localPerson.cachedInfo = [cache copy];
         
         NSLog(@"_activity activity cache updated with %lu records", (unsigned long)activityCache.count);
 
@@ -265,7 +256,7 @@
     
 }
 
-+ (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs{
+- (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs{
     NSMutableDictionary *cache = [EWSession sharedSession].currentUser.cachedInfo.mutableCopy;
     NSMutableDictionary *activity = [cache[kActivitiesCache] mutableCopy]?:[NSMutableDictionary new];
     NSMutableDictionary *friendsActivityDic = [activity[kFriended] mutableCopy] ?:[NSMutableDictionary new];

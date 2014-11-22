@@ -5,7 +5,7 @@
 //  Created by Lei on 1/8/14.
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
-//  The statisticsManager managers stats of person that stores in EWPerson's cachedInfo.
+//  The statisticsManager managers stats of person, and activity logs. Both of which stores in EWPerson's cachedInfo.
 
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
@@ -49,7 +49,7 @@
 
 + (EWStatisticsManager *)managerWithPerson:(EWPerson *)person;
 + (EWStatisticsManager *)myStats;
-+ (void)updateActivityCacheWithCompletion:(void (^)(void))block;
-+ (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs;
+- (void)updateActivityCacheWithCompletion:(void (^)(void))block;
+- (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs;
 
 @end
