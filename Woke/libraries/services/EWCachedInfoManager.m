@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
 
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 #import "EWUIUtil.h"
 #import "EWMediaManager.h"
 #import "EWMedia.h"
@@ -14,12 +14,12 @@
 #import "EWActivityManager.h"
 
 
-@implementation EWStatisticsManager
+@implementation EWCachedInfoManager
 //TODO: There is unfinished work
 //The manager should monitor my activities and update the statistics automatically
 
-+ (EWStatisticsManager *)managerWithPerson:(EWPerson *)p{
-    EWStatisticsManager *manager = [EWStatisticsManager new];
++ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)p{
+    EWCachedInfoManager *manager = [EWCachedInfoManager new];
     manager.person = p;
     if (p.isMe) {
         //newest on top
@@ -30,8 +30,8 @@
     return manager;
 }
 
-+ (EWStatisticsManager *)myStats{
-    return [EWStatisticsManager managerWithPerson:[EWPerson me]];
++ (EWCachedInfoManager *)myStats{
+    return [EWCachedInfoManager managerWithPerson:[EWPerson me]];
 }
 
 - (void)getStatsFromCache{

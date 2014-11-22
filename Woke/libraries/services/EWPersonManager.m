@@ -17,7 +17,7 @@
 #import "EWUserManager.h"
 #import "EWNotificationManager.h"
 #import "EWNotification.h"
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 
 
 @implementation EWPersonManager

@@ -15,7 +15,7 @@
 #import "EWPersonViewController.h"
 #import "EWWakeUpManager.h"
 #import "EWServer.h"
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 #import "UIViewController+Blur.h"
 #import "UIView+Extend.h"
 
@@ -94,7 +94,7 @@
         [EWNotificationManager sharedInstance].person = person;
         
         //update cache
-        [EWStatisticsManager updateCacheWithFriendsAdded:@[person.serverID]];
+        [EWCachedInfoManager updateCacheWithFriendsAdded:@[person.serverID]];
         
         //alert
         if (notification.completed) {

@@ -11,7 +11,7 @@
 #import "EWAlarm.h"
 #import "EWNotificationManager.h"
 #import "EWUserManager.h"
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
@@ -144,7 +144,7 @@ NSString * const EWPersonDefaultName = @"New User";
     [EWNotificationManager sendFriendAcceptNotificationToUser:person];
     
     //update cache
-    [EWStatisticsManager updateCacheWithFriendsAdded:@[person.serverID]];
+    [EWCachedInfoManager updateCacheWithFriendsAdded:@[person.serverID]];
     
     [EWSync save];
 }
