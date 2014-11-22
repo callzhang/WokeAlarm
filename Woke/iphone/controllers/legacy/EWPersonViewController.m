@@ -52,7 +52,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 @property (strong,nonatomic)GKImagePicker *imagePicker;
 @property (strong,nonatomic)NSMutableArray *photos;
 @property (strong,nonatomic)IDMPhotoBrowser *photoBrower;
-@property (nonatomic) NSDictionary *taskActivity;
+@property (nonatomic) NSDictionary *activities;
 
 @end
 
@@ -95,7 +95,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     
     //data source
     stats = [[EWStatisticsManager alloc] init];
-    self.taskActivity = [NSDictionary new];
+    self.activities = [NSDictionary new];
     profileItemsArray = kProfileTableArray;
 
     //login event
@@ -147,18 +147,18 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 - (void)initData {
     if (person) {
         //tasks = [[EWTaskStore sharedInstance] pastTasksByPerson:person];
-        _taskActivity = person.cachedInfo[kTaskActivityCache];
-        dates = _taskActivity.allKeys;
+        _activities = person.cachedInfo[kActivityCache];
+        dates = _activities.allKeys;
         dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
             NSInteger n1 = [obj1 integerValue];
             NSInteger n2 = [obj2 integerValue];
             return n1 < n2;
         }];
         if (person.isMe) {
-            if (!_taskActivity || _taskActivity.count != person.activities.count) {
+            if (!_activities || _activities.count != person.activities.count) {
                 [EWStatisticsManager updateActivityCacheWithCompletion:^{
-                    _taskActivity = person.cachedInfo[kTaskActivityCache];
-                    dates = _taskActivity.allKeys;
+                    _activities = person.cachedInfo[kActivityCache];
+                    dates = _activities.allKeys;
                     dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
                         NSInteger n1 = [obj1 integerValue];
                         NSInteger n2 = [obj2 integerValue];
@@ -451,7 +451,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         case 0:
             return 1;
         case 1:
-            return _taskActivity.count;
+            return _activities.count;
         default:
             return 0;
             break;
@@ -575,7 +575,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }else if (tabView.selectedSegmentIndex == 1) {
         //activities
         
-        NSDictionary *activity = _taskActivity[dates[indexPath.section]];
+        NSDictionary *activity = _activities[dates[indexPath.section]];
         
         UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:activitiyCellIdentifier];
         
@@ -589,7 +589,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         }
         switch (indexPath.row) {
             case 0:{
-                NSDate *time = activity[kTaskTime];
+                NSDate *time = activity[kActivityTime];
                 NSDate *completed = activity[kWokeTime];
                 if (!completed) {
                     completed = [time timeByAddingMinutes:kMaxWakeTime];

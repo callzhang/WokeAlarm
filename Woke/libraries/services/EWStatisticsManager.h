@@ -19,7 +19,7 @@
 #define kWakeability        @"wakeability"
 
 //activity
-#define kActivityCache      @"task_activity_cache"
+#define kActivityCache      @"activity_cache"
 //dictionary keys
 #define kActivityType       @"type"
 #define kActivityTime       @"time"

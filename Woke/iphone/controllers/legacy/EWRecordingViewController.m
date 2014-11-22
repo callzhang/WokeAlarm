@@ -345,18 +345,18 @@
             media.mediaFile = mediaFile;
             
             [EWServer pushVoice:media toUser:receiver withCompletion:^(BOOL success) {
-                //TODO: voice send
+                
+                
+                //dismiss hud
+                [EWUIUtil dismissHUDinView:self.view];
+                
+                //dismiss
+                [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
             }];
         }
         
         //clean up
         recordingFileUrl = nil;
-        
-        //dismiss hud
-        //[EWUIUtil dismissHUDinView:self.view];
-        
-        //dismiss
-        //[self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
     }
 }
 

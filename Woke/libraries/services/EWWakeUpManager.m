@@ -338,7 +338,7 @@
     [[ATConnect sharedConnection] engage:kWakeupSuccess fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
     
     //set wakeup time, move to past, schedule and save
-    [EWActivityManager completeActivity:activity];
+    [[EWActivityManager sharedManager] completeAlarmActivity:activity];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     
