@@ -25,6 +25,12 @@ NSString * const EWPersonDefaultName = @"New User";
 
 
 #pragma mark - Helper methods
++ (EWPerson *)me{
+    NSParameterAssert([NSThread isMainThread]);
+    return [EWSession sharedSession].currentUser;
+}
+
+
 - (BOOL)isMe {
     BOOL isme = NO;
     if ([EWSession sharedSession].currentUser) {

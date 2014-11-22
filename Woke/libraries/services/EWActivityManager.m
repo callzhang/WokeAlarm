@@ -30,6 +30,7 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 + (NSArray *)myActivities{
+    NSParameterAssert([NSThread isMainThread]);
     NSArray *activities = [EWSession sharedSession].currentUser.activities.allObjects;
     return [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];
 }

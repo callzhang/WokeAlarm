@@ -2,8 +2,9 @@
 
 
 extern const struct EWActivityTypes {
-    __unsafe_unretained NSString *media;
-    __unsafe_unretained NSString *friendship;
+    __unsafe_unretained NSString *media;//sending media
+    __unsafe_unretained NSString *friendship;//friendship
+    __unsafe_unretained NSString *alarm;//alarm timer
 } EWActivityTypes;
 
 @interface EWActivity : _EWActivity {}

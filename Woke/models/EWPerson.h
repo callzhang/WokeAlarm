@@ -24,6 +24,7 @@ extern NSString * const EWPersonDefaultName;
 @property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
 
++ (EWPerson *)me;
 - (BOOL)isMe;
 - (BOOL)isFriend;
 - (BOOL)friendPending;

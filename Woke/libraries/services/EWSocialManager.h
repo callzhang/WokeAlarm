@@ -20,7 +20,7 @@
 //Create
 - (EWSocial *)createSocialGraphForPerson:(EWPerson *)person;
 
-- (void)testFindWithUsersCompletion:(void (^)(NSArray *users))completion;
-- (BOOL)hasAddressBookAccess;
+//- (void)testFindWithUsersCompletion:(void (^)(NSArray *users))completion;
+//- (BOOL)hasAddressBookAccess;
 - (void)loadAddressBookCompletion:(void (^)(NSArray *contacts, NSError *error))completion;
 @end
