@@ -81,7 +81,6 @@
 		096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB031A1972B800B4CBFF /* EWRecordingViewController.m */; };
 		096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB051A1972B800B4CBFF /* EWRingtoneSelectionViewController.m */; };
 		096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB071A1972B800B4CBFF /* EWSettingsViewController.m */; };
-		096AAB171A1972B800B4CBFF /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepViewController.m */; };
 		096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */; };
 		096AAB191A1972B800B4CBFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0D1A1972B800B4CBFF /* ViewController.m */; };
 		097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */; };
@@ -1142,7 +1141,6 @@
 				096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */,
 				096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */,
 				9B840A2A1A170AE800D6C2A3 /* RMDateSelectionViewController.m in Sources */,
-				096AAB171A1972B800B4CBFF /* EWSleepViewController.m in Sources */,
 				096AAA7C1A19593300B4CBFF /* EWAlarmEditCell.m in Sources */,
 				096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */,
 				096AAADE1A195A3900B4CBFF /* EWAVManager.m in Sources */,

@@ -94,7 +94,7 @@
         [EWNotificationManager sharedInstance].person = person;
         
         //update cache
-        [EWCachedInfoManager updateCacheWithFriendsAdded:@[person.serverID]];
+        //[EWCachedInfoManager updateCacheWithFriendsAdded:@[person.serverID]];
         
         //alert
         if (notification.completed) {
