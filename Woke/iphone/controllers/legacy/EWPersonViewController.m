@@ -156,7 +156,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         }];
         if (person.isMe) {
             if (!_activities || _activities.count != person.activities.count) {
-                [EWCachedInfoManager updateActivityCacheWithCompletion:^{
+                [[EWCachedInfoManager myManager] updateActivityCacheWithCompletion:^{
                     _activities = person.cachedInfo[kActivityCache];
                     dates = _activities.allKeys;
                     dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {

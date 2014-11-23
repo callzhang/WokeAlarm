@@ -59,7 +59,7 @@
     return nil;
 }
 
-+ (EWCachedInfoManager *)myStatsManager{
++ (EWCachedInfoManager *)myManager{
     return [EWCachedInfoManager managerWithPerson:[EWPerson me]];
 }
 - (void)getStatsFromCache{
