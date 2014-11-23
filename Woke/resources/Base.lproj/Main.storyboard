@@ -15,6 +15,7 @@
             <string>Lato-Hairline</string>
             <string>Lato-Hairline</string>
             <string>Lato-Hairline</string>
+            <string>Lato-Hairline</string>
         </mutableArray>
         <mutableArray key="Lato-Light.ttf">
             <string>Lato-Light</string>
@@ -405,30 +406,6 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSN-dE-35g">
-                                <rect key="frame" x="16" y="505" width="288" height="48"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="iDX-qh-NDn"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="19"/>
-                                <state key="normal" title="Start" backgroundImage="woke-rectangle-normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
-                                <state key="selected" backgroundImage="woke-rectangle-selected"/>
-                                <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Say something to the person who will wake you up?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vVd-dK-qxb">
-                                <rect key="frame" x="15" y="350" width="290" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="290" id="WMO-Im-cB0"/>
-                                    <constraint firstAttribute="height" constant="100" id="it1-Zg-1zF"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="18"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d1h-mZ-fGj" userLabel="9.6% bottom spacer">
                                 <rect key="frame" x="155" y="450" width="10" height="55"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -436,6 +413,52 @@
                                     <constraint firstAttribute="width" constant="10" id="fvY-kC-LlX"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uaE-PD-T4Y" userLabel="bottom 290x100 container">
+                                <rect key="frame" x="15" y="350" width="290" height="100"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qhb-Ki-1ni">
+                                        <rect key="frame" x="25" y="0.0" width="240" height="100"/>
+                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="18"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Say something to the person who will wake you up?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1LV-hZ-wFF">
+                                        <rect key="frame" x="25" y="0.0" width="240" height="100"/>
+                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="18"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Qhb-Ki-1ni" secondAttribute="trailing" constant="25" id="6eT-XW-GLI"/>
+                                    <constraint firstAttribute="bottom" secondItem="1LV-hZ-wFF" secondAttribute="bottom" id="C7V-dt-8Pq"/>
+                                    <constraint firstItem="1LV-hZ-wFF" firstAttribute="top" secondItem="uaE-PD-T4Y" secondAttribute="top" id="I6Q-Oy-19l"/>
+                                    <constraint firstItem="1LV-hZ-wFF" firstAttribute="leading" secondItem="uaE-PD-T4Y" secondAttribute="leading" constant="25" id="NTG-Ld-xFw"/>
+                                    <constraint firstItem="Qhb-Ki-1ni" firstAttribute="leading" secondItem="uaE-PD-T4Y" secondAttribute="leading" constant="25" id="Wa8-zt-UOA"/>
+                                    <constraint firstItem="Qhb-Ki-1ni" firstAttribute="top" secondItem="uaE-PD-T4Y" secondAttribute="top" id="Y8g-fD-MrY"/>
+                                    <constraint firstAttribute="width" constant="290" id="bPp-sF-4nK"/>
+                                    <constraint firstAttribute="height" constant="100" id="ba0-EN-YN2"/>
+                                    <constraint firstAttribute="bottom" secondItem="Qhb-Ki-1ni" secondAttribute="bottom" id="cbP-DL-RjC"/>
+                                    <constraint firstAttribute="trailing" secondItem="1LV-hZ-wFF" secondAttribute="trailing" constant="25" id="kpC-4f-33c"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSN-dE-35g">
+                                <rect key="frame" x="16" y="505" width="288" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="iDX-qh-NDn"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="19"/>
+                                <state key="normal" title="Start Sleeping" backgroundImage="woke-rectangle-normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
+                                <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.32161970964566927" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -447,18 +470,18 @@
                             <constraint firstItem="zoZ-04-ZHl" firstAttribute="top" secondItem="HJt-tA-SSL" secondAttribute="bottom" constant="10" id="BGd-Zy-wRO"/>
                             <constraint firstItem="4xW-xG-fh5" firstAttribute="top" secondItem="7SC-QR-jdD" secondAttribute="bottom" id="CEZ-mp-k9Y"/>
                             <constraint firstAttribute="centerX" secondItem="Z2K-SO-fYc" secondAttribute="centerX" id="CXj-RX-GwG"/>
+                            <constraint firstItem="d1h-mZ-fGj" firstAttribute="top" secondItem="uaE-PD-T4Y" secondAttribute="bottom" id="NkT-KD-PTd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="cSN-dE-35g" secondAttribute="trailing" id="NyY-W8-bfa"/>
                             <constraint firstItem="HJt-tA-SSL" firstAttribute="top" secondItem="4xW-xG-fh5" secondAttribute="bottom" constant="5" id="OEI-8Y-NF6"/>
                             <constraint firstItem="Z2K-SO-fYc" firstAttribute="top" secondItem="zoZ-04-ZHl" secondAttribute="bottom" id="T2h-Z6-hQv"/>
                             <constraint firstItem="zu9-5E-PbO" firstAttribute="leading" secondItem="HJt-tA-SSL" secondAttribute="trailing" constant="3" id="TSJ-2B-OvZ"/>
                             <constraint firstItem="cSN-dE-35g" firstAttribute="top" secondItem="d1h-mZ-fGj" secondAttribute="bottom" id="VkB-QZ-eZH"/>
-                            <constraint firstItem="d1h-mZ-fGj" firstAttribute="top" secondItem="vVd-dK-qxb" secondAttribute="bottom" id="b0L-HI-3O1"/>
-                            <constraint firstAttribute="centerX" secondItem="vVd-dK-qxb" secondAttribute="centerX" id="c3u-XW-QYt"/>
                             <constraint firstAttribute="centerX" secondItem="HJt-tA-SSL" secondAttribute="centerX" id="hhQ-9f-hed"/>
                             <constraint firstAttribute="centerX" secondItem="7SC-QR-jdD" secondAttribute="centerX" id="jfZ-lw-1Yf"/>
                             <constraint firstItem="7SC-QR-jdD" firstAttribute="height" secondItem="ZXq-27-yIp" secondAttribute="height" multiplier="14/100" id="lxn-mc-yJx"/>
                             <constraint firstAttribute="centerX" secondItem="d1h-mZ-fGj" secondAttribute="centerX" id="m13-Fz-sF8"/>
                             <constraint firstItem="7SC-QR-jdD" firstAttribute="top" secondItem="7OL-w9-AWI" secondAttribute="bottom" id="pgc-T6-k1j"/>
+                            <constraint firstAttribute="centerX" secondItem="uaE-PD-T4Y" secondAttribute="centerX" id="qa1-G2-NET"/>
                             <constraint firstItem="cSN-dE-35g" firstAttribute="leading" secondItem="ZXq-27-yIp" secondAttribute="leadingMargin" id="rYL-GT-19c"/>
                         </constraints>
                     </view>
