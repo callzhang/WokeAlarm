@@ -37,8 +37,6 @@ extern NSString * const EWPersonDefaultName;
 + (NSArray *)myActivities;
 + (NSArray *)myNotifications;
 + (NSArray *)myUnreadNotifications;
-//+ (void)getFriendsForPerson:(EWPerson *)person;
-
 + (NSArray *)myAlarms;
 + (EWAlarm *)myNextAlarm;
 + (NSArray *)myFriends;

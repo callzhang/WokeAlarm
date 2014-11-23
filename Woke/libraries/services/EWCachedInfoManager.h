@@ -48,7 +48,9 @@
 @property (nonatomic) NSString *wakabilityStr;
 
 + (EWCachedInfoManager *)managerWithPerson:(EWPerson *)person;
-+ (EWCachedInfoManager *)myStats;
++ (EWCachedInfoManager *)myStatsManager;
+
+//cachedInfo management
 - (void)updateActivityCacheWithCompletion:(void (^)(void))block;
 - (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs;
 

@@ -144,7 +144,7 @@ NSString * const EWPersonDefaultName = @"New User";
     [EWNotificationManager sendFriendAcceptNotificationToUser:person];
     
     //update cache
-    [EWCachedInfoManager updateCacheWithFriendsAdded:@[person.serverID]];
+    [[EWCachedInfoManager sharedInstance] updateCacheWithFriendsAdded:@[person.serverID]];
     
     [EWSync save];
 }
