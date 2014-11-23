@@ -11,6 +11,7 @@
 #import "EWMenuViewController.h"
 #import "UIStoryboard+Extensions.h"
 #import <pop/pop.h>
+#import "EWSleepViewController.h"
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -21,6 +22,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 @property (weak, nonatomic) IBOutlet VBFPopFlatButton *menuButton;
 @property (nonatomic, assign) MainViewMenuState menuState;
 @property (nonatomic, strong) EWMenuViewController *menuViewController;
+@property (nonatomic, strong) EWSleepViewController *sleepViewController;
 @end
 
 @implementation EWMainViewController
@@ -30,6 +32,8 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     
     self.menuButton.currentButtonType = buttonMenuType;
     self.menuViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMenuViewController"];
+    self.sleepViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWSleepViewController"];
+    [self setSleepMode];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -40,6 +44,11 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     return UIStatusBarStyleLightContent;
 }
 #pragma mark -
+
+- (void)setSleepMode {
+    [self addChildViewController:self.sleepViewController];
+    [self.view insertSubview:self.sleepViewController.view belowSubview:self.menuButton];
+}
 #pragma mark - Action
 - (IBAction)onMenuButton:(id)sender {
     static BOOL animating = NO;

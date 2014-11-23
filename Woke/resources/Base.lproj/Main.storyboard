@@ -13,8 +13,12 @@
             <string>Lato-Hairline</string>
             <string>Lato-Hairline</string>
             <string>Lato-Hairline</string>
+            <string>Lato-Hairline</string>
+            <string>Lato-Hairline</string>
         </mutableArray>
         <mutableArray key="Lato-Light.ttf">
+            <string>Lato-Light</string>
+            <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
@@ -235,10 +239,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="jo1-f5-SWq">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="jo1-f5-SWq">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zG5-RJ-k2Q">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zG5-RJ-k2Q">
                                 <rect key="frame" x="150" y="40" width="300" height="29"/>
                                 <segments>
                                     <segment title="Sleep"/>
@@ -246,7 +250,7 @@
                                 </segments>
                                 <color key="tintColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lkl-Cx-QO2" customClass="VBFPopFlatButton">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lkl-Cx-QO2" customClass="VBFPopFlatButton">
                                 <rect key="frame" x="24" y="39" width="30" height="30"/>
                                 <state key="normal">
                                     <color key="titleColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
@@ -288,7 +292,7 @@
         <!--Sleep View Controller-->
         <scene sceneID="Ttp-Td-LPN">
             <objects>
-                <viewController id="aF8-hD-EeQ" customClass="EWSleepViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EWSleepViewController" id="aF8-hD-EeQ" customClass="EWSleepViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7OL-w9-AWI"/>
                         <viewControllerLayoutGuide type="bottom" id="H1O-qi-q4w"/>
@@ -304,7 +308,7 @@
                                     <constraint firstAttribute="width" constant="10" id="KZX-Ff-Ywi"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJt-tA-SSL">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJt-tA-SSL" userLabel="time wrapper view">
                                 <rect key="frame" x="45" y="125" width="230" height="80"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FQg-Z4-hZe">
@@ -383,18 +387,79 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wednesday, Spetember" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoZ-04-ZHl">
+                                <rect key="frame" x="50" y="215" width="220" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="220" id="fiP-QR-zSH"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="16"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23 hours 29 minutes " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2K-SO-fYc">
+                                <rect key="frame" x="50" y="235" width="220" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="220" id="fEE-oZ-XKW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="16"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSN-dE-35g">
+                                <rect key="frame" x="16" y="505" width="288" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="iDX-qh-NDn"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="19"/>
+                                <state key="normal" title="Start" backgroundImage="woke-rectangle-normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
+                                <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Say something to the person who will wake you up?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vVd-dK-qxb">
+                                <rect key="frame" x="15" y="350" width="290" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="290" id="WMO-Im-cB0"/>
+                                    <constraint firstAttribute="height" constant="100" id="it1-Zg-1zF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d1h-mZ-fGj" userLabel="9.6% bottom spacer">
+                                <rect key="frame" x="155" y="450" width="10" height="55"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="10" id="fvY-kC-LlX"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.32161970964566927" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="7SC-QR-jdD" firstAttribute="centerX" secondItem="4xW-xG-fh5" secondAttribute="centerX" id="1Oe-nH-YNt"/>
                             <constraint firstItem="zu9-5E-PbO" firstAttribute="top" secondItem="HJt-tA-SSL" secondAttribute="top" id="4Kd-f6-MsV"/>
+                            <constraint firstItem="H1O-qi-q4w" firstAttribute="top" secondItem="cSN-dE-35g" secondAttribute="bottom" constant="15" id="9gC-pG-izX"/>
+                            <constraint firstItem="d1h-mZ-fGj" firstAttribute="height" secondItem="ZXq-27-yIp" secondAttribute="height" multiplier="9.6/100" id="Acr-60-VKz"/>
+                            <constraint firstAttribute="centerX" secondItem="zoZ-04-ZHl" secondAttribute="centerX" id="Ay8-6l-NdX"/>
+                            <constraint firstItem="zoZ-04-ZHl" firstAttribute="top" secondItem="HJt-tA-SSL" secondAttribute="bottom" constant="10" id="BGd-Zy-wRO"/>
                             <constraint firstItem="4xW-xG-fh5" firstAttribute="top" secondItem="7SC-QR-jdD" secondAttribute="bottom" id="CEZ-mp-k9Y"/>
+                            <constraint firstAttribute="centerX" secondItem="Z2K-SO-fYc" secondAttribute="centerX" id="CXj-RX-GwG"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cSN-dE-35g" secondAttribute="trailing" id="NyY-W8-bfa"/>
                             <constraint firstItem="HJt-tA-SSL" firstAttribute="top" secondItem="4xW-xG-fh5" secondAttribute="bottom" constant="5" id="OEI-8Y-NF6"/>
+                            <constraint firstItem="Z2K-SO-fYc" firstAttribute="top" secondItem="zoZ-04-ZHl" secondAttribute="bottom" id="T2h-Z6-hQv"/>
                             <constraint firstItem="zu9-5E-PbO" firstAttribute="leading" secondItem="HJt-tA-SSL" secondAttribute="trailing" constant="3" id="TSJ-2B-OvZ"/>
+                            <constraint firstItem="cSN-dE-35g" firstAttribute="top" secondItem="d1h-mZ-fGj" secondAttribute="bottom" id="VkB-QZ-eZH"/>
+                            <constraint firstItem="d1h-mZ-fGj" firstAttribute="top" secondItem="vVd-dK-qxb" secondAttribute="bottom" id="b0L-HI-3O1"/>
+                            <constraint firstAttribute="centerX" secondItem="vVd-dK-qxb" secondAttribute="centerX" id="c3u-XW-QYt"/>
                             <constraint firstAttribute="centerX" secondItem="HJt-tA-SSL" secondAttribute="centerX" id="hhQ-9f-hed"/>
                             <constraint firstAttribute="centerX" secondItem="7SC-QR-jdD" secondAttribute="centerX" id="jfZ-lw-1Yf"/>
                             <constraint firstItem="7SC-QR-jdD" firstAttribute="height" secondItem="ZXq-27-yIp" secondAttribute="height" multiplier="14/100" id="lxn-mc-yJx"/>
+                            <constraint firstAttribute="centerX" secondItem="d1h-mZ-fGj" secondAttribute="centerX" id="m13-Fz-sF8"/>
                             <constraint firstItem="7SC-QR-jdD" firstAttribute="top" secondItem="7OL-w9-AWI" secondAttribute="bottom" id="pgc-T6-k1j"/>
+                            <constraint firstItem="cSN-dE-35g" firstAttribute="leading" secondItem="ZXq-27-yIp" secondAttribute="leadingMargin" id="rYL-GT-19c"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
