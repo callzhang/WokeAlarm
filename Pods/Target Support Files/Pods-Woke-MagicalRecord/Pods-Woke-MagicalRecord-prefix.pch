@@ -5,3 +5,6 @@
 #import "Pods-Woke-environment.h"
 #import <CoreData/CoreData.h>
 #import "CoreData+MagicalRecord.h"
+#import <CoreData/CoreData.h>
+#define MR_SHORTHAND 1
+#import "CoreData+MagicalRecord.h"

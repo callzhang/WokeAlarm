@@ -9,6 +9,7 @@ extern const struct EWSocialAttributes {
 	__unsafe_unretained NSString *facebookFriends;
 	__unsafe_unretained NSString *facebookToken;
 	__unsafe_unretained NSString *facebookUpdated;
+	__unsafe_unretained NSString *friendshipTimeline;
 	__unsafe_unretained NSString *weiboFriends;
 	__unsafe_unretained NSString *weiboToken;
 	__unsafe_unretained NSString *weiboUpdated;
@@ -19,6 +20,8 @@ extern const struct EWSocialRelationships {
 } EWSocialRelationships;
 
 @class EWPerson;
+
+@class NSObject;
 
 @class NSObject;
 
@@ -51,6 +54,10 @@ extern const struct EWSocialRelationships {
 
 //- (BOOL)validateFacebookUpdated:(id*)value_ error:(NSError**)error_;
 
+@property (nonatomic, strong) id friendshipTimeline;
+
+//- (BOOL)validateFriendshipTimeline:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) id weiboFriends;
 
 //- (BOOL)validateWeiboFriends:(id*)value_ error:(NSError**)error_;
@@ -82,6 +89,9 @@ extern const struct EWSocialRelationships {
 
 - (NSDate*)primitiveFacebookUpdated;
 - (void)setPrimitiveFacebookUpdated:(NSDate*)value;
+
+- (id)primitiveFriendshipTimeline;
+- (void)setPrimitiveFriendshipTimeline:(id)value;
 
 - (id)primitiveWeiboFriends;
 - (void)setPrimitiveWeiboFriends:(id)value;

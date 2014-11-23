@@ -163,6 +163,12 @@
 #define COCOAPODS_VERSION_MINOR_JGProgressHUD 2
 #define COCOAPODS_VERSION_PATCH_JGProgressHUD 2
 
+// KVOController
+#define COCOAPODS_POD_AVAILABLE_KVOController
+#define COCOAPODS_VERSION_MAJOR_KVOController 1
+#define COCOAPODS_VERSION_MINOR_KVOController 0
+#define COCOAPODS_VERSION_PATCH_KVOController 3
+
 // KZAsserts
 #define COCOAPODS_POD_AVAILABLE_KZAsserts
 #define COCOAPODS_VERSION_MAJOR_KZAsserts 1
@@ -204,6 +210,12 @@
 #define COCOAPODS_VERSION_MAJOR_MagicalRecord_Core 2
 #define COCOAPODS_VERSION_MINOR_MagicalRecord_Core 3
 #define COCOAPODS_VERSION_PATCH_MagicalRecord_Core 0
+
+// MagicalRecord/Shorthand
+#define COCOAPODS_POD_AVAILABLE_MagicalRecord_Shorthand
+#define COCOAPODS_VERSION_MAJOR_MagicalRecord_Shorthand 2
+#define COCOAPODS_VERSION_MINOR_MagicalRecord_Shorthand 3
+#define COCOAPODS_VERSION_PATCH_MagicalRecord_Shorthand 0
 
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse

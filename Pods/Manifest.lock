@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.4.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
+    - AFNetworking/NSURLConnection (= 2.4.1)
+    - AFNetworking/NSURLSession (= 2.4.1)
+    - AFNetworking/Reachability (= 2.4.1)
+    - AFNetworking/Security (= 2.4.1)
+    - AFNetworking/Serialization (= 2.4.1)
+    - AFNetworking/UIKit (= 2.4.1)
   - AFNetworking/NSURLConnection (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -21,13 +21,13 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - APAddressBook (0.1.4):
-    - APAddressBook/Core
+    - APAddressBook/Core (= 0.1.4)
   - APAddressBook/Core (0.1.4)
   - apptentive-ios (1.6.1):
-    - apptentive-ios/arc-files
+    - apptentive-ios/arc-files (= 1.6.1)
   - apptentive-ios/arc-files (1.6.1)
   - BlocksKit (2.2.5):
-    - BlocksKit/All
+    - BlocksKit/All (= 2.2.5)
   - BlocksKit/All (2.2.5):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
@@ -43,7 +43,7 @@ PODS:
     - BlocksKit/DynamicDelegate
   - Bolts (1.1.3)
   - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions
+    - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
@@ -52,7 +52,7 @@ PODS:
     - CocoaLumberjack/Core (~> 1.9)
   - DACircularProgress (2.2.0)
   - dyci (0.1.5.6):
-    - dyci/Injections
+    - dyci/Injections (= 0.1.5.6)
   - dyci/Injections (0.1.5.6)
   - Expecta (0.3.1)
   - Facebook-iOS-SDK (3.20.0):
@@ -63,24 +63,25 @@ PODS:
     - DACircularProgress
     - pop
   - JGProgressHUD (1.2.2)
+  - KVOController (1.0.3)
   - KZAsserts (1.0)
   - KZBootstrap (0.5.3):
-    - KZBootstrap/Core
+    - KZBootstrap/Core (= 0.5.3)
   - KZBootstrap/Core (0.5.3):
     - KZAsserts (~> 1.0)
   - libextobjc (0.4.1):
-    - libextobjc/EXTADT
-    - libextobjc/EXTConcreteProtocol
-    - libextobjc/EXTKeyPathCoding
-    - libextobjc/EXTNil
-    - libextobjc/EXTSafeCategory
-    - libextobjc/EXTScope
-    - libextobjc/EXTSelectorChecking
-    - libextobjc/EXTSynthesize
-    - libextobjc/NSInvocation+EXT
-    - libextobjc/NSMethodSignature+EXT
-    - libextobjc/RuntimeExtensions
-    - libextobjc/UmbrellaHeader
+    - libextobjc/EXTADT (= 0.4.1)
+    - libextobjc/EXTConcreteProtocol (= 0.4.1)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1)
+    - libextobjc/EXTNil (= 0.4.1)
+    - libextobjc/EXTSafeCategory (= 0.4.1)
+    - libextobjc/EXTScope (= 0.4.1)
+    - libextobjc/EXTSelectorChecking (= 0.4.1)
+    - libextobjc/EXTSynthesize (= 0.4.1)
+    - libextobjc/NSInvocation+EXT (= 0.4.1)
+    - libextobjc/NSMethodSignature+EXT (= 0.4.1)
+    - libextobjc/RuntimeExtensions (= 0.4.1)
+    - libextobjc/UmbrellaHeader (= 0.4.1)
   - libextobjc/EXTADT (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/EXTConcreteProtocol (0.4.1):
@@ -104,8 +105,9 @@ PODS:
   - libextobjc/RuntimeExtensions (0.4.1)
   - libextobjc/UmbrellaHeader (0.4.1)
   - MagicalRecord (2.3.0-beta.5):
-    - MagicalRecord/Core
+    - MagicalRecord/Core (= 2.3.0-beta.5)
   - MagicalRecord/Core (2.3.0-beta.5)
+  - MagicalRecord/Shorthand (2.3.0-beta.5)
   - MTDates (0.14.3)
   - MYBlurIntroductionView (1.0.3)
   - OCMock (3.1.1)
@@ -134,9 +136,11 @@ DEPENDENCIES:
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
   - JGProgressHUD (~> 1.2.2)
+  - KVOController (~> 1.0.3)
   - KZBootstrap (~> 0.5.2)
   - libextobjc (~> 0.4.1)
   - MagicalRecord (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
+  - MagicalRecord/Shorthand (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
   - MTDates (~> 0.14.3)
   - MYBlurIntroductionView (~> 1.0)
   - OCMock (~> 3.1.1)
@@ -169,6 +173,7 @@ SPEC CHECKSUMS:
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: da2110d99ea8735ad9a0ba52f2d184e756104a71
   JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398
+  KVOController: b1139ef1fc373b6757e4b69493fedd7b56eb1272
   KZAsserts: 008f2f37ba7dcb4ce87bb262a7f91406812a66e5
   KZBootstrap: 353e1e3788dbbf18a173fdc20a744f3c39200b72
   libextobjc: d6146fce3ebea986b7f75fcb4c967639200b88b0
@@ -183,4 +188,4 @@ SPEC CHECKSUMS:
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
   VBFPopFlatButton: 023eb57c9c8e0a77d1cf926621085b0727b70b15
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0.rc2

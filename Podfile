@@ -10,7 +10,7 @@ target 'Woke' do
   pod 'ParseFacebookUtils'
   pod 'AFNetworking', '~> 2.4.1'
   pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
-  #pod 'MagicalRecord/Shorthand', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
+  pod 'MagicalRecord/Shorthand', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
   pod 'BlocksKit', '~> 2.2.5'
   pod 'CrashlyticsFramework', '~> 2.2.5.1'
   pod 'RHAddressBook', '~> 1.1.1'
@@ -29,7 +29,7 @@ target 'Woke' do
   pod 'IDMPhotoBrowser', '~> 1.4'
   pod 'MYBlurIntroductionView', '~> 1.0'
   pod 'libextobjc', '~> 0.4.1'
-
+  pod 'KVOController', '~> 1.0.3'
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
 end
 

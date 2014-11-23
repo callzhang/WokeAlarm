@@ -9,6 +9,7 @@
 @implementation EWSocial
 @dynamic addressBookFriends;
 @dynamic facebookFriends;
+@dynamic friendshipTimeline;
 // Custom logic goes here.
 
 @end
