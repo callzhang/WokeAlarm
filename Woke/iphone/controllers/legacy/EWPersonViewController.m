@@ -25,7 +25,7 @@
 #import "EWAlarmManager.h"
 #import "EWPersonManager.h"
 #import "EWMediaManager.h"
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 #import "EWNotificationManager.h"
 #import "EWUserManager.h"
 
@@ -94,7 +94,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     [super viewDidLoad];
     
     //data source
-    stats = [[EWStatisticsManager alloc] init];
+    stats = [[EWCachedInfoManager alloc] init];
     self.activities = [NSDictionary new];
     profileItemsArray = kProfileTableArray;
 
@@ -156,7 +156,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         }];
         if (person.isMe) {
             if (!_activities || _activities.count != person.activities.count) {
-                [EWStatisticsManager updateActivityCacheWithCompletion:^{
+                [EWCachedInfoManager updateActivityCacheWithCompletion:^{
                     _activities = person.cachedInfo[kActivityCache];
                     dates = _activities.allKeys;
                     dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {

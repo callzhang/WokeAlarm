@@ -35,7 +35,7 @@
 #define kTasksFinished      @"task_finished"
 #define kAchievements       @"achievements"
 
-@interface EWStatisticsManager : NSObject
+@interface EWCachedInfoManager : NSObject
 
 @property (nonatomic) EWPerson *person;
 @property (nonatomic) NSArray *activities;
@@ -47,8 +47,10 @@
 @property (nonatomic) NSNumber *wakability;
 @property (nonatomic) NSString *wakabilityStr;
 
-+ (EWStatisticsManager *)managerWithPerson:(EWPerson *)person;
-+ (EWStatisticsManager *)myStats;
++ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)person;
++ (EWCachedInfoManager *)myStatsManager;
+
+//cachedInfo management
 - (void)updateActivityCacheWithCompletion:(void (^)(void))block;
 - (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs;
 

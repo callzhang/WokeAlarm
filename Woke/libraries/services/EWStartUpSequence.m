@@ -16,7 +16,7 @@
 #import "EWMedia.h"
 #import "EWNotification.h"
 #import "EWUIUtil.h"
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 #import "EWBackgroundingManager.h"
 
 

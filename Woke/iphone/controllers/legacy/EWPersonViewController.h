@@ -10,11 +10,11 @@
 
 @class EWPerson;
 @class ShinobiChart;
-@class EWStatisticsManager;
+@class EWCachedInfoManager;
 
 @interface EWPersonViewController : UIViewController<UIAlertViewDelegate, UIActionSheetDelegate> {
     //NSArray *tasks;
-    EWStatisticsManager *stats;
+    EWCachedInfoManager *stats;
     NSArray *profileItemsArray;
    
 

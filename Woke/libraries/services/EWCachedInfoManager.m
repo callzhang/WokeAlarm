@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
 
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 #import "EWUIUtil.h"
 #import "EWMediaManager.h"
 #import "EWMedia.h"
@@ -14,24 +14,34 @@
 #import "EWActivityManager.h"
 
 
-@implementation EWStatisticsManager
+@implementation EWCachedInfoManager
 //TODO: There is unfinished work
 //The manager should monitor my activities and update the statistics automatically
 
-+ (EWStatisticsManager *)managerWithPerson:(EWPerson *)p{
-    EWStatisticsManager *manager = [EWStatisticsManager new];
++ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)p{
+    EWCachedInfoManager *manager = [EWCachedInfoManager new];
     manager.person = p;
     if (p.isMe) {
         //newest on top
         manager.activities = [EWPerson myActivities];
+        [p addObserver:self forKeyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew context:nil];
     }else{
         [manager getStatsFromCache];
     }
     return manager;
 }
 
-+ (EWStatisticsManager *)myStats{
-    return [EWStatisticsManager managerWithPerson:[EWPerson me]];
++ (EWCachedInfoManager *)myStatsManager{
+    return [EWCachedInfoManager managerWithPerson:[EWPerson me]];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if ([object isKindOfClass:[EWPerson class]]) {
+        if ([keyPath isEqualToString:EWPersonRelationships.activities]) {
+            DDLogInfo(@"Activity changed detected and statistics updated");
+            [self updateStatistics];
+        }
+    }
 }
 
 - (void)getStatsFromCache{
@@ -56,6 +66,14 @@
     cache[kStatsCache] = stats;
     self.person.cachedInfo = cache;
     [EWSync save];
+}
+
+- (void)updateStatistics{
+    self.aveWakingLength = nil;
+    self.aveWakeUpTime = nil;
+    self.successRate = nil;
+    self.wakability = nil;
+    [self setStatsToCache];
 }
 
 - (NSNumber *)aveWakingLength{
@@ -188,7 +206,7 @@
         NSMutableDictionary *cache = localPerson.cachedInfo.mutableCopy;
         NSMutableDictionary *activityCache = [cache[kActivityCache] mutableCopy]?:[NSMutableDictionary new];
         if (activityCache.count == activities.count) {
-            NSLog(@"=== cached _activity activities count is same as past _activity count (%ld)", (long)activities.count);
+            NSLog(@"=== cached activities count is same as past _activity count (%ld)", (long)activities.count);
             return;
         }
         
