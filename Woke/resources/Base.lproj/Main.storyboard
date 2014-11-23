@@ -7,7 +7,15 @@
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
+        <mutableArray key="Lato-Hairline.ttf">
+            <string>Lato-Hairline</string>
+            <string>Lato-Hairline</string>
+            <string>Lato-Hairline</string>
+            <string>Lato-Hairline</string>
+            <string>Lato-Hairline</string>
+        </mutableArray>
         <mutableArray key="Lato-Light.ttf">
+            <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
@@ -52,7 +60,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-splash-logo" translatesAutoresizingMaskIntoConstraints="NO" id="PZQ-5O-S3O">
                                 <rect key="frame" x="197" y="104" width="207" height="212"/>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rWn-H2-vla" userLabel="35 height spacer">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWn-H2-vla" userLabel="35 height spacer">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="sdk-iw-hh3"/>
@@ -277,8 +285,127 @@
             </objects>
             <point key="canvasLocation" x="781" y="320"/>
         </scene>
+        <!--Sleep View Controller-->
+        <scene sceneID="Ttp-Td-LPN">
+            <objects>
+                <viewController id="aF8-hD-EeQ" customClass="EWSleepViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7OL-w9-AWI"/>
+                        <viewControllerLayoutGuide type="bottom" id="H1O-qi-q4w"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZXq-27-yIp">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7SC-QR-jdD" userLabel="14% top spacer">
+                                <rect key="frame" x="155" y="20" width="10" height="80"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="10" id="KZX-Ff-Ywi"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJt-tA-SSL">
+                                <rect key="frame" x="45" y="125" width="230" height="80"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FQg-Z4-hZe">
+                                        <rect key="frame" x="-5" y="-42" width="60" height="165"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="56d-Qf-LQk"/>
+                                            <constraint firstAttribute="height" constant="165" id="ukc-GQ-Cis"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="96"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tWT-fu-Vab">
+                                        <rect key="frame" x="120" y="0.0" width="55" height="80"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="JO0-qg-Os0"/>
+                                            <constraint firstAttribute="width" constant="55" id="UTB-Ts-tRe"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="96"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5g-Ah-JHU">
+                                        <rect key="frame" x="175" y="0.0" width="55" height="80"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="55" id="Udk-Wm-dIF"/>
+                                            <constraint firstAttribute="height" constant="80" id="qkt-9b-53M"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="96"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="alarm-dots" translatesAutoresizingMaskIntoConstraints="NO" id="FyN-3k-0Sz">
+                                        <rect key="frame" x="105" y="0.0" width="15" height="80"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="bpe-qB-b8c"/>
+                                            <constraint firstAttribute="width" constant="15" id="fBE-Uo-UqM"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLf-yx-LV6">
+                                        <rect key="frame" x="50" y="-42" width="55" height="165"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="55" id="o73-LX-8Rb"/>
+                                            <constraint firstAttribute="height" constant="165" id="zCO-Ek-ZOF"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="96"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerY" secondItem="cLf-yx-LV6" secondAttribute="centerY" id="6JE-z4-3ju"/>
+                                    <constraint firstItem="cLf-yx-LV6" firstAttribute="leading" secondItem="FQg-Z4-hZe" secondAttribute="trailing" constant="-5" id="CKg-gT-0WM"/>
+                                    <constraint firstAttribute="centerY" secondItem="l5g-Ah-JHU" secondAttribute="centerY" id="OZ2-fk-SER"/>
+                                    <constraint firstAttribute="height" constant="80" id="PtZ-JL-GYX"/>
+                                    <constraint firstAttribute="centerY" secondItem="FQg-Z4-hZe" secondAttribute="centerY" id="Xef-6N-j0d"/>
+                                    <constraint firstItem="FyN-3k-0Sz" firstAttribute="leading" secondItem="cLf-yx-LV6" secondAttribute="trailing" id="eo2-go-2tM"/>
+                                    <constraint firstItem="tWT-fu-Vab" firstAttribute="leading" secondItem="FyN-3k-0Sz" secondAttribute="trailing" id="gVi-HP-Ese"/>
+                                    <constraint firstAttribute="centerY" secondItem="tWT-fu-Vab" secondAttribute="centerY" id="l7u-Y2-YHz"/>
+                                    <constraint firstItem="FQg-Z4-hZe" firstAttribute="leading" secondItem="HJt-tA-SSL" secondAttribute="leading" constant="-5" id="pXa-dl-2us"/>
+                                    <constraint firstAttribute="width" constant="230" id="pbY-LB-cS4"/>
+                                    <constraint firstItem="l5g-Ah-JHU" firstAttribute="leading" secondItem="tWT-fu-Vab" secondAttribute="trailing" id="tHU-vD-1hB"/>
+                                    <constraint firstAttribute="centerY" secondItem="FyN-3k-0Sz" secondAttribute="centerY" id="viR-G2-fFo"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Next Alarm" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4xW-xG-fh5">
+                                <rect key="frame" x="122" y="100" width="76" height="20"/>
+                                <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="16"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zu9-5E-PbO">
+                                <rect key="frame" x="278" y="125" width="29" height="22"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="7SC-QR-jdD" firstAttribute="centerX" secondItem="4xW-xG-fh5" secondAttribute="centerX" id="1Oe-nH-YNt"/>
+                            <constraint firstItem="zu9-5E-PbO" firstAttribute="top" secondItem="HJt-tA-SSL" secondAttribute="top" id="4Kd-f6-MsV"/>
+                            <constraint firstItem="4xW-xG-fh5" firstAttribute="top" secondItem="7SC-QR-jdD" secondAttribute="bottom" id="CEZ-mp-k9Y"/>
+                            <constraint firstItem="HJt-tA-SSL" firstAttribute="top" secondItem="4xW-xG-fh5" secondAttribute="bottom" constant="5" id="OEI-8Y-NF6"/>
+                            <constraint firstItem="zu9-5E-PbO" firstAttribute="leading" secondItem="HJt-tA-SSL" secondAttribute="trailing" constant="3" id="TSJ-2B-OvZ"/>
+                            <constraint firstAttribute="centerX" secondItem="HJt-tA-SSL" secondAttribute="centerX" id="hhQ-9f-hed"/>
+                            <constraint firstAttribute="centerX" secondItem="7SC-QR-jdD" secondAttribute="centerX" id="jfZ-lw-1Yf"/>
+                            <constraint firstItem="7SC-QR-jdD" firstAttribute="height" secondItem="ZXq-27-yIp" secondAttribute="height" multiplier="14/100" id="lxn-mc-yJx"/>
+                            <constraint firstItem="7SC-QR-jdD" firstAttribute="top" secondItem="7OL-w9-AWI" secondAttribute="bottom" id="pgc-T6-k1j"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="odY-hj-5bB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="781" y="1023"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="alarm-dots" width="6" height="40"/>
         <image name="woke-background" width="320" height="568"/>
         <image name="woke-login-info" width="8" height="17"/>
         <image name="woke-login-info-selected" width="8" height="17"/>
@@ -288,6 +415,6 @@
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="MM5-PT-liV"/>
+        <segue reference="tfZ-IS-2Ts"/>
     </inferredMetricsTieBreakers>
 </document>
