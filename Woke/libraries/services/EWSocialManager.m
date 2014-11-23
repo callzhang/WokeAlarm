@@ -14,6 +14,7 @@
 #import "APContact.h"
 #import "NSArray+BlocksKit.h"
 #import "EWSocial.h"
+#import "FBKVOController.h"
 
 @interface EWSocialManager()
 @property (nonatomic, strong) APAddressBook *addressBook;
@@ -27,11 +28,38 @@
     dispatch_once(&onceToken, ^{
         if (!manager) {
             manager = [[EWSocialManager alloc] init];
+            [manager.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) block:^(id observer, id object, NSDictionary *change) {
+                DDLogVerbose(@"Obverved friends added");
+                NSArray *new = change[NSKeyValueChangeNewKey];
+                NSArray *old = change[NSKeyValueChangeOldKey];
+                NSArray *addition = [new filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT SELF IN %@", old]];
+                [manager updateFriendshipTimelineForFrendsIDs:[addition valueForKey:kParseObjectID]];
+            }];
         }
     });
     
     return manager;
 }
+
+
+- (void)updateFriendshipTimelineForFrendsIDs:(NSArray *)friendsIDs{
+    EWPerson *me = [EWPerson me];
+    if (!me.socialGraph.friendshipTimeline) {
+        me.socialGraph.friendshipTimeline = [NSMutableDictionary new];
+    }
+    
+    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline;
+    NSString *dateKey = [NSDate date].date2YYMMDDString;
+    NSArray *friendedArray = friendsActivityDic[dateKey]?:[NSArray new];
+    NSMutableSet *friendedSet = [NSMutableSet setWithArray:friendedArray];;
+    
+    [friendedSet addObjectsFromArray:friendsIDs];
+    
+    friendsActivityDic[dateKey] = [friendedSet allObjects];
+    
+    [EWSync save];
+}
+
 
 - (APAddressBook *)addressBook {
     if (!_addressBook) {

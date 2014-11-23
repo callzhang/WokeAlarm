@@ -13,37 +13,55 @@
 #import "EWActivity.h"
 #import "EWActivityManager.h"
 
+//#import <KVOController/NSObject+FBKVOController.h>
+#import <KVOController/FBKVOController.h>
 
 @implementation EWCachedInfoManager
 //TODO: There is unfinished work
 //The manager should monitor my activities and update the statistics automatically
 
 + (EWCachedInfoManager *)managerWithPerson:(EWPerson *)p{
-    EWCachedInfoManager *manager = [EWCachedInfoManager new];
-    manager.person = p;
+    
     if (p.isMe) {
         //newest on top
-        manager.activities = [EWPerson myActivities];
-        [p addObserver:self forKeyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew context:nil];
+        static EWCachedInfoManager *myManager;
+        if (!myManager) {
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                myManager = [EWCachedInfoManager new];
+                
+                myManager.activities = [EWPerson myActivities];
+                
+                //observe activities
+                [myManager.KVOController observe:p keyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+                    DDLogInfo(@"Activity changed detected and statistics updated");
+                    [myManager updateStatistics];
+                    [myManager updateActivityCacheWithCompletion:nil];
+                }];
+                
+                //observer friends
+                [myManager.KVOController observe:p keyPath:EWPersonRelationships.friends options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+                    [myManager updateCachedFriends];
+                }];
+
+            });
+        }
+        return myManager;
+        
     }else{
+        
+        EWCachedInfoManager *manager = [EWCachedInfoManager new];
+        manager.person = p;
         [manager getStatsFromCache];
+        
+        return manager;
     }
-    return manager;
+    return nil;
 }
 
 + (EWCachedInfoManager *)myStatsManager{
     return [EWCachedInfoManager managerWithPerson:[EWPerson me]];
 }
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    if ([object isKindOfClass:[EWPerson class]]) {
-        if ([keyPath isEqualToString:EWPersonRelationships.activities]) {
-            DDLogInfo(@"Activity changed detected and statistics updated");
-            [self updateStatistics];
-        }
-    }
-}
-
 - (void)getStatsFromCache{
     
     //load cached info
@@ -274,22 +292,11 @@
     
 }
 
-- (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs{
-    NSMutableDictionary *cache = [EWSession sharedSession].currentUser.cachedInfo.mutableCopy;
-    NSMutableDictionary *activity = [cache[kActivitiesCache] mutableCopy]?:[NSMutableDictionary new];
-    NSMutableDictionary *friendsActivityDic = [activity[kFriended] mutableCopy] ?:[NSMutableDictionary new];
-    NSString *dateKey = [NSDate date].date2YYMMDDString;
-    NSArray *friendedArray = friendsActivityDic[dateKey]?:[NSArray new];
-    NSMutableSet *friendedSet = [NSMutableSet setWithArray:friendedArray];;
+- (void)updateCachedFriends{
+    NSArray *friends = [[EWPerson me].friends valueForKey:kParseObjectID];
+    NSMutableDictionary *cache = [[EWPerson me].cachedInfo mutableCopy];
+    cache[kCachedFriends] = friends;
+    [EWPerson me].cachedInfo = cache;
     
-    [friendedSet addObjectsFromArray:friendIDs];
-    
-    friendsActivityDic[dateKey] = [friendedSet allObjects];
-    activity[kFriended] = [friendsActivityDic copy];
-    cache[kActivitiesCache] = [activity copy];
-    [EWSession sharedSession].currentUser.cachedInfo = [cache copy];
-    
-    [EWSync save];
 }
-
 @end

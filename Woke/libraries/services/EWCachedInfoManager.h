@@ -52,6 +52,5 @@
 
 //cachedInfo management
 - (void)updateActivityCacheWithCompletion:(void (^)(void))block;
-- (void)updateCacheWithFriendsAdded:(NSArray *)friendIDs;
-
+- (void)updateCachedFriends;
 @end
