@@ -13,6 +13,8 @@
 #import "FBSession.h"
 #import "FBAppCall.h"
 #import "PFFacebookUtils.h"
+#import "EWAccountManager.h"
+#import "EWSession.h"
 
 UIViewController *rootViewController;
 
@@ -28,6 +30,16 @@ UIViewController *rootViewController;
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
     [EWStartUpSequence sharedInstance];
+    
+    if ([EWAccountManager isLoggedIn]) {
+        //resume Core Data login
+        //show main view controller
+        [EWSession sharedSession];
+    }
+    else {
+        //show login view controller
+        
+    }
     return YES;
 }
 

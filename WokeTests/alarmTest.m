@@ -1,23 +1,28 @@
 //
-//  WokeTests.m
-//  WokeTests
+//  alarmTest.m
+//  Woke
 //
-//  Created by Zitao Xiong on 11/11/2014.
+//  Created by Lee on 11/23/14.
 //  Copyright (c) 2014 wokealarm. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "EWAlarmManager.h"
+#import "EWUserManager.h"
+#import "EWAccountManager.h"
 
-@interface WokeTests : XCTestCase
+@interface alarmTest : XCTestCase
 
 @end
 
-@implementation WokeTests
+@implementation alarmTest
 
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    EWUserManager
+    EWAccountManager
 }
 
 - (void)tearDown {
@@ -27,12 +32,8 @@
 
 - (void)testExample {
     // This is an example of a functional test case.
+    EWAlarmManager
     XCTAssert(YES, @"Pass");
-}
-
-- (void)testAlarmSchedule{
-    //
-    
 }
 
 - (void)testPerformanceExample {

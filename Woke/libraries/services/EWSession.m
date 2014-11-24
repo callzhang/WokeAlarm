@@ -7,21 +7,64 @@
 //
 
 #import "EWSession.h"
+#import "EWPerson.h"
+
+
 
 @implementation EWSession
-+ (EWSession *)sharedSession {
-    //make sure core data stuff is always on main thread
-    //NSParameterAssert([NSThread isMainThread]);
-    static EWSession *session;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        session = [[EWSession alloc] init];
-    });
-    
-    return session;
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_WITH_ACCESSOR(EWSession, sharedSession);
+- (EWSession *)init {
+    self = [super init];
+    if (self) {
+        NSString *cachedDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+        self.cachePath = [cachedDir stringByAppendingString:@"/sessionCache.arch"];
+        [self load];
+    }
+    return self;
 }
 
 + (NSManagedObjectContext *)mainContext{
     return [EWSession sharedSession].context;
 }
+
+- (void)load {
+    
+    EWSession *tmp = nil;
+    @try {
+        tmp = [NSKeyedUnarchiver unarchiveObjectWithFile:self.cachePath];
+    } @catch (NSException *exception) {
+        // log the error.
+        DDLogInfo(@"### Seems the archive uses an old format.");
+        return;
+    }
+    
+    if (tmp) {
+        self.currentUserObjectID = tmp -> _currentUserObjectID;
+    }
+}
+
+- (void)save {
+    
+    [NSKeyedArchiver archiveRootObject:self toFile:self.cachePath];
+    DDLogInfo(@"session saved %@", self);
+}
+
+- (void)setCurrentUserObjectID:(NSString *)currentUserObjectID{
+    if (currentUserObjectID) {
+        EWPerson *me = [EWPerson MR_findFirstByAttribute:EWServerObjectAttributes.objectId withValue:currentUserObjectID];
+        
+        NSParameterAssert([[PFUser currentUser].objectId isEqualToString:me.objectId]);
+        self.currentUser = me;
+    }
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeObject:_currentUserObjectID forKey:@"currentUserObjectID"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    self.currentUserObjectID = [decoder decodeObjectForKey:@"currentUserObjectID"];
+    return self;
+}
+
 @end
