@@ -124,6 +124,8 @@ PODS:
   - ReactiveCocoa/no-arc (2.3.1)
   - ReactiveCocoa/UI (2.3.1):
     - ReactiveCocoa/Core
+  - ReactiveViewModel (0.2):
+    - ReactiveCocoa (~> 2.1)
   - RHAddressBook (1.1.1)
   - VBFPopFlatButton (0.0.5):
     - pop
@@ -153,6 +155,7 @@ DEPENDENCIES:
   - ParseFacebookUtils
   - Reachability (~> 3.1.1)
   - ReactiveCocoa (~> 2.3.1)
+  - ReactiveViewModel (~> 0.2)
   - RHAddressBook (~> 1.1.1)
   - VBFPopFlatButton (~> 0.0.5)
 
@@ -192,6 +195,7 @@ SPEC CHECKSUMS:
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
   ReactiveCocoa: dca75777b9d18990c8714a3a6f2149f29b4d1462
+  ReactiveViewModel: 78387196df2e7535bb2776c41df15dbb17300f8a
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
   VBFPopFlatButton: 023eb57c9c8e0a77d1cf926621085b0727b70b15
 

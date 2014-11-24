@@ -25,6 +25,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.sleepViewModel = [[EWSleepViewModel alloc] init];
+   
+    [self bindViewModel];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -35,6 +38,11 @@
 }
 
 - (void)bindViewModel {
-    
+    RAC(self.labelTime1, text, @"") = [RACObserve(self.sleepViewModel, time1) distinctUntilChanged];
+    RAC(self.labelTime2, text)= [RACObserve(self.sleepViewModel, time2) distinctUntilChanged];
+    RAC(self.labelTime3, text)= [RACObserve(self.sleepViewModel, time3) distinctUntilChanged];
+    RAC(self.labelTime4, text)= [RACObserve(self.sleepViewModel, time4) distinctUntilChanged];
+    RAC(self.labelDateString, text)= [RACObserve(self.sleepViewModel, dateString) distinctUntilChanged];
+    RAC(self.labelWakeupText, text)= [RACObserve(self.sleepViewModel, wakeupText) distinctUntilChanged];
 }
 @end

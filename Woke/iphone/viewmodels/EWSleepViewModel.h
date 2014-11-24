@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "RVMViewModel.h"
 
-@interface EWSleepViewModel : NSObject
+@interface EWSleepViewModel : RVMViewModel
 @property (nonatomic, strong) NSString *time1;
 @property (nonatomic, strong) NSString *time2;
 @property (nonatomic, strong) NSString *time3;
