@@ -26,6 +26,7 @@
 #import <CocoaLumberjack/DDLog.h>
 #import "UIView+Extend.h"
 #import "extobjc.h"
+#import "EWCategories.h"
 
 //static NSUInteger ddLogLevel = DDLogLevelAll;
 static NSUInteger ddLogLevel = LOG_LEVEL_VERBOSE;

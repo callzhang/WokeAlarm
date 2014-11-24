@@ -85,6 +85,7 @@
 		096AAB191A1972B800B4CBFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0D1A1972B800B4CBFF /* ViewController.m */; };
 		097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */; };
 		097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */; };
+		0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */; };
 		09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A776FE1A11D8D9004AF902 /* WokeTests.m */; };
 		09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777101A11E2BD004AF902 /* AppDelegate.m */; };
 		09A7772D1A11E2BD004AF902 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777111A11E2BD004AF902 /* main.m */; };
@@ -277,6 +278,9 @@
 		097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewController.m; sourceTree = "<group>"; };
 		097A82CB1A2282980030A2E8 /* EWSleepViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewModel.h; sourceTree = "<group>"; };
 		097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewModel.m; sourceTree = "<group>"; };
+		0990EF6F1A22C3DB001AF099 /* UIWindow+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+Extensions.h"; sourceTree = "<group>"; };
+		0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+Extensions.m"; sourceTree = "<group>"; };
+		0990EF721A22C3E2001AF099 /* EWCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWCategories.h; sourceTree = "<group>"; };
 		09A776DF1A11D8D9004AF902 /* Woke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A776F81A11D8D9004AF902 /* WokeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WokeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A776FD1A11D8D9004AF902 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -491,6 +495,9 @@
 		096AAA911A195A3900B4CBFF /* categories */ = {
 			isa = PBXGroup;
 			children = (
+				0990EF721A22C3E2001AF099 /* EWCategories.h */,
+				0990EF6F1A22C3DB001AF099 /* UIWindow+Extensions.h */,
+				0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */,
 				09285A3D1A1F115000C808C0 /* UIStoryboard+Extensions.h */,
 				09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */,
 				096AAAF11A195CF300B4CBFF /* GCDSingleton.h */,
@@ -1195,6 +1202,7 @@
 				096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
+				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
 				096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAA801A19593300B4CBFF /* EWMediaCell.m in Sources */,

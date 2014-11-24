@@ -15,6 +15,8 @@
 #import "PFFacebookUtils.h"
 #import "EWAccountManager.h"
 #import "EWSession.h"
+#import "EWLoginGateViewController.h"
+#import "EWMainViewController.h"
 
 UIViewController *rootViewController;
 
@@ -35,9 +37,14 @@ UIViewController *rootViewController;
         //resume Core Data login
         //show main view controller
         [EWSession sharedSession];
+        
+        EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
+        [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
     }
     else {
         //show login view controller
+        EWLoginGateViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWLoginGateViewController"];
+        [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
         
     }
     return YES;

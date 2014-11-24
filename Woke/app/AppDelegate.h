@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-extern UIViewController *rootViewController;
+//extern UIViewController *rootViewController; //FIXME: remove it
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
