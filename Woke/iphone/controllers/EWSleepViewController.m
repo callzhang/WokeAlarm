@@ -7,31 +7,34 @@
 //
 
 #import "EWSleepViewController.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface EWSleepViewController ()
-
+@property (weak, nonatomic) IBOutlet UILabel *labelTime1;
+@property (weak, nonatomic) IBOutlet UILabel *labelTime2;
+@property (weak, nonatomic) IBOutlet UILabel *labelTime3;
+@property (weak, nonatomic) IBOutlet UILabel *labelTime4;
+@property (weak, nonatomic) IBOutlet UILabel *labelAmpm;
+@property (weak, nonatomic) IBOutlet UILabel *labelDateString;
+@property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
+@property (weak, nonatomic) IBOutlet UILabel *labelWakeupText;
 @end
 
 @implementation EWSleepViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    //remove background color set in interface builder[used for layouting].
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)bindViewModel {
+    
 }
-*/
-
 @end

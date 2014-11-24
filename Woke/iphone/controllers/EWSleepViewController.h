@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWSleepViewModel.h"
 
 @interface EWSleepViewController : UIViewController
-
+@property (nonatomic, strong) EWSleepViewModel *sleepViewModel;
 @end

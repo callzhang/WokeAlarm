@@ -18,11 +18,18 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateClosed,
 };
 
+typedef NS_ENUM(NSUInteger, MainViewMode) {
+    MainViewModeNone,
+    MainViewModeSleep,
+    MainViewModeWake,
+};
+
 @interface EWMainViewController ()
 @property (weak, nonatomic) IBOutlet VBFPopFlatButton *menuButton;
 @property (nonatomic, assign) MainViewMenuState menuState;
 @property (nonatomic, strong) EWMenuViewController *menuViewController;
 @property (nonatomic, strong) EWSleepViewController *sleepViewController;
+@property (nonatomic, assign) MainViewMode mode;
 @end
 
 @implementation EWMainViewController
@@ -33,7 +40,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     self.menuButton.currentButtonType = buttonMenuType;
     self.menuViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMenuViewController"];
     self.sleepViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWSleepViewController"];
-    [self setSleepMode];
+    self.mode = MainViewModeSleep;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -44,10 +51,24 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     return UIStatusBarStyleLightContent;
 }
 #pragma mark -
-
-- (void)setSleepMode {
-    [self addChildViewController:self.sleepViewController];
-    [self.view insertSubview:self.sleepViewController.view belowSubview:self.menuButton];
+- (void)setMode:(MainViewMode)mode {
+    if (_mode != mode) {
+        if (_mode == MainViewModeSleep) {
+            [self.sleepViewController.view removeFromSuperview];
+            [self.sleepViewController removeFromParentViewController];
+        }
+        else if (_mode == MainViewModeWake) {
+        }
+        
+        _mode = mode;
+        if (_mode == MainViewModeSleep) {
+            [self addChildViewController:self.sleepViewController];
+            [self.view insertSubview:self.sleepViewController.view belowSubview:self.menuButton];
+        }
+        else if (_mode == MainViewModeWake) {
+            
+        }
+    }
 }
 #pragma mark - Action
 - (IBAction)onMenuButton:(id)sender {
