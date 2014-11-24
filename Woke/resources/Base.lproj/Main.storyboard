@@ -113,7 +113,7 @@
                     <navigationItem key="navigationItem" id="PKz-Gk-DW4"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
-                        <segue destination="Prn-GM-2Iw" kind="show" identifier="TempShowMainViewSegue" id="tfZ-IS-2Ts"/>
+                        <segue destination="Prn-GM-2Iw" kind="custom" identifier="TempShowMainViewSegue" customClass="MSReplaceFadeSegue" id="tfZ-IS-2Ts"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
