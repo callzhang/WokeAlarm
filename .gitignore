@@ -22,3 +22,6 @@ build/
 *.dep
 # AppCode
 .idea
+
+# KZBootstrap
+KZBootstrapUserMacros.h

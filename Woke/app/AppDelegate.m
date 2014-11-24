@@ -33,6 +33,10 @@ UIViewController *rootViewController;
     
     [EWStartUpSequence sharedInstance];
     
+#ifdef caoer115
+    EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
+    [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
+#else
     if ([EWAccountManager isLoggedIn]) {
         //resume Core Data login
         //show main view controller
@@ -47,6 +51,7 @@ UIViewController *rootViewController;
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
         
     }
+#endif
     return YES;
 }
 
