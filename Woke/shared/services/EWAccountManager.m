@@ -12,6 +12,7 @@
 #import "EWErrorManager.h"
 #import "EWSocialManager.h"
 #import "FBSession.h"
+#import "EWServer.h"
 
 NSString * const EWAccountManagerDidLoginNotification = @"EWAccountManagerDidLoginNotification";
 NSString * const EWAccountManagerDidLogoutNotification = @"EWAccountManagerDidLogoutNotification";
@@ -21,6 +22,11 @@ NSString * const EWAccountManagerDidLogoutNotification = @"EWAccountManagerDidLo
 
 @implementation EWAccountManager
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
+
+
++ (BOOL)isLoggedIn {
+    return [PFUser currentUser] != nil;
+}
 
 - (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion {
     //login with facebook
@@ -39,17 +45,42 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }
         }
         else {
-            //TODO: [LEI] there is not need to find? because when login, db should be empty
-            EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
-            [EWSession sharedSession].currentUser = person;
-            
-            if (completion) {
-                completion(user.isNew, nil);
-            }
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountManagerDidLoginNotification object:nil];
+            [EWAccountManager loginWithServerUser:user withCompletion:^(BOOL isNewUser, NSError *err) {
+                //logged into the Core Data user
+            }];
         }
     }];
+}
+
+//login Core Data User with Server User (PFUser)
++ (void)loginWithServerUser:(PFUser *)user withCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
+    
+    //fetch or create
+    EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
+    
+    //save me
+    [EWSession sharedSession].currentUser = person;
+    
+    if ([EWSync sharedInstance].workingQueue.count == 0) {
+        //if no pending uploads, refresh self
+        [person refreshInBackgroundWithCompletion:NULL];
+    }
+    
+    if (completion) {
+        DDLogInfo(@"[d] Run completion block.");
+        completion([PFUser currentUser].isNew, nil);
+        
+        //TODO:[[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    }
+    
+    DDLogInfo(@"[c] Broadcast Person login notification");
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPersonLoggedIn object:[EWSession sharedSession].currentUser userInfo:@{kUserLoggedInUserKey:[EWSession sharedSession].currentUser}];
+    
+    //if new user, link with facebook
+    if([PFUser currentUser].isNew){
+        [EWAccountManager handleNewUser];
+        //TODO:[[ATConnect sharedConnection] engage:@"new_user" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    }
 }
 
 - (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion {
@@ -243,7 +274,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }
     }];
 }
-#pragma mark -
+
+
+#pragma mark - Tools
 + (NSArray *)facebookPermissions{
     NSArray *permissions = @[@"public_profile",
                              @"user_location",
@@ -252,5 +285,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                              @"user_photos",
                              @"user_friends"];
     return permissions;
+}
+
+
+
++ (void)handleNewUser{
+//    [EWAccountManager linkWithFacebook];
+    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWSession sharedSession].currentUser.name];
+    EWAlert(msg);
+    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
 }
 @end

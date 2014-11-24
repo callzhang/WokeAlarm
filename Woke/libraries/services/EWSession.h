@@ -9,15 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
 #import "NSManagedObject+MagicalFinders.h"
+#import "GCDSingleton.h"
 
 
 @interface EWSession : NSObject
 
 @property (nonatomic, assign) BOOL isSchedulingAlarm;
 @property (nonatomic, strong) EWPerson *currentUser;
+@property (nonatomic, strong) NSString *currentUserObjectID;
 @property (nonatomic, strong) NSManagedObjectContext *context;
+@property (nonatomic, strong) NSString *cachePath;
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER_WITH_ACCESSOR(EWSession, sharedSession)
 
-+ (EWSession *)sharedSession;
 + (NSManagedObjectContext *)mainContext;
 
 @end

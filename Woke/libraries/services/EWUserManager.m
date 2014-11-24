@@ -102,7 +102,7 @@
 }
 
 
-//login with local user default info
+//login Core Data User with Server User (PFUser)
 + (void)loginWithServerUser:(PFUser *)user withCompletionBlock:(void (^)(void))completionBlock{
 
     //fetch or create
