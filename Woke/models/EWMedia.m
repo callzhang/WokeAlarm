@@ -15,7 +15,7 @@
     NSParameterAssert([NSThread isMainThread]);
     EWMedia *m = [EWMedia MR_createEntity];
     m.updatedAt = [NSDate date];
-    m.author = [EWSession sharedSession].currentUser;
+    m.author = [EWPerson me];
     return m;
 }
 

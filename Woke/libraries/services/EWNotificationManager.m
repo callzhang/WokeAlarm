@@ -158,8 +158,8 @@
                 break;
                 
             case 1:{ //accepted
-                [[EWSession sharedSession].currentUser addFriendsObject:self.person];
-                [self.person addFriendsObject:[EWSession sharedSession].currentUser];
+                [[EWPerson me] addFriendsObject:self.person];
+                [self.person addFriendsObject:[EWPerson me]];
                 [EWNotificationManager sendFriendAcceptNotificationToUser:self.person];
                 [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"Accepted"];
                 break;
@@ -234,7 +234,7 @@
      */
     
     [PFCloud callFunctionInBackground:@"sendFriendRequestNotificationToUser"
-                       withParameters:@{@"sender": [EWSession sharedSession].currentUser.objectId,
+                       withParameters:@{@"sender": [EWPerson me].objectId,
                                         @"owner": person.objectId}
                                 block:^(id object, NSError *error)
      {
@@ -261,7 +261,7 @@
      userInfo: {User:user.objectId, Type: kNotificationTypeFriendAccepted}
      */
     [PFCloud callFunctionInBackground:@"sendFriendAcceptNotificationToUser"
-                       withParameters:@{@"sender": [EWSession sharedSession].currentUser.objectId, @"owner": person.objectId}
+                       withParameters:@{@"sender": [EWPerson me].objectId, @"owner": person.objectId}
                                 block:^(id object, NSError *error)
     {
         if (error) {

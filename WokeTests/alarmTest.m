@@ -11,18 +11,18 @@
 #import "EWAlarmManager.h"
 #import "EWUserManager.h"
 #import "EWAccountManager.h"
+#import "EWAlarmScheduleViewController.h"
+#import "UIWindow+Extensions.h"
 
-@interface alarmTest : XCTestCase
+@interface AlarmTest : XCTestCase
 
 @end
 
-@implementation alarmTest
+@implementation AlarmTest
 
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    EWUserManager
-    EWAccountManager
 }
 
 - (void)tearDown {
@@ -31,15 +31,25 @@
 }
 
 - (void)testExample {
-    // This is an example of a functional test case.
-    EWAlarmManager
-    XCTAssert(YES, @"Pass");
+    XCTestExpectation *expectation =
+    [self expectationWithDescription:@"High Expectations"];
+    
+    //schedule alarm
+
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout Error: %@", error);
+        }
+    }];
+
 }
 
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{
         // Put the code you want to measure the time of here.
+        NSLog(@"text");
     }];
 }
 

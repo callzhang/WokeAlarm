@@ -67,7 +67,7 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
     [self.view showLoopingWithTimeout:0];
     
     friendIDs = _person.cachedInfo[kCachedFriends];
-    NSMutableSet *myFriendIDs = [NSMutableSet setWithArray:[EWSession sharedSession].currentUser.cachedInfo[kCachedFriends]];
+    NSMutableSet *myFriendIDs = [NSMutableSet setWithArray:[EWPerson me].cachedInfo[kCachedFriends]];
     [myFriendIDs intersectSet:[NSSet setWithArray:friendIDs]];
     mutualFriends = [myFriendIDs allObjects];
     [_friendsCollectionView reloadData];

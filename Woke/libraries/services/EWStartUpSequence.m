@@ -18,6 +18,7 @@
 #import "EWUIUtil.h"
 #import "EWCachedInfoManager.h"
 #import "EWBackgroundingManager.h"
+#import "NSPersistentStoreCoordinator+MagicalRecord.h"
 
 
 @implementation EWStartUpSequence
@@ -34,9 +35,12 @@
 
 - (id)init{
 	self = [super init];
+    [MTDates]
+    
 	//set up server sync
 	[[EWSync sharedInstance] setup];
-	//watch for login event
+    
+    //watch for login event
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:kPersonLoggedIn object:nil];
 	
 	return self;
@@ -47,9 +51,9 @@
 - (void)loginDataCheck{
     DDLogVerbose(@"=== [%s] Logged in, performing login tasks.===", __func__);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    if (![currentInstallation[kParseObjectID] isEqualToString: [EWSession sharedSession].currentUser.objectId]){
-        currentInstallation[kUserID] = [EWSession sharedSession].currentUser.objectId;
-        currentInstallation[kUsername] = [EWSession sharedSession].currentUser.username;
+    if (![currentInstallation[kParseObjectID] isEqualToString: [EWPerson me].objectId]){
+        currentInstallation[kUserID] = [EWPerson me].objectId;
+        currentInstallation[kUsername] = [EWPerson me].username;
         [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 DDLogVerbose(@"Installation %@ saved", currentInstallation.objectId);
@@ -98,7 +102,7 @@
     
     //Update my relations cancelled here because the we should wait for all sync task finished before we can download the rest of the relation
     NSLog(@"7. Refresh my media");
-    [[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWSession sharedSession].currentUser];
+    [[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWPerson me]];
 	
 	//location
 	DDLogVerbose(@"8. Start location recurring update");
@@ -126,7 +130,7 @@
 	}
 	
     //services that need to run periodically
-    if (![EWSession sharedSession].currentUser) {
+    if (![EWPerson me]) {
         return;
     }
     //this will run at the beginning and every 600s
@@ -144,7 +148,16 @@
     
 }
 
-
++ (void)deleteDatabase{
+    NSURL *storeURL = [NSPersistentStore MR_urlForStoreName:[MagicalRecord defaultStoreName]];
+    NSError *error;
+    [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
+    
+    if (error) {
+        NSLog(@"An error has occurred while deleting %@", storeURL);
+        NSLog(@"Error description: %@", error.description);
+    }
+}
 
 @end
 

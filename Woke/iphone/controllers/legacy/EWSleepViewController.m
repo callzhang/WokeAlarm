@@ -40,7 +40,7 @@
     [[EWBackgroundingManager sharedInstance] startBackgrounding];
 	currentActivity = [EWActivityManager sharedManager].currentAlarmActivity;
 	
-	NSDate *cachedNextTime = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:[EWSession sharedSession].currentUser];
+	NSDate *cachedNextTime = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:[EWPerson me]];
 	if (![cachedNextTime isEqualToDate:currentActivity.time]) {
 		[[EWAlarmManager sharedInstance] updateCachedAlarmTimes];
 	}

@@ -73,7 +73,6 @@
 		096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAD21A195A3900B4CBFF /* PFQuery+EWQuery.m */; };
 		096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF31A19666A00B4CBFF /* EWErrorManager.m */; };
 		096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF71A1972B800B4CBFF /* EWAlarmScheduleViewController.m */; };
-		096AAB0F1A1972B800B4CBFF /* EWFirstTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF91A1972B800B4CBFF /* EWFirstTimeViewController.m */; };
 		096AAB101A1972B800B4CBFF /* EWFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFB1A1972B800B4CBFF /* EWFriendsViewController.m */; };
 		096AAB111A1972B800B4CBFF /* EWLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFD1A1972B800B4CBFF /* EWLogInViewController.m */; };
 		096AAB121A1972B800B4CBFF /* EWPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */; };
@@ -126,7 +125,7 @@
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; };
 		9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */; };
-		9B71AC751A22927C00E300CE /* alarmTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B71AC741A22927C00E300CE /* alarmTest.m */; };
+		9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B71AC741A22927C00E300CE /* AlarmTest.m */; };
 		9B8139701A15D65900F1A56C /* GKCropBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81395C1A15D65900F1A56C /* GKCropBorderView.m */; };
 		9B8139711A15D65900F1A56C /* GKImageCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81395E1A15D65900F1A56C /* GKImageCropOverlayView.m */; };
 		9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139601A15D65900F1A56C /* GKImageCropView.m */; };
@@ -365,7 +364,7 @@
 		9B6AB8171A16F1F6003372A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9B6AB8191A16F201003372A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		9B71AC741A22927C00E300CE /* alarmTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = alarmTest.m; sourceTree = "<group>"; };
+		9B71AC741A22927C00E300CE /* AlarmTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlarmTest.m; sourceTree = "<group>"; };
 		9B81395B1A15D65900F1A56C /* GKCropBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKCropBorderView.h; sourceTree = "<group>"; };
 		9B81395C1A15D65900F1A56C /* GKCropBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKCropBorderView.m; sourceTree = "<group>"; };
 		9B81395D1A15D65900F1A56C /* GKImageCropOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropOverlayView.h; sourceTree = "<group>"; };
@@ -686,7 +685,7 @@
 		09A776FB1A11D8D9004AF902 /* WokeTests */ = {
 			isa = PBXGroup;
 			children = (
-				9B71AC741A22927C00E300CE /* alarmTest.m */,
+				9B71AC741A22927C00E300CE /* AlarmTest.m */,
 				09A776FE1A11D8D9004AF902 /* WokeTests.m */,
 				09A776FC1A11D8D9004AF902 /* Supporting Files */,
 			);
@@ -1180,7 +1179,6 @@
 				09DF4F8A1A1434AF00BEA328 /* _EWNotification.m in Sources */,
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
-				096AAB0F1A1972B800B4CBFF /* EWFirstTimeViewController.m in Sources */,
 				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
 				09DF4F891A1434AF00BEA328 /* _EWMessage.m in Sources */,
 				096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */,
@@ -1279,7 +1277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
-				9B71AC751A22927C00E300CE /* alarmTest.m in Sources */,
+				9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

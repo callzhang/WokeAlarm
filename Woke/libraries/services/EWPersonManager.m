@@ -41,9 +41,9 @@
 #pragma mark - ME
 //Current User MO at background thread
 - (void)setCurrentUser:(EWPerson *)user{
-    [EWSession sharedSession].currentUser = user;
-    [[EWSession sharedSession].currentUser addObserver:self forKeyPath:@"score" options:NSKeyValueObservingOptionNew context:nil];
-    [[EWSession sharedSession].currentUser addObserver:self forKeyPath:@"lastLocation" options:NSKeyValueObservingOptionNew context:nil];
+    [EWPerson me] = user;
+    [[EWPerson me] addObserver:self forKeyPath:@"score" options:NSKeyValueObservingOptionNew context:nil];
+    [[EWPerson me] addObserver:self forKeyPath:@"lastLocation" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 #pragma mark - CREATE USER
@@ -106,7 +106,7 @@
     
     NSMutableArray *allPerson = [NSMutableArray new];
     
-    EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:context];
+    EWPerson *localMe = [[EWPerson me] MR_inContext:context];
     NSString *parseObjectId = [localMe valueForKey:kParseObjectID];
     NSError *error;
     
@@ -122,8 +122,8 @@
                            withParameters:@{@"objectId": parseObjectId,
                                             @"topk" : numberOfRelevantUsers,
                                             @"radius" : radiusOfRelevantUsers,
-                                            @"location": @{@"latitude": @([EWSession sharedSession].currentUser.lastLocation.coordinate.latitude),
-                                                           @"longitude": @([EWSession sharedSession].currentUser.lastLocation.coordinate.longitude)}}
+                                            @"location": @{@"latitude": @([EWPerson me].lastLocation.coordinate.latitude),
+                                                           @"longitude": @([EWPerson me].lastLocation.coordinate.longitude)}}
                                     error:&error];
     
     if (error && list.count == 0) {
@@ -153,7 +153,7 @@
     }
     
     //make sure the rest of people's score is revert back to 0
-    NSArray *otherLocalPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"(NOT %K IN %@) AND score > 0 AND %K != %@", kParseObjectID, [people valueForKey:kParseObjectID], kParseObjectID, [EWSession sharedSession].currentUser.objectId] inContext:context];
+    NSArray *otherLocalPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"(NOT %K IN %@) AND score > 0 AND %K != %@", kParseObjectID, [people valueForKey:kParseObjectID], kParseObjectID, [EWPerson me].objectId] inContext:context];
     for (EWPerson *person in otherLocalPerson) {
         person.score = 0;
     }
@@ -198,7 +198,7 @@
 //TODO: [ZITAO] move to account manager.
 - (void)userLoggedIn:(NSNotification *)notif{
     EWPerson *user = notif.object;
-    if (![[EWSession sharedSession].currentUser isEqual:user]) {
+    if (![[EWPerson me] isEqual:user]) {
         self.currentUser = user;
     }
     

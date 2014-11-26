@@ -70,9 +70,9 @@
 }
 
 - (EWSocial *)mySocialGraph{
-    EWSocial *sg = [EWSession sharedSession].currentUser.socialGraph;
+    EWSocial *sg = [EWPerson me].socialGraph;
     if (!sg) {
-        sg = [self  createSocialGraphForPerson:[EWSession sharedSession].currentUser];
+        sg = [self  createSocialGraphForPerson:[EWPerson me]];
     }
     return sg;
 }

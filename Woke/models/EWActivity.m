@@ -17,7 +17,7 @@ const struct EWActivityTypes EWActivityTypes = {
 
 + (EWActivity *)newActivity{
     EWActivity *activity = [[EWActivity alloc] init];
-    activity.owner = [EWSession sharedSession].currentUser;
+    activity.owner = [EWPerson me];
     activity.updatedAt = [NSDate date];
     return activity;
 }
