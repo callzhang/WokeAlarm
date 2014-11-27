@@ -24,6 +24,7 @@ extern NSString * const EWPersonDefaultName;
 @property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
 
++ (EWPerson *)me;
 - (BOOL)isMe;
 - (BOOL)isFriend;
 - (BOOL)friendPending;
@@ -36,8 +37,6 @@ extern NSString * const EWPersonDefaultName;
 + (NSArray *)myActivities;
 + (NSArray *)myNotifications;
 + (NSArray *)myUnreadNotifications;
-//+ (void)getFriendsForPerson:(EWPerson *)person;
-
 + (NSArray *)myAlarms;
 + (EWAlarm *)myNextAlarm;
 + (NSArray *)myFriends;

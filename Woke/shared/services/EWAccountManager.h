@@ -18,4 +18,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 
 - (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion;
 - (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion;
++ (void)resumeCoreDataUserWithServerUser:(PFUser *)user withCompletion:(void (^)(BOOL isNewUser, NSError *error))completion;
++ (BOOL)isLoggedIn;
 @end

@@ -12,6 +12,7 @@
 #import "EWErrorManager.h"
 #import "EWSocialManager.h"
 #import "FBSession.h"
+#import "EWServer.h"
 
 NSString * const EWAccountManagerDidLoginNotification = @"EWAccountManagerDidLoginNotification";
 NSString * const EWAccountManagerDidLogoutNotification = @"EWAccountManagerDidLogoutNotification";
@@ -21,6 +22,11 @@ NSString * const EWAccountManagerDidLogoutNotification = @"EWAccountManagerDidLo
 
 @implementation EWAccountManager
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
+
+
++ (BOOL)isLoggedIn {
+    return [PFUser currentUser] != nil;
+}
 
 - (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion {
     //login with facebook
@@ -39,17 +45,42 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }
         }
         else {
-            //TODO: [LEI] there is not need to find? because when login, db should be empty
-            EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
-            [EWSession sharedSession].currentUser = person;
-            
-            if (completion) {
-                completion(user.isNew, nil);
-            }
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountManagerDidLoginNotification object:nil];
+            [EWAccountManager resumeCoreDataUserWithServerUser:user withCompletion:^(BOOL isNewUser, NSError *err) {
+                //logged into the Core Data user
+            }];
         }
     }];
+}
+
+//login Core Data User with Server User (PFUser)
++ (void)resumeCoreDataUserWithServerUser:(PFUser *)user withCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
+    
+    //fetch or create
+    EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
+    
+    //save me
+    [EWPerson me] = person;
+    
+    if ([EWSync sharedInstance].workingQueue.count == 0 && person.changedKeys.count == 0) {
+        //if no pending uploads, refresh self
+        [person refreshInBackgroundWithCompletion:NULL];
+    }
+    
+    if (completion) {
+        DDLogInfo(@"[d] Run completion block.");
+        completion([PFUser currentUser].isNew, nil);
+        
+        //TODO:[[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    }
+    
+    DDLogInfo(@"[c] Broadcast Person login notification");
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPersonLoggedIn object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
+    
+    //if new user, link with facebook
+    if([PFUser currentUser].isNew){
+        [EWAccountManager handleNewUser];
+        //TODO:[[ATConnect sharedConnection] engage:@"new_user" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    }
 }
 
 - (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion {
@@ -98,7 +129,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 //after fb login, fetch user managed object
 + (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *person = [[EWSession sharedSession].currentUser MR_inContext:localContext];
+        EWPerson *person = [[EWPerson me] MR_inContext:localContext];
         
         NSParameterAssert(person);
         
@@ -149,7 +180,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 + (void)getFacebookFriends{
     DDLogVerbose(@"Updating facebook friends");
     //check facebook id exist
-    if (![EWSession sharedSession].currentUser.facebook) {
+    if (![EWPerson me].facebook) {
         DDLogWarn(@"Current user doesn't have facebook ID, skip checking fb friends");
         return;
     }
@@ -171,7 +202,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //get social graph of current user
         //if not, create one
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
+            EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
             EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:localMe];
             //skip if checked within a week
             if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
@@ -227,7 +258,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder];
             }else{
                 DDLogVerbose(@"Finished loading friends from facebook, transfer to social graph.");
-                EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWSession sharedSession].currentUser];
+                EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
                 graph.facebookFriends = [friendsHolder copy];
                 graph.facebookUpdated = [NSDate date];
 
@@ -243,7 +274,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }
     }];
 }
-#pragma mark -
+
+
+#pragma mark - Tools
 + (NSArray *)facebookPermissions{
     NSArray *permissions = @[@"public_profile",
                              @"user_location",
@@ -252,5 +285,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                              @"user_photos",
                              @"user_friends"];
     return permissions;
+}
+
+
+
++ (void)handleNewUser{
+//    [EWAccountManager linkWithFacebook];
+    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
+    EWAlert(msg);
+    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
 }
 @end

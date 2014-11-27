@@ -63,7 +63,7 @@
 		096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAABC1A195A3900B4CBFF /* EWServer.m */; };
 		096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAABE1A195A3900B4CBFF /* EWSession.m */; };
 		096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC01A195A3900B4CBFF /* EWSocialManager.m */; };
-		096AAAE81A195A3900B4CBFF /* EWStatisticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC21A195A3900B4CBFF /* EWStatisticsManager.m */; };
+		096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC21A195A3900B4CBFF /* EWCachedInfoManager.m */; };
 		096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC41A195A3900B4CBFF /* EWSync.m */; };
 		096AAAEB1A195A3900B4CBFF /* EWUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC81A195A3900B4CBFF /* EWUserManager.m */; };
 		096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACA1A195A3900B4CBFF /* EWUtil.m */; };
@@ -73,7 +73,6 @@
 		096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAD21A195A3900B4CBFF /* PFQuery+EWQuery.m */; };
 		096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF31A19666A00B4CBFF /* EWErrorManager.m */; };
 		096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF71A1972B800B4CBFF /* EWAlarmScheduleViewController.m */; };
-		096AAB0F1A1972B800B4CBFF /* EWFirstTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF91A1972B800B4CBFF /* EWFirstTimeViewController.m */; };
 		096AAB101A1972B800B4CBFF /* EWFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFB1A1972B800B4CBFF /* EWFriendsViewController.m */; };
 		096AAB111A1972B800B4CBFF /* EWLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFD1A1972B800B4CBFF /* EWLogInViewController.m */; };
 		096AAB121A1972B800B4CBFF /* EWPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */; };
@@ -81,9 +80,14 @@
 		096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB031A1972B800B4CBFF /* EWRecordingViewController.m */; };
 		096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB051A1972B800B4CBFF /* EWRingtoneSelectionViewController.m */; };
 		096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB071A1972B800B4CBFF /* EWSettingsViewController.m */; };
-		096AAB171A1972B800B4CBFF /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepViewController.m */; };
 		096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */; };
 		096AAB191A1972B800B4CBFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0D1A1972B800B4CBFF /* ViewController.m */; };
+		097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */; };
+		097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */; };
+		0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */; };
+		0990EF7A1A22C606001AF099 /* MSPushFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF751A22C606001AF099 /* MSPushFadeSegue.m */; };
+		0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */; };
+		0990EF7C1A22C606001AF099 /* MSReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF791A22C606001AF099 /* MSReplaceSegue.m */; };
 		09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A776FE1A11D8D9004AF902 /* WokeTests.m */; };
 		09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777101A11E2BD004AF902 /* AppDelegate.m */; };
 		09A7772D1A11E2BD004AF902 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777111A11E2BD004AF902 /* main.m */; };
@@ -121,6 +125,7 @@
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; };
 		9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */; };
+		9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B71AC741A22927C00E300CE /* AlarmTest.m */; };
 		9B8139701A15D65900F1A56C /* GKCropBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81395C1A15D65900F1A56C /* GKCropBorderView.m */; };
 		9B8139711A15D65900F1A56C /* GKImageCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81395E1A15D65900F1A56C /* GKImageCropOverlayView.m */; };
 		9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139601A15D65900F1A56C /* GKImageCropView.m */; };
@@ -228,8 +233,8 @@
 		096AAABE1A195A3900B4CBFF /* EWSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSession.m; sourceTree = "<group>"; };
 		096AAABF1A195A3900B4CBFF /* EWSocialManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSocialManager.h; sourceTree = "<group>"; };
 		096AAAC01A195A3900B4CBFF /* EWSocialManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSocialManager.m; sourceTree = "<group>"; };
-		096AAAC11A195A3900B4CBFF /* EWStatisticsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStatisticsManager.h; sourceTree = "<group>"; };
-		096AAAC21A195A3900B4CBFF /* EWStatisticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStatisticsManager.m; sourceTree = "<group>"; };
+		096AAAC11A195A3900B4CBFF /* EWCachedInfoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWCachedInfoManager.h; sourceTree = "<group>"; };
+		096AAAC21A195A3900B4CBFF /* EWCachedInfoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWCachedInfoManager.m; sourceTree = "<group>"; };
 		096AAAC31A195A3900B4CBFF /* EWSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSync.h; sourceTree = "<group>"; };
 		096AAAC41A195A3900B4CBFF /* EWSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSync.m; sourceTree = "<group>"; };
 		096AAAC71A195A3900B4CBFF /* EWUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWUserManager.h; sourceTree = "<group>"; };
@@ -271,6 +276,19 @@
 		096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeUpViewController.m; sourceTree = "<group>"; };
 		096AAB0C1A1972B800B4CBFF /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		096AAB0D1A1972B800B4CBFF /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		097A82C71A2163FA0030A2E8 /* EWSleepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewController.h; sourceTree = "<group>"; };
+		097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewController.m; sourceTree = "<group>"; };
+		097A82CB1A2282980030A2E8 /* EWSleepViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewModel.h; sourceTree = "<group>"; };
+		097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewModel.m; sourceTree = "<group>"; };
+		0990EF6F1A22C3DB001AF099 /* UIWindow+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+Extensions.h"; sourceTree = "<group>"; };
+		0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+Extensions.m"; sourceTree = "<group>"; };
+		0990EF721A22C3E2001AF099 /* EWCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWCategories.h; sourceTree = "<group>"; };
+		0990EF741A22C606001AF099 /* MSPushFadeSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPushFadeSegue.h; sourceTree = "<group>"; };
+		0990EF751A22C606001AF099 /* MSPushFadeSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPushFadeSegue.m; sourceTree = "<group>"; };
+		0990EF761A22C606001AF099 /* MSReplaceFadeSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSReplaceFadeSegue.h; sourceTree = "<group>"; };
+		0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSReplaceFadeSegue.m; sourceTree = "<group>"; };
+		0990EF781A22C606001AF099 /* MSReplaceSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSReplaceSegue.h; sourceTree = "<group>"; };
+		0990EF791A22C606001AF099 /* MSReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSReplaceSegue.m; sourceTree = "<group>"; };
 		09A776DF1A11D8D9004AF902 /* Woke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A776F81A11D8D9004AF902 /* WokeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WokeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A776FD1A11D8D9004AF902 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -346,6 +364,7 @@
 		9B6AB8171A16F1F6003372A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9B6AB8191A16F201003372A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		9B71AC741A22927C00E300CE /* AlarmTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlarmTest.m; sourceTree = "<group>"; };
 		9B81395B1A15D65900F1A56C /* GKCropBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKCropBorderView.h; sourceTree = "<group>"; };
 		9B81395C1A15D65900F1A56C /* GKCropBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKCropBorderView.m; sourceTree = "<group>"; };
 		9B81395D1A15D65900F1A56C /* GKImageCropOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropOverlayView.h; sourceTree = "<group>"; };
@@ -404,6 +423,7 @@
 			isa = PBXGroup;
 			children = (
 				096AAA3F1A19593300B4CBFF /* controllers */,
+				097A82CA1A2282830030A2E8 /* viewmodels */,
 				096AAA5C1A19593300B4CBFF /* views */,
 			);
 			path = iphone;
@@ -419,6 +439,8 @@
 				096AAA4B1A19593300B4CBFF /* EWMainViewController.m */,
 				09285A3A1A1F0E8100C808C0 /* EWMenuViewController.h */,
 				09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */,
+				097A82C71A2163FA0030A2E8 /* EWSleepViewController.h */,
+				097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -472,6 +494,7 @@
 				096AAAA01A195A3900B4CBFF /* defines */,
 				096AAAA41A195A3900B4CBFF /* helpers */,
 				096AAAA71A195A3900B4CBFF /* services */,
+				0990EF731A22C606001AF099 /* segues */,
 				096AAAA21A195A3900B4CBFF /* GPUImageAnimator.h */,
 				096AAAA31A195A3900B4CBFF /* GPUImageAnimator.m */,
 			);
@@ -481,6 +504,9 @@
 		096AAA911A195A3900B4CBFF /* categories */ = {
 			isa = PBXGroup;
 			children = (
+				0990EF721A22C3E2001AF099 /* EWCategories.h */,
+				0990EF6F1A22C3DB001AF099 /* UIWindow+Extensions.h */,
+				0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */,
 				09285A3D1A1F115000C808C0 /* UIStoryboard+Extensions.h */,
 				09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */,
 				096AAAF11A195CF300B4CBFF /* GCDSingleton.h */,
@@ -547,8 +573,8 @@
 				096AAABE1A195A3900B4CBFF /* EWSession.m */,
 				096AAABF1A195A3900B4CBFF /* EWSocialManager.h */,
 				096AAAC01A195A3900B4CBFF /* EWSocialManager.m */,
-				096AAAC11A195A3900B4CBFF /* EWStatisticsManager.h */,
-				096AAAC21A195A3900B4CBFF /* EWStatisticsManager.m */,
+				096AAAC11A195A3900B4CBFF /* EWCachedInfoManager.h */,
+				096AAAC21A195A3900B4CBFF /* EWCachedInfoManager.m */,
 				096AAAC31A195A3900B4CBFF /* EWSync.h */,
 				096AAAC41A195A3900B4CBFF /* EWSync.m */,
 				096AAAC71A195A3900B4CBFF /* EWUserManager.h */,
@@ -598,6 +624,28 @@
 			path = legacy;
 			sourceTree = "<group>";
 		};
+		097A82CA1A2282830030A2E8 /* viewmodels */ = {
+			isa = PBXGroup;
+			children = (
+				097A82CB1A2282980030A2E8 /* EWSleepViewModel.h */,
+				097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */,
+			);
+			path = viewmodels;
+			sourceTree = "<group>";
+		};
+		0990EF731A22C606001AF099 /* segues */ = {
+			isa = PBXGroup;
+			children = (
+				0990EF741A22C606001AF099 /* MSPushFadeSegue.h */,
+				0990EF751A22C606001AF099 /* MSPushFadeSegue.m */,
+				0990EF761A22C606001AF099 /* MSReplaceFadeSegue.h */,
+				0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */,
+				0990EF781A22C606001AF099 /* MSReplaceSegue.h */,
+				0990EF791A22C606001AF099 /* MSReplaceSegue.m */,
+			);
+			path = segues;
+			sourceTree = "<group>";
+		};
 		09A776D61A11D8D9004AF902 = {
 			isa = PBXGroup;
 			children = (
@@ -637,6 +685,7 @@
 		09A776FB1A11D8D9004AF902 /* WokeTests */ = {
 			isa = PBXGroup;
 			children = (
+				9B71AC741A22927C00E300CE /* AlarmTest.m */,
 				09A776FE1A11D8D9004AF902 /* WokeTests.m */,
 				09A776FC1A11D8D9004AF902 /* Supporting Files */,
 			);
@@ -1130,14 +1179,13 @@
 				09DF4F8A1A1434AF00BEA328 /* _EWNotification.m in Sources */,
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
-				096AAB0F1A1972B800B4CBFF /* EWFirstTimeViewController.m in Sources */,
+				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
 				09DF4F891A1434AF00BEA328 /* _EWMessage.m in Sources */,
 				096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */,
 				09DF4F821A1434AF00BEA328 /* _EWAchievement.m in Sources */,
 				096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */,
 				096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */,
 				9B840A2A1A170AE800D6C2A3 /* RMDateSelectionViewController.m in Sources */,
-				096AAB171A1972B800B4CBFF /* EWSleepViewController.m in Sources */,
 				096AAA7C1A19593300B4CBFF /* EWAlarmEditCell.m in Sources */,
 				096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */,
 				096AAADE1A195A3900B4CBFF /* EWAVManager.m in Sources */,
@@ -1161,6 +1209,7 @@
 				9B840A201A1705CE00D6C2A3 /* EWSocial.m in Sources */,
 				096AAB191A1972B800B4CBFF /* ViewController.m in Sources */,
 				096AAADF1A195A3900B4CBFF /* EWBackgroundingManager.m in Sources */,
+				0990EF7A1A22C606001AF099 /* MSPushFadeSegue.m in Sources */,
 				09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */,
 				09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */,
 				096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */,
@@ -1176,6 +1225,7 @@
 				096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
+				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
 				096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAA801A19593300B4CBFF /* EWMediaCell.m in Sources */,
@@ -1191,6 +1241,7 @@
 				09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */,
 				096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */,
 				096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */,
+				0990EF7C1A22C606001AF099 /* MSReplaceSegue.m in Sources */,
 				096AAA851A19593300B4CBFF /* EWShakeProgressView.m in Sources */,
 				096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */,
 				096AAAE41A195A3900B4CBFF /* EWPersonManager.m in Sources */,
@@ -1200,7 +1251,9 @@
 				09DF4F8B1A1434AF00BEA328 /* _EWPerson.m in Sources */,
 				9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */,
 				096AAADA1A195A3900B4CBFF /* GPUImageAnimator.m in Sources */,
+				097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */,
 				096AAA8F1A195A2A00B4CBFF /* NavigationControllerDelegate.m in Sources */,
+				097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */,
 				096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
 				096AAB121A1972B800B4CBFF /* EWPersonViewController.m in Sources */,
@@ -1214,7 +1267,7 @@
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
-				096AAAE81A195A3900B4CBFF /* EWStatisticsManager.m in Sources */,
+				096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */,
 				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1224,6 +1277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
+				9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

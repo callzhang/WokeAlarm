@@ -11,7 +11,7 @@
 #import "EWAlarm.h"
 #import "EWNotificationManager.h"
 #import "EWUserManager.h"
-#import "EWStatisticsManager.h"
+#import "EWCachedInfoManager.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
@@ -25,10 +25,16 @@ NSString * const EWPersonDefaultName = @"New User";
 
 
 #pragma mark - Helper methods
++ (EWPerson *)me{
+    NSParameterAssert([NSThread isMainThread]);
+    return [EWPerson me];
+}
+
+
 - (BOOL)isMe {
     BOOL isme = NO;
-    if ([EWSession sharedSession].currentUser) {
-        isme = [self.username isEqualToString:[EWSession sharedSession].currentUser.username];
+    if ([EWPerson me]) {
+        isme = [self.username isEqualToString:[EWPerson me].username];
     }
     return isme;
 }
@@ -45,12 +51,12 @@ NSString * const EWPersonDefaultName = @"New User";
 
 //request pending
 - (BOOL)friendPending {
-    return [[EWSession sharedSession].currentUser.cachedInfo[kCachedFriends] containsObject:self.objectId];
+    return [[EWPerson me].cachedInfo[kCachedFriends] containsObject:self.objectId];
 }
 
 //wait for friend acceptance
 - (BOOL)friendWaiting {
-    return [self.cachedInfo[kCachedFriends] containsObject:[EWSession sharedSession].currentUser.objectId];
+    return [self.cachedInfo[kCachedFriends] containsObject:[EWPerson me].objectId];
 }
 
 - (NSString *)genderObjectiveCaseString {
@@ -60,7 +66,7 @@ NSString * const EWPersonDefaultName = @"New User";
 
 #pragma mark - My Stuffs
 + (NSArray *)myActivities {
-    NSArray *activities = [EWSession sharedSession].currentUser.activities.allObjects;
+    NSArray *activities = [EWPerson me].activities.allObjects;
     return [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.updatedAt ascending:NO]]];
 }
 
@@ -71,7 +77,7 @@ NSString * const EWPersonDefaultName = @"New User";
 }
 
 + (NSArray *)myNotifications {
-    NSArray *notifications = [[EWSession sharedSession].currentUser.notifications allObjects];
+    NSArray *notifications = [[EWPerson me].notifications allObjects];
     NSSortDescriptor *sortCompelet = [NSSortDescriptor sortDescriptorWithKey:@"completed" ascending:NO];
     NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:NO];
     NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:@"importance" ascending:NO];
@@ -81,7 +87,7 @@ NSString * const EWPersonDefaultName = @"New User";
 
 + (NSArray *)myAlarms {
     NSParameterAssert([NSThread isMainThread]);
-    return [self alarmsForUser:[EWSession sharedSession].currentUser];
+    return [self alarmsForUser:[EWPerson me]];
 }
 
 + (EWAlarm *)myNextAlarm {
@@ -100,7 +106,7 @@ NSString * const EWPersonDefaultName = @"New User";
 }
 
 + (NSArray *)myFriends{
-    return [EWSession sharedSession].currentUser.friends.allObjects;
+    return [EWPerson me].friends.allObjects;
 }
 
 + (NSArray *)alarmsForUser:(EWPerson *)user{
@@ -125,7 +131,7 @@ NSString * const EWPersonDefaultName = @"New User";
 }
 
 + (void)requestFriend:(EWPerson *)person{
-    [[EWSession sharedSession].currentUser addFriendsObject:person];
+    [[EWPerson me] addFriendsObject:person];
     [EWPerson updateMyCachedFriends];
     [EWNotificationManager sendFriendRequestNotificationToUser:person];
     
@@ -133,24 +139,21 @@ NSString * const EWPersonDefaultName = @"New User";
 }
 
 + (void)acceptFriend:(EWPerson *)person{
-    [[EWSession sharedSession].currentUser addFriendsObject:person];
+    [[EWPerson me] addFriendsObject:person];
     [EWPerson updateMyCachedFriends];
     [EWNotificationManager sendFriendAcceptNotificationToUser:person];
-    
-    //update cache
-    [EWStatisticsManager updateCacheWithFriendsAdded:@[person.serverID]];
     
     [EWSync save];
 }
 
 + (void)unfriend:(EWPerson *)person{
-    [[EWSession sharedSession].currentUser removeFriendsObject:person];
+    [[EWPerson me] removeFriendsObject:person];
     [EWPerson updateMyCachedFriends];
     [EWSync save];
 }
 
 + (void)updateMyCachedFriends{
-    [[EWSession sharedSession].currentUser updateMyFriends];
+    [[EWPerson me] updateMyFriends];
 }
 
 - (void)updateMyFriends {
@@ -207,7 +210,7 @@ NSString * const EWPersonDefaultName = @"New User";
 //check my relation, used for new installation with existing user
 + (void)updateMe{
     NSDate *lastCheckedMe = [[NSUserDefaults standardUserDefaults] valueForKey:kLastCheckedMe];
-    BOOL good = [[EWSession sharedSession].currentUser validate];
+    BOOL good = [[EWPerson me] validate];
     if (!good || !lastCheckedMe || lastCheckedMe.timeElapsed > kCheckMeInternal) {
         if (!good) {
             DDLogError(@"Failed to validate me, refreshing from server");
@@ -218,7 +221,7 @@ NSString * const EWPersonDefaultName = @"New User";
         }
         
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
+            EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
             [localMe refreshRelatedWithCompletion:^{
                 
                 [EWPerson updateMyCachedFriends];

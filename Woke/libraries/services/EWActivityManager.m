@@ -30,8 +30,25 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 + (NSArray *)myActivities{
-    NSArray *activities = [EWSession sharedSession].currentUser.activities.allObjects;
-    return [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];
+    return [[EWActivityManager sharedManager] activitiesForPerson:[EWPerson me] inContext:nil];
+}
+
++ (NSArray *)myAlarmActivities{
+    NSArray *activities = [self myActivities];
+    NSArray *alarmActivities = [activities bk_select:^BOOL(EWActivity *obj) {
+        return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
+    }];
+    return alarmActivities;
+}
+
+- (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context{
+    if (!context) {
+        context = [NSManagedObjectContext MR_defaultContext];
+    }
+    EWPerson *localMe = [[EWPerson me] MR_inContext:context];
+    NSArray *activities = localMe.activities.allObjects;
+    activities = [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.updatedAt ascending:NO]]];
+    return activities;
 }
 
 - (EWActivity *)currentAlarmActivity{
@@ -50,7 +67,7 @@ NSString *const EWActivityTypeMedia = @"media";
         }else{
             //create new activity
             _currentAlarmActivity = [EWActivity newActivity];
-            _currentAlarmActivity.owner = [EWSession sharedSession].currentUser;
+            _currentAlarmActivity.owner = [EWPerson me];
             _currentAlarmActivity.type = EWActivityTypeAlarm;
             _currentAlarmActivity.time = nextAlarm.time.nextOccurTime;
         }

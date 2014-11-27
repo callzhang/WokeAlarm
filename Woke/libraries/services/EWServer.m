@@ -111,7 +111,7 @@
         
         //set ACL
         PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
-        if ([[EWSession sharedSession].currentUser.objectId isEqualToString:WokeUserID]) {
+        if ([[EWPerson me].objectId isEqualToString:WokeUserID]) {
             //if WOKE, set public
             [acl setPublicReadAccess:YES];
             [acl setPublicWriteAccess:YES];
@@ -132,7 +132,7 @@
                                               @"content-available": @1,
                                               kPushType: kPushTypeMedia,
                                               kPushMediaType: kPushMediaTypeVoice,
-                                              kPushPersonID: [EWSession sharedSession].currentUser.objectId,
+                                              kPushPersonID: [EWPerson me].objectId,
                                               kPushMediaID: media.objectId} mutableCopy];
         
         //form push payload
@@ -213,11 +213,10 @@
 
 + (void)registerAPNS{
     //push
-#if !TARGET_IPHONE_SIMULATOR
-    //register everytime in case for events like phone replacement
     UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeNone;
     UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+#if !TARGET_IPHONE_SIMULATOR
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 
 #endif

@@ -4,5 +4,5 @@
 
 @property (nonatomic, strong) NSArray *facebookFriends;
 @property (nonatomic, strong) NSArray *addressBookFriends;
-// Custom logic goes here.
+@property (nonatomic, strong) NSMutableDictionary *friendshipTimeline;
 @end

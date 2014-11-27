@@ -351,7 +351,7 @@
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
         //delete
-        if (mi.author == [EWSession sharedSession].currentUser) {
+        if (mi.author == [EWPerson me]) {
             [mi remove];
         }
         [_activity removeMediasObject:mi];

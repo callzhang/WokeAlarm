@@ -13,6 +13,10 @@
 #import "FBSession.h"
 #import "FBAppCall.h"
 #import "PFFacebookUtils.h"
+#import "EWAccountManager.h"
+#import "EWSession.h"
+#import "EWLoginGateViewController.h"
+#import "EWMainViewController.h"
 
 UIViewController *rootViewController;
 
@@ -27,7 +31,31 @@ UIViewController *rootViewController;
     EWLogInit();
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
+    [EWStartUpSequence deleteDatabase];
     [EWStartUpSequence sharedInstance];
+    
+#ifdef caoer115
+    EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
+    [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
+#else
+    if ([EWAccountManager isLoggedIn]) {
+        //resume Core Data login
+        [EWAccountManager resumeCoreDataUserWithServerUser:[PFUser currentUser] withCompletion:^(BOOL isNewUser, NSError *error) {
+            DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
+        }];
+        //show main view controller
+        [EWSession sharedSession];
+        
+        EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
+        [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
+    }
+    else {
+        //show login view controller
+        EWLoginGateViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWLoginGateViewController"];
+        [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
+        
+    }
+#endif
     return YES;
 }
 

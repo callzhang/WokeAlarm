@@ -28,6 +28,11 @@ target 'Woke' do
   pod 'APAddressBook', '~> 0.1.4'
   pod 'IDMPhotoBrowser', '~> 1.4'
   pod 'MYBlurIntroductionView', '~> 1.0'
+  pod 'libextobjc', '~> 0.4.1'
+  pod 'KVOController', '~> 1.0.3'
+  pod 'ReactiveCocoa', '~> 2.3.1'
+  pod 'ReactiveViewModel', '~> 0.2'
+  pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
 end
 
 target 'WokeTests' do

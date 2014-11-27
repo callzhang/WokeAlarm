@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
 #import "NSManagedObject+MagicalFinders.h"
+#import "GCDSingleton.h"
 
 
 @interface EWSession : NSObject
@@ -19,9 +20,11 @@
  *  A dictionary of user and statement
  */
 @property (nonatomic, strong) NSDictionary *skippedWakees;
+@property (nonatomic, strong) NSString *currentUserObjectID;//for archieving
 @property (nonatomic, strong) NSManagedObjectContext *context;
+@property (nonatomic, strong) NSString *cachePath;
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER_WITH_ACCESSOR(EWSession, sharedSession)
 
-+ (EWSession *)sharedSession;
 + (NSManagedObjectContext *)mainContext;
 
 @end
