@@ -15,6 +15,10 @@
 
 @property (nonatomic, assign) BOOL isSchedulingAlarm;
 @property (nonatomic, strong) EWPerson *currentUser;
+/**
+ *  A dictionary of user and statement
+ */
+@property (nonatomic, strong) NSDictionary *skippedWakees;
 @property (nonatomic, strong) NSManagedObjectContext *context;
 
 + (EWSession *)sharedSession;

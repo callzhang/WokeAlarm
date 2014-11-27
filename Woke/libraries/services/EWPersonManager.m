@@ -21,9 +21,8 @@
 
 
 @implementation EWPersonManager
-@synthesize everyone;
+@synthesize wakeeList = _wakeeList;
 @synthesize isFetchingEveryone = _isFetchingEveryone;
-@synthesize timeEveryoneChecked;
 
 +(EWPersonManager *)sharedInstance{
     static EWPersonManager *sharedPersonStore_ = nil;
@@ -69,39 +68,62 @@
     }
 }
 
-- (NSArray *)everyone{
+- (EWPerson *)nextWakee{
+    if (_wakeeList.count == 0) {
+        //need to fetch everyone first
+        [self wakeeList];
+    }
+    EWPerson *next = _wakeeList.firstObject;
+    [_wakeeList removeObjectAtIndex:_wakeeList.count-1];
+    
+    //get extra if near empty
+    if (_wakeeList.count < 3) {
+        [self getWakeesInBackgroundWithCompletion:^{
+            //
+        }];
+    }
+    return next;
+}
+
+- (NSArray *)wakeeList{
     NSParameterAssert([NSThread isMainThread]);
     
     //fetch from sever
-    [self getEveryoneInContext:mainContext];
+    NSArray *allWakees = [self getWakeesInContext:mainContext];
     
-    NSArray *allPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
-    everyone = [allPerson sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"score" ascending:NO]]];
-    return everyone;
+    [_wakeeList addObjectsFromArray:allWakees];
+    return _wakeeList;
     
 }
 
-- (void)getEveryoneInBackgroundWithCompletion:(void (^)(void))block{
+- (void)getWakeesInBackgroundWithCompletion:(void (^)(void))block{
     NSParameterAssert([NSThread isMainThread]);
+    __block NSArray *wakees;
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        [self getEveryoneInContext:localContext];
+        wakees = [self getWakeesInContext:localContext];
     }completion:^(BOOL success, NSError *error) {
-        NSArray *allPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
-        everyone = [allPerson sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"score" ascending:NO]]];
+        for (EWPerson *localWakee in wakees) {
+            EWPerson *person = (EWPerson *)[localWakee MR_inContext:[NSManagedObjectContext MR_defaultContext]];
+            if (person) {
+                
+                [_wakeeList addObject:person];
+            }
+        }
+        
         if (block) {
             block();
         }
     }];
 }
 
-- (void)getEveryoneInContext:(NSManagedObjectContext *)context{
+- (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context{
     
     //cache
-    if ((everyone.count > 0 && timeEveryoneChecked && timeEveryoneChecked.timeElapsed < everyoneCheckTimeOut) || self.isFetchingEveryone) {
-        return;
+    if (self.isFetchingEveryone) {
+        return nil;
     }
     self.isFetchingEveryone = YES;
-    timeEveryoneChecked = [NSDate date];
+    //_timeEveryoneChecked = [NSDate date];
     
     
     NSMutableArray *allPerson = [NSMutableArray new];
@@ -130,65 +152,55 @@
         DDLogError(@"*** Failed to get relavent user list: %@", error.description);
         //get cached person
         error = nil;
-        list = localMe.cachedInfo[kEveryone];
-    }else{
-        //update cache
-        NSMutableDictionary *cachedInfo = [localMe.cachedInfo mutableCopy];
-        cachedInfo[kEveryone] = list;
-        cachedInfo[kEveryoneLastFetched] = [NSDate date];
-        localMe.cachedInfo = cachedInfo;
+        self.isFetchingEveryone = NO;
+        return nil;
     }
     
     //fetch
     error = nil;
     PFQuery *query = [PFUser query];
     [query whereKey:kParseObjectID containedIn:list];
-    [query includeKey:@"friends"];
-    NSArray *people = [EWSync findServerObjectWithQuery:query error:&error];
+    //[query includeKey:@"friends"];
+    NSArray *users = [EWSync findServerObjectWithQuery:query error:&error];
     
     if (error) {
         NSLog(@"*** Failed to fetch everyone: %@", error);
         self.isFetchingEveryone = NO;
-        return;
-    }
-    
-    //make sure the rest of people's score is revert back to 0
-    NSArray *otherLocalPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"(NOT %K IN %@) AND score > 0 AND %K != %@", kParseObjectID, [people valueForKey:kParseObjectID], kParseObjectID, [EWSession sharedSession].currentUser.objectId] inContext:context];
-    for (EWPerson *person in otherLocalPerson) {
-        person.score = 0;
+        return nil;
     }
     
     //change the returned people's score;
-    for (PFUser *user in people) {
+    for (PFUser *user in users) {
         EWPerson *person = (EWPerson *)[user managedObjectInContext:context];
-        [NSThread sleepForTimeInterval:0.1];//throttle down the new user creation speed
-        float score = 99 - [people indexOfObject:user] - arc4random_uniform(3);//add random for testing
-		if (person.score && person.score.floatValue != score) {
-			person.score = [NSNumber numberWithFloat:score];
-			[allPerson addObject:person];
-		}
+        
+        //remove skipped user
+        NSString *skippedStatement = [EWSession sharedSession].skippedWakees[user.objectId];
+        if (skippedStatement) {
+            if ([skippedStatement isEqualToString:person.statement]) {
+                DDLogInfo(@"Same statement for person %@ (%@) skipped", person.name, person.statement);
+                continue;
+            }
+        }
+        [allPerson addObject:person];
     }
     
     //batch save to local
-    [allPerson addObjectsFromArray:otherLocalPerson];
     [EWSync saveAllToLocal:allPerson];
     
     //still need to save me
-    localMe.score = @100;
+    //localMe.score = @100;
     
     NSLog(@"Received everyone list: %@", [allPerson valueForKey:@"name"]);
     self.isFetchingEveryone = NO;
-}
-
-- (void)setEveryone:(NSArray *)e{
-    everyone = e;
+    
+    return allPerson;
 }
 
 
 - (EWPerson *)anyone{
     
-    NSInteger i = arc4random_uniform((uint16_t)self.everyone.count);
-    EWPerson *one = self.everyone[i];
+    NSInteger i = arc4random_uniform((uint16_t)self.wakeeList.count);
+    EWPerson *one = self.wakeeList[i];
     return one;
 }
 

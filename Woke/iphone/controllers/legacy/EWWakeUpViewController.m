@@ -125,7 +125,7 @@
     [self.view setNeedsDisplay];
     
     //pre download everyone for postWakeUpVC
-    [[EWPersonManager sharedInstance] getEveryoneInBackgroundWithCompletion:NULL];
+    [[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
     
     //send currently played cell info to EWAVManager
     if ([EWAVManager sharedManager].media) {

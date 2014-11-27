@@ -69,7 +69,7 @@
 	
 	//fetch everyone
 	DDLogVerbose(@"1. Getting everyone");
-	[[EWPersonManager sharedInstance] getEveryoneInBackgroundWithCompletion:NULL];
+	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
     
     //refresh current user
     DDLogVerbose(@"2. Register AWS push key");
@@ -134,7 +134,7 @@
 	
 	//fetch everyone
 	DDLogVerbose(@"[1] Getting everyone");
-	[[EWPersonManager sharedInstance] getEveryoneInBackgroundWithCompletion:NULL];
+	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
 	
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
