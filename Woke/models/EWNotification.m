@@ -19,7 +19,7 @@
     NSParameterAssert([NSThread isMainThread]);
     EWNotification *notice = [EWNotification MR_createEntity];
     notice.updatedAt = [NSDate date];
-    notice.owner = [EWSession sharedSession].currentUser;
+    notice.owner = [EWPerson me];
     notice.importance = 0;
     return notice;
 }

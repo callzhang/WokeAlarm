@@ -217,7 +217,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     self.name.text = person.name;
     self.location.text = person.city;
     if (person.lastLocation && !person.isMe) {
-        CLLocation *loc0 = [EWSession sharedSession].currentUser.lastLocation;
+        CLLocation *loc0 = [EWPerson me].lastLocation;
         CLLocation *loc1 = person.lastLocation;
         float distance = [loc0 distanceFromLocation:loc1]/1000;
         if (person.city) {
@@ -280,7 +280,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 - (IBAction)login:(id)sender {
     
-    if (![EWSession sharedSession].currentUser.facebook) {
+    if (![EWPerson me].facebook) {
         EWLogInViewController *loginVC = [[EWLogInViewController alloc] init];
         [loginVC connect:nil];
         return;
@@ -733,11 +733,11 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }else if (buttonIndex == 3){
         UIImage *image = [photoBrowser photoAtIndex:photoIndex].underlyingImage;
         // upload my profile and move to first place
-        NSString *fileUrl = [EWUtil uploadImageToParseREST:[EWSession sharedSession].currentUser.profilePic];
-        [EWUtil deleteFileFromParseRESTwithURL:[EWSession sharedSession].currentUser.images[photoIndex]];
+        NSString *fileUrl = [EWUtil uploadImageToParseREST:[EWPerson me].profilePic];
+        [EWUtil deleteFileFromParseRESTwithURL:[EWPerson me].images[photoIndex]];
         [_photos insertObject:fileUrl atIndex:0];
         // set my profile
-        [EWSession sharedSession].currentUser.profilePic = image;
+        [EWPerson me].profilePic = image;
         
         // delete original pic in array;
         [_photos removeObjectAtIndex:photoIndex];
@@ -781,7 +781,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 {
     if (person.isMe) {
         // 结束时候保存一次
-        [EWSession sharedSession].currentUser.images = _photos;
+        [EWPerson me].images = _photos;
         [EWSync save];
     }
 }
@@ -803,7 +803,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
             
             [_photos addObject:fileUrl];
             
-            [EWSession sharedSession].currentUser.images = _photos;
+            [EWPerson me].images = _photos;
             //        [EWSync save];
             
             [EWUIUtil dismissHUDinView:_photoBrower.view];
@@ -895,7 +895,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         
         [_photos addObject:fileUrl];
         
-        [EWSession sharedSession].currentUser.images = _photos;
+        [EWPerson me].images = _photos;
         [EWSync save];
         
         [EWUIUtil dismissHUDinView:_photoBrower.view];

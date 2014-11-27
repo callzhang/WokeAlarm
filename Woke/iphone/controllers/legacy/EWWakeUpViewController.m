@@ -125,7 +125,7 @@
     [self.view setNeedsDisplay];
     
     //pre download everyone for postWakeUpVC
-    [[EWPersonManager sharedInstance] getEveryoneInBackgroundWithCompletion:NULL];
+    [[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
     
     //send currently played cell info to EWAVManager
     if ([EWAVManager sharedManager].media) {
@@ -351,7 +351,7 @@
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
         //delete
-        if (mi.author == [EWSession sharedSession].currentUser) {
+        if (mi.author == [EWPerson me]) {
             [mi remove];
         }
         [_activity removeMediasObject:mi];

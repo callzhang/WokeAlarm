@@ -120,8 +120,8 @@
         }else{
             
             //Woke state -> assign media to next task, download
-            if (![[EWSession sharedSession].currentUser.unreadMedias containsObject:media]) {
-                [[EWSession sharedSession].currentUser addUnreadMediasObject:media];
+            if (![[EWPerson me].unreadMedias containsObject:media]) {
+                [[EWPerson me] addUnreadMediasObject:media];
                 [EWSync save];
                 
             }
@@ -214,7 +214,7 @@
     
     //update media
     [[EWMediaManager sharedInstance] checkMediaAssets];
-    NSArray *medias = [EWSession sharedSession].currentUser.unreadMedias.allObjects;
+    NSArray *medias = [EWPerson me].unreadMedias.allObjects;
     
     //fill media from mediaAssets, if no media for task, create a pseudo media
     NSInteger nVoiceNeeded = 1;
@@ -225,7 +225,7 @@
             //find media to add
             [activity addMediasObject: media];
             //remove media from mediaAssets, need to remove relation doesn't have inverse relation. This is to make sure the sender doesn't need to modify other person
-            [[EWSession sharedSession].currentUser removeUnreadMediasObject:media];
+            [[EWPerson me] removeUnreadMediasObject:media];
             //!!!single directional relation? Remove media.receiver?
             
             //stop if enough
@@ -277,7 +277,7 @@
         [[UIApplication sharedApplication] scheduleLocalNotification:note];
         
         //play sound
-        [[EWAVManager sharedManager] playSoundFromFileName:[EWSession sharedSession].currentUser.preference[@"DefaultTone"]];
+        [[EWAVManager sharedManager] playSoundFromFileName:[EWPerson me].preference[@"DefaultTone"]];
         
         //play sounds after 30s - time for alarm
         double d = 10;
@@ -351,7 +351,7 @@
 #pragma mark - CHECK TIMER
 - (void) alarmTimerCheck{
     //check time
-    if (![EWSession sharedSession].currentUser) return;
+    if (![EWPerson me]) return;
     EWAlarm *alarm = [EWPerson myNextAlarm];
     if (alarm.state == NO) return;
     
@@ -377,12 +377,12 @@
 
 - (void)sleepTimerCheck{
     //check time
-    if (![EWSession sharedSession].currentUser) return;
+    if (![EWPerson me]) return;
     EWAlarm *alarm = [EWPerson myNextAlarm];
     if (alarm.state == NO) return;
     
     //alarm time up
-    NSNumber *sleepDuration = [EWSession sharedSession].currentUser.preference[kSleepDuration];
+    NSNumber *sleepDuration = [EWPerson me].preference[kSleepDuration];
     NSInteger durationInSeconds = sleepDuration.integerValue * 3600;
     NSDate *sleepTime = [alarm.time dateByAddingTimeInterval:-durationInSeconds];
 	NSTimeInterval timeLeft = sleepTime.timeIntervalSinceNow;
@@ -404,10 +404,10 @@
 
 + (void)handleSleepTimerEvent:(UILocalNotification *)notification{
     NSString *taskID = notification.userInfo[kLocalAlarmID];
-    if ([EWSession sharedSession].currentUser) {
+    if ([EWPerson me]) {
         //logged in enter sleep mode
         EWAlarm *alarm = [EWPerson myNextAlarm];
-        NSNumber *duration = [EWSession sharedSession].currentUser.preference[kSleepDuration];
+        NSNumber *duration = [EWPerson me].preference[kSleepDuration];
         BOOL nextTaskMatched = [alarm.objectID.URIRepresentation.absoluteString isEqualToString:taskID];
         NSInteger h = alarm.time.timeIntervalSinceNow/3600;
         BOOL needSleep = h < duration.floatValue && h > 1;

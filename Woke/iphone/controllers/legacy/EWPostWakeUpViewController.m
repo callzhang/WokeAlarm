@@ -121,7 +121,7 @@ NSString * const selectAllCellId = @"selectAllCellId";
 {
     [self.view showLoopingWithTimeout:0];
     //take the cached value or a new value
-    [[EWPersonManager sharedInstance] getEveryoneInBackgroundWithCompletion:^{
+    [[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:^{
         NSArray *allPerson = [EWPerson MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"score > 0"] inContext:mainContext];
         _personArray = [allPerson sortedArrayUsingComparator:^NSComparisonResult(EWPerson *obj1, EWPerson *obj2) {
             NSDate *time1 = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:obj1]?:[[NSDate date] timeByAddingMinutes:60];

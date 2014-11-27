@@ -125,7 +125,7 @@
         for (PFObject *a in objects) {
             EWAlarm *alarm = (EWAlarm *)[a managedObjectInContext:mainContext];;
             [alarm refresh];
-            alarm.owner = [EWSession sharedSession].currentUser;
+            alarm.owner = [EWPerson me];
             if (![alarm validate]) {
                 [alarm remove];
             }else if (![alarms containsObject:alarm]) {
@@ -262,7 +262,7 @@
 	DDLogInfo(@"There are %ld scheduled local notification", (long)allNotification.count);
 	
 	//delete redundant alarm notif
-	for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
+	for (EWAlarm *alarm in [EWPerson me].alarms) {
 		[alarm scheduleLocalNotification];
 		NSArray *notifs= [alarm localNotifications];
 		[allNotification removeObjectsInArray:notifs];
@@ -364,7 +364,7 @@
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     
-    NSDictionary *dic = @{@"where":@{kUsername:[EWSession sharedSession].currentUser.username},
+    NSDictionary *dic = @{@"where":@{kUsername:[EWPerson me].username},
                           @"push_time":[NSNumber numberWithDouble:[time timeIntervalSince1970]+30],
                           @"data":@{@"alert":@"Time to get up",
                                     @"content-available":@1,

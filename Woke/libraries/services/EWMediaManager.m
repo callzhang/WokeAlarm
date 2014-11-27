@@ -33,7 +33,7 @@
 
 - (NSArray *)myMedias{
     NSParameterAssert([NSThread isMainThread]);
-    return [self mediasForPerson:[EWSession sharedSession].currentUser];
+    return [self mediasForPerson:[EWPerson me]];
 }
 
 
@@ -41,7 +41,7 @@
     PFQuery *q = [PFQuery queryWithClassName:@"EWMedia"];
     [q whereKey:EWMediaRelationships.author equalTo:[PFQuery getUserObjectWithId:WokeUserID]];
     [q whereKey:EWMediaAttributes.type equalTo:kPushMediaTypeVoice];
-    NSArray *mediasFromWoke = [EWSession sharedSession].currentUser.cachedInfo[kWokeVoiceReceived]?:[NSArray new];
+    NSArray *mediasFromWoke = [EWPerson me].cachedInfo[kWokeVoiceReceived]?:[NSArray new];
 #if !DEBUG
     [q whereKey:kParseObjectID notContainedIn:mediasFromWoke];
 #endif
@@ -52,11 +52,11 @@
         EWMedia *media = (EWMedia *)[voice managedObjectInContext:nil];
         [media refresh];
         //save
-        NSMutableDictionary *cache = [[EWSession sharedSession].currentUser.cachedInfo mutableCopy];
+        NSMutableDictionary *cache = [[EWPerson me].cachedInfo mutableCopy];
         NSMutableArray *receivedVoices = [mediasFromWoke mutableCopy];
         [receivedVoices addObject:media.objectId];
         [cache setObject:receivedVoices forKey:kWokeVoiceReceived];
-        [EWSession sharedSession].currentUser.cachedInfo = [cache copy];
+        [EWPerson me].cachedInfo = [cache copy];
         [EWSync save];
         
         return media;
@@ -72,7 +72,7 @@
         PFQuery *q = [[[PFUser currentUser] relationForKey:EWPersonRelationships.medias] query];
         [EWSync findServerObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
             [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-                EWPerson *localMe = [[EWSession sharedSession].currentUser MR_inContext:localContext];
+                EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
                 NSArray *newMedias = [objects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [localMe.medias valueForKey:kParseObjectID]]];
                 for (PFObject *m in newMedias) {
                     EWMedia *media = (EWMedia *)[m managedObjectInContext:localContext];
@@ -121,7 +121,7 @@
     }
     PFQuery *query = [PFQuery queryWithClassName:@"EWMedia"];
     [query whereKey:@"receivers" containedIn:@[[PFUser currentUser]]];
-    NSSet *localAssetIDs = [[EWSession sharedSession].currentUser.unreadMedias valueForKey:kParseObjectID];
+    NSSet *localAssetIDs = [[EWPerson me].unreadMedias valueForKey:kParseObjectID];
     [query whereKey:kParseObjectID notContainedIn:localAssetIDs.allObjects];
     NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query];
 	BOOL newMedia = NO;
@@ -131,7 +131,7 @@
         //relationship
         NSMutableArray *receivers = po[@"receivers"];
         for (PFObject *receiver in receivers) {
-            if ([receiver.objectId isEqualToString:[EWSession sharedSession].currentUser.objectId]) {
+            if ([receiver.objectId isEqualToString:[EWPerson me].objectId]) {
                 [receivers removeObject:receiver];
                 break;
             }
@@ -144,7 +144,7 @@
         }];
         
         mo.receiver = nil;
-        [[EWSession sharedSession].currentUser addUnreadMediasObject:mo];
+        [[EWPerson me] addUnreadMediasObject:mo];
         
         //in order to upload change to server, we need to save to server
         [mo saveToServer];

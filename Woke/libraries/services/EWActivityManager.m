@@ -67,7 +67,7 @@ NSString *const EWActivityTypeMedia = @"media";
         }else{
             //create new activity
             _currentAlarmActivity = [EWActivity newActivity];
-            _currentAlarmActivity.owner = [EWSession sharedSession].currentUser;
+            _currentAlarmActivity.owner = [EWPerson me];
             _currentAlarmActivity.type = EWActivityTypeAlarm;
             _currentAlarmActivity.time = nextAlarm.time.nextOccurTime;
         }

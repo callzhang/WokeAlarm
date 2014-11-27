@@ -54,8 +54,8 @@
 }
 
 - (NSString *)distanceString{
-    if (!_person.isMe && _person.lastLocation && [EWSession sharedSession].currentUser.lastLocation) {
-        CLLocation *loc0 = [EWSession sharedSession].currentUser.lastLocation;
+    if (!_person.isMe && _person.lastLocation && [EWPerson me].lastLocation) {
+        CLLocation *loc0 = [EWPerson me].lastLocation;
         CLLocation *loc1 = _person.lastLocation;
         _distance = [loc0 distanceFromLocation:loc1]/1000;
     }

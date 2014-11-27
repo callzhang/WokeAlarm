@@ -55,12 +55,12 @@ static const NSArray *pref;
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [EWSession sharedSession].currentUser.preference = [preference mutableCopy];
+    [EWPerson me].preference = [preference mutableCopy];
     [EWSync save];
 }
 - (void)initData {
     //profile
-    preference = [[EWSession sharedSession].currentUser.preference mutableCopy]?:[kUserDefaults mutableCopy];
+    preference = [[EWPerson me].preference mutableCopy]?:[kUserDefaults mutableCopy];
     settingGroup = settingGroupPreference;
     ringtoneList = ringtoneNameList;
     
@@ -106,7 +106,7 @@ static const NSArray *pref;
 - (void)ViewController:(EWRingtoneSelectionViewController *)controller didFinishSelectRingtone:(NSString *)tone{
     //set ringtone
     preference[@"DefaultTone"] = tone;
-    [EWSession sharedSession].currentUser.preference = preference;
+    [EWPerson me].preference = preference;
     [EWSync save];
 }
 
@@ -261,7 +261,7 @@ static const NSArray *pref;
             if (d != d0) {
                 DDLogInfo(@"Sleep duration changed from %f to %f", d0, d);
                 preference[kSleepDuration] = @(d);
-                [EWSession sharedSession].currentUser.preference = preference.copy;
+                [EWPerson me].preference = preference.copy;
                 [_tableView reloadData];
                 [[EWAlarmManager sharedInstance] scheduleSleepNotifications];
             }
@@ -290,7 +290,7 @@ static const NSArray *pref;
 
 - (void)OnBedTimeNotificationSwitchChanged:(UISwitch *)sender{
     [preference setObject:@(sender.on) forKey:kBedTimeNotification];
-    [EWSession sharedSession].currentUser.preference = preference;
+    [EWPerson me].preference = preference;
     [EWSync save];
     
     //schedule sleep notification

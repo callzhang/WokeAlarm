@@ -52,7 +52,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
     
     //add alarm observer
     [[EWAlarmManager sharedInstance] addObserver:self forKeyPath:@"isSchedulingAlarm" options:NSKeyValueObservingOptionNew context:nil];
-    [[EWSession sharedSession].currentUser addObserver:self forKeyPath:EWPersonRelationships.alarms options:NSKeyValueObservingOptionNew context:nil];
+    [[EWPerson me] addObserver:self forKeyPath:EWPersonRelationships.alarms options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -65,7 +65,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
 - (void)dealloc{
     @try {
         [[EWAlarmManager sharedInstance] removeObserver:self forKeyPath:@"isSchedulingAlarm"];
-        [[EWSession sharedSession].currentUser removeObserver:self forKeyPath:@"alarms"];
+        [[EWPerson me] removeObserver:self forKeyPath:@"alarms"];
     }
     @catch (NSException *exception) {
         DDLogError(@"Failed to remove observer: %@", exception.description);
@@ -88,7 +88,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
             }
         });
         
-    }else if (object == [EWSession sharedSession].currentUser){
+    }else if (object == [EWPerson me]){
         [EWUIUtil dismissHUDinView:self.view];
         [self initData];
         [self.view showLoopingWithTimeout:0];

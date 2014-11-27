@@ -21,9 +21,9 @@
     //add relationMagicalRecord
     EWAlarm *a = [EWAlarm MR_createEntity];
     a.updatedAt = [NSDate date];
-    a.owner = [EWSession sharedSession].currentUser;
+    a.owner = [EWPerson me];
     a.state = @YES;
-    a.tone = [EWSession sharedSession].currentUser.preference[@"DefaultTone"];
+    a.tone = [EWPerson me].preference[@"DefaultTone"];
     
     return a;
 }
@@ -38,7 +38,7 @@
 + (void)deleteAll{
     //delete
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
+        for (EWAlarm *alarm in [EWPerson me].alarms) {
             EWAlarm *localAlarm = [alarm MR_inContext:localContext];
             [localAlarm remove];
         }
@@ -50,7 +50,7 @@
     BOOL good = YES;
     if (!self.owner) {
         DDLogError(@"Alarm（%@）missing owner", self.serverID);
-        self.owner = [[EWSession sharedSession].currentUser MR_inContext:self.managedObjectContext];
+        self.owner = [[EWPerson me] MR_inContext:self.managedObjectContext];
     }
     if (!self.time) {
         DDLogError(@"Alarm（%@）missing time", self.serverID);
@@ -59,7 +59,7 @@
     //check tone
     if (!self.tone) {
         DDLogError(@"Tone not set, fixed!");
-        self.tone = [EWSession sharedSession].currentUser.preference[@"DefaultTone"];
+        self.tone = [EWPerson me].preference[@"DefaultTone"];
     }
     
     if (!good) {
@@ -143,31 +143,31 @@
 #pragma mark - Cached alarm time to user defaults
 
 - (void)updateCachedAlarmTime{
-    NSMutableDictionary *cache = [EWSession sharedSession].currentUser.cachedInfo.mutableCopy?:[NSMutableDictionary new];
+    NSMutableDictionary *cache = [EWPerson me].cachedInfo.mutableCopy?:[NSMutableDictionary new];
     NSMutableDictionary *timeTable = [cache[kCachedAlarmTimes] mutableCopy]?:[NSMutableDictionary new];
-    for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
+    for (EWAlarm *alarm in [EWPerson me].alarms) {
         if (alarm.state) {
             NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
             timeTable[wkday] = alarm.time;
         }
     }
     cache[kCachedAlarmTimes] = timeTable;
-    [EWSession sharedSession].currentUser.cachedInfo = cache;
+    [EWPerson me].cachedInfo = cache;
     [EWSync save];
     DDLogVerbose(@"Updated cached alarm times: %@", timeTable);
 }
 
 - (void)updateCachedStatement{
-    NSMutableDictionary *cache = [EWSession sharedSession].currentUser.cachedInfo.mutableCopy?:[NSMutableDictionary new];
+    NSMutableDictionary *cache = [EWPerson me].cachedInfo.mutableCopy?:[NSMutableDictionary new];
     NSMutableDictionary *statements = [cache[kCachedStatements] mutableCopy]?:[NSMutableDictionary new];
-    for (EWAlarm *alarm in [EWSession sharedSession].currentUser.alarms) {
+    for (EWAlarm *alarm in [EWPerson me].alarms) {
         if (alarm.state) {
             NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
             statements[wkday] = alarm.statement;
         }
     }
     cache[kCachedStatements] = statements;
-    [EWSession sharedSession].currentUser.cachedInfo = cache;
+    [EWPerson me].cachedInfo = cache;
     [EWSync save];
     DDLogVerbose(@"Updated cached statements: %@", statements);
 }
@@ -271,7 +271,10 @@
 #pragma mark - Sleep notification
 
 - (void)scheduleSleepNotification{
-    NSNumber *duration = [EWSession sharedSession].currentUser.preference[kSleepDuration];
+    if (!self.time) {
+        return;
+    }
+    NSNumber *duration = [EWPerson me].preference[kSleepDuration];
     float d = duration.floatValue;
     NSDate *sleepTime = [self.time dateByAddingTimeInterval:-d*3600];
     

@@ -55,9 +55,9 @@
     
     [self.indicator stopAnimating];
     
-    if ([EWSession sharedSession].currentUser) {
-        self.name.text = [EWSession sharedSession].currentUser.name;
-        self.profileView.image = [EWSession sharedSession].currentUser.profilePic;
+    if ([EWPerson me]) {
+        self.name.text = [EWPerson me].name;
+        self.profileView.image = [EWPerson me].profilePic;
     }
 
 }
@@ -74,7 +74,7 @@
 }
 
 - (IBAction)check:(id)sender {
-    DDLogInfo(@"Current user: %@", [EWSession sharedSession].currentUser);
+    DDLogInfo(@"Current user: %@", [EWPerson me]);
 }
 
 

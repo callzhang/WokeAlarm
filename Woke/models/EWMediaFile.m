@@ -14,7 +14,7 @@
 
 + (EWMediaFile *)newMediaFile{
     EWMediaFile *mediaFile = [EWMediaFile MR_createEntity];
-    mediaFile.owner = [EWSession sharedSession].currentUser.serverID;
+    mediaFile.owner = [EWPerson me].serverID;
     mediaFile.updatedAt = [NSDate date];
     return mediaFile;
 }
