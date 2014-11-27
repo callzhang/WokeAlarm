@@ -100,6 +100,8 @@
 		09A86FD21A1ACDDB0075DFF4 /* EWMainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */; };
 		09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE17F1A13285400989ECA /* EWBaseViewController.m */; };
 		09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */; };
+		09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B521001A25786C008FF7F6 /* UIView+Mask.m */; };
+		09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B521031A25825A008FF7F6 /* EWWakeViewController.m */; };
 		09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5B1E51A166162006EA46C /* UAProgressView.m */; };
 		09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F111A1434AF00BEA328 /* EarlyWorm.xcdatamodeld */; };
 		09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F151A1434AF00BEA328 /* EWAchievement.m */; };
@@ -311,6 +313,10 @@
 		09ABE17F1A13285400989ECA /* EWBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseViewController.m; sourceTree = "<group>"; };
 		09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseNavigationController.h; sourceTree = "<group>"; };
 		09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseNavigationController.m; sourceTree = "<group>"; };
+		09B520FF1A25786C008FF7F6 /* UIView+Mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Mask.h"; sourceTree = "<group>"; };
+		09B521001A25786C008FF7F6 /* UIView+Mask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Mask.m"; sourceTree = "<group>"; };
+		09B521021A25825A008FF7F6 /* EWWakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeViewController.h; sourceTree = "<group>"; };
+		09B521031A25825A008FF7F6 /* EWWakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeViewController.m; sourceTree = "<group>"; };
 		09C5B1E41A166162006EA46C /* UAProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAProgressView.h; sourceTree = "<group>"; };
 		09C5B1E51A166162006EA46C /* UAProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UAProgressView.m; sourceTree = "<group>"; };
 		09DF4F121A1434AF00BEA328 /* EarlyWorm 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EarlyWorm 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -442,6 +448,8 @@
 				09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */,
 				097A82C71A2163FA0030A2E8 /* EWSleepViewController.h */,
 				097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */,
+				09B521021A25825A008FF7F6 /* EWWakeViewController.h */,
+				09B521031A25825A008FF7F6 /* EWWakeViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -519,6 +527,8 @@
 				096AAA971A195A3900B4CBFF /* NSString+Extend.m */,
 				096AAA981A195A3900B4CBFF /* UIView+Blur.h */,
 				096AAA991A195A3900B4CBFF /* UIView+Blur.m */,
+				09B520FF1A25786C008FF7F6 /* UIView+Mask.h */,
+				09B521001A25786C008FF7F6 /* UIView+Mask.m */,
 				096AAA9A1A195A3900B4CBFF /* UIView+Extend.h */,
 				096AAA9B1A195A3900B4CBFF /* UIView+Extend.m */,
 				096AAA9C1A195A3900B4CBFF /* UIView+Layout.h */,
@@ -1228,6 +1238,8 @@
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
 				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
+				09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */,
+				09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */,
 				096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAA801A19593300B4CBFF /* EWMediaCell.m in Sources */,

@@ -12,6 +12,7 @@
 #import "UIStoryboard+Extensions.h"
 #import <pop/pop.h>
 #import "EWSleepViewController.h"
+#import "EWWakeViewController.h"
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -29,6 +30,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
 @property (nonatomic, assign) MainViewMenuState menuState;
 @property (nonatomic, strong) EWMenuViewController *menuViewController;
 @property (nonatomic, strong) EWSleepViewController *sleepViewController;
+@property (nonatomic, strong) EWWakeViewController *wakeViewController;
 @property (nonatomic, assign) MainViewMode mode;
 @end
 
@@ -40,6 +42,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     self.menuButton.currentButtonType = buttonMenuType;
     self.menuViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMenuViewController"];
     self.sleepViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWSleepViewController"];
+    self.wakeViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWWakeViewController"];
     self.mode = MainViewModeSleep;
 }
 
@@ -58,6 +61,8 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
             [self.sleepViewController removeFromParentViewController];
         }
         else if (_mode == MainViewModeWake) {
+            [self.wakeViewController.view removeFromSuperview];
+            [self.wakeViewController removeFromParentViewController];
         }
         
         _mode = mode;
@@ -66,11 +71,26 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
             [self.view insertSubview:self.sleepViewController.view belowSubview:self.menuButton];
         }
         else if (_mode == MainViewModeWake) {
-            
+            [self addChildViewController:self.wakeViewController];
+            [self.view insertSubview:self.wakeViewController.view belowSubview:self.menuButton];
         }
     }
 }
 #pragma mark - Action
+- (IBAction)onSegmentedValueChanged:(UISegmentedControl *)sender {
+    NSInteger index = sender.selectedSegmentIndex;
+    switch (index) {
+        case 0:
+            self.mode = MainViewModeSleep;
+            break;
+        case 1:
+            self.mode = MainViewModeWake;
+            break;
+        default:
+            break;
+    }
+}
+
 - (IBAction)onMenuButton:(id)sender {
     static BOOL animating = NO;
     
