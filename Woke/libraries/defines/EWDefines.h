@@ -117,11 +117,6 @@ typedef void (^SenderBlock)(id sender);
 #define kAlarmToneChanged				@"EWAlarmToneChanged" //key: alarm
 #define kAlarmStatementChanged			@"EWAlarmStatementChanged" //key: alarm
 
-
-//person store
-#define kPersonLoggedIn                 @"PersonLoggedIn"
-#define kPersonLoggedOut                @"PersonLoggedOut"
-
 //media store
 //#define kMediaNewNotification           @"EWMediaNew"
 

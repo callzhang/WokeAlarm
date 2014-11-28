@@ -45,7 +45,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }
         }
         else {
-            [EWAccountManager resumeCoreDataUserWithServerUser:user withCompletion:^(BOOL isNewUser, NSError *err) {
+            [self resumeCoreDataUserWithServerUser:user withCompletion:^(BOOL isNewUser, NSError *err) {
                 //logged into the Core Data user
             }];
         }
@@ -53,13 +53,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 }
 
 //login Core Data User with Server User (PFUser)
-+ (void)resumeCoreDataUserWithServerUser:(PFUser *)user withCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
+- (void)resumeCoreDataUserWithServerUser:(PFUser *)user withCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
     
     //fetch or create
     EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
     
     //save me
-    [EWPerson me] = person;
+    [EWSession sharedSession].currentUser = person;
     
     if ([EWSync sharedInstance].workingQueue.count == 0 && person.changedKeys.count == 0) {
         //if no pending uploads, refresh self
@@ -74,7 +74,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }
     
     DDLogInfo(@"[c] Broadcast Person login notification");
-    [[NSNotificationCenter defaultCenter] postNotificationName:kPersonLoggedIn object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountManagerDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
     
     //if new user, link with facebook
     if([PFUser currentUser].isNew){
@@ -112,6 +112,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     if ([PFUser currentUser]) {
         [PFUser logOut];
     }
+    
+    [EWSession sharedSession].currentUser = nil;
     
     [FBSession.activeSession closeAndClearTokenInformation];
     

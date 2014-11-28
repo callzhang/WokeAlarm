@@ -24,26 +24,7 @@
 @synthesize wakeeList = _wakeeList;
 @synthesize isFetchingEveryone = _isFetchingEveryone;
 
-+(EWPersonManager *)sharedInstance{
-    static EWPersonManager *sharedPersonStore_ = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedPersonStore_ = [[EWPersonManager alloc] init];
-        //listern to user log in events
-        [[NSNotificationCenter defaultCenter] addObserver:sharedPersonStore_ selector:@selector(userLoggedIn:) name:kPersonLoggedIn object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:sharedPersonStore_ selector:@selector(userLoggedOut:) name:kPersonLoggedOut object:nil];
-    });
-    
-    return sharedPersonStore_;
-}
-
-#pragma mark - ME
-//Current User MO at background thread
-- (void)setCurrentUser:(EWPerson *)user{
-    [EWPerson me] = user;
-    [[EWPerson me] addObserver:self forKeyPath:@"score" options:NSKeyValueObservingOptionNew context:nil];
-    [[EWPerson me] addObserver:self forKeyPath:@"lastLocation" options:NSKeyValueObservingOptionNew context:nil];
-}
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 #pragma mark - CREATE USER
 -(EWPerson *)getPersonByServerID:(NSString *)ID{
@@ -205,20 +186,6 @@
 }
 
 
-
-#pragma mark - Notification
-//TODO: [ZITAO] move to account manager.
-- (void)userLoggedIn:(NSNotification *)notif{
-    EWPerson *user = notif.object;
-    if (![[EWPerson me] isEqual:user]) {
-        self.currentUser = user;
-    }
-    
-}
-
-- (void)userLoggedOut:(NSNotification *)notif{
-    self.currentUser = nil;
-}
 
 
 

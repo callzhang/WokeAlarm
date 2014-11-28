@@ -99,7 +99,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     profileItemsArray = kProfileTableArray;
 
     //login event
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedIn:) name:kPersonLoggedIn object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedIn:) name:EWAccountManagerDidLoginNotification object:nil];
     
     //table view
     taskTableView.dataSource = self;

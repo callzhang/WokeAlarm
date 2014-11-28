@@ -23,13 +23,14 @@
 
 @interface EWPersonManager : NSObject
 
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWPersonManager);
+
 /**
- Possible people that are relevant, fetched from server(TODO)
+ Possible wakees fetched from server(TODO)
  */
 @property (nonatomic) NSMutableArray *wakeeList;
 @property BOOL isFetchingEveryone;
 
-+ (EWPersonManager *)sharedInstance;
 //- (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
 - (EWPerson *)getPersonByServerID:(NSString *)ID;
 - (void)getWakeesInBackgroundWithCompletion:(void (^)(void))block;

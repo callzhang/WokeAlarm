@@ -83,7 +83,7 @@
     
     
     //watch for login event
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginEventHandler) name:kPersonLoggedIn object:Nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginEventHandler) name:EWAccountManagerDidLoginNotification object:Nil];
 
 }
 
@@ -124,7 +124,7 @@
     }
     
     DDLogInfo(@"[c] Broadcast Person login notification");
-    [[NSNotificationCenter defaultCenter] postNotificationName:kPersonLoggedIn object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountManagerDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
     
     //if new user, link with facebook
     if([PFUser currentUser].isNew){
@@ -212,7 +212,7 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueRefresh];
     DDLogInfo(@"Cleaned local queue");
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kPersonLoggedOut object:self userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountManagerDidLogoutNotification object:self userInfo:nil];
     
 }
 

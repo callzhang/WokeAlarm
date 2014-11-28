@@ -13,6 +13,7 @@
 #import "EWAccountManager.h"
 #import "EWAlarmScheduleViewController.h"
 #import "UIWindow+Extensions.h"
+#import "EWPerson.h"
 
 @interface AlarmTest : XCTestCase
 
@@ -31,11 +32,19 @@
 }
 
 - (void)testExample {
-    XCTestExpectation *expectation =
-    [self expectationWithDescription:@"High Expectations"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     
+    
+    EWPerson *me = [EWPerson me];
+    NSLog(@"Before schedule, there are %lu alarms", me.alarms.count);
     //schedule alarm
-
+    EWAlarmManager *manager = [EWAlarmManager sharedInstance];
+    [manager scheduleAlarm];
+    NSLog(@"There are %lu alarms: %@", (unsigned long)me.alarms.count, me.alarms);
+    if (me.alarms.count == 7) {
+        [expectation fulfill];
+    }
+    
     
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {

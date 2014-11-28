@@ -188,7 +188,7 @@
 		096AAA6C1A19593300B4CBFF /* EWSleepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWSleepViewController.xib; sourceTree = "<group>"; };
 		096AAA6D1A19593300B4CBFF /* EWWakeUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWWakeUpView.xib; sourceTree = "<group>"; };
 		096AAA891A195A2A00B4CBFF /* EWAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAccountManager.h; sourceTree = "<group>"; };
-		096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAccountManager.m; sourceTree = "<group>"; };
+		096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWAccountManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAA8C1A195A2A00B4CBFF /* NavigationControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationControllerDelegate.h; sourceTree = "<group>"; };
 		096AAA8D1A195A2A00B4CBFF /* NavigationControllerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationControllerDelegate.m; sourceTree = "<group>"; };
 		096AAA921A195A3900B4CBFF /* NSDate+Extend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Extend.h"; sourceTree = "<group>"; };
@@ -205,7 +205,7 @@
 		096AAA9D1A195A3900B4CBFF /* UIView+Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Layout.m"; sourceTree = "<group>"; };
 		096AAA9E1A195A3900B4CBFF /* UIViewController+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Blur.h"; sourceTree = "<group>"; };
 		096AAA9F1A195A3900B4CBFF /* UIViewController+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Blur.m"; sourceTree = "<group>"; };
-		096AAAA11A195A3900B4CBFF /* EWDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWDefines.h; sourceTree = "<group>"; };
+		096AAAA11A195A3900B4CBFF /* EWDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EWDefines.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		096AAAA21A195A3900B4CBFF /* GPUImageAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageAnimator.h; sourceTree = "<group>"; };
 		096AAAA31A195A3900B4CBFF /* GPUImageAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageAnimator.m; sourceTree = "<group>"; };
 		096AAAA51A195A3900B4CBFF /* EWUIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWUIUtil.h; sourceTree = "<group>"; };
@@ -220,7 +220,7 @@
 		096AAAAF1A195A3900B4CBFF /* EWBackgroundingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBackgroundingManager.m; sourceTree = "<group>"; };
 		096AAAB01A195A3900B4CBFF /* EWBlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlockTypes.h; sourceTree = "<group>"; };
 		096AAAB11A195A3900B4CBFF /* EWStartUpSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStartUpSequence.h; sourceTree = "<group>"; };
-		096AAAB21A195A3900B4CBFF /* EWStartUpSequence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStartUpSequence.m; sourceTree = "<group>"; };
+		096AAAB21A195A3900B4CBFF /* EWStartUpSequence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWStartUpSequence.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAAB31A195A3900B4CBFF /* EWImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWImageManager.h; sourceTree = "<group>"; };
 		096AAAB41A195A3900B4CBFF /* EWImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWImageManager.m; sourceTree = "<group>"; };
 		096AAAB51A195A3900B4CBFF /* EWMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMediaManager.h; sourceTree = "<group>"; };
@@ -228,7 +228,7 @@
 		096AAAB71A195A3900B4CBFF /* EWNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWNotificationManager.h; sourceTree = "<group>"; };
 		096AAAB81A195A3900B4CBFF /* EWNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWNotificationManager.m; sourceTree = "<group>"; };
 		096AAAB91A195A3900B4CBFF /* EWPersonManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPersonManager.h; sourceTree = "<group>"; };
-		096AAABA1A195A3900B4CBFF /* EWPersonManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPersonManager.m; sourceTree = "<group>"; };
+		096AAABA1A195A3900B4CBFF /* EWPersonManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWPersonManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAABB1A195A3900B4CBFF /* EWServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWServer.h; sourceTree = "<group>"; };
 		096AAABC1A195A3900B4CBFF /* EWServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWServer.m; sourceTree = "<group>"; };
 		096AAABD1A195A3900B4CBFF /* EWSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSession.h; sourceTree = "<group>"; };
@@ -240,7 +240,7 @@
 		096AAAC31A195A3900B4CBFF /* EWSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSync.h; sourceTree = "<group>"; };
 		096AAAC41A195A3900B4CBFF /* EWSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSync.m; sourceTree = "<group>"; };
 		096AAAC71A195A3900B4CBFF /* EWUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWUserManager.h; sourceTree = "<group>"; };
-		096AAAC81A195A3900B4CBFF /* EWUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWUserManager.m; sourceTree = "<group>"; };
+		096AAAC81A195A3900B4CBFF /* EWUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWUserManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAAC91A195A3900B4CBFF /* EWUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWUtil.h; sourceTree = "<group>"; };
 		096AAACA1A195A3900B4CBFF /* EWUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWUtil.m; sourceTree = "<group>"; };
 		096AAACB1A195A3900B4CBFF /* EWWakeUpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpManager.h; sourceTree = "<group>"; };
@@ -261,9 +261,9 @@
 		096AAAFA1A1972B800B4CBFF /* EWFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWFriendsViewController.h; sourceTree = "<group>"; };
 		096AAAFB1A1972B800B4CBFF /* EWFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWFriendsViewController.m; sourceTree = "<group>"; };
 		096AAAFC1A1972B800B4CBFF /* EWLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWLogInViewController.h; sourceTree = "<group>"; };
-		096AAAFD1A1972B800B4CBFF /* EWLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWLogInViewController.m; sourceTree = "<group>"; };
+		096AAAFD1A1972B800B4CBFF /* EWLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWLogInViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAAFE1A1972B800B4CBFF /* EWPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPersonViewController.h; sourceTree = "<group>"; };
-		096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPersonViewController.m; sourceTree = "<group>"; };
+		096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWPersonViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAB001A1972B800B4CBFF /* EWPostWakeUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPostWakeUpViewController.h; sourceTree = "<group>"; };
 		096AAB011A1972B800B4CBFF /* EWPostWakeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPostWakeUpViewController.m; sourceTree = "<group>"; };
 		096AAB021A1972B800B4CBFF /* EWRecordingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWRecordingViewController.h; sourceTree = "<group>"; };
