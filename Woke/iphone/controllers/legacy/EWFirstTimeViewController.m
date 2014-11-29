@@ -10,7 +10,7 @@
 #import "MYBlurIntroductionView.h"
 #import "MYIntroductionPanel.h"
 //#import "EWLogInViewController.h"
-#import "EWUserManager.h"
+
 #import "EWFirstTimeViewController.h"
 #import "EWUIUtil.h"
 #import "UIViewController+Blur.h"

@@ -13,7 +13,7 @@
 #import "EWMediaManager.h"
 #import "EWNotificationManager.h"
 #import "EWPerson.h"
-#import "EWUserManager.h"
+
 #import "EWServer.h"
 #import "ATConnect.h"
 #import "EWBackgroundingManager.h"

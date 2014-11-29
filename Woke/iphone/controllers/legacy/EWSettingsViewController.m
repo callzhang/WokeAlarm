@@ -12,13 +12,14 @@
 #import "EWMediaCell.h"
 #import "EWFirstTimeViewController.h"
 #import "EWLogInViewController.h"
-#import "EWUserManager.h"
+
 #import "RDSelectionViewController.h"
 #import "RMDateSelectionViewController.h"
 #import "EWAVManager.h"
 #import "EWAlarmManager.h"
 #import "UIViewController+Blur.h"
 #import "NSString+Extend.h"
+#import "EWAccountManager.h"
 
 static const NSArray *sleepDurations;
 static const NSArray *socialLevels;
@@ -307,7 +308,7 @@ static const NSArray *pref;
         if (buttonIndex == 1) {
             [self dismissBlurViewControllerWithCompletionHandler:^{
                 //log out
-                [EWUserManager logout];
+                [[EWAccountManager sharedInstance] logout];
             }];
         }
     }

@@ -65,7 +65,6 @@
 		096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC01A195A3900B4CBFF /* EWSocialManager.m */; };
 		096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC21A195A3900B4CBFF /* EWCachedInfoManager.m */; };
 		096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC41A195A3900B4CBFF /* EWSync.m */; };
-		096AAAEB1A195A3900B4CBFF /* EWUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC81A195A3900B4CBFF /* EWUserManager.m */; };
 		096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACA1A195A3900B4CBFF /* EWUtil.m */; };
 		096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACC1A195A3900B4CBFF /* EWWakeUpManager.m */; };
 		096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACE1A195A3900B4CBFF /* NSManagedObject+EWSync.m */; };
@@ -74,7 +73,6 @@
 		096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF31A19666A00B4CBFF /* EWErrorManager.m */; };
 		096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF71A1972B800B4CBFF /* EWAlarmScheduleViewController.m */; };
 		096AAB101A1972B800B4CBFF /* EWFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFB1A1972B800B4CBFF /* EWFriendsViewController.m */; };
-		096AAB111A1972B800B4CBFF /* EWLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFD1A1972B800B4CBFF /* EWLogInViewController.m */; };
 		096AAB121A1972B800B4CBFF /* EWPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */; };
 		096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB011A1972B800B4CBFF /* EWPostWakeUpViewController.m */; };
 		096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB031A1972B800B4CBFF /* EWRecordingViewController.m */; };
@@ -1258,7 +1256,6 @@
 				096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */,
 				096AAAE41A195A3900B4CBFF /* EWPersonManager.m in Sources */,
 				09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */,
-				096AAAEB1A195A3900B4CBFF /* EWUserManager.m in Sources */,
 				09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */,
 				09DF4F8B1A1434AF00BEA328 /* _EWPerson.m in Sources */,
 				9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */,
@@ -1275,7 +1272,6 @@
 				096AAB101A1972B800B4CBFF /* EWFriendsViewController.m in Sources */,
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,
 				09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */,
-				096AAB111A1972B800B4CBFF /* EWLogInViewController.m in Sources */,
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
@@ -1458,7 +1454,6 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = Woke/support/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1478,7 +1473,6 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = Woke/support/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1783,7 +1777,6 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = Woke/support/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1860,7 +1853,6 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = Woke/support/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

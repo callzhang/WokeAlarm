@@ -24,14 +24,28 @@ extern NSString * const EWPersonDefaultName;
 @property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
 
-+ (EWPerson *)me;
-- (BOOL)isMe;
+//validate
+- (BOOL)validate;
+
+//helper
 - (BOOL)isFriend;
 - (BOOL)friendPending;
 - (BOOL)friendWaiting;
 - (NSString *)genderObjectiveCaseString;
++ (void)updateMyCachedFriends;
 
-- (BOOL)validate;
+//friend
++ (void)requestFriend:(EWPerson *)person;
++ (void)acceptFriend:(EWPerson *)person;
++ (void)unfriend:(EWPerson *)person;
+
++ (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
+@end
+
+
+@interface EWPerson(Woke)
++ (EWPerson *)me;
+- (BOOL)isMe;
 
 //my stuff
 + (NSArray *)myActivities;
@@ -40,12 +54,9 @@ extern NSString * const EWPersonDefaultName;
 + (NSArray *)myAlarms;
 + (EWAlarm *)myNextAlarm;
 + (NSArray *)myFriends;
++ (NSArray *)alarmsForUser:(EWPerson *)user;
 
-//friend
-+ (void)requestFriend:(EWPerson *)person;
-+ (void)acceptFriend:(EWPerson *)person;
-+ (void)unfriend:(EWPerson *)person;
-+ (void)updateMyCachedFriends;
 
-+ (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
+//Tools
++ (void)updateMeFromFacebook;
 @end

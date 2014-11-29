@@ -297,4 +297,42 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     EWAlert(msg);
     [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
 }
+
+
++ (void)registerLocation{
+    
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        
+        if (geoPoint.latitude == 0 && geoPoint.longitude == 0) {
+            //NYC coordinate if on simulator
+            geoPoint.latitude = 40.732019;
+            geoPoint.longitude = -73.992684;
+        }
+        
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
+        
+        DDLogVerbose(@"Get user location with lat: %f, lon: %f", geoPoint.latitude, geoPoint.longitude);
+        
+        //reverse search address
+        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
+            
+            [EWPerson me].lastLocation = location;
+            
+            if (err == nil && [placemarks count] > 0) {
+                CLPlacemark *placemark = [placemarks lastObject];
+                //get info
+                [EWPerson me].city = placemark.locality;
+                [EWPerson me].region = placemark.country;
+            } else {
+                NSLog(@"%@", err.debugDescription);
+            }
+            [EWSync save];
+            
+        }];
+        
+        
+    }];
+}
+
 @end

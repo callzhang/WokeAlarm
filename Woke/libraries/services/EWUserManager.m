@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
 
-#import "EWUserManager.h"
+
 #import "EWStartUpSequence.h"
 #import "EWUtil.h"
 //TODO:#import "EWFirstTimeViewController.h"
@@ -109,7 +109,7 @@
     EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
     
     //save me
-    [EWPerson me] = person;
+    [EWSession sharedSession].currentUser = person;
     
     if ([EWSync sharedInstance].workingQueue.count == 0) {
         //if no pending uploads, refresh self

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "EWAlarmManager.h"
-#import "EWUserManager.h"
+
 #import "EWAccountManager.h"
 #import "EWAlarmScheduleViewController.h"
 #import "UIWindow+Extensions.h"

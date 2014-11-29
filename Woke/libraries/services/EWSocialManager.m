@@ -9,7 +9,7 @@
 #import "EWSocialManager.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
-#import "EWUserManager.h"
+
 #import "APAddressBook.h"
 #import "APContact.h"
 #import "NSArray+BlocksKit.h"

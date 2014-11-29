@@ -7,7 +7,7 @@
 //
 
 #import "EWStartUpSequence.h"
-#import "EWUserManager.h"
+
 #import "EWPersonManager.h"
 #import "EWMediaManager.h"
 #import "EWAlarmManager.h"
@@ -19,6 +19,7 @@
 #import "EWCachedInfoManager.h"
 #import "EWBackgroundingManager.h"
 #import "NSPersistentStoreCoordinator+MagicalRecord.h"
+#import "EWAccountManager.h"
 
 
 @implementation EWStartUpSequence
@@ -35,7 +36,7 @@
 
 - (id)init{
 	self = [super init];
-    [MTDates]
+    [NSDate mt_setFirstDayOfWeek:0];
     
 	//set up server sync
 	[[EWSync sharedInstance] setup];
@@ -106,7 +107,7 @@
 	
 	//location
 	DDLogVerbose(@"8. Start location recurring update");
-	[EWUserManager registerLocation];
+	[EWAccountManager registerLocation];
 	
     
     //update data with timely updates
@@ -143,7 +144,7 @@
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
 		DDLogVerbose(@"[2] Start location recurring update");
-		[EWUserManager registerLocation];
+		[EWAccountManager registerLocation];
 	}
     
 }

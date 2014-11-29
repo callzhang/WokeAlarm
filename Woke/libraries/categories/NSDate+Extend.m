@@ -119,10 +119,9 @@
 }
 
 - (NSInteger)weekdayNumber{
-//	NSCalendar *cal = [NSCalendar currentCalendar];
-//	NSInteger weekdayOfDate = [cal ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:self];
-//	return weekdayOfDate - 1; //0:sunday ... 6:saturday
-    return 0;
+	NSCalendar *cal = [NSCalendar currentCalendar];
+	NSInteger weekdayOfDate = [cal ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitWeekOfYear forDate:self];
+	return weekdayOfDate - 1; //0:sunday ... 6:saturday
 }
 
 - (NSDate *)nextOccurTime:(NSInteger)n withExtraSeconds:(NSInteger)seconds{

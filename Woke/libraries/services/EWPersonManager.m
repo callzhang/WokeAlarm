@@ -14,7 +14,7 @@
 #import "EWAlarmManager.h"
 #import "NSDate+Extend.h"
 #import "EWStartUpSequence.h"
-#import "EWUserManager.h"
+
 #import "EWNotificationManager.h"
 #import "EWNotification.h"
 #import "EWCachedInfoManager.h"

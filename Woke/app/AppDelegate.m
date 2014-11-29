@@ -40,7 +40,7 @@ UIViewController *rootViewController;
 #else
     if ([EWAccountManager isLoggedIn]) {
         //resume Core Data login
-        [EWAccountManager resumeCoreDataUserWithServerUser:[PFUser currentUser] withCompletion:^(BOOL isNewUser, NSError *error) {
+        [[EWAccountManager sharedInstance] resumeCoreDataUserWithServerUser:[PFUser currentUser] withCompletion:^(BOOL isNewUser, NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
         }];
         //show main view controller

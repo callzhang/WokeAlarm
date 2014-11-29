@@ -10,7 +10,7 @@
 #import "EWMedia.h"
 #import "EWImageManager.h"
 #import "EWPerson.h"
-#import "EWUserManager.h"
+
 #import "EWNotificationManager.h"
 #import "EWNotification.h"
 #import "EWActivity.h"
@@ -119,9 +119,10 @@
     if (![PFUser currentUser]) {
         return NO;
     }
+    EWPerson *localMe = [[EWPerson me] MR_inContext:context];
     PFQuery *query = [PFQuery queryWithClassName:@"EWMedia"];
     [query whereKey:@"receivers" containedIn:@[[PFUser currentUser]]];
-    NSSet *localAssetIDs = [[EWPerson me].unreadMedias valueForKey:kParseObjectID];
+    NSSet *localAssetIDs = [localMe.unreadMedias valueForKey:kParseObjectID];
     [query whereKey:kParseObjectID notContainedIn:localAssetIDs.allObjects];
     NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query];
 	BOOL newMedia = NO;
@@ -131,7 +132,7 @@
         //relationship
         NSMutableArray *receivers = po[@"receivers"];
         for (PFObject *receiver in receivers) {
-            if ([receiver.objectId isEqualToString:[EWPerson me].objectId]) {
+            if ([receiver.objectId isEqualToString:localMe.objectId]) {
                 [receivers removeObject:receiver];
                 break;
             }
@@ -144,7 +145,7 @@
         }];
         
         mo.receiver = nil;
-        [[EWPerson me] addUnreadMediasObject:mo];
+        [localMe addUnreadMediasObject:mo];
         
         //in order to upload change to server, we need to save to server
         [mo saveToServer];

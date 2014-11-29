@@ -27,11 +27,11 @@
 #import "EWMediaManager.h"
 #import "EWCachedInfoManager.h"
 #import "EWNotificationManager.h"
-#import "EWUserManager.h"
+
 
 //view
 #import "EWRecordingViewController.h"
-#import "EWLogInViewController.h"
+//#import "EWLogInViewController.h"
 #import "EWFriendsViewController.h"
 #import "NavigationControllerDelegate.h"
 #import "EWSettingsViewController.h"
@@ -39,6 +39,7 @@
 // ImageBrowser
 #import "IDMPhotoBrowser.h"
 #import "UIView+Extend.h"
+#import "EWAccountManager.h"
 
 #define kProfileTableArray              @[@"Friends", @"People woke me up", @"People I woke up", @"Last Seen", @"Next wake-up time", @"Wake-ability Score", @"Average wake up time"]
 
@@ -281,8 +282,8 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 - (IBAction)login:(id)sender {
     
     if (![EWPerson me].facebook) {
-        EWLogInViewController *loginVC = [[EWLogInViewController alloc] init];
-        [loginVC connect:nil];
+        //EWLogInViewController *loginVC = [[EWLogInViewController alloc] init];
+        //[loginVC connect:nil];
         return;
         
     }
@@ -310,9 +311,10 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
     
     [self presentViewController:_photoBrower animated:YES completion:nil];
-    
-    
-    
+}
+
+- (void)userLoggedIn:(NSNotification *)note{
+    //
 }
 
 - (IBAction)tabTapped:(UISegmentedControl *)sender {
@@ -391,11 +393,11 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         [self.navigationController pushViewController:prefView animated:YES];
         
     }else if ([title isEqualToString:@"Log out"]){
-        [EWUserManager logout];
-        EWLogInViewController *loginVC = [EWLogInViewController new];
-        [[UIApplication sharedApplication].delegate.window.rootViewController dismissBlurViewControllerWithCompletionHandler:^{
-            [[UIApplication sharedApplication].delegate.window.rootViewController presentViewControllerWithBlurBackground:loginVC];
-        }];
+        [[EWAccountManager sharedInstance] logout];
+//        EWLogInViewController *loginVC = [EWLogInViewController new];
+//        [[UIApplication sharedApplication].delegate.window.rootViewController dismissBlurViewControllerWithCompletionHandler:^{
+//            [[UIApplication sharedApplication].delegate.window.rootViewController presentViewControllerWithBlurBackground:loginVC];
+//        }];
     }
     else if([title isEqualToString:@"Take Photo"])
     {

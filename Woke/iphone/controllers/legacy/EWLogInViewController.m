@@ -12,10 +12,11 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import "AFNetworking.h"
 #import "UIImageView+AFNetworking.h"
-#import "EWUserManager.h"
+
 #import "UIView+Extend.h"
 #import "JGProgressHUD.h"
 #import "UIViewController+Blur.h"
+#import "EWAccountManager.h"
 
 
 #define WhyFaceBook @"Lorem ipsum dolor sit amet,\nconsectertur adipisicing elit,sed do\neiusmod tempor incididunt ut\n labore et dolore magna aliqua Ut enim ad minim veniam."

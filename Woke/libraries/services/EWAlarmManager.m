@@ -14,7 +14,7 @@
 #import "EWAlarm.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
-#import "EWUserManager.h"
+
 #import "EWAlarmScheduleViewController.h"
 
 #import "AFNetworking.h"
@@ -142,7 +142,7 @@
     for (EWAlarm *a in alarms) {
         
         //get the day alarm represents
-        NSInteger i = a.time.mt_weekdayOfWeek;
+        NSInteger i = a.time.mt_weekdayOfWeek-1;
         
         //see if that day has alarm already
         if (![newAlarms[i] isEqual:@NO]){
