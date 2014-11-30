@@ -70,12 +70,18 @@
 
 #pragma mark - response to changes
 - (void)setState:(NSNumber *)state {
+    //update cached time in person
+    if (self.stateValue == state.boolValue) {
+        DDLogInfo(@"Set same state to alarm: %@", self);
+        return;
+    }
+    
     [self willChangeValueForKey:EWAlarmAttributes.state];
     [self setPrimitiveState:state];
-	//update cached time in person
-    [self updateCachedAlarmTime];
+    [self didChangeValueForKey:EWAlarmAttributes.state];
+    
 	//update saved time in user defaults
-	[self setSavedAlarmTime];
+	//[self setSavedAlarmTime];
 	//schedule local notification
 	if (state.boolValue == YES) {
 		//schedule local notif
@@ -84,13 +90,21 @@
 		//cancel local notif
 		[self cancelLocalNotification];
 	}
-    [self didChangeValueForKey:EWAlarmAttributes.state];
+
+    
+    [self updateCachedAlarmTime];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChanged object:self];
 }
 
 - (void)setTime:(NSDate *)time {
+    if ([self.time isEqualToDate:time]) {
+        DDLogInfo(@"Set same time to alarm: %@", self);
+        return;
+    }
+    
     [self willChangeValueForKey:EWAlarmAttributes.time];
     [self setPrimitiveTime:time];
+    [self didChangeValueForKey:EWAlarmAttributes.time];
     
     //update saved time in user defaults
     [self setSavedAlarmTime];
@@ -99,9 +113,7 @@
     [self updateCachedAlarmTime];
     
     //schedule local notification
-    [self cancelLocalNotification];
     [self scheduleLocalNotification];
-    [self didChangeValueForKey:EWAlarmAttributes.time];
     
     // schedule on server
     //[self scheduleNotificationOnServer];
@@ -129,7 +141,7 @@
 #pragma mark - Tools
 //update saved time in user defaults
 - (void)setSavedAlarmTime{
-	NSInteger wkd = self.time.mt_weekdayOfWeek;
+	NSInteger wkd = self.time.mt_weekdayOfWeek - 1;
 	double hour = self.time.mt_hourOfDay;
 	double minute = self.time.mt_minuteOfHour;
 	double number = round(hour*100 + minute)/100.0;
@@ -141,15 +153,13 @@
 
 
 #pragma mark - Cached alarm time to user defaults
-
+//the alarm time stored in person's cached info
 - (void)updateCachedAlarmTime{
     NSMutableDictionary *cache = [EWPerson me].cachedInfo.mutableCopy?:[NSMutableDictionary new];
     NSMutableDictionary *timeTable = [cache[kCachedAlarmTimes] mutableCopy]?:[NSMutableDictionary new];
     for (EWAlarm *alarm in [EWPerson me].alarms) {
-        if (alarm.state) {
-            NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
-            timeTable[wkday] = alarm.time;
-        }
+        NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
+        timeTable[wkday] = alarm.time;
     }
     cache[kCachedAlarmTimes] = timeTable;
     [EWPerson me].cachedInfo = cache;
@@ -175,10 +185,7 @@
 #pragma mark - Local Notification
 - (void)scheduleLocalNotification{
 	//check state
-	if (self.state == NO) {
-		[self cancelLocalNotification];
-		return;
-	}
+    NSAssert(self.stateValue, @"alarm state is NO");
 	
 	//check existing
 	NSMutableArray *notifications = [[self localNotifications] mutableCopy];
@@ -208,12 +215,12 @@
 			localNotif.fireDate = time_i;
 			localNotif.timeZone = [NSTimeZone systemTimeZone];
 			if (self.statement) {
-				localNotif.alertBody = [NSString stringWithFormat:LOCALSTR(self.statement)];
+				localNotif.alertBody = self.statement;
 			}else{
 				localNotif.alertBody = @"It's time to get up!";
 			}
 			
-			localNotif.alertAction = LOCALSTR(@"Get up!");//TODO
+			localNotif.alertAction = @"Get up!";//TODO
 			localNotif.soundName = self.tone;
 			localNotif.applicationIconBadgeNumber = i+1;
 			

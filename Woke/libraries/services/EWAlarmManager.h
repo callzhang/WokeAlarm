@@ -26,10 +26,12 @@
 //Get next alarm statement from person's cachedInfo
 - (NSString *)nextStatementForPerson:(EWPerson *)person;
 //currentAlarm
-- (EWAlarm *)currentAlarm;
+- (EWAlarm *)nextAlarmForPerson:(EWPerson *)person;
+- (NSArray *)alarmsForPerson:(EWPerson *)person;
 
-// schedule
+// schedule + check
 - (NSArray *)scheduleAlarm;
+- (void)checkAlarmsFromServer;
 
 //update cached info
 - (void)updateCachedAlarmTimes;

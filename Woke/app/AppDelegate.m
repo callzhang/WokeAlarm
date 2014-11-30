@@ -31,10 +31,11 @@ UIViewController *rootViewController;
     EWLogInit();
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
-    [EWStartUpSequence deleteDatabase];
+    //[EWStartUpSequence deleteDatabase];
     [EWStartUpSequence sharedInstance];
     
 #ifdef caoer115
+    //???
     EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
 #else
@@ -43,9 +44,10 @@ UIViewController *rootViewController;
         [[EWAccountManager sharedInstance] resumeCoreDataUserWithServerUser:[PFUser currentUser] withCompletion:^(BOOL isNewUser, NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
         }];
-        //show main view controller
+        //load saved session info
         [EWSession sharedSession];
         
+        //show main view controller
         EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
     }
