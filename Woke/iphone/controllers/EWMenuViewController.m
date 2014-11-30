@@ -8,6 +8,7 @@
 
 #import "EWMenuViewController.h"
 #import <pop/pop.h>
+#import "EWAccountManager.h"
 
 #define kTopOriginDefaultConstraint 20
 #define kHomeOriginDefaultConstraint 66
@@ -34,6 +35,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+   
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
+    [self.view addGestureRecognizer:tap];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -59,6 +63,12 @@
     [self addFadeInAnimationToView:self.voice forKey:@"voice FadeIn"];
     [self addFadeInAnimationToView:self.me forKey:@"me FadeIn"];
     [self addFadeInAnimationToView:self.settings forKey:@"settings FadeIn"];
+}
+
+- (void)onTap {
+    if (self.tapHandler) {
+        self.tapHandler();
+    }
 }
 
 - (void)collapseMenuWithComletion:(void (^)(void))completion {
@@ -127,4 +137,9 @@
     [super viewWillDisappear:animated];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"MenuLogoutFadeToLoginGate"]) {
+        [[EWAccountManager shared] logout];
+    }
+}
 @end

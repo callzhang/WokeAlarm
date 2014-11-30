@@ -47,6 +47,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         else {
             [self resumeCoreDataUserWithServerUser:user withCompletion:^(BOOL isNewUser, NSError *err) {
                 //logged into the Core Data user
+                if (completion) {
+                    completion(isNewUser, err);
+                }
             }];
         }
     }];

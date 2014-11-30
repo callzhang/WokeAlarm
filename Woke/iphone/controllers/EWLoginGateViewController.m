@@ -40,4 +40,9 @@
     }];
 }
 
+- (IBAction)unwindToLoginGateViewController:(UIStoryboardSegue *)segue {
+    if ([segue.identifier isEqualToString:@"unwindFromMenuLogout"]) {
+        [[EWAccountManager shared] logout];
+    }
+}
 @end

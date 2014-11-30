@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^MenuBackgroundTapHanlder)(void);
 @interface EWMenuViewController : UIViewController
 
+
 @property (weak, nonatomic) IBOutlet UIView *backgroundView;
+@property (nonatomic, copy) MenuBackgroundTapHanlder tapHandler;
 
 - (void)collapseMenuWithComletion:(void (^)(void))completion;
 @end

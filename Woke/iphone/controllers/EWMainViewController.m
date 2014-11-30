@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
 @property (nonatomic, strong) EWSleepViewController *sleepViewController;
 @property (nonatomic, strong) EWWakeViewController *wakeViewController;
 @property (nonatomic, assign) MainViewMode mode;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *modeSegmentedControl;
 @end
 
 @implementation EWMainViewController
@@ -44,6 +45,12 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     self.sleepViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWSleepViewController"];
     self.wakeViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWWakeViewController"];
     self.mode = MainViewModeSleep;
+    
+    @weakify(self)
+    self.menuViewController.tapHandler = ^ {
+        @strongify(self);
+        [self onMenuButton:nil];
+    };
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -68,11 +75,11 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
         _mode = mode;
         if (_mode == MainViewModeSleep) {
             [self addChildViewController:self.sleepViewController];
-            [self.view insertSubview:self.sleepViewController.view belowSubview:self.menuButton];
+            [self.view insertSubview:self.sleepViewController.view belowSubview:self.modeSegmentedControl];
         }
         else if (_mode == MainViewModeWake) {
             [self addChildViewController:self.wakeViewController];
-            [self.view insertSubview:self.wakeViewController.view belowSubview:self.menuButton];
+            [self.view insertSubview:self.wakeViewController.view belowSubview:self.modeSegmentedControl];
         }
     }
 }

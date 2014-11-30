@@ -49,8 +49,9 @@ const char *kHexEdgeKey;
     //scale
     float height = self.bounds.size.height;
     float width = self.bounds.size.width;
-    float ratio = MAX(height, width)/originalSize;
-    [hexagonPath applyTransform:CGAffineTransformMakeScale(ratio, ratio)];
+    float ratioWidth = width / originalSize;
+    float ratioHeight = height / originalSize;
+    [hexagonPath applyTransform:CGAffineTransformMakeScale(ratioWidth, ratioHeight)];
     
     //apply mask
     hexagonMask.path = hexagonPath.CGPath;

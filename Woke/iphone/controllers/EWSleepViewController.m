@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
 @property (weak, nonatomic) IBOutlet UILabel *labelWakeupText;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *firstLetterLeadingConstraint;
 @end
 
 @implementation EWSleepViewController
@@ -44,5 +45,14 @@
     RAC(self.labelTime4, text)= [RACObserve(self.sleepViewModel, time4) distinctUntilChanged];
     RAC(self.labelDateString, text)= [RACObserve(self.sleepViewModel, dateString) distinctUntilChanged];
     RAC(self.labelWakeupText, text)= [RACObserve(self.sleepViewModel, wakeupText) distinctUntilChanged];
+    
+    [RACObserve(self.sleepViewModel, time1) subscribeNext:^(NSString *value) {
+        if (!value) {
+            self.firstLetterLeadingConstraint.constant = -35;
+        }
+        else {
+            self.firstLetterLeadingConstraint.constant = -5;
+        }
+    }];
 }
 @end
