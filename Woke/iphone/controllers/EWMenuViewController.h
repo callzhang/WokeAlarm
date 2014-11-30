@@ -15,5 +15,5 @@ typedef void(^MenuBackgroundTapHanlder)(void);
 @property (weak, nonatomic) IBOutlet UIView *backgroundView;
 @property (nonatomic, copy) MenuBackgroundTapHanlder tapHandler;
 
-- (void)collapseMenuWithComletion:(void (^)(void))completion;
+- (void)closeMenu;
 @end

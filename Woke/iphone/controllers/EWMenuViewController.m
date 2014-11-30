@@ -40,9 +40,20 @@
     [self.view addGestureRecognizer:tap];
 }
 
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self showMenu];
+}
+
+- (void)onTap {
+    if (self.tapHandler) {
+        self.tapHandler();
+    }
+}
+
+- (void)showMenu {
     self.backgroundView.alpha = 0.0f;
     POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -65,13 +76,7 @@
     [self addFadeInAnimationToView:self.settings forKey:@"settings FadeIn"];
 }
 
-- (void)onTap {
-    if (self.tapHandler) {
-        self.tapHandler();
-    }
-}
-
-- (void)collapseMenuWithComletion:(void (^)(void))completion {
+- (void)closeMenu {
     [self addBackAnimationToConstraint:self.homeTopLayoutConstraint index:0 forKey:@"home back"];
     [self addBackAnimationToConstraint:self.notificationTopLayoutConstraint index:1 forKey:@"notification back"];
     [self addBackAnimationToConstraint:self.alarmTopLayoutConstraint index:2 forKey:@"alarm back"];
@@ -85,15 +90,9 @@
     [self addBackFadeoutToView:self.voice forKey:@"voice fade"];
     [self addBackFadeoutToView:self.me forKey:@"me fade"];
     [self addBackFadeoutToView:self.settings forKey:@"settings fade"];
-    
-    //refactor
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.04 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (completion) {
-            completion();
-        }
-    });
 }
 
+#pragma mark - Animation Helper
 - (void)addFadeInAnimationToView:(UIView *)view forKey:(NSString *)key{
     POPBasicAnimation *fadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
     fadeIn.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];

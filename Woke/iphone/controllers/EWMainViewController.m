@@ -135,9 +135,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
         
         [self.menuViewController.view pop_addAnimation:anim forKey:@"fade"];
         
-        [self.menuViewController collapseMenuWithComletion:^{
-            
-        }];
+        [self.menuViewController closeMenu];
     }
 }
 
