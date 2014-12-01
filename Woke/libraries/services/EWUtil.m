@@ -9,16 +9,6 @@
 
 #import "EWUtil.h"
 #import <AdSupport/ASIdentifierManager.h>
-#import <AddressBook/AddressBook.h>
-#import <AddressBookUI/AddressBookUI.h>
-#import <CrashlyticsLogger.h>
-#import "DDLog.h"
-#import "DDASLLogger.h"
-#import "DDTTYLogger.h"
-#import "DDFileLogger.h"
-
-//static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-
 @implementation EWUtil
 
 + (NSString *)UUID{
@@ -135,61 +125,5 @@
     }];
     
 }
-
-
-#pragma mark - Logging
-//void EWLog(NSString *format, ...){
-//    
-//    
-//    va_list args;
-//    va_start(args, format);
-//    NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
-//    va_end(args);
-//	
-//	NSArray *symbolList = logLevelSymbols;
-//	if ([format hasPrefix:symbolList[0]]){
-//		DDLogError(str);
-//	}else if ([format hasPrefix:symbolList[1]]) {
-//		DDLogWarn(str);
-//	}else if ([format hasPrefix:symbolList[2]]) {
-//		DDLogInfo(str);
-//	}else if ([format hasPrefix:symbolList[3]]) {
-//		DDLogDebug(str);
-//	}else{
-//		DDLogVerbose(str);
-//	}
-//	
-//}
-
-void EWLogInit(){
-#ifdef DEBUG
-    [DDLog addLogger:[DDASLLogger sharedInstance]];
-	
-    DDTTYLogger *log = [DDTTYLogger sharedInstance];
-    [DDLog addLogger:log];
-    
-    // we also enable colors in Xcode debug console
-    // because this require some setup for Xcode, commented out here.
-    // https://github.com/CocoaLumberjack/CocoaLumberjack/wiki/XcodeColors
-    [log setColorsEnabled:YES];
-    [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:LOG_FLAG_ERROR];
-	[log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:LOG_FLAG_WARN];
-	[log setForegroundColor:[UIColor orangeColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
-	//white for debug
-	[log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
-#endif
-    
-    //file logger
-    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
-    fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
-    fileLogger.logFileManager.maximumNumberOfLogFiles = 7;//keep a week's log
-    [DDLog addLogger:fileLogger];
-    
-    //crashlytics logger
-    [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
-}
-
-
-
 
 @end
