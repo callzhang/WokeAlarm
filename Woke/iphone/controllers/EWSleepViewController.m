@@ -38,9 +38,11 @@
     self.view.backgroundColor = [UIColor clearColor];
     
     
+#ifdef caoer115
     //test
     self.sleepViewModel.alarm = [EWPerson myNextAlarm];
     self.sleepViewModel.alarm.time = [NSDate mt_dateFromYear:200 month:0 day:0 hour:12 minute:50];
+#endif
 }
 
 - (void)bindViewModel {
