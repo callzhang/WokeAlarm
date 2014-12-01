@@ -50,7 +50,8 @@
     BOOL good = YES;
     if (!self.owner) {
         DDLogError(@"Alarm（%@）missing owner", self.serverID);
-        self.owner = [[EWPerson me] MR_inContext:self.managedObjectContext];
+        //self.owner = [[EWPerson me] MR_inContext:self.managedObjectContext];
+        good = NO;
     }
     if (!self.time) {
         DDLogError(@"Alarm（%@）missing time", self.serverID);
@@ -58,8 +59,13 @@
     }
     //check tone
     if (!self.tone) {
-        DDLogError(@"Tone not set, fixed!");
-        self.tone = [EWPerson me].preference[@"DefaultTone"];
+        DDLogError(@"Tone not set!");
+        //self.tone = [EWPerson me].preference[@"DefaultTone"];
+        good = NO;
+    }
+    
+    if (!self.state) {
+        DDLogError(@"State not set for alarm: %@", self.objectId);
     }
     
     if (!good) {
@@ -121,19 +127,24 @@
 }
 
 - (void)setTone:(NSString *)tone {
+    if ([self.tone isEqualToString:tone]) {
+        DDLogVerbose(@"Set same tone for alarm: %@", self.objectId);
+        return;
+    }
     [self willChangeValueForKey:EWAlarmAttributes.tone];
     [self setPrimitiveTone:tone];
+    [self didChangeValueForKey:EWAlarmAttributes.tone];
+    
     [self cancelLocalNotification];
     [self scheduleLocalNotification];
-    [self didChangeValueForKey:EWAlarmAttributes.tone];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmToneChanged object:self];
 }
 
 - (void)setStatement:(NSString *)statement {
     [self willChangeValueForKey:EWAlarmAttributes.statement];
     [self setPrimitiveStatement:statement];
-    [self updateCachedStatement];
     [self didChangeValueForKey:EWAlarmAttributes.statement];
+    [self updateCachedStatement];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmToneChanged object:self];
 }
 
@@ -185,59 +196,66 @@
 #pragma mark - Local Notification
 - (void)scheduleLocalNotification{
 	//check state
-    NSAssert(self.stateValue, @"alarm state is NO");
+    NSAssert(self.stateValue, @"Alarm state is NO");
+    if (![self validate]) {
+        DDLogVerbose(@"Alarm not validated when scheduling local notif");
+        return;
+    }
 	
 	//check existing
 	NSMutableArray *notifications = [[self localNotifications] mutableCopy];
 	
-	//check missing
+	//check missing timer
 	for (unsigned i=0; i<nWeeksToSchedule; i++) {
-		//get time
-		NSDate *time_i = [self.time dateByAddingTimeInterval: i * 60];
-		BOOL foundMatchingLocalNotif = NO;
-		for (UILocalNotification *notification in notifications) {
-			if ([time_i isEqualToDate:notification.fireDate]) {
-				//found matching notification
-				foundMatchingLocalNotif = YES;
-				[notifications removeObject:notification];
-				break;
-			}
-		}
-		if (!foundMatchingLocalNotif) {
-			
-			//make self objectID perminent
-			if (self.objectID.isTemporaryID) {
-				[self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
-			}
-			//schedule
-			UILocalNotification *localNotif = [[UILocalNotification alloc] init];
-			//set fire time
-			localNotif.fireDate = time_i;
-			localNotif.timeZone = [NSTimeZone systemTimeZone];
-			if (self.statement) {
-				localNotif.alertBody = self.statement;
-			}else{
-				localNotif.alertBody = @"It's time to get up!";
-			}
-			
-			localNotif.alertAction = @"Get up!";//TODO
-			localNotif.soundName = self.tone;
-			localNotif.applicationIconBadgeNumber = i+1;
-			
-			//======= user information passed to app delegate =======
-            //Use Alarm's objectID as the identifier instead of serverID to avoid cases where alarm doesn't have one
-			localNotif.userInfo = @{kLocalAlarmID: self.objectID.URIRepresentation.absoluteString,
-									kLocalNotificationTypeKey: kLocalNotificationTypeAlarmTimer};
-			//=======================================================
-			
-			if (i == nWeeksToSchedule - 1) {
-				//if this is the last one, schedule to be repeat
-				localNotif.repeatInterval = NSCalendarUnitWeekOfYear;
-			}
-			
-			[[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
-			DDLogInfo(@"Local Notif scheduled at %@", localNotif.fireDate.date2detailDateString);
-		}
+        for (unsigned j = 0; j<nLocalNotifPerAlarm; j++) {
+            //get time
+            NSDate *time_j = [[self.time nextOccurTime:i] dateByAddingTimeInterval: j * 60];
+            BOOL foundMatchingLocalNotif = NO;
+            for (UILocalNotification *notification in notifications) {
+                if ([time_j isEqualToDate:notification.fireDate]) {
+                    //found matching notification
+                    foundMatchingLocalNotif = YES;
+                    [notifications removeObject:notification];
+                    break;
+                }
+            }
+            if (!foundMatchingLocalNotif) {
+                
+                //make self objectID perminent
+                if (self.objectID.isTemporaryID) {
+                    [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
+                }
+                //schedule
+                UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+                //set fire time
+                localNotif.fireDate = time_j;
+                localNotif.timeZone = [NSTimeZone systemTimeZone];
+                if (self.statement) {
+                    localNotif.alertBody = self.statement;
+                }else{
+                    localNotif.alertBody = NSLocalizedString(@"It's time to get up!", @"It's time to get up!");
+                }
+                
+                localNotif.alertAction = NSLocalizedString(@"Get up!", @"Get up!");
+                localNotif.soundName = self.tone;
+                localNotif.applicationIconBadgeNumber = i+1;
+                
+                //======= user information passed to app delegate =======
+                //Use Alarm's objectID as the identifier instead of serverID to avoid cases where alarm doesn't have one
+                localNotif.userInfo = @{kLocalAlarmID: self.objectID.URIRepresentation.absoluteString,
+                                        kLocalNotificationTypeKey: kLocalNotificationTypeAlarmTimer};
+                //=======================================================
+                
+                if (i == nWeeksToSchedule - 1) {
+                    //if this is the last one, schedule to be repeat
+                    localNotif.repeatInterval = NSCalendarUnitWeekOfYear;
+                }
+                
+                [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
+                DDLogInfo(@"Local Notif scheduled at %@", localNotif.fireDate.date2detailDateString);
+            }
+        }
+		
 	}
 	
 	//delete remaining alarm timer
@@ -286,7 +304,7 @@
     NSDate *sleepTime = [self.time dateByAddingTimeInterval:-d*3600];
     
     //cancel if no change
-    [self cancelLocalNotification];
+    [self cancelSleepNotification];
     
     //local notification
     UILocalNotification *sleepNotif = [[UILocalNotification alloc] init];

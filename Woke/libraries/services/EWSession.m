@@ -49,6 +49,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_WITH_ACCESSOR(EWSession, sharedSession);
     DDLogInfo(@"session saved %@", self);
 }
 
+#pragma mark - Getter and Setter
+- (NSMutableDictionary *)skippedWakees{
+    if (_skippedWakees) {
+        _skippedWakees  = [NSMutableDictionary new];
+    }
+    return _skippedWakees;
+}
+
 - (void)setCurrentUserObjectID:(NSString *)currentUserObjectID{
     if (currentUserObjectID) {
         EWPerson *me = [EWPerson MR_findFirstByAttribute:EWServerObjectAttributes.objectId withValue:currentUserObjectID];
@@ -58,12 +66,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_WITH_ACCESSOR(EWSession, sharedSession);
     }
 }
 
+
+#pragma mark - Persistancy
+
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [encoder encodeObject:_currentUserObjectID forKey:@"currentUserObjectID"];
+    [encoder encodeObject:_skippedWakees forKey:@"skippedUsers"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
     self.currentUserObjectID = [decoder decodeObjectForKey:@"currentUserObjectID"];
+    self.skippedWakees = [decoder decodeObjectForKey:@"skippedUsers"];
     return self;
 }
 

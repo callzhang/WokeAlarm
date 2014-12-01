@@ -38,6 +38,9 @@
 	self = [super init];
     [NSDate mt_setFirstDayOfWeek:0];
     
+    //load saved session info
+    [EWSession sharedSession];
+    
 	//set up server sync
 	[[EWSync sharedInstance] setup];
     

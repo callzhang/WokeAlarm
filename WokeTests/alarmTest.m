@@ -14,6 +14,7 @@
 #import "EWAlarmScheduleViewController.h"
 #import "UIWindow+Extensions.h"
 #import "EWPerson.h"
+#import "EWAlarm.h"
 
 @interface AlarmTest : XCTestCase
 
@@ -36,14 +37,23 @@
     
     
     EWPerson *me = [EWPerson me];
-    NSLog(@"Before schedule, there are %lu alarms", me.alarms.count);
+    NSLog(@"Before test schedule, there are %lu alarms", me.alarms.count);
     //schedule alarm
     EWAlarmManager *manager = [EWAlarmManager sharedInstance];
     [manager scheduleAlarm];
-    NSLog(@"There are %lu alarms: %@", (unsigned long)me.alarms.count, me.alarms);
+    NSLog(@"There are %lu alarms after test", (unsigned long)me.alarms.count);
+    BOOL allGood = YES;
     if (me.alarms.count == 7) {
-        [expectation fulfill];
+        for (EWAlarm *a in me.alarms) {
+            if (![a validate]) {
+                allGood = NO;
+            }
+        }
+        if (allGood) {
+            [expectation fulfill];
+        }
     }
+    
     
     
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {

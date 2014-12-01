@@ -18,13 +18,27 @@
 #import "EWNotificationManager.h"
 #import "EWNotification.h"
 #import "EWCachedInfoManager.h"
+//#import "FBKVOController.h"
+#import <KVOController/FBKVOController.h>
+#import "EWBlockTypes.h"
 
+@interface EWPersonManager()
+@property (nonatomic, strong) NSMutableArray *wakeeListChangeBlocks;
+@end
 
 @implementation EWPersonManager
 @synthesize wakeeList = _wakeeList;
-@synthesize isFetchingEveryone = _isFetchingEveryone;
+@synthesize isFetchingWakees = _isFetchingWakees;
 
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
+
+- (EWPersonManager *)init{
+    if (self = [super init]) {
+        _wakeeList = [NSMutableArray new];
+        _wakeeListChangeBlocks = [NSMutableArray new];
+    }
+    return self;
+}
 
 #pragma mark - CREATE USER
 -(EWPerson *)getPersonByServerID:(NSString *)ID{
@@ -37,80 +51,101 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 #pragma mark - Everyone server code
 
-- (BOOL)isFetchingEveryone{
+- (BOOL)isFetchingWakees{
     @synchronized(self){
-        return _isFetchingEveryone;
+        return _isFetchingWakees;
     }
 }
 
-- (void)setIsFetchingEveryone:(BOOL)isFetchingEveryone{
+- (void)setIsFetchingWakees:(BOOL)isFetchingEveryone{
     @synchronized(self){
-        _isFetchingEveryone = isFetchingEveryone;
+        _isFetchingWakees = isFetchingEveryone;
     }
 }
 
-- (EWPerson *)nextWakee{
-    if (_wakeeList.count == 0) {
+- (void)nextWakeeWithCompletion:(void (^)(EWPerson *person))block{
+    if (!_wakeeList || _wakeeList.count == 0) {
         //need to fetch everyone first
-        [self wakeeList];
+        if (self.isFetchingWakees) {
+            [self getWakeesInBackgroundWithCompletion:^{
+                //return next
+                if (block) {
+                    block(_wakeeList.firstObject);
+                    [_wakeeList removeObject:_wakeeList.firstObject];
+                }
+            }];
+        }
     }
-    EWPerson *next = _wakeeList.firstObject;
-    [_wakeeList removeObjectAtIndex:_wakeeList.count-1];
+    else{
+        if (block) {
+            block(_wakeeList.firstObject);
+            [_wakeeList removeObject:_wakeeList.firstObject];
+        }
+        
+        //get extra if near empty
+        if (_wakeeList.count < 3) {
+            [self getWakeesInBackgroundWithCompletion:^{
+                //
+            }];
+        }
+    }
     
-    //get extra if near empty
-    if (_wakeeList.count < 3) {
-        [self getWakeesInBackgroundWithCompletion:^{
-            //
-        }];
-    }
-    return next;
 }
 
-- (NSArray *)wakeeList{
-    NSParameterAssert([NSThread isMainThread]);
-    
-    //fetch from sever
-    NSArray *allWakees = [self getWakeesInContext:mainContext];
-    
-    [_wakeeList addObjectsFromArray:allWakees];
-    return _wakeeList;
-    
-}
+//- (NSArray *)getWakeeList{
+//    NSParameterAssert([NSThread isMainThread]);
+//    //check
+//    if (self.isFetchingWakees) {
+//        return nil;
+//    }
+//    //fetch from sever
+//    NSArray *allWakees = [self getWakeesInContext:mainContext];
+//    
+//    [_wakeeList addObjectsFromArray:allWakees];
+//    return _wakeeList;
+//    
+//}
 
 - (void)getWakeesInBackgroundWithCompletion:(void (^)(void))block{
     NSParameterAssert([NSThread isMainThread]);
+    //add finish block to the queue
+    if (block) {
+        [_wakeeListChangeBlocks addObject:block];
+    }
+    
+    //check
+    if (self.isFetchingWakees) {
+        return;
+    }
+    
     __block NSArray *wakees;
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         wakees = [self getWakeesInContext:localContext];
-    }completion:^(BOOL success, NSError *error) {
+    } completion:^(BOOL success, NSError *error) {
         for (EWPerson *localWakee in wakees) {
-            EWPerson *person = (EWPerson *)[localWakee MR_inContext:[NSManagedObjectContext MR_defaultContext]];
+            EWPerson *person = (EWPerson *)[localWakee MR_inContext:mainContext];
             if (person) {
-                
-                [_wakeeList addObject:person];
+                [self.wakeeList addObject:person];
             }
         }
         
-        if (block) {
-            block();
+        //execute finishing block
+        for (VoidBlock b in _wakeeListChangeBlocks) {
+            b();
         }
+        [_wakeeListChangeBlocks removeAllObjects];
     }];
 }
 
 - (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context{
     
-    //cache
-    if (self.isFetchingEveryone) {
-        return nil;
-    }
-    self.isFetchingEveryone = YES;
+    self.isFetchingWakees = YES;
     //_timeEveryoneChecked = [NSDate date];
     
     
     NSMutableArray *allPerson = [NSMutableArray new];
     
     EWPerson *localMe = [[EWPerson me] MR_inContext:context];
-    NSString *parseObjectId = [localMe valueForKey:kParseObjectID];
     NSError *error;
     
     //check my location
@@ -122,7 +157,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }
     
     NSArray *list = [PFCloud callFunction:@"getRelevantUsers"
-                           withParameters:@{@"objectId": parseObjectId,
+                           withParameters:@{@"objectId": localMe.objectId,
                                             @"topk" : numberOfRelevantUsers,
                                             @"radius" : radiusOfRelevantUsers,
                                             @"location": @{@"latitude": @([EWPerson me].lastLocation.coordinate.latitude),
@@ -133,7 +168,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
         DDLogError(@"*** Failed to get relavent user list: %@", error.description);
         //get cached person
         error = nil;
-        self.isFetchingEveryone = NO;
+        self.isFetchingWakees = NO;
         return nil;
     }
     
@@ -146,7 +181,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     
     if (error) {
         NSLog(@"*** Failed to fetch everyone: %@", error);
-        self.isFetchingEveryone = NO;
+        self.isFetchingWakees = NO;
         return nil;
     }
     
@@ -172,7 +207,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     //localMe.score = @100;
     
     NSLog(@"Received everyone list: %@", [allPerson valueForKey:@"name"]);
-    self.isFetchingEveryone = NO;
+    self.isFetchingWakees = NO;
     
     return allPerson;
 }

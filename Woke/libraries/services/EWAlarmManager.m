@@ -169,7 +169,9 @@
             hasChange = YES;
             continue;
         }else if (![a validate]){
-            DDLogVerbose(@"%s Something wrong with alarm(%@) Delete!", __func__, a.objectId);
+            DDLogError(@"%s Something wrong with alarm(%@) Delete!", __func__, a.objectId);
+            [a MR_deleteEntity];
+            hasChange = YES;
             continue;
         }
         
@@ -236,7 +238,7 @@
         
         DDLogVerbose(@"Alarm for me is %lu, fetch from server!", alarms.count);
         PFQuery *alarmQuery = [PFQuery queryWithClassName:NSStringFromClass([EWAlarm class])];
-        [alarmQuery whereKey:@"owner" equalTo:[PFUser currentUser]];
+        [alarmQuery whereKey:EWAlarmRelationships.owner equalTo:[PFUser currentUser]];
         [alarmQuery whereKey:kParseObjectID notContainedIn:[alarms valueForKey:kParseObjectID]];
         NSArray *objects = [EWSync findServerObjectWithQuery:alarmQuery error:NULL];
         
