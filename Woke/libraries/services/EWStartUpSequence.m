@@ -85,7 +85,7 @@
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
 	DDLogVerbose(@"5. Check my social graph");
-	//
+	//TODO
 	
     DDLogVerbose(@"4. Check my unread media");//media also will be checked with background fetch
     [[EWMediaManager sharedInstance] checkMediaAssetsInBackground];

@@ -545,7 +545,7 @@ void RouteChangeListener(	void *inClientData,
                          UInt32 inDataSize,
                          const void *inData)
 {
-	EWAVManager* This = (__bridge EWAVManager *)inClientData;  //???
+	EWAVManager* This = (__bridge EWAVManager *)inClientData;
 	
 	if (inID == kAudioSessionProperty_AudioRouteChange) {
 		

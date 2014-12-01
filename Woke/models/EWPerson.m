@@ -12,6 +12,7 @@
 #import "EWAccountManager.h"
 #import "EWCachedInfoManager.h"
 #import "EWAlarm.h"
+#import "EWAlarmManager.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
@@ -112,21 +113,21 @@ NSString * const EWPersonDefaultName = @"New User";
 
 #pragma mark - Parsed
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{
-    EWPerson *newUser = (EWPerson *)[user managedObjectInContext:mainContext];
+    EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
     if (user.isNew) {
-        newUser.username = user.username;
-        newUser.profilePic = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];//TODO: new user profile
-        newUser.name = kDefaultUsername;
-        newUser.preference = kUserDefaults;
-        newUser.cachedInfo = [NSDictionary new];
+        person.username = user.username;
+        person.profilePic = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];//TODO: new user profile
+        person.name = kDefaultUsername;
+        person.preference = kUserDefaults;
+        person.cachedInfo = [NSDictionary new];
         if ([user isEqual:[PFUser currentUser]]) {
-            newUser.score = @100;
+            person.score = @100;
         }
-        newUser.updatedAt = [NSDate date];
+        person.updatedAt = [NSDate date];
     }
     
     //no need to save here
-    return newUser;
+    return person;
 }
 
 
@@ -265,21 +266,11 @@ NSString * const EWPersonDefaultName = @"New User";
 
 + (NSArray *)myAlarms {
     NSParameterAssert([NSThread isMainThread]);
-    return [self alarmsForUser:[EWPerson me]];
+    return [[EWAlarmManager sharedInstance] alarmsForPerson:[EWPerson me]];
 }
 
 + (EWAlarm *)myNextAlarm {
-    float interval = CGFLOAT_MAX;
-    EWAlarm *next;
-    for (EWAlarm *alarm in [self myAlarms]) {
-        float timeLeft = alarm.time.nextOccurTime.timeIntervalSinceNow;
-        if (alarm.state) {
-            if (interval == 0 || timeLeft < interval) {
-                interval = timeLeft;
-                next = alarm;
-            }
-        }
-    }
+    EWAlarm *next = [[EWAlarmManager sharedInstance] nextAlarmForPerson:[self me]];
     return next;
 }
 
@@ -287,27 +278,6 @@ NSString * const EWPersonDefaultName = @"New User";
     return [EWPerson me].friends.allObjects;
 }
 
-
-+ (NSArray *)alarmsForUser:(EWPerson *)user{
-    NSMutableArray *alarms = [[user.alarms allObjects] mutableCopy];
-    
-    NSComparator alarmComparator = ^NSComparisonResult(id obj1, id obj2) {
-        NSInteger wkd1 = [(EWAlarm *)obj1 time].mt_weekdayOfWeek;
-        NSInteger wkd2 = [(EWAlarm *)obj2 time].mt_weekdayOfWeek;
-        if (wkd1 > wkd2) {
-            return NSOrderedDescending;
-        }else if (wkd1 < wkd2){
-            return NSOrderedAscending;
-        }else{
-            return NSOrderedSame;
-        }
-    };
-    
-    //sort
-    NSArray *sortedAlarms = [alarms sortedArrayUsingComparator:alarmComparator];
-    
-    return sortedAlarms;
-}
 
 #pragma mark - Tools
 + (void)updateMeFromFacebook{
