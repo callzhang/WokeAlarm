@@ -68,7 +68,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-splash-logo" translatesAutoresizingMaskIntoConstraints="NO" id="PZQ-5O-S3O">
                                 <rect key="frame" x="197" y="104" width="207" height="212"/>
                             </imageView>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWn-H2-vla" userLabel="35 height spacer">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rWn-H2-vla" userLabel="35 height spacer">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="sdk-iw-hh3"/>
@@ -380,16 +380,6 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5g-Ah-JHU">
-                                        <rect key="frame" x="175" y="0.0" width="55" height="80"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="55" id="Udk-Wm-dIF"/>
-                                            <constraint firstAttribute="height" constant="80" id="qkt-9b-53M"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="96"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="alarm-dots" translatesAutoresizingMaskIntoConstraints="NO" id="FyN-3k-0Sz">
                                         <rect key="frame" x="105" y="0.0" width="15" height="80"/>
                                         <constraints>
@@ -402,6 +392,16 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="o73-LX-8Rb"/>
                                             <constraint firstAttribute="height" constant="165" id="zCO-Ek-ZOF"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="96"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5g-Ah-JHU">
+                                        <rect key="frame" x="175" y="0.0" width="55" height="80"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="55" id="Udk-Wm-dIF"/>
+                                            <constraint firstAttribute="height" constant="80" id="qkt-9b-53M"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="96"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -561,7 +561,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P4K-aa-mhR" userLabel="14% top spacer">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P4K-aa-mhR" userLabel="14% top spacer">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="Sva-os-NJ6"/>
@@ -605,7 +605,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vGP-Fp-b50" userLabel="bottom 9.6 spacer">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGP-Fp-b50" userLabel="bottom 9.6 spacer">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="Xfe-JM-6dT"/>

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseViewController.h"
 
-@interface EWWakeViewController : UIViewController
+@interface EWWakeViewController : EWBaseViewController
 
 @end
