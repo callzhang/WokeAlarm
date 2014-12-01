@@ -7,6 +7,8 @@
 //
 
 #import "EWSleepViewModel.h"
+@interface EWSleepViewModel ()
+@end
 
 @implementation EWSleepViewModel
 - (instancetype)init {
@@ -27,4 +29,26 @@
     return self;
 }
 
+
+- (void)setAlarm:(EWAlarm *)alarm {
+    if (_alarm != alarm) {
+        _alarm = alarm;
+    }
+    
+    [RACObserve(alarm, time) subscribeNext:^(NSDate *date) {
+        NSString *hour = [date mt_stringFromDateWithFormat:@"h" localized:NO];
+        NSString *minutes = [date mt_stringFromDateWithFormat:@"mm" localized:NO];
+        if (hour.length == 1) {
+            self.time1 = nil;
+            self.time2 = hour;
+        }
+        else if (hour.length == 2) {
+            self.time1 = @"1";
+            self.time2 = [hour substringWithRange:NSMakeRange(1, 1)];
+        }
+        
+        self.time3 = [minutes substringWithRange:NSMakeRange(0, 1)];
+        self.time4 = [minutes substringWithRange:NSMakeRange(1, 1)];
+    }];
+}
 @end

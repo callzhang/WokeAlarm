@@ -7,7 +7,6 @@
 //
 
 #import "EWSleepViewController.h"
-#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface EWSleepViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *labelTime1;
@@ -27,6 +26,7 @@
     [super viewDidLoad];
     
     self.sleepViewModel = [[EWSleepViewModel alloc] init];
+    self.sleepViewModel.alarm = [EWPerson myNextAlarm];
    
     [self bindViewModel];
 }
@@ -36,6 +36,11 @@
     
     //remove background color set in interface builder[used for layouting].
     self.view.backgroundColor = [UIColor clearColor];
+    
+    
+    //test
+    self.sleepViewModel.alarm = [EWPerson myNextAlarm];
+    self.sleepViewModel.alarm.time = [NSDate mt_dateFromYear:200 month:0 day:0 hour:12 minute:50];
 }
 
 - (void)bindViewModel {

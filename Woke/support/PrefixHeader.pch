@@ -27,6 +27,7 @@
 #import "UIView+Extend.h"
 #import "extobjc.h"
 #import "EWCategories.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 //static NSUInteger ddLogLevel = DDLogLevelAll;
 static NSUInteger ddLogLevel = LOG_LEVEL_VERBOSE;
