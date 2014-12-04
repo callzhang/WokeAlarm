@@ -313,7 +313,7 @@
 
 
 //indicate that the user has woke
-- (void)woke:(EWActivity *)activity{
+- (void)woke{
     //[EWWakeUpManager sharedInstance].controller = nil;
     [EWWakeUpManager sharedInstance].isWakingUp = NO;
     
@@ -321,7 +321,7 @@
     [[ATConnect sharedConnection] engage:kWakeupSuccess fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
     
     //set wakeup time, move to past, schedule and save
-    [[EWActivityManager sharedManager] completeAlarmActivity:activity];
+    [[EWActivityManager sharedManager] completeAlarmActivity:self.currentActivity];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     

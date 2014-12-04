@@ -65,7 +65,7 @@ NSUInteger static maxLoop = 100;
  Release the reference to wakeupVC
  Post notification: kWokeNotification
  */
-- (void)woke:(EWActivity *)activity;
+- (void)woke;
 
 /**
  Timely alarm timer check task
