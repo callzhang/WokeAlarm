@@ -7,7 +7,7 @@
 //
 #import "EWShakeProgressView.h"
 #import <UIKit/UIKit.h>
-@class EWPerson, EWMedia, EWAlarm;
+@class EWPerson, EWMedia, EWAlarm, EWMediaCell;
 
 @interface EWWakeUpViewController : UIViewController <UIPopoverControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 //@property (weak, nonatomic) IBOutlet UILabel *title;
@@ -20,7 +20,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *wakeupButton;
 @property (strong, nonatomic) IBOutlet UILabel *timeDescription;
 @property (strong, nonatomic) IBOutlet EWShakeProgressView *shakeProgress;
-
+@property (nonatomic, strong) EWMediaCell *currentCell;
 
 @property (nonatomic, weak) EWPerson *person;
 @property (nonatomic, weak) EWActivity *activity;

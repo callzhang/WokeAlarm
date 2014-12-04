@@ -26,8 +26,8 @@
 @interface EWWakeUpViewController (){
     
     NSMutableArray *medias;
-    BOOL next;
-    NSInteger loopCount;
+    //BOOL next;
+    //NSInteger loopCount;
     CGRect headerFrame;
     NSTimer *timerTimer;
     NSUInteger timePast;
@@ -51,9 +51,9 @@
     [self initData];
     
     //first time loop
-    next = YES;
+    [EWWakeUpManager sharedInstance].playNext = YES;
     timePast = 1;
-    loopCount = kLoopMediaPlayCount;
+    [EWWakeUpManager sharedInstance].loopCount = kLoopMediaPlayCount;
     
     //notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextCell:) name:kAudioPlayerDidFinishPlaying object:nil];
@@ -128,18 +128,7 @@
     [[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
     
     //send currently played cell info to EWAVManager
-    if ([EWAVManager sharedManager].media) {
-        NSInteger currentPlayingCellIndex = [medias indexOfObject:[EWAVManager sharedManager].media];
-        if (currentPlayingCellIndex != NSNotFound) {
-            EWMediaCell *cell = (EWMediaCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:currentPlayingCellIndex inSection:0]];
-            if (cell) {
-                [[EWAVManager sharedManager] playForCell:cell];
-            }
-        }
-    }
-    
-    
-
+    //[[EWWakeUpManager sharedInstance] playNext];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -259,32 +248,8 @@
 
 - (void)OnCancel{
     [self.navigationController dismissBlurViewControllerWithCompletionHandler:^{
-        [[EWAVManager sharedManager] stopAllPlaying];
+        [[EWWakeUpManager sharedInstance] stopPlayingVoice];
     }];
-}
-
--(void)presentPostWakeUpVC
-{
-    [self.view showLoopingWithTimeout:0];
-    
-    //stop music
-    [[EWAVManager sharedManager] stopAllPlaying];
-    [EWAVManager sharedManager].currentCell = nil;
-    [EWAVManager sharedManager].media = nil;
-    next = NO;
-    
-    //release the pointer in wakeUpManager
-    [EWWakeUpManager woke:_activity];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self scrollViewDidScroll:self.tableView];//prevent header move
-    });
-    
-    EWPostWakeUpViewController * postWakeUpVC = [[EWPostWakeUpViewController alloc] initWithNibName:nil bundle:nil];
-    postWakeUpVC.activity = _activity;
-    
-    [EWUIUtil dismissHUDinView:self.view];
-    [self presentViewControllerWithBlurBackground:postWakeUpVC];
 }
 
 #pragma mark - tableViewController delegate methods
@@ -380,7 +345,7 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     });
     
-    next = NO;
+    [EWWakeUpManager sharedInstance].playNext = NO;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -559,9 +524,28 @@
             }
         }
     });
+}
+/**
+ *  Update the highlighted cell when playing
+ */
+- (void)updatePlayingCellAndProgress{
+    //check active cell, switch if changed
+    static NSUInteger currentPlayingCellIndex = 0;
+    NSUInteger currentMediaIndex = [EWWakeUpManager sharedInstance].currentMediaIndex;
     
+    //highlight
+    if (currentMediaIndex != currentPlayingCellIndex) {
+        NSIndexPath *path = [NSIndexPath indexPathForRow:currentMediaIndex inSection:0];
+        if ([_tableView cellForRowAtIndexPath:path]) {
+            [_tableView selectRowAtIndexPath:path animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [_tableView deselectRowAtIndexPath:path animated:YES];
+            });
+        }
+    }
     
-    
+    //update the progress
+    self.currentCell.mediaBar.value = [EWWakeUpManager sharedInstance].playingProgress;
 }
 
 

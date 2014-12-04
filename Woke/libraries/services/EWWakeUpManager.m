@@ -19,23 +19,24 @@
 #import "EWBackgroundingManager.h"
 #import "EWAlarm.h"
 #import "EWActivity.h"
+#import "EWActivityManager.h"
+#import "EWAlarmManager.h"
+#import "NSTimer+BlocksKit.h"
+//#import "AppDelegate.h"
 
 //UI
 #import "EWWakeUpViewController.h"
-#import "EWSleepViewController.h"
 #import "EWPostWakeUpViewController.h"
-#import "EWActivityManager.h"
-#import "EWAlarmManager.h"
-#import "AppDelegate.h"
-#import "UIView+Extend.h"
-#import "UIView+Blur.h"
-#import "NSTimer+BlocksKit.h"
-#import "UIViewController+Blur.h"
+//#import "EWSleepViewController.h"
+//#import "EWPostWakeUpViewController.h"
+//#import "UIView+Extend.h"
+//#import "UIView+Blur.h"
+//#import "UIViewController+Blur.h"
 
 
 @interface EWWakeUpManager()
 //retain the controller so that it won't deallocate when needed
-@property (nonatomic, retain) EWWakeUpViewController *controller;
+//@property (nonatomic, retain) EWWakeUpViewController *controller;
 @end
 
 
@@ -56,6 +57,10 @@
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingEnterNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[self alarmTimerCheck];
 		[self sleepTimerCheck];
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoice) name:kAudioPlayerDidFinishPlaying object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
 	}];
 	return self;
 }
@@ -74,7 +79,7 @@
 
 
 #pragma mark - Handle push notification
-+ (void)handlePushMedia:(NSDictionary *)notification{
+- (void)handlePushMedia:(NSDictionary *)notification{
     NSString *pushType = notification[kPushType];
     NSParameterAssert([pushType isEqualToString:kPushTypeMedia]);
     NSString *type = notification[kPushMediaType];
@@ -85,7 +90,6 @@
         NSLog(@"Push doesn't have media ID, abort!");
         return;
     }
-
     
     EWMedia *media = [EWMedia getMediaByID:mediaID];
     //NSDate *nextTimer = nextAlarm.time;
@@ -108,7 +112,7 @@
         }else if (!activity.completed && [[NSDate date] timeIntervalSinceDate:activity.time] < kMaxWakeTime){
             
             //============== struggle ==============
-            [EWWakeUpManager presentWakeUpViewWithActivity:activity];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
             
             //broadcast so wakeupVC can react to it
             //[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:@{kPushMediaKey: mediaID, kPushTaskKey: task.objectId}];
@@ -143,7 +147,7 @@
     }
 }
 
-+ (void)handleAlarmTimerEvent:(NSDictionary *)info{
+- (void)handleAlarmTimerEvent:(NSDictionary *)info{
     NSParameterAssert([NSThread isMainThread]);
     if ([EWWakeUpManager sharedInstance].isWakingUp) {
         DDLogWarn(@"WakeUpManager is already handling alarm timer, skip");
@@ -258,12 +262,12 @@
     if (isLaunchedFromLocalNotification) {
         
         NSLog(@"Entered from local notification, start wakeup view now");
-        [EWWakeUpManager presentWakeUpViewWithActivity:activity];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
         
     }else if (isLaunchedFromRemoteNotification){
         
         NSLog(@"Entered from remote notification, start wakeup view now");
-        [EWWakeUpManager presentWakeUpViewWithActivity:activity];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
         
     }else{
         //fire an alarm
@@ -287,7 +291,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(d * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //present wakeupVC and paly when displayed
             [[EWAVManager sharedManager] volumeFadeWithCompletion:^{
-                [EWWakeUpManager presentWakeUpViewWithActivity:activity];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
             }];
             
         });
@@ -306,32 +310,11 @@
     return NO;
 }
 
-+ (void)presentWakeUpView{
-    //get absolute next task
-    EWActivity *activity = [EWActivityManager sharedManager].currentAlarmActivity;
-    //present
-    [EWWakeUpManager presentWakeUpViewWithActivity:activity];
-}
 
-+ (void)presentWakeUpViewWithActivity:(EWActivity *)activity{
-    if (![EWWakeUpManager isRootPresentingWakeUpView] && ![EWWakeUpManager sharedInstance].controller) {
-        //init wake up view controller
-        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithActivity:activity];
-        //save to manager
-        [EWWakeUpManager sharedInstance].controller = controller;
-        
-        //dispatch to main thread
-        [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:controller withCompletion:NULL];
-        
-    }else{
-        DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
-		//NSParameterAssert([EWWakeUpManager sharedInstance].isWakingUp == YES);
-    }
-}
 
 //indicate that the user has woke
-+ (void)woke:(EWActivity *)activity{
-    [EWWakeUpManager sharedInstance].controller = nil;
+- (void)woke:(EWActivity *)activity{
+    //[EWWakeUpManager sharedInstance].controller = nil;
     [EWWakeUpManager sharedInstance].isWakingUp = NO;
     
     //handle wakeup signel
@@ -364,7 +347,7 @@
         NSLog(@"%s: About to init alart timer in %fs", __func__, timeLeft);
 		[timerScheduled invalidate];
 		[NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
-			[EWWakeUpManager handleAlarmTimerEvent:nil];
+			[[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:nil];
 		} repeats:NO];
 		NSLog(@"===========================>> Alarm Timer scheduled on %@) <<=============================", alarm.time.date2String);
     }
@@ -391,7 +374,7 @@
         NSLog(@"%s: About to init alart timer in %fs", __func__, timeLeft);
 		[timerScheduled invalidate];
 		timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
-			[EWWakeUpManager handleSleepTimerEvent:nil];
+			[[EWWakeUpManager sharedInstance] handleSleepTimerEvent:nil];
 		} repeats:NO];
 		NSLog(@"===========================>> Sleep Timer scheduled on %@ <<=============================", sleepTime.date2String);
     }
@@ -402,22 +385,95 @@
 	}
 }
 
-+ (void)handleSleepTimerEvent:(UILocalNotification *)notification{
-    NSString *taskID = notification.userInfo[kLocalAlarmID];
+- (void)handleSleepTimerEvent:(UILocalNotification *)notification{
+    NSString *alarmID = notification.userInfo[kLocalAlarmID];
     if ([EWPerson me]) {
         //logged in enter sleep mode
         EWAlarm *alarm = [EWPerson myNextAlarm];
         NSNumber *duration = [EWPerson me].preference[kSleepDuration];
-        BOOL nextTaskMatched = [alarm.objectID.URIRepresentation.absoluteString isEqualToString:taskID];
-        NSInteger h = alarm.time.timeIntervalSinceNow/3600;
-        BOOL needSleep = h < duration.floatValue && h > 1;
-        BOOL presenting = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController != nil;
-        if (nextTaskMatched && needSleep && !presenting) {
-            EWSleepViewController *controller = [[EWSleepViewController alloc] initWithNibName:nil bundle:nil];
-            [[UIApplication sharedApplication].delegate.window.rootViewController presentViewControllerWithBlurBackground:controller];
+        if (alarmID) {
+            BOOL nextAlarmMatched = [alarm.objectID.URIRepresentation.absoluteString isEqualToString:alarmID];
+            if (!nextAlarmMatched) {
+                DDLogError(@"The sleep notification sent is not the same as the next alarm");
+                return;
+            }
         }
         
+        NSInteger h = alarm.time.timeIntervalSinceNow/3600;
+        BOOL needSleep = h < duration.floatValue && h > 1;
+        
+        if (needSleep) {
+            //send notification so baseNavigationView can present the sleepView
+            [[NSNotificationCenter defaultCenter] postNotificationName:kSleepTimeNotification object:alarm];
+        }
     }
+}
+
+#pragma mark - Play for wake up view
+- (void)palyNextVoice{
+    EWMedia *mediaJustFinished = mediaJustFinished = [EWAVManager sharedManager].media;
+    float t = 0;
+    if (mediaJustFinished) {
+        t = kMediaPlayInterval;
+    }
+    //delay 3s if there is a media playing previously
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(t * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        //check if playing media is changed
+        if (mediaJustFinished != [EWAVManager sharedManager].media) {
+            DDLogInfo(@"Media has changed since last notice. SKip!");
+            return;
+        }
+        
+        //check if need to play next
+        if (!self.playNext){
+            NSLog(@"Next is disabled, stop playing next");
+            return;
+        }
+        //return if no  medias
+        if (!_medias.count) {
+            return;
+        }
+        
+        NSInteger currentCellPlaying = [_medias indexOfObject:mediaJustFinished];//if not found, next = 0
+        
+        __block EWMediaCell *cell;
+        NSIndexPath *path;
+        NSInteger nextCellIndex = currentCellPlaying + 1;
+        
+        if (nextCellIndex < (NSInteger)_medias.count){
+            //get next cell
+            NSLog(@"Play next song (%ld)", (long)nextCellIndex);
+            path = [NSIndexPath indexPathForRow:nextCellIndex inSection:0];
+            
+        }else{
+            if ((--_loopCount)>0) {
+                //play the first if loopCount > 0
+                NSLog(@"Looping, %ld loop left", (long)_loopCount);
+                path = [NSIndexPath indexPathForRow:0 inSection:0];
+                
+            }else{
+                NSLog(@"Loop finished, stop playing");
+                //nullify all cell info in EWAVManager
+                cell = nil;
+                [EWAVManager sharedManager].currentCell = nil;
+                [EWAVManager sharedManager].media = nil;
+                path = nil;
+                return;
+            }
+        }
+        
+    });
+    
+
+    
+}
+
+- (void)playVoiceAtIndex:(NSUInteger)n{
+    
+}
+
+- (EWPerson *)currentWaker{
+    
 }
 
 @end

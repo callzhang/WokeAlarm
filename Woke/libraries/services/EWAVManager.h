@@ -37,11 +37,11 @@
 
 @property (retain, nonatomic) AVAudioPlayer *player;
 @property (retain, nonatomic) AVAudioRecorder *recorder;
-@property (weak, nonatomic) EWMediaCell *currentCell; //current cell, assigned by others
+//@property (weak, nonatomic) EWMediaCell *currentCell; //current cell, assigned by others
 @property (weak, nonatomic) EWMedia *media;
 @property (weak, nonatomic) UIButton *recordStopBtn;
 @property (weak, nonatomic) UIButton *playStopBtn;
-@property (nonatomic) EWMediaSlider *progressBar;
+//@property (nonatomic) EWMediaSlider *progressBar;
 @property (weak, nonatomic) UILabel *currentTime;
 @property (weak, nonatomic) SCSiriWaveformView *waveformView;
 //@property (nonatomic) BOOL loop;
@@ -49,7 +49,7 @@
 +(EWAVManager *)sharedManager;
 
 //play
-- (void)playForCell:(UITableViewCell *)cell;
+//- (void)playForCell:(UITableViewCell *)cell;
 - (void)playMedia:(EWMedia *)media;
 
 /**

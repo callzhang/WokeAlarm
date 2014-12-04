@@ -10,4 +10,11 @@
 
 @interface EWBaseNavigationController : UINavigationController
 
+/**
+ Present EWWakeUpViewController on rootView.
+ Also it will register the presented wake up view controller as a retained value to prevent premature deallocation in ARC.
+ @discussion If rootView is displaying anything else, it will dismiss other view first.
+ */
+
+- (void)presentWakeUpViewWithActivity:(NSNotification *)activity;
 @end

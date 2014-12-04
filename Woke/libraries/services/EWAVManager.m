@@ -30,7 +30,7 @@
 
 @implementation EWAVManager
 @synthesize player, recorder;
-@synthesize playStopBtn, recordStopBtn, currentCell, progressBar, currentTime, media;
+@synthesize playStopBtn, recordStopBtn, currentTime, media;
 
 
 +(EWAVManager *)sharedManager{
@@ -115,35 +115,6 @@
 }
 
 #pragma mark - PLAY FUNCTIONS
-//play for cell with progress
--(void)playForCell:(UITableViewCell *)cell{
-    //Active session
-    //[self registerActiveAudioSession];
-    
-    //determine cell type
-    if (![cell isKindOfClass:[EWMediaCell class]]) return;
-    EWMediaCell *mediaCell = (EWMediaCell *)cell;
-    
-    //link progress bar with cell's progress bar
-    self.currentCell = mediaCell;
-
-    
-    //play
-    //[self playSoundFromURL:[NSURL URLWithString:mediaCell.media.audioKey]];
-    [self playMedia:mediaCell.media];
-
-    
-}
-
-- (void)setCurrentCell:(EWMediaCell *)cell{
-    
-    //assign new value
-    progressBar = cell.mediaBar;
-    //media = cell.media;
-    currentCell = cell;
-}
-
-
 - (void)playMedia:(EWMedia *)mi{
     NSParameterAssert([NSThread isMainThread]);
 	//set to max volume
@@ -266,22 +237,22 @@
 	//remove target action
 	
 }
-
-#pragma mark - UI event
-- (IBAction)sliderChanged:(UISlider *)sender {
-    if (![sender isEqual:progressBar]) {
-        DDLogVerbose(@"Sender is not current slider in EWAVManager, skip");
-        return;
-    }
-    // Fast skip the music when user scroll the UISlider
-    [player stop];
-    [player setCurrentTime:progressBar.value];
-    NSString *timeStr = [NSString stringWithFormat:@"%02ld", (long)progressBar.value % 60];
-    currentTime.text = timeStr;
-    [player prepareToPlay];
-    [player play];
-    
-}
+//
+//#pragma mark - UI event
+//- (IBAction)sliderChanged:(UISlider *)sender {
+//    if (![sender isEqual:progressBar]) {
+//        DDLogVerbose(@"Sender is not current slider in EWAVManager, skip");
+//        return;
+//    }
+//    // Fast skip the music when user scroll the UISlider
+//    [player stop];
+//    [player setCurrentTime:progressBar.value];
+//    NSString *timeStr = [NSString stringWithFormat:@"%02ld", (long)progressBar.value % 60];
+//    currentTime.text = timeStr;
+//    [player prepareToPlay];
+//    [player play];
+//    
+//}
 
 #pragma mark - Record
 - (NSURL *)record{
@@ -329,11 +300,6 @@
 #pragma mark - update UI
 - (void)updateViewForPlayerState:(AVAudioPlayer *)p
 {
-    //init the progress bar
-    if (progressBar) {
-        //[self updateCurrentTime];
-        progressBar.maximumValue = (float)player.duration;
-    }
     //timer stop first
     [updateTimer invalidate];
     //set up timer
@@ -346,7 +312,7 @@
         
         //unhide
         [UIView animateWithDuration:0.5 animations:^{
-            self.progressBar.alpha = 1;
+            //self.progressBar.alpha = 1;
         }];
         [UIView animateWithDuration:0.5 animations:^{
             self.waveformView.alpha = 0.0;
@@ -360,11 +326,7 @@
 }
 
 - (void)updateViewForRecorderState:(AVAudioRecorder *)r{
-    if (progressBar) {
-        //[self updateCurrentTimeForRecorder];
-        progressBar.maximumValue = kMaxRecordTime;
-    }
-    
+
 	if (updateTimer)
 		[updateTimer invalidate];
     
@@ -386,7 +348,7 @@
             }];
             
             [UIView animateWithDuration:0.5 animations:^{
-                self.progressBar.alpha = 0;
+                //self.progressBar.alpha = 0;
             }];
             
         }
@@ -398,23 +360,23 @@
 	}
 }
 
--(void)updateCurrentTime:(NSTimer *)timer{
-    AVAudioPlayer *p = (AVAudioPlayer *)timer.userInfo;
-    if (!progressBar.isTouchInside) {
-        if(![p isEqual:player]) DDLogVerbose(@"***Player passed in is not correct");
-        progressBar.value = (float)player.currentTime;
-        //currentTime.text = [NSString stringWithFormat:@"%02ld\"", (long)player.currentTime % 60, nil];
-    }
-}
-
--(void)updateCurrentTimeForRecorder:(NSTimer *)timer{
-    AVAudioRecorder *r = (AVAudioRecorder *)timer.userInfo;
-    if(![r isEqual:recorder]) DDLogVerbose(@"***Recorder passed in is not correct");
-    if (!progressBar.isTouchInside) {
-        progressBar.value = (float)recorder.currentTime;
-        currentTime.text = [NSString stringWithFormat:@"%02ld\"", (long)recorder.currentTime % 60, nil];
-    }
-}
+//-(void)updateCurrentTime:(NSTimer *)timer{
+//    AVAudioPlayer *p = (AVAudioPlayer *)timer.userInfo;
+//    if (!progressBar.isTouchInside) {
+//        if(![p isEqual:player]) DDLogVerbose(@"***Player passed in is not correct");
+//        progressBar.value = (float)player.currentTime;
+//        //currentTime.text = [NSString stringWithFormat:@"%02ld\"", (long)player.currentTime % 60, nil];
+//    }
+//}
+//
+//-(void)updateCurrentTimeForRecorder:(NSTimer *)timer{
+//    AVAudioRecorder *r = (AVAudioRecorder *)timer.userInfo;
+//    if(![r isEqual:recorder]) DDLogVerbose(@"***Recorder passed in is not correct");
+//    if (!progressBar.isTouchInside) {
+//        progressBar.value = (float)recorder.currentTime;
+//        currentTime.text = [NSString stringWithFormat:@"%02ld\"", (long)recorder.currentTime % 60, nil];
+//    }
+//}
 
 - (void)updateMeters{
 	[self.recorder updateMeters];
@@ -428,7 +390,6 @@
     DDLogVerbose(@"Player finished (%@)", flag?@"Success":@"Failed");
     [updateTimer invalidate];
     self.player.currentTime = 0.0;
-    progressBar.value = 0.0;
     if (self.media) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerDidFinishPlaying object:self.media];
     }

@@ -7,6 +7,10 @@
 //
 
 #import "EWBaseNavigationController.h"
+#import "EWActivityManager.h"
+#import "EWWakeUpManager.h"
+#import "EWWakeUpViewController.h"
+#import "EWActivity.h"
 
 @interface EWBaseNavigationController ()
 
@@ -16,6 +20,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    // listern for notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentWakeUpViewWithActivity:) name:kWakeTimeNotification object:nil];
+}
+
+
+- (void)presentWakeUpViewWithActivity:(NSNotification *)note{
+    EWActivity *activity = note.object;
+    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
+        //init wake up view controller
+        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithActivity:activity];
+        //save to manager
+        //[EWWakeUpManager sharedInstance].controller = controller;
+        
+        //push sleep view
+        [self pushViewController:controller animated:YES];
+        
+    }else{
+        DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
+        //NSParameterAssert([EWWakeUpManager sharedInstance].isWakingUp == YES);
+    }
 }
 @end

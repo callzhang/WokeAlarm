@@ -7,9 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+NSUInteger static maxLoop = 100;
 
 @interface EWWakeUpManager : NSObject
-@property BOOL isWakingUp;
+@property (nonatomic, strong) EWAlarm *alarm;
+@property (nonatomic, strong) EWActivity *currentActivity;
+@property (nonatomic, strong) NSMutableArray *medias;
+@property (nonatomic) NSUInteger loopCount;
+@property (nonatomic) NSUInteger currentMedia;
+@property (nonatomic) BOOL isWakingUp;
+@property (nonatomic) BOOL playNext;
 
 + (EWWakeUpManager *)sharedInstance;
 
@@ -27,7 +34,7 @@
  *       woke: alert with no name
  *   suspend: background download
  */
-+ (void)handlePushMedia:(NSDictionary *)notification;
+- (void)handlePushMedia:(NSDictionary *)notification;
 
 /**
  Handle alarm time up event
@@ -39,28 +46,26 @@
     b. fire silent alarm
     c. present wakeupVC and start play in 30s
  */
-+ (void)handleAlarmTimerEvent:(NSDictionary *)pushInfo;
+- (void)handleAlarmTimerEvent:(NSDictionary *)pushInfo;
 
-+ (void)handleSleepTimerEvent:(UILocalNotification *)notification;
+/**
+ *  Handle the sleep timer event
+ *
+ *  @param notification the notification used to identify which alarm/activity it is going to sleep for.
+ */
+- (void)handleSleepTimerEvent:(UILocalNotification *)notification;
 
 /**
  Detect if root view is presenting EWWakeUpViewController
  */
 + (BOOL)isRootPresentingWakeUpView;
 
-/**
- Present EWWakeUpViewController on rootView.
- Also it will register the presented wake up view controller as a retained value to prevent premature deallocation in ARC.
- @discussion If rootView is displaying anything else, it will dismiss other view first.
- */
-+ (void)presentWakeUpView;
-+ (void)presentWakeUpViewWithActivity:(EWActivity *)activity;
 
 /**
  Release the reference to wakeupVC
  Post notification: kWokeNotification
  */
-+ (void)woke:(EWActivity *)task;
+- (void)woke:(EWActivity *)activity;
 
 /**
  Timely alarm timer check task
@@ -70,4 +75,26 @@
 - (void)alarmTimerCheck;
 
 - (void)sleepTimerCheck;
+
+
+#pragma mark - Play for wakeup view
+/**
+ *  The single API exposed for playing sound
+ */
+- (void)playNextVoice;
+/**
+ *  Play the n'th voice
+ *
+ */
+- (void)playVoiceAtIndex:(NSUInteger)n;
+/**
+ *  The current waker for the voice that is being played
+ *
+ *  @return The waker
+ */
+- (void)stopPlayingVoice;
+- (EWPerson *)currentWaker;
+- (NSUInteger)currentMediaIndex;
+- (float)playingProgress;
+
 @end
