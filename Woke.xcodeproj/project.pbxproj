@@ -786,7 +786,7 @@
 		09A7772A1A11E2BD004AF902 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
-				9B8829391A317E3900EF572E /* GPUAnimator */,
+				9B8829391A317E3900EF572E /* EWBlur */,
 				9B840A241A170AE800D6C2A3 /* RMSelectionView */,
 				09C5B1E31A166162006EA46C /* UAProgress */,
 				9B8139591A15D65900F1A56C /* GCPickerView */,
@@ -924,7 +924,7 @@
 			path = RMSelectionView;
 			sourceTree = "<group>";
 		};
-		9B8829391A317E3900EF572E /* GPUAnimator */ = {
+		9B8829391A317E3900EF572E /* EWBlur */ = {
 			isa = PBXGroup;
 			children = (
 				9B88293A1A317E3900EF572E /* EWBlurAnimator.h */,
@@ -934,8 +934,9 @@
 				9B8829401A31868100EF572E /* EWBlurNavigationControllerDelegate.h */,
 				9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */,
 			);
-			path = GPUAnimator;
+			path = EWBlur;
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		9BDF60911A149685009E3C4A /* SCSiriWaveformView */ = {
 			isa = PBXGroup;

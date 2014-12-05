@@ -11,15 +11,19 @@
 #import "EWWakeUpManager.h"
 #import "EWWakeUpViewController.h"
 #import "EWActivity.h"
+#import "EWBlurNavigationControllerDelegate.h"
 
 @interface EWBaseNavigationController ()
-
+@property (nonatomic, strong) EWBlurNavigationControllerDelegate *blurDelegate;
 @end
 
 @implementation EWBaseNavigationController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //add EWBlur Nav Delegate
+    _blurDelegate = [EWBlurNavigationControllerDelegate new];
+    self.delegate = _blurDelegate;
     // listern for notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentWakeUpViewWithActivity:) name:kWakeTimeNotification object:nil];
 }
