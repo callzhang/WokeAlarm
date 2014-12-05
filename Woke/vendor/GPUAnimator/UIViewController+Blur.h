@@ -15,7 +15,7 @@ typedef enum{
     EWBlurViewOptionBlack
 } EWBlurViewOptions;
 
-@class NavigationControllerDelegate;
+@class EWBlurNavigationControllerDelegate;
 
 @interface UIViewController (Blur)
 

@@ -33,7 +33,7 @@
 #import "EWRecordingViewController.h"
 //#import "EWLogInViewController.h"
 #import "EWFriendsViewController.h"
-#import "NavigationControllerDelegate.h"
+#import "EWBlurNavigationControllerDelegate.h"
 #import "EWSettingsViewController.h"
 #import "GKImagePicker.h"
 // ImageBrowser
