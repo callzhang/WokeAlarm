@@ -25,9 +25,6 @@
 @property (nonatomic, weak) EWPerson *person;
 @property (nonatomic, weak) EWActivity *activity;
 
-//- (EWWakeUpViewController *)initWithActivity:(EWActivity *)activity;
-//- (void)playMedia:(id)sender atIndex:(NSIndexPath *)indexPath;
-- (void)startPlayCells;
 
 /**
  Search for cell that has media that has the audioKey that metches the playing URL in EWAVManager.

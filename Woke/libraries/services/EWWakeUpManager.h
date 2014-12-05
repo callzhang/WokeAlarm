@@ -14,7 +14,7 @@ NSUInteger static maxLoop = 100;
 @property (nonatomic, strong) EWActivity *currentActivity;
 @property (nonatomic, strong) NSMutableArray *medias;
 @property (nonatomic) NSUInteger loopCount;
-@property (nonatomic) NSUInteger currentMedia;
+@property (nonatomic) NSUInteger currentMediaIndex;
 @property (nonatomic) BOOL isWakingUp;
 @property (nonatomic) BOOL playNext;
 

@@ -49,12 +49,12 @@
 - (IBAction)play:(id)sender {
     if (EWAVManager.sharedManager.player.isPlaying) {
         [EWAVManager.sharedManager stopAllPlaying];
-        if ([EWAVManager.sharedManager.currentCell isEqual:self]) {
+        if ([EWAVManager.sharedManager.media isEqual:self.media]) {
             return;
         }
     }
     //play this cell
-    [EWAVManager.sharedManager playForCell:self];
+    [EWAVManager.sharedManager playMedia:self.media];
     
 }
 

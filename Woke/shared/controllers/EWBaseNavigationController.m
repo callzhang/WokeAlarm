@@ -26,10 +26,11 @@
 
 
 - (void)presentWakeUpViewWithActivity:(NSNotification *)note{
-    EWActivity *activity = note.object;
+    //EWActivity *activity = note.object;
     if (![EWWakeUpManager isRootPresentingWakeUpView]) {
         //init wake up view controller
-        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithActivity:activity];
+        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithNibName:nil bundle:nil];
+        
         //save to manager
         //[EWWakeUpManager sharedInstance].controller = controller;
         

@@ -54,7 +54,6 @@ extern NSString * const EWPersonDefaultName;
 + (NSArray *)myAlarms;
 + (EWAlarm *)myNextAlarm;
 + (NSArray *)myFriends;
-+ (NSArray *)alarmsForUser:(EWPerson *)user;
 
 
 //Tools

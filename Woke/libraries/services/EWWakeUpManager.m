@@ -57,11 +57,11 @@
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingEnterNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[self alarmTimerCheck];
 		[self sleepTimerCheck];
-        
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoice) name:kAudioPlayerDidFinishPlaying object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
 	}];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoice) name:kAudioPlayerDidFinishPlaying object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
+    
 	return self;
 }
 
@@ -420,13 +420,13 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(t * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //check if playing media is changed
         if (mediaJustFinished != [EWAVManager sharedManager].media) {
-            DDLogInfo(@"Media has changed since last notice. SKip!");
+            DDLogInfo(@"Media has changed since during the delay. Skip!");
             return;
         }
         
         //check if need to play next
         if (!self.playNext){
-            NSLog(@"Next is disabled, stop playing next");
+            DDLogInfo(@"Next is disabled, stop playing next");
             return;
         }
         //return if no  medias
@@ -434,46 +434,44 @@
             return;
         }
         
-        NSInteger currentCellPlaying = [_medias indexOfObject:mediaJustFinished];//if not found, next = 0
+        NSUInteger mediaJustPlayed = [_medias indexOfObject:mediaJustFinished];//if not found, next = 0
+        if (mediaJustPlayed != _currentMediaIndex) {
+            DDLogInfo(@"Media order has changed since last known. Skip!");
+            return;
+        }
+        _currentMediaIndex ++;
         
-        __block EWMediaCell *cell;
-        NSIndexPath *path;
-        NSInteger nextCellIndex = currentCellPlaying + 1;
-        
-        if (nextCellIndex < (NSInteger)_medias.count){
+        if (_currentMediaIndex < _medias.count){
             //get next cell
-            NSLog(@"Play next song (%ld)", (long)nextCellIndex);
-            path = [NSIndexPath indexPathForRow:nextCellIndex inSection:0];
+            NSLog(@"Play next song (%ld)", (long)_currentMediaIndex);
+            [[EWAVManager sharedManager] playMedia:_medias[_currentMediaIndex]];
             
         }else{
             if ((--_loopCount)>0) {
                 //play the first if loopCount > 0
                 NSLog(@"Looping, %ld loop left", (long)_loopCount);
-                path = [NSIndexPath indexPathForRow:0 inSection:0];
+                [[EWAVManager sharedManager] playMedia:_medias.firstObject];
                 
             }else{
                 NSLog(@"Loop finished, stop playing");
                 //nullify all cell info in EWAVManager
-                cell = nil;
-                [EWAVManager sharedManager].currentCell = nil;
+                self.currentMediaIndex = 0;
+                self.currentActivity = nil;
+                
                 [EWAVManager sharedManager].media = nil;
-                path = nil;
                 return;
             }
         }
-        
     });
-    
-
-    
 }
 
 - (void)playVoiceAtIndex:(NSUInteger)n{
-    
+    [[EWAVManager sharedManager] playMedia:_medias[n]];
 }
 
 - (EWPerson *)currentWaker{
-    
+    EWMedia *mediaPlaying = _medias[_currentMediaIndex];
+    return mediaPlaying.author;
 }
 
 @end

@@ -28,7 +28,8 @@
     
     NSMutableArray *medias;
     CGRect headerFrame;
-    NSTimer *timerTimer;
+    NSTimer *timeTimer;
+    NSTimer *progressTimer;
     NSUInteger timePast;
 }
 @end
@@ -42,9 +43,11 @@
 @synthesize footer;
 
 
-- (EWWakeUpViewController *)init{
-    self = [self initWithNibName:nil bundle:nil];
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     
+    self.activity = [EWWakeUpManager sharedInstance].currentActivity;
+    medias = [EWWakeUpManager sharedInstance].medias;
     //DATA
     [self initData];
     
@@ -65,14 +68,6 @@
 }
 
 
-//- (void)refresh{
-//    [self initData];
-//    [_tableView reloadData];
-//    [self startPlayCells];
-//}
-
-
-
 #pragma mark - Life Cycle
 
 - (void)viewDidLoad {
@@ -90,7 +85,7 @@
     [EWUIUtil dismissHUDinView:self.view];
     
     //start playing
-    [self startPlayCells];
+    [self updatePlayingCellAndProgress];
     
 }
 
@@ -99,7 +94,8 @@
     [super viewDidAppear:animated];
     
     //timer updates
-    timerTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
+    timeTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
+    progressTimer = [NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(updatePlayingCellAndProgress) userInfo:nil repeats:YES];
     [self updateTimer];
     
     //position the content
@@ -128,7 +124,7 @@
     [[EWBackgroundingManager sharedInstance] registerBackgroudingAudioSession];
     
     //invalid timer
-    [timerTimer invalidate];
+    [timeTimer invalidate];
 }
 
 - (void)initData {
@@ -147,7 +143,7 @@
     [EWWakeUpManager sharedInstance].loopCount = kLoopMediaPlayCount;
     
     //notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextCell:) name:kAudioPlayerDidFinishPlaying object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
     //responder to remote control
     [self prepareRemoteControlEventsListener];
@@ -332,7 +328,7 @@
         [[EWWakeUpManager sharedInstance].currentActivity removeMediasObject:currentMedia];
         
         //stop play if media is being played
-        if ([EWWakeUpManager sharedInstance].currentMedia == (NSUInteger)indexPath.row) {
+        if ([EWWakeUpManager sharedInstance].currentMediaIndex == (NSUInteger)indexPath.row) {
             //media is being played
             NSLog(@"Deleting current cell, play next");
             if ([tableView numberOfRowsInSection:0] > 1) {
@@ -436,7 +432,7 @@
 }
 
 
-#pragma mark - Handle player events
+#pragma mark - Update player events
 
 /**
  *  Update the highlighted cell when playing
@@ -514,7 +510,7 @@
                 
             case UIEventSubtypeRemoteControlPreviousTrack:
                 DDLogVerbose(@"Received remote control: Previous");
-                [self startPlayCells];
+                [[EWWakeUpManager sharedInstance] playNext];
                 break;
                 
             case UIEventSubtypeRemoteControlNextTrack:
