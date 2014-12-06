@@ -100,6 +100,8 @@
 		09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B521001A25786C008FF7F6 /* UIView+Mask.m */; };
 		09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B521031A25825A008FF7F6 /* EWWakeViewController.m */; };
 		09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5B1E51A166162006EA46C /* UAProgressView.m */; };
+		09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D7370D1A328F4400E8C9ED /* SevenSwitch.m */; };
+		09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D737101A32951000E8C9ED /* EWAlarmViewController.m */; };
 		09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F111A1434AF00BEA328 /* EarlyWorm.xcdatamodeld */; };
 		09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F151A1434AF00BEA328 /* EWAchievement.m */; };
 		09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F171A1434AF00BEA328 /* EWActivity.m */; };
@@ -316,6 +318,10 @@
 		09B521031A25825A008FF7F6 /* EWWakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeViewController.m; sourceTree = "<group>"; };
 		09C5B1E41A166162006EA46C /* UAProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAProgressView.h; sourceTree = "<group>"; };
 		09C5B1E51A166162006EA46C /* UAProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UAProgressView.m; sourceTree = "<group>"; };
+		09D7370C1A328F4400E8C9ED /* SevenSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SevenSwitch.h; sourceTree = "<group>"; };
+		09D7370D1A328F4400E8C9ED /* SevenSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SevenSwitch.m; sourceTree = "<group>"; };
+		09D7370F1A32951000E8C9ED /* EWAlarmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmViewController.h; sourceTree = "<group>"; };
+		09D737101A32951000E8C9ED /* EWAlarmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmViewController.m; sourceTree = "<group>"; };
 		09DF4F121A1434AF00BEA328 /* EarlyWorm 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EarlyWorm 2.xcdatamodel"; sourceTree = "<group>"; };
 		09DF4F131A1434AF00BEA328 /* EarlyWorm.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EarlyWorm.xcdatamodel; sourceTree = "<group>"; };
 		09DF4F141A1434AF00BEA328 /* EWAchievement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAchievement.h; sourceTree = "<group>"; };
@@ -447,6 +453,8 @@
 				097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */,
 				09B521021A25825A008FF7F6 /* EWWakeViewController.h */,
 				09B521031A25825A008FF7F6 /* EWWakeViewController.m */,
+				09D7370F1A32951000E8C9ED /* EWAlarmViewController.h */,
+				09D737101A32951000E8C9ED /* EWAlarmViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -792,6 +800,7 @@
 		09A7772A1A11E2BD004AF902 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				09D7370B1A328F4400E8C9ED /* SevenSwitch */,
 				9B840A241A170AE800D6C2A3 /* RMSelectionView */,
 				09C5B1E31A166162006EA46C /* UAProgress */,
 				9B8139591A15D65900F1A56C /* GCPickerView */,
@@ -817,6 +826,15 @@
 				09C5B1E51A166162006EA46C /* UAProgressView.m */,
 			);
 			path = UAProgress;
+			sourceTree = "<group>";
+		};
+		09D7370B1A328F4400E8C9ED /* SevenSwitch */ = {
+			isa = PBXGroup;
+			children = (
+				09D7370C1A328F4400E8C9ED /* SevenSwitch.h */,
+				09D7370D1A328F4400E8C9ED /* SevenSwitch.m */,
+			);
+			path = SevenSwitch;
 			sourceTree = "<group>";
 		};
 		09DF4F0E1A1434AF00BEA328 /* models */ = {
@@ -1206,6 +1224,7 @@
 				096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */,
 				096AAA821A19593300B4CBFF /* EWMediaSlider.m in Sources */,
 				09DF4F7B1A1434AF00BEA328 /* EWMediaFile.m in Sources */,
+				09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */,
 				09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */,
 				096AAADC1A195A3900B4CBFF /* EWActivityManager.m in Sources */,
 				096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */,
@@ -1275,6 +1294,7 @@
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
+				09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */,
 				096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */,
 				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,
 			);

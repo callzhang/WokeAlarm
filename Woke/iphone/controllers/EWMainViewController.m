@@ -8,16 +8,11 @@
 
 #import "EWMainViewController.h"
 #import "VBFPopFlatButton.h"
-#import "EWMenuViewController.h"
 #import "UIStoryboard+Extensions.h"
-#import <pop/pop.h>
 #import "EWSleepViewController.h"
 #import "EWWakeViewController.h"
 
-typedef NS_ENUM(NSUInteger, MainViewMenuState) {
-    MainViewMenuStateOpen,
-    MainViewMenuStateClosed,
-};
+
 
 typedef NS_ENUM(NSUInteger, MainViewMode) {
     MainViewModeNone,
@@ -26,9 +21,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
 };
 
 @interface EWMainViewController ()
-@property (weak, nonatomic) IBOutlet VBFPopFlatButton *menuButton;
-@property (nonatomic, assign) MainViewMenuState menuState;
-@property (nonatomic, strong) EWMenuViewController *menuViewController;
+
 @property (nonatomic, strong) EWSleepViewController *sleepViewController;
 @property (nonatomic, strong) EWWakeViewController *wakeViewController;
 @property (nonatomic, assign) MainViewMode mode;
@@ -40,17 +33,9 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.menuButton.currentButtonType = buttonMenuType;
-    self.menuViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMenuViewController"];
     self.sleepViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWSleepViewController"];
     self.wakeViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWWakeViewController"];
     self.mode = MainViewModeSleep;
-    
-    @weakify(self)
-    self.menuViewController.tapHandler = ^ {
-        @strongify(self);
-        [self onMenuButton:nil];
-    };
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -97,47 +82,5 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
             break;
     }
 }
-
-- (IBAction)onMenuButton:(id)sender {
-    static BOOL animating = NO;
-    
-    if (animating) {
-        return;
-    }
-    
-    animating = YES;
-    if (self.menuState == MainViewMenuStateOpen) {
-        self.menuState = MainViewMenuStateClosed;
-        [self.menuButton animateToType:buttonCloseType];
-        [self addChildViewController:self.menuViewController];
-        [self.view insertSubview:self.menuViewController.view belowSubview:self.menuButton];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            animating = NO;
-        });
-    }
-    else if (self.menuState == MainViewMenuStateClosed) {
-        self.menuState = MainViewMenuStateOpen;
-        [self.menuButton animateToType:buttonMenuType];
-        
-        POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
-        anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        anim.fromValue = @(1.0);
-        anim.toValue = @(0.0);
-        
-        @weakify(self)
-        anim.completionBlock = ^(POPAnimation *animation, BOOL finished) {
-            @strongify(self)
-            [self.menuViewController removeFromParentViewController];
-            [self.menuViewController.view removeFromSuperview];
-            self.menuViewController.view.alpha = 1.0;
-            animating = NO;
-        };
-        
-        [self.menuViewController.view pop_addAnimation:anim forKey:@"fade"];
-        
-        [self.menuViewController closeMenu];
-    }
-}
-
 
 @end

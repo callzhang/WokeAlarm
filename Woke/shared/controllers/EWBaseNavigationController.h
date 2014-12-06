@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class VBFPopFlatButton;
 @interface EWBaseNavigationController : UINavigationController
-
+@property (strong, nonatomic) VBFPopFlatButton *menuButton;
 @end

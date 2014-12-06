@@ -66,7 +66,6 @@ UIViewController *rootViewController;
     [EWStartUpSequence sharedInstance];
     
 #ifdef caoer115
-    //???
     EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
 #else
