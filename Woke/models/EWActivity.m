@@ -16,7 +16,7 @@ const struct EWActivityTypes EWActivityTypes = {
 @implementation EWActivity
 
 + (EWActivity *)newActivity{
-    EWActivity *activity = [[EWActivity alloc] init];
+    EWActivity *activity = [EWActivity MR_createEntity];
     activity.owner = [EWPerson me];
     activity.updatedAt = [NSDate date];
     return activity;

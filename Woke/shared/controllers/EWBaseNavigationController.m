@@ -19,6 +19,15 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 @interface EWBaseNavigationController ()
 @property (nonatomic, strong) EWMenuViewController *menuViewController;
 @property (nonatomic, assign) MainViewMenuState menuState;
+
+#import "EWActivityManager.h"
+#import "EWWakeUpManager.h"
+#import "EWWakeUpViewController.h"
+#import "EWActivity.h"
+#import "EWBlurNavigationControllerDelegate.h"
+
+@interface EWBaseNavigationController ()
+@property (nonatomic, strong) EWBlurNavigationControllerDelegate *blurDelegate;
 @end
 
 @implementation EWBaseNavigationController
@@ -42,6 +51,30 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     [self.menuButton addTarget:self action:@selector(onMenuButton:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.menuButton];
+    //add EWBlur Nav Delegate
+    _blurDelegate = [EWBlurNavigationControllerDelegate new];
+    self.delegate = _blurDelegate;
+    // listern for notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentWakeUpViewWithActivity:) name:kWakeTimeNotification object:nil];
+}
+
+
+- (void)presentWakeUpViewWithActivity:(NSNotification *)note{
+    //EWActivity *activity = note.object;
+    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
+        //init wake up view controller
+        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithNibName:nil bundle:nil];
+        
+        //save to manager
+        //[EWWakeUpManager sharedInstance].controller = controller;
+        
+        //push sleep view
+        [self pushViewController:controller animated:YES];
+        
+    }else{
+        DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
+        //NSParameterAssert([EWSession sharedSession].isWakingUp == YES);
+    }
 }
 
 - (void)onMenuButton:(VBFPopFlatButton *)sender {

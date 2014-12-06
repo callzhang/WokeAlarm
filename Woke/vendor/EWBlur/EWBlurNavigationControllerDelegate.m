@@ -1,38 +1,37 @@
 //
-//  NavigationControllerDelegate.m
+//  NavigationControllerDelegate.h
 //  NavigationTransitionController
 //
-//  Created by Chris Eidhof on 09.10.13.
-//  Copyright (c) 2013 Chris Eidhof. All rights reserved.
+//  Created by Lei Zhang 7/12/2014
+//  Copyright (c) 2014 BlackFog. All rights reserved.
 //
 
-#import "NavigationControllerDelegate.h"
-#import "GPUImageAnimator.h"
-#import "EWAVManager.h"
+#import "EWBlurNavigationControllerDelegate.h"
+#import "EWBlurAnimator.h"
 
 static NSString * PushSegueIdentifier = @"push segue identifier";
 
-@interface NavigationControllerDelegate ()
+@interface EWBlurNavigationControllerDelegate ()
 
 @property (weak, nonatomic) IBOutlet UINavigationController *navigationController;
-@property (strong, nonatomic) GPUImageAnimator* animator;
+@property (strong, nonatomic) EWBlurAnimator* animator;
 @property (strong, nonatomic) UIPercentDrivenInteractiveTransition* interactionController;
 
 @end
 
-@implementation NavigationControllerDelegate
+@implementation EWBlurNavigationControllerDelegate
 
 - (void)awakeFromNib
 {
 //    UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
 //    [self.navigationController.view addGestureRecognizer:panRecognizer];
-    self.animator = [GPUImageAnimator new];
+    self.animator = [EWBlurAnimator new];
 }
 
 
-- (NavigationControllerDelegate *)init{
+- (EWBlurNavigationControllerDelegate *)init{
     self = [super init];
-    self.animator = [GPUImageAnimator new];
+    self.animator = [EWBlurAnimator new];
     return self;
 }
 

@@ -13,6 +13,7 @@
 #import "EWCachedInfoManager.h"
 #import "EWAlarm.h"
 #import "EWAlarmManager.h"
+#import "EWActivityManager.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
@@ -269,9 +270,14 @@ NSString * const EWPersonDefaultName = @"New User";
     return [[EWAlarmManager sharedInstance] alarmsForPerson:[EWPerson me]];
 }
 
-+ (EWAlarm *)myNextAlarm {
++ (EWAlarm *)myCurrentAlarm {
     EWAlarm *next = [[EWAlarmManager sharedInstance] nextAlarmForPerson:[self me]];
     return next;
+}
+
++ (EWActivity *)myCurrentAlarmActivity{
+    EWActivity *activity = [[EWActivityManager sharedManager] myCurrentAlarmActivity];
+    return activity;
 }
 
 + (NSArray *)myFriends{

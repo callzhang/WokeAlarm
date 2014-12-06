@@ -2,7 +2,7 @@
 //  GPUBlurAnimator.h
 //  WokeAlarm
 //
-//  Created by Lei on 9/28/13.
+//  Created by Lei Zhang on 9/28/13.
 //  Copyright (c) 2013 Woke. All rights reserved.
 //
 
@@ -18,7 +18,7 @@
 @class GPUImageView;
 
 
-@interface GPUImageAnimator : NSObject<UIViewControllerAnimatedTransitioning,UIViewControllerInteractiveTransitioning>
+@interface EWBlurAnimator : NSObject<UIViewControllerAnimatedTransitioning,UIViewControllerInteractiveTransitioning>
 
 @property (nonatomic) BOOL interactive;
 @property (nonatomic) CGFloat progress;

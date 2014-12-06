@@ -2,11 +2,11 @@
 //  GPUBlurAnimator.h
 //  WokeAlarm
 //
-//  Created by Lei on 9/28/13.
+//  Created by Lei Zhang on 9/28/13.
 //  Copyright (c) 2013 Woke. All rights reserved.
 //
 
-#import "GPUImageAnimator.h"
+#import "EWBlurAnimator.h"
 #import "GPUImage.h"
 #import "GPUImagePicture.h"
 #import "GPUImagePixellateFilter.h"
@@ -25,7 +25,7 @@ static const CGFloat zoom = 1.5;
 static const CGFloat initialDownSampling = 2;
 
 
-@interface GPUImageAnimator (){
+@interface EWBlurAnimator (){
 	UIViewController* toViewController;
 	UIViewController* fromViewController;
 	UIView* container;
@@ -45,7 +45,7 @@ static const CGFloat initialDownSampling = 2;
 @property (nonatomic, strong) CADisplayLink* displayLink;
 @end
 
-@implementation GPUImageAnimator
+@implementation EWBlurAnimator
 
 - (id)init
 {
@@ -282,7 +282,7 @@ static const CGFloat initialDownSampling = 2;
 	BOOL active = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
 	if (self.type == kModelViewPresent && !active) {
 		//rander the last frame when app become active
-		__weak GPUImageAnimator *weakSelf = self;
+		__weak EWBlurAnimator *weakSelf = self;
 		__block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
 			NSLog(@"Application did become active, render last frame of presenting blur image");
 			weakSelf.blurImage = [[GPUImagePicture alloc] initWithImage:fromView.screenshot];

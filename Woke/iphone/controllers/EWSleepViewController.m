@@ -26,7 +26,7 @@
     [super viewDidLoad];
     
     self.sleepViewModel = [[EWSleepViewModel alloc] init];
-    self.sleepViewModel.alarm = [EWPerson myNextAlarm];
+    self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
    
     [self bindViewModel];
 }

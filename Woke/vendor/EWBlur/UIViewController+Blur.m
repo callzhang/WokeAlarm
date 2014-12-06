@@ -8,10 +8,10 @@
 
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
-#import "NavigationControllerDelegate.h"
+#import "EWBlurNavigationControllerDelegate.h"
 
 
-static NavigationControllerDelegate *delegate = nil;
+static EWBlurNavigationControllerDelegate *delegate = nil;
 
 @implementation UIViewController (Blur)
 
@@ -29,7 +29,7 @@ static NavigationControllerDelegate *delegate = nil;
 - (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController option:(EWBlurViewOptions)blurOption completion:(void (^)(void))block{
 	viewController.modalPresentationStyle = UIModalPresentationCustom;
 	if (!delegate) {
-		delegate = [NavigationControllerDelegate new];
+		delegate = [EWBlurNavigationControllerDelegate new];
 	}
 	
 	viewController.transitioningDelegate = delegate;

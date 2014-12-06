@@ -51,9 +51,9 @@ NSString *const EWActivityTypeMedia = @"media";
     return activities;
 }
 
-- (EWActivity *)currentAlarmActivity{
+- (EWActivity *)myCurrentAlarmActivity{
     
-    EWAlarm *nextAlarm = [EWPerson myNextAlarm];
+    EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
     
     if (!_currentAlarmActivity) {
         NSArray *activities = [EWActivityManager myActivities];
@@ -61,7 +61,7 @@ NSString *const EWActivityTypeMedia = @"media";
             return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
         }];
         EWActivity *lastAlarmActivity = alarmActivities.lastObject;
-        if (fabs([lastAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])<1) {
+        if (lastAlarmActivity && fabs([lastAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])<1) {
             //the last activity is the current activity
             _currentAlarmActivity = lastAlarmActivity;
         }else{

@@ -15,7 +15,7 @@
 @import Foundation;
 //#import "KZBootstrapUserMacros.h"
 //#import <CocoaLumberjack/CocoaLumberjack.h>
-#import "KZBootstrapUserMacros.h"
+//#import "KZBootstrapUserMacros.h"
 
 #import "DDLog.h"
 #import "CoreData+MagicalRecord.h"
