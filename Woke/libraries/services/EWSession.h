@@ -19,12 +19,13 @@
 /**
  *  A dictionary of user and statement
  */
-@property (nonatomic, strong) NSDictionary *skippedWakees;
+@property (nonatomic, strong) NSMutableDictionary *skippedWakees;
 @property (nonatomic, strong) NSString *currentUserObjectID;//for archieving
 @property (nonatomic, strong) NSManagedObjectContext *context;
 @property (nonatomic, strong) NSString *cachePath;
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER_WITH_ACCESSOR(EWSession, sharedSession)
 
 + (NSManagedObjectContext *)mainContext;
+- (void)save;
 
 @end

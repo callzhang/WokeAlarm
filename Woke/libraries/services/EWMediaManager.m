@@ -120,56 +120,35 @@
         return NO;
     }
     EWPerson *localMe = [[EWPerson me] MR_inContext:context];
-    PFQuery *query = [PFQuery queryWithClassName:@"EWMedia"];
-    [query whereKey:@"receivers" containedIn:@[[PFUser currentUser]]];
+    PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWMedia class])];
+    [query whereKey:EWMediaRelationships.receiver equalTo:[PFUser currentUser]];
     NSSet *localAssetIDs = [localMe.unreadMedias valueForKey:kParseObjectID];
     [query whereKey:kParseObjectID notContainedIn:localAssetIDs.allObjects];
     NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query];
 	BOOL newMedia = NO;
     for (PFObject *po in mediaPOs) {
         EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
-        [mo refresh];//save to local marked
+        
         //relationship
-        NSMutableArray *receivers = po[@"receivers"];
-        for (PFObject *receiver in receivers) {
-            if ([receiver.objectId isEqualToString:localMe.objectId]) {
-                [receivers removeObject:receiver];
-                break;
-            }
+//        NSMutableArray *receivers = po[EWMediaRelationships.receiver];
+//        for (PFObject *receiver in receivers) {
+//            if ([receiver.objectId isEqualToString:localMe.objectId]) {
+//                [receivers removeObject:receiver];
+//                break;
+//            }
+//        }
+        if (![(NSSet *)[localMe.unreadMedias valueForKey:kParseObjectID] containsObject:po.objectId]) {
+            //new media
+            [mo refresh];
+            DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
+            //notification
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
+                [EWNotification newNotificationForMedia:media];
+            });
+            newMedia = YES;
         }
-        po[@"receivers"] = receivers.copy;
-        [po saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                DDLogError(@"Failed to save media %@: %@",po.objectId, error);
-            }
-        }];
         
-        mo.receiver = nil;
-        [localMe addUnreadMediasObject:mo];
-        
-        //in order to upload change to server, we need to save to server
-        [mo saveToServer];
-        DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
-		
-		//find if new media has been notified
-		BOOL notified = NO;
-		for (EWNotification *note in [EWPerson myNotifications]) {
-			if ([note.userInfo[@"media"] isEqualToString:mo.objectId]) {
-				DDLogVerbose(@"Media has already been notified to user, skip.");
-				notified = YES;
-                break;
-			}
-		}
-		
-        //create a notification
-		if (!notified) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
-				[EWNotification newNotificationForMedia:media];
-			});
-			newMedia = YES;
-		}
-		
     }
 	
     if (newMedia) {

@@ -63,6 +63,8 @@ UIViewController *rootViewController;
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
     //[EWStartUpSequence deleteDatabase];
+    
+    //watch for login
     [EWStartUpSequence sharedInstance];
     
 #ifdef caoer115
@@ -74,8 +76,6 @@ UIViewController *rootViewController;
         [[EWAccountManager sharedInstance] resumeCoreDataUserWithServerUser:[PFUser currentUser] withCompletion:^(BOOL isNewUser, NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
         }];
-        //load saved session info
-        [EWSession sharedSession];
         
         //show main view controller
         EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
@@ -99,6 +99,7 @@ UIViewController *rootViewController;
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [[EWSession sharedSession] save];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {

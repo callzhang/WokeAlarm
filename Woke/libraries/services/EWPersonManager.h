@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EWStartUpSequence.h"
 #import "EWPerson.h"
+#import "GCDSingleton.h"
 
 #define everyoneCheckTimeOut            600 //10min
 #define numberOfRelevantUsers           @10 //number of relevant users returned
@@ -29,7 +30,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWPersonManager);
  Possible wakees fetched from server(TODO)
  */
 @property (nonatomic) NSMutableArray *wakeeList;
-@property BOOL isFetchingEveryone;
+@property BOOL isFetchingWakees;
 
 //- (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
 - (EWPerson *)getPersonByServerID:(NSString *)ID;
@@ -37,17 +38,16 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWPersonManager);
 
 /**
  *  The main method to get next person to wake up
- *  When called first time, this method will call the server method to fetch a list of person. 
  *
  *  The method will grab next person if it there is still a person in the list returned earlier from server
  *
- *  When the list is empty, the method will call the server again to replenish the list.
+ *  When the list is empty, and no other thread is calling the server for the wakee list, the method will call the server again to replenish the list. However, when the isFetchingWakees is YES, the object will wait until the fetch finishes, and then return with the block.
  *
- *  @discussion The returned person will never be ones that were skipped by user and has not updated.
+ *  @discussion The returned person will never be ones that were skipped by user with the same statement.
  *
  *  @return An instance of EWPerson
  */
-- (EWPerson *)nextWakee;
+- (void)nextWakeeWithCompletion:(void (^)(EWPerson *person))block;
 
 
 

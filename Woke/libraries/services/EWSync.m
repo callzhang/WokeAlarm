@@ -685,9 +685,9 @@ NSManagedObjectContext *mainContext;
 }
 
 + (void)save{
-	NSAssert([NSThread isMainThread], @"Calling +[self save] on background context is not allowed. Use [context saveWithBlock:] instead");
+	NSAssert([NSThread isMainThread], @"Calling +[self save] on background context is not allowed. Use [context MR_saveToPersistentStoreAndWait] instead");
 	if (mainContext.hasChanges) {
-		[mainContext saveWithBlock:nil];
+		[mainContext MR_saveToPersistentStoreAndWait];
 	}
 }
 
