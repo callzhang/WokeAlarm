@@ -9,8 +9,9 @@
 //
 
 #import "EWBackgroundingManager.h"
-#import "EWWakeUpManager.h"
-#import "CrashlyticsLogger.h"
+//#import "EWWakeUpManager.h"
+//#import "CrashlyticsLogger.h"
+#import "EWSession.h"
 
 OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
@@ -88,16 +89,19 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
     return supported;
 }
 
+- (BOOL)isSleeping{
+    return [EWSession sharedSession].isSleeping;
+}
 
 #pragma mark - Application state change
 - (void)enterBackground{
-    if (self.sleeping || BACKGROUNDING_FROM_START) {
+    if (self.isSleeping || BACKGROUNDING_FROM_START) {
         [self startBackgrounding];
     }
 }
 
 - (void)enterForeground{
-	if (![EWWakeUpManager sharedInstance].isWakingUp) {
+	if (![EWSession sharedSession].isWakingUp) {
 		[self registerBackgroudingAudioSession];
 	}
 	
@@ -142,7 +146,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #pragma mark - Backgrounding
 
 - (void)startBackgrounding{
-	if (![EWWakeUpManager sharedInstance].isWakingUp) {
+	if (![EWSession sharedSession].isWakingUp) {
 		[self registerBackgroudingAudioSession];
 	}
     [self backgroundKeepAlive:nil];
@@ -152,7 +156,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 - (void)endBackgrounding{
     DDLogInfo(@"End Backgrounding");
-    self.sleeping = NO;
+    //self.sleeping = NO;
     
     UIApplication *application = [UIApplication sharedApplication];
     
@@ -296,9 +300,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	if (flags) {
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 			
-			
-			EWBackgroundingManager *manager = [EWBackgroundingManager sharedInstance];
-			if (manager.sleeping || BACKGROUNDING_FROM_START) {
+			if (self.isSleeping || BACKGROUNDING_FROM_START) {
 				[self startBackgrounding];
 #ifdef DEBUG
 				UILocalNotification *n = [UILocalNotification new];

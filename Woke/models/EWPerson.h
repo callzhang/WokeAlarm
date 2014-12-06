@@ -52,9 +52,11 @@ extern NSString * const EWPersonDefaultName;
 + (NSArray *)myNotifications;
 + (NSArray *)myUnreadNotifications;
 + (NSArray *)myAlarms;
-+ (EWAlarm *)myNextAlarm;
 + (NSArray *)myFriends;
 
+
++ (EWAlarm *)myCurrentAlarm;
++ (EWActivity *)myCurrentAlarmActivity;
 
 //Tools
 + (void)updateMeFromFacebook;

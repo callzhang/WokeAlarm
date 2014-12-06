@@ -43,7 +43,7 @@
         
     }else{
         DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
-        //NSParameterAssert([EWWakeUpManager sharedInstance].isWakingUp == YES);
+        //NSParameterAssert([EWSession sharedSession].isWakingUp == YES);
     }
 }
 @end

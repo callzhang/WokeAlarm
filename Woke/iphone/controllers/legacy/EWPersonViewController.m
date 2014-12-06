@@ -234,7 +234,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
     
     //statement
-    EWAlarm *alarm = [EWPerson myNextAlarm];
+    EWAlarm *alarm = [EWPerson myCurrentAlarm];
     NSString *str;
     if (alarm.statement) {
         str = alarm.statement;

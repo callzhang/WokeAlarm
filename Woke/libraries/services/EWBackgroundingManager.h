@@ -14,7 +14,7 @@
 #define kBackgroundingEndNotice		@"end_backgrounding"
 
 @interface EWBackgroundingManager : NSObject <AVAudioSessionDelegate>
-@property (nonatomic) BOOL sleeping;
+- (BOOL)isSleeping;
 
 + (EWBackgroundingManager *)sharedInstance;
 - (void)startBackgrounding;

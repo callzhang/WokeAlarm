@@ -41,7 +41,6 @@
 
 
 @implementation EWWakeUpManager
-@synthesize isWakingUp = _isWakingUp;
 
 + (EWWakeUpManager *)sharedInstance{
     static EWWakeUpManager *manager;
@@ -54,6 +53,8 @@
 
 - (id)init{
 	self = [super init];
+    _currentActivity = [EWPerson myCurrentAlarmActivity];
+    _alarm = [EWPerson myCurrentAlarm];
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingEnterNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[self alarmTimerCheck];
 		[self sleepTimerCheck];
@@ -64,19 +65,6 @@
     
 	return self;
 }
-
-- (BOOL)isWakingUp{
-    @synchronized(self){
-        return _isWakingUp;
-    }
-}
-
-- (void)setIsWakingUp:(BOOL)isWakingUp{
-    @synchronized(self){
-        _isWakingUp = isWakingUp;
-    }
-}
-
 
 #pragma mark - Handle push notification
 - (void)handlePushMedia:(NSDictionary *)notification{
@@ -149,7 +137,7 @@
 
 - (void)handleAlarmTimerEvent:(NSDictionary *)info{
     NSParameterAssert([NSThread isMainThread]);
-    if ([EWWakeUpManager sharedInstance].isWakingUp) {
+    if ([EWSession sharedSession].isWakingUp) {
         DDLogWarn(@"WakeUpManager is already handling alarm timer, skip");
         return;
     }else if ([EWWakeUpManager isRootPresentingWakeUpView]) {
@@ -182,7 +170,7 @@
         }
 		
 	}else{
-		alarm = [EWPerson myNextAlarm];
+		alarm = [EWPerson myCurrentAlarm];
 	}
 	
 	
@@ -214,7 +202,8 @@
     }
 #endif
     //state change
-    [EWWakeUpManager sharedInstance].isWakingUp = YES;
+    [EWSession sharedSession].isSleeping = NO;
+    [EWSession sharedSession].isWakingUp = YES;
     
     //update media
     [[EWMediaManager sharedInstance] checkMediaAssets];
@@ -310,12 +299,13 @@
     return NO;
 }
 
-
+#pragma mark - Actions
 
 //indicate that the user has woke
-- (void)woke{
-    //[EWWakeUpManager sharedInstance].controller = nil;
-    [EWWakeUpManager sharedInstance].isWakingUp = NO;
+- (void)wake{
+    
+    [EWSession sharedSession].isSleeping = NO;
+    [EWSession sharedSession].isWakingUp = NO;
     
     //handle wakeup signel
     [[ATConnect sharedConnection] engage:kWakeupSuccess fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
@@ -330,12 +320,17 @@
     //update history stats
 }
 
+- (void)sleep{
+    //check that current alarm activity and alarm are correct
+    [self alarmTimerCheck];
+    [EWSession sharedSession].isSleeping = YES;
+}
 
 #pragma mark - CHECK TIMER
 - (void) alarmTimerCheck{
     //check time
     if (![EWPerson me]) return;
-    EWAlarm *alarm = [EWPerson myNextAlarm];
+    EWAlarm *alarm = [EWPerson myCurrentAlarm];
     if (alarm.state == NO) return;
     
     //alarm time up
@@ -361,7 +356,7 @@
 - (void)sleepTimerCheck{
     //check time
     if (![EWPerson me]) return;
-    EWAlarm *alarm = [EWPerson myNextAlarm];
+    EWAlarm *alarm = [EWPerson myCurrentAlarm];
     if (alarm.state == NO) return;
     
     //alarm time up
@@ -389,7 +384,7 @@
     NSString *alarmID = notification.userInfo[kLocalAlarmID];
     if ([EWPerson me]) {
         //logged in enter sleep mode
-        EWAlarm *alarm = [EWPerson myNextAlarm];
+        EWAlarm *alarm = [EWPerson myCurrentAlarm];
         NSNumber *duration = [EWPerson me].preference[kSleepDuration];
         if (alarmID) {
             BOOL nextAlarmMatched = [alarm.objectID.URIRepresentation.absoluteString isEqualToString:alarmID];
@@ -410,7 +405,7 @@
 }
 
 #pragma mark - Play for wake up view
-- (void)palyNextVoice{
+- (void)playNextVoice{
     EWMedia *mediaJustFinished = mediaJustFinished = [EWAVManager sharedManager].media;
     float t = 0;
     if (mediaJustFinished) {
@@ -463,6 +458,16 @@
             }
         }
     });
+}
+
+- (void)stopPlayingVoice{
+    [EWAVManager sharedManager].stopAllPlaying;
+}
+
+- (float)playingProgress{
+    float t = [EWAVManager sharedManager].player.currentTime;
+    float T = [EWAVManager sharedManager].player.duration;
+    return t/T;
 }
 
 - (void)playVoiceAtIndex:(NSUInteger)n{

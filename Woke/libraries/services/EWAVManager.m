@@ -308,7 +308,7 @@
 		//[lvlMeter_in setPlayer:p];
         //add new target
         //[progressBar addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
-		updateTimer = [NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(updateCurrentTime:) userInfo:p repeats:YES];
+		//updateTimer = [NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(updateCurrentTime:) userInfo:p repeats:YES];
         
         //unhide
         [UIView animateWithDuration:0.5 animations:^{
@@ -459,69 +459,6 @@
     avplayer = nil;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context{
-    AVPlayer *p = (AVPlayer *)object;
-    if(![p isEqual:avplayer]) DDLogVerbose(@"@@@ Inconsistant player");
-    
-    if ([object isKindOfClass:[avplayer class]] && [keyPath isEqual:@"status"]) {
-        //observed status change for avplayer
-        if (avplayer.status == AVPlayerStatusReadyToPlay) {
-            //[avplayer play];
-            //tracking time
-//            Float64 durationSeconds = CMTimeGetSeconds([avplayer.currentItem duration]);
-//            CMTime durationInterval = CMTimeMakeWithSeconds(durationSeconds/100, 1);
-//            
-//            [avplayer addPeriodicTimeObserverForInterval:durationInterval queue:NULL usingBlock:^(CMTime time){
-//                
-//                NSString *timeDescription = (NSString *)
-//                //CFBridgingRelease(CMTimeCopyDescription(NULL, avplayer.currentTime));
-//                CFBridgingRelease(CMTimeCopyDescription(NULL, time));
-//                DDLogVerbose(@"Passed a boundary at %@", timeDescription);
-//            }];
-            
-            CMTime interval = CMTimeMake(30, 1);//30s
-            AVPlayerUpdateTimer = [avplayer addPeriodicTimeObserverForInterval:interval queue:NULL usingBlock:^(CMTime time){
-                CMTime endTime = CMTimeConvertScale (p.currentItem.asset.duration, p.currentTime.timescale, kCMTimeRoundingMethod_RoundHalfAwayFromZero);
-                if (CMTimeCompare(endTime, kCMTimeZero) != 0) {
-                    double normalizedTime = (double) p.currentTime.value / (double) endTime.value;
-                    DDLogVerbose(@"AVPlayer is still playing %f", normalizedTime);
-                }
-            }];
-        }else if(avplayer.status == AVPlayerStatusFailed){
-            // deal with failure
-            DDLogVerbose(@"Failed to load audio");
-        }
-    }
-}
-
-
-
-#pragma mark AudioSession handlers
-/*
-void RouteChangeListener(	void *inClientData,
-                         AudioSessionPropertyID	inID,
-                         UInt32 inDataSize,
-                         const void *inData)
-{
-	EWAVManager* This = (__bridge EWAVManager *)inClientData;
-	
-	if (inID == kAudioSessionProperty_AudioRouteChange) {
-		
-		CFDictionaryRef routeDict = (CFDictionaryRef)inData;
-		NSNumber* reasonValue = (NSNumber*)CFDictionaryGetValue(routeDict, CFSTR(kAudioSession_AudioRouteChangeKey_Reason));
-		
-		NSInteger reason = [reasonValue intValue];
-        
-		if (reason == kAudioSessionRouteChangeReason_OldDeviceUnavailable) {
-            DDLogVerbose(@"kAudioSessionRouteChangeReason_OldDeviceUnavailable");
-			[This pausePlaybackForPlayer:This.player];
-		}
-	}
-}*/
-
 
 #pragma  mark - System Sound Service
 - (void)playSystemSound:(NSURL *)path{
@@ -576,7 +513,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
     if (NSClassFromString(@"MPNowPlayingInfoCenter")){
         
         if (!m) m = media;
-        EWAlarm *nextAlarm = [EWPerson myNextAlarm];
+        EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
         
         NSString *title = nextAlarm.time.mt_stringFromDateWithFullWeekdayTitle;
         

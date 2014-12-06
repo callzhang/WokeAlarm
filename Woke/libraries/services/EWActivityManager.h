@@ -21,6 +21,8 @@ extern NSString *const EWActivityTypeMedia;
 //Shortcut
 + (NSArray *)myActivities;
 + (NSArray *)myAlarmActivities;
+- (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context;
+- (EWActivity *)myCurrentAlarmActivity;
 
 
 - (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context;

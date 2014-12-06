@@ -151,8 +151,6 @@
     //Active session
     [[EWAVManager sharedManager] registerActiveAudioSession];
     
-    [EWWakeUpManager sharedInstance].isWakingUp = YES;
-    
     [_tableView reloadData];
 }
 
@@ -263,7 +261,7 @@
     [EWWakeUpManager sharedInstance].playNext = NO;
     
     //release the pointer in wakeUpManager
-    [[EWWakeUpManager sharedInstance] woke];
+    [[EWWakeUpManager sharedInstance] wake];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self scrollViewDidScroll:self.tableView];//prevent header move

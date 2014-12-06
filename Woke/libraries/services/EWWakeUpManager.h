@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+@import UIKit;
+@class EWActivity, EWAlarm, EWPerson;
 NSUInteger static maxLoop = 100;
 
 @interface EWWakeUpManager : NSObject
@@ -15,7 +17,7 @@ NSUInteger static maxLoop = 100;
 @property (nonatomic, strong) NSMutableArray *medias;
 @property (nonatomic) NSUInteger loopCount;
 @property (nonatomic) NSUInteger currentMediaIndex;
-@property (nonatomic) BOOL isWakingUp;
+//@property (nonatomic) BOOL isWakingUp;
 @property (nonatomic) BOOL playNext;
 
 + (EWWakeUpManager *)sharedInstance;
@@ -65,7 +67,13 @@ NSUInteger static maxLoop = 100;
  Release the reference to wakeupVC
  Post notification: kWokeNotification
  */
-- (void)woke;
+- (void)wake;
+
+/**
+ *  Handles the sleep action.
+ *  When called, the app goes to sleep status
+ */
+- (void)sleep;
 
 /**
  Timely alarm timer check task
