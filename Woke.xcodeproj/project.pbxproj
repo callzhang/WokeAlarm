@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		091C67431A351F060091B8A6 /* EWStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67421A351F060091B8A6 /* EWStyleController.m */; };
 		09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDE1A1316580048DC44 /* Lato-Light.ttf */; };
 		09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DE01A1316640048DC44 /* Lato-Hairline.ttf */; };
 		09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDF1A1316580048DC44 /* Lato-Regular.ttf */; };
@@ -162,6 +163,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		091C67411A351F060091B8A6 /* EWStyleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStyleController.h; sourceTree = "<group>"; };
+		091C67421A351F060091B8A6 /* EWStyleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStyleController.m; sourceTree = "<group>"; };
 		09269DDE1A1316580048DC44 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		09269DDF1A1316580048DC44 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		09269DE01A1316640048DC44 /* Lato-Hairline.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Hairline.ttf"; sourceTree = "<group>"; };
@@ -787,6 +790,8 @@
 				09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */,
 				09A86FD01A1ACDDB0075DFF4 /* EWMainNavigationController.h */,
 				09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */,
+				091C67411A351F060091B8A6 /* EWStyleController.h */,
+				091C67421A351F060091B8A6 /* EWStyleController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -1292,6 +1297,7 @@
 				09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */,
 				096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */,
 				096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */,
+				091C67431A351F060091B8A6 /* EWStyleController.m in Sources */,
 				0990EF7C1A22C606001AF099 /* MSReplaceSegue.m in Sources */,
 				096AAA851A19593300B4CBFF /* EWShakeProgressView.m in Sources */,
 				096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */,

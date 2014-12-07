@@ -18,6 +18,7 @@
     [super viewDidLoad];
     
     self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+    self.title = @"Alarms";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
