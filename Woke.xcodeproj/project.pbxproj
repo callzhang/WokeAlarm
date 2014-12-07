@@ -102,6 +102,7 @@
 		09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5B1E51A166162006EA46C /* UAProgressView.m */; };
 		09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D7370D1A328F4400E8C9ED /* SevenSwitch.m */; };
 		09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D737101A32951000E8C9ED /* EWAlarmViewController.m */; };
+		09D737141A329DE800E8C9ED /* EWViewControllerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D737131A329DE800E8C9ED /* EWViewControllerHelper.m */; };
 		09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F111A1434AF00BEA328 /* EarlyWorm.xcdatamodeld */; };
 		09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F151A1434AF00BEA328 /* EWAchievement.m */; };
 		09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F171A1434AF00BEA328 /* EWActivity.m */; };
@@ -322,6 +323,8 @@
 		09D7370D1A328F4400E8C9ED /* SevenSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SevenSwitch.m; sourceTree = "<group>"; };
 		09D7370F1A32951000E8C9ED /* EWAlarmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmViewController.h; sourceTree = "<group>"; };
 		09D737101A32951000E8C9ED /* EWAlarmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmViewController.m; sourceTree = "<group>"; };
+		09D737121A329DE800E8C9ED /* EWViewControllerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWViewControllerHelper.h; sourceTree = "<group>"; };
+		09D737131A329DE800E8C9ED /* EWViewControllerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWViewControllerHelper.m; sourceTree = "<group>"; };
 		09DF4F121A1434AF00BEA328 /* EarlyWorm 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EarlyWorm 2.xcdatamodel"; sourceTree = "<group>"; };
 		09DF4F131A1434AF00BEA328 /* EarlyWorm.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EarlyWorm.xcdatamodel; sourceTree = "<group>"; };
 		09DF4F141A1434AF00BEA328 /* EWAchievement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAchievement.h; sourceTree = "<group>"; };
@@ -523,6 +526,8 @@
 				0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */,
 				09285A3D1A1F115000C808C0 /* UIStoryboard+Extensions.h */,
 				09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */,
+				09D737121A329DE800E8C9ED /* EWViewControllerHelper.h */,
+				09D737131A329DE800E8C9ED /* EWViewControllerHelper.m */,
 				096AAAF11A195CF300B4CBFF /* GCDSingleton.h */,
 				096AAA921A195A3900B4CBFF /* NSDate+Extend.h */,
 				096AAA931A195A3900B4CBFF /* NSDate+Extend.m */,
@@ -1284,6 +1289,7 @@
 				097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */,
 				096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
+				09D737141A329DE800E8C9ED /* EWViewControllerHelper.m in Sources */,
 				096AAB121A1972B800B4CBFF /* EWPersonViewController.m in Sources */,
 				096AAAE21A195A3900B4CBFF /* EWMediaManager.m in Sources */,
 				9B840A291A170AE800D6C2A3 /* RDSelectionViewController.m in Sources */,

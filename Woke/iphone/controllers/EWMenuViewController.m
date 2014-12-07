@@ -9,6 +9,7 @@
 #import "EWMenuViewController.h"
 #import <pop/pop.h>
 #import "EWAccountManager.h"
+#import "EWAlarmViewController.h"
 
 #define kTopOriginDefaultConstraint 20
 #define kHomeOriginDefaultConstraint 66
@@ -47,6 +48,19 @@
     [self showMenu];
 }
 
+#pragma mark -
+- (IBAction)onAlarms:(id)sender {
+    [self.baseNavigationController toogleMenuCompletion:^{
+        [self performSegueWithIdentifier:@"MenuToAlarmReplace" sender:self];
+    }];
+}
+
+- (IBAction)onHome:(id)sender {
+    [self.baseNavigationController toogleMenuCompletion:^{
+        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+    }];
+}
+#pragma mark -
 - (void)onTap {
     if (self.tapHandler) {
         self.tapHandler();

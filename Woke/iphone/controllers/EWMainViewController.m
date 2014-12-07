@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
 @property (nonatomic, strong) EWSleepViewController *sleepViewController;
 @property (nonatomic, strong) EWWakeViewController *wakeViewController;
 @property (nonatomic, assign) MainViewMode mode;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *modeSegmentedControl;
+@property (strong, nonatomic) UISegmentedControl *modeSegmentedControl;
 @end
 
 @implementation EWMainViewController
@@ -35,7 +35,26 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     
     self.sleepViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWSleepViewController"];
     self.wakeViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWWakeViewController"];
+    
+    self.modeSegmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Sleep", @"Wake"]];
+    self.modeSegmentedControl.frame = CGRectMake(94, 0, 187, 29); //TODO: switch to autolayout, center H, half super W, top 0
+    self.modeSegmentedControl.tintColor = [UIColor whiteColor];
+    [self.modeSegmentedControl setSelectedSegmentIndex:0];
+    [self.modeSegmentedControl addTarget:self action:@selector(onSegmentedValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = self.modeSegmentedControl;
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
+    self.navigationController.view.backgroundColor = [UIColor clearColor];
+    
     self.mode = MainViewModeSleep;
+    
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
 - (BOOL)prefersStatusBarHidden {

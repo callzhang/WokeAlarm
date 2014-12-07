@@ -7,14 +7,20 @@
 //
 
 #import "EWAlarmViewController.h"
+#import "VBFPopFlatButton.h"
 
 @interface EWAlarmViewController ()
 
 @end
 
 @implementation EWAlarmViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
 }
 @end

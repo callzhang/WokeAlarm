@@ -10,5 +10,7 @@
 
 @class VBFPopFlatButton;
 @interface EWBaseNavigationController : UINavigationController
-@property (strong, nonatomic) VBFPopFlatButton *menuButton;
+//@property (strong, nonatomic) VBFPopFlatButton *menuButton;
+- (UIBarButtonItem *)menuBarButtonItem;
+- (void)toogleMenuCompletion:(void (^)(void))completion;
 @end
