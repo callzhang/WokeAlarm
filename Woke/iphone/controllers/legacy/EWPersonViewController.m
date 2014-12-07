@@ -33,7 +33,7 @@
 #import "EWRecordingViewController.h"
 //#import "EWLogInViewController.h"
 #import "EWFriendsViewController.h"
-#import "NavigationControllerDelegate.h"
+#import "EWBlurNavigationControllerDelegate.h"
 #import "EWSettingsViewController.h"
 #import "GKImagePicker.h"
 // ImageBrowser
@@ -234,7 +234,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
     
     //statement
-    EWAlarm *alarm = [EWPerson myNextAlarm];
+    EWAlarm *alarm = [EWPerson myCurrentAlarm];
     NSString *str;
     if (alarm.statement) {
         str = alarm.statement;

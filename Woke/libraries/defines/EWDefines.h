@@ -180,3 +180,8 @@ typedef void (^SenderBlock)(id sender);
 
 #define kCachedAlarmTimes                @"alarm_schedule"
 #define kCachedStatements                @"statements"
+
+//Wake Up
+#define kSleepTimeNotification          @"sleep_time"
+#define kWakeTimeNotification           @"wake_time"
+#define kVoicePlayNotification          @"voice_play"

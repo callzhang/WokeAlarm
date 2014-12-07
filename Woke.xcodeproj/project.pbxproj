@@ -41,15 +41,12 @@
 		096AAA861A19593300B4CBFF /* EWSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA6C1A19593300B4CBFF /* EWSleepViewController.xib */; };
 		096AAA871A19593300B4CBFF /* EWWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA6D1A19593300B4CBFF /* EWWakeUpView.xib */; };
 		096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */; };
-		096AAA8F1A195A2A00B4CBFF /* NavigationControllerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA8D1A195A2A00B4CBFF /* NavigationControllerDelegate.m */; };
 		096AAAD31A195A3900B4CBFF /* NSDate+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA931A195A3900B4CBFF /* NSDate+Extend.m */; };
 		096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA951A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m */; };
 		096AAAD51A195A3900B4CBFF /* NSString+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA971A195A3900B4CBFF /* NSString+Extend.m */; };
 		096AAAD61A195A3900B4CBFF /* UIView+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA991A195A3900B4CBFF /* UIView+Blur.m */; };
 		096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA9B1A195A3900B4CBFF /* UIView+Extend.m */; };
 		096AAAD81A195A3900B4CBFF /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA9D1A195A3900B4CBFF /* UIView+Layout.m */; };
-		096AAAD91A195A3900B4CBFF /* UIViewController+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA9F1A195A3900B4CBFF /* UIViewController+Blur.m */; };
-		096AAADA1A195A3900B4CBFF /* GPUImageAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAA31A195A3900B4CBFF /* GPUImageAnimator.m */; };
 		096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAA61A195A3900B4CBFF /* EWUIUtil.m */; };
 		096AAADC1A195A3900B4CBFF /* EWActivityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAA91A195A3900B4CBFF /* EWActivityManager.m */; };
 		096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAAB1A195A3900B4CBFF /* EWAlarmManager.m */; };
@@ -146,6 +143,11 @@
 		9B840A201A1705CE00D6C2A3 /* EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A1F1A1705CE00D6C2A3 /* EWSocial.m */; };
 		9B840A291A170AE800D6C2A3 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B840A2A1A170AE800D6C2A3 /* RMDateSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A281A170AE800D6C2A3 /* RMDateSelectionViewController.m */; };
+		9B88293E1A317E3900EF572E /* EWBlurAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B88293B1A317E3900EF572E /* EWBlurAnimator.m */; };
+		9B88293F1A317E3900EF572E /* UIViewController+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B88293D1A317E3900EF572E /* UIViewController+Blur.m */; };
+		9B8829421A31868100EF572E /* EWBlurNavigationControllerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */; };
+		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
+		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
 		A3428B2612EFBC90CE29A819 /* libPods-WokeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */; };
 /* End PBXBuildFile section */
 
@@ -190,8 +192,6 @@
 		096AAA6D1A19593300B4CBFF /* EWWakeUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWWakeUpView.xib; sourceTree = "<group>"; };
 		096AAA891A195A2A00B4CBFF /* EWAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAccountManager.h; sourceTree = "<group>"; };
 		096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWAccountManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		096AAA8C1A195A2A00B4CBFF /* NavigationControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationControllerDelegate.h; sourceTree = "<group>"; };
-		096AAA8D1A195A2A00B4CBFF /* NavigationControllerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationControllerDelegate.m; sourceTree = "<group>"; };
 		096AAA921A195A3900B4CBFF /* NSDate+Extend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Extend.h"; sourceTree = "<group>"; };
 		096AAA931A195A3900B4CBFF /* NSDate+Extend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Extend.m"; sourceTree = "<group>"; };
 		096AAA941A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+ChainSave.h"; sourceTree = "<group>"; };
@@ -204,11 +204,7 @@
 		096AAA9B1A195A3900B4CBFF /* UIView+Extend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Extend.m"; sourceTree = "<group>"; };
 		096AAA9C1A195A3900B4CBFF /* UIView+Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Layout.h"; sourceTree = "<group>"; };
 		096AAA9D1A195A3900B4CBFF /* UIView+Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Layout.m"; sourceTree = "<group>"; };
-		096AAA9E1A195A3900B4CBFF /* UIViewController+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Blur.h"; sourceTree = "<group>"; };
-		096AAA9F1A195A3900B4CBFF /* UIViewController+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Blur.m"; sourceTree = "<group>"; };
 		096AAAA11A195A3900B4CBFF /* EWDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EWDefines.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		096AAAA21A195A3900B4CBFF /* GPUImageAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageAnimator.h; sourceTree = "<group>"; };
-		096AAAA31A195A3900B4CBFF /* GPUImageAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageAnimator.m; sourceTree = "<group>"; };
 		096AAAA51A195A3900B4CBFF /* EWUIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWUIUtil.h; sourceTree = "<group>"; };
 		096AAAA61A195A3900B4CBFF /* EWUIUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWUIUtil.m; sourceTree = "<group>"; };
 		096AAAA81A195A3900B4CBFF /* EWActivityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWActivityManager.h; sourceTree = "<group>"; };
@@ -305,7 +301,6 @@
 		09A777211A11E2BD004AF902 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		09A777261A11E2BD004AF902 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09A777271A11E2BD004AF902 /* KZBEnvironments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = KZBEnvironments.plist; sourceTree = "<group>"; };
-		09A777281A11E2BD004AF902 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		09A777291A11E2BD004AF902 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		09A86FD01A1ACDDB0075DFF4 /* EWMainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainNavigationController.h; sourceTree = "<group>"; };
 		09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMainNavigationController.m; sourceTree = "<group>"; };
@@ -404,6 +399,15 @@
 		9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RDSelectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9B840A271A170AE800D6C2A3 /* RMDateSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMDateSelectionViewController.h; sourceTree = "<group>"; };
 		9B840A281A170AE800D6C2A3 /* RMDateSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMDateSelectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		9B88293A1A317E3900EF572E /* EWBlurAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlurAnimator.h; sourceTree = "<group>"; };
+		9B88293B1A317E3900EF572E /* EWBlurAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBlurAnimator.m; sourceTree = "<group>"; };
+		9B88293C1A317E3900EF572E /* UIViewController+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Blur.h"; sourceTree = "<group>"; };
+		9B88293D1A317E3900EF572E /* UIViewController+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Blur.m"; sourceTree = "<group>"; };
+		9B8829401A31868100EF572E /* EWBlurNavigationControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlurNavigationControllerDelegate.h; sourceTree = "<group>"; };
+		9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBlurNavigationControllerDelegate.m; sourceTree = "<group>"; };
+		9BB5669B1A2ED3F3004174B3 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
+		9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpProcessTest.m; sourceTree = "<group>"; };
+		9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpPlayingTest.m; sourceTree = "<group>"; };
 		B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.adhoc.xcconfig"; sourceTree = "<group>"; };
 		B95C7310A02172389FEF1951 /* libPods-Woke.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Woke.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E99CC22C9AEFD7C29BAB9044 /* Pods-WokeTests.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.profiling.xcconfig"; sourceTree = "<group>"; };
@@ -512,8 +516,6 @@
 				096AAAA41A195A3900B4CBFF /* helpers */,
 				096AAAA71A195A3900B4CBFF /* services */,
 				0990EF731A22C606001AF099 /* segues */,
-				096AAAA21A195A3900B4CBFF /* GPUImageAnimator.h */,
-				096AAAA31A195A3900B4CBFF /* GPUImageAnimator.m */,
 			);
 			path = libraries;
 			sourceTree = "<group>";
@@ -543,8 +545,6 @@
 				096AAA9B1A195A3900B4CBFF /* UIView+Extend.m */,
 				096AAA9C1A195A3900B4CBFF /* UIView+Layout.h */,
 				096AAA9D1A195A3900B4CBFF /* UIView+Layout.m */,
-				096AAA9E1A195A3900B4CBFF /* UIViewController+Blur.h */,
-				096AAA9F1A195A3900B4CBFF /* UIViewController+Blur.m */,
 			);
 			path = categories;
 			sourceTree = "<group>";
@@ -706,6 +706,8 @@
 		09A776FB1A11D8D9004AF902 /* WokeTests */ = {
 			isa = PBXGroup;
 			children = (
+				9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */,
+				9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */,
 				9B71AC741A22927C00E300CE /* AlarmTest.m */,
 				09A776FE1A11D8D9004AF902 /* WokeTests.m */,
 				09A776FC1A11D8D9004AF902 /* Supporting Files */,
@@ -772,8 +774,6 @@
 				09A777231A11E2BD004AF902 /* controllers */,
 				096AAA881A195A2A00B4CBFF /* services */,
 				096AAA8B1A195A2A00B4CBFF /* views */,
-				096AAA8C1A195A2A00B4CBFF /* NavigationControllerDelegate.h */,
-				096AAA8D1A195A2A00B4CBFF /* NavigationControllerDelegate.m */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -794,9 +794,9 @@
 		09A777251A11E2BD004AF902 /* support */ = {
 			isa = PBXGroup;
 			children = (
+				9BB5669B1A2ED3F3004174B3 /* KZBootstrapUserMacros.h */,
 				09A777261A11E2BD004AF902 /* Info.plist */,
 				09A777271A11E2BD004AF902 /* KZBEnvironments.plist */,
-				09A777281A11E2BD004AF902 /* KZBootstrapUserMacros.h */,
 				09A777291A11E2BD004AF902 /* PrefixHeader.pch */,
 			);
 			path = support;
@@ -806,6 +806,7 @@
 			isa = PBXGroup;
 			children = (
 				09D7370B1A328F4400E8C9ED /* SevenSwitch */,
+				9B8829391A317E3900EF572E /* EWBlur */,
 				9B840A241A170AE800D6C2A3 /* RMSelectionView */,
 				09C5B1E31A166162006EA46C /* UAProgress */,
 				9B8139591A15D65900F1A56C /* GCPickerView */,
@@ -951,6 +952,20 @@
 			);
 			path = RMSelectionView;
 			sourceTree = "<group>";
+		};
+		9B8829391A317E3900EF572E /* EWBlur */ = {
+			isa = PBXGroup;
+			children = (
+				9B88293A1A317E3900EF572E /* EWBlurAnimator.h */,
+				9B88293B1A317E3900EF572E /* EWBlurAnimator.m */,
+				9B88293C1A317E3900EF572E /* UIViewController+Blur.h */,
+				9B88293D1A317E3900EF572E /* UIViewController+Blur.m */,
+				9B8829401A31868100EF572E /* EWBlurNavigationControllerDelegate.h */,
+				9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */,
+			);
+			path = EWBlur;
+			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		9BDF60911A149685009E3C4A /* SCSiriWaveformView */ = {
 			isa = PBXGroup;
@@ -1212,6 +1227,7 @@
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
 				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
 				09DF4F891A1434AF00BEA328 /* _EWMessage.m in Sources */,
+				9B88293F1A317E3900EF572E /* UIViewController+Blur.m in Sources */,
 				096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */,
 				09DF4F821A1434AF00BEA328 /* _EWAchievement.m in Sources */,
 				096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */,
@@ -1220,9 +1236,11 @@
 				096AAA7C1A19593300B4CBFF /* EWAlarmEditCell.m in Sources */,
 				096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */,
 				096AAADE1A195A3900B4CBFF /* EWAVManager.m in Sources */,
+				9B8829421A31868100EF572E /* EWBlurNavigationControllerDelegate.m in Sources */,
 				09A86FD21A1ACDDB0075DFF4 /* EWMainNavigationController.m in Sources */,
 				9B8139731A15D65900F1A56C /* GKImageCropViewController.m in Sources */,
 				09DF4F7D1A1434AF00BEA328 /* EWMessage.m in Sources */,
+				9B88293E1A317E3900EF572E /* EWBlurAnimator.m in Sources */,
 				096AAAE11A195A3900B4CBFF /* EWImageManager.m in Sources */,
 				9B8139741A15D65900F1A56C /* GKImagePicker.m in Sources */,
 				9B8139711A15D65900F1A56C /* GKImageCropOverlayView.m in Sources */,
@@ -1267,7 +1285,6 @@
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
 				096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */,
 				9B8139751A15D65900F1A56C /* GKResizeableCropOverlayView.m in Sources */,
-				096AAAD91A195A3900B4CBFF /* UIViewController+Blur.m in Sources */,
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
 				09DF4F831A1434AF00BEA328 /* _EWActivity.m in Sources */,
 				09DF4F801A1434AF00BEA328 /* EWServerObject.m in Sources */,
@@ -1283,9 +1300,7 @@
 				09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */,
 				09DF4F8B1A1434AF00BEA328 /* _EWPerson.m in Sources */,
 				9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */,
-				096AAADA1A195A3900B4CBFF /* GPUImageAnimator.m in Sources */,
 				097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */,
-				096AAA8F1A195A2A00B4CBFF /* NavigationControllerDelegate.m in Sources */,
 				097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */,
 				096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
@@ -1310,8 +1325,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */,
 				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
 				9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */,
+				9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

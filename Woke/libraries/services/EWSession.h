@@ -16,6 +16,8 @@
 
 @property (nonatomic, assign) BOOL isSchedulingAlarm;
 @property (nonatomic, strong) EWPerson *currentUser;
+@property (nonatomic) BOOL isSleeping;
+@property (nonatomic) BOOL isWakingUp;
 /**
  *  A dictionary of user and statement
  */

@@ -433,9 +433,9 @@ NSManagedObjectContext *mainContext;
     [object updateFromManagedObject:managedObject];
     //================================================================
     
-    [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error) {
-            if (error.code == kPFErrorObjectNotFound){
+    [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *err) {
+        if (err) {
+            if (err.code == kPFErrorObjectNotFound){
                 DDLogError(@"*** PO not found for %@(%@), set to nil.", managedObject.entity.name, managedObject.serverID);
                 NSManagedObject *trueMO = [managedObject.managedObjectContext existingObjectWithID:managedObject.objectID error:NULL];
                 if (trueMO) {
@@ -444,7 +444,7 @@ NSManagedObjectContext *mainContext;
                 }
             }
 			else{
-                DDLogError(@"*** Failed to save server object: %@", error.description);
+                DDLogError(@"*** Failed to save server object: %@", err.description);
             }
             [managedObject uploadEventually];
         }
@@ -770,23 +770,16 @@ NSManagedObjectContext *mainContext;
     }
     
     //if no ACL, use MO to determine
-    EWPerson *p;
-    if ([mo respondsToSelector:@selector(owner)]) {
-        p = [mo valueForKey:@"owner"];
-        if (!p && [mo respondsToSelector:@selector(pastOwner)]) {
-            p = [mo valueForKey:@"pastOwner"];
-        }
-    }else if ([mo respondsToSelector:@selector(author)]){
-        //check author
-        p = [mo valueForKey:@"author"];
-        
-    }else if ([mo isKindOfClass:[EWPerson class]]) {
+    __block EWPerson *p;
+    if ([mo.entity.managedObjectClassName isEqualToString:kSyncUserClass]) {
         p = (EWPerson *)mo;
     }else{
-        //if not, use PO from server
-        return YES;
+        [mo.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+            if ([obj.entity.managedObjectClassName isEqualToString:kSyncUserClass]) {
+                p = [mo valueForKey:key];
+            }
+        }];
     }
-    
     if (p.isMe){
         return YES;
     }

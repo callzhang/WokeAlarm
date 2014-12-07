@@ -23,7 +23,7 @@ typedef void (^EWSavingCallback)(void);
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
 #define kServerTransformClasses             @{@"EWPerson": @"_User"} //localClass: serverClass
 #define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, @"score"]
-//#define kUserClass                          @"EWPerson"
+#define kSyncUserClass                      @"EWPerson"
 //#define classSkipped                        @[@"EWPerson"]
 
 
