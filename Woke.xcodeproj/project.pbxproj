@@ -22,6 +22,20 @@
 
 /* Begin PBXBuildFile section */
 		091C67431A351F060091B8A6 /* EWStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67421A351F060091B8A6 /* EWStyleController.m */; };
+		091C67461A35205F0091B8A6 /* EWBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67451A35205F0091B8A6 /* EWBaseTableViewController.m */; };
+		091C67591A3523AF0091B8A6 /* EWAlarmEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67491A3523AF0091B8A6 /* EWAlarmEditCell.m */; };
+		091C675A1A3523AF0091B8A6 /* EWAlarmEditCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */; };
+		091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */; };
+		091C675C1A3523AF0091B8A6 /* EWLogInView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C674D1A3523AF0091B8A6 /* EWLogInView.xib */; };
+		091C675D1A3523AF0091B8A6 /* EWMediaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C674F1A3523AF0091B8A6 /* EWMediaCell.m */; };
+		091C675E1A3523AF0091B8A6 /* EWMediaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67501A3523AF0091B8A6 /* EWMediaCell.xib */; };
+		091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67521A3523AF0091B8A6 /* EWMediaSlider.m */; };
+		091C67601A3523AF0091B8A6 /* EWPostWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67531A3523AF0091B8A6 /* EWPostWakeUpView.xib */; };
+		091C67611A3523AF0091B8A6 /* EWRecordingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67541A3523AF0091B8A6 /* EWRecordingViewController.xib */; };
+		091C67621A3523AF0091B8A6 /* EWShakeProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67561A3523AF0091B8A6 /* EWShakeProgressView.m */; };
+		091C67631A3523AF0091B8A6 /* EWSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67571A3523AF0091B8A6 /* EWSleepViewController.xib */; };
+		091C67641A3523AF0091B8A6 /* EWWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67581A3523AF0091B8A6 /* EWWakeUpView.xib */; };
+		091C67671A3523C40091B8A6 /* EWAlarmTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */; };
 		09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDE1A1316580048DC44 /* Lato-Light.ttf */; };
 		09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DE01A1316640048DC44 /* Lato-Hairline.ttf */; };
 		09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDF1A1316580048DC44 /* Lato-Regular.ttf */; };
@@ -29,18 +43,6 @@
 		09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */; };
 		096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */; };
 		096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA4B1A19593300B4CBFF /* EWMainViewController.m */; };
-		096AAA7C1A19593300B4CBFF /* EWAlarmEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA5E1A19593300B4CBFF /* EWAlarmEditCell.m */; };
-		096AAA7D1A19593300B4CBFF /* EWAlarmEditCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA5F1A19593300B4CBFF /* EWAlarmEditCell.xib */; };
-		096AAA7E1A19593300B4CBFF /* EWCollectionPersonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA611A19593300B4CBFF /* EWCollectionPersonCell.m */; };
-		096AAA7F1A19593300B4CBFF /* EWLogInView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA621A19593300B4CBFF /* EWLogInView.xib */; };
-		096AAA801A19593300B4CBFF /* EWMediaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA641A19593300B4CBFF /* EWMediaCell.m */; };
-		096AAA811A19593300B4CBFF /* EWMediaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA651A19593300B4CBFF /* EWMediaCell.xib */; };
-		096AAA821A19593300B4CBFF /* EWMediaSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA671A19593300B4CBFF /* EWMediaSlider.m */; };
-		096AAA831A19593300B4CBFF /* EWPostWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA681A19593300B4CBFF /* EWPostWakeUpView.xib */; };
-		096AAA841A19593300B4CBFF /* EWRecordingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA691A19593300B4CBFF /* EWRecordingViewController.xib */; };
-		096AAA851A19593300B4CBFF /* EWShakeProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA6B1A19593300B4CBFF /* EWShakeProgressView.m */; };
-		096AAA861A19593300B4CBFF /* EWSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA6C1A19593300B4CBFF /* EWSleepViewController.xib */; };
-		096AAA871A19593300B4CBFF /* EWWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096AAA6D1A19593300B4CBFF /* EWWakeUpView.xib */; };
 		096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */; };
 		096AAAD31A195A3900B4CBFF /* NSDate+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA931A195A3900B4CBFF /* NSDate+Extend.m */; };
 		096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA951A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m */; };
@@ -165,6 +167,27 @@
 /* Begin PBXFileReference section */
 		091C67411A351F060091B8A6 /* EWStyleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStyleController.h; sourceTree = "<group>"; };
 		091C67421A351F060091B8A6 /* EWStyleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStyleController.m; sourceTree = "<group>"; };
+		091C67441A35205F0091B8A6 /* EWBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseTableViewController.h; sourceTree = "<group>"; };
+		091C67451A35205F0091B8A6 /* EWBaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseTableViewController.m; sourceTree = "<group>"; };
+		091C67481A3523AF0091B8A6 /* EWAlarmEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmEditCell.h; sourceTree = "<group>"; };
+		091C67491A3523AF0091B8A6 /* EWAlarmEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmEditCell.m; sourceTree = "<group>"; };
+		091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWAlarmEditCell.xib; sourceTree = "<group>"; };
+		091C674B1A3523AF0091B8A6 /* EWCollectionPersonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWCollectionPersonCell.h; sourceTree = "<group>"; };
+		091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWCollectionPersonCell.m; sourceTree = "<group>"; };
+		091C674D1A3523AF0091B8A6 /* EWLogInView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWLogInView.xib; sourceTree = "<group>"; };
+		091C674E1A3523AF0091B8A6 /* EWMediaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMediaCell.h; sourceTree = "<group>"; };
+		091C674F1A3523AF0091B8A6 /* EWMediaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMediaCell.m; sourceTree = "<group>"; };
+		091C67501A3523AF0091B8A6 /* EWMediaCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWMediaCell.xib; sourceTree = "<group>"; };
+		091C67511A3523AF0091B8A6 /* EWMediaSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMediaSlider.h; sourceTree = "<group>"; };
+		091C67521A3523AF0091B8A6 /* EWMediaSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMediaSlider.m; sourceTree = "<group>"; };
+		091C67531A3523AF0091B8A6 /* EWPostWakeUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWPostWakeUpView.xib; sourceTree = "<group>"; };
+		091C67541A3523AF0091B8A6 /* EWRecordingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWRecordingViewController.xib; sourceTree = "<group>"; };
+		091C67551A3523AF0091B8A6 /* EWShakeProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWShakeProgressView.h; sourceTree = "<group>"; };
+		091C67561A3523AF0091B8A6 /* EWShakeProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWShakeProgressView.m; sourceTree = "<group>"; };
+		091C67571A3523AF0091B8A6 /* EWSleepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWSleepViewController.xib; sourceTree = "<group>"; };
+		091C67581A3523AF0091B8A6 /* EWWakeUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWWakeUpView.xib; sourceTree = "<group>"; };
+		091C67651A3523C40091B8A6 /* EWAlarmTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmTableViewCell.h; sourceTree = "<group>"; };
+		091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmTableViewCell.m; sourceTree = "<group>"; };
 		09269DDE1A1316580048DC44 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		09269DDF1A1316580048DC44 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		09269DE01A1316640048DC44 /* Lato-Hairline.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Hairline.ttf"; sourceTree = "<group>"; };
@@ -176,23 +199,6 @@
 		096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWLoginGateViewController.m; sourceTree = "<group>"; };
 		096AAA4A1A19593300B4CBFF /* EWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainViewController.h; sourceTree = "<group>"; };
 		096AAA4B1A19593300B4CBFF /* EWMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMainViewController.m; sourceTree = "<group>"; };
-		096AAA5D1A19593300B4CBFF /* EWAlarmEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmEditCell.h; sourceTree = "<group>"; };
-		096AAA5E1A19593300B4CBFF /* EWAlarmEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmEditCell.m; sourceTree = "<group>"; };
-		096AAA5F1A19593300B4CBFF /* EWAlarmEditCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWAlarmEditCell.xib; sourceTree = "<group>"; };
-		096AAA601A19593300B4CBFF /* EWCollectionPersonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWCollectionPersonCell.h; sourceTree = "<group>"; };
-		096AAA611A19593300B4CBFF /* EWCollectionPersonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWCollectionPersonCell.m; sourceTree = "<group>"; };
-		096AAA621A19593300B4CBFF /* EWLogInView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWLogInView.xib; sourceTree = "<group>"; };
-		096AAA631A19593300B4CBFF /* EWMediaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMediaCell.h; sourceTree = "<group>"; };
-		096AAA641A19593300B4CBFF /* EWMediaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMediaCell.m; sourceTree = "<group>"; };
-		096AAA651A19593300B4CBFF /* EWMediaCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWMediaCell.xib; sourceTree = "<group>"; };
-		096AAA661A19593300B4CBFF /* EWMediaSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMediaSlider.h; sourceTree = "<group>"; };
-		096AAA671A19593300B4CBFF /* EWMediaSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMediaSlider.m; sourceTree = "<group>"; };
-		096AAA681A19593300B4CBFF /* EWPostWakeUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWPostWakeUpView.xib; sourceTree = "<group>"; };
-		096AAA691A19593300B4CBFF /* EWRecordingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWRecordingViewController.xib; sourceTree = "<group>"; };
-		096AAA6A1A19593300B4CBFF /* EWShakeProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWShakeProgressView.h; sourceTree = "<group>"; };
-		096AAA6B1A19593300B4CBFF /* EWShakeProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWShakeProgressView.m; sourceTree = "<group>"; };
-		096AAA6C1A19593300B4CBFF /* EWSleepViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWSleepViewController.xib; sourceTree = "<group>"; };
-		096AAA6D1A19593300B4CBFF /* EWWakeUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWWakeUpView.xib; sourceTree = "<group>"; };
 		096AAA891A195A2A00B4CBFF /* EWAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAccountManager.h; sourceTree = "<group>"; };
 		096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWAccountManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAA921A195A3900B4CBFF /* NSDate+Extend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Extend.h"; sourceTree = "<group>"; };
@@ -439,6 +445,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		091C67471A3523AF0091B8A6 /* legacy */ = {
+			isa = PBXGroup;
+			children = (
+				091C67481A3523AF0091B8A6 /* EWAlarmEditCell.h */,
+				091C67491A3523AF0091B8A6 /* EWAlarmEditCell.m */,
+				091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */,
+				091C674B1A3523AF0091B8A6 /* EWCollectionPersonCell.h */,
+				091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */,
+				091C674D1A3523AF0091B8A6 /* EWLogInView.xib */,
+				091C674E1A3523AF0091B8A6 /* EWMediaCell.h */,
+				091C674F1A3523AF0091B8A6 /* EWMediaCell.m */,
+				091C67501A3523AF0091B8A6 /* EWMediaCell.xib */,
+				091C67511A3523AF0091B8A6 /* EWMediaSlider.h */,
+				091C67521A3523AF0091B8A6 /* EWMediaSlider.m */,
+				091C67531A3523AF0091B8A6 /* EWPostWakeUpView.xib */,
+				091C67541A3523AF0091B8A6 /* EWRecordingViewController.xib */,
+				091C67551A3523AF0091B8A6 /* EWShakeProgressView.h */,
+				091C67561A3523AF0091B8A6 /* EWShakeProgressView.m */,
+				091C67571A3523AF0091B8A6 /* EWSleepViewController.xib */,
+				091C67581A3523AF0091B8A6 /* EWWakeUpView.xib */,
+			);
+			path = legacy;
+			sourceTree = "<group>";
+		};
 		096AAA3E1A19593300B4CBFF /* iphone */ = {
 			isa = PBXGroup;
 			children = (
@@ -472,23 +502,9 @@
 		096AAA5C1A19593300B4CBFF /* views */ = {
 			isa = PBXGroup;
 			children = (
-				096AAA5D1A19593300B4CBFF /* EWAlarmEditCell.h */,
-				096AAA5E1A19593300B4CBFF /* EWAlarmEditCell.m */,
-				096AAA5F1A19593300B4CBFF /* EWAlarmEditCell.xib */,
-				096AAA601A19593300B4CBFF /* EWCollectionPersonCell.h */,
-				096AAA611A19593300B4CBFF /* EWCollectionPersonCell.m */,
-				096AAA621A19593300B4CBFF /* EWLogInView.xib */,
-				096AAA631A19593300B4CBFF /* EWMediaCell.h */,
-				096AAA641A19593300B4CBFF /* EWMediaCell.m */,
-				096AAA651A19593300B4CBFF /* EWMediaCell.xib */,
-				096AAA661A19593300B4CBFF /* EWMediaSlider.h */,
-				096AAA671A19593300B4CBFF /* EWMediaSlider.m */,
-				096AAA681A19593300B4CBFF /* EWPostWakeUpView.xib */,
-				096AAA691A19593300B4CBFF /* EWRecordingViewController.xib */,
-				096AAA6A1A19593300B4CBFF /* EWShakeProgressView.h */,
-				096AAA6B1A19593300B4CBFF /* EWShakeProgressView.m */,
-				096AAA6C1A19593300B4CBFF /* EWSleepViewController.xib */,
-				096AAA6D1A19593300B4CBFF /* EWWakeUpView.xib */,
+				091C67471A3523AF0091B8A6 /* legacy */,
+				091C67651A3523C40091B8A6 /* EWAlarmTableViewCell.h */,
+				091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -792,6 +808,8 @@
 				09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */,
 				091C67411A351F060091B8A6 /* EWStyleController.h */,
 				091C67421A351F060091B8A6 /* EWStyleController.m */,
+				091C67441A35205F0091B8A6 /* EWBaseTableViewController.h */,
+				091C67451A35205F0091B8A6 /* EWBaseTableViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -1097,29 +1115,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				096AAA861A19593300B4CBFF /* EWSleepViewController.xib in Resources */,
 				9B8139761A15D65900F1A56C /* PLCameraSheetButton.png in Resources */,
+				091C67611A3523AF0091B8A6 /* EWRecordingViewController.xib in Resources */,
+				091C675C1A3523AF0091B8A6 /* EWLogInView.xib in Resources */,
 				9B8139771A15D65900F1A56C /* PLCameraSheetButton@2x.png in Resources */,
+				091C67601A3523AF0091B8A6 /* EWPostWakeUpView.xib in Resources */,
 				09A777321A11E2BD004AF902 /* Settings.bundle in Resources */,
 				09A777311A11E2BD004AF902 /* Images.xcassets in Resources */,
 				09A7772F1A11E2BD004AF902 /* LaunchScreen.xib in Resources */,
 				09A777341A11E2BD004AF902 /* KZBEnvironments.plist in Resources */,
 				9B8139791A15D65900F1A56C /* PLCameraSheetButtonPressed@2x.png in Resources */,
-				096AAA831A19593300B4CBFF /* EWPostWakeUpView.xib in Resources */,
 				9B8139781A15D65900F1A56C /* PLCameraSheetButtonPressed.png in Resources */,
 				09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */,
-				096AAA811A19593300B4CBFF /* EWMediaCell.xib in Resources */,
-				096AAA871A19593300B4CBFF /* EWWakeUpView.xib in Resources */,
+				091C675A1A3523AF0091B8A6 /* EWAlarmEditCell.xib in Resources */,
 				09A777301A11E2BD004AF902 /* Main.storyboard in Resources */,
-				096AAA7F1A19593300B4CBFF /* EWLogInView.xib in Resources */,
 				09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */,
+				091C67631A3523AF0091B8A6 /* EWSleepViewController.xib in Resources */,
+				091C675E1A3523AF0091B8A6 /* EWMediaCell.xib in Resources */,
 				9B81397D1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				9B81397A1A15D65900F1A56C /* PLCameraSheetDoneButton.png in Resources */,
-				096AAA841A19593300B4CBFF /* EWRecordingViewController.xib in Resources */,
-				096AAA7D1A19593300B4CBFF /* EWAlarmEditCell.xib in Resources */,
 				09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */,
 				9B81397B1A15D65900F1A56C /* PLCameraSheetDoneButton@2x.png in Resources */,
 				9B81397C1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed.png in Resources */,
+				091C67641A3523AF0091B8A6 /* EWWakeUpView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1229,6 +1247,7 @@
 			files = (
 				09DF4F8A1A1434AF00BEA328 /* _EWNotification.m in Sources */,
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
+				091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
 				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
 				09DF4F891A1434AF00BEA328 /* _EWMessage.m in Sources */,
@@ -1238,7 +1257,6 @@
 				096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */,
 				096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */,
 				9B840A2A1A170AE800D6C2A3 /* RMDateSelectionViewController.m in Sources */,
-				096AAA7C1A19593300B4CBFF /* EWAlarmEditCell.m in Sources */,
 				096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */,
 				096AAADE1A195A3900B4CBFF /* EWAVManager.m in Sources */,
 				9B8829421A31868100EF572E /* EWBlurNavigationControllerDelegate.m in Sources */,
@@ -1250,7 +1268,6 @@
 				9B8139741A15D65900F1A56C /* GKImagePicker.m in Sources */,
 				9B8139711A15D65900F1A56C /* GKImageCropOverlayView.m in Sources */,
 				096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */,
-				096AAA821A19593300B4CBFF /* EWMediaSlider.m in Sources */,
 				09DF4F7B1A1434AF00BEA328 /* EWMediaFile.m in Sources */,
 				09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */,
 				09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */,
@@ -1273,19 +1290,19 @@
 				096AAAD51A195A3900B4CBFF /* NSString+Extend.m in Sources */,
 				09DF4F7A1A1434AF00BEA328 /* EWMedia.m in Sources */,
 				09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */,
-				096AAA7E1A19593300B4CBFF /* EWCollectionPersonCell.m in Sources */,
 				9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */,
+				091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */,
 				096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */,
 				096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */,
 				096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
+				091C67591A3523AF0091B8A6 /* EWAlarmEditCell.m in Sources */,
 				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
 				09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */,
 				09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */,
 				096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
-				096AAA801A19593300B4CBFF /* EWMediaCell.m in Sources */,
 				096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */,
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
 				096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */,
@@ -1298,8 +1315,9 @@
 				096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */,
 				096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */,
 				091C67431A351F060091B8A6 /* EWStyleController.m in Sources */,
+				091C67621A3523AF0091B8A6 /* EWShakeProgressView.m in Sources */,
 				0990EF7C1A22C606001AF099 /* MSReplaceSegue.m in Sources */,
-				096AAA851A19593300B4CBFF /* EWShakeProgressView.m in Sources */,
+				091C67461A35205F0091B8A6 /* EWBaseTableViewController.m in Sources */,
 				096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */,
 				096AAAE41A195A3900B4CBFF /* EWPersonManager.m in Sources */,
 				09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */,
@@ -1308,6 +1326,7 @@
 				9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */,
 				097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */,
 				097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */,
+				091C675D1A3523AF0091B8A6 /* EWMediaCell.m in Sources */,
 				096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
 				09D737141A329DE800E8C9ED /* EWViewControllerHelper.m in Sources */,
@@ -1318,6 +1337,7 @@
 				096AAB101A1972B800B4CBFF /* EWFriendsViewController.m in Sources */,
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,
 				09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */,
+				091C67671A3523C40091B8A6 /* EWAlarmTableViewCell.m in Sources */,
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
