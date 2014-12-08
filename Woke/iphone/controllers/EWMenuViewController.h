@@ -7,13 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseViewController.h"
 
 typedef void(^MenuBackgroundTapHanlder)(void);
-@interface EWMenuViewController : UIViewController
+@interface EWMenuViewController : EWBaseViewController
 
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundView;
 @property (nonatomic, copy) MenuBackgroundTapHanlder tapHandler;
+@property (nonatomic, weak) EWBaseNavigationController *baseNavigationController;
 
 - (void)closeMenu;
+
 @end

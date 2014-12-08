@@ -23,6 +23,7 @@
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
 #import "DDFileLogger.h"
+#import "EWStyleController.h"
 
 UIViewController *rootViewController;
 
@@ -64,6 +65,7 @@ UIViewController *rootViewController;
     
     //[EWStartUpSequence deleteDatabase];
     
+    [EWStyleController applySystemStyle];
     //watch for login
     [EWStartUpSequence sharedInstance];
     

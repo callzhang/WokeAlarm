@@ -17,15 +17,23 @@
 #import "EWBlurNavigationControllerDelegate.h"
 
 
+
+//#import "EWActivityManager.h"
+//#import "EWWakeUpManager.h"
+//#import "EWWakeUpViewController.h"
+//#import "EWActivity.h"
+#import "EWBlurNavigationControllerDelegate.h"
+
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
     MainViewMenuStateClosed,
 };
 
-@interface EWBaseNavigationController ()
+@interface EWBaseNavigationController ()<UINavigationControllerDelegate>
 @property (nonatomic, strong) EWMenuViewController *menuViewController;
 @property (nonatomic, assign) MainViewMenuState menuState;
 @property (nonatomic, strong) EWBlurNavigationControllerDelegate *blurDelegate;
+
 @end
 
 @implementation EWBaseNavigationController
@@ -36,7 +44,9 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     @weakify(self)
     self.menuViewController.tapHandler = ^ {
         @strongify(self);
-        [self onMenuButton:nil];
+        [self toogleMenuCompletion:^{
+            
+        }];
     };
     float statusBar = 20;
     float navigationBar = 44;
@@ -45,13 +55,13 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     float mY = ((navigationBar) - mHeight ) / 2.0 + statusBar;
     float mX = mY - statusBar;
     
-    self.menuButton = [[VBFPopFlatButton alloc] initWithFrame:CGRectMake(mX, mY, mWidth, mHeight) buttonType:buttonMenuType buttonStyle:buttonPlainStyle animateToInitialState:NO];
-    [self.menuButton addTarget:self action:@selector(onMenuButton:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:self.menuButton];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     //add EWBlur Nav Delegate
-    _blurDelegate = [EWBlurNavigationControllerDelegate new];
-    self.delegate = _blurDelegate;
+//    _blurDelegate = [EWBlurNavigationControllerDelegate new];
+//    self.delegate = _blurDelegate;
     // listern for notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentWakeUpViewWithActivity:) name:kWakeTimeNotification object:nil];
 }
@@ -60,6 +70,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 - (void)presentWakeUpViewWithActivity:(NSNotification *)note{
     DDLogDebug(@"Presenting Wake Up View");
     //TODO: implement the presenting process
+
 //    //EWActivity *activity = note.object;
 //    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
 //        //init wake up view controller
@@ -78,6 +89,11 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 }
 
 - (void)onMenuButton:(VBFPopFlatButton *)sender {
+    [self toogleMenuCompletion:nil];
+}
+
+- (void)toogleMenuCompletion:(void (^)(void))completion {
+    
     static BOOL animating = NO;
     
     if (animating) {
@@ -86,18 +102,24 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     
     animating = YES;
     if (self.menuState == MainViewMenuStateOpen) {
+        //Open Menu
         self.menuState = MainViewMenuStateClosed;
-        [self.menuButton animateToType:buttonCloseType];
+//        [self.menuButton animateToType:buttonCloseType];
         [self addChildViewController:self.menuViewController];
-        [self.view insertSubview:self.menuViewController.view belowSubview:self.menuButton];
+        [self.view addSubview:self.menuViewController.view];
+//        [self.view insertSubview:self.menuViewController.view belowSubview:self.menuButton];
         [self.menuViewController beginAppearanceTransition:YES animated:YES];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             animating = NO;
+            if (completion) {
+                completion();
+            }
         });
     }
     else if (self.menuState == MainViewMenuStateClosed) {
+        //Close Menu
         self.menuState = MainViewMenuStateOpen;
-        [self.menuButton animateToType:buttonMenuType];
+//        [self.menuButton animateToType:buttonMenuType];
         
         [self.menuViewController willMoveToParentViewController:nil];
         [self.menuViewController beginAppearanceTransition:NO animated:YES];
@@ -114,6 +136,11 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
             [self.menuViewController.view removeFromSuperview];
             self.menuViewController.view.alpha = 1.0;
             animating = NO;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) {
+                    completion();
+                };
+            });
         };
         
         [self.menuViewController.view pop_addAnimation:anim forKey:@"fade"];
@@ -121,5 +148,29 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
         [self.menuViewController closeMenu];
     }
 }
+#pragma mark - Helper
+- (UIBarButtonItem *)menuBarButtonItem {
+    UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [menuButton setImage:[UIImage imageNamed:@"woke-nav-menu"] forState:UIControlStateNormal];
+    menuButton.frame = CGRectMake(0, 0, 35, 35);
+    [menuButton addTarget:self action:@selector(onMenuButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+    
+    return buttonItem;
+}
 
+#pragma mark - Accessor
+
+- (void)setMenuViewController:(EWMenuViewController *)menuViewController {
+    if (_menuViewController != menuViewController) {
+        _menuViewController = menuViewController;
+        _menuViewController.baseNavigationController = self;
+    }
+    
+    if (menuViewController == nil) {
+        _menuViewController.baseNavigationController = nil;
+        _menuViewController = nil;
+    }
+}
 @end

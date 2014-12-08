@@ -10,7 +10,8 @@
 
 @class VBFPopFlatButton;
 @interface EWBaseNavigationController : UINavigationController
-@property (strong, nonatomic) VBFPopFlatButton *menuButton;
+- (UIBarButtonItem *)menuBarButtonItem;
+- (void)toogleMenuCompletion:(void (^)(void))completion;
 
 /**
  Present EWWakeUpViewController on rootView.
@@ -19,5 +20,4 @@
  */
 
 - (void)presentWakeUpViewWithActivity:(NSNotification *)activity;
-
 @end
