@@ -264,7 +264,10 @@ static const float originalSize = 80.0;
         //not in navigation controller
         UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(260, 20, 40, 40)];
         [closeBtn setImage:[UIImage imageNamed:@"Close Button"] forState:UIControlStateNormal];
-        [closeBtn addTarget:vc action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+        if ([vc respondsToSelector:@selector(close:)]) {
+            [closeBtn addTarget:vc action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
         [vc.view addSubview:closeBtn];
     }
     

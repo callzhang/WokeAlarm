@@ -10,6 +10,12 @@
 #import "VBFPopFlatButton.h"
 #import "EWMenuViewController.h"
 #import <pop/pop.h>
+#import "EWActivityManager.h"
+#import "EWWakeUpManager.h"
+#import "EWWakeUpViewController.h"
+#import "EWActivity.h"
+#import "EWBlurNavigationControllerDelegate.h"
+
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -19,14 +25,6 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 @interface EWBaseNavigationController ()
 @property (nonatomic, strong) EWMenuViewController *menuViewController;
 @property (nonatomic, assign) MainViewMenuState menuState;
-
-#import "EWActivityManager.h"
-#import "EWWakeUpManager.h"
-#import "EWWakeUpViewController.h"
-#import "EWActivity.h"
-#import "EWBlurNavigationControllerDelegate.h"
-
-@interface EWBaseNavigationController ()
 @property (nonatomic, strong) EWBlurNavigationControllerDelegate *blurDelegate;
 @end
 
@@ -60,21 +58,23 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 
 
 - (void)presentWakeUpViewWithActivity:(NSNotification *)note{
-    //EWActivity *activity = note.object;
-    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
-        //init wake up view controller
-        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithNibName:nil bundle:nil];
-        
-        //save to manager
-        //[EWWakeUpManager sharedInstance].controller = controller;
-        
-        //push sleep view
-        [self pushViewController:controller animated:YES];
-        
-    }else{
-        DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
-        //NSParameterAssert([EWSession sharedSession].isWakingUp == YES);
-    }
+    DDLogDebug(@"Presenting Wake Up View");
+    //TODO: implement the presenting process
+//    //EWActivity *activity = note.object;
+//    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
+//        //init wake up view controller
+//        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithNibName:nil bundle:nil];
+//        
+//        //save to manager
+//        //[EWWakeUpManager sharedInstance].controller = controller;
+//        
+//        //push sleep view
+//        [self pushViewController:controller animated:YES];
+//        
+//    }else{
+//        DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
+//        //NSParameterAssert([EWSession sharedSession].isWakingUp == YES);
+//    }
 }
 
 - (void)onMenuButton:(VBFPopFlatButton *)sender {

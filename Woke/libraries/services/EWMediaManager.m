@@ -51,6 +51,7 @@
     if (voice) {
         EWMedia *media = (EWMedia *)[voice managedObjectInContext:nil];
         [media refresh];
+        DDLogDebug(@"Got woke voice %@", media.objectId);
         //save
         NSMutableDictionary *cache = [[EWPerson me].cachedInfo mutableCopy];
         NSMutableArray *receivedVoices = [mediasFromWoke mutableCopy];

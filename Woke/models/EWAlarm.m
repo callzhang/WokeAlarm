@@ -269,7 +269,7 @@
 	}
 	
 	//schedule sleep timer
-	[self scheduleSleepNotification];
+	[self scheduleSleepLocalNotification];
 	
 }
 
@@ -295,7 +295,7 @@
 
 #pragma mark - Sleep notification
 
-- (void)scheduleSleepNotification{
+- (void)scheduleSleepLocalNotification{
     if (!self.time) {
         return;
     }
@@ -304,7 +304,7 @@
     NSDate *sleepTime = [self.time dateByAddingTimeInterval:-d*3600];
     
     //cancel if no change
-    [self cancelSleepNotification];
+    [self cancelSleepLocalNotification];
     
     //local notification
     UILocalNotification *sleepNotif = [[UILocalNotification alloc] init];
@@ -324,7 +324,7 @@
     DDLogInfo(@"Sleep notification schedule at %@", sleepNotif.fireDate.date2detailDateString);
 }
 
-- (void)cancelSleepNotification{
+- (void)cancelSleepLocalNotification{
     NSArray *sleeps = [UIApplication sharedApplication].scheduledLocalNotifications;
     NSInteger n = 0;
     for (UILocalNotification *sleep in sleeps) {
