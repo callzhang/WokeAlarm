@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -41,6 +41,7 @@
         <scene sceneID="URX-it-B9N">
             <objects>
                 <navigationController id="Ne0-fa-NmS" customClass="EWBaseNavigationController" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" id="ef9-ZV-2Sh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -300,7 +301,7 @@
             <objects>
                 <tableViewController id="sJb-xk-dko" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="j2I-pw-dGs">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -319,6 +320,7 @@
                             <outlet property="delegate" destination="sJb-xk-dko" id="UwQ-lK-ZaV"/>
                         </connections>
                     </tableView>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="avV-w5-UfA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -662,6 +664,25 @@
             </objects>
             <point key="canvasLocation" x="964" y="1014"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="6cz-Rb-LEO">
+            <objects>
+                <viewController id="cn9-tj-CIm" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tGR-Dl-h9L"/>
+                        <viewControllerLayoutGuide type="bottom" id="GZo-44-KJk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ilK-me-T6E">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vcY-iz-4hH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="622" y="1692"/>
+        </scene>
         <!--Alarm View Controller-->
         <scene sceneID="J5T-sb-sq7">
             <objects>
@@ -705,6 +726,6 @@
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="chJ-Cr-lS2"/>
+        <segue reference="tfZ-IS-2Ts"/>
     </inferredMetricsTieBreakers>
 </document>
