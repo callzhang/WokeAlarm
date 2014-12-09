@@ -51,18 +51,26 @@
 
 - (void)testAlarmTimeUp{
     //waking up: test for 30s and expect local notification is fired
-        [[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:nil];
+    [[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:nil];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     //expected states
     XCTAssert([EWSession sharedSession].isWakingUp, @"Failed to wake up");
     //wait for notification
     [[NSNotificationCenter defaultCenter] addObserverForName:kWakeTimeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        XCTAssert([EWAVManager sharedManager].player.isPlaying, @"AVManager is not playing");
-        //wait for sound playing for 30s
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            XCTAssert([EWSession sharedSession].isWakingUp, @"wake up status not expected");
             [expectation fulfill];
+            //TODO: need the base view controller respose to the "kWakeTimeNotification" notification and present wake up view
+            //wait for sound playing for 30s
+            if ([EWAVManager sharedManager].player.isPlaying) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    //
+                });
+            }
+            
         });
+        
     }];
     
     

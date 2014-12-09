@@ -8,6 +8,7 @@
 
 #import "EWAlarm.h"
 #import "EWSession.h"
+#import "EWAlarmManager.h"
 
 @implementation EWAlarm
 
@@ -97,7 +98,7 @@
 		[self cancelLocalNotification];
 	}
 
-    
+    [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     [self updateCachedAlarmTime];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChanged object:self];
 }
@@ -113,7 +114,7 @@
     [self didChangeValueForKey:EWAlarmAttributes.time];
     
     //update saved time in user defaults
-    [self setSavedAlarmTime];
+    //[self setSavedAlarmTime];
     
     //update cached alarm time in currentUser
     [self updateCachedAlarmTime];
@@ -122,7 +123,7 @@
     [self scheduleLocalNotification];
     
     // schedule on server
-    //[self scheduleNotificationOnServer];
+    [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];
 }
 
@@ -151,16 +152,15 @@
 
 #pragma mark - Tools
 //update saved time in user defaults
-- (void)setSavedAlarmTime{
-	NSInteger wkd = self.time.mt_weekdayOfWeek - 1;
-	double hour = self.time.mt_hourOfDay;
-	double minute = self.time.mt_minuteOfHour;
-	double number = round(hour*100 + minute)/100.0;
-    NSMutableArray *alarmTimes = [[[NSUserDefaults standardUserDefaults] objectForKey:kSavedAlarms] mutableCopy];
-	[alarmTimes setObject:[NSNumber numberWithDouble:number] atIndexedSubscript:wkd];
-	[[NSUserDefaults standardUserDefaults] setObject:alarmTimes.copy forKey:kSavedAlarms];
-
-}
+//- (void)setSavedAlarmTime{
+//	NSInteger wkd = self.time.mt_weekdayOfWeek - 1;
+//	double hour = self.time.mt_hourOfDay;
+//	double minute = self.time.mt_minuteOfHour;
+//	double number = round(hour*100 + minute)/100.0;
+//    NSMutableArray *alarmTimes = [[[NSUserDefaults standardUserDefaults] objectForKey:kSavedAlarms] mutableCopy];
+//	[alarmTimes setObject:[NSNumber numberWithDouble:number] atIndexedSubscript:wkd];
+//	[[NSUserDefaults standardUserDefaults] setObject:alarmTimes.copy forKey:kSavedAlarms];
+//}
 
 
 #pragma mark - Cached alarm time to user defaults
