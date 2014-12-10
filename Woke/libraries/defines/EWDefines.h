@@ -146,12 +146,6 @@ typedef void (^SenderBlock)(id sender);
 //notification
 #define kPushNofiticationID				@"notificationID"
 
-//Audio & Video
-#define kMaxRecordTime                  30.0
-#define kAudioPlayerDidFinishPlaying    @"audio_finished_playing"
-#define kAudioPlayerWillStart           @"audio_will_start"
-#define kAudioPlayerNextPath            @"audio_next_path"
-
 //Collection View Identifier
 #define kCollectionViewCellPersonIdenfifier  @"CollectionViewIdentifier"
 

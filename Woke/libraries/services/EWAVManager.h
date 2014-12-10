@@ -18,11 +18,15 @@
 @import Foundation;
 @import AVFoundation;
 @import AudioToolbox;
-#import "EWDefines.h"
-#import "SCSiriWaveformView.h"
+//#import "EWDefines.h"
+//#import "SCSiriWaveformView.h"
 
-
-#define kSilentSound            @"Silence04s.caf"
+#define kSilentSound                    @"bg.caf"
+#define kMaxRecordTime                  30.0
+#define kAudioPlayerDidFinishPlaying    @"audio_finished_playing"
+#define kAudioPlayerPlayingNewMedia     @"playing_new_media"
+#define kRecorderDidFinish              @"recorder_finished"
+#define kRecorderDidStart               @"recorder_start"
 
 @class EWMediaCell, EWMedia, EWMediaSlider;
 
@@ -37,16 +41,9 @@
 
 @property (retain, nonatomic) AVAudioPlayer *player;
 @property (retain, nonatomic) AVAudioRecorder *recorder;
-//@property (weak, nonatomic) EWMediaCell *currentCell; //current cell, assigned by others
 @property (weak, nonatomic) EWMedia *media;
-@property (weak, nonatomic) UIButton *recordStopBtn;
-@property (weak, nonatomic) UIButton *playStopBtn;
-//@property (nonatomic) EWMediaSlider *progressBar;
-@property (weak, nonatomic) UILabel *currentTime;
-@property (weak, nonatomic) SCSiriWaveformView *waveformView;
-//@property (nonatomic) BOOL loop;
 
-+(EWAVManager *)sharedManager;
++ (EWAVManager *)sharedManager;
 
 //play
 //- (void)playForCell:(UITableViewCell *)cell;
