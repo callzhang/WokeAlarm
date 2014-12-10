@@ -851,9 +851,8 @@ NSManagedObjectContext *mainContext;
         return object;
     }
     
-    DDLogError(@"!!! passed in empty ID, upload first!");
+    DDLogError(@"[%s] Passed in empty ID, upload first!", __func__);
     return nil;
-    
 }
 
 @end

@@ -10,6 +10,12 @@
 #import "VBFPopFlatButton.h"
 #import "EWMenuViewController.h"
 #import <pop/pop.h>
+#import "EWActivityManager.h"
+#import "EWWakeUpManager.h"
+#import "EWWakeUpViewController.h"
+#import "EWActivity.h"
+#import "EWBlurNavigationControllerDelegate.h"
+
 
 
 //#import "EWActivityManager.h"
@@ -26,7 +32,8 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 @interface EWBaseNavigationController ()<UINavigationControllerDelegate>
 @property (nonatomic, strong) EWMenuViewController *menuViewController;
 @property (nonatomic, assign) MainViewMenuState menuState;
-//@property (nonatomic, strong) EWBlurNavigationControllerDelegate *blurDelegate;
+@property (nonatomic, strong) EWBlurNavigationControllerDelegate *blurDelegate;
+
 @end
 
 @implementation EWBaseNavigationController
@@ -61,6 +68,9 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 
 
 - (void)presentWakeUpViewWithActivity:(NSNotification *)note{
+    DDLogDebug(@"Presenting Wake Up View");
+    //TODO: implement the presenting process
+
 //    //EWActivity *activity = note.object;
 //    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
 //        //init wake up view controller

@@ -7,10 +7,10 @@
 //  Created by Lee on 8/6/14.
 //  Copyright (c) 2014 Woke. All rights reserved.
 //
+#define backgroundingSound                  @"bg.caf"
+#define backgroundingFailureSound           @"new.caf"
 
 #import "EWBackgroundingManager.h"
-//#import "EWWakeUpManager.h"
-//#import "CrashlyticsLogger.h"
 #import "EWSession.h"
 
 OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
@@ -61,7 +61,8 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
             DDLogError(words);
         }];
 		
-		NSURL *path = [[NSBundle mainBundle] URLForResource:@"bg" withExtension:@"caf"];
+        NSArray *soundArray = [backgroundingSound componentsSeparatedByString:@"."];
+		NSURL *path = [[NSBundle mainBundle] URLForResource:soundArray.firstObject withExtension:soundArray.lastObject];
 		player = [AVPlayer playerWithURL:path];
 		[player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
 		player.volume = 0.01;
@@ -241,7 +242,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 		backgroundingFailNotification.alertBody = @"Woke stopped running. Tap here to reactivate it.";
 		backgroundingFailNotification.alertAction = @"Activate";
 		backgroundingFailNotification.userInfo = @{kLocalNotificationTypeKey: kLocalNotificationTypeReactivate};
-		backgroundingFailNotification.soundName = @"new.caf";
+		backgroundingFailNotification.soundName = backgroundingFailureSound;
 		[[UIApplication sharedApplication] scheduleLocalNotification:backgroundingFailNotification];
 	//}
 	

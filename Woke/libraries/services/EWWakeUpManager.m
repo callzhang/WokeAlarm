@@ -66,6 +66,14 @@
 	return self;
 }
 
+- (EWAlarm *)alarm{
+    return [EWPerson myCurrentAlarm];
+}
+
+- (EWActivity *)currentActivity{
+    return [EWPerson myCurrentAlarmActivity];
+}
+
 #pragma mark - Handle push notification
 - (void)handlePushMedia:(NSDictionary *)notification{
     NSString *pushType = notification[kPushType];
@@ -150,7 +158,7 @@
 	
     //get target activity
     EWAlarm *alarm;
-    EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivity];
+    EWActivity *activity = self.currentActivity;
     if (info) {
         NSString *alarmID = info[kPushAlarmID];
         NSString *alarmLocalID = info[kLocalAlarmID];
@@ -282,7 +290,6 @@
             [[EWAVManager sharedManager] volumeFadeWithCompletion:^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
             }];
-            
         });
     }
 }
