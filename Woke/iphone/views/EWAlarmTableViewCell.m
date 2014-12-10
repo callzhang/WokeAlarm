@@ -11,7 +11,6 @@
 @implementation EWAlarmTableViewCell
 
 - (void)awakeFromNib {
-    self.contentView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.04];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

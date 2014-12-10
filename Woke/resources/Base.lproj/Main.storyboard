@@ -36,6 +36,8 @@
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
+            <string>Lato-Light</string>
+            <string>Lato-Light</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -786,7 +788,42 @@
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5LZ-sh-nDm" id="XaK-UV-OHv">
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-alarm-arrow-right" translatesAutoresizingMaskIntoConstraints="NO" id="bca-mM-1MH">
+                                            <rect key="frame" x="301" y="23" width="9" height="15"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.69999999999999996" tag="99" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simple" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PTN-gA-1FR">
+                                            <rect key="frame" x="171" y="18" width="120" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="120" id="F3D-a4-rA5"/>
+                                                <constraint firstAttribute="height" constant="24" id="Im8-QA-JhB"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="20"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Alarm Tone" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jp7-WP-L5x">
+                                            <rect key="frame" x="8" y="18" width="120" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="120" id="Wfa-7S-S7Y"/>
+                                                <constraint firstAttribute="height" constant="24" id="iXt-Gm-L1J"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="20"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="jp7-WP-L5x" secondAttribute="centerY" id="FRZ-c2-kqf"/>
+                                        <constraint firstAttribute="centerY" secondItem="bca-mM-1MH" secondAttribute="centerY" id="ImU-hp-7J7"/>
+                                        <constraint firstItem="jp7-WP-L5x" firstAttribute="leading" secondItem="XaK-UV-OHv" secondAttribute="leading" constant="10" id="Lcv-zu-Tn2"/>
+                                        <constraint firstItem="bca-mM-1MH" firstAttribute="leading" secondItem="PTN-gA-1FR" secondAttribute="trailing" constant="10" id="TdW-1F-y3F"/>
+                                        <constraint firstAttribute="trailing" secondItem="bca-mM-1MH" secondAttribute="trailing" constant="10" id="bzK-8m-K00"/>
+                                        <constraint firstAttribute="centerY" secondItem="PTN-gA-1FR" secondAttribute="centerY" id="wda-I1-vkT"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -822,6 +859,7 @@
     </scenes>
     <resources>
         <image name="alarm-dots" width="6" height="40"/>
+        <image name="woke-alarm-arrow-right" width="9" height="15"/>
         <image name="woke-alarms-minus" width="30" height="30"/>
         <image name="woke-alarms-minus-highlighted" width="30" height="30"/>
         <image name="woke-alarms-plus" width="30" height="30"/>
