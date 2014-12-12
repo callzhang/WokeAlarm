@@ -9,8 +9,12 @@
 #import "EWAlarmViewController.h"
 #import "VBFPopFlatButton.h"
 #import "EWAlarmTableViewCell.h"
+#import "EWAlarm.h"
+
+#define kToneLabelTag 99
 
 @interface EWAlarmViewController ()
+@property (nonatomic, strong) NSArray *alarms;
 
 @end
 
@@ -21,6 +25,8 @@
     self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
     self.title = @"Alarms";
     self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"woke-background"]];
+    
+    self.alarms = [EWPerson myAlarms];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -37,7 +43,7 @@
     }
     
     if (section == 1) {
-        return 7;
+        return self.alarms.count;
     }
     
     return 0;
@@ -59,7 +65,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         UITableViewCell *toneCell = [tableView dequeueReusableCellWithIdentifier:@"EWAlarmToneSelectionCell"];
+        toneCell.contentView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.04];
+        return toneCell;
     }
+    
     EWAlarmTableViewCell *cell = (EWAlarmTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"EWAlarmTableViewCell"];
     
     if (indexPath.row % 2 == 0) {
@@ -68,6 +77,10 @@
     else {
         cell.contentView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.04];
     }
+    
+    EWAlarm *alarm = self.alarms[indexPath.row];
+    cell.alarm = alarm;
+    
     return cell;
 }
 

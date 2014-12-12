@@ -8,9 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@class EWAlarm, SevenSwitch;
 @interface EWAlarmTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *plusButton;
 @property (weak, nonatomic) IBOutlet UIButton *minusButton;
 @property (weak, nonatomic) IBOutlet UILabel *mondayLabel;
+@property (nonatomic, strong) EWAlarm *alarm;
+@property (weak, nonatomic) IBOutlet SevenSwitch *sevenSwitch;
+
+- (IBAction)onPlusButton:(id)sender;
+- (IBAction)onMinusButton:(id)sender;
+- (IBAction)onSwitchValueChanged:(id)sender;
 @end
