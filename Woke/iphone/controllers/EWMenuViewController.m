@@ -51,13 +51,13 @@
 #pragma mark -
 - (IBAction)onAlarms:(id)sender {
     [self.baseNavigationController toogleMenuCompletion:^{
-        [self performSegueWithIdentifier:@"MenuToAlarmReplace" sender:self];
+//        [self performSegueWithIdentifier:@"MenuToAlarmReplace" sender:self];
     }];
 }
 
 - (IBAction)onHome:(id)sender {
     [self.baseNavigationController toogleMenuCompletion:^{
-        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+//        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
     }];
 }
 #pragma mark -
