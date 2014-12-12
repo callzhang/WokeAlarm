@@ -196,7 +196,7 @@
 #pragma mark - Local Notification
 - (void)scheduleLocalNotification{
 	//check state
-    NSAssert(self.stateValue, @"Alarm state is NO");
+    if(!self.stateValue) return;
     if (![self validate]) {
         DDLogVerbose(@"Alarm not validated when scheduling local notif");
         return;

@@ -151,6 +151,7 @@
 		9B8829421A31868100EF572E /* EWBlurNavigationControllerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
+		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
 		9BF1815D1A35222F00D25DBA /* Autumn Spring.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181551A35222F00D25DBA /* Autumn Spring.caf */; };
 		9BF1815E1A35222F00D25DBA /* Daybreak.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181561A35222F00D25DBA /* Daybreak.caf */; };
 		9BF1815F1A35222F00D25DBA /* Drive.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181571A35222F00D25DBA /* Drive.caf */; };
@@ -288,8 +289,8 @@
 		096AAB051A1972B800B4CBFF /* EWRingtoneSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWRingtoneSelectionViewController.m; sourceTree = "<group>"; };
 		096AAB061A1972B800B4CBFF /* EWSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSettingsViewController.h; sourceTree = "<group>"; };
 		096AAB071A1972B800B4CBFF /* EWSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSettingsViewController.m; sourceTree = "<group>"; };
-		096AAB081A1972B800B4CBFF /* EWSleepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewController.h; sourceTree = "<group>"; };
-		096AAB091A1972B800B4CBFF /* EWSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewController.m; sourceTree = "<group>"; };
+		096AAB081A1972B800B4CBFF /* EWSleepModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWSleepModeViewController.h; path = legacy/EWSleepModeViewController.h; sourceTree = "<group>"; };
+		096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EWSleepModeViewController.m; path = legacy/EWSleepModeViewController.m; sourceTree = "<group>"; };
 		096AAB0A1A1972B800B4CBFF /* EWWakeUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpViewController.h; sourceTree = "<group>"; };
 		096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeUpViewController.m; sourceTree = "<group>"; };
 		096AAB0C1A1972B800B4CBFF /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -506,6 +507,10 @@
 			children = (
 				9BF181651A37C1B600D25DBA /* EWPreWakeViewController.h */,
 				9BF181661A37C1B600D25DBA /* EWPreWakeViewController.m */,
+				097A82C71A2163FA0030A2E8 /* EWSleepViewController.h */,
+				097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */,
+				096AAB081A1972B800B4CBFF /* EWSleepModeViewController.h */,
+				096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */,
 				096AAAF51A1972B800B4CBFF /* legacy */,
 				096AAA461A19593300B4CBFF /* EWLoginGateViewController.h */,
 				096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */,
@@ -513,8 +518,6 @@
 				096AAA4B1A19593300B4CBFF /* EWMainViewController.m */,
 				09285A3A1A1F0E8100C808C0 /* EWMenuViewController.h */,
 				09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */,
-				097A82C71A2163FA0030A2E8 /* EWSleepViewController.h */,
-				097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */,
 				09B521021A25825A008FF7F6 /* EWWakeViewController.h */,
 				09B521031A25825A008FF7F6 /* EWWakeViewController.m */,
 				09D7370F1A32951000E8C9ED /* EWAlarmViewController.h */,
@@ -680,8 +683,6 @@
 				096AAB051A1972B800B4CBFF /* EWRingtoneSelectionViewController.m */,
 				096AAB061A1972B800B4CBFF /* EWSettingsViewController.h */,
 				096AAB071A1972B800B4CBFF /* EWSettingsViewController.m */,
-				096AAB081A1972B800B4CBFF /* EWSleepViewController.h */,
-				096AAB091A1972B800B4CBFF /* EWSleepViewController.m */,
 				096AAB0A1A1972B800B4CBFF /* EWWakeUpViewController.h */,
 				096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */,
 				096AAB0C1A1972B800B4CBFF /* ViewController.h */,
@@ -1163,7 +1164,6 @@
 				9B8139771A15D65900F1A56C /* PLCameraSheetButton@2x.png in Resources */,
 				091C67601A3523AF0091B8A6 /* EWPostWakeUpView.xib in Resources */,
 				9BF181611A35222F00D25DBA /* Silence04s.caf in Resources */,
-				096AAA861A19593300B4CBFF /* EWSleepViewController.xib in Resources */,
 				9B8139761A15D65900F1A56C /* PLCameraSheetButton.png in Resources */,
 				9BF181631A35222F00D25DBA /* tock.caf in Resources */,
 				9B8139771A15D65900F1A56C /* PLCameraSheetButton@2x.png in Resources */,
@@ -1177,12 +1177,9 @@
 				9B8139781A15D65900F1A56C /* PLCameraSheetButtonPressed.png in Resources */,
 				09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */,
 				091C675A1A3523AF0091B8A6 /* EWAlarmEditCell.xib in Resources */,
-				096AAA831A19593300B4CBFF /* EWPostWakeUpView.xib in Resources */,
 				9BF181601A35222F00D25DBA /* Parisian Dream.caf in Resources */,
 				9B8139781A15D65900F1A56C /* PLCameraSheetButtonPressed.png in Resources */,
 				09269DE31A1316E60048DC44 /* Lato-Regular.ttf in Resources */,
-				096AAA811A19593300B4CBFF /* EWMediaCell.xib in Resources */,
-				096AAA871A19593300B4CBFF /* EWWakeUpView.xib in Resources */,
 				9BF181621A35222F00D25DBA /* Sunny Afternoon.caf in Resources */,
 				09A777301A11E2BD004AF902 /* Main.storyboard in Resources */,
 				09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */,
@@ -1304,6 +1301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09DF4F8A1A1434AF00BEA328 /* _EWNotification.m in Sources */,
+				9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */,
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,

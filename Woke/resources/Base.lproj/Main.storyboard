@@ -39,6 +39,11 @@
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
+            <string>Lato-Light</string>
+        </mutableArray>
+        <mutableArray key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+            <string>Lato-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -497,6 +502,9 @@
                                 <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
                                 <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
+                                <connections>
+                                    <segue destination="VN0-T7-2gC" kind="custom" customClass="MSReplaceFadeSegue" id="oOK-jK-Klq"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -541,10 +549,10 @@
             </objects>
             <point key="canvasLocation" x="622" y="1014"/>
         </scene>
-        <!--Wake View Controller-->
+        <!--View Controller-->
         <scene sceneID="cFx-dN-xs2">
             <objects>
-                <viewController storyboardIdentifier="EWWakeViewController" id="ZmP-te-75G" customClass="EWWakeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EWWakeViewController" id="ZmP-te-75G" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dl2-E4-4JA"/>
                         <viewControllerLayoutGuide type="bottom" id="izB-BO-tjT"/>
@@ -669,6 +677,106 @@
             </objects>
             <point key="canvasLocation" x="964" y="1014"/>
         </scene>
+        <!--Sleep Mode View Controller-->
+        <scene sceneID="ZQQ-Js-IYW">
+            <objects>
+                <viewController id="VN0-T7-2gC" customClass="EWSleepModeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hEt-3G-iJu"/>
+                        <viewControllerLayoutGuide type="bottom" id="O80-la-ztf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ee5-9B-fj4">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stary night" translatesAutoresizingMaskIntoConstraints="NO" id="KkA-gJ-DzL">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11:30 PM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S6h-jf-hVc">
+                                <rect key="frame" x="35" y="152" width="251" height="51"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="51" id="lBx-Gk-Zth"/>
+                                    <constraint firstAttribute="width" constant="251" id="q9S-lx-bjw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lane-Narrow" family="Lane - Narrow" pointSize="48"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="7.5 hours left" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZBf-1Q-Sxs">
+                                <rect key="frame" x="101" y="201" width="118" height="21"/>
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wake time 7:30 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QuD-d8-ABZ">
+                                <rect key="frame" x="58" y="128" width="204" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="204" id="KSn-ed-1Am"/>
+                                    <constraint firstAttribute="height" constant="21" id="gYW-hJ-EBO"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uwa-h9-K4p">
+                                <rect key="frame" x="90" y="504" width="139" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="9cV-ux-NiX"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="139" id="DUQ-eI-O05"/>
+                                    <constraint firstAttribute="height" constant="48" id="Rxp-mM-Zil"/>
+                                    <constraint firstAttribute="width" constant="139" id="Yte-Tg-AfQ"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="48" id="ig2-3X-mwn"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="19"/>
+                                <state key="normal" title="Wake Up" backgroundImage="woke-rectangle-normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
+                                <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Rxp-mM-Zil"/>
+                                        <exclude reference="Yte-Tg-AfQ"/>
+                                        <exclude reference="ig2-3X-mwn"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <segue destination="cn9-tj-CIm" kind="custom" customClass="MSReplaceFadeSegue" id="mXC-I0-GpE"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.1780278132" green="0.25300945009999998" blue="0.35721456010000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="QuD-d8-ABZ" firstAttribute="leading" secondItem="ee5-9B-fj4" secondAttribute="leadingMargin" constant="42" id="56o-Bk-M7G"/>
+                            <constraint firstItem="O80-la-ztf" firstAttribute="top" secondItem="uwa-h9-K4p" secondAttribute="bottom" constant="16" id="5ZE-K8-q9w"/>
+                            <constraint firstAttribute="centerX" secondItem="S6h-jf-hVc" secondAttribute="centerX" id="AuH-Kd-Q9f"/>
+                            <constraint firstItem="ZBf-1Q-Sxs" firstAttribute="top" secondItem="QuD-d8-ABZ" secondAttribute="bottom" constant="52" id="CyF-ym-DRX"/>
+                            <constraint firstItem="KkA-gJ-DzL" firstAttribute="top" secondItem="ee5-9B-fj4" secondAttribute="top" id="Do9-yo-v90"/>
+                            <constraint firstAttribute="centerX" secondItem="QuD-d8-ABZ" secondAttribute="centerX" id="F2N-Pg-Oae"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="QuD-d8-ABZ" secondAttribute="trailing" constant="42" id="N6d-BY-EKg"/>
+                            <constraint firstAttribute="trailing" secondItem="KkA-gJ-DzL" secondAttribute="trailing" id="hII-gX-HF2"/>
+                            <constraint firstItem="S6h-jf-hVc" firstAttribute="top" secondItem="QuD-d8-ABZ" secondAttribute="bottom" constant="3" id="hgH-jy-s29"/>
+                            <constraint firstItem="QuD-d8-ABZ" firstAttribute="top" secondItem="hEt-3G-iJu" secondAttribute="bottom" constant="108" id="iFW-YJ-MSh"/>
+                            <constraint firstAttribute="centerX" secondItem="uwa-h9-K4p" secondAttribute="centerX" id="k84-XK-j9p"/>
+                            <constraint firstItem="KkA-gJ-DzL" firstAttribute="leading" secondItem="ee5-9B-fj4" secondAttribute="leading" id="mED-k2-RUv"/>
+                            <constraint firstAttribute="centerX" secondItem="ZBf-1Q-Sxs" secondAttribute="centerX" id="qZc-Si-dz5"/>
+                            <constraint firstItem="O80-la-ztf" firstAttribute="top" secondItem="KkA-gJ-DzL" secondAttribute="bottom" id="t4C-6g-MGb"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="56o-Bk-M7G"/>
+                                <exclude reference="N6d-BY-EKg"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KJ6-XR-Sql" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1321" y="1014"/>
+        </scene>
         <!--Pre Wake View Controller-->
         <scene sceneID="6cz-Rb-LEO">
             <objects>
@@ -712,12 +820,17 @@
                                 <state key="normal" title="Wake up">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="wakeUp:" destination="cn9-tj-CIm" eventType="touchUpInside" id="VUZ-bg-866"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="zFJ-K2-VqW" firstAttribute="top" secondItem="tGR-Dl-h9L" secondAttribute="bottom" constant="42" id="IcT-ND-38D"/>
                             <constraint firstAttribute="centerX" secondItem="3Ep-2l-i5U" secondAttribute="centerX" id="OfS-Px-y8U"/>
@@ -740,7 +853,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vcY-iz-4hH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="622" y="1686"/>
+            <point key="canvasLocation" x="622" y="1780"/>
         </scene>
         <!--Alarm View Controller-->
         <scene sceneID="J5T-sb-sq7">
@@ -965,11 +1078,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4h4-PB-kRD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="964" y="1686"/>
+            <point key="canvasLocation" x="964" y="1780"/>
         </scene>
     </scenes>
     <resources>
         <image name="alarm-dots" width="6" height="40"/>
+        <image name="stary night" width="640" height="1136"/>
         <image name="woke-alarm-arrow-right" width="9" height="15"/>
         <image name="woke-alarms-minus" width="30" height="30"/>
         <image name="woke-alarms-minus-highlighted" width="30" height="30"/>

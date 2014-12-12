@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 WokeAlarm.com. All rights reserved.
 //
 
-#import "EWSleepViewController.h"
+#import "EWSleepModeViewController.h"
 #import "EWBackgroundingManager.h"
 #import "EWAVManager.h"
 #import "EWPersonManager.h"
@@ -15,14 +15,14 @@
 #import "EWActivity.h"
 #import "UIViewController+Blur.h"
 
-@interface EWSleepViewController (){
+@interface EWSleepModeViewController (){
     NSTimer *timer;
     EWActivity *currentActivity;
 }
 
 @end
 
-@implementation EWSleepViewController
+@implementation EWSleepModeViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -44,6 +44,8 @@
 	if (![cachedNextTime isEqualToDate:currentActivity.time]) {
 		[[EWAlarmManager sharedInstance] updateCachedAlarmTimes];
 	}
+    
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
 }
 
 - (void)viewDidAppear:(BOOL)animated{

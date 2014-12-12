@@ -43,6 +43,8 @@
         //update info
         [self updateViewForCurrentMedia];
     }];
+    
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
 }
 
 - (void)dealloc{
