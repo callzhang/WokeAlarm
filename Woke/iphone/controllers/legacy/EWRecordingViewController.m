@@ -83,10 +83,10 @@
 
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
-    [EWAVManager sharedManager].waveformView = self.waveformView;
+    //[EWAVManager sharedManager].waveformView = self.waveformView;
 
-    [EWAVManager sharedManager].playStopBtn = playBtn;
-    [EWAVManager sharedManager].recordStopBtn = recordBtn;
+    //[EWAVManager sharedManager].playStopBtn = playBtn;
+    //[EWAVManager sharedManager].recordStopBtn = recordBtn;
 }
 
 -(void)initProgressView{

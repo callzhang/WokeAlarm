@@ -55,19 +55,6 @@
 }
 
 
-- (void)dealloc {
-    @try {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kAudioPlayerDidFinishPlaying object:nil];
-        [self.activity removeObserver:self forKeyPath:@"medias"];
-    }
-    @catch (NSException *exception) {
-        DDLogError(@"error in deallocating WakeUpViewController: %@", exception.description);
-    }
-    
-    DDLogVerbose(@"WakeUpViewController deallocated. Observers removed.");
-}
-
-
 #pragma mark - Life Cycle
 
 - (void)viewDidLoad {
@@ -103,7 +90,7 @@
     [self.view setNeedsDisplay];
     
     //pre download everyone for postWakeUpVC
-    [[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
+    //[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
     
     //send currently played cell info to EWAVManager
     //[[EWWakeUpManager sharedInstance] playNext];
@@ -118,13 +105,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNewMediaNotification object:nil];
     [_activity removeObserver:self forKeyPath:@"medias"];
     
-    NSLog(@"WakeUpViewController popped out of view: remote control event listner stopped. Observers removed.");
-    
-    //Resume to normal session
-    [[EWBackgroundingManager sharedInstance] registerBackgroudingAudioSession];
-    
-    //invalid timer
     [timeTimer invalidate];
+    [progressTimer invalidate];
+    NSLog(@"WakeUpViewController popped out of view: remote control event listner stopped. Observers removed.");
 }
 
 - (void)initData {

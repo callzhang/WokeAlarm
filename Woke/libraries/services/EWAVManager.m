@@ -30,7 +30,7 @@
 
 @implementation EWAVManager
 @synthesize player, recorder;
-@synthesize playStopBtn, recordStopBtn, currentTime, media;
+@synthesize media;
 
 
 +(EWAVManager *)sharedManager{
@@ -127,6 +127,7 @@
 			[self.player play];
 		}
 		[self updateViewForPlayerState:player];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerPlayingNewMedia object:media];
         return;
     }
     else{
@@ -139,7 +140,8 @@
         if ([media.type isEqualToString:kMediaTypeVoice] || !media.type) {
             
             [self playSoundFromData:mi.mediaFile.audio];
-			
+			[[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerPlayingNewMedia object:media];
+            
         }else{
             DDLogVerbose(@"Unknown type of media, skip");
             [self playSoundFromFileName:kSilentSound];
@@ -237,22 +239,6 @@
 	//remove target action
 	
 }
-//
-//#pragma mark - UI event
-//- (IBAction)sliderChanged:(UISlider *)sender {
-//    if (![sender isEqual:progressBar]) {
-//        DDLogVerbose(@"Sender is not current slider in EWAVManager, skip");
-//        return;
-//    }
-//    // Fast skip the music when user scroll the UISlider
-//    [player stop];
-//    [player setCurrentTime:progressBar.value];
-//    NSString *timeStr = [NSString stringWithFormat:@"%02ld", (long)progressBar.value % 60];
-//    currentTime.text = timeStr;
-//    [player prepareToPlay];
-//    [player play];
-//    
-//}
 
 #pragma mark - Record
 - (NSURL *)record{
@@ -305,18 +291,6 @@
     //set up timer
     if (p.playing){
 		player.volume = 1.0;
-		//[lvlMeter_in setPlayer:p];
-        //add new target
-        //[progressBar addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
-		//updateTimer = [NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(updateCurrentTime:) userInfo:p repeats:YES];
-        
-        //unhide
-        [UIView animateWithDuration:0.5 animations:^{
-            //self.progressBar.alpha = 1;
-        }];
-        [UIView animateWithDuration:0.5 animations:^{
-            self.waveformView.alpha = 0.0;
-        }];
         
 	}
 	else{
@@ -332,33 +306,14 @@
     
 	if (r.recording)
 	{
-//        if (progressBar) {
-//            DDLogVerbose(@"Updating progress bar");
-//            updateTimer = [NSTimer scheduledTimerWithTimeInterval:.01 target:self selector:@selector(updateCurrentTimeForRecorder:) userInfo:r repeats:YES];
-//        }
 		
-        
-        if (self.waveformView) {
-            DDLogVerbose(@"Updating meter waveform");
-            displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateMeters)];
-            [displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-            
-            [UIView animateWithDuration:0.5 animations:^{
-                self.waveformView.alpha = 1;
-            }];
-            
-            [UIView animateWithDuration:0.5 animations:^{
-                //self.progressBar.alpha = 0;
-            }];
-            
-        }
 	}
 	else
 	{
 		[updateTimer invalidate];
-        
 	}
 }
+
 
 //-(void)updateCurrentTime:(NSTimer *)timer{
 //    AVAudioPlayer *p = (AVAudioPlayer *)timer.userInfo;
@@ -378,15 +333,9 @@
 //    }
 //}
 
-- (void)updateMeters{
-	[self.recorder updateMeters];
-    CGFloat normalizedValue = (float)pow (10, [self.recorder averagePowerForChannel:0]/30);
-    [self.waveformView updateWithLevel:normalizedValue];
-}
-
 
 #pragma mark - AVAudioPlayer delegate method
-- (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *)p successfully:(BOOL)flag {
+- (void)audioPlayerDidFinishPlaying: (AVAudioPlayer *)p successfully:(BOOL)flag {
     DDLogVerbose(@"Player finished (%@)", flag?@"Success":@"Failed");
     [updateTimer invalidate];
     self.player.currentTime = 0.0;
@@ -399,10 +348,6 @@
     [updateTimer invalidate];
     [displaylink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     displaylink = nil;
-    [UIView animateWithDuration:0.5 animations:^{
-        self.waveformView.alpha = 0;
-    }];
-    [recordStopBtn setTitle:@"Record" forState:UIControlStateNormal];
     DDLogVerbose(@"Recording reached max length");
 }
 

@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -664,10 +665,10 @@
             </objects>
             <point key="canvasLocation" x="964" y="1014"/>
         </scene>
-        <!--View Controller-->
+        <!--Pre Wake View Controller-->
         <scene sceneID="6cz-Rb-LEO">
             <objects>
-                <viewController id="cn9-tj-CIm" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EWPreWakeViewController" id="cn9-tj-CIm" customClass="EWPreWakeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="tGR-Dl-h9L"/>
                         <viewControllerLayoutGuide type="bottom" id="GZo-44-KJk"/>
@@ -675,13 +676,67 @@
                     <view key="view" contentMode="scaleToFill" id="ilK-me-T6E">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zFJ-K2-VqW">
+                                <rect key="frame" x="40" y="62" width="240" height="240"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="zFJ-K2-VqW" secondAttribute="height" multiplier="1:1" id="saO-mi-vyp"/>
+                                </constraints>
+                            </imageView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kn5-qD-xSK">
+                                <rect key="frame" x="85" y="339" width="150" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="YwQ-rZ-AzT"/>
+                                </constraints>
+                            </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ep-2l-i5U">
+                                <rect key="frame" x="40" y="310" width="240" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="h2x-A0-RsB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.17802781320947389" green="0.25300945014414777" blue="0.35721456005586594" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gna-Bz-U0d">
+                                <rect key="frame" x="63" y="474" width="194" height="58"/>
+                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="194" id="hV6-89-u2B"/>
+                                    <constraint firstAttribute="height" constant="58" id="irK-7l-6QT"/>
+                                </constraints>
+                                <state key="normal" title="Wake up">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="wakeUp:" destination="cn9-tj-CIm" eventType="touchUpInside" id="VUZ-bg-866"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="zFJ-K2-VqW" firstAttribute="top" secondItem="tGR-Dl-h9L" secondAttribute="bottom" constant="42" id="IcT-ND-38D"/>
+                            <constraint firstAttribute="centerX" secondItem="3Ep-2l-i5U" secondAttribute="centerX" id="OfS-Px-y8U"/>
+                            <constraint firstItem="GZo-44-KJk" firstAttribute="top" secondItem="Gna-Bz-U0d" secondAttribute="bottom" constant="36" id="PMp-Q8-6Hu"/>
+                            <constraint firstItem="Gna-Bz-U0d" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leadingMargin" constant="47" id="PV6-FI-CGK"/>
+                            <constraint firstAttribute="centerX" secondItem="kn5-qD-xSK" secondAttribute="centerX" id="TSL-9T-H0x"/>
+                            <constraint firstItem="zFJ-K2-VqW" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leadingMargin" constant="24" id="hZO-eX-cXs"/>
+                            <constraint firstItem="kn5-qD-xSK" firstAttribute="top" secondItem="3Ep-2l-i5U" secondAttribute="bottom" constant="8" id="igR-NM-BxR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="zFJ-K2-VqW" secondAttribute="trailing" constant="24" id="t6o-u2-jH9"/>
+                            <constraint firstItem="3Ep-2l-i5U" firstAttribute="top" secondItem="zFJ-K2-VqW" secondAttribute="bottom" constant="8" id="wmH-pc-ZEb"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Gna-Bz-U0d" secondAttribute="trailing" constant="47" id="ygU-aI-8TH"/>
+                        </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="name" destination="3Ep-2l-i5U" id="uYx-L5-Ati"/>
+                        <outlet property="profileImage" destination="zFJ-K2-VqW" id="8Dk-W2-VZ0"/>
+                        <outlet property="progress" destination="kn5-qD-xSK" id="FL1-Wo-ytV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vcY-iz-4hH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="622" y="1692"/>
+            <point key="canvasLocation" x="622" y="1686"/>
         </scene>
         <!--Alarm View Controller-->
         <scene sceneID="J5T-sb-sq7">
@@ -714,6 +769,31 @@
             </objects>
             <point key="canvasLocation" x="-1007" y="1275"/>
         </scene>
+        <!--Wake Up View Controller-->
+        <scene sceneID="vHe-83-czK">
+            <objects>
+                <viewController storyboardIdentifier="EWWakeUpViewController" id="Udc-H3-g35" customClass="EWWakeUpViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="S59-Ke-Ckt"/>
+                        <viewControllerLayoutGuide type="bottom" id="949-p4-UOe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="z3P-0E-m3U">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="JBz-Og-Tfe">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4h4-PB-kRD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="964" y="1686"/>
+        </scene>
     </scenes>
     <resources>
         <image name="alarm-dots" width="6" height="40"/>
@@ -726,6 +806,6 @@
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="tfZ-IS-2Ts"/>
+        <segue reference="chJ-Cr-lS2"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#define kNewNediaPlaying        @"new_media_playing"
 @import UIKit;
 @class EWActivity, EWAlarm, EWPerson;
 NSUInteger static maxLoop = 100;
