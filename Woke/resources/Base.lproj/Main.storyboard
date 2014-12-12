@@ -154,7 +154,7 @@
                                 <rect key="frame" x="0.0" y="-50" width="320" height="618"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x94-DL-jrO">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x94-DL-jrO">
                                 <rect key="frame" x="21" y="86" width="74" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <state key="normal" title="Home">
@@ -166,7 +166,7 @@
                                     <segue destination="Prn-GM-2Iw" kind="custom" identifier="MenuToHomeReplace" customClass="MSReplaceFadeSegue" id="chJ-Cr-lS2"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHV-nd-2l3">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHV-nd-2l3">
                                 <rect key="frame" x="21" y="140" width="154" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <state key="normal" title="Notifications">
@@ -174,7 +174,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4y-rw-jgD">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4y-rw-jgD">
                                 <rect key="frame" x="21" y="194" width="83" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <state key="normal" title="Alarms">
@@ -186,7 +186,7 @@
                                     <segue destination="iQK-rp-5Xu" kind="custom" identifier="MenuToAlarmReplace" customClass="MSReplaceFadeSegue" id="TgZ-7W-3pc"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Mb-bv-HXk">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Mb-bv-HXk">
                                 <rect key="frame" x="21" y="248" width="66" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <state key="normal" title="Voice">
@@ -194,7 +194,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
                                 <rect key="frame" x="21" y="302" width="123" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <state key="normal" title="My Profile">
@@ -202,7 +202,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="027-dv-aEP">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="027-dv-aEP">
                                 <rect key="frame" x="21" y="356" width="96" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <state key="normal" title="Settings">
@@ -210,7 +210,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIq-mw-Cq6">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIq-mw-Cq6">
                                 <rect key="frame" x="216" y="502" width="84" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <state key="normal" title="Logout">
@@ -345,7 +345,7 @@
                                     <constraint firstAttribute="width" id="KZX-Ff-Ywi"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HJt-tA-SSL" userLabel="time wrapper view">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJt-tA-SSL" userLabel="time wrapper view">
                                 <rect key="frame" x="45" y="125" width="230" height="80"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FQg-Z4-hZe">
@@ -412,19 +412,19 @@
                                     <constraint firstAttribute="centerY" secondItem="FyN-3k-0Sz" secondAttribute="centerY" id="viR-G2-fFo"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Next Alarm" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4xW-xG-fh5">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Next Alarm" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4xW-xG-fh5">
                                 <rect key="frame" x="121" y="100" width="78" height="20"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="16"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="AM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zu9-5E-PbO">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zu9-5E-PbO">
                                 <rect key="frame" x="278" y="125" width="29" height="22"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Wednesday, Spetember" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoZ-04-ZHl">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wednesday, Spetember" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoZ-04-ZHl">
                                 <rect key="frame" x="50" y="215" width="220" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="fiP-QR-zSH"/>
@@ -433,7 +433,7 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="23 hours 29 minutes " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2K-SO-fYc">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23 hours 29 minutes " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2K-SO-fYc">
                                 <rect key="frame" x="50" y="235" width="220" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="fEE-oZ-XKW"/>
@@ -780,6 +780,12 @@
                     <view key="view" contentMode="scaleToFill" id="z3P-0E-m3U">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="JBz-Og-Tfe">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -800,6 +806,6 @@
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="tfZ-IS-2Ts"/>
+        <segue reference="chJ-Cr-lS2"/>
     </inferredMetricsTieBreakers>
 </document>
