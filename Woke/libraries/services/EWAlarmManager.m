@@ -17,6 +17,12 @@
 #import "EWAlarmScheduleViewController.h"
 #import "AFNetworking.h"
 
+@interface EWAlarmManager(){
+    NSTimer *alarmPushScheduleTimer;
+}
+
+@end
+
 @implementation EWAlarmManager
 
 + (EWAlarmManager *)sharedInstance {
@@ -367,14 +373,15 @@
 
 - (void)scheduleNotificationOnServerForAlarm:(EWAlarm *)alarm{
 
-    static NSTimer *alarmPushScheduleTimer;
     NSMutableArray *userInfo = [alarmPushScheduleTimer.userInfo mutableCopy] ?: [NSMutableArray new];
     [userInfo addObject:alarm.objectID];
+    [alarmPushScheduleTimer invalidate];
     alarmPushScheduleTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(scheduleNotificationOnServerForTimer:) userInfo:userInfo.copy repeats:NO];
     
 }
 
 - (void)scheduleNotificationOnServerForTimer:(NSTimer *)timer{
+    alarmPushScheduleTimer = nil;
     NSArray *alarmsIDs = timer.userInfo;
     NSArray *alarms = [EWAlarm MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K IN %@", kParseObjectID, alarmsIDs]];
     for (EWAlarm *alarm in alarms) {

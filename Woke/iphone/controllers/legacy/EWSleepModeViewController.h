@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseViewController.h"
 
-@interface EWSleepViewController : UIViewController
+@interface EWSleepModeViewController : EWBaseViewController
 - (IBAction)cancel:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLeftLabel;
