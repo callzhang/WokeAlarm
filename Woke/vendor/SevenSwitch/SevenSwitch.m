@@ -56,7 +56,7 @@
 #pragma mark init Methods
 
 - (id)init {
-    self = [super initWithFrame:CGRectMake(0, 0, 50, 30)];
+    self = [super initWithFrame:CGRectMake(0, 0, 60, 30)];
     if (self) {
         [self setup];
     }
@@ -66,7 +66,15 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        self.frame = CGRectMake(0, 0, 60, 30);
         [self setup];
+        
+        //Woke customization
+        self.thumbTintColor = [UIColor clearColor];
+        self.onTintColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.1f];
+        self.inactiveColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.1f];
+        self.shadowColor = [UIColor clearColor];
+        self.borderColor = [UIColor clearColor];
     }
     return self;
 }
@@ -129,7 +137,7 @@
     [background addSubview:offImageView];
 	
     // knob
-    knob = [[UIView alloc] initWithFrame:CGRectMake(1, 1, self.frame.size.height - 2, self.frame.size.height - 2)];
+    knob = [[UIView alloc] initWithFrame:CGRectMake(1, 1, self.frame.size.height - 2, self.frame.size.width - 2)];
     knob.backgroundColor = self.thumbTintColor;
     knob.layer.cornerRadius = (self.frame.size.height * 0.5) - 1;
     knob.layer.shadowColor = self.shadowColor.CGColor;
@@ -154,6 +162,7 @@
     self.onLabel.textColor = [UIColor whiteColor];
     self.onLabel.text = @"ON";
     self.onLabel.font = [UIFont systemFontOfSize:12];
+    self.onLabel.alpha = 0;
     [knob addSubview:self.onLabel];
     
     self.offLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.height / 4.0, -1, self.frame.size.width - self.frame.size.height, self.frame.size.height)];
@@ -268,7 +277,7 @@
         if (self.on)
             knob.frame = CGRectMake(frame.size.width - (normalKnobWidth + 1), 1, frame.size.height - 2, normalKnobWidth);
         else
-            knob.frame = CGRectMake(1, 1, normalKnobWidth, normalKnobWidth);
+            knob.frame = CGRectMake(1, 1, normalKnobWidth, frame.size.height);
 
         knob.layer.cornerRadius = self.isRounded ? (frame.size.height * 0.5) - 1 : 2;
     }
