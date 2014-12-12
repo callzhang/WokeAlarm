@@ -736,6 +736,9 @@
                                                 <constraint firstAttribute="height" constant="30" id="0fG-Kt-xv4"/>
                                                 <constraint firstAttribute="width" constant="60" id="nyQ-9h-ao8"/>
                                             </constraints>
+                                            <connections>
+                                                <action selector="onSwitchValueChanged:" destination="vQc-FA-CBp" eventType="valueChanged" id="qRB-Fz-TAG"/>
+                                            </connections>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PmX-xE-3Ev">
                                             <rect key="frame" x="210" y="25" width="30" height="30"/>
@@ -748,6 +751,9 @@
                                             </state>
                                             <state key="selected" image="woke-alarms-plus-highlighted"/>
                                             <state key="highlighted" image="woke-alarms-plus-highlighted"/>
+                                            <connections>
+                                                <action selector="onPlusButton:" destination="vQc-FA-CBp" eventType="touchUpInside" id="6Hf-k5-tk5"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ok4-yk-EOP">
                                             <rect key="frame" x="170" y="25" width="30" height="30"/>
@@ -760,6 +766,9 @@
                                             </state>
                                             <state key="selected" image="woke-alarms-minus-highlighted"/>
                                             <state key="highlighted" image="woke-alarms-minus-highlighted"/>
+                                            <connections>
+                                                <action selector="onMinusButton:" destination="vQc-FA-CBp" eventType="touchUpInside" id="L2q-ej-0zL"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -781,6 +790,7 @@
                                     <outlet property="minusButton" destination="Ok4-yk-EOP" id="SAC-05-vap"/>
                                     <outlet property="mondayLabel" destination="pIS-6G-iXc" id="TQ9-Fb-uHG"/>
                                     <outlet property="plusButton" destination="PmX-xE-3Ev" id="2Dm-xF-fPC"/>
+                                    <outlet property="sevenSwitch" destination="mNF-OP-8sK" id="hgK-MN-BdD"/>
                                     <outlet property="timeLabel" destination="vDo-0X-iMi" id="sAo-ba-HAb"/>
                                 </connections>
                             </tableViewCell>

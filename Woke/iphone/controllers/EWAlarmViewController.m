@@ -79,8 +79,7 @@
     }
     
     EWAlarm *alarm = self.alarms[indexPath.row];
-    cell.mondayLabel.text = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
-    cell.timeLabel.text = [alarm.time mt_stringFromDateWithFormat:@"hh:mm a" localized:YES];
+    cell.alarm = alarm;
     
     return cell;
 }

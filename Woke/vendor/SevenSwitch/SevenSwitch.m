@@ -66,9 +66,9 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        self.frame = CGRectMake(0, 0, 60, 30);
         [self setup];
         
-        self.frame = CGRectMake(0, 0, 60, 30);
         //Woke customization
         self.thumbTintColor = [UIColor clearColor];
         self.onTintColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.1f];
