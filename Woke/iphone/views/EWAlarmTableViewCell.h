@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *mondayLabel;
 @property (nonatomic, strong) EWAlarm *alarm;
 @property (weak, nonatomic) IBOutlet SevenSwitch *sevenSwitch;
+@property (nonatomic, assign, getter=isNextAlarm) BOOL nextAlarm;
 
 - (IBAction)onPlusButton:(id)sender;
 - (IBAction)onMinusButton:(id)sender;

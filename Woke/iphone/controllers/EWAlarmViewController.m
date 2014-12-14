@@ -16,7 +16,7 @@
 
 @interface EWAlarmViewController ()
 @property (nonatomic, strong) NSArray *alarms;
-
+@property (nonatomic, assign) EWAlarm *nextAlarm;
 @end
 
 @implementation EWAlarmViewController
@@ -28,11 +28,12 @@
     self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"woke-background"]];
     
     self.alarms = [EWPerson myAlarms];
-    
+    self.nextAlarm = [EWPerson myCurrentAlarm];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -69,6 +70,9 @@
         UITableViewCell *toneCell = [tableView dequeueReusableCellWithIdentifier:@"EWAlarmToneSelectionCell"];
         toneCell.contentView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.04];
         toneCell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        
+        UILabel *toneLabel = (UILabel *)[toneCell viewWithTag:kToneLabelTag];
+        toneLabel.text = [EWSession sharedSession].currentAlarmTone;
         return toneCell;
     }
     
@@ -84,6 +88,13 @@
     
     EWAlarm *alarm = self.alarms[indexPath.row];
     cell.alarm = alarm;
+    
+    if ([alarm isEqual:self.nextAlarm]) {
+        cell.nextAlarm = YES;
+    }
+    else {
+        cell.nextAlarm = NO;
+    }
     
     return cell;
 }
