@@ -593,6 +593,9 @@
                                 </state>
                                 <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <connections>
+                                    <action selector="onWakeHerButton:" destination="ZmP-te-75G" eventType="touchUpInside" id="HIf-hC-uMG"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEo-IB-dbM">
                                 <rect key="frame" x="16" y="505" width="139" height="48"/>
@@ -606,6 +609,9 @@
                                 </state>
                                 <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <connections>
+                                    <action selector="onNextButton:" destination="ZmP-te-75G" eventType="touchUpInside" id="oim-UA-mb6"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -640,7 +646,10 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="nameLabel" destination="FYb-xQ-Ifp" id="1I3-CW-WMV"/>
                         <outlet property="profileImageView" destination="eiI-YG-cDg" id="T5U-6T-rtt"/>
+                        <outlet property="statusLabel" destination="ZNX-QY-fw8" id="KTz-9c-7h2"/>
+                        <outlet property="wantsToWakeUpAtLabel" destination="Fp5-iC-Irk" id="pJQ-n5-AR1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z3T-0w-8G8" userLabel="First Responder" sceneMemberID="firstResponder"/>
