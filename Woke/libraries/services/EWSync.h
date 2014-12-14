@@ -46,7 +46,7 @@ typedef void (^EWSavingCallback)(void);
 #define kParseQueueDelete                   @"parse_queue_delete"
 #define kParseQueueWorking                  @"parse_queue_working"
 #define kParseQueueRefresh                  @"parse_queue_refresh"//queue for refresh
-#define kUserID                             @"user_object_id"
+#define kUserID                             @"userId"
 #define kUsername                           @"username"
 
 

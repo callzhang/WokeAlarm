@@ -214,15 +214,20 @@
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1
-#define COCOAPODS_VERSION_MINOR_Parse 5
+#define COCOAPODS_VERSION_MINOR_Parse 6
 #define COCOAPODS_VERSION_PATCH_Parse 0
 
 // ParseFacebookUtils
 #define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 1.5.0.1.
+#define COCOAPODS_VERSION_MAJOR_ParseFacebookUtils 1
+#define COCOAPODS_VERSION_MINOR_ParseFacebookUtils 6
+#define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 0
+
+// ParseUI
+#define COCOAPODS_POD_AVAILABLE_ParseUI
+#define COCOAPODS_VERSION_MAJOR_ParseUI 1
+#define COCOAPODS_VERSION_MINOR_ParseUI 0
+#define COCOAPODS_VERSION_PATCH_ParseUI 2
 
 // RHAddressBook
 #define COCOAPODS_POD_AVAILABLE_RHAddressBook

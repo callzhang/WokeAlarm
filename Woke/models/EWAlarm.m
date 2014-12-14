@@ -196,10 +196,13 @@
 #pragma mark - Local Notification
 - (void)scheduleLocalNotification{
 	//check state
-    if(!self.stateValue) return;
     if (![self validate]) {
         DDLogVerbose(@"Alarm not validated when scheduling local notif");
         return;
+    }
+    
+    if(!self.stateValue) {
+        [self cancelLocalNotification];
     }
 	
 	//check existing
@@ -301,27 +304,42 @@
     }
     NSNumber *duration = [EWPerson me].preference[kSleepDuration];
     float d = duration.floatValue;
-    NSDate *sleepTime = [self.time dateByAddingTimeInterval:-d*3600];
-    
-    //cancel if no change
-    [self cancelSleepLocalNotification];
-    
-    //local notification
-    UILocalNotification *sleepNotif = [[UILocalNotification alloc] init];
-    sleepNotif.timeZone = [NSTimeZone systemTimeZone];
-    sleepNotif.alertBody = [NSString stringWithFormat:@"It's time to sleep, press here to enter sleep mode (%@)", sleepTime.date2String];
-    sleepNotif.alertAction = @"Sleep";
-    sleepNotif.repeatInterval = NSCalendarUnitWeekOfYear;
-    sleepNotif.soundName = @"sleep mode.caf";
-    sleepNotif.userInfo = @{kLocalAlarmID: self.objectID.URIRepresentation.absoluteString,
-                            kLocalNotificationTypeKey: kLocalNotificationTypeSleepTimer};
-    if ([sleepTime timeIntervalSinceNow]>0) {
-        //future
-        sleepNotif.fireDate = sleepTime;
+    NSDate *sleepTime = [self.time.nextOccurTime dateByAddingTimeInterval:-d*3600];
+    BOOL sleepNotificationScheduled = NO;
+    for (UILocalNotification *sleep in self.localNotifications) {
+        if ([sleep.userInfo[kLocalNotificationTypeKey] isEqualToString:kLocalNotificationTypeSleepTimer]) {
+            if ([sleep.userInfo[kLocalAlarmID] isEqualToString:self.objectID.URIRepresentation.absoluteString]) {
+                if ([sleep.fireDate isEqualToDate:sleepTime]) {
+                    sleepNotificationScheduled = YES;
+                }else{
+                    DDLogError(@"Found sleep notification with incorrect time %@, should be %@. (%@)", sleep.fireDate, sleepTime, sleepTime.mt_stringFromDateWithFullWeekdayTitle);
+                    [[UIApplication sharedApplication] cancelLocalNotification:sleep];
+                }
+                
+            }
+        }
     }
     
-    [[UIApplication sharedApplication] scheduleLocalNotification:sleepNotif];
-    DDLogInfo(@"Sleep notification schedule at %@", sleepNotif.fireDate.date2detailDateString);
+    if (!sleepNotificationScheduled) {
+        //local notification
+        UILocalNotification *sleepNotif = [[UILocalNotification alloc] init];
+        sleepNotif.timeZone = [NSTimeZone systemTimeZone];
+        sleepNotif.alertBody = [NSString stringWithFormat:@"It's time to sleep, press here to enter sleep mode (%@)", sleepTime.date2String];
+        sleepNotif.alertAction = @"Sleep";
+        sleepNotif.repeatInterval = NSCalendarUnitWeekOfYear;
+        sleepNotif.soundName = @"sleep mode.caf";
+        sleepNotif.userInfo = @{kLocalAlarmID: self.objectID.URIRepresentation.absoluteString,
+                                kLocalNotificationTypeKey: kLocalNotificationTypeSleepTimer};
+        if ([sleepTime timeIntervalSinceNow]>0) {
+            sleepNotif.fireDate = sleepTime;
+        }else{
+            DDLogError(@"Tring to schedule sleep timer in the past: %@", sleepTime.date2detailDateString);
+            return;
+        }
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:sleepNotif];
+        DDLogInfo(@"Sleep notification schedule at %@", sleepNotif.fireDate.date2detailDateString);
+    }
 }
 
 - (void)cancelSleepLocalNotification{
@@ -333,8 +351,6 @@
                 [[UIApplication sharedApplication] cancelLocalNotification:sleep];
                 n++;
             }
-            
-            
         }
     }
     DDLogInfo(@"Cancelled %ld sleep notification", (long)n);

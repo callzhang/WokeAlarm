@@ -55,7 +55,7 @@
 - (void)loginDataCheck{
     DDLogVerbose(@"=== [%s] Logged in, performing login tasks.===", __func__);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    if (![currentInstallation[kParseObjectID] isEqualToString: [EWPerson me].objectId]){
+    if (![currentInstallation[kUserID] isEqualToString: [EWPerson me].objectId]){
         currentInstallation[kUserID] = [EWPerson me].objectId;
         currentInstallation[kUsername] = [EWPerson me].username;
         [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -101,6 +101,7 @@
     //update facebook info
     //DDLogVerbose(@"6. Updating facebook info");
     //[EWUserManager updateFacebookInfo];
+    
 	DDLogVerbose(@"6. Check scheduled local notifications");
 	[[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
     

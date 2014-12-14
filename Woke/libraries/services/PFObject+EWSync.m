@@ -262,7 +262,7 @@
     NSMutableArray *MOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
     //NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
     while (MOs.count > 1) {
-        NSLog(@"Find duplicated MO for ID %@", self.objectId);
+        DDLogError(@"Find duplicated MO for ID %@", self.objectId);
         NSManagedObject *mo_ = MOs.lastObject;
         [MOs removeLastObject];
         [mo_ MR_deleteEntityInContext:context];
@@ -282,7 +282,6 @@
     }else{
         
         if ([mo valueForKey:kUpdatedDateKey] && (mo.isOutDated || self.isNewerThanMO)) {
-            
             [mo assignValueFromParseObject:self];
             //[EWDataStore saveToLocal:mo];//mo will be saved later
         }

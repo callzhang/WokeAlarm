@@ -65,8 +65,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [EWSession sharedSession].currentUser = person;
     
     if ([EWSync sharedInstance].workingQueue.count == 0 && person.changedKeys.count == 0) {
-        //if no pending uploads, refresh self
-        //[person refreshInBackgroundWithCompletion:NULL];
+        //TODO: if no pending uploads, refresh self
+        [person refresh];
     }
     
     if (completion) {
