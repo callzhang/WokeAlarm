@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */; };
 		091C67431A351F060091B8A6 /* EWStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67421A351F060091B8A6 /* EWStyleController.m */; };
 		091C67461A35205F0091B8A6 /* EWBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67451A35205F0091B8A6 /* EWBaseTableViewController.m */; };
 		091C67591A3523AF0091B8A6 /* EWAlarmEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67491A3523AF0091B8A6 /* EWAlarmEditCell.m */; };
@@ -82,6 +83,7 @@
 		096AAB191A1972B800B4CBFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0D1A1972B800B4CBFF /* ViewController.m */; };
 		097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */; };
 		097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */; };
+		098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 098D2EA91A3D2F1000026D0C /* UIImage+Extensions.m */; };
 		0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */; };
 		0990EF7A1A22C606001AF099 /* MSPushFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF751A22C606001AF099 /* MSPushFadeSegue.m */; };
 		0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */; };
@@ -176,6 +178,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		090665511A3CD40800FF76E6 /* EWAlarmToneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmToneViewController.h; sourceTree = "<group>"; };
+		090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmToneViewController.m; sourceTree = "<group>"; };
 		091C67411A351F060091B8A6 /* EWStyleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStyleController.h; sourceTree = "<group>"; };
 		091C67421A351F060091B8A6 /* EWStyleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStyleController.m; sourceTree = "<group>"; };
 		091C67441A35205F0091B8A6 /* EWBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseTableViewController.h; sourceTree = "<group>"; };
@@ -299,6 +303,8 @@
 		097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewController.m; sourceTree = "<group>"; };
 		097A82CB1A2282980030A2E8 /* EWSleepViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewModel.h; sourceTree = "<group>"; };
 		097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewModel.m; sourceTree = "<group>"; };
+		098D2EA81A3D2F1000026D0C /* UIImage+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Extensions.h"; sourceTree = "<group>"; };
+		098D2EA91A3D2F1000026D0C /* UIImage+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Extensions.m"; sourceTree = "<group>"; };
 		0990EF6F1A22C3DB001AF099 /* UIWindow+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+Extensions.h"; sourceTree = "<group>"; };
 		0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+Extensions.m"; sourceTree = "<group>"; };
 		0990EF721A22C3E2001AF099 /* EWCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWCategories.h; sourceTree = "<group>"; };
@@ -522,6 +528,8 @@
 				09B521031A25825A008FF7F6 /* EWWakeViewController.m */,
 				09D7370F1A32951000E8C9ED /* EWAlarmViewController.h */,
 				09D737101A32951000E8C9ED /* EWAlarmViewController.m */,
+				090665511A3CD40800FF76E6 /* EWAlarmToneViewController.h */,
+				090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -856,6 +864,8 @@
 		09A7772A1A11E2BD004AF902 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				098D2EA81A3D2F1000026D0C /* UIImage+Extensions.h */,
+				098D2EA91A3D2F1000026D0C /* UIImage+Extensions.m */,
 				09D7370B1A328F4400E8C9ED /* SevenSwitch */,
 				9B8829391A317E3900EF572E /* EWBlur */,
 				9B840A241A170AE800D6C2A3 /* RMSelectionView */,
@@ -1303,6 +1313,7 @@
 				09DF4F8A1A1434AF00BEA328 /* _EWNotification.m in Sources */,
 				9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */,
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
+				098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */,
 				091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
 				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
@@ -1368,6 +1379,7 @@
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
 				09DF4F831A1434AF00BEA328 /* _EWActivity.m in Sources */,
 				09DF4F801A1434AF00BEA328 /* EWServerObject.m in Sources */,
+				090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */,
 				096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */,
 				09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */,
 				096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */,

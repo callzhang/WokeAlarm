@@ -43,10 +43,9 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     [self.modeSegmentedControl addTarget:self action:@selector(onSegmentedValueChanged:) forControlEvents:UIControlEventValueChanged];
     self.navigationItem.titleView = self.modeSegmentedControl;
     
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = [UIImage new];
-    self.navigationController.navigationBar.translucent = YES;
-    self.navigationController.view.backgroundColor = [UIColor clearColor];
+    [self.mainNavigationController setNavigationBarTransparent:YES];
+    
+//    self.navigationController.view.backgroundColor = [UIColor clearColor];
     
     self.mode = MainViewModeSleep;
     

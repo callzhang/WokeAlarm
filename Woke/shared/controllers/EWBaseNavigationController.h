@@ -20,4 +20,6 @@
  */
 
 - (void)presentWakeUpViewWithActivity:(NSNotification *)activity;
+
+- (void)setNavigationBarTransparent:(BOOL)transparent;
 @end
