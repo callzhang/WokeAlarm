@@ -18,7 +18,6 @@ const struct EWPersonAttributes EWPersonAttributes = {
 	.preference = @"preference",
 	.profilePic = @"profilePic",
 	.region = @"region",
-	.score = @"score",
 	.statement = @"statement",
 	.username = @"username",
 	.weibo = @"weibo",
@@ -63,12 +62,6 @@ const struct EWPersonRelationships EWPersonRelationships = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 
-	if ([key isEqualToString:@"scoreValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"score"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-
 	return keyPaths;
 }
 
@@ -99,26 +92,6 @@ const struct EWPersonRelationships EWPersonRelationships = {
 @dynamic profilePic;
 
 @dynamic region;
-
-@dynamic score;
-
-- (float)scoreValue {
-	NSNumber *result = [self score];
-	return [result floatValue];
-}
-
-- (void)setScoreValue:(float)value_ {
-	[self setScore:@(value_)];
-}
-
-- (float)primitiveScoreValue {
-	NSNumber *result = [self primitiveScore];
-	return [result floatValue];
-}
-
-- (void)setPrimitiveScoreValue:(float)value_ {
-	[self setPrimitiveScore:@(value_)];
-}
 
 @dynamic statement;
 

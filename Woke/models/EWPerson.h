@@ -38,7 +38,13 @@ extern NSString * const EWPersonDefaultName;
 + (void)requestFriend:(EWPerson *)person;
 + (void)acceptFriend:(EWPerson *)person;
 + (void)unfriend:(EWPerson *)person;
-
+/**
+ *  Find or create EWPerson from PFUser
+ *
+ *  @param user PFUser
+ *  @discussion If PFUser isNew or missing name, it will trigger new user sequence and assign default value
+ *  @return EWPerson
+ */
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
 @end
 

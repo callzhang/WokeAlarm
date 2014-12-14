@@ -74,8 +74,8 @@ UIViewController *rootViewController;
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
 #else
     if ([EWAccountManager isLoggedIn]) {
-        //resume Core Data login
-        [[EWAccountManager sharedInstance] resumeCoreDataUserWithServerUser:[PFUser currentUser] withCompletion:^(BOOL isNewUser, NSError *error) {
+        [[EWAccountManager sharedInstance] fetchCurrentUser:[PFUser currentUser]];
+        [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
         }];
         

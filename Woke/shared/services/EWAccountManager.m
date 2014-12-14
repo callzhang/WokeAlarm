@@ -14,24 +14,50 @@
 #import "FBSession.h"
 #import "EWServer.h"
 
-NSString * const EWAccountManagerDidLoginNotification = @"EWAccountManagerDidLoginNotification";
-NSString * const EWAccountManagerDidLogoutNotification = @"EWAccountManagerDidLogoutNotification";
-
 @interface EWAccountManager()
 @end
 
 @implementation EWAccountManager
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
-
+//TODO: refactor to EWSession
 + (BOOL)isLoggedIn {
-    return [PFUser currentUser] != nil;
+    return [[NSUserDefaults standardUserDefaults]  boolForKey:@"Loggin"];
+}
+
++ (void)setLoggedIn:(BOOL)loggedIn {
+    [[NSUserDefaults standardUserDefaults] setBool:loggedIn forKey:@"Loggin"];
 }
 
 - (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion {
     //login with facebook
     [PFFacebookUtils logInWithPermissions:[[self class] facebookPermissions] block:^(PFUser *user, NSError *error) {
-        if (!user) {
+        if (user) {
+            [self fetchCurrentUser:user];
+            [self refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *err) {
+                //if new user, link with facebook
+                if([PFUser currentUser].isNew){
+                    /**
+                     *  Handle external event such as welcoming message and broadcasting new user to the community
+                     */
+                    //    [EWAccountManager linkWithFacebook];
+                    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
+                    EWAlert(msg);
+                    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
+                }
+                
+                [[self class] setLoggedIn:YES];
+                
+                DDLogInfo(@"[c] Broadcast Person login notification");
+                [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
+                
+                //logged into the Core Data user
+                if (completion) {
+                    completion(isNewUser, err);
+                }
+            }];
+        }
+        else {
             if (error) {
                 if (completion) {
                     completion(NO, error);
@@ -44,45 +70,40 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 }
             }
         }
-        else {
-            [self resumeCoreDataUserWithServerUser:user withCompletion:^(BOOL isNewUser, NSError *err) {
-                //logged into the Core Data user
-                if (completion) {
-                    completion(isNewUser, err);
-                }
-            }];
-        }
     }];
 }
 
-//login Core Data User with Server User (PFUser)
-- (void)resumeCoreDataUserWithServerUser:(PFUser *)user withCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
-    
-    //fetch or create
+- (void)fetchCurrentUser:(PFUser *)user {
     EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
+    [EWSession sharedSession].currentUser = person;
+}
+
+//login Core Data User with Server User (PFUser)
+- (void)refreshEverythingIfNecesseryWithCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
+    //here we have three scenarios:
+    //1) Old user, everything should be update to date
+    //2) New user, everything copied from defaul template and upload to server
+    //3) Existing user but first time login on this phone, we need to download user data first and THEN execute login sequence
     
     //save me
-    [EWSession sharedSession].currentUser = person;
-    
-    if ([EWSync sharedInstance].workingQueue.count == 0 && person.changedKeys.count == 0) {
+    if (![[self class] isLoggedIn]){
+        if ([EWSync sharedInstance].workingQueue.count == 0) {
+            DDLogError(@"Upload queue is not empty when user logging in.");
+        }
         //TODO: if no pending uploads, refresh self
-        [person refresh];
+        [[EWPerson me] refreshInBackgroundWithCompletion:^{
+            if (completion) {
+                DDLogInfo(@"[d] Run completion block.");
+                completion([PFUser currentUser].isNew, nil);
+                
+                //TODO:[[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+            }
+        }];
     }
-    
-    if (completion) {
-        DDLogInfo(@"[d] Run completion block.");
-        completion([PFUser currentUser].isNew, nil);
-        
-        //TODO:[[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
-    }
-    
-    DDLogInfo(@"[c] Broadcast Person login notification");
-    [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountManagerDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
-    
-    //if new user, link with facebook
-    if([PFUser currentUser].isNew){
-        [EWAccountManager handleNewUser];
-        //TODO:[[ATConnect sharedConnection] engage:@"new_user" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    else {
+        if (completion) {
+            completion([PFUser currentUser].isNew, nil);
+        }
     }
 }
 
@@ -120,17 +141,25 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     [FBSession.activeSession closeAndClearTokenInformation];
     
-    //remove all queue
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueDelete];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueInsert];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueUpdate];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueWorking];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueRefresh];
-    DDLogInfo(@"Cleaned local queue");
+    [[self class] setLoggedIn:NO];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountManagerDidLogoutNotification object:self userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLogoutNotification object:self userInfo:nil];
 }
+
 #pragma mark - Facebook
++ (void)updateMyFacebookInfo{
+    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+        [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *data, NSError *error) {
+            if (error) {
+                [EWAccountManager handleFacebookException:error];
+            }
+            
+            //update with facebook info
+            [EWAccountManager updateUserWithFBData:data];
+        }];
+    }
+}
+
 //after fb login, fetch user managed object
 + (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -174,6 +203,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 img = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];
             }
             person.profilePic = img;
+        }else{
+            person.profilePic = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];
         }
         
     }completion:^(BOOL success, NSError *error) {
@@ -280,6 +311,74 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }];
 }
 
++ (void)handleFacebookException:(NSError *)error{
+    if (!error) {
+        return;
+    }
+    NSString *alertText;
+    NSString *alertTitle;
+    // If the error requires people using an app to make an action outside of the app in order to recover
+    
+    if ([FBErrorUtility shouldNotifyUserForError:error] == YES){
+        alertTitle = @"Something went wrong";
+        alertText = [FBErrorUtility userMessageForError:error];
+        //[self showMessage:alertText withTitle:alertTitle];
+    } else {
+        
+        // If the user cancelled login, do nothing
+        if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
+            //[MBProgressHUD hideHUDForView:[UIApplication sharedApplication].delegate.window.rootViewController.view animated:YES];
+            DDLogInfo(@"User cancelled login");
+            alertTitle = @"User Cancelled Login";
+            alertText = @"Please Try Again";
+            
+            // Handle session closures that happen outside of the app
+        } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession){
+            alertTitle = @"Session Error";
+            alertText = @"Your current session is no longer valid. Please log in again.";
+            //[self showMessage:alertText withTitle:alertTitle];
+            
+            // Here we will handle all other errors with a generic error messageaccessToken:.
+            // We recommend you check our Handling Errors guide for more information
+            // https://developers.facebook.com/docs/ios/errors/
+            
+            // Clear this token
+            [FBSession.activeSession closeAndClearTokenInformation];
+        } else if (error.code == 5){
+            if (![EWSync isReachable]) {
+                DDLogError(@"No connection: %@", error.description);
+            }else{
+                
+                DDLogError(@"Error %@", error.description);
+                alertTitle = @"Something went wrong";
+                alertText = @"Operation couldn't be finished. We appologize for this. It may caused by weak internet connection.";
+            }
+        } else {
+            //Get more error information from the error
+            NSDictionary *errorInformation = [[[error.userInfo objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"] objectForKey:@"body"] objectForKey:@"error"];
+            
+            // Show the user an error message
+            alertTitle = @"Something went wrong";
+            alertText = [NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@", [errorInformation objectForKey:@"message"]];
+            //[self showMessage:alertText withTitle:alertTitle];
+            DDLogError(@"Failed to login fb: %@", error.description);
+            
+            // Clear this token
+            [FBSession.activeSession closeAndClearTokenInformation];
+        }
+    }
+    
+    if (!alertTitle) return;
+    
+    UIAlertView *alertView = [[UIAlertView alloc]
+                              initWithTitle:alertTitle
+                              message:alertText
+                              delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+    [alertView show];
+    
+}
 
 #pragma mark - Tools
 + (NSArray *)facebookPermissions{
@@ -291,16 +390,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                              @"user_friends"];
     return permissions;
 }
-
-
-
-+ (void)handleNewUser{
-//    [EWAccountManager linkWithFacebook];
-    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
-    EWAlert(msg);
-    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
-}
-
 
 + (void)registerLocation{
     

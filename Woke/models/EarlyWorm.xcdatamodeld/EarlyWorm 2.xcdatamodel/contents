@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="EWAchievement" representedClassName="EWAchievement" parentEntity="EWServerObject" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Transformable" syncable="YES"/>
@@ -84,7 +84,6 @@
         <attribute name="preference" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="profilePic" optional="YES" attributeType="Transformable" storedInTruthFile="YES" syncable="YES"/>
         <attribute name="region" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="score" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="statement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="weibo" optional="YES" attributeType="String" syncable="YES"/>
@@ -123,7 +122,7 @@
         <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
         <element name="EWMessage" positionX="0" positionY="0" width="128" height="165"/>
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="128" height="465"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="128" height="450"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
         <element name="EWSocial" positionX="0" positionY="0" width="128" height="180"/>
     </elements>

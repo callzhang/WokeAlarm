@@ -35,7 +35,7 @@
 {
     [super viewDidLoad];
     //observer
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateView) name:EWAccountManagerDidLoginNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateView) name:EWAccountDidLoginNotification object:nil];
     
     [self.indicator stopAnimating];
     [self updateView];

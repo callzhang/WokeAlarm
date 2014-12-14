@@ -62,8 +62,9 @@ typedef void (^SenderBlock)(id sender);
 #define TICK                            NSDate *startTime = [NSDate date];
 #define TOCK                            NSLog(@"Time: %f", -[startTime timeIntervalSinceNow]);
 
-//Logging
-//#define NSLog                           EWLog
+//Account Management
+#define EWAccountDidLoginNotification    @"EWAccountDidLoginNotification"
+#define EWAccountDidLogoutNotification   @"EWAccountDidLogoutNotification"
 
 //Global parameters
 #define nWeeksToSchedule				1

@@ -115,16 +115,14 @@ NSString * const EWPersonDefaultName = @"New User";
 #pragma mark - Parsed
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{
     EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
-    if (user.isNew) {
-        person.username = user.username;
-        person.profilePic = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];//TODO: new user profile
+    if (user.isNew || !user[@"name"]) {
+        DDLogInfo(@"New user logged in, assign new value");
         person.name = kDefaultUsername;
         person.preference = kUserDefaults;
-        person.cachedInfo = [NSDictionary new];
-        if ([user isEqual:[PFUser currentUser]]) {
-            person.score = @100;
-        }
+        person.cachedInfo = [NSMutableDictionary new];
         person.updatedAt = [NSDate date];
+        
+        [EWAccountManager updateMyFacebookInfo];
     }
     
     //no need to save here
@@ -228,8 +226,8 @@ NSString * const EWPersonDefaultName = @"New User";
             EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
             [localMe refreshRelatedWithCompletion:^{
                 
-                [EWPerson updateMyCachedFriends];
-                [EWAccountManager updateFacebookInfo];
+                [localMe updateMyFriends];
+                [EWAccountManager updateMyFacebookInfo];
             }];
             //TODO: we need a better sync method
             //1. query for medias
@@ -282,11 +280,5 @@ NSString * const EWPersonDefaultName = @"New User";
 
 + (NSArray *)myFriends{
     return [EWPerson me].friends.allObjects;
-}
-
-
-#pragma mark - Tools
-+ (void)updateMeFromFacebook{
-    [EWAccountManager updateFacebookInfo];
 }
 @end

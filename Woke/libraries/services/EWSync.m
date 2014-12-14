@@ -69,6 +69,18 @@ NSManagedObjectContext *mainContext;
         _saveToServerDelayTimer = [NSTimer scheduledTimerWithTimeInterval:kUploadLag target:self selector:@selector(uploadToServer) userInfo:nil repeats:NO];
     }];
     
+    [[NSNotificationCenter defaultCenter] addObserverForName:EWAccountDidLogoutNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        //TODO: stop all uploads and downloads
+        
+        //remove all queue
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueDelete];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueInsert];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueUpdate];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueWorking];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueRefresh];
+
+    }];
+    
     //Reachability
     self.reachability = [Reachability reachabilityForInternetConnection];
     self.reachability.reachableBlock = ^(Reachability *reachability) {

@@ -19,7 +19,6 @@ extern const struct EWPersonAttributes {
 	__unsafe_unretained NSString *preference;
 	__unsafe_unretained NSString *profilePic;
 	__unsafe_unretained NSString *region;
-	__unsafe_unretained NSString *score;
 	__unsafe_unretained NSString *statement;
 	__unsafe_unretained NSString *username;
 	__unsafe_unretained NSString *weibo;
@@ -127,14 +126,6 @@ extern const struct EWPersonRelationships {
 @property (nonatomic, strong) NSString* region;
 
 //- (BOOL)validateRegion:(id*)value_ error:(NSError**)error_;
-
-@property (nonatomic, strong) NSNumber* score;
-
-@property (atomic) float scoreValue;
-- (float)scoreValue;
-- (void)setScoreValue:(float)value_;
-
-//- (BOOL)validateScore:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) NSString* statement;
 
@@ -289,12 +280,6 @@ extern const struct EWPersonRelationships {
 
 - (NSString*)primitiveRegion;
 - (void)setPrimitiveRegion:(NSString*)value;
-
-- (NSNumber*)primitiveScore;
-- (void)setPrimitiveScore:(NSNumber*)value;
-
-- (float)primitiveScoreValue;
-- (void)setPrimitiveScoreValue:(float)value_;
 
 - (NSString*)primitiveStatement;
 - (void)setPrimitiveStatement:(NSString*)value;

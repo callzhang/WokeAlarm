@@ -45,7 +45,7 @@
 	[[EWSync sharedInstance] setup];
     
     //watch for login event
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWAccountManagerDidLoginNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWAccountDidLoginNotification object:nil];
 	
 	return self;
 }
