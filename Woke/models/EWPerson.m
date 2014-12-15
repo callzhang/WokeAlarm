@@ -119,10 +119,10 @@ NSString * const EWPersonDefaultName = @"New User";
         DDLogInfo(@"New user logged in, assign new value");
         person.name = kDefaultUsername;
         person.preference = kUserDefaults;
-        person.cachedInfo = [NSMutableDictionary new];
+        person.cachedInfo = [NSDictionary new];
         person.updatedAt = [NSDate date];
         
-        [EWAccountManager updateMyFacebookInfo];
+        [[EWAccountManager shared] updateMyFacebookInfo];
     }
     
     //no need to save here
@@ -169,7 +169,7 @@ NSString * const EWPersonDefaultName = @"New User";
     }
     
     if (needRefreshFacebook) {
-        [EWPerson updateMeFromFacebook];
+        [[EWAccountManager shared] updateMyFacebookInfo];
     }
     
     //preference
@@ -227,7 +227,7 @@ NSString * const EWPersonDefaultName = @"New User";
             [localMe refreshRelatedWithCompletion:^{
                 
                 [localMe updateMyFriends];
-                [EWAccountManager updateMyFacebookInfo];
+                [[EWAccountManager shared] updateMyFacebookInfo];
             }];
             //TODO: we need a better sync method
             //1. query for medias

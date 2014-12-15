@@ -64,6 +64,4 @@ extern NSString * const EWPersonDefaultName;
 + (EWAlarm *)myCurrentAlarm;
 + (EWActivity *)myCurrentAlarmActivity;
 
-//Tools
-+ (void)updateMeFromFacebook;
 @end

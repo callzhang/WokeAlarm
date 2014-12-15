@@ -102,6 +102,8 @@
     NSMutableDictionary *mutableRelationships = [managedObject.entity.relationshipsByName mutableCopy];
     [mutableRelationships enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
         id relatedManagedObjects = [managedObject valueForKey:key];
+        DDLogVerbose(@"Updating PFObject relation %@->%@(%@)", self.parseClassName, key, managedObject.entity.name);
+        
         if (relatedManagedObjects){
             if ([obj isToMany]) {
                 //To-Many relation
@@ -131,6 +133,11 @@
                 
                 //========================== relation ==========================
                 PFRelation *parseRelation = [self relationForKey:key];
+                if (parseRelation.targetClass) {
+                    NSAssert([parseRelation.targetClass isEqualToString:obj.destinationEntity.name], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, obj.entity.name);
+                }
+                
+                //TODO: create a new PFRelation so that we don't need to deal with deletion
                 
                 //Find related PO to delete async
                 NSMutableArray *relatedParseObjects = [[[parseRelation query] findObjects] mutableCopy];
@@ -151,9 +158,9 @@
                         
                         //PFObject *relatedParseObject = [EWDataStore getCachedParseObjectForID:parseID];
                         PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
-                        //[relatedParseObject fetchIfNeeded];
+                        
+                        DDLogVerbose(@"+++> To-many relation on PO %@->%@(%@) added when updating from MO", managedObject.entity.name, relatedParseObject.parseClassName, relatedParseObject.objectId);
                         [parseRelation addObject:relatedParseObject];
-                        //NSLog(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], obj.name, relatedParseObject.objectId);
                         
                     } else {
                         __block PFObject *blockObject = self;

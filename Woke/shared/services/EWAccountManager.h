@@ -21,6 +21,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 - (void)logout;
 
 //tools
-+ (void)updateMyFacebookInfo;
-+ (void)registerLocation;
+- (void)updateMyFacebookInfo;
+- (void)registerLocation;
 @end

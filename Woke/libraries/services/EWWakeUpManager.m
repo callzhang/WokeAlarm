@@ -468,7 +468,7 @@
 }
 
 - (void)stopPlayingVoice{
-    [EWAVManager sharedManager].stopAllPlaying;
+    [[EWAVManager sharedManager] stopAllPlaying];
 }
 
 - (float)playingProgress{

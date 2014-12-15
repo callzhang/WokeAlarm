@@ -160,8 +160,6 @@ NSManagedObjectContext *mainContext;
         return;
     }
     
-    NSLog(@"Start update to server");
-    
     //only ManagedObjectID is thread safe
     NSSet *insertedManagedObjects = [self insertQueue];
     NSSet *updatedManagedObjects = [self updateQueue];
@@ -175,7 +173,7 @@ NSManagedObjectContext *mainContext;
         [self appendObject:mo toQueue:kParseQueueWorking];
     }
     
-    //save to local items
+    //save to local items check
     NSArray *saveToLocalItemAlreadyInWorkingQueue = [self.saveToLocalItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", [workingObjects valueForKey:@"objectID"]]];
     if (saveToLocalItemAlreadyInWorkingQueue.count) {
         DDLogError(@"There are items in saveToLocal queue but also appeared in working queue, please check the code!%@", saveToLocalItemAlreadyInWorkingQueue);
@@ -195,10 +193,14 @@ NSManagedObjectContext *mainContext;
     _changeRecords = [NSMutableDictionary new];
 	
 	//skip if no changes
-	if (workingObjects.count == 0 && deletedServerObjects.count == 0 && _saveCallbacks.count == 0) return;
-    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], [updatedManagedObjects valueForKey:kParseObjectID], deletedServerObjects);
+    if (workingObjects.count == 0 && deletedServerObjects.count == 0 && _saveCallbacks.count == 0){
+        DDLogInfo(@"No change detacted, skip uploading");
+        return;
+    }
+    //logging
+    NSDictionary *updated = [NSDictionary dictionaryWithObjectsAndKeys:[updatedManagedObjects valueForKeyPath:@"entity.name"], [updatedManagedObjects valueForKey:kParseObjectID], nil];
+    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], updated, deletedServerObjects);
     DDLogVerbose(@"Change records:\n%@", workingChangedRecords);
-    
     
     NSArray *callbacks = [self.saveCallbacks copy];
     [_saveCallbacks removeAllObjects];
@@ -783,12 +785,13 @@ NSManagedObjectContext *mainContext;
     
     //if no ACL, use MO to determine
     __block EWPerson *p;
-    if ([mo.entity.managedObjectClassName isEqualToString:kSyncUserClass]) {
+    if ([mo.entity.name isEqualToString:kSyncUserClass]) {
         p = (EWPerson *)mo;
     }else{
         [mo.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-            if ([obj.entity.managedObjectClassName isEqualToString:kSyncUserClass]) {
+            if ([obj.destinationEntity.name isEqualToString:kSyncUserClass]) {
                 p = [mo valueForKey:key];
+                *stop = YES;
             }
         }];
     }

@@ -13,8 +13,10 @@
 #import "EWSocialManager.h"
 #import "FBSession.h"
 #import "EWServer.h"
+#import "ATConnect.h"
 
 @interface EWAccountManager()
+@property (nonatomic) BOOL isUpdatingFacebookInfo;
 @end
 
 @implementation EWAccountManager
@@ -27,13 +29,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 + (void)setLoggedIn:(BOOL)loggedIn {
     [[NSUserDefaults standardUserDefaults] setBool:loggedIn forKey:@"Loggin"];
+    
+    if (loggedIn) {
+        DDLogInfo(@"[c] Broadcast Person login notification");
+        [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
+    }
 }
 
 - (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion {
     //login with facebook
     [PFFacebookUtils logInWithPermissions:[[self class] facebookPermissions] block:^(PFUser *user, NSError *error) {
         if (user) {
+            //fetch core data and set as current user (me)
             [self fetchCurrentUser:user];
+            //refresh me if needed
             [self refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *err) {
                 //if new user, link with facebook
                 if([PFUser currentUser].isNew){
@@ -45,11 +54,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     EWAlert(msg);
                     [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
                 }
-                
-                [[self class] setLoggedIn:YES];
-                
-                DDLogInfo(@"[c] Broadcast Person login notification");
-                [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
                 
                 //logged into the Core Data user
                 if (completion) {
@@ -93,15 +97,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //TODO: if no pending uploads, refresh self
         [[EWPerson me] refreshInBackgroundWithCompletion:^{
             if (completion) {
+                //set login mark
+                [[self class] setLoggedIn:YES];
+                
                 DDLogInfo(@"[d] Run completion block.");
                 completion([PFUser currentUser].isNew, nil);
                 
-                //TODO:[[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+                [[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
             }
         }];
     }
     else {
         if (completion) {
+            //set login mark
+            [[self class] setLoggedIn:YES];
             completion([PFUser currentUser].isNew, nil);
         }
     }
@@ -114,7 +123,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 [EWErrorManager handleError:error];
             }
             else {
-                [[self class] updateUserWithFBData:data];
+                [self updateUserWithFBData:data];
             }
         }];
     }
@@ -147,7 +156,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 }
 
 #pragma mark - Facebook
-+ (void)updateMyFacebookInfo{
+- (void)updateMyFacebookInfo{
+    if (self.isUpdatingFacebookInfo) {
+        return;
+    }
+    self.isUpdatingFacebookInfo = YES;
     if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
         [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *data, NSError *error) {
             if (error) {
@@ -155,13 +168,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }
             
             //update with facebook info
-            [EWAccountManager updateUserWithFBData:data];
+            [[EWAccountManager shared] updateUserWithFBData:data];
         }];
     }
 }
 
 //after fb login, fetch user managed object
-+ (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
+- (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWPerson *person = [[EWPerson me] MR_inContext:localContext];
         
@@ -208,10 +221,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }completion:^(BOOL success, NSError *error) {
         //update friends
         [self getFacebookFriends];
+        self.isUpdatingFacebookInfo = NO;
     }];
 }
 
-+ (void)getFacebookFriends{
+- (void)getFacebookFriends{
     DDLogVerbose(@"Updating facebook friends");
     //check facebook id exist
     if (![EWPerson me].facebook) {
@@ -254,9 +268,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }
 }
 
-+ (void)openFacebookSessionWithCompletion:(void (^)(void))block{
+- (void)openFacebookSessionWithCompletion:(void (^)(void))block{
     
-    [FBSession openActiveSessionWithReadPermissions:self.facebookPermissions
+    [FBSession openActiveSessionWithReadPermissions:[EWAccountManager facebookPermissions]
                                        allowLoginUI:YES
                                   completionHandler:
      ^(FBSession *session, FBSessionState state, NSError *error) {
@@ -269,7 +283,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
      }];
 }
 
-+ (void)getFacebookFriendsWithPath:(NSString *)path withReturnData:(NSMutableDictionary *)friendsHolder{
+- (void)getFacebookFriendsWithPath:(NSString *)path withReturnData:(NSMutableDictionary *)friendsHolder{
     [FBRequestConnection startWithGraphPath:path completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 
         DDLogVerbose(@"Got facebook friends list, start processing");
@@ -378,7 +392,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
 }
 
-#pragma mark - Tools
+
 + (NSArray *)facebookPermissions{
     NSArray *permissions = @[@"public_profile",
                              @"user_location",
@@ -389,7 +403,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     return permissions;
 }
 
-+ (void)registerLocation{
+#pragma mark - Geolocation
+
+- (void)registerLocation{
     
     [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
         

@@ -125,6 +125,7 @@
 		09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E17AFF1A15C01800317F8D /* SCSiriWaveformView.m */; };
 		8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B95C7310A02172389FEF1951 /* libPods-Woke.a */; };
 		9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B25631E1A1952FA00010B9E /* _EWSocial.m */; };
+		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; };
 		9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */; };
@@ -389,6 +390,8 @@
 		6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WokeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B25631D1A1952FA00010B9E /* _EWSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _EWSocial.h; sourceTree = "<group>"; };
 		9B25631E1A1952FA00010B9E /* _EWSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWSocial.m; sourceTree = "<group>"; };
+		9B6797041A3E34ED007B8188 /* NSDictionary+KeyPathAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KeyPathAccess.h"; sourceTree = "<group>"; };
+		9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+KeyPathAccess.m"; sourceTree = "<group>"; };
 		9B6AB8171A16F1F6003372A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9B6AB8191A16F201003372A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -571,6 +574,8 @@
 		096AAA911A195A3900B4CBFF /* categories */ = {
 			isa = PBXGroup;
 			children = (
+				9B6797041A3E34ED007B8188 /* NSDictionary+KeyPathAccess.h */,
+				9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */,
 				0990EF721A22C3E2001AF099 /* EWCategories.h */,
 				0990EF6F1A22C3DB001AF099 /* UIWindow+Extensions.h */,
 				0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */,
@@ -1358,6 +1363,7 @@
 				091C67591A3523AF0091B8A6 /* EWAlarmEditCell.m in Sources */,
 				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
 				09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */,
+				9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */,
 				09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */,
 				096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,

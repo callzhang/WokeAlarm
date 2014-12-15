@@ -87,9 +87,6 @@
     DDLogVerbose(@"3. Check alarm");
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
-	DDLogVerbose(@"5. Check my social graph");
-	//TODO
-	
     DDLogVerbose(@"4. Check my unread media");//media also will be checked with background fetch
     [[EWMediaManager sharedInstance] checkMediaAssetsInBackground];
     
@@ -104,14 +101,13 @@
     
 	DDLogVerbose(@"6. Check scheduled local notifications");
 	[[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
-    
-    //Update my relations cancelled here because the we should wait for all sync task finished before we can download the rest of the relation
-    NSLog(@"7. Refresh my media");
-    [[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWPerson me]];
+
+    DDLogVerbose(@"7. Refresh my media");
+    //[[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWPerson me]];
 	
 	//location
 	DDLogVerbose(@"8. Start location recurring update");
-	[EWAccountManager registerLocation];
+	[[EWAccountManager shared] registerLocation];
 	
     
     //update data with timely updates
@@ -148,7 +144,7 @@
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
 		DDLogVerbose(@"[2] Start location recurring update");
-		[EWAccountManager registerLocation];
+		[[EWAccountManager shared] registerLocation];
 	}
     
 }

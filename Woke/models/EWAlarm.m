@@ -9,6 +9,7 @@
 #import "EWAlarm.h"
 #import "EWSession.h"
 #import "EWAlarmManager.h"
+#import "NSDictionary+KeyPathAccess.h"
 
 @implementation EWAlarm
 
@@ -87,6 +88,9 @@
     [self setPrimitiveState:state];
     [self didChangeValueForKey:EWAlarmAttributes.state];
     
+    if (![self validate]) {
+        return;
+    }
 	//update saved time in user defaults
 	//[self setSavedAlarmTime];
 	//schedule local notification
@@ -112,7 +116,9 @@
     [self willChangeValueForKey:EWAlarmAttributes.time];
     [self setPrimitiveTime:time];
     [self didChangeValueForKey:EWAlarmAttributes.time];
-    
+    if (![self validate]) {
+        return;
+    }
     //update saved time in user defaults
     //[self setSavedAlarmTime];
     
@@ -166,31 +172,22 @@
 #pragma mark - Cached alarm time to user defaults
 //the alarm time stored in person's cached info
 - (void)updateCachedAlarmTime{
-    NSMutableDictionary *cache = [EWPerson me].cachedInfo.mutableCopy?:[NSMutableDictionary new];
-    NSMutableDictionary *timeTable = [cache[kCachedAlarmTimes] mutableCopy]?:[NSMutableDictionary new];
-    for (EWAlarm *alarm in [EWPerson me].alarms) {
-        NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
-        timeTable[wkday] = alarm.time;
-    }
-    cache[kCachedAlarmTimes] = timeTable;
-    [EWPerson me].cachedInfo = cache;
+    NSDictionary *cache = [EWPerson me].cachedInfo;
+    NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
+    NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedAlarmTimes, wkday];
+    [EWPerson me].cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:path];
+
     [EWSync save];
-    DDLogVerbose(@"Updated cached alarm times: %@", timeTable);
+    DDLogVerbose(@"Updated cached alarm times: %@ on %@", self.time.nextOccurTime, wkday);
 }
 
 - (void)updateCachedStatement{
-    NSMutableDictionary *cache = [EWPerson me].cachedInfo.mutableCopy?:[NSMutableDictionary new];
-    NSMutableDictionary *statements = [cache[kCachedStatements] mutableCopy]?:[NSMutableDictionary new];
-    for (EWAlarm *alarm in [EWPerson me].alarms) {
-        if (alarm.state) {
-            NSString *wkday = alarm.time.mt_stringFromDateWithFullWeekdayTitle;
-            statements[wkday] = alarm.statement;
-        }
-    }
-    cache[kCachedStatements] = statements;
-    [EWPerson me].cachedInfo = cache;
+    NSDictionary *cache = [EWPerson me].cachedInfo;
+    NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
+    NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedStatements, wkday];
+    [EWPerson me].cachedInfo = [cache setValue:self.statement forImmutableKeyPath:path];
     [EWSync save];
-    DDLogVerbose(@"Updated cached statements: %@", statements);
+    DDLogVerbose(@"Updated cached statements: %@ on %@", self.statement, wkday);
 }
 
 #pragma mark - Local Notification
