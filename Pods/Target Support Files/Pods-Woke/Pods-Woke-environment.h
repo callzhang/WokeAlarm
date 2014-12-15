@@ -52,13 +52,13 @@
 #define COCOAPODS_POD_AVAILABLE_APAddressBook
 #define COCOAPODS_VERSION_MAJOR_APAddressBook 0
 #define COCOAPODS_VERSION_MINOR_APAddressBook 1
-#define COCOAPODS_VERSION_PATCH_APAddressBook 4
+#define COCOAPODS_VERSION_PATCH_APAddressBook 5
 
 // APAddressBook/Core
 #define COCOAPODS_POD_AVAILABLE_APAddressBook_Core
 #define COCOAPODS_VERSION_MAJOR_APAddressBook_Core 0
 #define COCOAPODS_VERSION_MINOR_APAddressBook_Core 1
-#define COCOAPODS_VERSION_PATCH_APAddressBook_Core 4
+#define COCOAPODS_VERSION_PATCH_APAddressBook_Core 5
 
 // BlocksKit
 #define COCOAPODS_POD_AVAILABLE_BlocksKit
@@ -125,7 +125,7 @@
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 2.2.5.1.
+// Version: 2.2.5.2.
 
 // CrashlyticsLumberjack
 #define COCOAPODS_POD_AVAILABLE_CrashlyticsLumberjack
@@ -154,8 +154,8 @@
 // IDMPhotoBrowser
 #define COCOAPODS_POD_AVAILABLE_IDMPhotoBrowser
 #define COCOAPODS_VERSION_MAJOR_IDMPhotoBrowser 1
-#define COCOAPODS_VERSION_MINOR_IDMPhotoBrowser 4
-#define COCOAPODS_VERSION_PATCH_IDMPhotoBrowser 0
+#define COCOAPODS_VERSION_MINOR_IDMPhotoBrowser 5
+#define COCOAPODS_VERSION_PATCH_IDMPhotoBrowser 2
 
 // JGProgressHUD
 #define COCOAPODS_POD_AVAILABLE_JGProgressHUD
@@ -210,6 +210,12 @@
 #define COCOAPODS_VERSION_MAJOR_MagicalRecord_Core 2
 #define COCOAPODS_VERSION_MINOR_MagicalRecord_Core 3
 #define COCOAPODS_VERSION_PATCH_MagicalRecord_Core 0
+
+// NYXImagesKit
+#define COCOAPODS_POD_AVAILABLE_NYXImagesKit
+#define COCOAPODS_VERSION_MAJOR_NYXImagesKit 2
+#define COCOAPODS_VERSION_MINOR_NYXImagesKit 3
+#define COCOAPODS_VERSION_PATCH_NYXImagesKit 0
 
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse

@@ -54,6 +54,7 @@ Available fields:
 * APContactFieldAddresses - *array of user addresses*
 * APContactFieldRecordID - *ID of record in iOS address book*
 * APContactFieldSocialProfiles - *array of social profiles*
+* APContactFieldNote - *contact notes*
 * APContactFieldDefault - *contact first name, last name and phones array*
 * APContactFieldAll - *all contact fields described above*
 
@@ -140,6 +141,15 @@ self.addressBook.loadContacts(
 ```
 
 #### History
+
+**Version 0.1.5**
+* Added contact notes
+
+Thanks to [leomdivani](https://github.com/leomdivani) for pull request
+
+* Fixed missing 'APSocialProfile' in Swift bridging-file
+
+Thanks to [A M Leszkiewicz](https://github.com/amleszk) for pull request
 
 **Version 0.1.4**
 * Changed the definition of APAddressBookAccess to use NS_ENUM so that Swift knows how to convert APAddressBookAccess for bridging.

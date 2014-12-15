@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
+
 #import "IDMPhoto.h"
 #import "IDMPhotoProtocol.h"
 #import "IDMCaptionView.h"
@@ -20,14 +21,10 @@
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDismissAtPageIndex:(NSUInteger)index;
 - (void)photoBrowser:(IDMPhotoBrowser *)photoBrowser didDismissActionSheetWithButtonIndex:(NSUInteger)buttonIndex photoIndex:(NSUInteger)photoIndex;
 - (IDMCaptionView *)photoBrowser:(IDMPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index;
--(void)photoBrowser:(IDMPhotoBrowser *)photoBrowser detelePhotoAtIndexPath:(NSInteger) path;
--(void)didDisAppearePhotoBrowser;
 @end
 
-
-
 // IDMPhotoBrowser
-@interface IDMPhotoBrowser : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate>
+@interface IDMPhotoBrowser : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate> 
 
 // Properties
 @property (nonatomic, strong) id <IDMPhotoBrowserDelegate> delegate;
@@ -51,15 +48,15 @@
 
 @property (nonatomic) BOOL arrowButtonsChangePhotosAnimated;
 
-// defines zooming of the background defauly 1.0
+@property (nonatomic) BOOL forceHideStatusBar;
+@property (nonatomic) BOOL usePopAnimation;
+@property (nonatomic) BOOL disableVerticalSwipe;
+
+// defines zooming of the background (default 1.0)
 @property (nonatomic) float backgroundScaleFactor;
 
-// animation time defult .28
+// animation time (default .28)
 @property (nonatomic) float animationDuration;
-
-@property (nonatomic, strong) UIActionSheet *actionsSheet;
-
-@property (nonatomic, strong) NSString *actionSheetTitle;
 
 // Init
 - (id)initWithPhotos:(NSArray *)photosArray;
@@ -81,13 +78,5 @@
 
 // Get IDMPhoto at index
 - (id<IDMPhoto>)photoAtIndex:(NSUInteger)index;
-
-// add a photo in browser
--(void)addPhotoInBrowser:(id)photo;
-
-// delete a photo in browser
--(void)deleteButtonPressed:(id)sender;
-// Change Sender View
-//- (void)setSenderViewForAnimation:(UIView*)senderView;
 
 @end

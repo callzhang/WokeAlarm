@@ -23,6 +23,8 @@
 //#import "EWWakeUpViewController.h"
 //#import "EWActivity.h"
 #import "EWBlurNavigationControllerDelegate.h"
+#import "NYXImagesKit.h"
+#import "UIImage+Extensions.h"
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -34,6 +36,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 @property (nonatomic, assign) MainViewMenuState menuState;
 @property (nonatomic, strong) EWBlurNavigationControllerDelegate *blurDelegate;
 
+@property (nonatomic, assign) BOOL barTransparent;
 @end
 
 @implementation EWBaseNavigationController
@@ -171,6 +174,30 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     if (menuViewController == nil) {
         _menuViewController.baseNavigationController = nil;
         _menuViewController = nil;
+    }
+}
+
+- (void)setNavigationBarTransparent:(BOOL)transparent {
+    
+    if (self.barTransparent == transparent) {
+        return;
+    }
+    
+    self.barTransparent = transparent;
+    
+    if (transparent) {
+        [self.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+        self.navigationBar.shadowImage = [UIImage new];
+        self.navigationBar.translucent = YES;
+    }
+    else {
+        UIImage *image = [UIImage imageWithColor:[UIColor colorWithHue:0.555f saturation:1.f brightness:0.855f alpha:1.f]];
+        [self.navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        self.navigationBar.shadowImage = nil;
+//        self.navigationBar.barTintColor = [UIColor colorWithHue:0.555f saturation:1.f brightness:0.855f alpha:1.f];
+//        self.navigationBar.tintColor = [UIColor colorWithHue:0.555f saturation:1.f brightness:0.855f alpha:1.f];
+//        self.navigationBar.barTintColor = [UIColor blueColor];
+        self.navigationBar.translucent = YES;
     }
 }
 @end

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -44,6 +44,7 @@
         <mutableArray key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
             <string>Lato-Regular</string>
+            <string>Lato-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -52,14 +53,13 @@
             <objects>
                 <navigationController id="Ne0-fa-NmS" customClass="EWBaseNavigationController" sceneMemberID="viewController">
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
-                    <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" id="ef9-ZV-2Sh">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ef9-ZV-2Sh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.12943929430000001" green="0.58621412520000005" blue="0.63474220039999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="51"/>
-                            <color key="textColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </textAttributes>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="ZRV-eL-WOE">
@@ -306,36 +306,6 @@
             </objects>
             <point key="canvasLocation" x="-991.5" y="530.5"/>
         </scene>
-        <!--Table View Controller-->
-        <scene sceneID="8r1-eM-TWG">
-            <objects>
-                <tableViewController id="sJb-xk-dko" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="j2I-pw-dGs">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="fCF-Fn-3zx">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fCF-Fn-3zx" id="m7i-jQ-AFl">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="aF8-hD-EeQ" kind="show" id="x8d-XB-uBA"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="sJb-xk-dko" id="WV6-xx-D4n"/>
-                            <outlet property="delegate" destination="sJb-xk-dko" id="UwQ-lK-ZaV"/>
-                        </connections>
-                    </tableView>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="avV-w5-UfA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-46" y="1764"/>
-        </scene>
         <!--Sleep View Controller-->
         <scene sceneID="Ttp-Td-LPN">
             <objects>
@@ -549,10 +519,10 @@
             </objects>
             <point key="canvasLocation" x="622" y="1014"/>
         </scene>
-        <!--View Controller-->
+        <!--Wake View Controller-->
         <scene sceneID="cFx-dN-xs2">
             <objects>
-                <viewController storyboardIdentifier="EWWakeViewController" id="ZmP-te-75G" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EWWakeViewController" id="ZmP-te-75G" customClass="EWWakeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dl2-E4-4JA"/>
                         <viewControllerLayoutGuide type="bottom" id="izB-BO-tjT"/>
@@ -567,7 +537,7 @@
                                     <constraint firstAttribute="width" id="Sva-os-NJ6"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eiI-YG-cDg" userLabel="porfolio image view">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eiI-YG-cDg" userLabel="porfolio image view">
                                 <rect key="frame" x="81" y="100" width="158" height="158"/>
                                 <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -623,6 +593,9 @@
                                 </state>
                                 <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <connections>
+                                    <action selector="onWakeHerButton:" destination="ZmP-te-75G" eventType="touchUpInside" id="HIf-hC-uMG"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEo-IB-dbM">
                                 <rect key="frame" x="16" y="505" width="139" height="48"/>
@@ -636,6 +609,9 @@
                                 </state>
                                 <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <connections>
+                                    <action selector="onNextButton:" destination="ZmP-te-75G" eventType="touchUpInside" id="oim-UA-mb6"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -670,7 +646,10 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="nameLabel" destination="FYb-xQ-Ifp" id="1I3-CW-WMV"/>
                         <outlet property="profileImageView" destination="eiI-YG-cDg" id="T5U-6T-rtt"/>
+                        <outlet property="statusLabel" destination="ZNX-QY-fw8" id="KTz-9c-7h2"/>
+                        <outlet property="wantsToWakeUpAtLabel" destination="Fp5-iC-Irk" id="pJQ-n5-AR1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z3T-0w-8G8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -856,41 +835,10 @@
             <point key="canvasLocation" x="622" y="1780"/>
         </scene>
         <!--Alarm View Controller-->
-        <scene sceneID="J5T-sb-sq7">
-            <objects>
-                <viewController storyboardIdentifier="EWAlarmViewController" id="iQK-rp-5Xu" customClass="EWAlarmViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="6pG-Mb-MbQ"/>
-                        <viewControllerLayoutGuide type="bottom" id="AZi-YH-2f9"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="PyR-Qa-aWj">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="tLf-LH-dlS">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="tLf-LH-dlS" firstAttribute="top" secondItem="6pG-Mb-MbQ" secondAttribute="bottom" constant="-64" id="3Tb-97-Qon"/>
-                            <constraint firstItem="tLf-LH-dlS" firstAttribute="leading" secondItem="PyR-Qa-aWj" secondAttribute="leading" id="81G-hY-Pgw"/>
-                            <constraint firstItem="AZi-YH-2f9" firstAttribute="top" secondItem="tLf-LH-dlS" secondAttribute="bottom" id="PIr-wJ-Ozc"/>
-                            <constraint firstAttribute="trailing" secondItem="tLf-LH-dlS" secondAttribute="trailing" id="Pw8-Ad-pPk"/>
-                        </constraints>
-                    </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vTr-9E-7iH" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1187" y="1218"/>
-        </scene>
-        <!--Alarm View Controller-->
         <scene sceneID="tGF-v7-DLi">
             <objects>
                 <tableViewController id="Qdr-6h-6LT" customClass="EWAlarmViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" delaysContentTouches="NO" canCancelContentTouches="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="gRg-DQ-YbY">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" delaysContentTouches="NO" canCancelContentTouches="NO" dataMode="prototypes" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="gRg-DQ-YbY">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -900,8 +848,8 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" tableViewCell="vQc-FA-CBp" id="PqW-eZ-Woa">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="12:00 AM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDo-0X-iMi">
-                                            <rect key="frame" x="10" y="29" width="139" height="40"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:00 AM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDo-0X-iMi">
+                                            <rect key="frame" x="10" y="30" width="139" height="40"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="ezs-vp-0gj"/>
                                             </constraints>
@@ -959,12 +907,16 @@
                                                 <action selector="onMinusButton:" destination="vQc-FA-CBp" eventType="touchUpInside" id="L2q-ej-0zL"/>
                                             </connections>
                                         </button>
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-alarms-next-badge" translatesAutoresizingMaskIntoConstraints="NO" id="uA0-pQ-RC7">
+                                            <rect key="frame" x="75" y="10" width="50" height="20"/>
+                                        </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="mNF-OP-8sK" secondAttribute="trailing" constant="10" id="1h2-qw-CBW"/>
                                         <constraint firstItem="vDo-0X-iMi" firstAttribute="leading" secondItem="PqW-eZ-Woa" secondAttribute="leading" constant="10" id="5zs-ku-wda"/>
                                         <constraint firstAttribute="bottom" secondItem="vDo-0X-iMi" secondAttribute="bottom" constant="10" id="60b-Wi-ouR"/>
+                                        <constraint firstItem="uA0-pQ-RC7" firstAttribute="leading" secondItem="pIS-6G-iXc" secondAttribute="trailing" constant="8" id="DdK-rH-QgK"/>
                                         <constraint firstAttribute="centerY" secondItem="mNF-OP-8sK" secondAttribute="centerY" id="IyX-I0-BVg"/>
                                         <constraint firstItem="PmX-xE-3Ev" firstAttribute="centerY" secondItem="Ok4-yk-EOP" secondAttribute="centerY" id="UCS-XT-7Rg"/>
                                         <constraint firstItem="mNF-OP-8sK" firstAttribute="leading" secondItem="PmX-xE-3Ev" secondAttribute="trailing" constant="10" id="b0j-jI-m9g"/>
@@ -972,12 +924,14 @@
                                         <constraint firstItem="pIS-6G-iXc" firstAttribute="top" secondItem="PqW-eZ-Woa" secondAttribute="top" constant="10" id="fgB-yQ-Bhj"/>
                                         <constraint firstItem="pIS-6G-iXc" firstAttribute="leading" secondItem="PqW-eZ-Woa" secondAttribute="leading" constant="10" id="hzC-97-w61"/>
                                         <constraint firstItem="PmX-xE-3Ev" firstAttribute="leading" secondItem="Ok4-yk-EOP" secondAttribute="trailing" constant="10" id="vUB-xb-hTt"/>
+                                        <constraint firstItem="uA0-pQ-RC7" firstAttribute="centerY" secondItem="pIS-6G-iXc" secondAttribute="centerY" id="x46-XE-mWn"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="minusButton" destination="Ok4-yk-EOP" id="SAC-05-vap"/>
                                     <outlet property="mondayLabel" destination="pIS-6G-iXc" id="TQ9-Fb-uHG"/>
+                                    <outlet property="nextImageView" destination="uA0-pQ-RC7" id="XBW-aJ-dEB"/>
                                     <outlet property="plusButton" destination="PmX-xE-3Ev" id="2Dm-xF-fPC"/>
                                     <outlet property="sevenSwitch" destination="mNF-OP-8sK" id="hgK-MN-BdD"/>
                                     <outlet property="timeLabel" destination="vDo-0X-iMi" id="sAo-ba-HAb"/>
@@ -992,9 +946,9 @@
                                             <rect key="frame" x="301" y="23" width="9" height="15"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" alpha="0.69999999999999996" tag="99" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simple" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PTN-gA-1FR">
-                                            <rect key="frame" x="171" y="18" width="120" height="24"/>
+                                            <rect key="frame" x="107" y="18" width="184" height="24"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="120" id="F3D-a4-rA5"/>
+                                                <constraint firstAttribute="width" constant="184" id="F3D-a4-rA5"/>
                                                 <constraint firstAttribute="height" constant="24" id="Im8-QA-JhB"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="20"/>
@@ -1037,6 +991,60 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tp7-vN-6oM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-871" y="1971"/>
+        </scene>
+        <!--Alarm Tone View Controller-->
+        <scene sceneID="sPN-Ds-mEv">
+            <objects>
+                <tableViewController storyboardIdentifier="EWAlarmToneViewController" id="8s9-xg-yma" customClass="EWAlarmToneViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="WcG-ie-vz3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EWAlarmToneViewCell" rowHeight="60" id="T5r-Xw-xnP" customClass="EWAlarmToneViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="T5r-Xw-xnP" id="eFB-Sd-P7m">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simple" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jxr-lR-o3Y">
+                                            <rect key="frame" x="8" y="20" width="228" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="aeU-Lo-tVK"/>
+                                                <constraint firstAttribute="width" constant="228" id="s4w-oU-3qh"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="20"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-check-mark" translatesAutoresizingMaskIntoConstraints="NO" id="X0c-l2-zi6">
+                                            <rect key="frame" x="282" y="22" width="20" height="15"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="jxr-lR-o3Y" secondAttribute="centerY" id="KYl-n2-tXT"/>
+                                        <constraint firstAttribute="trailing" secondItem="X0c-l2-zi6" secondAttribute="trailing" constant="18" id="NKh-qV-kzL"/>
+                                        <constraint firstAttribute="centerY" secondItem="X0c-l2-zi6" secondAttribute="centerY" id="rj7-4k-9RN"/>
+                                        <constraint firstItem="jxr-lR-o3Y" firstAttribute="leading" secondItem="eFB-Sd-P7m" secondAttribute="leading" constant="8" id="uC1-Or-3Rp"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="alarmLabel" destination="jxr-lR-o3Y" id="uqh-DT-z74"/>
+                                    <outlet property="checkMark" destination="X0c-l2-zi6" id="2PW-EH-xmv"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="8s9-xg-yma" id="wYw-ba-lVg"/>
+                            <outlet property="delegate" destination="8s9-xg-yma" id="SZq-Lp-4QC"/>
+                        </connections>
+                    </tableView>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bkN-NF-fA4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-516" y="1969"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="aPH-Gc-r51">
@@ -1087,9 +1095,11 @@
         <image name="woke-alarm-arrow-right" width="9" height="15"/>
         <image name="woke-alarms-minus" width="30" height="30"/>
         <image name="woke-alarms-minus-highlighted" width="30" height="30"/>
+        <image name="woke-alarms-next-badge" width="50" height="20"/>
         <image name="woke-alarms-plus" width="30" height="30"/>
         <image name="woke-alarms-plus-highlighted" width="30" height="30"/>
         <image name="woke-background" width="320" height="568"/>
+        <image name="woke-check-mark" width="20" height="15"/>
         <image name="woke-login-info" width="8" height="17"/>
         <image name="woke-login-info-selected" width="8" height="17"/>
         <image name="woke-rectangle-disabled" width="9" height="9"/>

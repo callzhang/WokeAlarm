@@ -729,7 +729,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     
     if (buttonIndex == 2) {
         
-        [photoBrowser deleteButtonPressed:nil];
+//        [photoBrowser deleteButtonPressed:nil];
         
         return ;
     }else if (buttonIndex == 3){
@@ -812,7 +812,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
             
             [_photoBrower.view showSuccessNotification:@"Uploaded"];
             
-            [_photoBrower addPhotoInBrowser:fileUrl];
+//            [_photoBrower addPhotoInBrowser:fileUrl];
         });
         
         
@@ -904,7 +904,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         
         [_photoBrower.view showSuccessNotification:@"Uploaded"];
         
-        [_photoBrower addPhotoInBrowser:fileUrl];
+//        [_photoBrower addPhotoInBrowser:fileUrl];
     }];
 }
 @end

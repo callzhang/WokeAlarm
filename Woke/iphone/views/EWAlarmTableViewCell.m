@@ -9,10 +9,23 @@
 #import "EWAlarmTableViewCell.h"
 #import "EWAlarm.h"
 #import "SevenSwitch.h"
+@interface EWAlarmTableViewCell()
+@property (weak, nonatomic) IBOutlet UIImageView *nextImageView;
+@end
 
 @implementation EWAlarmTableViewCell
 
 - (void)awakeFromNib {
+}
+
+- (void)setNextAlarm:(BOOL)nextAlarm {
+    _nextAlarm = nextAlarm;
+    if (_nextAlarm) {
+        self.nextImageView.hidden = NO;
+    }
+    else {
+        self.nextImageView.hidden = YES;
+    }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -39,6 +52,7 @@
         self.timeLabel.alpha = 1.0f;
         self.plusButton.alpha = 1.0f;
         self.minusButton.alpha = 1.0f;
+        self.nextImageView.alpha = 1.0f;
         [self.sevenSwitch setOn:YES animated:NO];
     }
     else {
@@ -46,6 +60,7 @@
         self.timeLabel.alpha = .36f;
         self.plusButton.alpha = .36f;
         self.minusButton.alpha = .36f;
+        self.nextImageView.alpha = .36f;
         [self.sevenSwitch setOn:NO animated:NO];
     }
 }

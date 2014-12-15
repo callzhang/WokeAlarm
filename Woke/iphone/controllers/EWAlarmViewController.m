@@ -10,12 +10,13 @@
 #import "VBFPopFlatButton.h"
 #import "EWAlarmTableViewCell.h"
 #import "EWAlarm.h"
+#import "EWAlarmToneViewController.h"
 
 #define kToneLabelTag 99
 
 @interface EWAlarmViewController ()
 @property (nonatomic, strong) NSArray *alarms;
-
+@property (nonatomic, assign) EWAlarm *nextAlarm;
 @end
 
 @implementation EWAlarmViewController
@@ -27,10 +28,12 @@
     self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"woke-background"]];
     
     self.alarms = [EWPerson myAlarms];
+    self.nextAlarm = [EWPerson myCurrentAlarm];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -66,10 +69,15 @@
     if (indexPath.section == 0) {
         UITableViewCell *toneCell = [tableView dequeueReusableCellWithIdentifier:@"EWAlarmToneSelectionCell"];
         toneCell.contentView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.04];
+        toneCell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        
+        UILabel *toneLabel = (UILabel *)[toneCell viewWithTag:kToneLabelTag];
+        toneLabel.text = [EWSession sharedSession].currentAlarmTone;
         return toneCell;
     }
     
     EWAlarmTableViewCell *cell = (EWAlarmTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"EWAlarmTableViewCell"];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     if (indexPath.row % 2 == 0) {
         cell.contentView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.02];
@@ -80,6 +88,13 @@
     
     EWAlarm *alarm = self.alarms[indexPath.row];
     cell.alarm = alarm;
+    
+    if ([alarm isEqual:self.nextAlarm]) {
+        cell.nextAlarm = YES;
+    }
+    else {
+        cell.nextAlarm = NO;
+    }
     
     return cell;
 }
@@ -94,5 +109,24 @@
     }
     
     return 0;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 0) {
+        EWAlarmToneViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWAlarmToneViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    DDLogInfo(@"%@ : insets: %@", NSStringFromCGPoint(scrollView.contentOffset), NSStringFromUIEdgeInsets(scrollView.scrollIndicatorInsets));
+    float offset = scrollView.scrollIndicatorInsets.top + scrollView.contentOffset.y;
+    if (offset > 0) {
+        [self.mainNavigationController setNavigationBarTransparent:NO];
+    }
+    else {
+        [self.mainNavigationController setNavigationBarTransparent:YES];
+    }
 }
 @end

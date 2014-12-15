@@ -18,6 +18,9 @@
 @property (nonatomic, strong) EWPerson *currentUser;
 @property (nonatomic) BOOL isSleeping;
 @property (nonatomic) BOOL isWakingUp;
+
+@property (nonatomic, copy) NSArray *alarmTones;
+@property (nonatomic, copy) NSString *currentAlarmTone;
 /**
  *  A dictionary of user and statement
  */

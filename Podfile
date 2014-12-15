@@ -32,6 +32,7 @@ target 'Woke' do
   pod 'KVOController', '~> 1.0.3'
   pod 'ReactiveCocoa', '~> 2.3.1'
   pod 'ReactiveViewModel', '~> 0.2'
+  pod 'NYXImagesKit', '~> 2.3'
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
 end
 
