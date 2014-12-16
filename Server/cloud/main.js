@@ -414,7 +414,8 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
                   title: "You got a new voice",
                   body: "Woke send you a new voice.",
                   type: "media",
-                  media_type: "voice"
+                  media_type: "voice",
+                  media: voice.get("objectId")
                 }
               },{
                   success: function() {
