@@ -12,6 +12,7 @@
 @interface EWPreWakeViewController : EWBaseViewController
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
 - (IBAction)wakeUp:(UIButton *)sender;
+- (IBAction)newMedia:(id)sender;
 @property (weak, nonatomic) IBOutlet UIProgressView *progress;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (nonatomic, strong) NSArray *medias;

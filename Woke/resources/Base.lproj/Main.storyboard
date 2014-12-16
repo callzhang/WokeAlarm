@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -789,8 +789,35 @@
                                 <color key="textColor" red="0.17802781320947389" green="0.25300945014414777" blue="0.35721456005586594" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZr-RW-npd">
+                                <rect key="frame" x="224" y="474" width="80" height="58"/>
+                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="3Tn-EA-l4E"/>
+                                    <constraint firstAttribute="height" constant="58" id="4Xh-nN-0ZO"/>
+                                    <constraint firstAttribute="width" constant="194" id="6se-UR-9np"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="58" id="NiT-hP-5Ke"/>
+                                </constraints>
+                                <state key="normal" title="new media">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6se-UR-9np"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="newMedia:" destination="cn9-tj-CIm" eventType="touchUpInside" id="euU-ap-xYV"/>
+                                    <action selector="wakeUp:" destination="cn9-tj-CIm" eventType="touchUpInside" id="84r-nf-HbN"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gna-Bz-U0d">
-                                <rect key="frame" x="63" y="474" width="194" height="58"/>
+                                <rect key="frame" x="22" y="474" width="194" height="58"/>
                                 <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="194" id="hV6-89-u2B"/>
@@ -811,16 +838,20 @@
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="VZr-RW-npd" firstAttribute="trailing" secondItem="ilK-me-T6E" secondAttribute="trailingMargin" id="Gxc-Lr-3os"/>
+                            <constraint firstItem="GZo-44-KJk" firstAttribute="top" secondItem="VZr-RW-npd" secondAttribute="bottom" constant="36" id="HP2-QR-xkr"/>
                             <constraint firstItem="zFJ-K2-VqW" firstAttribute="top" secondItem="tGR-Dl-h9L" secondAttribute="bottom" constant="42" id="IcT-ND-38D"/>
                             <constraint firstAttribute="centerX" secondItem="3Ep-2l-i5U" secondAttribute="centerX" id="OfS-Px-y8U"/>
                             <constraint firstItem="GZo-44-KJk" firstAttribute="top" secondItem="Gna-Bz-U0d" secondAttribute="bottom" constant="36" id="PMp-Q8-6Hu"/>
-                            <constraint firstItem="Gna-Bz-U0d" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leadingMargin" constant="47" id="PV6-FI-CGK"/>
+                            <constraint firstItem="Gna-Bz-U0d" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leadingMargin" constant="6" id="PV6-FI-CGK"/>
                             <constraint firstAttribute="centerX" secondItem="kn5-qD-xSK" secondAttribute="centerX" id="TSL-9T-H0x"/>
+                            <constraint firstItem="VZr-RW-npd" firstAttribute="trailing" secondItem="ilK-me-T6E" secondAttribute="trailingMargin" id="bNY-NE-GKS"/>
+                            <constraint firstItem="VZr-RW-npd" firstAttribute="leading" secondItem="Gna-Bz-U0d" secondAttribute="trailing" constant="8" id="frI-Qq-4Ma"/>
                             <constraint firstItem="zFJ-K2-VqW" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leadingMargin" constant="24" id="hZO-eX-cXs"/>
                             <constraint firstItem="kn5-qD-xSK" firstAttribute="top" secondItem="3Ep-2l-i5U" secondAttribute="bottom" constant="8" id="igR-NM-BxR"/>
                             <constraint firstAttribute="trailingMargin" secondItem="zFJ-K2-VqW" secondAttribute="trailing" constant="24" id="t6o-u2-jH9"/>
                             <constraint firstItem="3Ep-2l-i5U" firstAttribute="top" secondItem="zFJ-K2-VqW" secondAttribute="bottom" constant="8" id="wmH-pc-ZEb"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Gna-Bz-U0d" secondAttribute="trailing" constant="47" id="ygU-aI-8TH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Gna-Bz-U0d" secondAttribute="trailing" constant="88" id="ygU-aI-8TH"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>

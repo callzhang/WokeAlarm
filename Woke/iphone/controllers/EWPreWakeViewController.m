@@ -58,6 +58,10 @@
 }
 
 - (IBAction)wakeUp:(UIButton *)sender {
-    
+    DDLogInfo(@"Wake button pressed!");
+}
+
+- (IBAction)newMedia:(id)sender {
+    EWMedia *media = [EWMedia newMedia];
 }
 @end
