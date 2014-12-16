@@ -100,7 +100,8 @@ typedef void (^SenderBlock)(id sender);
 #define kSavedAlarms                    @"saved_alarms"
 
 #pragma mark - User / External events
-//App wide events
+
+//============> App wide events
 #define kWokeNotification               @"woke"
 #define kSleepNotification              @"Sleep"
 #define kNewMediaNotification           @"media_event" //key: task & media

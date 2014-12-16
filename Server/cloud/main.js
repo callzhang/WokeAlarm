@@ -413,24 +413,29 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
                   alert: "You got a new voice",
                   title: "You got a new voice",
                   body: "Woke send you a new voice.",
-                  type: "voice",
-                  notificationID: notification.id
+                  type: "media",
+                  media_type: "voice"
                 }
               },{
                   success: function() {
                     // Push was successful
+                    console.log("Test voice Sent");
                   },
                   error: function(error) {
                     // Handle error
+                    console.log("Failed to send push for test voice");
                   }
               });
+            }
+          }, error: function () {
+            console.log("cannot find woke voices");
+            response.error("Cannot find woke voices");
+          });
+        },{
+          error: function(){
+            console.log("failed to find Woke");
           }
-        }, error: function () {
-          console.log("cannot find woke user");
-          response.error("Cannot find woke user");
         }
-      })
-    }
   });
 
 }

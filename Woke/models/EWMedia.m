@@ -57,7 +57,12 @@
 }
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID{
-    return [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID].firstObject;
+    EWMedia *media = [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID].firstObject;
+    if (!media) {
+        //need to find it on server
+        media = (EWMedia *)[EWSync findObjectWithClass:NSStringFromClass([EWMedia class]) withID:mediaID];
+    }
+    return media;
 }
 
 
@@ -69,7 +74,13 @@
 
 
 - (void)downloadMediaFile{
-    //TODO;
+    EWMediaFile *file;
+    if (!self.mediaFile) {
+        [self refresh];
+        file = self.mediaFile;
+    }
+    [file refresh];
+    return file;
 }
 
 #pragma mark - Underlying data

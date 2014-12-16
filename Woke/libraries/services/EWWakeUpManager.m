@@ -108,13 +108,14 @@
         }else if (!activity.completed && [[NSDate date] timeIntervalSinceDate:activity.time] < kMaxWakeTime){
             
             //============== struggle ==============
-            [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
+            
+            //assign activity
+            media.avtivity = activity;
             
             //broadcast so wakeupVC can react to it
-            //[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:@{kPushMediaKey: mediaID, kPushTaskKey: task.objectId}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:activity];
             
-            //use KVO
-            [activity addMediasObject:media];
+            //save
             [EWSync save];
             
         }else{

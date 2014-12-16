@@ -681,14 +681,14 @@ NSManagedObjectContext *mainContext;
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID{
 	NSParameterAssert([NSThread isMainThread]);
     if (serverID == nil) {
-        NSLog(@"!!! Passed in nil to get current MO");
+        DDLogError(@"!!! Passed in nil to get current MO");
         return nil;
     }
     
     NSError *error;
     NSManagedObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:serverID];
     if (!MO) {
-		PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:serverID error:NULL];
+		PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:serverID error:error];
 		MO = [PO managedObjectInContext:mainContext];
 		[MO refresh];
 		if (!MO) {
