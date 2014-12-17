@@ -14,6 +14,8 @@
 #import "FBSession.h"
 #import "EWServer.h"
 #import "ATConnect.h"
+#import "AppDelegate.h"
+@import CoreLocation;
 
 @interface EWAccountManager()
 @property (nonatomic) BOOL isUpdatingFacebookInfo;
@@ -406,6 +408,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Geolocation
 
 - (void)registerLocation{
+    CLLocationManager *manager = [CLLocationManager new];
+    if ([manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [manager requestWhenInUseAuthorization];
+    }
     
     [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
         
@@ -439,6 +445,41 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         
         
     }];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    switch (status) {
+        case kCLAuthorizationStatusDenied:
+            DDLogWarn(@"kCLAuthorizationStatusDenied");
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alertView show];
+        }
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+        {
+            DDLogInfo(@"kCLAuthorizationStatusAuthorizedWhenInUse");
+            manager.desiredAccuracy = kCLLocationAccuracyBest;
+            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
+            //[manager startUpdatingLocation];
+            
+        }
+            break;
+        case kCLAuthorizationStatusAuthorizedAlways:
+        {
+            DDLogInfo(@"kCLAuthorizationStatusAuthorizedAlways");
+            manager.desiredAccuracy = kCLLocationAccuracyBest;
+            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
+            //[manager startUpdatingLocation];
+        }
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            DDLogInfo(@"kCLAuthorizationStatusNotDetermined");
+            break;
+        case kCLAuthorizationStatusRestricted:
+            DDLogInfo(@"kCLAuthorizationStatusRestricted");
+            break;
+    }
 }
 
 @end

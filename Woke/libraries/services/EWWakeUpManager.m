@@ -110,7 +110,7 @@
             //============== struggle ==============
             
             //assign activity
-            media.avtivity = activity;
+            media.activity = activity;
             
             //broadcast so wakeupVC can react to it
             [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:activity];

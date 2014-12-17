@@ -33,9 +33,26 @@
     [super viewWillAppear:animated];
     //update view
     [self updateViewForCurrentMedia];
+    
     //update progress
     progressUpdateTimer = [NSTimer bk_scheduledTimerWithTimeInterval:0.05 block:^(NSTimer *timer) {
-        self.progress.progress = [EWAVManager sharedManager].player.currentTime / [EWAVManager sharedManager].player.duration;
+        if ([EWAVManager sharedManager].player.isPlaying) {
+            if (self.progress.alpha < 1) {
+                [UIView animateWithDuration:0.5 animations:^{
+                    self.progress.alpha = 1;
+                }];
+            }
+            float t = [EWAVManager sharedManager].player.currentTime;
+            float d = [EWAVManager sharedManager].player.duration;
+            self.progress.progress = t / d;
+        }else{
+            if (self.progress.alpha >0) {
+                [UIView animateWithDuration:0.5 animations:^{
+                    self.progress.alpha = 0;
+                }];
+            }
+        }
+        
     } repeats:YES];
     
     //register playing info
@@ -62,6 +79,14 @@
 }
 
 - (IBAction)newMedia:(id)sender {
-    EWMedia *media = [EWMedia newMedia];
+    //call server test function
+    [PFCloud callFunctionInBackground:@"testSendWakeUpVoice" withParameters:@{kParseObjectID: [EWPerson me].objectId} block:^(id object, NSError *error) {
+        //
+        if (!error) {
+            DDLogInfo(@"Finished test voice request");
+        }else{
+            DDLogError(@"Failed test voice request: %@", error.description);
+        }
+    }];
 }
 @end

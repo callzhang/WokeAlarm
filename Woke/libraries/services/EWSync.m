@@ -688,7 +688,7 @@ NSManagedObjectContext *mainContext;
     NSError *error;
     NSManagedObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:serverID];
     if (!MO) {
-		PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:serverID error:error];
+		PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:serverID error:&error];
 		MO = [PO managedObjectInContext:mainContext];
 		[MO refresh];
 		if (!MO) {

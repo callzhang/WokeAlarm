@@ -387,29 +387,32 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
       var userQuery = new Parse.Query(Parse.User);
       query.equalTo("username", "woke");
       query.find({
-        success: function(woke) {
+        success: function (woke) {
           if (!woke) {
             response.error("cannot find Woke");
-          };
+          }
           //create a meida
-          var voice = new Parse.object("EWMedia");
-          voice.set("receiver") = user;
-          voice.set("authur") = woke;
+          var EWMedia = Parse.Object.extend("EWMedia");
+          var voice = new EWMedia;
+          voice.set("receiver", user);
+          voice.set("author", woke);
           //TODO: assign activity
           var EWMediaFile = Parse.Object.extend("EWMediaFile");
           var mediaFileQuery = new Parse.Query(EWMediaFile);
-          mediaFileQuery.equalTo("owner", woke.get("objectId"))
+          mediaFileQuery.equalTo("owner", woke.get("objectId"));
           mediaFileQuery.find({
             success: function (voiceFiles) {
               var voiceFile = voiceFiles[math.ceil(random() * voices.length)];
-              voice.set("mediaFile") = voiceFile;
+              voice.set("mediaFile", voiceFile);
+              voice.save();
+
               //send a push
               var query = new Parse.Query(Parse.Installation);
               query.equalTo('username', objectId);
 
               Parse.Push.send({
-                where: query.
-                data:{
+                where: query,
+                data: {
                   alert: "You got a new voice",
                   title: "You got a new voice",
                   body: "Woke send you a new voice.",
@@ -417,29 +420,30 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
                   media_type: "voice",
                   media: voice.get("objectId")
                 }
-              },{
-                  success: function() {
-                    // Push was successful
-                    console.log("Test voice Sent");
-                  },
-                  error: function(error) {
-                    // Handle error
-                    console.log("Failed to send push for test voice");
-                  }
+              }, {
+                success: function () {
+                  // Push was successful
+                  console.log("Test voice Sent");
+                },
+                error: function (error) {
+                  // Handle error
+                  console.log("Failed to send push for test voice");
+                }
               });
+            }, error: function (list, error) {
+              console.log("cannot find woke voices");
+              response.error("Cannot find woke voices: ", + error.message);
             }
-          }, error: function () {
-            console.log("cannot find woke voices");
-            response.error("Cannot find woke voices");
           });
-        },{
-          error: function(){
-            console.log("failed to find Woke");
-          }
+        }, error: function (list, error) {
+          console.log("failed to find Woke: " + error.message);
         }
+      });
+    }, error: function (list, error){
+      console.log("failed to find test receiver user: " + error.message);
+    }
   });
-
-}
+});
 
 
 

@@ -80,7 +80,6 @@
         file = self.mediaFile;
     }
     [file refresh];
-    return file;
 }
 
 #pragma mark - Underlying data

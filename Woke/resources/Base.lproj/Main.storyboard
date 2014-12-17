@@ -813,7 +813,6 @@
                                 </variation>
                                 <connections>
                                     <action selector="newMedia:" destination="cn9-tj-CIm" eventType="touchUpInside" id="euU-ap-xYV"/>
-                                    <action selector="wakeUp:" destination="cn9-tj-CIm" eventType="touchUpInside" id="84r-nf-HbN"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gna-Bz-U0d">
