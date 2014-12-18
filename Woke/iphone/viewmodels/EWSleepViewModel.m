@@ -7,6 +7,7 @@
 //
 
 #import "EWSleepViewModel.h"
+#import "RACEXTScope.h"
 @interface EWSleepViewModel ()
 @end
 
@@ -35,7 +36,9 @@
         _alarm = alarm;
     }
     
+    @weakify(self);
     [RACObserve(alarm, time) subscribeNext:^(NSDate *date) {
+        @strongify(self);
         NSString *hour = [date mt_stringFromDateWithFormat:@"h" localized:NO];
         NSString *minutes = [date mt_stringFromDateWithFormat:@"mm" localized:NO];
         if (hour.length == 1) {
@@ -49,6 +52,11 @@
         
         self.time3 = [minutes substringWithRange:NSMakeRange(0, 1)];
         self.time4 = [minutes substringWithRange:NSMakeRange(1, 1)];
+    }];
+    
+    [RACObserve(alarm, statement) subscribeNext:^(NSString *statement) {
+        @strongify(self);
+        self.wakeupText = statement;
     }];
 }
 @end
