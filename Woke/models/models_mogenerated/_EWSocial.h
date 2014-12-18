@@ -7,10 +7,12 @@
 extern const struct EWSocialAttributes {
 	__unsafe_unretained NSString *addressBookFriends;
 	__unsafe_unretained NSString *facebookFriends;
+	__unsafe_unretained NSString *facebookID;
 	__unsafe_unretained NSString *facebookToken;
 	__unsafe_unretained NSString *facebookUpdated;
 	__unsafe_unretained NSString *friendshipTimeline;
 	__unsafe_unretained NSString *weiboFriends;
+	__unsafe_unretained NSString *weiboID;
 	__unsafe_unretained NSString *weiboToken;
 	__unsafe_unretained NSString *weiboUpdated;
 } EWSocialAttributes;
@@ -46,6 +48,10 @@ extern const struct EWSocialRelationships {
 
 //- (BOOL)validateFacebookFriends:(id*)value_ error:(NSError**)error_;
 
+@property (nonatomic, strong) NSString* facebookID;
+
+//- (BOOL)validateFacebookID:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) NSData* facebookToken;
 
 //- (BOOL)validateFacebookToken:(id*)value_ error:(NSError**)error_;
@@ -61,6 +67,10 @@ extern const struct EWSocialRelationships {
 @property (nonatomic, strong) id weiboFriends;
 
 //- (BOOL)validateWeiboFriends:(id*)value_ error:(NSError**)error_;
+
+@property (nonatomic, strong) NSString* weiboID;
+
+//- (BOOL)validateWeiboID:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) NSData* weiboToken;
 
@@ -84,6 +94,9 @@ extern const struct EWSocialRelationships {
 - (id)primitiveFacebookFriends;
 - (void)setPrimitiveFacebookFriends:(id)value;
 
+- (NSString*)primitiveFacebookID;
+- (void)setPrimitiveFacebookID:(NSString*)value;
+
 - (NSData*)primitiveFacebookToken;
 - (void)setPrimitiveFacebookToken:(NSData*)value;
 
@@ -95,6 +108,9 @@ extern const struct EWSocialRelationships {
 
 - (id)primitiveWeiboFriends;
 - (void)setPrimitiveWeiboFriends:(id)value;
+
+- (NSString*)primitiveWeiboID;
+- (void)setPrimitiveWeiboID:(NSString*)value;
 
 - (NSData*)primitiveWeiboToken;
 - (void)setPrimitiveWeiboToken:(NSData*)value;

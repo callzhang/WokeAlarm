@@ -41,15 +41,15 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
       //user = results[0];
       var userObject = result;
       // User's location
-      //var userGeoPoint = userObject.get("lastLocation");
+      //var userGeoPoint = userObject.get("location");
       var userGeoPoint =  new Parse.GeoPoint({latitude: userLocation.latitude, longitude: userLocation.longitude});
       // Create a query for places
       var query = new Parse.Query(Parse.User);
       // Interested in locations near user.
       if (radius > 0 && radius < 6371)
-        query.withinKilometers("lastLocation", userGeoPoint, radius);
+        query.withinKilometers("location", userGeoPoint, radius);
       else
-        query.near("lastLocation", userGeoPoint);
+        query.near("location", userGeoPoint);
       query.ascending();
       // Limit what could be a lot of points.
       query.limit(2*topk);
@@ -99,10 +99,10 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
                 var mergedList = nearbyUsers.filter(function (x) { return x.id != userObject.id});
                 var minDistance = 9999;
                 var maxDistance = -1;
-                //var myGeoPoint = (userObject.get("lastLocation"));
+                //var myGeoPoint = (userObject.get("location"));
 
                 for (i = 0; i < mergedList.length; i++) {
-                  var geoPoint = (mergedList[i].get("lastLocation"));
+                  var geoPoint = (mergedList[i].get("location"));
 
                   var distance = geoPoint.kilometersTo(userGeoPoint);
                   //set distance for every user

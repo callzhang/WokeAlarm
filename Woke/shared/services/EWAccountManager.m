@@ -183,9 +183,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         NSParameterAssert(person);
         
         //name
-        if ([person.name isEqualToString:EWPersonDefaultName] || person.name.length == 0) {
-            person.name = user.name;
+        if (!person.firstName) {
+            person.firstName = user.first_name;
         }
+        if (!person.lastName) {
+            person.lastName = user.last_name;
+        }
+        
         //email
         if (!person.email) person.email = user[@"email"];
         
@@ -196,7 +200,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             person.birthday = [formatter dateFromString:user[@"birthday"]];
         }
         //facebook link
-        person.facebook = user.objectID;
+        [EWPerson mySocialGraph].facebookID = user.objectID;
         //gender
         person.gender = user[@"gender"];
         //city
@@ -206,6 +210,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             //new user
             person.preference = kUserDefaults;
         }
+        
         
         if (!person.profilePic) {
             //download profile picture if needed
@@ -230,7 +235,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 - (void)getFacebookFriends{
     DDLogVerbose(@"Updating facebook friends");
     //check facebook id exist
-    if (![EWPerson me].facebook) {
+    if (![EWPerson me].socialGraph.facebookID) {
         DDLogWarn(@"Current user doesn't have facebook ID, skip checking fb friends");
         return;
     }
@@ -409,42 +414,46 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 - (void)registerLocation{
     CLLocationManager *manager = [CLLocationManager new];
+    manager.delegate = self;
     if ([manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [manager requestWhenInUseAuthorization];
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+            [manager requestWhenInUseAuthorization];
+        } else {
+            [manager startUpdatingLocation];
+        }
+    }else{
+        [manager startUpdatingLocation];
     }
     
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        
-        if (geoPoint.latitude == 0 && geoPoint.longitude == 0) {
-            //NYC coordinate if on simulator
-            geoPoint.latitude = 40.732019;
-            geoPoint.longitude = -73.992684;
-        }
-        
-        CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
-        
-        DDLogVerbose(@"Get user location with lat: %f, lon: %f", geoPoint.latitude, geoPoint.longitude);
-        
-        //reverse search address
-        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
-        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
-            
-            [EWPerson me].lastLocation = location;
-            
-            if (err == nil && [placemarks count] > 0) {
-                CLPlacemark *placemark = [placemarks lastObject];
-                //get info
-                [EWPerson me].city = placemark.locality;
-                [EWPerson me].region = placemark.country;
-            } else {
-                NSLog(@"%@", err.debugDescription);
-            }
-            [EWSync save];
-            
-        }];
-        
-        
-    }];
+//    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+//        
+//        if (geoPoint.latitude == 0 && geoPoint.longitude == 0) {
+//            //NYC coordinate if on simulator
+//            geoPoint.latitude = 40.732019;
+//            geoPoint.longitude = -73.992684;
+//        }
+//        
+//        CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
+//        
+//        DDLogVerbose(@"Get user location with lat: %f, lon: %f", geoPoint.latitude, geoPoint.longitude);
+//        
+//        //reverse search address
+//        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+//        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
+//            
+//            [EWPerson me].lastLocation = location;
+//            
+//            if (err == nil && [placemarks count] > 0) {
+//                CLPlacemark *placemark = [placemarks lastObject];
+//                //get info
+//                [EWPerson me].city = placemark.locality;
+//                [EWPerson me].region = placemark.country;
+//            } else {
+//                NSLog(@"%@", err.debugDescription);
+//            }
+//            [EWSync save];
+//        }];
+//    }];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
@@ -459,9 +468,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         case kCLAuthorizationStatusAuthorizedWhenInUse:
         {
             DDLogInfo(@"kCLAuthorizationStatusAuthorizedWhenInUse");
-            manager.desiredAccuracy = kCLLocationAccuracyBest;
+            manager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
             manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
-            //[manager startUpdatingLocation];
+            [manager startUpdatingLocation];
             
         }
             break;
@@ -469,8 +478,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         {
             DDLogInfo(@"kCLAuthorizationStatusAuthorizedAlways");
             manager.desiredAccuracy = kCLLocationAccuracyBest;
-            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
-            //[manager startUpdatingLocation];
+            manager.distanceFilter = kCLLocationAccuracyHundredMeters;
+            [manager startUpdatingLocation];
         }
             break;
         case kCLAuthorizationStatusNotDetermined:
@@ -479,6 +488,37 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         case kCLAuthorizationStatusRestricted:
             DDLogInfo(@"kCLAuthorizationStatusRestricted");
             break;
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    CLLocation *loc = locations.lastObject;
+    if (loc.horizontalAccuracy <100 && loc.verticalAccuracy < 100) {
+        //bingo
+        if (loc.coordinate.latitude == 0 && loc.coordinate.longitude == 0) {
+            //NYC coordinate if on simulator
+            loc = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
+        }
+        
+        DDLogVerbose(@"Get user location with lat: %f, lon: %f", loc.coordinate.latitude, loc.coordinate.longitude);
+        
+        //reverse search address
+        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+        [geoloc reverseGeocodeLocation:loc completionHandler:^(NSArray *placemarks, NSError *err) {
+            
+            [EWPerson me].location = loc;
+            
+            if (err == nil && [placemarks count] > 0) {
+                CLPlacemark *placemark = [placemarks lastObject];
+                //get info
+                [EWPerson me].city = placemark.locality;
+                [EWPerson me].country = placemark.country;
+            } else {
+                DDLogWarn(@"%@", err.debugDescription);
+            }
+            [EWSync save];
+            
+        }];
     }
 }
 

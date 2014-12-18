@@ -10,7 +10,7 @@
 #import "GCDSingleton.h"
 
 
-@interface EWAccountManager : NSObject
+@interface EWAccountManager : NSObject <CLLocationManagerDelegate>
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 
 - (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion;

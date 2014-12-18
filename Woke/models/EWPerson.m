@@ -14,11 +14,13 @@
 #import "EWAlarm.h"
 #import "EWAlarmManager.h"
 #import "EWActivityManager.h"
+#import "EWSocial.h"
+#import "EWSocialManager.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
 @implementation EWPerson
-@dynamic lastLocation;
+@dynamic location;
 @dynamic profilePic;
 @dynamic bgImage;
 @dynamic preference;
@@ -207,6 +209,9 @@ NSString * const EWPersonDefaultName = @"New User";
     return isme;
 }
 
+- (NSString *)name{
+    return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+}
 
 //FIXME: took too long, need to optimize, maybe use one server call.
 //check my relation, used for new installation with existing user
@@ -293,5 +298,9 @@ NSString * const EWPersonDefaultName = @"New User";
 
 + (NSArray *)myFriends{
     return [EWPerson me].friends.allObjects;
+}
+
++ (EWSocial *)mySocialGraph{
+    return [[EWSocialManager sharedInstance] mySocialGraph];
 }
 @end
