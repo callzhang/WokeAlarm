@@ -23,7 +23,7 @@ extern NSString * const EWPersonDefaultName;
 @property (nonatomic, strong) NSDictionary *preference;
 @property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
-@property (nonatomic, readonly, strong) NSString *name;
+@property (nonatomic, readwrite) NSString *name;
 
 //validate
 - (BOOL)validate;

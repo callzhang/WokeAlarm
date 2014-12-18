@@ -62,6 +62,28 @@
         self.navigationBar.translucent = YES;
     }
 }
+
+- (BOOL)prefersStatusBarHidden {
+    if (self.viewControllers.count) {
+        UIViewController *vc = self.viewControllers.firstObject;
+        if ([vc respondsToSelector:@selector(prefersStatusBarHidden)]) {
+            return [vc prefersStatusBarHidden];
+        }
+    }
+    
+    return NO;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    if (self.viewControllers.count) {
+        UIViewController *vc = self.viewControllers.firstObject;
+        if ([vc respondsToSelector:@selector(preferredStatusBarStyle)]) {
+            return vc.preferredStatusBarStyle;
+        }
+    }
+    
+    return UIStatusBarStyleLightContent;
+}
 @end
 
 @implementation UIViewController(EWBaseNavigationController)
