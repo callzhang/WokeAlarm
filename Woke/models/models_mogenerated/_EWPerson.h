@@ -9,19 +9,18 @@ extern const struct EWPersonAttributes {
 	__unsafe_unretained NSString *birthday;
 	__unsafe_unretained NSString *cachedInfo;
 	__unsafe_unretained NSString *city;
+	__unsafe_unretained NSString *country;
 	__unsafe_unretained NSString *email;
-	__unsafe_unretained NSString *facebook;
+	__unsafe_unretained NSString *firstName;
 	__unsafe_unretained NSString *gender;
 	__unsafe_unretained NSString *history;
 	__unsafe_unretained NSString *images;
-	__unsafe_unretained NSString *lastLocation;
-	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *lastName;
+	__unsafe_unretained NSString *location;
 	__unsafe_unretained NSString *preference;
 	__unsafe_unretained NSString *profilePic;
-	__unsafe_unretained NSString *region;
 	__unsafe_unretained NSString *statement;
 	__unsafe_unretained NSString *username;
-	__unsafe_unretained NSString *weibo;
 } EWPersonAttributes;
 
 extern const struct EWPersonRelationships {
@@ -87,13 +86,17 @@ extern const struct EWPersonRelationships {
 
 //- (BOOL)validateCity:(id*)value_ error:(NSError**)error_;
 
+@property (nonatomic, strong) NSString* country;
+
+//- (BOOL)validateCountry:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) NSString* email;
 
 //- (BOOL)validateEmail:(id*)value_ error:(NSError**)error_;
 
-@property (nonatomic, strong) NSString* facebook;
+@property (nonatomic, strong) NSString* firstName;
 
-//- (BOOL)validateFacebook:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFirstName:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) NSString* gender;
 
@@ -107,13 +110,13 @@ extern const struct EWPersonRelationships {
 
 //- (BOOL)validateImages:(id*)value_ error:(NSError**)error_;
 
-@property (nonatomic, strong) id lastLocation;
+@property (nonatomic, strong) NSString* lastName;
 
-//- (BOOL)validateLastLocation:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateLastName:(id*)value_ error:(NSError**)error_;
 
-@property (nonatomic, strong) NSString* name;
+@property (nonatomic, strong) id location;
 
-//- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateLocation:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) id preference;
 
@@ -123,10 +126,6 @@ extern const struct EWPersonRelationships {
 
 //- (BOOL)validateProfilePic:(id*)value_ error:(NSError**)error_;
 
-@property (nonatomic, strong) NSString* region;
-
-//- (BOOL)validateRegion:(id*)value_ error:(NSError**)error_;
-
 @property (nonatomic, strong) NSString* statement;
 
 //- (BOOL)validateStatement:(id*)value_ error:(NSError**)error_;
@@ -134,10 +133,6 @@ extern const struct EWPersonRelationships {
 @property (nonatomic, strong) NSString* username;
 
 //- (BOOL)validateUsername:(id*)value_ error:(NSError**)error_;
-
-@property (nonatomic, strong) NSString* weibo;
-
-//- (BOOL)validateWeibo:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) NSSet *achievements;
 
@@ -251,11 +246,14 @@ extern const struct EWPersonRelationships {
 - (NSString*)primitiveCity;
 - (void)setPrimitiveCity:(NSString*)value;
 
+- (NSString*)primitiveCountry;
+- (void)setPrimitiveCountry:(NSString*)value;
+
 - (NSString*)primitiveEmail;
 - (void)setPrimitiveEmail:(NSString*)value;
 
-- (NSString*)primitiveFacebook;
-- (void)setPrimitiveFacebook:(NSString*)value;
+- (NSString*)primitiveFirstName;
+- (void)setPrimitiveFirstName:(NSString*)value;
 
 - (NSString*)primitiveGender;
 - (void)setPrimitiveGender:(NSString*)value;
@@ -266,11 +264,11 @@ extern const struct EWPersonRelationships {
 - (id)primitiveImages;
 - (void)setPrimitiveImages:(id)value;
 
-- (id)primitiveLastLocation;
-- (void)setPrimitiveLastLocation:(id)value;
+- (NSString*)primitiveLastName;
+- (void)setPrimitiveLastName:(NSString*)value;
 
-- (NSString*)primitiveName;
-- (void)setPrimitiveName:(NSString*)value;
+- (id)primitiveLocation;
+- (void)setPrimitiveLocation:(id)value;
 
 - (id)primitivePreference;
 - (void)setPrimitivePreference:(id)value;
@@ -278,17 +276,11 @@ extern const struct EWPersonRelationships {
 - (id)primitiveProfilePic;
 - (void)setPrimitiveProfilePic:(id)value;
 
-- (NSString*)primitiveRegion;
-- (void)setPrimitiveRegion:(NSString*)value;
-
 - (NSString*)primitiveStatement;
 - (void)setPrimitiveStatement:(NSString*)value;
 
 - (NSString*)primitiveUsername;
 - (void)setPrimitiveUsername:(NSString*)value;
-
-- (NSString*)primitiveWeibo;
-- (void)setPrimitiveWeibo:(NSString*)value;
 
 - (NSMutableSet*)primitiveAchievements;
 - (void)setPrimitiveAchievements:(NSMutableSet*)value;

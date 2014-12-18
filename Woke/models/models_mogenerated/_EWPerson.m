@@ -8,19 +8,18 @@ const struct EWPersonAttributes EWPersonAttributes = {
 	.birthday = @"birthday",
 	.cachedInfo = @"cachedInfo",
 	.city = @"city",
+	.country = @"country",
 	.email = @"email",
-	.facebook = @"facebook",
+	.firstName = @"firstName",
 	.gender = @"gender",
 	.history = @"history",
 	.images = @"images",
-	.lastLocation = @"lastLocation",
-	.name = @"name",
+	.lastName = @"lastName",
+	.location = @"location",
 	.preference = @"preference",
 	.profilePic = @"profilePic",
-	.region = @"region",
 	.statement = @"statement",
 	.username = @"username",
-	.weibo = @"weibo",
 };
 
 const struct EWPersonRelationships EWPersonRelationships = {
@@ -73,9 +72,11 @@ const struct EWPersonRelationships EWPersonRelationships = {
 
 @dynamic city;
 
+@dynamic country;
+
 @dynamic email;
 
-@dynamic facebook;
+@dynamic firstName;
 
 @dynamic gender;
 
@@ -83,21 +84,17 @@ const struct EWPersonRelationships EWPersonRelationships = {
 
 @dynamic images;
 
-@dynamic lastLocation;
+@dynamic lastName;
 
-@dynamic name;
+@dynamic location;
 
 @dynamic preference;
 
 @dynamic profilePic;
 
-@dynamic region;
-
 @dynamic statement;
 
 @dynamic username;
-
-@dynamic weibo;
 
 @dynamic achievements;
 

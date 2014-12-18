@@ -6,10 +6,12 @@
 const struct EWSocialAttributes EWSocialAttributes = {
 	.addressBookFriends = @"addressBookFriends",
 	.facebookFriends = @"facebookFriends",
+	.facebookID = @"facebookID",
 	.facebookToken = @"facebookToken",
 	.facebookUpdated = @"facebookUpdated",
 	.friendshipTimeline = @"friendshipTimeline",
 	.weiboFriends = @"weiboFriends",
+	.weiboID = @"weiboID",
 	.weiboToken = @"weiboToken",
 	.weiboUpdated = @"weiboUpdated",
 };
@@ -51,6 +53,8 @@ const struct EWSocialRelationships EWSocialRelationships = {
 
 @dynamic facebookFriends;
 
+@dynamic facebookID;
+
 @dynamic facebookToken;
 
 @dynamic facebookUpdated;
@@ -58,6 +62,8 @@ const struct EWSocialRelationships EWSocialRelationships = {
 @dynamic friendshipTimeline;
 
 @dynamic weiboFriends;
+
+@dynamic weiboID;
 
 @dynamic weiboToken;
 

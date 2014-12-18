@@ -12,17 +12,18 @@
 
 @import CoreLocation;
 
-@class EWAlarm;
+@class EWAlarm, EWSocial;
 
 extern NSString * const EWPersonDefaultName;
 
 @interface EWPerson : _EWPerson
-@property (nonatomic, strong) CLLocation* lastLocation;
+@property (nonatomic, strong) CLLocation* location;
 @property (nonatomic, strong) UIImage *profilePic;
 @property (nonatomic, strong) UIImage *bgImage;
 @property (nonatomic, strong) NSDictionary *preference;
 @property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
+@property (nonatomic, readonly, strong) NSString *name;
 
 //validate
 - (BOOL)validate;
@@ -59,7 +60,7 @@ extern NSString * const EWPersonDefaultName;
 + (NSArray *)myUnreadNotifications;
 + (NSArray *)myAlarms;
 + (NSArray *)myFriends;
-
++ (EWSocial *)mySocialGraph;
 
 + (EWAlarm *)myCurrentAlarm;
 + (EWActivity *)myCurrentAlarmActivity;

@@ -297,7 +297,6 @@
 
 #pragma mark - FACEBOOK
 + (void)loginParseWithFacebookWithCompletion:(ErrorBlock)block{
-    
     //login with facebook
     [PFFacebookUtils logInWithPermissions:[EWUserManager facebookPermissions] block:^(PFUser *user, NSError *error) {
         if (error) {

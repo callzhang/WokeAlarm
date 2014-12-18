@@ -149,10 +149,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     NSError *error;
     
     //check my location
-    if (!localMe.lastLocation) {
+    if (!localMe.location) {
         //get a fake coordinate
         CLLocation *loc = [[CLLocation alloc] initWithLatitude:0 longitude:0];
-        localMe.lastLocation = loc;
+        localMe.location = loc;
         
     }
     
@@ -160,8 +160,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
                            withParameters:@{@"objectId": localMe.objectId,
                                             @"topk" : numberOfRelevantUsers,
                                             @"radius" : radiusOfRelevantUsers,
-                                            @"location": @{@"latitude": @([EWPerson me].lastLocation.coordinate.latitude),
-                                                           @"longitude": @([EWPerson me].lastLocation.coordinate.longitude)}}
+                                            @"location": @{@"latitude": @([EWPerson me].location.coordinate.latitude),
+                                                           @"longitude": @([EWPerson me].location.coordinate.longitude)}}
                                     error:&error];
     
     if (error && list.count == 0) {

@@ -74,19 +74,18 @@
         <attribute name="birthday" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="cachedInfo" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="facebook" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="history" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="images" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="lastLocation" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="preference" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="profilePic" optional="YES" attributeType="Transformable" storedInTruthFile="YES" syncable="YES"/>
-        <attribute name="region" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="statement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="weibo" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="achievements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWAchievement" inverseName="owner" inverseEntity="EWAchievement" syncable="YES"/>
         <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWActivity" inverseName="owner" inverseEntity="EWActivity" syncable="YES"/>
         <relationship name="alarms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWAlarm" inverseName="owner" inverseEntity="EWAlarm" syncable="YES"/>
@@ -106,10 +105,12 @@
     <entity name="EWSocial" representedClassName="EWSocial" parentEntity="EWServerObject" syncable="YES">
         <attribute name="addressBookFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="facebookFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="facebookID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookToken" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="facebookUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="friendshipTimeline" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="weiboFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="weiboID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="weiboToken" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="weiboUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="socialGraph" inverseEntity="EWPerson" syncable="YES"/>
@@ -122,8 +123,8 @@
         <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
         <element name="EWMessage" positionX="0" positionY="0" width="128" height="165"/>
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="128" height="450"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="128" height="433"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="EWSocial" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="EWSocial" positionX="0" positionY="0" width="128" height="210"/>
     </elements>
 </model>

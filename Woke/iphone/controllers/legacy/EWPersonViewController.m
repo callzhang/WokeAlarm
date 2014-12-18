@@ -27,7 +27,7 @@
 #import "EWMediaManager.h"
 #import "EWCachedInfoManager.h"
 #import "EWNotificationManager.h"
-
+#import "PFFacebookUtils.h"
 
 //view
 #import "EWRecordingViewController.h"
@@ -203,7 +203,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         
     }else{//self
         self.addFriend.hidden = YES;
-        if(!person.facebook){
+        if(![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]){
             
             [self.loginBtn setTitle:@"Log in" forState:UIControlStateNormal];
             
@@ -217,9 +217,9 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     self.profilePic.image = person.profilePic;
     self.name.text = person.name;
     self.location.text = person.city;
-    if (person.lastLocation && !person.isMe) {
-        CLLocation *loc0 = [EWPerson me].lastLocation;
-        CLLocation *loc1 = person.lastLocation;
+    if (person.location && !person.isMe) {
+        CLLocation *loc0 = [EWPerson me].location;
+        CLLocation *loc1 = person.location;
         float distance = [loc0 distanceFromLocation:loc1]/1000;
         if (person.city) {
             self.location.text =[NSString stringWithFormat:@"%@ | ",person.city];
@@ -281,7 +281,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 - (IBAction)login:(id)sender {
     
-    if (![EWPerson me].facebook) {
+    if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
         //EWLogInViewController *loginVC = [[EWLogInViewController alloc] init];
         //[loginVC connect:nil];
         return;
