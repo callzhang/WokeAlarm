@@ -86,6 +86,8 @@
 		0990EF7A1A22C606001AF099 /* MSPushFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF751A22C606001AF099 /* MSPushFadeSegue.m */; };
 		0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */; };
 		0990EF7C1A22C606001AF099 /* MSReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF791A22C606001AF099 /* MSReplaceSegue.m */; };
+		09A087151A425DC200FCE9FA /* EWSleepingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A087141A425DC200FCE9FA /* EWSleepingViewController.m */; };
+		09A087181A425EBE00FCE9FA /* EWSetStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */; };
 		09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A776FE1A11D8D9004AF902 /* WokeTests.m */; };
 		09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777101A11E2BD004AF902 /* AppDelegate.m */; };
 		09A7772D1A11E2BD004AF902 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777111A11E2BD004AF902 /* main.m */; };
@@ -102,7 +104,6 @@
 		09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5B1E51A166162006EA46C /* UAProgressView.m */; };
 		09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D7370D1A328F4400E8C9ED /* SevenSwitch.m */; };
 		09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D737101A32951000E8C9ED /* EWAlarmViewController.m */; };
-		09D737141A329DE800E8C9ED /* EWViewControllerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D737131A329DE800E8C9ED /* EWViewControllerHelper.m */; };
 		09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F111A1434AF00BEA328 /* EarlyWorm.xcdatamodeld */; };
 		09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F151A1434AF00BEA328 /* EWAchievement.m */; };
 		09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F171A1434AF00BEA328 /* EWActivity.m */; };
@@ -315,6 +316,10 @@
 		0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSReplaceFadeSegue.m; sourceTree = "<group>"; };
 		0990EF781A22C606001AF099 /* MSReplaceSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSReplaceSegue.h; sourceTree = "<group>"; };
 		0990EF791A22C606001AF099 /* MSReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSReplaceSegue.m; sourceTree = "<group>"; };
+		09A087131A425DC200FCE9FA /* EWSleepingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepingViewController.h; sourceTree = "<group>"; };
+		09A087141A425DC200FCE9FA /* EWSleepingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepingViewController.m; sourceTree = "<group>"; };
+		09A087161A425EBE00FCE9FA /* EWSetStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSetStatusViewController.h; sourceTree = "<group>"; };
+		09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSetStatusViewController.m; sourceTree = "<group>"; };
 		09A776DF1A11D8D9004AF902 /* Woke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A776F81A11D8D9004AF902 /* WokeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WokeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A776FD1A11D8D9004AF902 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -345,8 +350,6 @@
 		09D7370D1A328F4400E8C9ED /* SevenSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SevenSwitch.m; sourceTree = "<group>"; };
 		09D7370F1A32951000E8C9ED /* EWAlarmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmViewController.h; sourceTree = "<group>"; };
 		09D737101A32951000E8C9ED /* EWAlarmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmViewController.m; sourceTree = "<group>"; };
-		09D737121A329DE800E8C9ED /* EWViewControllerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWViewControllerHelper.h; sourceTree = "<group>"; };
-		09D737131A329DE800E8C9ED /* EWViewControllerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWViewControllerHelper.m; sourceTree = "<group>"; };
 		09DF4F121A1434AF00BEA328 /* EarlyWorm 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EarlyWorm 2.xcdatamodel"; sourceTree = "<group>"; };
 		09DF4F131A1434AF00BEA328 /* EarlyWorm.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EarlyWorm.xcdatamodel; sourceTree = "<group>"; };
 		09DF4F141A1434AF00BEA328 /* EWAchievement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAchievement.h; sourceTree = "<group>"; };
@@ -533,6 +536,10 @@
 				09D737101A32951000E8C9ED /* EWAlarmViewController.m */,
 				090665511A3CD40800FF76E6 /* EWAlarmToneViewController.h */,
 				090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */,
+				09A087131A425DC200FCE9FA /* EWSleepingViewController.h */,
+				09A087141A425DC200FCE9FA /* EWSleepingViewController.m */,
+				09A087161A425EBE00FCE9FA /* EWSetStatusViewController.h */,
+				09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -589,8 +596,6 @@
 				0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */,
 				09285A3D1A1F115000C808C0 /* UIStoryboard+Extensions.h */,
 				09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */,
-				09D737121A329DE800E8C9ED /* EWViewControllerHelper.h */,
-				09D737131A329DE800E8C9ED /* EWViewControllerHelper.m */,
 				096AAAF11A195CF300B4CBFF /* GCDSingleton.h */,
 				096AAA921A195A3900B4CBFF /* NSDate+Extend.h */,
 				096AAA931A195A3900B4CBFF /* NSDate+Extend.m */,
@@ -1343,6 +1348,7 @@
 				096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */,
 				09DF4F7B1A1434AF00BEA328 /* EWMediaFile.m in Sources */,
 				09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */,
+				09A087181A425EBE00FCE9FA /* EWSetStatusViewController.m in Sources */,
 				09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */,
 				096AAADC1A195A3900B4CBFF /* EWActivityManager.m in Sources */,
 				096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */,
@@ -1352,6 +1358,7 @@
 				09DF4F7E1A1434AF00BEA328 /* EWNotification.m in Sources */,
 				096AAAD61A195A3900B4CBFF /* UIView+Blur.m in Sources */,
 				09DF4F881A1434AF00BEA328 /* _EWMediaFile.m in Sources */,
+				09A087151A425DC200FCE9FA /* EWSleepingViewController.m in Sources */,
 				9B840A201A1705CE00D6C2A3 /* EWSocial.m in Sources */,
 				096AAB191A1972B800B4CBFF /* ViewController.m in Sources */,
 				096AAADF1A195A3900B4CBFF /* EWBackgroundingManager.m in Sources */,
@@ -1406,7 +1413,6 @@
 				091C675D1A3523AF0091B8A6 /* EWMediaCell.m in Sources */,
 				096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
-				09D737141A329DE800E8C9ED /* EWViewControllerHelper.m in Sources */,
 				096AAAE21A195A3900B4CBFF /* EWMediaManager.m in Sources */,
 				9B840A291A170AE800D6C2A3 /* RDSelectionViewController.m in Sources */,
 				096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */,

@@ -243,6 +243,19 @@ NSString * const EWPersonDefaultName = @"New User";
 
 
 #pragma mark - My Stuffs
+
+- (void)updateStatus:(NSString *)status completion:(void (^)(NSError *))completion {
+    [[[self class] myAlarms] enumerateObjectsUsingBlock:^(EWAlarm *obj, NSUInteger idx, BOOL *stop) {
+        obj.statement = status;
+    }];
+    
+    [EWPerson me].statement = status;
+    
+    [EWSync saveWithCompletion:^{
+        completion(nil);
+    }];
+}
+
 + (NSArray *)myActivities {
     NSArray *activities = [EWPerson me].activities.allObjects;
     return [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.updatedAt ascending:NO]]];

@@ -7,6 +7,7 @@
 //
 
 #import "EWBaseViewController.h"
+#import "EWMainNavigationController.h"
 
 @interface EWBaseViewController ()
 

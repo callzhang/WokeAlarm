@@ -60,6 +60,7 @@ extern NSString * const EWPersonDefaultName;
 + (NSArray *)myAlarms;
 + (NSArray *)myFriends;
 
+- (void)updateStatus:(NSString *)status completion:(void (^)(NSError *error))completion;
 
 + (EWAlarm *)myCurrentAlarm;
 + (EWActivity *)myCurrentAlarmActivity;

@@ -7,6 +7,7 @@
 //
 
 #import "EWSleepViewController.h"
+#import "EWSetStatusViewController.h"
 
 @interface EWSleepViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *labelTime1;
@@ -61,5 +62,21 @@
             self.firstLetterLeadingConstraint.constant = -5;
         }
     }];
+}
+- (IBAction)onStatusOverlayButton:(id)sender {
+    [self performSegueWithIdentifier:@"toSetStatusController" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"toSetStatusController"]) {
+        EWSetStatusViewController *viewController = [[segue.destinationViewController viewControllers] firstObject];
+        viewController.person = [EWPerson me];
+    }
+}
+
+- (IBAction)unwindToSleepViewController:(UIStoryboardSegue *)sender {
+    if ([sender.identifier isEqualToString:@"unwindFromStatusViewController"]) {
+        
+    }
 }
 @end
