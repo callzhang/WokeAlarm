@@ -20,6 +20,7 @@
 #import "EWBackgroundingManager.h"
 #import "NSPersistentStoreCoordinator+MagicalRecord.h"
 #import "EWAccountManager.h"
+#import "PFFacebookUtils.h"
 
 
 @implementation EWStartUpSequence
@@ -43,6 +44,9 @@
     
 	//set up server sync
 	[[EWSync sharedInstance] setup];
+    
+    //facebook
+    [PFFacebookUtils initializeFacebook];
     
     //watch for login event
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWAccountDidLoginNotification object:nil];

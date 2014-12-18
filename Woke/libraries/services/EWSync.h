@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <Parse/Parse.h>
-#import "Reachability.h"
 #import "NSManagedObject+EWSync.h"
 #import "PFObject+EWSync.h"
 #import "EWServerObject.h"
@@ -17,7 +16,7 @@
 extern NSManagedObjectContext *mainContext;
 typedef void (^EWSavingCallback)(void);
 
-
+@class AFNetworkReachabilityManager;
 
 #pragma mark - Sync parameters
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
@@ -53,7 +52,7 @@ typedef void (^EWSavingCallback)(void);
 
 @interface EWSync : NSObject
 @property NSMutableArray *saveCallbacks; //MO save callback
-@property Reachability *reachability;
+@property AFNetworkReachabilityManager *reachability;
 @property NSMutableDictionary *serverObjectPool;
 @property NSMutableDictionary *changeRecords;
 @property NSMutableArray *saveToLocalItems;

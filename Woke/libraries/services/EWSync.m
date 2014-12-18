@@ -9,9 +9,8 @@
 #import "EWSync.h"
 #import "EWUIUtil.h"
 #import "EWServerObject.h"
-#import "PFFacebookUtils.h"
+#import "AFNetworkReachabilityManager.h"
 
-#define kPFQueryCacheLife		60*60;
 
 
 //============ Global shortcut to main context ===========
@@ -82,28 +81,28 @@ NSManagedObjectContext *mainContext;
     }];
     
     //Reachability
-    self.reachability = [Reachability reachabilityForInternetConnection];
-    self.reachability.reachableBlock = ^(Reachability *reachability) {
-        DDLogInfo(@"====== Network is reachable. Start upload. ======");
-        //in background thread
-        [[EWSync sharedInstance] resumeUploadToServer];
-        
-        //resume refresh MO
-        NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh];
-        for (NSManagedObject *MO in MOs) {
-            [MO refreshInBackgroundWithCompletion:^{
-                DDLogInfo(@"%@(%@) refreshed after network resumed.", MO.entity.name, MO.serverID);
-            }];
+    self.reachability = [AFNetworkReachabilityManager sharedManager];
+    [self.reachability startMonitoring];
+    [self.reachability setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        if (status > 0) {
+            DDLogInfo(@"====== Network is reachable. Start upload. ======");
+            //in background thread
+            [[EWSync sharedInstance] resumeUploadToServer];
+            
+            //resume refresh MO
+            NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh];
+            for (NSManagedObject *MO in MOs) {
+                [MO refreshInBackgroundWithCompletion:^{
+                    DDLogInfo(@"%@(%@) refreshed after network resumed.", MO.entity.name, MO.serverID);
+                }];
+            }
+        } else {
+            DDLogInfo(@"====== Network is unreachable ======");
+            //TODO
+            //[EWUIUtil showHUDWithString:@"Offline"];
         }
-    };
-    self.reachability.unreachableBlock = ^(Reachability * reachability){
-        DDLogInfo(@"====== Network is unreachable ======");
-        //TODO
-        //[EWUIUtil showHUDWithString:@"Offline"];
-    };
-    
-    //facebook
-    [PFFacebookUtils initializeFacebook];
+        
+    }];
     
     //initial property
     self.parseSaveCallbacks = [NSMutableDictionary dictionary];
