@@ -75,10 +75,6 @@
 	//init backgrounding manager
 	[EWBackgroundingManager sharedInstance];
 	
-    //continue upload to server if any
-    DDLogVerbose(@"0. Continue uploading to server");
-    [[EWSync sharedInstance] resumeUploadToServer];
-	
 	//fetch everyone
 	DDLogVerbose(@"1. Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];

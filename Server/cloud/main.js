@@ -55,9 +55,9 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
       query.limit(2*topk);
       // Final list of objects
       query.find({
-        
         success: function(nearbyUsers) {
           //var relation = userObject.relation("friends");
+          console.log(userObject);
           var friendsList = userObject.get("friends") === undefined ? [] 
                                                                     : userObject.get("friends").map(
                                                                         function(x) { 
@@ -171,9 +171,9 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
           }
           });
         },
-        error: function(list, error) {
-
-          console.error("search nearby users failed: " + error);
+        error: function(error) {
+          response.error("Can't find any user with criteria: "+error.message);
+          console.log("search nearby users failed: " + error.message);
         }
       });
     },
@@ -182,7 +182,6 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
     }
   });
 });
-
 
 //parameters:
 //  sender: objectId for sender

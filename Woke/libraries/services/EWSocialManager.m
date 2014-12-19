@@ -33,7 +33,9 @@
                 NSArray *new = change[NSKeyValueChangeNewKey];
                 NSArray *old = change[NSKeyValueChangeOldKey];
                 NSArray *addition = [new filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT SELF IN %@", old]];
-                [manager updateFriendshipTimelineForFrendsIDs:[addition valueForKey:kParseObjectID]];
+                if (new.count) {
+                    [manager updateFriendshipTimelineForFrendsIDs:[addition valueForKey:kParseObjectID]];
+                }
             }];
         }
     });

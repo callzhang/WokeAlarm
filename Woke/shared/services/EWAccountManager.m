@@ -15,6 +15,7 @@
 #import "EWServer.h"
 #import "ATConnect.h"
 #import "AppDelegate.h"
+#import "EWUIUtil.h"
 @import CoreLocation;
 
 @interface EWAccountManager()
@@ -418,7 +419,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     if ([manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
             [manager requestWhenInUseAuthorization];
-        } else {
+        } else if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied | kCLAuthorizationStatusRestricted){
+            //need pop alert
+            DDLogError(@"Location service disabled");
+            [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Location service is disabled. To find the best match around your area, please enable location service in settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        }else{
             [manager startUpdatingLocation];
         }
     }else{
