@@ -158,7 +158,7 @@ typedef void (^SenderBlock)(id sender);
 #define kNotificationTypeFriendRequest      @"friendship_request"
 #define kNotificationTypeFriendAccepted     @"friendship_accepted"
 #define kNotificationTypeSystemNotice             @"notice"
-#define kNotificationTypeNextTaskHasMedia   @"task_has_media"
+#define kNotificationTypeNewMedia   @"task_has_media"
 
 //Navgation Controller
 #define kMaxPersonNavigationConnt       6

@@ -27,9 +27,10 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	.activities = @"activities",
 	.alarms = @"alarms",
 	.friends = @"friends",
-	.medias = @"medias",
 	.notifications = @"notifications",
+	.receivedMedias = @"receivedMedias",
 	.receivedMessages = @"receivedMessages",
+	.sentMedias = @"sentMedias",
 	.sentMessages = @"sentMessages",
 	.socialGraph = @"socialGraph",
 	.unreadMedias = @"unreadMedias",
@@ -140,17 +141,6 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	return result;
 }
 
-@dynamic medias;
-
-- (NSMutableSet*)mediasSet {
-	[self willAccessValueForKey:@"medias"];
-
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medias"];
-
-	[self didAccessValueForKey:@"medias"];
-	return result;
-}
-
 @dynamic notifications;
 
 - (NSMutableSet*)notificationsSet {
@@ -162,7 +152,20 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	return result;
 }
 
+@dynamic receivedMedias;
+
 @dynamic receivedMessages;
+
+@dynamic sentMedias;
+
+- (NSMutableSet*)sentMediasSet {
+	[self willAccessValueForKey:@"sentMedias"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"sentMedias"];
+
+	[self didAccessValueForKey:@"sentMedias"];
+	return result;
+}
 
 @dynamic sentMessages;
 

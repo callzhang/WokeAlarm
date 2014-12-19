@@ -28,9 +28,10 @@ extern const struct EWPersonRelationships {
 	__unsafe_unretained NSString *activities;
 	__unsafe_unretained NSString *alarms;
 	__unsafe_unretained NSString *friends;
-	__unsafe_unretained NSString *medias;
 	__unsafe_unretained NSString *notifications;
+	__unsafe_unretained NSString *receivedMedias;
 	__unsafe_unretained NSString *receivedMessages;
+	__unsafe_unretained NSString *sentMedias;
 	__unsafe_unretained NSString *sentMessages;
 	__unsafe_unretained NSString *socialGraph;
 	__unsafe_unretained NSString *unreadMedias;
@@ -40,9 +41,10 @@ extern const struct EWPersonRelationships {
 @class EWActivity;
 @class EWAlarm;
 @class EWPerson;
-@class EWMedia;
 @class EWNotification;
+@class EWMedia;
 @class EWMessage;
+@class EWMedia;
 @class EWMessage;
 @class EWSocial;
 @class EWMedia;
@@ -150,17 +152,21 @@ extern const struct EWPersonRelationships {
 
 - (NSMutableSet*)friendsSet;
 
-@property (nonatomic, strong) NSSet *medias;
-
-- (NSMutableSet*)mediasSet;
-
 @property (nonatomic, strong) NSSet *notifications;
 
 - (NSMutableSet*)notificationsSet;
 
+@property (nonatomic, strong) EWMedia *receivedMedias;
+
+//- (BOOL)validateReceivedMedias:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) EWMessage *receivedMessages;
 
 //- (BOOL)validateReceivedMessages:(id*)value_ error:(NSError**)error_;
+
+@property (nonatomic, strong) NSSet *sentMedias;
+
+- (NSMutableSet*)sentMediasSet;
 
 @property (nonatomic, strong) EWMessage *sentMessages;
 
@@ -208,19 +214,19 @@ extern const struct EWPersonRelationships {
 
 @end
 
-@interface _EWPerson (MediasCoreDataGeneratedAccessors)
-- (void)addMedias:(NSSet*)value_;
-- (void)removeMedias:(NSSet*)value_;
-- (void)addMediasObject:(EWMedia*)value_;
-- (void)removeMediasObject:(EWMedia*)value_;
-
-@end
-
 @interface _EWPerson (NotificationsCoreDataGeneratedAccessors)
 - (void)addNotifications:(NSSet*)value_;
 - (void)removeNotifications:(NSSet*)value_;
 - (void)addNotificationsObject:(EWNotification*)value_;
 - (void)removeNotificationsObject:(EWNotification*)value_;
+
+@end
+
+@interface _EWPerson (SentMediasCoreDataGeneratedAccessors)
+- (void)addSentMedias:(NSSet*)value_;
+- (void)removeSentMedias:(NSSet*)value_;
+- (void)addSentMediasObject:(EWMedia*)value_;
+- (void)removeSentMediasObject:(EWMedia*)value_;
 
 @end
 
@@ -294,14 +300,17 @@ extern const struct EWPersonRelationships {
 - (NSMutableSet*)primitiveFriends;
 - (void)setPrimitiveFriends:(NSMutableSet*)value;
 
-- (NSMutableSet*)primitiveMedias;
-- (void)setPrimitiveMedias:(NSMutableSet*)value;
-
 - (NSMutableSet*)primitiveNotifications;
 - (void)setPrimitiveNotifications:(NSMutableSet*)value;
 
+- (EWMedia*)primitiveReceivedMedias;
+- (void)setPrimitiveReceivedMedias:(EWMedia*)value;
+
 - (EWMessage*)primitiveReceivedMessages;
 - (void)setPrimitiveReceivedMessages:(EWMessage*)value;
+
+- (NSMutableSet*)primitiveSentMedias;
+- (void)setPrimitiveSentMedias:(NSMutableSet*)value;
 
 - (EWMessage*)primitiveSentMessages;
 - (void)setPrimitiveSentMessages:(EWMessage*)value;

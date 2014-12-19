@@ -11,6 +11,7 @@
 #import "EWActivity.h"
 #import "EWAlarm.h"
 #import "NSArray+BlocksKit.h"
+#import "EWMedia.h"
 
 NSString *const EWActivityTypeAlarm = @"alarm";
 NSString *const EWActivityTypeFriendship = @"friendship";
@@ -27,6 +28,20 @@ NSString *const EWActivityTypeMedia = @"media";
         });
     }
     return manager;
+}
+
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        //observe new media notification
+        [[NSNotificationCenter defaultCenter] addObserverForName:kNotificationTypeNewMedia object:nil queue:nil usingBlock:^(NSNotification *note) {
+            DDLogVerbose(@"Activity manager observed new media notification and added new media to my current alarm activity");
+            EWMedia *newMedia = note.userInfo[@"media"];
+            EWActivity *alarmActivity = [self myCurrentAlarmActivity];
+            [alarmActivity addMediasObject:newMedia];
+        }];
+    }
+    return self;
 }
 
 + (NSArray *)myActivities{
@@ -56,25 +71,35 @@ NSString *const EWActivityTypeMedia = @"media";
     EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
     
     if (!_currentAlarmActivity) {
-        NSArray *activities = [EWActivityManager myActivities];
-        NSArray *alarmActivities = [activities bk_select:^BOOL(EWActivity *obj) {
-            return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
-        }];
-        EWActivity *lastAlarmActivity = alarmActivities.lastObject;
-        if (lastAlarmActivity && fabs([lastAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])<1) {
-            //the last activity is the current activity
-            _currentAlarmActivity = lastAlarmActivity;
-        }else{
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, nextAlarm.time.nextOccurTime];
+        NSArray *activities = [EWActivity MR_findAllWithPredicate:predicate];
+        _currentAlarmActivity = activities.lastObject;
+        if (activities.count > 1) {
+            DDLogError(@"Multiple current alarm activities found, please check: \n%@", [activities valueForKey:EWActivityAttributes.time]);
+        }
+        
+        if (!_currentAlarmActivity) {
             //create new activity
             _currentAlarmActivity = [EWActivity newActivity];
             _currentAlarmActivity.owner = [EWPerson me];
             _currentAlarmActivity.type = EWActivityTypeAlarm;
             _currentAlarmActivity.time = nextAlarm.time.nextOccurTime;
+            //add unread media to current activity
+            for (EWMedia *media in [EWPerson me].unreadMedias) {
+                if (!media.targetDate || [media.targetDate timeIntervalSinceDate:nextAlarm.time.nextOccurTime]<0) {
+                    [_currentAlarmActivity addMediasObject:media];
+                }
+            }
+            //remove media from unreadMedias
+            for (EWMedia *media in _currentAlarmActivity.medias) {
+                [[EWPerson me] addUnreadMediasObject:media];
+            }
+            [EWSync save];
         }
     }else{
         if (fabs([_currentAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])>1) {
             _currentAlarmActivity = nil;
-            return self.currentAlarmActivity;
+            [self myCurrentAlarmActivity];
         }
     }
     return _currentAlarmActivity;

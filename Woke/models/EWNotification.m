@@ -24,13 +24,13 @@
     return notice;
 }
 
-+ (EWNotification *)newNotificationForMedia:(EWMedia *)media{
++ (EWNotification *)newMediaNotification:(EWMedia *)media{
     if (!media) {
         return nil;
     }
     
     EWNotification *note = [self newNotification];
-    note.type = kNotificationTypeNextTaskHasMedia;
+    note.type = kNotificationTypeNewMedia;
     note.userInfo = @{@"media": media.objectId};
     note.sender = media.author.objectId;
     [EWSync save];

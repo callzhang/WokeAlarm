@@ -58,7 +58,7 @@
 //    NSDictionary *userInfo = notification.userInfo;
     [EWNotificationManager sharedInstance].notification = notification;
     
-    if ([notification.type isEqualToString:kNotificationTypeNextTaskHasMedia]) {
+    if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
         
         [[[UIAlertView alloc] initWithTitle:@"New Voice"
                                     message:@"You've got a new voice for your next morning!"

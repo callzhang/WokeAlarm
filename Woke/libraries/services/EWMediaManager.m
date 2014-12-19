@@ -67,18 +67,18 @@
 
 //possible redundant API, my media should be ready on start
 - (NSArray *)mediaCreatedByPerson:(EWPerson *)person{
-    NSArray *medias = [person.medias allObjects];
+    NSArray *medias = [person.sentMedias allObjects];
     if (medias.count == 0 && [person isMe]) {
         //query
-        PFQuery *q = [[[PFUser currentUser] relationForKey:EWPersonRelationships.medias] query];
+        PFQuery *q = [[[PFUser currentUser] relationForKey:EWPersonRelationships.sentMedias] query];
         [EWSync findServerObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
             [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
-                NSArray *newMedias = [objects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [localMe.medias valueForKey:kParseObjectID]]];
+                NSArray *newMedias = [objects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [localMe.sentMedias valueForKey:kParseObjectID]]];
                 for (PFObject *m in newMedias) {
                     EWMedia *media = (EWMedia *)[m managedObjectInContext:localContext];
                     [media refresh];
-                    [localMe addMediasObject:media];
+                    [localMe addSentMediasObject:media];
                     [media saveToLocal];
                 }
                 [localMe saveToLocal];
@@ -130,25 +130,15 @@
     for (PFObject *po in mediaPOs) {
         EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
         
-        //relationship
-//        NSMutableArray *receivers = po[EWMediaRelationships.receiver];
-//        for (PFObject *receiver in receivers) {
-//            if ([receiver.objectId isEqualToString:localMe.objectId]) {
-//                [receivers removeObject:receiver];
-//                break;
-//            }
-//        }
-        if (![(NSSet *)[localMe.unreadMedias valueForKey:kParseObjectID] containsObject:po.objectId]) {
-            //new media
-            [mo refresh];
-            DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
-            //notification
-            dispatch_async(dispatch_get_main_queue(), ^{
-                EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
-                [EWNotification newNotificationForMedia:media];
-            });
-            newMedia = YES;
-        }
+        //new media
+        [mo refresh];
+        DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
+        //notification
+        dispatch_async(dispatch_get_main_queue(), ^{
+            EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
+            [EWNotification newMediaNotification:media];
+        });
+        newMedia = YES;
         
     }
 	

@@ -128,6 +128,8 @@
     //schedule local notification
     [self scheduleLocalNotification];
     
+    //TODO: update current activity time
+    
     // schedule on server
     [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];

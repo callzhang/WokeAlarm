@@ -17,7 +17,7 @@
 @property (nonatomic, retain) NSDictionary *lastLocation;
 @property (nonatomic, retain) NSDictionary *userInfo;
 + (EWNotification *)newNotification;
-+ (EWNotification *)newNotificationForMedia:(EWMedia *)media;
++ (EWNotification *)newMediaNotification:(EWMedia *)media;
 
 
 //delete

@@ -14,6 +14,8 @@
 #import "EWAVManager.h"
 #import "NSTimer+BlocksKit.h"
 #import "EWAVManager.h"
+#import "EWMediaManager.h"
+#import "EWAlarm.h"
 
 @interface EWPreWakeViewController(){
     NSTimer *progressUpdateTimer;
@@ -25,7 +27,19 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.medias = [EWWakeUpManager sharedInstance].currentActivity.medias.allObjects;
+    //add unread media to current activity
+    EWActivity *currentActivity = [EWWakeUpManager sharedInstance].currentActivity;
+    EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
+    for (EWMedia *media in [EWPerson me].unreadMedias) {
+        if (!media.targetDate || [media.targetDate timeIntervalSinceDate:nextAlarm.time.nextOccurTime]<0) {
+            [currentActivity addMediasObject:media];
+        }
+    }
+    //remove media from unreadMedias
+    for (EWMedia *media in currentActivity.medias) {
+        [[EWPerson me] addUnreadMediasObject:media];
+    }
+    self.medias = currentActivity.medias.allObjects;
     self.currentMedia = self.medias.firstObject;
 }
 
@@ -68,7 +82,16 @@
     [progressUpdateTimer invalidate];
 }
 
-//UI
+
+#pragma mark - UI
+
+- (void)refresh{
+    if (!self.currentMedia) {
+        self.currentMedia = self.medias.firstObject;
+    }
+    [self updateViewForCurrentMedia];
+}
+
 - (void)updateViewForCurrentMedia{
     self.profileImage.image = self.currentMedia.author.profilePic;
     self.name.text = self.currentMedia.author.name;
@@ -84,6 +107,13 @@
         //
         if (!error) {
             DDLogInfo(@"Finished test voice request");
+            //check new media
+            BOOL newMedia = [[EWMediaManager sharedInstance] checkMediaAssets];
+            if (newMedia) {
+                //update view
+                DDLogVerbose(@"New media found");
+                [self refresh];
+            }
         }else{
             DDLogError(@"Failed test voice request: %@", error.description);
         }
