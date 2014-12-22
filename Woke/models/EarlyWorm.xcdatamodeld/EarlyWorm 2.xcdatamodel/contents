@@ -12,12 +12,15 @@
         <attribute name="completed" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="friended" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="friendID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mediaIDs" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="sleepTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="statement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="medias" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMedia" inverseName="activity" inverseEntity="EWMedia" syncable="YES"/>
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="activities" inverseEntity="EWPerson" syncable="YES"/>
+        <fetchedProperty name="medias" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="EWMedia" predicateString="objectID IN mediaIDs"/>
+        </fetchedProperty>
     </entity>
     <entity name="EWAlarm" representedClassName="EWAlarm" parentEntity="EWServerObject" syncable="YES">
         <attribute name="important" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -36,7 +39,6 @@
         <attribute name="response" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="targetDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWActivity" inverseName="medias" inverseEntity="EWActivity" syncable="YES"/>
         <relationship name="author" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="sentMedias" inverseEntity="EWPerson" syncable="YES"/>
         <relationship name="mediaFile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWMediaFile" inverseName="medias" inverseEntity="EWMediaFile" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMessage" inverseName="media" inverseEntity="EWMessage" syncable="YES"/>
@@ -118,9 +120,9 @@
     </entity>
     <elements>
         <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="EWActivity" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="EWActivity" positionX="0" positionY="0" width="128" height="206"/>
         <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="EWMedia" positionX="0" positionY="0" width="128" height="28"/>
+        <element name="EWMedia" positionX="0" positionY="0" width="128" height="210"/>
         <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
         <element name="EWMessage" positionX="0" positionY="0" width="128" height="165"/>
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>

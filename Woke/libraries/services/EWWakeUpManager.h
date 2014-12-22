@@ -14,7 +14,7 @@ NSUInteger static maxLoop = 100;
 
 @interface EWWakeUpManager : NSObject
 @property (nonatomic, strong) EWAlarm *alarm;
-@property (nonatomic, strong) EWActivity *currentActivity;
+//@property (nonatomic, strong) EWActivity *currentActivity;
 @property (nonatomic, strong) NSMutableArray *medias;
 @property (nonatomic) NSUInteger loopCount;
 @property (nonatomic) NSUInteger currentMediaIndex;

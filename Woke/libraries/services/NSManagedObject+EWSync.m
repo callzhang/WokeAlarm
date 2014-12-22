@@ -314,9 +314,7 @@
         return;
     }
     
-    NSString *parseObjectId = self.serverID;
-    
-    if (!parseObjectId) {
+    if (!self.serverID) {
         //NSParameterAssert([self isInserted]);
         DDLogWarn(@"!!! The MO %@(%@) trying to refresh doesn't have servreID, skip! %@", self.entity.name, self.serverID, self);
     }else{

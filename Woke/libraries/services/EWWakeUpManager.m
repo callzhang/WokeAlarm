@@ -53,7 +53,6 @@
 
 - (id)init{
 	self = [super init];
-    _currentActivity = [EWPerson myCurrentAlarmActivity];
     _alarm = [EWPerson myCurrentAlarm];
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingEnterNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[self alarmTimerCheck];
@@ -68,10 +67,6 @@
 
 - (EWAlarm *)alarm{
     return [EWPerson myCurrentAlarm];
-}
-
-- (EWActivity *)currentActivity{
-    return [EWPerson myCurrentAlarmActivity];
 }
 
 #pragma mark - Handle push notification
@@ -159,7 +154,7 @@
 	
     //get target activity
     EWAlarm *alarm;
-    EWActivity *activity = self.currentActivity;
+    EWActivity *activity = [EWActivityManager sharedManager].currentAlarmActivity;
     if (info) {
         NSString *alarmID = info[kPushAlarmID];
         NSString *alarmLocalID = info[kLocalAlarmID];
@@ -193,23 +188,18 @@
         NSLog(@"Alarm is OFF, skip today's alarm");
         return;
     }
+    if (alarm.time.nextOccurTime.timeElapsed > kMaxWakeTime) {
+        NSLog(@"Activity(%@) from notification has passed the wake up window. Handle it with checkPastTasks.", activity.objectId);
+        [[EWActivityManager sharedManager] currentAlarmActivity];
+        return;
+    }
     
     if (activity.completed) {
         // task completed
         NSLog(@"Activity has completed at %@, skip.", activity.completed.date2String);
         return;
     }
-    if (activity.time.timeElapsed > kMaxWakeTime) {
-        NSLog(@"Activity(%@) from notification has passed the wake up window. Handle it with checkPastTasks.", activity.objectId);
-        [[EWActivityManager sharedManager] currentAlarmActivity];
-        return;
-    }
-#if !DEBUG
-    if (task.time.timeIntervalSinceNow>0) {
-        DDLogWarn(@"Task %@(%@) passed in is in the future", task.time.date2String, task.objectId);
-        return;
-    }
-#endif
+
     //state change
     [EWSession sharedSession].isSleeping = NO;
     [EWSession sharedSession].isWakingUp = YES;
@@ -242,10 +232,10 @@
     }
     
     //add Woke media is needed
-    if (activity.medias.count == 0) {
+    if ([EWPerson myUnreadMedias].count == 0) {
         //need to create some voice
         EWMedia *media = [[EWMediaManager sharedInstance] getWokeVoice];
-        [activity addMediasObject:media];
+        //[activity addMediasObject:media];
     }
     
     //save
@@ -459,7 +449,6 @@
                 NSLog(@"Loop finished, stop playing");
                 //nullify all cell info in EWAVManager
                 self.currentMediaIndex = 0;
-                self.currentActivity = nil;
                 
                 [EWAVManager sharedManager].media = nil;
                 return;

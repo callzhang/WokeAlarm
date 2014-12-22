@@ -7,18 +7,15 @@
 //
 
 #import "EWPreWakeViewController.h"
-#import "EWSession.h"
 #import "EWWakeUpManager.h"
 #import "EWMedia.h"
-#import "EWActivity.h"
 #import "EWAVManager.h"
 #import "NSTimer+BlocksKit.h"
-#import "EWAVManager.h"
-#import "EWMediaManager.h"
 #import "EWAlarm.h"
 
 @interface EWPreWakeViewController(){
     NSTimer *progressUpdateTimer;
+    NSUInteger currentPlayCount;
 }
 
 @end
@@ -28,19 +25,24 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     //add unread media to current activity
-    EWActivity *currentActivity = [EWWakeUpManager sharedInstance].currentActivity;
-    EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
-    for (EWMedia *media in [EWPerson me].unreadMedias) {
-        if (!media.targetDate || [media.targetDate timeIntervalSinceDate:nextAlarm.time.nextOccurTime]<0) {
-            [currentActivity addMediasObject:media];
-        }
-    }
-    //remove media from unreadMedias
-    for (EWMedia *media in currentActivity.medias) {
-        [[EWPerson me] addUnreadMediasObject:media];
-    }
-    self.medias = currentActivity.medias.allObjects;
+    currentPlayCount = 0;
+    self.medias = [EWPerson myUnreadMedias];
     self.currentMedia = self.medias.firstObject;
+    [[EWAVManager sharedManager] playMedia:self.currentMedia];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kNotificationTypeNewMedia object:nil queue:nil usingBlock:^(NSNotification *note) {
+        if (note.object == currentActivity) {
+            [self refresh];
+        }
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kAudioPlayerDidFinishPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
+        if (++currentPlayCount >= self.medias.count) {
+            currentPlayCount = 0;
+        }
+        [self refresh];
+        [[EWAVManager sharedManager] playMedia:self.currentMedia];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -86,8 +88,12 @@
 #pragma mark - UI
 
 - (void)refresh{
+    self.medias = [EWWakeUpManager sharedInstance].currentActivity.medias.allObjects;
     if (!self.currentMedia) {
         self.currentMedia = self.medias.firstObject;
+        [[EWAVManager sharedManager] playMedia:self.currentMedia];
+    }else{
+        self.currentMedia = self.medias[currentPlayCount];
     }
     [self updateViewForCurrentMedia];
 }
@@ -112,7 +118,6 @@
             if (newMedia) {
                 //update view
                 DDLogVerbose(@"New media found");
-                [self refresh];
             }
         }else{
             DDLogError(@"Failed test voice request: %@", error.description);

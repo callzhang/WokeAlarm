@@ -29,20 +29,11 @@ const struct EWActivityTypes EWActivityTypes = {
 
 - (BOOL)validate{
     BOOL good = YES;
-    PFObject *selfPO = self.parseObject;
     if (!self.owner) {
-        PFUser *ownerPO = selfPO[EWActivityRelationships.owner];
-        EWPerson *owner = (EWPerson *)[ownerPO managedObjectInContext:mainContext];
-        self.owner = owner;
-        if (!self.owner) {
-            good = NO;
-        }
+        good = NO;
     }
     if (!self.type) {
-        self.type = selfPO[EWActivityAttributes.type];
-        if (!self.type) {
-            good = NO;
-        }
+        good = NO;
     }
     
     //TODO: check more values

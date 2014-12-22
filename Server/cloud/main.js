@@ -399,7 +399,7 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
           mediaFileQuery.find({
             success: function (voices) {
               console.log("Get Woke voices: "+voices.length);
-              var n = Math.ceil(Math.random() * voices.length);
+              var n = Math.floor(Math.random() * voices.length);
               console.log("Random voice chosen: "+n);
               voiceFile = voices[n];
               media.set("mediaFile", voiceFile);

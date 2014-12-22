@@ -65,6 +65,7 @@ extern NSString * const EWPersonDefaultName;
 - (void)updateStatus:(NSString *)status completion:(void (^)(NSError *error))completion;
 
 + (EWAlarm *)myCurrentAlarm;
-+ (EWActivity *)myCurrentAlarmActivity;
+//+ (EWActivity *)myCurrentAlarmActivity;
++ (NSArray *)myUnreadMedias;
 
 @end

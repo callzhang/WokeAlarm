@@ -69,6 +69,8 @@ UIViewController *rootViewController;
     //watch for login
     [EWStartUpSequence sharedInstance];
     
+    DDLogInfo(@"Bundle ID: %@", [[NSBundle mainBundle] bundleIdentifier]);
+    
 #ifdef caoer115
     EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];

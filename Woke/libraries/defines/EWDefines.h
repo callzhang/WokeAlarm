@@ -106,6 +106,11 @@ typedef void (^SenderBlock)(id sender);
 #define kSleepNotification              @"Sleep"
 #define kNewMediaNotification           @"media_event" //key: task & media
 #define kNewTimerNotification           @"alarm_timer"
+//Notification types
+#define kNotificationTypeFriendRequest  @"friendship_request"
+#define kNotificationTypeFriendAccepted @"friendship_accepted"
+#define kNotificationTypeSystemNotice   @"notice"
+
 
 #pragma mark - Data event
 //alarm store
@@ -153,12 +158,6 @@ typedef void (^SenderBlock)(id sender);
 //CollectionView Cell
 #define kCollectionViewCellWidth        80
 #define kCollectionViewCellHeight       80
-
-//Notification types
-#define kNotificationTypeFriendRequest      @"friendship_request"
-#define kNotificationTypeFriendAccepted     @"friendship_accepted"
-#define kNotificationTypeSystemNotice             @"notice"
-#define kNotificationTypeNewMedia   @"task_has_media"
 
 //Navgation Controller
 #define kMaxPersonNavigationConnt       6

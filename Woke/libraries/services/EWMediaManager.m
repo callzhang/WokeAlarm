@@ -14,6 +14,10 @@
 #import "EWNotificationManager.h"
 #import "EWNotification.h"
 #import "EWActivity.h"
+#import "NSArray+BlocksKit.h"
+#import "EWAlarmManager.h"
+#import "EWAlarm.h"
+#import "NSDictionary+KeyPathAccess.h"
 
 @implementation EWMediaManager
 //@synthesize context, model;
@@ -51,6 +55,8 @@
     if (voice) {
         EWMedia *media = (EWMedia *)[voice managedObjectInContext:nil];
         [media refresh];
+        //add to my unread medias
+        [[EWPerson me] addUnreadMediasObject:media];
         DDLogDebug(@"Got woke voice %@", media.objectId);
         //save
         NSMutableDictionary *cache = [[EWPerson me].cachedInfo mutableCopy];
@@ -134,12 +140,16 @@
         [mo refresh];
         DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
         //notification
-        dispatch_async(dispatch_get_main_queue(), ^{
-            EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
-            [EWNotification newMediaNotification:media];
-        });
-        newMedia = YES;
+        if ([NSThread isMainThread]) {
+            [EWNotification newMediaNotification:mo];
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
+                [EWNotification newMediaNotification:media];
+            });
+        }
         
+        newMedia = YES;
     }
 	
     if (newMedia) {
@@ -153,5 +163,21 @@
     return NO;
 }
 
+- (NSArray *)myUnreadMediasForPerson:(EWPerson *)person{
+    NSArray *unreadMedias = person.unreadMedias.allObjects;
+    //filter only target date not in the future
+    NSArray *unreadMediasForToday = [unreadMedias bk_select:^BOOL(EWMedia *obj) {
+        if (!obj.targetDate) {
+            return YES;
+        }else if ([obj.targetDate timeIntervalSinceDate:[EWPerson myCurrentAlarm].time.nextOccurTime] < 0){
+            return YES;
+        }
+        return NO;
+    }];
+    //sort by priority and created date
+    unreadMediasForToday = [unreadMediasForToday sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWMediaAttributes.priority ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
+    return unreadMediasForToday;
+    
+}
 
 @end

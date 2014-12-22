@@ -10,7 +10,7 @@
 
 @implementation EWServerObject
 - (BOOL)validate{
-    NSParameterAssert(YES);
+    NSParameterAssert(NO);
     return NO;
 }
 

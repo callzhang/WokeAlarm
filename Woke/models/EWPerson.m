@@ -16,6 +16,7 @@
 #import "EWActivityManager.h"
 #import "EWSocial.h"
 #import "EWSocialManager.h"
+#import "EWMediaManager.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
@@ -291,9 +292,13 @@ NSString * const EWPersonDefaultName = @"New User";
     return next;
 }
 
-+ (EWActivity *)myCurrentAlarmActivity{
-    EWActivity *activity = [[EWActivityManager sharedManager] myCurrentAlarmActivity];
-    return activity;
+//+ (EWActivity *)myCurrentAlarmActivity{
+//    EWActivity *activity = [[EWActivityManager sharedManager] myCurrentAlarmActivity];
+//    return activity;
+//}
+
++ (NSArray *)myUnreadMedias{
+    return [[EWMediaManager sharedInstance] myUnreadMediasForPerson:[EWPerson me]];
 }
 
 + (NSArray *)myFriends{

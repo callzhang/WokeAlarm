@@ -128,6 +128,7 @@
     //notification
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kAudioPlayerDidFinishPlaying object:nil];
     //responder to remote control
     [self prepareRemoteControlEventsListener];
     
