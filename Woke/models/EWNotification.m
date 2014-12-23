@@ -36,14 +36,13 @@
         return NO;
     }];
 
-    
     EWNotification *note = [self newNotification];
     note.type = kNotificationTypeNewMedia;
     note.userInfo = @{@"media": media.objectId, @"activity": [EWPerson myCurrentAlarmActivity].objectId};
     note.sender = media.author.objectId;
     note.receiver = [EWPerson me].objectId;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTypeNewMedia object:media];
     [EWSync save];
+    
     return note;
 }
 

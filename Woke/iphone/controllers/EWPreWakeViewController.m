@@ -30,7 +30,7 @@
     self.currentMedia = self.medias.firstObject;
     [[EWAVManager sharedManager] playMedia:self.currentMedia];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:kNotificationTypeNewMedia object:nil queue:nil usingBlock:^(NSNotification *note) {
+    [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         if (note.object == currentActivity) {
             [self refresh];
         }

@@ -106,11 +106,12 @@ typedef void (^SenderBlock)(id sender);
 #define kSleepNotification              @"Sleep"
 #define kNewMediaNotification           @"media_event" //key: task & media
 #define kNewTimerNotification           @"alarm_timer"
+
 //Notification types
 #define kNotificationTypeFriendRequest  @"friendship_request"
 #define kNotificationTypeFriendAccepted @"friendship_accepted"
 #define kNotificationTypeSystemNotice   @"notice"
-
+#define kNotificationTypeNewMedia       @"new_media"
 
 #pragma mark - Data event
 //alarm store

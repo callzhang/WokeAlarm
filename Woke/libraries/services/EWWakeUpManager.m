@@ -90,10 +90,6 @@
         NSParameterAssert(mediaID);
         NSLog(@"Received voice type push");
         
-
-        //download media
-        NSLog(@"Downloading media: %@", media.objectId);
-        [media downloadMediaFile];
         
         //determin action based on task timing
         if ([[NSDate date] isEarlierThan:activity.time]) {
@@ -108,7 +104,8 @@
             media.activity = activity;
             
             //broadcast so wakeupVC can react to it
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:activity];
+            //Wait until the media has been downloaded
+            //[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:activity];
             
             //save
             [EWSync save];

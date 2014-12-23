@@ -57,10 +57,28 @@
 }
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID{
-    EWMedia *media = [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID].firstObject;
+    return [[self class] getMediaByID:mediaID inContext:mainContext];
+}
+
++ (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context{
+    EWMedia *media = [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID inContext:context].firstObject;
     if (!media) {
         //need to find it on server
         media = (EWMedia *)[EWSync findObjectWithClass:NSStringFromClass([EWMedia class]) withID:mediaID];
+        
+        //download media
+        NSLog(@"Downloading media: %@", media.objectId);
+        [media downloadMediaFile];
+        
+        //post notification
+        if ([NSThread isMainThread]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:media];
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EWMedia *m = [media MR_inContext:mainContext];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:m];
+            });
+        }
     }
     return media;
 }
@@ -71,7 +89,6 @@
     [self MR_deleteEntity];
     [EWSync save];
 }
-
 
 - (void)downloadMediaFile{
     EWMediaFile *file;

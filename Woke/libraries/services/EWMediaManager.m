@@ -134,10 +134,10 @@
     NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query];
 	BOOL newMedia = NO;
     for (PFObject *po in mediaPOs) {
-        EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
-        
+        //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
+        EWMedia *mo = [EWMedia getMediaByID:po.objectId];
         //new media
-        [mo refresh];
+        //[mo refresh];
         DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
         //notification
         if ([NSThread isMainThread]) {
