@@ -146,7 +146,8 @@ typedef void (^EWSavingCallback)(void);
 - (BOOL)contains:(NSManagedObject *)mo inQueue:(NSString *)queue;
 
 #pragma mark - CoreData
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID;
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
 

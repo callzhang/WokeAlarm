@@ -158,7 +158,7 @@
         NSParameterAssert(alarmID || alarmLocalID);
         if (alarmID) {
             isLaunchedFromRemoteNotification = YES;
-            alarm = (EWAlarm *)[EWSync findObjectWithClass:@"EWAlarm" withID:alarmID];
+            alarm = [EWAlarm getAlarmByID:alarmID];
         }else if (alarmLocalID){
             isLaunchedFromLocalNotification = YES;
             NSURL *url = [NSURL URLWithString:alarmLocalID];
@@ -232,7 +232,7 @@
     if ([EWPerson myUnreadMedias].count == 0) {
         //need to create some voice
         EWMedia *media = [[EWMediaManager sharedInstance] getWokeVoice];
-        //[activity addMediasObject:media];
+        [[EWPerson me] addUnreadMediasObject:media];
     }
     
     //save
@@ -306,7 +306,7 @@
     [[ATConnect sharedConnection] engage:kWakeupSuccess fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
     
     //set wakeup time, move to past, schedule and save
-    [[EWActivityManager sharedManager] completeAlarmActivity:self.currentActivity];
+    [[EWActivityManager sharedManager] completeAlarmActivity:[EWPerson myCurrentAlarmActivity]];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     

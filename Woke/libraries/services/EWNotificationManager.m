@@ -137,7 +137,7 @@
 
 + (EWNotification *)getNotificationByID:(NSString *)notificationID{
     
-    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID];
+    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID error:nil];
     return notification;
 }
 

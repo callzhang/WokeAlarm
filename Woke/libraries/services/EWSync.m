@@ -677,22 +677,26 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Core Data
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID{
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
 	NSParameterAssert([NSThread isMainThread]);
-    if (serverID == nil) {
-        DDLogError(@"!!! Passed in nil to get current MO");
+    
+    NSManagedObject * MO = [self findObjectWithClass:className withID:serverID inContext:mainContext error:error];
+    return MO;
+}
+
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
+    if (objectID == nil) {
+        DDLogError(@"[%s] !!! Passed in nil to get current MO", __func__);
         return nil;
     }
-    
-    NSError *error;
-    NSManagedObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:serverID];
+    NSManagedObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectID inContext:context];
     if (!MO) {
-		PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:serverID error:&error];
-		MO = [PO managedObjectInContext:mainContext];
-		[MO refresh];
-		if (!MO) {
-			DDLogError(@"Failed getting exsiting MO(%@): %@", className, error.description);
-		}
+        PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:objectID error:error];
+        MO = [PO managedObjectInContext:context];
+        [MO refresh];
+        if (!MO) {
+            DDLogError(@"Failed getting exsiting MO(%@): %@", className, (*error).description);
+        }
     }
     return MO;
 }

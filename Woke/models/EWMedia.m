@@ -64,7 +64,8 @@
     EWMedia *media = [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID inContext:context].firstObject;
     if (!media) {
         //need to find it on server
-        media = (EWMedia *)[EWSync findObjectWithClass:NSStringFromClass([EWMedia class]) withID:mediaID];
+        NSError *error;
+        media = (EWMedia *)[EWSync findObjectWithClass:NSStringFromClass([EWMedia class]) withID:mediaID inContext:context error:&error];
         
         //download media
         NSLog(@"Downloading media: %@", media.objectId);

@@ -292,10 +292,10 @@ NSString * const EWPersonDefaultName = @"New User";
     return next;
 }
 
-//+ (EWActivity *)myCurrentAlarmActivity{
-//    EWActivity *activity = [[EWActivityManager sharedManager] myCurrentAlarmActivity];
-//    return activity;
-//}
++ (EWActivity *)myCurrentAlarmActivity{
+    EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivityForPerson:[EWPerson me]];
+    return activity;
+}
 
 + (NSArray *)myUnreadMedias{
     return [[EWMediaManager sharedInstance] myUnreadMediasForPerson:[EWPerson me]];

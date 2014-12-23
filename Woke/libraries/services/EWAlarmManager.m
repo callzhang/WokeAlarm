@@ -341,10 +341,10 @@
 
 
 #pragma mark - Local notification
-- (void)scheduleAlarmTimerNotifications{
+- (void)scheduleAllNotifications{
     NSArray *alarms = [EWPerson myAlarms];
     for (EWAlarm *alarm in alarms) {
-        [alarm scheduleAlarmTimerLocalNotification];
+        [alarm scheduleLocalNotification];
     }
 }
 
@@ -362,10 +362,10 @@
     }
 }
 
-- (void)cancelAlarmTimerNotifications{
+- (void)cancelAllTimerNotifications{
     NSArray *alarms = [EWPerson myAlarms];
     for (EWAlarm *alarm in alarms) {
-        [alarm cancelAlarmTimerLocalNotification];
+        [alarm cancelLocalNotification];
     }
 }
 

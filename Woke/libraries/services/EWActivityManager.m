@@ -12,6 +12,7 @@
 #import "EWAlarm.h"
 #import "NSArray+BlocksKit.h"
 #import "EWMedia.h"
+#import "EWAlarmManager.h"
 
 NSString *const EWActivityTypeAlarm = @"alarm";
 NSString *const EWActivityTypeFriendship = @"friendship";
@@ -37,7 +38,7 @@ NSString *const EWActivityTypeMedia = @"media";
         [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
             DDLogVerbose(@"Activity manager observed new media notification and added new media to my current alarm activity");
             EWMedia *newMedia = note.object;
-            EWActivity *alarmActivity = [self myCurrentAlarmActivity];
+            EWActivity *alarmActivity = [EWPerson myCurrentAlarmActivity];
             [alarmActivity addMediasObject:newMedia];
             [EWSync save];
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTypeActivityHasNewMedia object:alarmActivity];
@@ -68,9 +69,8 @@ NSString *const EWActivityTypeMedia = @"media";
     return activities;
 }
 
-- (EWActivity *)myCurrentAlarmActivity{
-    
-    EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
+- (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person{
+    EWAlarm *nextAlarm = [[EWAlarmManager sharedInstance] nextAlarmForPerson:person];
     
     if (!_currentAlarmActivity) {
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, nextAlarm.time.nextOccurTime];
@@ -83,25 +83,15 @@ NSString *const EWActivityTypeMedia = @"media";
         if (!_currentAlarmActivity) {
             //create new activity
             _currentAlarmActivity = [EWActivity newActivity];
-            _currentAlarmActivity.owner = [EWPerson me];
+            _currentAlarmActivity.owner = person;
             _currentAlarmActivity.type = EWActivityTypeAlarm;
             _currentAlarmActivity.time = nextAlarm.time.nextOccurTime;
-            //add unread media to current activity
-            for (EWMedia *media in [EWPerson me].unreadMedias) {
-                if (!media.targetDate || [media.targetDate timeIntervalSinceDate:nextAlarm.time.nextOccurTime]<0) {
-                    [_currentAlarmActivity addMediasObject:media];
-                }
-            }
-            //remove media from unreadMedias
-            for (EWMedia *media in _currentAlarmActivity.medias) {
-                [[EWPerson me] addUnreadMediasObject:media];
-            }
             [EWSync save];
         }
     }else{
         if (fabs([_currentAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])>1) {
             _currentAlarmActivity = nil;
-            [self myCurrentAlarmActivity];
+            [self currentAlarmActivityForPerson:person];
         }
     }
     return _currentAlarmActivity;

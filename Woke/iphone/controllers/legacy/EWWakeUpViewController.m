@@ -20,13 +20,14 @@
 #import "UIView+Layout.h"
 #import "UIViewController+Blur.h"
 #import "FBKVOController.h"
+#import "EWActivityManager.h"
 
 #define cellIdentifier                  @"EWMediaViewCell"
 
 
 @interface EWWakeUpViewController (){
     
-    NSMutableArray *medias;
+    NSArray *medias;
     CGRect headerFrame;
     NSTimer *timeTimer;
     NSTimer *progressTimer;
@@ -38,16 +39,15 @@
 
 @implementation EWWakeUpViewController
 @synthesize tableView = _tableView;
-@synthesize timer, header;
-@synthesize person;
-@synthesize footer;
+@synthesize timer, header, footer;
+@synthesize person = _person;
 
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     
-    self.activity = [EWWakeUpManager sharedInstance].currentActivity;
-    medias = [EWWakeUpManager sharedInstance].medias;
+    //_activity = [EWPerson myCurrentAlarmActivity];
+    //medias = [EWPerson myUnreadMedias];
     //DATA
     [self initData];
     
@@ -103,7 +103,6 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAudioPlayerDidFinishPlaying object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNewMediaNotification object:nil];
-    [_activity removeObserver:self forKeyPath:@"medias"];
     
     [timeTimer invalidate];
     [progressTimer invalidate];
@@ -115,8 +114,9 @@
 //    medias = [[_activity.medias allObjects] mutableCopy];
 //    [medias sortUsingDescriptors:@[sort]];
     
-    medias = [EWWakeUpManager sharedInstance].medias;
-    [self.KVOController observe:self keyPath:@"medias" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+    medias = [EWPerson myUnreadMedias];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         [self.tableView reloadData];
     }];
     
@@ -126,9 +126,7 @@
     [EWWakeUpManager sharedInstance].loopCount = kLoopMediaPlayCount;
     
     //notification
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kAudioPlayerDidFinishPlaying object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kAudioPlayerDidFinishPlaying object:nil];
     //responder to remote control
     [self prepareRemoteControlEventsListener];
     
@@ -146,8 +144,8 @@
     header.layer.borderColor = [UIColor whiteColor].CGColor;
     header.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.1];
     
-    timer.text = self.activity.time.date2timeShort;
-    self.AM.text = self.activity.time.date2am;
+    timer.text = _activity.time.date2timeShort;
+    self.AM.text = _activity.time.date2am;
     
     //table view
     //tableView_.frame = CGRectMake(0, 150, self.view.frame.size.width, self.view.frame.size.height-230);
@@ -204,18 +202,6 @@
             }];
         }];
     }];
-}
-
-
-
-#pragma mark - KVO
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    if ([object isKindOfClass:[EWActivity class]]) {
-        if ([keyPath isEqualToString:@"medias"] && self.activity.medias.count != medias.count) {
-            //observed task.media changed
-            [_tableView reloadData];
-        }
-    }
 }
 
 #pragma mark - UI
@@ -307,7 +293,7 @@
         
         EWMedia *currentMedia = [EWWakeUpManager sharedInstance].medias[indexPath.row];
         
-        [[EWWakeUpManager sharedInstance].currentActivity removeMediasObject:currentMedia];
+        [currentMedia MR_deleteEntity];
         
         //stop play if media is being played
         if ([EWWakeUpManager sharedInstance].currentMediaIndex == (NSUInteger)indexPath.row) {
@@ -329,7 +315,7 @@
         
         
         //update UI
-        [self scrollViewDidScroll:self.tableView];\
+        [self scrollViewDidScroll:self.tableView];
         [self.tableView reloadData];
         
     }

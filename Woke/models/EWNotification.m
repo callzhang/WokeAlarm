@@ -35,10 +35,14 @@
         }
         return NO;
     }];
+    
+    if (notification) {
+        return notification;
+    }
 
     EWNotification *note = [self newNotification];
     note.type = kNotificationTypeNewMedia;
-    note.userInfo = @{@"media": media.objectId, @"activity": [EWPerson myCurrentAlarmActivity].objectId};
+    note.userInfo = @{@"media": media.objectId};
     note.sender = media.author.objectId;
     note.receiver = [EWPerson me].objectId;
     [EWSync save];

@@ -257,7 +257,7 @@
     
 }
 
-- (NSManagedObject *)managedObjectInContext:(NSManagedObjectContext *)context{
+- (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{
     
     if (!self.objectId) {
         return nil;

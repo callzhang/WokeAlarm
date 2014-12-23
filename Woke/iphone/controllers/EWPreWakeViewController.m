@@ -12,6 +12,7 @@
 #import "EWAVManager.h"
 #import "NSTimer+BlocksKit.h"
 #import "EWAlarm.h"
+#import "EWMediaManager.h"
 
 @interface EWPreWakeViewController(){
     NSTimer *progressUpdateTimer;
@@ -31,7 +32,7 @@
     [[EWAVManager sharedManager] playMedia:self.currentMedia];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        if (note.object == currentActivity) {
+        if (note.object == [EWPerson myCurrentAlarmActivity]) {
             [self refresh];
         }
     }];
@@ -88,7 +89,7 @@
 #pragma mark - UI
 
 - (void)refresh{
-    self.medias = [EWWakeUpManager sharedInstance].currentActivity.medias.allObjects;
+    self.medias = [EWPerson myUnreadMedias];
     if (!self.currentMedia) {
         self.currentMedia = self.medias.firstObject;
         [[EWAVManager sharedManager] playMedia:self.currentMedia];

@@ -15,8 +15,8 @@
 
 
 #pragma mark - NEW
-//add new alarm, save, add to current user, save user
-+ (EWAlarm *)newAlarm{
+//add new alarm, save, add to current user, save  Ouser
++ (instancetype)newAlarm{
     NSParameterAssert([NSThread isMainThread]);
     DDLogVerbose(@"Create new Alarm");
     
@@ -28,6 +28,17 @@
     a.tone = [EWPerson me].preference[@"DefaultTone"];
     
     return a;
+}
+
+#pragma mark - Search
++ (instancetype)getAlarmByID:(NSString *)alarmID{
+    NSParameterAssert([NSThread isMainThread]);
+    NSError *error;
+    EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:alarmID error:&error];
+    if (error) {
+        DDLogError(error.description);
+    }
+    return alarm;
 }
 
 #pragma mark - DELETE
@@ -154,7 +165,7 @@
     [self setPrimitiveStatement:statement];
     [self didChangeValueForKey:EWAlarmAttributes.statement];
     [self updateCachedStatement];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmToneChanged object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStatementChanged object:self];
 }
 
 
