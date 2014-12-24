@@ -750,7 +750,7 @@ NSManagedObjectContext *mainContext;
     BOOL good = YES;
     
     if (![SO valueForKey:kUpdatedDateKey] && SO.serverID) {
-        NSLog(@"The %@(%@) you are trying to validate haven't been downloaded fully. Skip validating.", SO.entity.name, SO.serverID);
+        DDLogWarn(@"The %@(%@) you are trying to validate haven't been downloaded fully. Skip validating.", SO.entity.name, SO.serverID);
         return NO;
     }
 	
@@ -759,19 +759,18 @@ NSManagedObjectContext *mainContext;
 		if (!tryFix) {
 			return NO;
 		}
+        //TODO: use more granular level fix, or use better way to fix
 		[SO refresh];
 		good = [SO validate];
-		
 	}
 	
     if (!good) {
-        NSLog(@"*** %@(%@) failed in validation after trying to fix", SO.entity.name, SO.serverID);
+        DDLogError(@"*** %@(%@) failed in validation after trying to fix", SO.entity.name, SO.serverID);
     }
     
     return good;
     
 }
-
 
 
 + (BOOL)checkAccess:(NSManagedObject *)mo{

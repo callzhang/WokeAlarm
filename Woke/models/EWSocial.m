@@ -12,4 +12,12 @@
 @dynamic friendshipTimeline;
 // Custom logic goes here.
 
+- (BOOL)validate{
+    BOOL good = YES;
+    if (!self.facebookID || !self.weiboID) {
+        good = NO;
+    }
+    return good;
+}
+
 @end
