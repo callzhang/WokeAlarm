@@ -136,6 +136,8 @@
     for (PFObject *po in mediaPOs) {
         //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
         EWMedia *mo = [EWMedia getMediaByID:po.objectId];
+        mo.receiver = [EWPerson me];
+        [[EWPerson me] addUnreadMediasObject:mo];
         //new media
         //[mo refresh];
         DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
@@ -163,7 +165,7 @@
     return NO;
 }
 
-- (NSArray *)myUnreadMediasForPerson:(EWPerson *)person{
+- (NSArray *)unreadMediasForPerson:(EWPerson *)person{
     NSArray *unreadMedias = person.unreadMedias.allObjects;
     //filter only target date not in the future
     NSArray *unreadMediasForToday = [unreadMedias bk_select:^BOOL(EWMedia *obj) {

@@ -368,18 +368,18 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     if ([title isEqualToString:@"Add friend"]) {
         
         //friend
-        [EWPerson requestFriend:person];
+        [[EWPerson me] requestFriend:person];
         [self.view showSuccessNotification:@"Request sent"];
         
     }else if ([title isEqualToString:@"Unfriend"]){
         
         //unfriend
-        [EWPerson unfriend:person];
+        [[EWPerson me] unfriend:person];
         [self.view showSuccessNotification:@"Unfriended"];
         
     }else if ([title isEqualToString:@"Accept friend"]){
         
-        [EWPerson acceptFriend:person];
+        [[EWPerson me] acceptFriend:person];
         [self.view showSuccessNotification:@"Added"];
         
     }else if ([title isEqualToString:@"Send Voice Greeting"]){

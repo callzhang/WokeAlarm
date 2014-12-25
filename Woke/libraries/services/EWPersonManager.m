@@ -145,7 +145,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     
     NSMutableArray *allPerson = [NSMutableArray new];
     
-    EWPerson *localMe = [[EWPerson me] MR_inContext:context];
+    EWPerson *localMe = [EWPerson meInContext:context];
     NSError *error;
     
     //check my location

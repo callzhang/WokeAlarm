@@ -10,6 +10,10 @@
 
 @implementation NSDictionary(KeyPathAccess)
 - (instancetype)setValue:(id)value forImmutableKeyPath:(NSString *)keyPath{
+    if ([keyPath isEqualToString:@""]) {
+        DDLogWarn(@"%s passed in empty path", __func__);
+        return self;
+    }
     NSArray *paths = [keyPath componentsSeparatedByString:@"."];
     NSMutableDictionary *newDictionary = [self mutableCopy];
     if (paths.count == 1) {
@@ -17,8 +21,8 @@
         newDictionary[paths.firstObject] = value;
     }else{
         //divide the task
-        NSString *childPath = @"";
-        for (NSUInteger i = 1; i<paths.count; i++) {
+        NSString *childPath = paths[1];
+        for (NSUInteger i = 2; i<paths.count; i++) {
             childPath = [childPath stringByAppendingString:[NSString stringWithFormat:@".%@", paths[i]]];
         }
         NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];
@@ -38,8 +42,8 @@
         newDictionary[paths.firstObject] = array;
     }else{
         //divide the task
-        NSString *childPath = @"";
-        for (NSUInteger i = 1; i<paths.count; i++) {
+        NSString *childPath = paths[1];
+        for (NSUInteger i = 2; i<paths.count; i++) {
             childPath = [childPath stringByAppendingString:[NSString stringWithFormat:@".%@", paths[i]]];
         }
         NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];

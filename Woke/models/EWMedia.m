@@ -84,12 +84,7 @@
 }
 
 
-#pragma mark - DELETE
-- (void)remove{
-    [self MR_deleteEntity];
-    [EWSync save];
-}
-
+#pragma mark - Media File
 - (void)downloadMediaFile{
     EWMediaFile *file;
     if (!self.mediaFile) {
@@ -97,6 +92,12 @@
         file = self.mediaFile;
     }
     [file refresh];
+}
+
+#pragma mark - DELETE
+- (void)remove{
+    [self MR_deleteEntity];
+    [EWSync save];
 }
 
 #pragma mark - Underlying data

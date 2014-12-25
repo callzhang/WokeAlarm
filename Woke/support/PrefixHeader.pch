@@ -21,6 +21,7 @@
 #import "CoreData+MagicalRecord.h"
 #import "EWDefines.h"
 #import "EWSync.h"
+#import "EWPerson+Woke.h"
 #import "NSManagedObjectContext+ChainSave.h"
 #import <MTDates/NSDate+MTDates.h>
 #import "NSDate+Extend.h"

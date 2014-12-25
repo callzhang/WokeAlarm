@@ -35,7 +35,7 @@
  */
 - (NSArray *)mediasForPerson:(EWPerson *)person;
 
-- (NSArray *)myUnreadMediasForPerson:(EWPerson *)person;
+- (NSArray *)unreadMediasForPerson:(EWPerson *)person;
 
 //Check media assets relationship
 - (BOOL)checkMediaAssets;
