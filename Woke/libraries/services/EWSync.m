@@ -710,7 +710,10 @@ NSManagedObjectContext *mainContext;
 
 + (void)saveWithCompletion:(EWSavingCallback)block{
     [[EWSync sharedInstance].saveCallbacks addObject:block];
-    [self save];
+    if ([NSThread isMainThread]) {
+        [mainContext MR_saveToPersistentStoreAndWait];
+    }
+    [[EWSync sharedInstance] uploadToServer];
 }
 
 + (void)saveAllToLocal:(NSArray *)MOs{

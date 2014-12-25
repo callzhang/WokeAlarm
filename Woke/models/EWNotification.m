@@ -11,6 +11,7 @@
 #import "EWMedia.h"
 #import "EWActivity.h"
 #import "NSArray+BlocksKit.h"
+#import "NSDictionary+KeyPathAccess.h"
 
 @implementation EWNotification
 @dynamic userInfo;
@@ -29,7 +30,7 @@
 + (EWNotification *)newMediaNotification:(EWMedia *)media{
     EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
         if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
-            if (notif.userInfo[@"activity"] == [EWPerson myCurrentAlarmActivity]) {
+            if (notif.userInfo[@"activity"] == [EWPerson myCurrentAlarmActivity].objectId) {
                 return YES;
             }
         }
@@ -37,16 +38,25 @@
     }];
     
     if (notification) {
+        [notification.userInfo addValue:media.objectId toArrayAtImmutableKeyPath:@"medias"];
+        [EWSync save];
         return notification;
     }
 
     EWNotification *note = [self newNotification];
     note.type = kNotificationTypeNewMedia;
-    note.userInfo = @{@"media": media.objectId};
     note.sender = media.author.objectId;
     note.receiver = [EWPerson me].objectId;
-    [EWSync save];
-    
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+    if (!activity.objectId) {
+        [activity updateToServerWithCompletion:^(PFObject *PO) {
+            note.userInfo = @{@"medias": @[media.objectId], @"activity": activity};
+            [EWSync save];
+        }];
+    }else{
+        note.userInfo = @{@"medias": @[media.objectId], @"activity": activity};
+        [EWSync save];
+    }
     return note;
 }
 

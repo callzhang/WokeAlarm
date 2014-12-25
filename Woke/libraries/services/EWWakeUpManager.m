@@ -82,57 +82,31 @@
         return;
     }
     
+    //download media
     EWMedia *media = [EWMedia getMediaByID:mediaID];
-    //NSDate *nextTimer = nextAlarm.time;
+    //Woke state -> assign media to next task, download
+    if (![[EWPerson me].unreadMedias containsObject:media]) {
+        [[EWPerson me] addUnreadMediasObject:media];
+        [EWSync save];
+        
+    }
     
     if ([type isEqualToString:kPushMediaTypeVoice]) {
         // ============== Media ================
         NSParameterAssert(mediaID);
         NSLog(@"Received voice type push");
         
-        
-        //determin action based on task timing
-        if ([[NSDate date] isEarlierThan:activity.time]) {
-            
-            //============== pre alarm -> download ==============
-            
-        }else if (!activity.completed && [[NSDate date] timeIntervalSinceDate:activity.time] < kMaxWakeTime){
-            
-            //============== struggle ==============
-            
-            //assign activity
-            media.activity = activity;
-            
-            //broadcast so wakeupVC can react to it
-            //Wait until the media has been downloaded
-            //[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:activity];
-            
-            //save
-            [EWSync save];
-            
-        }else{
-            
-            //Woke state -> assign media to next task, download
-            if (![[EWPerson me].unreadMedias containsObject:media]) {
-                [[EWPerson me] addUnreadMediasObject:media];
-                [EWSync save];
-                
-            }
-            
-        }
-        
 #ifdef DEBUG
         [[[UIAlertView alloc] initWithTitle:@"Voice来啦" message:@"收到一条神秘的语音."  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 #endif
-        
         
     }else if([type isEqualToString:@"test"]){
         
         // ============== Test ================
         
-        NSLog(@"Received === test === type push");
-        [UIApplication sharedApplication].applicationIconBadgeNumber = 9;
-        
+        DDLogInfo(@"Received === test === type push");
+        EWAlert(@"Received === test === type push");
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 99;
     }
 }
 
@@ -203,33 +177,13 @@
     
     //update media
     [[EWMediaManager sharedInstance] checkMediaAssets];
-    NSArray *medias = [EWPerson me].unreadMedias.allObjects;
+    NSArray *medias = [EWPerson myUnreadMedias];
     
     //fill media from mediaAssets, if no media for task, create a pseudo media
-    NSInteger nVoiceNeeded = 1;
-    
-    for (EWMedia *media in medias) {
-        if (!media.targetDate || [media.targetDate timeIntervalSinceNow]<0) {
-            
-            //find media to add
-            [activity addMediasObject: media];
-            //remove media from mediaAssets, need to remove relation doesn't have inverse relation. This is to make sure the sender doesn't need to modify other person
-            [[EWPerson me] removeUnreadMediasObject:media];
-            //!!!single directional relation? Remove media.receiver?
-            
-            //stop if enough
-            if ([media.type isEqualToString: kMediaTypeVoice]) {
-                //reduce the counter
-                nVoiceNeeded--;
-                if (nVoiceNeeded <= 0) {
-                    break;
-                }
-            }
-        }
-    }
+    //NSInteger nVoiceNeeded = 1;
     
     //add Woke media is needed
-    if ([EWPerson myUnreadMedias].count == 0) {
+    if (medias.count == 0) {
         //need to create some voice
         EWMedia *media = [[EWMediaManager sharedInstance] getWokeVoice];
         [[EWPerson me] addUnreadMediasObject:media];

@@ -9,7 +9,6 @@
 
 @implementation EWMedia
 
-
 #pragma mark - create media
 + (EWMedia *)newMedia{
     NSParameterAssert([NSThread isMainThread]);
@@ -38,7 +37,7 @@
         }
     }
     
-    if (!self.receiver && !self.activity) {
+    if (!self.receiver) {
         DDLogError(@"Found media %@ with no receiver and no activity.", self.serverID);
         good = NO;
     }

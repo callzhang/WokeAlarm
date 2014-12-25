@@ -16,7 +16,7 @@
 
 @interface EWPreWakeViewController(){
     NSTimer *progressUpdateTimer;
-    NSUInteger currentPlayCount;
+    //NSUInteger currentPlayCount;
 }
 
 @end
@@ -25,11 +25,8 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    //add unread media to current activity
-    currentPlayCount = 0;
-    self.medias = [EWPerson myUnreadMedias];
-    self.currentMedia = self.medias.firstObject;
-    [[EWAVManager sharedManager] playMedia:self.currentMedia];
+    //data source
+    [self refresh];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         if (note.object == [EWPerson myCurrentAlarmActivity]) {
@@ -38,9 +35,11 @@
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kAudioPlayerDidFinishPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
-        if (++currentPlayCount >= self.medias.count) {
+        NSUInteger currentPlayCount = [self.medias indexOfObjectIdenticalTo:self.currentMedia]+1;
+        if (currentPlayCount >= self.medias.count) {
             currentPlayCount = 0;
         }
+        self.currentMedia = self.medias[currentPlayCount];
         [self refresh];
         [[EWAVManager sharedManager] playMedia:self.currentMedia];
     }];
@@ -93,8 +92,6 @@
     if (!self.currentMedia) {
         self.currentMedia = self.medias.firstObject;
         [[EWAVManager sharedManager] playMedia:self.currentMedia];
-    }else{
-        self.currentMedia = self.medias[currentPlayCount];
     }
     [self updateViewForCurrentMedia];
 }

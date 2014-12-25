@@ -19,7 +19,7 @@
         //divide the task
         NSString *childPath = @"";
         for (NSUInteger i = 1; i<paths.count; i++) {
-            childPath = [childPath stringByAppendingString:paths[i]];
+            childPath = [childPath stringByAppendingString:[NSString stringWithFormat:@".%@", paths[i]]];
         }
         NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];
         childDic = [childDic setValue:value forImmutableKeyPath:childPath];
@@ -27,4 +27,26 @@
     }
     return newDictionary.copy;
 }
+
+- (instancetype)addValue:(id)value toArrayAtImmutableKeyPath:(NSString *)keyPath{
+    NSArray *paths = [keyPath componentsSeparatedByString:@"."];
+    NSMutableDictionary *newDictionary = [self mutableCopy];
+    if (paths.count == 1) {
+        //last keypath, add value directly
+        NSMutableArray *array = [(NSArray *)newDictionary[paths.firstObject] mutableCopy];
+        [array addObject:value];
+        newDictionary[paths.firstObject] = array;
+    }else{
+        //divide the task
+        NSString *childPath = @"";
+        for (NSUInteger i = 1; i<paths.count; i++) {
+            childPath = [childPath stringByAppendingString:[NSString stringWithFormat:@".%@", paths[i]]];
+        }
+        NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];
+        childDic = [childDic setValue:value forImmutableKeyPath:childPath];
+        newDictionary[paths.firstObject] = childDic;
+    }
+    return newDictionary.copy;
+}
+
 @end

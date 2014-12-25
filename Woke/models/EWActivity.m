@@ -14,6 +14,7 @@ const struct EWActivityTypes EWActivityTypes = {
 @end
 
 @implementation EWActivity
+@dynamic mediaIDs;
 
 + (EWActivity *)newActivity{
     EWActivity *activity = [EWActivity MR_createEntity];
@@ -41,12 +42,11 @@ const struct EWActivityTypes EWActivityTypes = {
     return good;
 }
 
-- (EWActivity *)createWithMedia:(EWMedia *)media {
-    EWActivity *activity = [EWActivity newActivity];
-    activity.type = EWActivityTypes.media;
-    [activity addMediasObject:media];
-    
-    return activity;
+- (void)addMediaID:(NSString *)objectID{
+    NSMutableArray *mediaArray = self.mediaIDs.mutableCopy ?: [NSMutableArray new];
+    [mediaArray addObject:objectID];
+    self.mediaIDs = mediaArray.copy;
+    [EWSync save];
 }
 
 

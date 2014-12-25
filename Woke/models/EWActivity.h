@@ -8,6 +8,8 @@ extern const struct EWActivityTypes {
 } EWActivityTypes;
 
 @interface EWActivity : _EWActivity {}
+@property (nonatomic, strong) NSArray *mediaIDs;
+
 // add
 + (EWActivity *)newActivity;
 // delete
@@ -17,6 +19,7 @@ extern const struct EWActivityTypes {
 // valid
 - (BOOL)validate;
 
-- (EWActivity *)createWithMedia:(EWMedia *)media;
+- (void)addMediaID:(NSString *)objectID;
+
 - (EWActivity *)createWithPerson:(EWPerson *)person friended:(BOOL)friended;
 @end

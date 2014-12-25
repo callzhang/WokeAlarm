@@ -4,7 +4,6 @@
 
 @interface EWMedia : _EWMedia
 
-
 //new
 + (EWMedia *)newMedia;
 //delete

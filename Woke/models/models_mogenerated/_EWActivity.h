@@ -8,6 +8,7 @@ extern const struct EWActivityAttributes {
 	__unsafe_unretained NSString *completed;
 	__unsafe_unretained NSString *friendID;
 	__unsafe_unretained NSString *friended;
+	__unsafe_unretained NSString *mediaIDs;
 	__unsafe_unretained NSString *sleepTime;
 	__unsafe_unretained NSString *statement;
 	__unsafe_unretained NSString *time;
@@ -15,12 +16,16 @@ extern const struct EWActivityAttributes {
 } EWActivityAttributes;
 
 extern const struct EWActivityRelationships {
-	__unsafe_unretained NSString *medias;
 	__unsafe_unretained NSString *owner;
 } EWActivityRelationships;
 
-@class EWMedia;
+extern const struct EWActivityFetchedProperties {
+	__unsafe_unretained NSString *medias;
+} EWActivityFetchedProperties;
+
 @class EWPerson;
+
+@class NSObject;
 
 @interface EWActivityID : EWServerObjectID {}
 @end
@@ -47,6 +52,10 @@ extern const struct EWActivityRelationships {
 
 //- (BOOL)validateFriended:(id*)value_ error:(NSError**)error_;
 
+@property (nonatomic, strong) id mediaIDs;
+
+//- (BOOL)validateMediaIDs:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) NSDate* sleepTime;
 
 //- (BOOL)validateSleepTime:(id*)value_ error:(NSError**)error_;
@@ -63,21 +72,11 @@ extern const struct EWActivityRelationships {
 
 //- (BOOL)validateType:(id*)value_ error:(NSError**)error_;
 
-@property (nonatomic, strong) NSSet *medias;
-
-- (NSMutableSet*)mediasSet;
-
 @property (nonatomic, strong) EWPerson *owner;
 
 //- (BOOL)validateOwner:(id*)value_ error:(NSError**)error_;
 
-@end
-
-@interface _EWActivity (MediasCoreDataGeneratedAccessors)
-- (void)addMedias:(NSSet*)value_;
-- (void)removeMedias:(NSSet*)value_;
-- (void)addMediasObject:(EWMedia*)value_;
-- (void)removeMediasObject:(EWMedia*)value_;
+@property (nonatomic, readonly) NSArray *medias;
 
 @end
 
@@ -95,6 +94,9 @@ extern const struct EWActivityRelationships {
 - (BOOL)primitiveFriendedValue;
 - (void)setPrimitiveFriendedValue:(BOOL)value_;
 
+- (id)primitiveMediaIDs;
+- (void)setPrimitiveMediaIDs:(id)value;
+
 - (NSDate*)primitiveSleepTime;
 - (void)setPrimitiveSleepTime:(NSDate*)value;
 
@@ -103,9 +105,6 @@ extern const struct EWActivityRelationships {
 
 - (NSDate*)primitiveTime;
 - (void)setPrimitiveTime:(NSDate*)value;
-
-- (NSMutableSet*)primitiveMedias;
-- (void)setPrimitiveMedias:(NSMutableSet*)value;
 
 - (EWPerson*)primitiveOwner;
 - (void)setPrimitiveOwner:(EWPerson*)value;
