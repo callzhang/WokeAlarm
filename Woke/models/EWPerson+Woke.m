@@ -15,6 +15,7 @@
 #import "EWAccountManager.h"
 #import "EWNotificationManager.h"
 #import "EWCachedInfoManager.h"
+#import "EWNotification.h"
 
 @implementation EWPerson(Woke)
 
@@ -103,10 +104,10 @@
 
 + (NSArray *)myNotifications {
     NSArray *notifications = [EWPerson me].notifications.allObjects;
-    //NSSortDescriptor *sortCompelete = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.completed ascending:NO];
+    NSSortDescriptor *sortCompelete = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.completed ascending:NO];
     NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:NO];
-    //NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];
-    notifications = [notifications sortedArrayUsingDescriptors:@[sortDate]];
+    NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];
+    notifications = [notifications sortedArrayUsingDescriptors:@[sortDate, sortCompelete, sortImportance]];
     return notifications;
 }
 

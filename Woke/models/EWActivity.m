@@ -36,8 +36,12 @@ const struct EWActivityTypes EWActivityTypes = {
     if (!self.type) {
         good = NO;
     }
-    
-    //TODO: check more values
+    else if ([self.type isEqualToString:EWActivityTypes.alarm]) {
+        if (self.time) {
+            DDLogError(@"Activity %@ missing time", self.objectId);
+            good = NO;
+        }
+    }
     
     return good;
 }

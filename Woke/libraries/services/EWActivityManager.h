@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
 
-#define kNotificationTypeActivityHasNewMedia    @"activity_new_media"
+//#define kNotificationTypeActivityHasNewMedia    @"activity_new_media"
 
 extern NSString *const EWActivityTypeAlarm;
 extern NSString *const EWActivityTypeFriendship;

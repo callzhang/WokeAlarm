@@ -38,7 +38,7 @@
     }];
     
     if (notification) {
-        [notification.userInfo addValue:media.objectId toArrayAtImmutableKeyPath:@"medias"];
+        notification.userInfo = [notification.userInfo addValue:media.objectId toArrayAtImmutableKeyPath:@"medias"];
         [EWSync save];
         return notification;
     }
@@ -50,11 +50,11 @@
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     if (!activity.objectId) {
         [activity updateToServerWithCompletion:^(PFObject *PO) {
-            note.userInfo = @{@"medias": @[media.objectId], @"activity": activity};
+            note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
             [EWSync save];
         }];
     }else{
-        note.userInfo = @{@"medias": @[media.objectId], @"activity": activity};
+        note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
         [EWSync save];
     }
     return note;

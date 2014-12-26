@@ -149,6 +149,7 @@
     }
 }
 
+#pragma mark - Playing methods
 //play for file in main bundle
 -(void)playSoundFromFileName:(NSString *)fileName {
     

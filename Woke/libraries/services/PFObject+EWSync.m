@@ -264,14 +264,15 @@
     }
     
     if (!context) {
+        NSAssert([NSThread isMainThread], @"default context must be on main thread");
         context = mainContext;
     }
-    NSMutableArray *MOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
+    NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
     //NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
-    while (MOs.count > 1) {
+    while (SOs.count > 1) {
         DDLogError(@"Find duplicated MO for ID %@", self.objectId);
-        NSManagedObject *mo_ = MOs.lastObject;
-        [MOs removeLastObject];
+        EWServerObject *mo_ = SOs.lastObject;
+        [SOs removeLastObject];
         [mo_ MR_deleteEntityInContext:context];
         
         [[EWSync sharedInstance].deleteToLocalItems addObject:self.objectId];
@@ -279,22 +280,22 @@
         //remove from the update queue
         [[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
     }
-    NSManagedObject *mo = MOs.firstObject;
+    EWServerObject *SO = SOs.firstObject;
     
-    if (!mo) {
+    if (!SO) {
         //if managedObject not exist, create it locally
-        mo = [NSClassFromString(self.localClassName) MR_createInContext:context];
-        [mo assignValueFromParseObject:self];
+        SO = [NSClassFromString(self.localClassName) MR_createInContext:context];
+        [SO assignValueFromParseObject:self];
         DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
     }else{
         
-        if ([mo valueForKey:kUpdatedDateKey] && (mo.isOutDated || self.isNewerThanMO)) {
-            [mo assignValueFromParseObject:self];
+        if ([SO valueForKey:kUpdatedDateKey] && (SO.isOutDated || self.isNewerThanMO)) {
+            [SO assignValueFromParseObject:self];
             //[EWDataStore saveToLocal:mo];//mo will be saved later
         }
     }
     
-    return mo;
+    return SO;
 }
 
 - (BOOL)isNewerThanMO{

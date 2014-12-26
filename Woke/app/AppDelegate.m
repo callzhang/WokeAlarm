@@ -74,7 +74,10 @@ UIViewController *rootViewController;
 #ifdef caoer115
     EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
-#else
+#endif
+#ifdef lei
+    [NSClassFromString(@"SFDynamicCodeInjection") performSelector:@selector(disable)];
+#endif
     if ([EWAccountManager isLoggedIn]) {
         [[EWAccountManager sharedInstance] fetchCurrentUser:[PFUser currentUser]];
         [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *error) {
@@ -91,7 +94,6 @@ UIViewController *rootViewController;
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
         
     }
-#endif
     return YES;
 }
 

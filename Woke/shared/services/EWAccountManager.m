@@ -20,6 +20,7 @@
 
 @interface EWAccountManager()
 @property (nonatomic) BOOL isUpdatingFacebookInfo;
+@property (nonatomic, strong) CLLocationManager *manager;
 @end
 
 @implementation EWAccountManager
@@ -414,20 +415,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Geolocation
 
 - (void)registerLocation{
-    CLLocationManager *manager = [CLLocationManager new];
-    manager.delegate = self;
-    if ([manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+    self.manager = [CLLocationManager new];
+    self.manager.delegate = self;
+    if ([self.manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
-            [manager requestWhenInUseAuthorization];
-        } else if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied | kCLAuthorizationStatusRestricted){
+            [self.manager requestWhenInUseAuthorization];
+        } else if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] ==kCLAuthorizationStatusRestricted){
             //need pop alert
             DDLogError(@"Location service disabled");
-            [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Location service is disabled. To find the best match around your area, please enable location service in settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+            EWAlert(@"Location service is disabled. To find the best match around your area, please enable location service in settings.")
         }else{
-            [manager startUpdatingLocation];
+            [self.manager startUpdatingLocation];
         }
     }else{
-        [manager startUpdatingLocation];
+        [self.manager startUpdatingLocation];
     }
     
 //    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
@@ -499,9 +500,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     CLLocation *loc = locations.lastObject;
     if (loc.horizontalAccuracy <100 && loc.verticalAccuracy < 100) {
+        
         //bingo
+        [manager stopUpdatingLocation];
         if (loc.coordinate.latitude == 0 && loc.coordinate.longitude == 0) {
-            //NYC coordinate if on simulator
+            DDLogInfo(@"Using NYC coordinate on simulator");
             loc = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
         }
         
@@ -513,7 +516,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             
             [EWPerson me].location = loc;
             
-            if (err == nil && [placemarks count] > 0) {
+            if (!err && [placemarks count] > 0) {
                 CLPlacemark *placemark = [placemarks lastObject];
                 //get info
                 [EWPerson me].city = placemark.locality;

@@ -13,9 +13,9 @@
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 @import UIKit;
 @import Foundation;
-//#import "KZBootstrapUserMacros.h"
+
 //#import <CocoaLumberjack/CocoaLumberjack.h>
-//#import "KZBootstrapUserMacros.h"
+#import "KZBootstrapUserMacros.h"
 
 #import "DDLog.h"
 #import "CoreData+MagicalRecord.h"

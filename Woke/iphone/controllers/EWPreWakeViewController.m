@@ -51,7 +51,7 @@
     [self updateViewForCurrentMedia];
     
     //update progress
-    progressUpdateTimer = [NSTimer bk_scheduledTimerWithTimeInterval:0.05 block:^(NSTimer *timer) {
+    progressUpdateTimer = [NSTimer bk_scheduledTimerWithTimeInterval:.1 block:^(NSTimer *timer) {
         if ([EWAVManager sharedManager].player.isPlaying) {
             if (self.progress.alpha < 1) {
                 [UIView animateWithDuration:0.5 animations:^{
@@ -80,7 +80,8 @@
     self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
 }
 
-- (void)dealloc{
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [progressUpdateTimer invalidate];
 }
 

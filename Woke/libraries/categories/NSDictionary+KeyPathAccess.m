@@ -37,9 +37,9 @@
     NSMutableDictionary *newDictionary = [self mutableCopy];
     if (paths.count == 1) {
         //last keypath, add value directly
-        NSMutableArray *array = [(NSArray *)newDictionary[paths.firstObject] mutableCopy];
+        NSMutableArray *array = [(NSArray *)newDictionary[paths.firstObject] mutableCopy]?:[NSMutableArray array];
         [array addObject:value];
-        newDictionary[paths.firstObject] = array;
+        newDictionary[paths.firstObject] = array.copy;
     }else{
         //divide the task
         NSString *childPath = paths[1];

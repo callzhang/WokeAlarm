@@ -63,7 +63,7 @@
     NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline?:[NSMutableDictionary new];
     //diff
     NSMutableSet *allFriendsInTimeline = [NSMutableSet new];
-    NSMutableSet *allFriends = [me.friends valueForKey:kParseObjectID];
+    NSMutableSet *allFriends = [me.friends mutableSetValueForKey:kParseObjectID];
     for (NSArray *friends in friendsActivityDic.allValues) {
         [allFriendsInTimeline addObjectsFromArray:friends];
     }

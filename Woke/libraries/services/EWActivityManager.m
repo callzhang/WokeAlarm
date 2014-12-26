@@ -34,6 +34,7 @@ NSString *const EWActivityTypeMedia = @"media";
 - (instancetype)init{
     self = [super init];
     if (self) {
+        /* no need to observe new media
         //observe new media notification
         [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
             DDLogVerbose(@"Activity manager observed new media notification and added new media to my current alarm activity");
@@ -45,6 +46,7 @@ NSString *const EWActivityTypeMedia = @"media";
             [EWSync save];
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTypeActivityHasNewMedia object:alarmActivity];
         }];
+         */
     }
     return self;
 }

@@ -296,40 +296,40 @@ NSManagedObjectContext *mainContext;
     NSSet *objects = [updatedObjects setByAddingObjectsFromSet:insertedObjects];
     
     //for updated mo
-    for (EWServerObject *MO in objects) {
+    for (EWServerObject *SO in objects) {
         //check if it's our guy
-        if (![MO isKindOfClass:[EWServerObject class]]) {
+        if (![SO isKindOfClass:[EWServerObject class]]) {
             continue;
         }
         //First test MO exist
-        if (![context existingObjectWithID:MO.objectID error:NULL]) {
-            DDLogError(@"*** MO you are trying to modify doesn't exist in the sqlite: %@", MO.objectID);
+        if (![context existingObjectWithID:SO.objectID error:NULL]) {
+            DDLogError(@"*** MO you are trying to modify doesn't exist in the sqlite: %@", SO.objectID);
             continue;
         }
         
         
         //skip if marked save to local
-        if ([self.saveToLocalItems containsObject:MO.objectID]) {
-			NSUInteger index = [self.saveToLocalItems indexOfObject:MO.objectID];
+        if ([self.saveToLocalItems containsObject:SO.objectID]) {
+			NSUInteger index = [self.saveToLocalItems indexOfObject:SO.objectID];
 			[self.saveToLocalItems removeObjectAtIndex:index];
             continue;
         }
 		
 		//Pre-save validate
-		BOOL good = [EWSync validateSO:MO];
+		BOOL good = [EWSync validateSO:SO];
 		if (!good) {
 			continue;
 		}
 		
-        BOOL mine = [EWSync checkAccess:MO];
+        BOOL mine = [EWSync checkAccess:SO];
         if (!mine) {
-            DDLogWarn(@"!!! Skip updating other's object %@ with changes %@", MO.serverID, MO.changedKeys);
+            DDLogWarn(@"!!! Skip updating other's object %@ with changes %@", SO.serverID, SO.changedKeys);
             continue;
         }
         
-        if ([insertedObjects containsObject:MO]) {
+        if ([insertedObjects containsObject:SO]) {
             //enqueue to insertQueue
-            [self appendInsertQueue:MO];
+            [self appendInsertQueue:SO];
             
             //*** we should not add updatedAt here, as it is the criteria for enqueue. Two Inserts could be possible: downloaded from server or created here. Therefore we need to add createdAt at local creation point.
             //change updatedAt
@@ -338,22 +338,22 @@ NSManagedObjectContext *mainContext;
         }
         
         //additional check for updated object
-        if ([updatedObjects containsObject:MO]) {
+        if ([updatedObjects containsObject:SO]) {
             
             //check if updated keys exist
-            NSArray *changedKeys = MO.changedKeys;
+            NSArray *changedKeys = SO.changedKeys;
             if (changedKeys.count > 0) {
                 
                 //add changed keys to record
-                NSSet *changed = [self.changeRecords objectForKey:MO.serverID] ?:[NSSet new];
+                NSSet *changed = [self.changeRecords objectForKey:SO.serverID] ?:[NSSet new];
                 changed = [changed setByAddingObjectsFromArray:changedKeys];
-                [self.changeRecords setObject:changed forKey:MO.objectID];
+                [self.changeRecords setObject:changed forKey:SO.objectID];
                 
                 //add to queue
-                [self appendUpdateQueue:MO];
+                [self appendUpdateQueue:SO];
                 
                 //change updatedAt: If MO already has updatedAt, then update the timestamp
-                [MO setValue:[NSDate date] forKeyPath:kUpdatedDateKey];
+                [SO setValue:[NSDate date] forKeyPath:kUpdatedDateKey];
             }
         }
         
@@ -385,8 +385,6 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Upload worker
-
-
 - (void)updateParseObjectFromManagedObject:(EWServerObject *)managedObject{
     NSError *error;
     
@@ -776,13 +774,13 @@ NSManagedObjectContext *mainContext;
 }
 
 
-+ (BOOL)checkAccess:(NSManagedObject *)mo{
-    if (!mo.serverID) {
++ (BOOL)checkAccess:(EWServerObject *)SO{
+    if (!SO.serverID) {
         return YES;
     }
     
     //first see if cached PO exist
-    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectForID:mo.serverID];
+    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectForID:SO.serverID];
     if (po.ACL != nil) {
         BOOL write = [po.ACL getWriteAccessForUser:[PFUser currentUser]] || [po.ACL getPublicWriteAccess];
         return write;
@@ -790,12 +788,12 @@ NSManagedObjectContext *mainContext;
     
     //if no ACL, use MO to determine
     __block EWPerson *p;
-    if ([mo.entity.name isEqualToString:kSyncUserClass]) {
-        p = (EWPerson *)mo;
+    if ([SO.entity.name isEqualToString:kSyncUserClass]) {
+        p = (EWPerson *)SO;
     }else{
-        [mo.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+        [SO.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
             if ([obj.destinationEntity.name isEqualToString:kSyncUserClass]) {
-                p = [mo valueForKey:key];
+                p = [SO valueForKey:key];
                 *stop = YES;
             }
         }];
