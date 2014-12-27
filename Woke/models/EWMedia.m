@@ -27,18 +27,19 @@
     }
     
     if (!self.author) {
+        DDLogError(@"Media %@ missing authur.", self.objectId);
         good = NO;
     }
     
     if ([self.type isEqualToString:kMediaTypeVoice]) {
         if(!self.mediaFile){
-            DDLogError(@"Media %@ type voice with no mediaFile.", self.serverID);
+            DDLogError(@"Media %@ type voice with no mediaFile.", self.objectId);
             good = NO;
         }
     }
     
     if (!self.receiver) {
-        DDLogError(@"Media %@ with no receiver.", self.serverID);
+        DDLogError(@"Media %@ with no receiver.", self.objectId);
         good = NO;
     }
     
@@ -94,20 +95,20 @@
     [file refresh];
 }
 
-- (void)downloadMediaFileWithCompletion:(VoidBlock)block{
+- (void)downloadMediaFileWithCompletion:(ErrorBlock)block{
     EWMediaFile *file = self.mediaFile;
     if (!file) {
         [self refreshInBackgroundWithCompletion:^(NSError *error){
             [self.mediaFile refreshInBackgroundWithCompletion:^(NSError *err){
                 if (block) {
-                    block();
+                    block(err);
                 }
             }];
         }];
     }else{
         [file refreshInBackgroundWithCompletion:^(NSError *error){
             if (block) {
-                block();
+                block(error);
             }
         }];
     }

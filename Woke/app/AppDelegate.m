@@ -80,8 +80,11 @@ UIViewController *rootViewController;
 #endif
     if ([EWAccountManager isLoggedIn]) {
         [[EWAccountManager sharedInstance] fetchCurrentUser:[PFUser currentUser]];
-        [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *error) {
+        [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
+            if (error) {
+                DDLogError(@"With error: %@", error);
+            }
         }];
         
         //show main view controller

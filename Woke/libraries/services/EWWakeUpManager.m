@@ -335,11 +335,6 @@
 }
 
 #pragma mark - Play for wake up view
-- (void)reloadMedias{
-    self.medias = [EWPerson myUnreadMedias];
-}
-
-
 - (void)playNextVoiceWithPause{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kMediaPlayInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //check if playing media is changed
@@ -350,6 +345,7 @@
         [self playNextVoice];
     });
 }
+
 - (void)playNextVoice{
     
     //Active session

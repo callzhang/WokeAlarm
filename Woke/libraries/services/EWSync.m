@@ -109,7 +109,7 @@ NSManagedObjectContext *mainContext;
     self.saveCallbacks = [NSMutableArray new];
     self.saveToLocalItems = [NSMutableArray new];
     self.deleteToLocalItems = [NSMutableArray new];
-    self.serverObjectPool = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
+    self.serverObjectCache = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
     self.changeRecords = [NSMutableDictionary new];
     
 }
@@ -156,6 +156,7 @@ NSManagedObjectContext *mainContext;
     //determin network reachability
     if (!self.isReachable) {
         NSLog(@"Network not reachable, skip uploading");
+        [self runCompletionBlocks:self.saveCallbacks];
         return;
     }
     
@@ -182,8 +183,8 @@ NSManagedObjectContext *mainContext;
     }
     
     //clear save/delete to local items
-    self.saveToLocalItems = [NSMutableArray new];
-    self.deleteToLocalItems = [NSMutableArray new];
+    //self.saveToLocalItems = [NSMutableArray new];
+    //self.deleteToLocalItems = [NSMutableArray new];
     
     //clear queues
     [self clearQueue:kParseQueueInsert];
@@ -194,6 +195,7 @@ NSManagedObjectContext *mainContext;
 	//skip if no changes
     if (workingObjects.count == 0 && deletedServerObjects.count == 0 && _saveCallbacks.count == 0){
         DDLogInfo(@"No change detacted, skip uploading");
+        [self runCompletionBlocks:self.saveCallbacks];
         return;
     }
     //logging
@@ -230,49 +232,38 @@ NSManagedObjectContext *mainContext;
         
     } completion:^(BOOL success, NSError *error) {
         
-        //completion block
-        if (callbacks.count) {
-            DDLogVerbose(@"=========== Start running completion block (%lu) =============", (unsigned long)callbacks.count);
-            for (EWSavingCallback block in callbacks){
-                block();
-            }
-        }
-        
         DDLogVerbose(@"=========== Finished uploading to saver ===============");
-        NSSet *reminningWorkingObjects = [self getObjectFromQueue:kParseQueueWorking];
-        if (reminningWorkingObjects.count > 0) {
-            DDLogError(@"*** With failures: (ID)%@(Entity)%@", [reminningWorkingObjects valueForKey:@"objectId"], [reminningWorkingObjects valueForKeyPath: @"entity.name"]);
-            
-            [self clearQueue:kParseQueueWorking];
-        }
-        if (workingChangedRecords.count) {
-            DDLogVerbose(@"*** With remaining changed records: %@", workingChangedRecords);
-        }
+        [self runCompletionBlocks:callbacks];
         
-        self.isUploading = NO;
     }];
+}
+
+- (void)runCompletionBlocks:(NSArray *)callbacks{
+    //TODO: use object-specific block as callback block
+    if (callbacks.count) {
+        DDLogVerbose(@"=========== Start running completion block (%lu) =============", (unsigned long)callbacks.count);
+        for (EWSavingCallback block in callbacks){
+            block();
+        }
+    }
     
+    NSSet *remainningWorkingObjects = [self getObjectFromQueue:kParseQueueWorking];
+    if (remainningWorkingObjects.count > 0) {
+        DDLogError(@"*** With failures: (ID)%@ (Entity)%@", [remainningWorkingObjects valueForKey:@"objectId"], [remainningWorkingObjects valueForKeyPath: @"entity.name"]);
+    }
+    
+    self.isUploading = NO;
 }
 
 - (void)resumeUploadToServer{
     NSSet *workingMOs = [self workingQueue];
     NSSet *deletePOs = [self deleteQueue];
     if (workingMOs.count > 0 || deletePOs.count > 0) {
-        NSLog(@"There are %lu MOs need to upload or %lu MOs need to delete", (unsigned long)workingMOs.count, (unsigned long)deletePOs.count);
-        for (NSManagedObject *MO in workingMOs) {
-            if (MO.serverID) {
-                NSLog(@"MO %@(%@) resumed to UPDATE queue", MO.entity.name, MO.serverID);
-                [self appendUpdateQueue:MO];
-            }else{
-                NSLog(@"MO %@(%@) resumed to INSERT queue", MO.entity.name, MO.objectID);
-                [self appendInsertQueue:MO];
-            }
-            
-            [self removeObjectFromWorkingQueue:MO];
-        }
-        NSParameterAssert([self workingQueue].count == 0);
+        DDLogInfo(@"There are %lu MOs need to upload or %lu MOs need to delete, resume uploading!", (unsigned long)workingMOs.count, (unsigned long)deletePOs.count);
         
         [self uploadToServer];
+    }else{
+        DDLogWarn(@"Nothing to resume uploading");
     }
 }
 
@@ -312,6 +303,8 @@ NSManagedObjectContext *mainContext;
         if ([self.saveToLocalItems containsObject:SO.objectID]) {
 			NSUInteger index = [self.saveToLocalItems indexOfObject:SO.objectID];
 			[self.saveToLocalItems removeObjectAtIndex:index];
+            [self removeObjectFromInsertQueue:SO];
+            [self removeObjectFromUpdateQueue:SO];
             continue;
         }
 		
@@ -355,30 +348,29 @@ NSManagedObjectContext *mainContext;
                 [SO setValue:[NSDate date] forKeyPath:kUpdatedDateKey];
             }
         }
-        
-        
     }
     
-    for (NSManagedObject *MO in deletedObjects) {
+    for (NSManagedObject *SO in deletedObjects) {
         //check if it's our guy
-        if (![MO isKindOfClass:[EWServerObject class]]) {
-            continue;
+        if (![SO isKindOfClass:[EWServerObject class]]) continue;
+        
+        if ([self.deleteToLocalItems containsObject:SO.serverID]) {
+            //remove PO from delete queue if any
+            [self removeObjectFromDeleteQueue:[PFObject objectWithoutDataWithClassName:SO.serverClassName objectId:SO.serverID]];
+            //remove deleteToLocal mark
+            NSUInteger index = [self.deleteToLocalItems indexOfObject:SO.objectID];
+            [self.deleteToLocalItems removeObjectAtIndex:index];
         }
-        if ([self.deleteToLocalItems containsObject:MO.serverID]) {
-            [self removeObjectFromDeleteQueue:[PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:MO.serverID]];
-            continue;
-        }
-        if (MO.serverID) {
-            NSLog(@"~~~> MO %@(%@) is going to be DELETED, enqueue PO to delete queue.", MO.entity.name, [MO valueForKey:kParseObjectID]);
-            
-            PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:MO.serverID];
-            
-            [self.serverObjectPool removeObjectForKey:MO.serverID];
-            
+        else if (SO.serverID) {
+            NSLog(@"~~~> MO %@(%@) is going to be DELETED, enqueue PO to delete queue.", SO.entity.name, [SO valueForKey:kParseObjectID]);
+            //get PO reference
+            PFObject *PO = [PFObject objectWithoutDataWithClassName:SO.serverClassName objectId:SO.serverID];
+            //remove PO from cache
+            [self.serverObjectCache removeObjectForKey:SO.serverID];
+            //add PO to delete queue
             [self appendObjectToDeleteQueue:PO];
         }
     }
-    
 }
 
 
@@ -402,10 +394,13 @@ NSManagedObjectContext *mainContext;
     if (parseObjectId) {
         //download
         object =[self getParseObjectWithClass:managedObject.serverClassName ID:parseObjectId error:&error];
-        
+        if ([object isNewerThanMO]) {
+            DDLogWarn(@"The PO %@(%@) being updated from MO is newer than MO", object.parseClassName, object.objectId);
+        }
         if (!object || error) {
             if ([error code] == kPFErrorObjectNotFound) {
                 DDLogError(@"PO %@ couldn't be found!", managedObject.serverClassName);
+                managedObject.objectId = nil;
             }
 			else if ([error code] == kPFErrorConnectionFailed) {
                 DDLogError(@"Uh oh, we couldn't even connect to the Parse Cloud!");
@@ -426,7 +421,7 @@ NSManagedObjectContext *mainContext;
     if (!object) {
         //insert
         object = [PFObject objectWithClassName:managedObject.serverClassName];
-        
+        error = nil;
         [object save:&error];//need to save before working on PFRelation
         if (!error) {
             DDLogVerbose(@"+++> CREATED PO %@(%@)", object.parseClassName, object.objectId);
@@ -492,13 +487,13 @@ NSManagedObjectContext *mainContext;
 			}
 			
 			[self removeObjectFromDeleteQueue:parseObject];
-			[self.serverObjectPool removeObjectForKey:parseObject.objectId];
+			[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 		}];
 	}
 	@catch (NSException *exception) {
 		DDLogError(@"Error in deleting PO: %@, reason: %@", parseObject, exception.description);
 		[self removeObjectFromDeleteQueue:parseObject];
-		[self.serverObjectPool removeObjectForKey:parseObject.objectId];
+		[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 	}
 }
 
@@ -828,11 +823,11 @@ NSManagedObjectContext *mainContext;
 }
 
 - (PFObject *)getCachedParseObjectForID:(NSString *)objectId{
-    return [self.serverObjectPool objectForKey:objectId];
+    return [self.serverObjectCache objectForKey:objectId];
 }
 
 - (void)setCachedParseObject:(PFObject *)PO {
-    [self.serverObjectPool setObject:PO forKey:PO.objectId];
+    [self.serverObjectCache setObject:PO forKey:PO.objectId];
 }
 
 - (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error{

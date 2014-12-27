@@ -60,7 +60,7 @@ typedef void (^EWSavingCallback)(void);
 @interface EWSync : NSObject
 @property NSMutableArray *saveCallbacks; //MO save callback
 @property AFNetworkReachabilityManager *reachability;
-@property ELAWellCached *serverObjectPool;
+@property ELAWellCached *serverObjectCache;
 @property NSMutableDictionary *changeRecords;
 @property NSMutableArray *saveToLocalItems;
 @property NSMutableArray *deleteToLocalItems;

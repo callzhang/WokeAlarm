@@ -13,10 +13,10 @@
 @interface EWAccountManager : NSObject <CLLocationManagerDelegate>
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 
-- (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion;
+- (void)loginFacebookCompletion:(ErrorBlock)completion;
 - (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion;
 - (void)fetchCurrentUser:(PFUser *)user;
-- (void)refreshEverythingIfNecesseryWithCompletion:(void (^)(BOOL isNewUser, NSError *error))completion;
+- (void)refreshEverythingIfNecesseryWithCompletion:(ErrorBlock)completion;
 + (BOOL)isLoggedIn;
 - (void)logout;
 

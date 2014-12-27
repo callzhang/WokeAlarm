@@ -28,32 +28,22 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 //TODO: refactor to EWSession
 + (BOOL)isLoggedIn {
-    return [[NSUserDefaults standardUserDefaults]  boolForKey:@"Loggin"];
+    return [PFUser currentUser] != nil;
 }
 
-+ (void)setLoggedIn:(BOOL)loggedIn {
-    [[NSUserDefaults standardUserDefaults] setBool:loggedIn forKey:@"Loggin"];
-    
-    if (loggedIn) {
-        DDLogInfo(@"[c] Broadcast Person login notification");
-        [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
-    }
-}
-
-- (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion {
+- (void)loginFacebookCompletion:(ErrorBlock)completion {
     //login with facebook
     [PFFacebookUtils logInWithPermissions:[[self class] facebookPermissions] block:^(PFUser *user, NSError *error) {
         if (user) {
             //fetch core data and set as current user (me)
             [self fetchCurrentUser:user];
             //refresh me if needed
-            [self refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *err) {
+            [self refreshEverythingIfNecesseryWithCompletion:^(NSError *err){
                 //if new user, link with facebook
                 if([PFUser currentUser].isNew){
                     /**
                      *  Handle external event such as welcoming message and broadcasting new user to the community
                      */
-                    //    [EWAccountManager linkWithFacebook];
                     NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
                     EWAlert(msg);
                     [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
@@ -61,20 +51,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 
                 //logged into the Core Data user
                 if (completion) {
-                    completion(isNewUser, err);
+                    completion(err);
                 }
             }];
         }
         else {
             if (error) {
                 if (completion) {
-                    completion(NO, error);
+                    completion(error);
                 }
             }
             else {
                 NSError *error2 = [NSError errorWithDomain:EWErrorDomain code:-1 userInfo:@{EWErrorInfoDescriptionKey: @"User Cancelled Log"}];
                 if (completion) {
-                    completion(NO, error2);
+                    completion(error2);
                 }
             }
         }
@@ -87,36 +77,41 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 }
 
 //login Core Data User with Server User (PFUser)
-- (void)refreshEverythingIfNecesseryWithCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
+- (void)refreshEverythingIfNecesseryWithCompletion:(ErrorBlock)completion{
     //here we have three scenarios:
     //1) Old user, everything should be update to date
     //2) New user, everything copied from defaul template and upload to server
     //3) Existing user but first time login on this phone, we need to download user data first and THEN execute login sequence
     
     //save me
-    if (![[self class] isLoggedIn]){
-        if ([EWSync sharedInstance].workingQueue.count == 0) {
-            DDLogError(@"Upload queue is not empty when user logging in.");
+    if (![PFUser currentUser].isNewerThanMO || [PFUser currentUser].isNew){
+        //Scenario (1): Old user continue using app, no need to refresh
+        //Scenario (2): new user, nothing to refresh
+        [[EWSync sharedInstance] resumeUploadToServer];
+        
+        if (completion) {
+            DDLogInfo(@"[c] Broadcast Person login notification");
+            [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
+
+            completion(nil);
         }
-        //TODO: if no pending uploads, refresh self
+    }
+    else {
+        //scenario (3)
+        //refresh self and regardless of any pending uploads (they will be uploaded later)
+        //TODO: create a server function to update self
+
         [[EWPerson me] refreshInBackgroundWithCompletion:^(NSError *error){
             if (completion) {
-                //set login mark
-                [[self class] setLoggedIn:YES];
+                DDLogInfo(@"[c] Broadcast Person login notification");
+                [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
                 
                 DDLogInfo(@"[d] Run completion block.");
-                completion([PFUser currentUser].isNew, nil);
+                completion(error);
                 
                 [[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
             }
         }];
-    }
-    else {
-        if (completion) {
-            //set login mark
-            [[self class] setLoggedIn:YES];
-            completion([PFUser currentUser].isNew, nil);
-        }
     }
 }
 
@@ -153,8 +148,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [EWSession sharedSession].currentUser = nil;
     
     [FBSession.activeSession closeAndClearTokenInformation];
-    
-    [[self class] setLoggedIn:NO];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLogoutNotification object:self userInfo:nil];
 }

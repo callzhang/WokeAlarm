@@ -1,4 +1,4 @@
-//
+    //
 //  EWAVManager.m
 //  EarlyWorm
 //
@@ -139,7 +139,10 @@
             if (mi.mediaFile.audio) {
                 [self playSoundFromData:mi.mediaFile.audio];
             }else{
-                [mi downloadMediaFileWithCompletion:^{
+                [mi downloadMediaFileWithCompletion:^(NSError *error){
+                    if (error) {
+                        DDLogError(@"Failed to download media file: %@", error.description);
+                    }
                     [self playSoundFromData:mi.mediaFile.audio];
                 }];
             }

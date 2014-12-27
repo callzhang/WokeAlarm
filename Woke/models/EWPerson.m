@@ -30,7 +30,7 @@ NSString * const EWPersonDefaultName = @"New User";
         person.name = kDefaultUsername;
         person.preference = kUserDefaults;
         person.cachedInfo = [NSDictionary new];
-        person.updatedAt = [NSDate date];
+        //person.updatedAt = [NSDate date];
         
         [[EWAccountManager shared] updateMyFacebookInfo];
     }
@@ -41,10 +41,12 @@ NSString * const EWPersonDefaultName = @"New User";
 
 #pragma mark - Helper
 - (NSString *)genderObjectiveCaseString {
-    NSString *str = [self.gender isEqualToString:@"male"]?@"him":@"her";
-    return str;
+    return [self.gender isEqualToString:@"male"]?@"him":@"her";
 }
 
+- (NSString *)name{
+    return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+}
 
 #pragma mark - Validation
 - (BOOL)validate{

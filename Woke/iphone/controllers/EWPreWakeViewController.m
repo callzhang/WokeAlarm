@@ -79,8 +79,9 @@
 
 #pragma mark - UI
 - (void)updateViewForCurrentMedia{
-    self.profileImage.image = [EWWakeUpManager sharedInstance].currentMedia.author.profilePic;
-    self.name.text = [EWWakeUpManager sharedInstance].currentMedia.author.name;
+    EWPerson *author = [EWWakeUpManager sharedInstance].currentMedia.author;
+    self.profileImage.image = author.profilePic;
+    self.name.text = author.name;
 }
 
 - (IBAction)wakeUp:(UIButton *)sender {

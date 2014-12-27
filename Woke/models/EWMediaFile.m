@@ -91,7 +91,10 @@
     if (!self.audio) {
         good = NO;
     }
-    return YES;
+    if (!self.medias.count == 0){
+        good = NO;
+    }
+    return good;
 }
 
 @end

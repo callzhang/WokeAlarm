@@ -74,6 +74,9 @@
     NSMutableSet *friendedSet = [NSMutableSet setWithArray:friendedArray];;
     //add new friends
     [friendedSet setByAddingObjectsFromSet:allFriends];
+    if (friendedSet.count == 0) {
+        return;
+    }
     //save
     friendsActivityDic[dateKey] = [friendedSet allObjects];
     me.socialGraph.friendshipTimeline = friendsActivityDic;
