@@ -59,7 +59,7 @@
         
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
             EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
-            [localMe refreshRelatedWithCompletion:^{
+            [localMe refreshRelatedWithCompletion:^(NSError *error){
                 
                 [localMe updateMyCachedFriends];
                 [[EWAccountManager shared] updateMyFacebookInfo];

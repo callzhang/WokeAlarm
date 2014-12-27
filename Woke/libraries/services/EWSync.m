@@ -10,7 +10,7 @@
 #import "EWUIUtil.h"
 #import "EWServerObject.h"
 #import "AFNetworkReachabilityManager.h"
-
+#import <WellCached/ELAWellCached.h>
 
 
 //============ Global shortcut to main context ===========
@@ -92,8 +92,8 @@ NSManagedObjectContext *mainContext;
             //resume refresh MO
             NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh];
             for (NSManagedObject *MO in MOs) {
-                [MO refreshInBackgroundWithCompletion:^{
-                    DDLogInfo(@"%@(%@) refreshed after network resumed.", MO.entity.name, MO.serverID);
+                [MO refreshInBackgroundWithCompletion:^(NSError *error){
+                    DDLogInfo(@"%@(%@) refreshed after network resumed with error:%@", MO.entity.name, MO.serverID, error.description);
                 }];
             }
         } else {
@@ -109,7 +109,7 @@ NSManagedObjectContext *mainContext;
     self.saveCallbacks = [NSMutableArray new];
     self.saveToLocalItems = [NSMutableArray new];
     self.deleteToLocalItems = [NSMutableArray new];
-    self.serverObjectPool = [NSMutableDictionary new];
+    self.serverObjectPool = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
     self.changeRecords = [NSMutableDictionary new];
     
 }
@@ -316,14 +316,13 @@ NSManagedObjectContext *mainContext;
         }
 		
 		//Pre-save validate
-		BOOL good = [EWSync validateSO:SO];
-		if (!good) {
+		if (![EWSync validateSO:SO]) {
 			continue;
 		}
 		
-        BOOL mine = [EWSync checkAccess:SO];
-        if (!mine) {
-            DDLogWarn(@"!!! Skip updating other's object %@ with changes %@", SO.serverID, SO.changedKeys);
+        //check ACL
+        if (![EWSync checkAccess:SO]) {
+            DDLogWarn(@"!!! Skip uploading object with no access rights %@ with changes %@", SO.serverID, SO.changedKeys);
             continue;
         }
         
@@ -806,10 +805,6 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Parse helper methods
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query{
-	return [EWSync findServerObjectWithQuery:query error:NULL];
-}
-
 + (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error{
 
 	NSArray *result = [query findObjects:error];
@@ -833,7 +828,7 @@ NSManagedObjectContext *mainContext;
 }
 
 - (PFObject *)getCachedParseObjectForID:(NSString *)objectId{
-    return [self.serverObjectPool valueForKey:objectId];
+    return [self.serverObjectPool objectForKey:objectId];
 }
 
 - (void)setCachedParseObject:(PFObject *)PO {
@@ -862,15 +857,22 @@ NSManagedObjectContext *mainContext;
             }];
 			
 			//find on server
-			object = [[EWSync findServerObjectWithQuery:q] firstObject];
-
+			object = [[EWSync findServerObjectWithQuery:q error:error] firstObject];
         }
-        
         return object;
     }
     
     DDLogError(@"[%s] Passed in empty ID, upload first!", __func__);
     return nil;
+}
+
+- (NSString *)description{
+    //print current states and queues
+    NSMutableString *string = [NSMutableString stringWithFormat:@"EWSync object with current reachability: %d", [EWSync isReachable]];
+    [string appendFormat:@"\nCurrent updating item: %@", [[EWSync sharedInstance].updateQueue valueForKey:kParseObjectID]];
+    [string appendFormat:@"\nCurrent inserting item: %@", [[EWSync sharedInstance].insertQueue valueForKey:kParseObjectID]];
+    [string appendFormat:@"\nCurrent deleting item: %@", [[EWSync sharedInstance].deleteQueue valueForKey:kParseObjectID]];
+    return string;
 }
 
 @end

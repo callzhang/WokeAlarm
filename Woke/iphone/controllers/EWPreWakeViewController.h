@@ -13,8 +13,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
 - (IBAction)wakeUp:(UIButton *)sender;
 - (IBAction)newMedia:(id)sender;
+- (IBAction)next:(id)sender;
 @property (weak, nonatomic) IBOutlet UIProgressView *progress;
 @property (weak, nonatomic) IBOutlet UILabel *name;
-@property (nonatomic, strong) NSArray *medias;
-@property (nonatomic, strong) EWMedia *currentMedia;
 @end

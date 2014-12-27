@@ -34,6 +34,7 @@ target 'Woke' do
   pod 'ReactiveViewModel', '~> 0.2'
   pod 'NYXImagesKit', '~> 2.3'
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
+  pod 'WellCached'
 end
 
 target 'WokeTests' do

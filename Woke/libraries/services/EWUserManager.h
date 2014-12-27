@@ -32,17 +32,17 @@
  
  4) After finished refreshing, update fb info and broadcast user login
  */
-+ (void)loginWithServerUser:(PFUser *)user withCompletionBlock:(void (^)(void))completionBlock;
++ (void)loginWithServerUser:(PFUser *)user withCompletionBlock:(VoidBlock)completionBlock;
 
 /**
  Login with local plist or ADID
  */
-+ (void)loginWithDeviceIDWithCompletionBlock:(void (^)(void))block;
++ (void)loginWithDeviceIDWithCompletionBlock:(VoidBlock)block;
 
 /**
  Log in with temporary parse user
  */
-//+ (void)loginWithTempUser:(void (^)(void))block;
+//+ (void)loginWithTempUser:(VoidBlock)block;
 
 /**
  Cache user's data
@@ -63,13 +63,13 @@
 #pragma mark - facebook
 //high level stuff
 + (void)loginParseWithFacebookWithCompletion:(void (^)(NSError *err))block;
-//+ (void)loginUsingFacebookWithCompletion:(void (^)(void))block;
+//+ (void)loginUsingFacebookWithCompletion:(VoidBlock)block;
 + (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user;
 + (void)getFacebookFriends;
 + (void)updateFacebookInfo;
 //low level request
 + (NSArray *)facebookPermissions;
-+ (void)openFacebookSessionWithCompletion:(void (^)(void))block;
++ (void)openFacebookSessionWithCompletion:(VoidBlock)block;
 + (void)handleFacebookException:(NSError *)exception;
 //+ (void)facebookSessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error;
 

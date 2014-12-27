@@ -283,6 +283,12 @@
 #define COCOAPODS_VERSION_MINOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_PATCH_VBFPopFlatButton 5
 
+// WellCached
+#define COCOAPODS_POD_AVAILABLE_WellCached
+#define COCOAPODS_VERSION_MAJOR_WellCached 0
+#define COCOAPODS_VERSION_MINOR_WellCached 1
+#define COCOAPODS_VERSION_PATCH_WellCached 1
+
 // apptentive-ios
 #define COCOAPODS_POD_AVAILABLE_apptentive_ios
 #define COCOAPODS_VERSION_MAJOR_apptentive_ios 1

@@ -27,7 +27,7 @@
 + (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block;
 
 #pragma mark - Push methods
-+ (void)broadcastMessage:(NSString *)msg onSuccess:(void (^)(void))block onFailure:(void (^)(void))failureBlock;
++ (void)broadcastMessage:(NSString *)msg onSuccess:(VoidBlock)block onFailure:(VoidBlock)failureBlock;
 
 
 /**

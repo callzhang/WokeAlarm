@@ -37,7 +37,7 @@ const struct EWActivityTypes EWActivityTypes = {
         good = NO;
     }
     else if ([self.type isEqualToString:EWActivityTypes.alarm]) {
-        if (self.time) {
+        if (!self.time) {
             DDLogError(@"Activity %@ missing time", self.objectId);
             good = NO;
         }

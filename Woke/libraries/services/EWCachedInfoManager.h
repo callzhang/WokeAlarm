@@ -51,6 +51,6 @@
 + (EWCachedInfoManager *)myManager;
 
 //cachedInfo management
-- (void)updateActivityCacheWithCompletion:(void (^)(void))block;
+- (void)updateActivityCacheWithCompletion:(VoidBlock)block;
 - (void)updateCachedFriends;
 @end

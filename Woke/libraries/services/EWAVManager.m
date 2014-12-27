@@ -30,7 +30,6 @@
 
 @implementation EWAVManager
 @synthesize player, recorder;
-@synthesize media;
 
 
 +(EWAVManager *)sharedManager{
@@ -121,26 +120,31 @@
 	[self setDeviceVolume:1.0];
     if (!mi){
         [self playSoundFromFileName:kSilentSound];
-    }else if (media == mi){
+    }else if (_media == mi){
         DDLogInfo(@"Same media passed in, skip.");
 		if (!self.player.isPlaying) {
 			[self.player play];
 		}
-		[self updateViewForPlayerState:player];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerPlayingNewMedia object:media];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:mi];
         return;
     }
     else{
         //new media
-        media = mi;
+        _media = mi;
 		
 		//lock screen
 		[self displayNowPlayingInfoToLockScreen:mi];
 		
-        if ([media.type isEqualToString:kMediaTypeVoice] || !media.type) {
+        if ([mi.type isEqualToString:kMediaTypeVoice] || !mi.type) {
+            if (mi.mediaFile.audio) {
+                [self playSoundFromData:mi.mediaFile.audio];
+            }else{
+                [mi downloadMediaFileWithCompletion:^{
+                    [self playSoundFromData:mi.mediaFile.audio];
+                }];
+            }
             
-            [self playSoundFromData:mi.mediaFile.audio];
-			[[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerPlayingNewMedia object:media];
+			[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:mi];
             
         }else{
             DDLogVerbose(@"Unknown type of media, skip");
@@ -197,7 +201,7 @@
 	}
 	self.player.delegate = self;
 	if ([player play]){
-		[self updateViewForPlayerState:player];
+		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:url];
 	}else{
 		DDLogVerbose(@"*** Could not play with AVPlayer, using system sound");
 		[self playSystemSound:url];
@@ -222,7 +226,7 @@
 	}
 	self.player.delegate = self;
 	if ([player play]){
-		[self updateViewForPlayerState:player];
+		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:data];
 	}else{
 		DDLogVerbose(@"*** Could not play with AVAudioPlayer, using system sound");
 		NSString *path = [NSTemporaryDirectory() stringByAppendingString:@"audioTempFile"];
@@ -236,9 +240,8 @@
 	[player stop];
 	//[qPlayer pause];
 	[avplayer pause];
-	[updateTimer invalidate];
+	//[updateTimer invalidate];
 	//remove target action
-	
 }
 
 #pragma mark - Record
@@ -246,11 +249,10 @@
     if (recorder.isRecording) {
         
         [recorder stop];
-        [updateTimer invalidate];
         recorder = nil;
         
         [[AVAudioSession sharedInstance] setActive: NO error: nil];
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishRecording object:nil];
         DDLogVerbose(@"Recording stopped");
     } else {
         NSDictionary *recordSettings = @{AVEncoderAudioQualityKey: @(AVAudioQualityLow),
@@ -277,43 +279,42 @@
             DDLogVerbose(@"Unable to record");
             return nil;
         }
-        //setup the UI
-        [self updateViewForRecorderState:recorder];
+        //post notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartRecording object:nil];
         
     }
     return recordingFileUrl;
 }
 
 #pragma mark - update UI
-- (void)updateViewForPlayerState:(AVAudioPlayer *)p
-{
-    //timer stop first
-    [updateTimer invalidate];
-    //set up timer
-    if (p.playing){
-		player.volume = 1.0;
-        
-	}
-	else{
-		//[lvlMeter_in setPlayer:nil];
-		[updateTimer invalidate];
-	}
+- (float)playingProgress{
+    float t = [EWAVManager sharedManager].player.currentTime;
+    float T = [EWAVManager sharedManager].player.duration;
+    return t/T;
 }
 
-- (void)updateViewForRecorderState:(AVAudioRecorder *)r{
-
-	if (updateTimer)
-		[updateTimer invalidate];
-    
-	if (r.recording)
-	{
-		
-	}
-	else
-	{
-		[updateTimer invalidate];
-	}
-}
+//- (void)updateViewForPlayerState:(AVAudioPlayer *)p
+//{
+//    //set up timer
+//    if (p.playing){
+//		player.volume = 1.0;
+//	}
+//}
+//
+//- (void)updateViewForRecorderState:(AVAudioRecorder *)r{
+//
+//	if (updateTimer)
+//		[updateTimer invalidate];
+//    
+//	if (r.recording)
+//	{
+//		
+//	}
+//	else
+//	{
+//		[updateTimer invalidate];
+//	}
+//}
 
 
 //-(void)updateCurrentTime:(NSTimer *)timer{
@@ -338,15 +339,15 @@
 #pragma mark - AVAudioPlayer delegate method
 - (void)audioPlayerDidFinishPlaying: (AVAudioPlayer *)p successfully:(BOOL)flag {
     DDLogVerbose(@"Player finished (%@)", flag?@"Success":@"Failed");
-    [updateTimer invalidate];
+    //[updateTimer invalidate];
     self.player.currentTime = 0.0;
     if (self.media) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerDidFinishPlaying object:self.media];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:self.media];
     }
 }
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
-    [updateTimer invalidate];
+    //[updateTimer invalidate];
     [displaylink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     displaylink = nil;
     DDLogVerbose(@"Recording reached max length");
@@ -431,6 +432,7 @@
     AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundUrl, &soundID);
     //AudioServicesPlayAlertSound(soundID);
     AudioServicesPlaySystemSound(soundID);
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:path];
     
     //long background server
     UIBackgroundTaskIdentifier bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
@@ -444,7 +446,7 @@
 void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
     
     if ([EWAVManager sharedManager].media) {
-        //[[NSNotificationCenter defaultCenter] postNotificationName:kAudioPlayerDidFinishPlaying object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:nil];
         //DDLogVerbose(@"broadcasting finish event");
     }    
     [[UIApplication sharedApplication] endBackgroundTask:(NSInteger)bgTaskId];
@@ -453,12 +455,13 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 
 #pragma mark - Remote control
 - (void)displayNowPlayingInfoToLockScreen:(EWMedia *)m{
+    if (!m) return;
     if (!m.author) return;
         
     //only support iOS5+
     if (NSClassFromString(@"MPNowPlayingInfoCenter")){
         
-        if (!m) m = media;
+        self.media = m;
         EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
         
         NSString *title = nextAlarm.time.mt_stringFromDateWithFullWeekdayTitle;
@@ -470,7 +473,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
         dict[MPMediaItemPropertyAlbumTitle] = title?:@"";
         
         //cover
-        UIImage *cover = media.mediaFile.image ?: media.author.profilePic;
+        UIImage *cover = m.mediaFile.image ?: m.author.profilePic;
         if (cover) {
             MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:cover];
             dict[MPMediaItemPropertyArtwork] = artwork;
@@ -488,7 +491,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 
 
 #pragma mark - Volume control
-- (void)volumeFadeWithCompletion:(void (^)(void))block{
+- (void)volumeFadeWithCompletion:(VoidBlock)block{
     if (self.player.volume > 0) {
         self.player.volume = (float)self.player.volume - 0.1f;
         [self performSelector:@selector(volumeFadeWithCompletion:) withObject:block afterDelay:0.2];

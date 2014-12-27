@@ -10,7 +10,7 @@
 
 @interface EWMainNavigationController : EWBaseNavigationController
 - (UIBarButtonItem *)menuBarButtonItem;
-- (void)toogleMenuCompletion:(void (^)(void))completion;
+- (void)toogleMenuCompletion:(VoidBlock)completion;
 
 @end
 

@@ -15,11 +15,11 @@ NSUInteger static maxLoop = 100;
 @interface EWWakeUpManager : NSObject
 @property (nonatomic, strong) EWAlarm *alarm;
 //@property (nonatomic, strong) EWActivity *currentActivity;
-@property (nonatomic, strong) NSMutableArray *medias;
+@property (nonatomic, strong) NSArray *medias;
 @property (nonatomic) NSUInteger loopCount;
-@property (nonatomic) NSUInteger currentMediaIndex;
-//@property (nonatomic) BOOL isWakingUp;
-@property (nonatomic) BOOL playNext;
+@property (nonatomic) EWMedia *currentMedia;
+//@property (nonatomic) BOOL isWakingUp;//moved to session manager
+@property (nonatomic) BOOL continuePlay;
 
 + (EWWakeUpManager *)sharedInstance;
 
@@ -101,9 +101,8 @@ NSUInteger static maxLoop = 100;
  *
  *  @return The waker
  */
+- (void)reloadMedias;
 - (void)stopPlayingVoice;
-- (EWPerson *)currentWaker;
 - (NSUInteger)currentMediaIndex;
-- (float)playingProgress;
 
 @end

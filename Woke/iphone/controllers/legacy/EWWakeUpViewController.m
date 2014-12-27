@@ -8,26 +8,19 @@
 
 #import "EWWakeUpViewController.h"
 #import "EWMediaCell.h"
-#import "EWMediaManager.h"
-#import "EWMedia.h"
 #import "EWAVManager.h"
 #import "EWMediaSlider.h"
 #import "EWWakeUpManager.h"
 #import "EWPostWakeUpViewController.h"
-#import "EWBackgroundingManager.h"
 #import "EWUIUtil.h"
-#import "EWActivity.h"
 #import "UIView+Layout.h"
 #import "UIViewController+Blur.h"
 #import "FBKVOController.h"
-#import "EWActivityManager.h"
 
 #define cellIdentifier                  @"EWMediaViewCell"
 
 
 @interface EWWakeUpViewController (){
-    
-    NSArray *medias;
     CGRect headerFrame;
     NSTimer *timeTimer;
     NSTimer *progressTimer;
@@ -43,18 +36,6 @@
 @synthesize person = _person;
 
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    
-    //_activity = [EWPerson myCurrentAlarmActivity];
-    //medias = [EWPerson myUnreadMedias];
-    //DATA
-    [self initData];
-    
-    return self;
-}
-
-
 #pragma mark - Life Cycle
 
 - (void)viewDidLoad {
@@ -66,8 +47,7 @@
     //HUD
     [self.view showLoopingWithTimeout:0];
     
-    //[self initData];
-    [self initView];
+    [self initData];
     
     [EWUIUtil dismissHUDinView:self.view];
     
@@ -80,6 +60,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    [self initView];
     //timer updates
     timeTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
     progressTimer = [NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(updatePlayingCellAndProgress) userInfo:nil repeats:YES];
@@ -98,10 +79,12 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+    //remove AVManager state
+    [[EWWakeUpManager sharedInstance] stopPlayingVoice];
     
     [self resignRemoteControlEventsListener];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAudioPlayerDidFinishPlaying object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAVManagerDidFinishPlaying object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNewMediaNotification object:nil];
     
     [timeTimer invalidate];
@@ -110,28 +93,19 @@
 }
 
 - (void)initData {
-//    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES];
-//    medias = [[_activity.medias allObjects] mutableCopy];
-//    [medias sortUsingDescriptors:@[sort]];
-    
-    medias = [EWPerson myUnreadMedias];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         [self.tableView reloadData];
     }];
     
     //first time loop
-    [EWWakeUpManager sharedInstance].playNext = YES;
     timePast = 1;
     [EWWakeUpManager sharedInstance].loopCount = kLoopMediaPlayCount;
     
     //notification
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kAudioPlayerDidFinishPlaying object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kAVManagerDidFinishPlaying object:nil];
     //responder to remote control
     [self prepareRemoteControlEventsListener];
-    
-    //Active session
-    [[EWAVManager sharedManager] registerActiveAudioSession];
     
     [_tableView reloadData];
 }
@@ -219,7 +193,7 @@
         [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:n inSection:0] animated:YES];
     });
     
-    [EWWakeUpManager sharedInstance].playNext = NO;
+    [EWWakeUpManager sharedInstance].continuePlay = NO;
 }
 
 -(void)presentPostWakeUpVC
@@ -228,7 +202,7 @@
     
     //stop music
     [[EWWakeUpManager sharedInstance] stopPlayingVoice];
-    [EWWakeUpManager sharedInstance].playNext = NO;
+    [EWWakeUpManager sharedInstance].continuePlay = NO;
     
     //release the pointer in wakeUpManager
     [[EWWakeUpManager sharedInstance] wake];
@@ -247,7 +221,7 @@
 #pragma mark - tableViewController delegate methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return medias.count;
+    return [EWWakeUpManager sharedInstance].medias.count;
 }
 
 
@@ -264,11 +238,11 @@
     EWMediaCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     //get media item
     EWMedia *mi;
-    if (indexPath.row >= (NSInteger)medias.count) {
+    if (indexPath.row >= (NSInteger)[EWWakeUpManager sharedInstance].medias.count) {
         NSLog(@"@@@ WakupView asking for deleted media");
         mi = nil;
     }else{
-        mi = [medias objectAtIndex:indexPath.row];
+        mi = [[EWWakeUpManager sharedInstance].medias objectAtIndex:indexPath.row];
     }
     
     //title
@@ -300,7 +274,7 @@
             //media is being played
             NSLog(@"Deleting current cell, play next");
             if ([tableView numberOfRowsInSection:0] > 1) {
-                [[EWWakeUpManager sharedInstance] playNext];
+                [[EWWakeUpManager sharedInstance] playNextVoice];
             }
         }
         
@@ -422,7 +396,7 @@
     }
     
     //update the progress
-    self.currentCell.mediaBar.value = [EWWakeUpManager sharedInstance].playingProgress;
+    self.currentCell.mediaBar.value = [EWAVManager sharedManager].playingProgress;
 }
 
 
@@ -478,12 +452,12 @@
                 
             case UIEventSubtypeRemoteControlPreviousTrack:
                 DDLogVerbose(@"Received remote control: Previous");
-                [[EWWakeUpManager sharedInstance] playNext];
+                [[EWWakeUpManager sharedInstance] playNextVoice];
                 break;
                 
             case UIEventSubtypeRemoteControlNextTrack:
                 DDLogVerbose(@"Received remote control: Next");
-                [[EWWakeUpManager sharedInstance] playNext];
+                [[EWWakeUpManager sharedInstance] playNextVoice];
                 break;
                 
             case UIEventSubtypeRemoteControlStop:

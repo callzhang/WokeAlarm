@@ -16,6 +16,9 @@
 #import "EWPerson.h"
 #import "NSDate+Extend.h"
 #import "EWAVManager.h"
+#import "EWPerson+Woke.h"
+#import "EWActivityManager.h"
+#import "EWDefines.h"
 
 @interface WakeUpProcessTest : XCTestCase
 
@@ -34,9 +37,9 @@
 }
 
 - (void)testCurrentAlarm{
-    EWActivity *activity = [EWWakeUpManager sharedInstance].currentActivity;
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     NSLog(@"Current activit: %@", activity);
-    EWAlarm *alarm = [EWWakeUpManager sharedInstance].alarm;
+    EWAlarm *alarm = [EWPerson myCurrentAlarm];
     NSLog(@"Current alarm: %@", alarm);
     XCTAssertEqual(activity.time, alarm.time.nextOccurTime);
 }
@@ -44,7 +47,7 @@
 - (void)testSleep{
     //sleep
     [[EWWakeUpManager sharedInstance] sleep];
-    NSDate *alarmTime = [EWWakeUpManager sharedInstance].currentActivity.time;
+    NSDate *alarmTime = [EWPerson myCurrentAlarm].time;
     NSLog(@"Current alarm time is: %@", alarmTime);
     XCTAssert([EWSession sharedSession].isSleeping, @"Sleep status not detacted");
 }
@@ -57,11 +60,11 @@
     //expected states
     XCTAssert([EWSession sharedSession].isWakingUp, @"Failed to wake up");
     //wait for notification
-    [[NSNotificationCenter defaultCenter] addObserverForName:kWakeTimeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+    [[NSNotificationCenter defaultCenter] addObserverForName:kWakeStartNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             XCTAssert([EWSession sharedSession].isWakingUp, @"wake up status not expected");
             [expectation fulfill];
-            //TODO: need the base view controller respose to the "kWakeTimeNotification" notification and present wake up view
+            //TODO: need the base view controller respose to the "kWakeStartNotification" notification and present wake up view
             //wait for sound playing for 30s
             if ([EWAVManager sharedManager].player.isPlaying) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -84,11 +87,11 @@
 
 - (void)testWake{
     //wake up
-    NSDate *alarmTime = [EWWakeUpManager sharedInstance].currentActivity.time;
+    NSDate *alarmTime = [EWPerson myCurrentAlarmActivity].time;
     [[EWWakeUpManager sharedInstance] wake];
-    NSDate *nextAlarmTime = [EWWakeUpManager sharedInstance].currentActivity.time;
+    NSDate *nextAlarmTime = [EWPerson myCurrentAlarmActivity].time;
     NSLog(@"Next alarm time is: %@", nextAlarmTime);
-    XCTAssert([alarmTime isEqualToDate:nextAlarmTime]);
+    XCTAssert(![alarmTime isEqualToDate:nextAlarmTime]);
 }
 
 - (void)testPerformanceExample {

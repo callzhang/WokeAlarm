@@ -43,14 +43,14 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 //    _blurDelegate = [EWBlurNavigationControllerDelegate new];
 //    self.delegate = _blurDelegate;
     // listern for notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentWakeUpViewWithActivity:) name:kWakeTimeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentWakeUpViewWithActivity:) name:kWakeStartNotification object:nil];
 }
 
 - (void)onMenuButton:(UIButton *)sender {
     [self toogleMenuCompletion:nil];
 }
 
-- (void)toogleMenuCompletion:(void (^)(void))completion {
+- (void)toogleMenuCompletion:(VoidBlock)completion {
     
     static BOOL animating = NO;
     

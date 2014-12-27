@@ -26,34 +26,33 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     //data source
-    [self refresh];
+    [[EWWakeUpManager sharedInstance] playNextVoice];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         if (note.object == [EWPerson myCurrentAlarmActivity]) {
-            [self refresh];
+            [self updateViewForCurrentMedia];
         }
     }];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:kAudioPlayerDidFinishPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
-        NSUInteger currentPlayCount = [self.medias indexOfObjectIdenticalTo:self.currentMedia]+1;
-        if (currentPlayCount >= self.medias.count) {
-            currentPlayCount = 0;
-        }
-        self.currentMedia = self.medias[currentPlayCount];
-        [self refresh];
-        [[EWAVManager sharedManager] playMedia:self.currentMedia];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
+        
+        [self updateViewForCurrentMedia];
+        //[[EWAVManager sharedManager] playMedia:self.currentMedia];
     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    
     //update view
     [self updateViewForCurrentMedia];
     
     //update progress
     progressUpdateTimer = [NSTimer bk_scheduledTimerWithTimeInterval:.1 block:^(NSTimer *timer) {
         if ([EWAVManager sharedManager].player.isPlaying) {
-            if (self.progress.alpha < 1) {
+            if (self.progress.alpha == 0) {
                 [UIView animateWithDuration:0.5 animations:^{
                     self.progress.alpha = 1;
                 }];
@@ -62,22 +61,14 @@
             float d = [EWAVManager sharedManager].player.duration;
             self.progress.progress = t / d;
         }else{
-            if (self.progress.alpha >0) {
+            if (self.progress.alpha == 1) {
                 [UIView animateWithDuration:0.5 animations:^{
                     self.progress.alpha = 0;
                 }];
             }
         }
-        
     } repeats:YES];
     
-    //register playing info
-    [[NSNotificationCenter defaultCenter] addObserverForName:kAudioPlayerPlayingNewMedia object:nil queue:nil usingBlock:^(NSNotification *note) {
-        //update info
-        [self updateViewForCurrentMedia];
-    }];
-    
-    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -87,19 +78,9 @@
 
 
 #pragma mark - UI
-
-- (void)refresh{
-    self.medias = [EWPerson myUnreadMedias];
-    if (!self.currentMedia) {
-        self.currentMedia = self.medias.firstObject;
-        [[EWAVManager sharedManager] playMedia:self.currentMedia];
-    }
-    [self updateViewForCurrentMedia];
-}
-
 - (void)updateViewForCurrentMedia{
-    self.profileImage.image = self.currentMedia.author.profilePic;
-    self.name.text = self.currentMedia.author.name;
+    self.profileImage.image = [EWWakeUpManager sharedInstance].currentMedia.author.profilePic;
+    self.name.text = [EWWakeUpManager sharedInstance].currentMedia.author.name;
 }
 
 - (IBAction)wakeUp:(UIButton *)sender {
@@ -122,5 +103,9 @@
             DDLogError(@"Failed test voice request: %@", error.description);
         }
     }];
+}
+
+- (IBAction)next:(id)sender {
+    [[EWWakeUpManager sharedInstance] playNextVoice];
 }
 @end

@@ -213,7 +213,7 @@
 
 
 #pragma mark - Update Activity
-- (void)updateActivityCacheWithCompletion:(void (^)(void))block{
+- (void)updateActivityCacheWithCompletion:(VoidBlock)block{
     //TODO
     NSParameterAssert([_person isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {

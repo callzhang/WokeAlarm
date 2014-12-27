@@ -177,5 +177,5 @@ typedef void (^SenderBlock)(id sender);
 
 //Wake Up
 #define kSleepTimeNotification          @"sleep_time"
-#define kWakeTimeNotification           @"wake_time"
+#define kWakeStartNotification           @"wake_time"
 #define kVoicePlayNotification          @"voice_play"

@@ -16,7 +16,14 @@
 extern NSManagedObjectContext *mainContext;
 typedef void (^EWSavingCallback)(void);
 
+//Error codes:
+//http://www.lifeasbob.com/Code/ErrorCodes.aspx
+//or https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/NSError_Codes
+#define kEWSyncErrorNoConnection            668 //NO_CONNECTION
+#define kEWSyncErrorNoServerID              113 //NO_MORE_SEARCH_HANDLES: No more internal file identifiers available
+
 @class AFNetworkReachabilityManager;
+@class ELAWellCached;
 
 #pragma mark - Sync parameters
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
@@ -53,7 +60,7 @@ typedef void (^EWSavingCallback)(void);
 @interface EWSync : NSObject
 @property NSMutableArray *saveCallbacks; //MO save callback
 @property AFNetworkReachabilityManager *reachability;
-@property NSMutableDictionary *serverObjectPool;
+@property ELAWellCached *serverObjectPool;
 @property NSMutableDictionary *changeRecords;
 @property NSMutableArray *saveToLocalItems;
 @property NSMutableArray *deleteToLocalItems;
@@ -153,7 +160,6 @@ typedef void (^EWSavingCallback)(void);
 
 #pragma mark - Parse helper methods
 //PO query
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query;
 + (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error;
 + (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 //- (PFObject *)getCachedParseObjectForID:(NSString *)parseID;

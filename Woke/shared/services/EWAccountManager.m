@@ -99,7 +99,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             DDLogError(@"Upload queue is not empty when user logging in.");
         }
         //TODO: if no pending uploads, refresh self
-        [[EWPerson me] refreshInBackgroundWithCompletion:^{
+        [[EWPerson me] refreshInBackgroundWithCompletion:^(NSError *error){
             if (completion) {
                 //set login mark
                 [[self class] setLoggedIn:YES];
@@ -277,7 +277,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }
 }
 
-- (void)openFacebookSessionWithCompletion:(void (^)(void))block{
+- (void)openFacebookSessionWithCompletion:(VoidBlock)block{
     
     [FBSession openActiveSessionWithReadPermissions:[EWAccountManager facebookPermissions]
                                        allowLoginUI:YES

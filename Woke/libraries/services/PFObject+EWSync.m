@@ -57,7 +57,7 @@
         if ([value isKindOfClass:[NSData class]]) {
             //data
             if (!expectChange && POValue) {
-                DDLogVerbose(@"MO attribute %@(%@)->%@ not change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
+                DDLogVerbose(@"MO attribute %@(%@)->%@ no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
                 return;
             }
             //TODO: video file
@@ -108,8 +108,7 @@
             if ([obj isToMany]) {
                 //To-Many relation
                 //First detect if has inverse relation, if not, we use Array to represent the relation
-                //Exceptin: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
-                //TODO: in the next release we need to use Array for all relation except relation to EWPerson
+                //TODO: Exceptin: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
                 if (!obj.inverseRelationship/* && ![key isEqualToString:kUserClass]*/) {
                     //No inverse relation, use array of pointer
                     
@@ -146,7 +145,7 @@
                     for (PFObject *PO in relatedParseObjectsToDelete) {
                         [parseRelation removeObject:PO];
                         //We don't update the inverse PFRelation as they should be updated from that MO
-                        NSLog(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], obj.name, PO.objectId);
+                        DDLogVerbose(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, managedObject.serverID, key, PO.objectId);
                     }
                 }
                 
@@ -159,7 +158,7 @@
                         //PFObject *relatedParseObject = [EWDataStore getCachedParseObjectForID:parseID];
                         PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
                         
-                        DDLogVerbose(@"+++> To-many relation on PO %@->%@(%@) added when updating from MO", managedObject.entity.name, relatedParseObject.parseClassName, relatedParseObject.objectId);
+                        DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
                         [parseRelation addObject:relatedParseObject];
                         
                     } else {
@@ -304,7 +303,7 @@
     NSDate *updatedMO = [mo valueForKey:kUpdatedDateKey];
     if (updatedPO && updatedMO) {
         if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {
-            DDLogVerbose(@"PO is newer than MO: %@ > %@", updatedPO, updatedMO);
+            //DDLogVerbose(@"PO is newer than MO: %@ > %@", updatedPO, updatedMO);
             return YES;
         }else{
             return NO;

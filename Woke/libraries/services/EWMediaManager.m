@@ -49,7 +49,7 @@
 #if !DEBUG
     [q whereKey:kParseObjectID notContainedIn:mediasFromWoke];
 #endif
-    NSArray *voices = [EWSync findServerObjectWithQuery:q];
+    NSArray *voices = [EWSync findServerObjectWithQuery:q error:nil];
     NSUInteger i = arc4random_uniform(voices.count);
     PFObject *voice = voices[i];
     if (voice) {
@@ -131,7 +131,7 @@
     [query whereKey:EWMediaRelationships.receiver equalTo:[PFUser currentUser]];
     NSSet *localAssetIDs = [localMe.unreadMedias valueForKey:kParseObjectID];
     [query whereKey:kParseObjectID notContainedIn:localAssetIDs.allObjects];
-    NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query];
+    NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query error:nil];
 	BOOL newMedia = NO;
     for (PFObject *po in mediaPOs) {
         //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];

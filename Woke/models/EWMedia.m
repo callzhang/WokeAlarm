@@ -38,7 +38,7 @@
     }
     
     if (!self.receiver) {
-        DDLogError(@"Found media %@ with no receiver and no activity.", self.serverID);
+        DDLogError(@"Media %@ with no receiver.", self.serverID);
         good = NO;
     }
     
@@ -86,12 +86,31 @@
 
 #pragma mark - Media File
 - (void)downloadMediaFile{
-    EWMediaFile *file;
-    if (!self.mediaFile) {
+    EWMediaFile *file = self.mediaFile;
+    if (!file) {
         [self refresh];
         file = self.mediaFile;
     }
     [file refresh];
+}
+
+- (void)downloadMediaFileWithCompletion:(VoidBlock)block{
+    EWMediaFile *file = self.mediaFile;
+    if (!file) {
+        [self refreshInBackgroundWithCompletion:^(NSError *error){
+            [self.mediaFile refreshInBackgroundWithCompletion:^(NSError *err){
+                if (block) {
+                    block();
+                }
+            }];
+        }];
+    }else{
+        [file refreshInBackgroundWithCompletion:^(NSError *error){
+            if (block) {
+                block();
+            }
+        }];
+    }
 }
 
 #pragma mark - DELETE

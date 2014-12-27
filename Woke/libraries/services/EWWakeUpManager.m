@@ -22,23 +22,6 @@
 #import "EWActivityManager.h"
 #import "EWAlarmManager.h"
 #import "NSTimer+BlocksKit.h"
-//#import "AppDelegate.h"
-
-//UI
-#import "EWWakeUpViewController.h"
-#import "EWPostWakeUpViewController.h"
-//#import "EWSleepViewController.h"
-//#import "EWPostWakeUpViewController.h"
-//#import "UIView+Extend.h"
-//#import "UIView+Blur.h"
-//#import "UIViewController+Blur.h"
-
-
-@interface EWWakeUpManager()
-//retain the controller so that it won't deallocate when needed
-//@property (nonatomic, retain) EWWakeUpViewController *controller;
-@end
-
 
 @implementation EWWakeUpManager
 
@@ -53,20 +36,19 @@
 
 - (id)init{
 	self = [super init];
-    _alarm = [EWPerson myCurrentAlarm];
+    self.alarm = [EWPerson myCurrentAlarm];
+    self.medias = [EWPerson myUnreadMedias];
+    self.continuePlay = YES;
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingEnterNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[self alarmTimerCheck];
 		[self sleepTimerCheck];
 	}];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoice) name:kAudioPlayerDidFinishPlaying object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithPause) name:kAVManagerDidFinishPlaying object:nil];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        self.medias = [EWPerson myUnreadMedias];
+    }];
 	return self;
-}
-
-- (EWAlarm *)alarm{
-    return [EWPerson myCurrentAlarm];
 }
 
 #pragma mark - Handle push notification
@@ -75,7 +57,6 @@
     NSParameterAssert([pushType isEqualToString:kPushTypeMedia]);
     NSString *type = notification[kPushMediaType];
     NSString *mediaID = notification[kPushMediaID];
-    EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivity];
 	
     if (!mediaID) {
         NSLog(@"Push doesn't have media ID, abort!");
@@ -201,12 +182,12 @@
     if (isLaunchedFromLocalNotification) {
         
         NSLog(@"Entered from local notification, start wakeup view now");
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
     }else if (isLaunchedFromRemoteNotification){
         
         NSLog(@"Entered from remote notification, start wakeup view now");
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
     }else{
         //fire an alarm
@@ -230,7 +211,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(d * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //present wakeupVC and paly when displayed
             [[EWAVManager sharedManager] volumeFadeWithCompletion:^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
             }];
         });
     }
@@ -240,9 +221,9 @@
 + (BOOL)isRootPresentingWakeUpView{
     //determin if WakeUpViewController is presenting
     UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
-    if ([vc isKindOfClass:[EWWakeUpViewController class]]) {
+    if ([NSStringFromClass([vc class]) isEqualToString:@"EWWakeUpViewController"]) {
         return YES;
-    }else if ([vc isKindOfClass:[EWPostWakeUpViewController class]]){
+    }else if ([NSStringFromClass([vc class]) isEqualToString:@"EWPreWakeViewController"]){
         return YES;
     }
     return NO;
@@ -354,77 +335,78 @@
 }
 
 #pragma mark - Play for wake up view
-- (void)playNextVoice{
-    EWMedia *mediaJustFinished = mediaJustFinished = [EWAVManager sharedManager].media;
-    float t = 0;
-    if (mediaJustFinished) {
-        t = kMediaPlayInterval;
-    }
-    //delay 3s if there is a media playing previously
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(t * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+- (void)reloadMedias{
+    self.medias = [EWPerson myUnreadMedias];
+}
+
+
+- (void)playNextVoiceWithPause{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kMediaPlayInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //check if playing media is changed
-        if (mediaJustFinished != [EWAVManager sharedManager].media) {
+        if (self.currentMedia != [EWAVManager sharedManager].media) {
             DDLogInfo(@"Media has changed since during the delay. Skip!");
             return;
         }
+        [self playNextVoice];
+    });
+}
+- (void)playNextVoice{
+    
+    //Active session
+    [[EWAVManager sharedManager] registerActiveAudioSession];
+    
+    //check if need to play next
+    if (!self.continuePlay){
+        DDLogInfo(@"Next is disabled, stop playing next");
+        return;
+    }
+    //return if no  medias
+    if (!_medias.count) {
+        DDLogWarn(@"[%s] No media to play", __FUNCTION__);
+        return;
+    }
+    
+    NSUInteger mediaJustPlayedIdx = [_medias indexOfObject:self.currentMedia];//if not found, next = 0
+    if (mediaJustPlayedIdx == NSNotFound) {
+        mediaJustPlayedIdx = 0;
+    } else {
+        mediaJustPlayedIdx ++;
+    }
+    
+    if (mediaJustPlayedIdx < _medias.count){
+        //get next cell
+        NSLog(@"Play next song (%ld)", (long)mediaJustPlayedIdx);
+        self.currentMedia = _medias[mediaJustPlayedIdx];
+        [[EWAVManager sharedManager] playMedia:_currentMedia];
         
-        //check if need to play next
-        if (!self.playNext){
-            DDLogInfo(@"Next is disabled, stop playing next");
-            return;
-        }
-        //return if no  medias
-        if (!_medias.count) {
-            return;
-        }
-        
-        NSUInteger mediaJustPlayed = [_medias indexOfObject:mediaJustFinished];//if not found, next = 0
-        if (mediaJustPlayed != _currentMediaIndex) {
-            DDLogInfo(@"Media order has changed since last known. Skip!");
-            return;
-        }
-        _currentMediaIndex ++;
-        
-        if (_currentMediaIndex < _medias.count){
-            //get next cell
-            NSLog(@"Play next song (%ld)", (long)_currentMediaIndex);
-            [[EWAVManager sharedManager] playMedia:_medias[_currentMediaIndex]];
+    }else{
+        if ((--_loopCount)>0) {
+            //play the first if loopCount > 0
+            NSLog(@"Looping, %ld loop left", (long)_loopCount);
+            self.currentMedia = _medias.firstObject;
+            [[EWAVManager sharedManager] playMedia:_currentMedia];
             
         }else{
-            if ((--_loopCount)>0) {
-                //play the first if loopCount > 0
-                NSLog(@"Looping, %ld loop left", (long)_loopCount);
-                [[EWAVManager sharedManager] playMedia:_medias.firstObject];
-                
-            }else{
-                NSLog(@"Loop finished, stop playing");
-                //nullify all cell info in EWAVManager
-                self.currentMediaIndex = 0;
-                
-                [EWAVManager sharedManager].media = nil;
-                return;
-            }
+            NSLog(@"Loop finished, stop playing");
+            //nullify all info in EWAVManager
+            [self stopPlayingVoice];
+            self.currentMedia = nil;
+            return;
         }
-    });
+    }
 }
 
 - (void)stopPlayingVoice{
     [[EWAVManager sharedManager] stopAllPlaying];
 }
 
-- (float)playingProgress{
-    float t = [EWAVManager sharedManager].player.currentTime;
-    float T = [EWAVManager sharedManager].player.duration;
-    return t/T;
-}
-
 - (void)playVoiceAtIndex:(NSUInteger)n{
+    self.currentMedia = _medias[n];
     [[EWAVManager sharedManager] playMedia:_medias[n]];
 }
 
-- (EWPerson *)currentWaker{
-    EWMedia *mediaPlaying = _medias[_currentMediaIndex];
-    return mediaPlaying.author;
+- (NSUInteger)currentMediaIndex{
+    return [_medias indexOfObjectIdenticalTo:_currentMedia];
 }
 
 @end

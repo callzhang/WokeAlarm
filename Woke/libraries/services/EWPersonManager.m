@@ -106,7 +106,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 //    
 //}
 
-- (void)getWakeesInBackgroundWithCompletion:(void (^)(void))block{
+- (void)getWakeesInBackgroundWithCompletion:(VoidBlock)block{
     NSParameterAssert([NSThread isMainThread]);
     //add finish block to the queue
     if (block) {

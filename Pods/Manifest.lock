@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.4.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
+    - AFNetworking/NSURLConnection (= 2.4.1)
+    - AFNetworking/NSURLSession (= 2.4.1)
+    - AFNetworking/Reachability (= 2.4.1)
+    - AFNetworking/Security (= 2.4.1)
+    - AFNetworking/Serialization (= 2.4.1)
+    - AFNetworking/UIKit (= 2.4.1)
   - AFNetworking/NSURLConnection (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -21,13 +21,13 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - APAddressBook (0.1.5):
-    - APAddressBook/Core
+    - APAddressBook/Core (= 0.1.5)
   - APAddressBook/Core (0.1.5)
   - apptentive-ios (1.6.1):
-    - apptentive-ios/arc-files
+    - apptentive-ios/arc-files (= 1.6.1)
   - apptentive-ios/arc-files (1.6.1)
   - BlocksKit (2.2.5):
-    - BlocksKit/All
+    - BlocksKit/All (= 2.2.5)
   - BlocksKit/All (2.2.5):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
@@ -43,7 +43,7 @@ PODS:
     - BlocksKit/DynamicDelegate
   - Bolts (1.1.3)
   - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions
+    - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
@@ -52,7 +52,7 @@ PODS:
     - CocoaLumberjack/Core (~> 1.9)
   - DACircularProgress (2.2.0)
   - dyci (0.1.5.6):
-    - dyci/Injections
+    - dyci/Injections (= 0.1.5.6)
   - dyci/Injections (0.1.5.6)
   - Expecta (0.3.1)
   - Facebook-iOS-SDK (3.20.0):
@@ -66,22 +66,22 @@ PODS:
   - KVOController (1.0.3)
   - KZAsserts (1.0)
   - KZBootstrap (0.5.3):
-    - KZBootstrap/Core
+    - KZBootstrap/Core (= 0.5.3)
   - KZBootstrap/Core (0.5.3):
     - KZAsserts (~> 1.0)
   - libextobjc (0.4.1):
-    - libextobjc/EXTADT
-    - libextobjc/EXTConcreteProtocol
-    - libextobjc/EXTKeyPathCoding
-    - libextobjc/EXTNil
-    - libextobjc/EXTSafeCategory
-    - libextobjc/EXTScope
-    - libextobjc/EXTSelectorChecking
-    - libextobjc/EXTSynthesize
-    - libextobjc/NSInvocation+EXT
-    - libextobjc/NSMethodSignature+EXT
-    - libextobjc/RuntimeExtensions
-    - libextobjc/UmbrellaHeader
+    - libextobjc/EXTADT (= 0.4.1)
+    - libextobjc/EXTConcreteProtocol (= 0.4.1)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1)
+    - libextobjc/EXTNil (= 0.4.1)
+    - libextobjc/EXTSafeCategory (= 0.4.1)
+    - libextobjc/EXTScope (= 0.4.1)
+    - libextobjc/EXTSelectorChecking (= 0.4.1)
+    - libextobjc/EXTSynthesize (= 0.4.1)
+    - libextobjc/NSInvocation+EXT (= 0.4.1)
+    - libextobjc/NSMethodSignature+EXT (= 0.4.1)
+    - libextobjc/RuntimeExtensions (= 0.4.1)
+    - libextobjc/UmbrellaHeader (= 0.4.1)
   - libextobjc/EXTADT (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/EXTConcreteProtocol (0.4.1):
@@ -105,7 +105,7 @@ PODS:
   - libextobjc/RuntimeExtensions (0.4.1)
   - libextobjc/UmbrellaHeader (0.4.1)
   - MagicalRecord (2.3.0-beta.5):
-    - MagicalRecord/Core
+    - MagicalRecord/Core (= 2.3.0-beta.5)
   - MagicalRecord/Core (2.3.0-beta.5)
   - MTDates (0.14.3)
   - MYBlurIntroductionView (1.0.3)
@@ -122,7 +122,7 @@ PODS:
   - pop (1.0.7)
   - Reachability (3.1.1)
   - ReactiveCocoa (2.3.1):
-    - ReactiveCocoa/UI
+    - ReactiveCocoa/UI (= 2.3.1)
   - ReactiveCocoa/Core (2.3.1):
     - ReactiveCocoa/no-arc
   - ReactiveCocoa/no-arc (2.3.1)
@@ -133,6 +133,7 @@ PODS:
   - RHAddressBook (1.1.1)
   - VBFPopFlatButton (0.0.5):
     - pop
+  - WellCached (0.1.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.4.1)
@@ -163,6 +164,7 @@ DEPENDENCIES:
   - ReactiveViewModel (~> 0.2)
   - RHAddressBook (~> 1.1.1)
   - VBFPopFlatButton (~> 0.0.5)
+  - WellCached
 
 EXTERNAL SOURCES:
   dyci:
@@ -205,5 +207,6 @@ SPEC CHECKSUMS:
   ReactiveViewModel: 78387196df2e7535bb2776c41df15dbb17300f8a
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
   VBFPopFlatButton: 023eb57c9c8e0a77d1cf926621085b0727b70b15
+  WellCached: d139993bce456f14c12af349586cfd50f77c1d5c
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0

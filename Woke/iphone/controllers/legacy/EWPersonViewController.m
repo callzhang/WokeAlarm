@@ -137,7 +137,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         NSLog(@"Person %@ is outdated and needs refresh in background", person.name);
         
 
-        [person refreshShallowWithCompletion:^{
+        [person refreshShallowWithCompletion:^(NSError *error){
             [self initData];
             [self initView];
         }];
