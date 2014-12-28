@@ -39,7 +39,7 @@
 
 //Check media assets relationship
 - (BOOL)checkMediaAssets;
-- (void)checkMediaAssetsInBackground;
+- (void)checkUnreadMediasInBackground;
 
 //get ramdom voice
 - (EWMedia *)getWokeVoice;

@@ -112,17 +112,17 @@
     NSParameterAssert([NSThread isMainThread]);
 
     BOOL new;
-    new = [self checkMediaAssetsInContext:mainContext];
+    new = [self checkUnreadMediasInContext:mainContext];
     return new;
 }
 
-- (void)checkMediaAssetsInBackground{
+- (void)checkUnreadMediasInBackground{
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        [self checkMediaAssetsInContext:localContext];
+        [self checkUnreadMediasInContext:localContext];
     }];
 }
 
-- (BOOL)checkMediaAssetsInContext:(NSManagedObjectContext *)context{
+- (BOOL)checkUnreadMediasInContext:(NSManagedObjectContext *)context{
     if (![PFUser currentUser]) {
         return NO;
     }

@@ -88,10 +88,10 @@
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
     DDLogVerbose(@"4. Check my unread media");//media also will be checked with background fetch
-    [[EWMediaManager sharedInstance] checkMediaAssetsInBackground];
+    [[EWMediaManager sharedInstance] checkUnreadMediasInBackground];
     
     //updating facebook friends
-    DDLogVerbose(@"5. Updating facebook friends");
+    //DDLogVerbose(@"5. Updating facebook friends");
     //TODO: why?
 //    [EWUserManager getFacebookFriends];
     
@@ -106,7 +106,7 @@
     //[[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWPerson me]];
 	
 	//location
-	DDLogVerbose(@"8. Start location recurring update");
+	DDLogVerbose(@"8. Start location update");
 	[[EWAccountManager shared] registerLocation];
 	
     
@@ -134,16 +134,15 @@
     if (![EWPerson me]) {
         return;
     }
-    //this will run at the beginning and every 600s
-    DDLogVerbose(@"Start sync service");
 	
 	//fetch everyone
+#ifdef DEBUG
 	DDLogVerbose(@"[1] Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
-	
+#endif
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-		DDLogVerbose(@"[2] Start location recurring update");
+		DDLogVerbose(@"Start location recurring update");
 		[[EWAccountManager shared] registerLocation];
 	}
     

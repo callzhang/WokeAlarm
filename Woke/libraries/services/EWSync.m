@@ -845,7 +845,7 @@ NSManagedObjectContext *mainContext;
             //or if PO is older than MO
             PFQuery *q = [PFQuery queryWithClassName:class.serverClass];
             [q whereKey:kParseObjectID equalTo:ID];
-            
+            //add other uni-direction relationship as well (to masximize data per call)
             [entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
                 if (obj.isToMany && !obj.inverseRelationship) {
                     [q includeKey:key];
