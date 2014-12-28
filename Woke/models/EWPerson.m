@@ -26,7 +26,7 @@ NSString * const EWPersonDefaultName = @"New User";
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{
     EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
     if (user.isNew || !user[@"name"]) {
-        DDLogInfo(@"New user logged in, assign new value");
+        DDLogInfo(@"New user signed up, assign default value");
         person.name = kDefaultUsername;
         person.preference = kUserDefaults;
         person.cachedInfo = [NSDictionary new];

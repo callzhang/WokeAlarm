@@ -86,6 +86,7 @@
 
 - (IBAction)wakeUp:(UIButton *)sender {
     DDLogInfo(@"Wake button pressed!");
+    [[EWWakeUpManager sharedInstance] wake];
 }
 
 - (IBAction)newMedia:(id)sender {

@@ -23,6 +23,7 @@ NSManagedObjectContext *mainContext;
 @property NSManagedObjectContext *context; //the main context(private)
 @property NSMutableDictionary *parseSaveCallbacks;
 @property (nonatomic) NSTimer *saveToServerDelayTimer;
+@property AFNetworkReachabilityManager *reachability;
 @end
 
 
@@ -117,11 +118,11 @@ NSManagedObjectContext *mainContext;
 
 #pragma mark - connectivity
 + (BOOL)isReachable{
-    return [EWSync sharedInstance].reachability.isReachable;
+    return [EWSync sharedInstance].isReachable;
 }
 
 - (BOOL)isReachable{
-    return self.reachability.isReachable;
+    return !self.reachability.networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable;
 }
 
 #pragma mark - ============== Parse Server methods ==============
@@ -571,7 +572,7 @@ NSManagedObjectContext *mainContext;
         NSURL *url = [NSURL URLWithString:str];
         NSManagedObjectID *ID = [self.context.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
         if (!ID) {
-            NSLog(@"@@@ ManagedObjectID not found: %@", url);
+            DDLogError(@"@@@ ManagedObjectID not found: %@", url);
             //remove from queue
             [validMOs removeObject:str];
             [[NSUserDefaults standardUserDefaults] setObject:[validMOs copy] forKey:queue];
@@ -582,7 +583,7 @@ NSManagedObjectContext *mainContext;
         if (!error && MO) {
             [set addObject:MO];
         }else{
-            NSLog(@"*** Serious error: trying to fetch MO from queue %@ failed. %@", queue, error.description);
+            DDLogError(@"*** Serious error: trying to fetch MO from main context failed. ObjectID:%@ \nError:%@", ID, error.description);
             //remove from the queue
             MO = [self.context objectWithID:ID];
             [self removeObject:MO fromQueue:queue];

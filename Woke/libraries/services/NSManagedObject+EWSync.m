@@ -15,11 +15,11 @@
 #pragma mark - Server sync
 - (void)updateValueAndRelationFromParseObject:(PFObject *)parseObject{
     if (!parseObject) {
-        DDLogWarn(@"*** PO is nil, please check!");
+        DDLogError(@"[%s] PO is nil, please check!", __FUNCTION__);
         return;
     }
     if (!parseObject.isDataAvailable) {
-        DDLogWarn(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
+        DDLogError(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
         return;
     }
     
@@ -146,6 +146,7 @@
         }
     }];
     
+    //update updatedAt
     [self setValue:[NSDate date] forKey:kUpdatedDateKey];
     
     //pre save check
@@ -183,12 +184,26 @@
             return;
         }
         id parseValue = [object objectForKey:key];
-        
+        //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
             //PFFile
             PFFile *file = (PFFile *)parseValue;
-            
-            [self.managedObjectContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+            NSString *className = [self getPropertyClassByName:key];
+            if ([NSThread isMainThread]) { //download in background
+                [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    if (!data) {
+                        DDLogError(@"Failed to download PFFile: %@", error.description);
+                        return;
+                    }
+                    if ([className isEqualToString:@"UIImage"]) {
+                        UIImage *img = [UIImage imageWithData:data];
+                        [self setValue:img forKey:key];
+                    }else{
+                        [self setValue:data forKey:key];
+                    }
+                }];
+            }
+            else{//download directly if already in background
                 NSError *error;
                 NSData *data = [file getData:&error];
                 //[file getDataWithBlock:^(NSData *data, NSError *error) {
@@ -196,17 +211,13 @@
                     DDLogError(@"Failed to download PFFile: %@", error.description);
                     return;
                 }
-                NSManagedObject *localSelf = [self MR_inContext:localContext];
-                NSString *className = [localSelf getPropertyClassByName:key];
                 if ([className isEqualToString:@"UIImage"]) {
                     UIImage *img = [UIImage imageWithData:data];
-                    [localSelf setValue:img forKey:key];
+                    [self setValue:img forKey:key];
+                }else{
+                    [self setValue:data forKey:key];
                 }
-                else{
-                    [localSelf setValue:data forKey:key];
-                }
-                
-            }];
+            }
             
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
             //contains value
@@ -236,8 +247,9 @@
             }
         }
     }];
-    
-    [self setValue:[NSDate date] forKey:kUpdatedDateKey];
+    //assigned value from PO should not be considered complete, therefore we don't timestamp on this SO
+    //[self setValue:[NSDate date] forKey:kUpdatedDateKey];
+    [self saveToLocal];
 }
 
 #pragma mark - Parse related
@@ -331,8 +343,8 @@
         [object fetch];
         //update MO
         [self updateValueAndRelationFromParseObject:object];
-        //save
-        [self saveToLocal];
+        //save: already saved in update
+        //[self saveToLocal];
     }
 }
 

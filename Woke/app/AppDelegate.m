@@ -75,9 +75,8 @@ UIViewController *rootViewController;
     EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
 #endif
-#ifdef lei
-    [NSClassFromString(@"SFDynamicCodeInjection") performSelector:@selector(disable)];
-#endif
+    
+    //Login process: https://www.lucidchart.com/documents/edit/47d70f1c-5306-dbab-81ce-6d480a005610
     if ([EWAccountManager isLoggedIn]) {
         [[EWAccountManager sharedInstance] fetchCurrentUser:[PFUser currentUser]];
         [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(NSError *error) {

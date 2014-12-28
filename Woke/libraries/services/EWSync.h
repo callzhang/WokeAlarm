@@ -22,7 +22,6 @@ typedef void (^EWSavingCallback)(void);
 #define kEWSyncErrorNoConnection            668 //NO_CONNECTION
 #define kEWSyncErrorNoServerID              113 //NO_MORE_SEARCH_HANDLES: No more internal file identifiers available
 
-@class AFNetworkReachabilityManager;
 @class ELAWellCached;
 
 #pragma mark - Sync parameters
@@ -59,7 +58,6 @@ typedef void (^EWSavingCallback)(void);
 
 @interface EWSync : NSObject
 @property NSMutableArray *saveCallbacks; //MO save callback
-@property AFNetworkReachabilityManager *reachability;
 @property ELAWellCached *serverObjectCache;
 @property NSMutableDictionary *changeRecords;
 @property NSMutableArray *saveToLocalItems;

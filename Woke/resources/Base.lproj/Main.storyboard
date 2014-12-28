@@ -777,6 +777,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="vBe-BD-0jS">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zFJ-K2-VqW">
                                 <rect key="frame" x="40" y="62" width="240" height="240"/>
                                 <constraints>
@@ -869,16 +872,20 @@
                             <constraint firstItem="VZr-RW-npd" firstAttribute="trailing" secondItem="ilK-me-T6E" secondAttribute="trailingMargin" id="Gxc-Lr-3os"/>
                             <constraint firstItem="GZo-44-KJk" firstAttribute="top" secondItem="VZr-RW-npd" secondAttribute="bottom" constant="36" id="HP2-QR-xkr"/>
                             <constraint firstItem="zFJ-K2-VqW" firstAttribute="top" secondItem="tGR-Dl-h9L" secondAttribute="bottom" constant="42" id="IcT-ND-38D"/>
+                            <constraint firstItem="vBe-BD-0jS" firstAttribute="top" secondItem="ilK-me-T6E" secondAttribute="top" id="MBX-zo-oaQ"/>
                             <constraint firstAttribute="centerX" secondItem="3Ep-2l-i5U" secondAttribute="centerX" id="OfS-Px-y8U"/>
                             <constraint firstItem="GZo-44-KJk" firstAttribute="top" secondItem="Gna-Bz-U0d" secondAttribute="bottom" constant="36" id="PMp-Q8-6Hu"/>
                             <constraint firstItem="Gna-Bz-U0d" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leadingMargin" id="PV6-FI-CGK"/>
                             <constraint firstItem="GZo-44-KJk" firstAttribute="top" secondItem="zWk-bo-o67" secondAttribute="bottom" constant="36" id="R5p-oM-Mhe"/>
                             <constraint firstAttribute="centerX" secondItem="kn5-qD-xSK" secondAttribute="centerX" id="TSL-9T-H0x"/>
                             <constraint firstItem="zWk-bo-o67" firstAttribute="leading" secondItem="Gna-Bz-U0d" secondAttribute="trailing" constant="14" id="U7C-ec-rls"/>
+                            <constraint firstAttribute="trailing" secondItem="vBe-BD-0jS" secondAttribute="trailing" id="Yk1-R7-Smb"/>
                             <constraint firstItem="VZr-RW-npd" firstAttribute="trailing" secondItem="ilK-me-T6E" secondAttribute="trailingMargin" id="bNY-NE-GKS"/>
                             <constraint firstItem="VZr-RW-npd" firstAttribute="leading" secondItem="Gna-Bz-U0d" secondAttribute="trailing" constant="94" id="frI-Qq-4Ma"/>
                             <constraint firstItem="zFJ-K2-VqW" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leadingMargin" constant="24" id="hZO-eX-cXs"/>
                             <constraint firstItem="kn5-qD-xSK" firstAttribute="top" secondItem="3Ep-2l-i5U" secondAttribute="bottom" constant="8" id="igR-NM-BxR"/>
+                            <constraint firstItem="GZo-44-KJk" firstAttribute="top" secondItem="vBe-BD-0jS" secondAttribute="bottom" id="l43-d2-2Uk"/>
+                            <constraint firstItem="vBe-BD-0jS" firstAttribute="leading" secondItem="ilK-me-T6E" secondAttribute="leading" id="lHf-3T-pzE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="zFJ-K2-VqW" secondAttribute="trailing" constant="24" id="t6o-u2-jH9"/>
                             <constraint firstItem="3Ep-2l-i5U" firstAttribute="top" secondItem="zFJ-K2-VqW" secondAttribute="bottom" constant="8" id="wmH-pc-ZEb"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Gna-Bz-U0d" secondAttribute="trailing" constant="174" id="ygU-aI-8TH"/>
@@ -906,7 +913,7 @@
         <scene sceneID="QmN-2X-vtx">
             <objects>
                 <tableViewController id="XCh-yV-M0m" customClass="EWWakeUpViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="100" sectionFooterHeight="22" id="LBn-cy-sFQ">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="100" sectionFooterHeight="80" id="LBn-cy-sFQ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -915,9 +922,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </progressView>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="70" id="c06-qU-1p3">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EWWakeUpViewCell" rowHeight="70" id="c06-qU-1p3" customClass="EWWakeUpViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c06-qU-1p3" id="K58-Ip-kC6">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="100" contentMode="center" tableViewCell="c06-qU-1p3" id="K58-Ip-kC6">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0aC-2X-cWO">
@@ -980,6 +987,11 @@
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="image" destination="0aC-2X-cWO" id="7GH-MN-leG"/>
+                                    <outlet property="name" destination="BcY-OD-Vu0" id="ee5-9a-9Rw"/>
+                                    <outlet property="progress" destination="lBZ-cE-TEw" id="wdJ-cf-3Tk"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
