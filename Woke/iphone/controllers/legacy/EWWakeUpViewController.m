@@ -31,9 +31,9 @@
 
 
 @implementation EWWakeUpViewController
-@synthesize tableView = _tableView;
-@synthesize timer, header, footer;
-@synthesize person = _person;
+//@synthesize tableView = _tableView;
+//@synthesize timer, header, footer;
+//@synthesize person = _person;
 
 
 #pragma mark - Life Cycle
@@ -42,7 +42,7 @@
     [super viewDidLoad];
     
     //origin header frame
-    headerFrame = header.frame;
+    //headerFrame = header.frame;
     
     //HUD
     [self.view showLoopingWithTimeout:0];
