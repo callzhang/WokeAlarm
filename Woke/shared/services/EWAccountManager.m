@@ -16,6 +16,7 @@
 #import "ATConnect.h"
 #import "AppDelegate.h"
 #import "EWUIUtil.h"
+#import "NSTimer+BlocksKit.h"
 @import CoreLocation;
 
 @interface EWAccountManager()
@@ -491,36 +492,47 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-    CLLocation *loc = locations.lastObject;
+    static CLLocation *loc;
+    loc = locations.lastObject;
+    [NSTimer bk_scheduledTimerWithTimeInterval:300 block:^(NSTimer *timer) {
+        DDLogInfo(@"After 300s, we accept location with accuracy of %.0fm", loc.horizontalAccuracy);
+        [manager stopUpdatingLocation];
+        [self processLocation:loc];
+    } repeats:NO];
     if (loc.horizontalAccuracy <100 && loc.verticalAccuracy < 100) {
         
         //bingo
         [manager stopUpdatingLocation];
-        if (loc.coordinate.latitude == 0 && loc.coordinate.longitude == 0) {
-            DDLogInfo(@"Using NYC coordinate on simulator");
-            loc = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
-        }
-        
-        DDLogVerbose(@"Get user location with lat: %f, lon: %f", loc.coordinate.latitude, loc.coordinate.longitude);
-        
-        //reverse search address
-        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
-        [geoloc reverseGeocodeLocation:loc completionHandler:^(NSArray *placemarks, NSError *err) {
-            
-            [EWPerson me].location = loc;
-            
-            if (!err && [placemarks count] > 0) {
-                CLPlacemark *placemark = [placemarks lastObject];
-                //get info
-                [EWPerson me].city = placemark.locality;
-                [EWPerson me].country = placemark.country;
-            } else {
-                DDLogWarn(@"%@", err.debugDescription);
-            }
-            [EWSync save];
-            
-        }];
+        [self processLocation:loc];
     }
+}
+
+- (void)processLocation:(CLLocation *)location{
+    
+    if (location.coordinate.latitude == 0 && location.coordinate.longitude == 0) {
+        DDLogInfo(@"Using NYC coordinate on simulator");
+        location = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
+    }
+    
+    DDLogVerbose(@"Get user location with lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    
+    //reverse search address
+    CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+    [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
+        
+        [EWPerson me].location = location;
+        
+        if (!err && [placemarks count] > 0) {
+            CLPlacemark *placemark = [placemarks lastObject];
+            //get info
+            [EWPerson me].city = placemark.locality;
+            [EWPerson me].country = placemark.country;
+        } else {
+            DDLogWarn(@"%@", err.debugDescription);
+        }
+        [EWSync save];
+        
+    }];
 }
 
 @end

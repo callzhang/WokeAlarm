@@ -154,7 +154,25 @@ const struct EWPersonRelationships EWPersonRelationships = {
 
 @dynamic receivedMedias;
 
+- (NSMutableSet*)receivedMediasSet {
+	[self willAccessValueForKey:@"receivedMedias"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"receivedMedias"];
+
+	[self didAccessValueForKey:@"receivedMedias"];
+	return result;
+}
+
 @dynamic receivedMessages;
+
+- (NSMutableSet*)receivedMessagesSet {
+	[self willAccessValueForKey:@"receivedMessages"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"receivedMessages"];
+
+	[self didAccessValueForKey:@"receivedMessages"];
+	return result;
+}
 
 @dynamic sentMedias;
 
@@ -168,6 +186,15 @@ const struct EWPersonRelationships EWPersonRelationships = {
 }
 
 @dynamic sentMessages;
+
+- (NSMutableSet*)sentMessagesSet {
+	[self willAccessValueForKey:@"sentMessages"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"sentMessages"];
+
+	[self didAccessValueForKey:@"sentMessages"];
+	return result;
+}
 
 @dynamic socialGraph;
 

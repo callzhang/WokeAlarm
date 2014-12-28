@@ -189,7 +189,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     for (PFUser *user in users) {
         EWPerson *person = (EWPerson *)[user managedObjectInContext:context];
         
-        //remove skipped user
+        //remove skipped user if marked skip and the statement is the same.
         NSString *skippedStatement = [EWSession sharedSession].skippedWakees[user.objectId];
         if (skippedStatement) {
             if ([skippedStatement isEqualToString:person.statement]) {

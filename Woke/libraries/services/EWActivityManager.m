@@ -103,7 +103,16 @@ NSString *const EWActivityTypeMedia = @"media";
 
 - (void)completeAlarmActivity:(EWActivity *)activity{
     NSParameterAssert([activity.type isEqualToString:EWActivityTypeAlarm]);
-    //TODO
+    if (activity != self.currentAlarmActivity) {
+        DDLogError(@"%s The activity passed in is not the current activity", __FUNCTION__);
+    }else{
+        //add unread medias to current media
+        for (EWMedia *media in [EWPerson myUnreadMedias]) {
+            [activity addMediaID:media.objectId];
+        }
+        [EWPerson me].unreadMedias = nil;
+    }
+    
     activity.completed = [NSDate date];
     self.currentAlarmActivity = nil;
 }

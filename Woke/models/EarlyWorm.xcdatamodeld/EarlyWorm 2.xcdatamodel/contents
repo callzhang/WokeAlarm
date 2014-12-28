@@ -124,9 +124,9 @@
         <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
         <element name="EWMedia" positionX="0" positionY="0" width="128" height="210"/>
         <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="EWMessage" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="EWMessage" positionX="0" positionY="0" width="128" height="30"/>
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="128" height="450"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="128" height="30"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
         <element name="EWSocial" positionX="0" positionY="0" width="128" height="210"/>
     </elements>

@@ -162,6 +162,16 @@
         return YES;
     }
     
+    //check exisitng media
+    NSMutableSet *mediasNeedToRefresh = localMe.unreadMedias.mutableCopy;
+    [mediasNeedToRefresh unionSet:localMe.receivedMedias];
+    [mediasNeedToRefresh unionSet:localMe.sentMedias];
+    [mediasNeedToRefresh filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K != nil", kParseObjectID]];
+    for (EWMedia *media in mediasNeedToRefresh) {
+        DDLogVerbose(@"%s Refresh media: %@",__FUNCTION__, media.objectId);
+        [media refresh];
+    }
+    
     return NO;
 }
 

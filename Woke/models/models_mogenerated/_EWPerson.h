@@ -156,21 +156,21 @@ extern const struct EWPersonRelationships {
 
 - (NSMutableSet*)notificationsSet;
 
-@property (nonatomic, strong) EWMedia *receivedMedias;
+@property (nonatomic, strong) NSSet *receivedMedias;
 
-//- (BOOL)validateReceivedMedias:(id*)value_ error:(NSError**)error_;
+- (NSMutableSet*)receivedMediasSet;
 
-@property (nonatomic, strong) EWMessage *receivedMessages;
+@property (nonatomic, strong) NSSet *receivedMessages;
 
-//- (BOOL)validateReceivedMessages:(id*)value_ error:(NSError**)error_;
+- (NSMutableSet*)receivedMessagesSet;
 
 @property (nonatomic, strong) NSSet *sentMedias;
 
 - (NSMutableSet*)sentMediasSet;
 
-@property (nonatomic, strong) EWMessage *sentMessages;
+@property (nonatomic, strong) NSSet *sentMessages;
 
-//- (BOOL)validateSentMessages:(id*)value_ error:(NSError**)error_;
+- (NSMutableSet*)sentMessagesSet;
 
 @property (nonatomic, strong) EWSocial *socialGraph;
 
@@ -222,11 +222,35 @@ extern const struct EWPersonRelationships {
 
 @end
 
+@interface _EWPerson (ReceivedMediasCoreDataGeneratedAccessors)
+- (void)addReceivedMedias:(NSSet*)value_;
+- (void)removeReceivedMedias:(NSSet*)value_;
+- (void)addReceivedMediasObject:(EWMedia*)value_;
+- (void)removeReceivedMediasObject:(EWMedia*)value_;
+
+@end
+
+@interface _EWPerson (ReceivedMessagesCoreDataGeneratedAccessors)
+- (void)addReceivedMessages:(NSSet*)value_;
+- (void)removeReceivedMessages:(NSSet*)value_;
+- (void)addReceivedMessagesObject:(EWMessage*)value_;
+- (void)removeReceivedMessagesObject:(EWMessage*)value_;
+
+@end
+
 @interface _EWPerson (SentMediasCoreDataGeneratedAccessors)
 - (void)addSentMedias:(NSSet*)value_;
 - (void)removeSentMedias:(NSSet*)value_;
 - (void)addSentMediasObject:(EWMedia*)value_;
 - (void)removeSentMediasObject:(EWMedia*)value_;
+
+@end
+
+@interface _EWPerson (SentMessagesCoreDataGeneratedAccessors)
+- (void)addSentMessages:(NSSet*)value_;
+- (void)removeSentMessages:(NSSet*)value_;
+- (void)addSentMessagesObject:(EWMessage*)value_;
+- (void)removeSentMessagesObject:(EWMessage*)value_;
 
 @end
 
@@ -303,17 +327,17 @@ extern const struct EWPersonRelationships {
 - (NSMutableSet*)primitiveNotifications;
 - (void)setPrimitiveNotifications:(NSMutableSet*)value;
 
-- (EWMedia*)primitiveReceivedMedias;
-- (void)setPrimitiveReceivedMedias:(EWMedia*)value;
+- (NSMutableSet*)primitiveReceivedMedias;
+- (void)setPrimitiveReceivedMedias:(NSMutableSet*)value;
 
-- (EWMessage*)primitiveReceivedMessages;
-- (void)setPrimitiveReceivedMessages:(EWMessage*)value;
+- (NSMutableSet*)primitiveReceivedMessages;
+- (void)setPrimitiveReceivedMessages:(NSMutableSet*)value;
 
 - (NSMutableSet*)primitiveSentMedias;
 - (void)setPrimitiveSentMedias:(NSMutableSet*)value;
 
-- (EWMessage*)primitiveSentMessages;
-- (void)setPrimitiveSentMessages:(EWMessage*)value;
+- (NSMutableSet*)primitiveSentMessages;
+- (void)setPrimitiveSentMessages:(NSMutableSet*)value;
 
 - (EWSocial*)primitiveSocialGraph;
 - (void)setPrimitiveSocialGraph:(EWSocial*)value;

@@ -136,15 +136,18 @@
     }
 	
 	//fetch everyone
-#ifdef DEBUG
 	DDLogVerbose(@"[1] Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
-#endif
+
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-		DDLogVerbose(@"Start location recurring update");
+		DDLogVerbose(@"[2] Start location recurring update");
 		[[EWAccountManager shared] registerLocation];
 	}
+    
+    //unread media
+    DDLogVerbose(@"[3] Check unread medias");
+    [[EWMediaManager sharedInstance] checkUnreadMediasInBackground];
     
 }
 

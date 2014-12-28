@@ -280,7 +280,7 @@
         //refresh later
         [self refreshEventually];
         if (block) {
-            NSError *err = [[NSError alloc] initWithDomain:@"WokeAlarm.com" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
+            NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
             block(err);
         }
         return;
@@ -290,7 +290,7 @@
         DDLogVerbose(@"When refreshing, MO missing serverID %@, prepare to upload", self.entity.name);
         [self uploadEventually];
         [EWSync save];
-        NSError *err = [[NSError alloc] initWithDomain:@"WokeAlarm.com" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
+        NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
         if (block) {
             block(err);
         }
@@ -357,7 +357,7 @@
         DDLogWarn(@"Network not reachable, refresh later.");
         //refresh later
         if (block) {
-            NSError *err = [[NSError alloc] initWithDomain:@"WokeAlarm.com" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
+            NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
             block(err);
         }
         [self refreshEventually];
@@ -403,7 +403,7 @@
         //refresh later
         [self refreshEventually];
         if (block) {
-            NSError *err = [[NSError alloc] initWithDomain:@"WokeAlarm.com" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
+            NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
             block(err);
         }
         return;
