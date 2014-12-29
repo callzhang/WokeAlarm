@@ -223,6 +223,12 @@
 #define COCOAPODS_VERSION_MINOR_Parse 6
 #define COCOAPODS_VERSION_PATCH_Parse 0
 
+// ParseCrashReporting
+#define COCOAPODS_POD_AVAILABLE_ParseCrashReporting
+#define COCOAPODS_VERSION_MAJOR_ParseCrashReporting 1
+#define COCOAPODS_VERSION_MINOR_ParseCrashReporting 6
+#define COCOAPODS_VERSION_PATCH_ParseCrashReporting 0
+
 // ParseFacebookUtils
 #define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
 #define COCOAPODS_VERSION_MAJOR_ParseFacebookUtils 1

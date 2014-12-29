@@ -170,9 +170,9 @@
                             //the relation can only be additive, which is not a problem for new relation
                             [blockParseRelation addObject:object];
                             [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e   ) {
-                                NSLog(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, object.parseClassName, object.objectId);
+                                DDLogInfo(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, object.parseClassName, object.objectId);
                                 if (e) {
-                                    NSLog(@"Failed to save: %@", e.description);
+                                    DDLogError(@"Failed to save: %@", e.description);
                                     @try {
                                         [blockObject saveEventually];
                                     }
@@ -263,7 +263,7 @@
     }
     
     if (!context) {
-        NSAssert([NSThread isMainThread], @"default context must be on main thread");
+        EWAssertMainThread
         context = mainContext;
     }
     NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];

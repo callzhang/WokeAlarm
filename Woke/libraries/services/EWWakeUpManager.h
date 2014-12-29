@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #define kNewNediaPlaying        @"new_media_playing"
+#define kLoopMediaPlayCount             100
+
 @import UIKit;
 @class EWActivity, EWAlarm, EWPerson;
 NSUInteger static maxLoop = 100;
 
 @interface EWWakeUpManager : NSObject
-@property (nonatomic, strong) EWAlarm *alarm;
+//@property (nonatomic, strong) EWAlarm *alarm;
 //@property (nonatomic, strong) EWActivity *currentActivity;
 @property (nonatomic, strong) NSArray *medias;
 @property (nonatomic) NSUInteger loopCount;
@@ -63,19 +65,6 @@ NSUInteger static maxLoop = 100;
  */
 + (BOOL)isRootPresentingWakeUpView;
 
-
-/**
- Release the reference to wakeupVC
- Post notification: kWokeNotification
- */
-- (void)wake;
-
-/**
- *  Handles the sleep action.
- *  When called, the app goes to sleep status
- */
-- (void)sleep;
-
 /**
  Timely alarm timer check task
  Will schedule an alarm if the time left is within the service update interval
@@ -84,6 +73,24 @@ NSUInteger static maxLoop = 100;
 - (void)alarmTimerCheck;
 
 - (void)sleepTimerCheck;
+
+#pragma mark - Sleep/Wake related
+/**
+ Release the reference to wakeupVC
+ Post notification: kWokeNotification
+ */
+- (void)wake;
+
+/**
+ *  Prepare to wake
+ */
+- (void)startToWake;
+
+/**
+ *  Handles the sleep action.
+ *  When called, the app goes to sleep status
+ */
+- (void)sleep;
 
 
 #pragma mark - Play for wakeup view

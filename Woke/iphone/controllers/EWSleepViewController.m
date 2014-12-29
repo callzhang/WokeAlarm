@@ -8,6 +8,7 @@
 
 #import "EWSleepViewController.h"
 #import "EWSetStatusViewController.h"
+#import "EWWakeUpManager.h"
 
 @interface EWSleepViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *labelTime1;
@@ -71,6 +72,9 @@
     if ([segue.identifier isEqualToString:@"toSetStatusController"]) {
         EWSetStatusViewController *viewController = [[segue.destinationViewController viewControllers] firstObject];
         viewController.person = [EWPerson me];
+    }
+    else if ([segue.identifier isEqualToString:@"toSleepViewController"]){
+        [[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:nil];
     }
 }
 

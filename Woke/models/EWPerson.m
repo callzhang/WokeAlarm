@@ -21,6 +21,7 @@ NSString * const EWPersonDefaultName = @"New User";
 @dynamic preference;
 @dynamic cachedInfo;
 @dynamic images;
+@synthesize name;
 
 #pragma mark - Create
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{
@@ -58,9 +59,9 @@ NSString * const EWPersonDefaultName = @"New User";
     BOOL good = YES;
     BOOL needRefreshFacebook = NO;
     if(!self.name){
-        NSString *name = [PFUser currentUser][@"name"];
-        if (name) {
-            self.name = name;
+        NSString *name_ = [PFUser currentUser][@"name"];
+        if (name_) {
+            self.name = name_;
         }else{
             needRefreshFacebook = YES;
         }

@@ -15,7 +15,7 @@
 #pragma mark - Server sync
 - (void)updateValueAndRelationFromParseObject:(PFObject *)parseObject{
     if (!parseObject) {
-        DDLogError(@"[%s] PO is nil, please check!", __FUNCTION__);
+        DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
         return;
     }
     if (!parseObject.isDataAvailable) {

@@ -17,7 +17,7 @@
 #pragma mark - NEW
 //add new alarm, save, add to current user, save  Ouser
 + (instancetype)newAlarm{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     DDLogVerbose(@"Create new Alarm");
     
     //add relationMagicalRecord
@@ -32,7 +32,7 @@
 
 #pragma mark - Search
 + (instancetype)getAlarmByID:(NSString *)alarmID{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     NSError *error;
     EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:alarmID error:&error];
     if (error) {

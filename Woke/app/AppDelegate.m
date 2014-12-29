@@ -19,6 +19,7 @@
 #import "EWMainViewController.h"
 
 #import <CrashlyticsLogger.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 #import "DDLog.h"
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
@@ -60,7 +61,8 @@ UIViewController *rootViewController;
     //crashlytics logger
     [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
 #endif
-    
+    // Enable Crash Reporting
+    [ParseCrashReporting enable];
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
     //[EWStartUpSequence deleteDatabase];

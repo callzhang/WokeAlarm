@@ -113,6 +113,8 @@ PODS:
   - OCMock (3.1.1)
   - Parse (1.6.0):
     - Bolts (~> 1.1.3)
+  - ParseCrashReporting (1.6.0):
+    - Parse (~> 1.6.0)
   - ParseFacebookUtils (1.6.0):
     - Facebook-iOS-SDK (~> 3.20)
     - Parse (~> 1.6.0)
@@ -157,8 +159,9 @@ DEPENDENCIES:
   - MYBlurIntroductionView (~> 1.0)
   - NYXImagesKit (~> 2.3)
   - OCMock (~> 3.1.1)
-  - Parse (~> 1.6.0)
-  - ParseUI (~> 1.0)
+  - Parse
+  - ParseCrashReporting
+  - ParseUI
   - Reachability (~> 3.1.1)
   - ReactiveCocoa (~> 2.3.1)
   - ReactiveViewModel (~> 0.2)
@@ -199,6 +202,7 @@ SPEC CHECKSUMS:
   NYXImagesKit: 1c9f228ae78fab475d267b3b3a1308e0fba11731
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
   Parse: f15dfacd941ee8084a5decbef486da8b223c2810
+  ParseCrashReporting: b74cdad4d32e3d8dc78f7e862b89eec9a12f4648
   ParseFacebookUtils: 8d33da72678c4c03a3b94332179dc04548bbd268
   ParseUI: 0eed358b238dcd66949ebc22513eba603e110087
   pop: 2f14a1ea61339767af9e66741b418c831b3844df

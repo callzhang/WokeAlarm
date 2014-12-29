@@ -24,7 +24,6 @@
 		090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */; };
 		091C67431A351F060091B8A6 /* EWStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67421A351F060091B8A6 /* EWStyleController.m */; };
 		091C67461A35205F0091B8A6 /* EWBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67451A35205F0091B8A6 /* EWBaseTableViewController.m */; };
-		091C67591A3523AF0091B8A6 /* EWAlarmEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67491A3523AF0091B8A6 /* EWAlarmEditCell.m */; };
 		091C675A1A3523AF0091B8A6 /* EWAlarmEditCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */; };
 		091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */; };
 		091C675C1A3523AF0091B8A6 /* EWLogInView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C674D1A3523AF0091B8A6 /* EWLogInView.xib */; };
@@ -132,9 +131,7 @@
 		9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */; };
 		9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B71AC741A22927C00E300CE /* AlarmTest.m */; };
 		9B8139701A15D65900F1A56C /* GKCropBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81395C1A15D65900F1A56C /* GKCropBorderView.m */; };
-		9B8139711A15D65900F1A56C /* GKImageCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81395E1A15D65900F1A56C /* GKImageCropOverlayView.m */; };
 		9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139601A15D65900F1A56C /* GKImageCropView.m */; };
-		9B8139731A15D65900F1A56C /* GKImageCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139621A15D65900F1A56C /* GKImageCropViewController.m */; };
 		9B8139741A15D65900F1A56C /* GKImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139641A15D65900F1A56C /* GKImagePicker.m */; };
 		9B8139751A15D65900F1A56C /* GKResizeableCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139661A15D65900F1A56C /* GKResizeableCropOverlayView.m */; };
 		9B8139791A15D65900F1A56C /* PLCameraSheetButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396B1A15D65900F1A56C /* PLCameraSheetButtonPressed@2x.png */; };
@@ -143,8 +140,6 @@
 		9B81397C1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396E1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed.png */; };
 		9B81397D1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396F1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed@2x.png */; };
 		9B840A201A1705CE00D6C2A3 /* EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A1F1A1705CE00D6C2A3 /* EWSocial.m */; };
-		9B840A291A170AE800D6C2A3 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
-		9B840A2A1A170AE800D6C2A3 /* RMDateSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A281A170AE800D6C2A3 /* RMDateSelectionViewController.m */; };
 		9B88293E1A317E3900EF572E /* EWBlurAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B88293B1A317E3900EF572E /* EWBlurAnimator.m */; };
 		9B88293F1A317E3900EF572E /* UIViewController+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B88293D1A317E3900EF572E /* UIViewController+Blur.m */; };
 		9B8829421A31868100EF572E /* EWBlurNavigationControllerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */; };
@@ -1115,6 +1110,7 @@
 				09A776DD1A11D8D9004AF902 /* Resources */,
 				A6ACF7036880B6CF269077FB /* Copy Pods Resources */,
 				E93DC57A1C384A7E8FEAF65F /* KZBootstrap setup */,
+				9B3895061A51394F004D4290 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1252,6 +1248,19 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		9B3895061A51394F004D4290 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=/usr/local/bin:$PATH\ncd Server\n\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1344,18 +1353,15 @@
 				09DF4F821A1434AF00BEA328 /* _EWAchievement.m in Sources */,
 				096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */,
 				096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */,
-				9B840A2A1A170AE800D6C2A3 /* RMDateSelectionViewController.m in Sources */,
 				096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */,
 				096AAADE1A195A3900B4CBFF /* EWAVManager.m in Sources */,
 				9B8829421A31868100EF572E /* EWBlurNavigationControllerDelegate.m in Sources */,
 				09A86FD21A1ACDDB0075DFF4 /* EWMainNavigationController.m in Sources */,
-				9B8139731A15D65900F1A56C /* GKImageCropViewController.m in Sources */,
 				9BFCFFE01A3E74E3002B8A83 /* EWPersonViewController.m in Sources */,
 				09DF4F7D1A1434AF00BEA328 /* EWMessage.m in Sources */,
 				9B88293E1A317E3900EF572E /* EWBlurAnimator.m in Sources */,
 				096AAAE11A195A3900B4CBFF /* EWImageManager.m in Sources */,
 				9B8139741A15D65900F1A56C /* GKImagePicker.m in Sources */,
-				9B8139711A15D65900F1A56C /* GKImageCropOverlayView.m in Sources */,
 				096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */,
 				09DF4F7B1A1434AF00BEA328 /* EWMediaFile.m in Sources */,
 				09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */,
@@ -1391,7 +1397,6 @@
 				096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
-				091C67591A3523AF0091B8A6 /* EWAlarmEditCell.m in Sources */,
 				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
 				09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */,
 				9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */,
@@ -1427,7 +1432,6 @@
 				9BFF57121A4C8FB90067EE9B /* EWPerson+Woke.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
 				096AAAE21A195A3900B4CBFF /* EWMediaManager.m in Sources */,
-				9B840A291A170AE800D6C2A3 /* RDSelectionViewController.m in Sources */,
 				096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */,
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,
 				09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */,

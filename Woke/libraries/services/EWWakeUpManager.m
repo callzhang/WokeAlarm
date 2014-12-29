@@ -36,19 +36,28 @@
 
 - (id)init{
 	self = [super init];
-    self.alarm = [EWPerson myCurrentAlarm];
-    self.medias = [EWPerson myUnreadMedias];
+    if ([EWSession sharedSession].isWakingUp) {
+        self.medias = [EWPerson myUnreadMedias];
+    }else{
+        [self reloadMedias];
+    }
+    
     self.continuePlay = YES;
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingEnterNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[self alarmTimerCheck];
 		[self sleepTimerCheck];
 	}];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithPause) name:kAVManagerDidFinishPlaying object:nil];
-    [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        self.medias = [EWPerson myUnreadMedias];
-    }];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
+    
+    //first time loop
+    self.loopCount = kLoopMediaPlayCount;
+    
 	return self;
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Handle push notification
@@ -69,7 +78,6 @@
     if (![[EWPerson me].unreadMedias containsObject:media]) {
         [[EWPerson me] addUnreadMediasObject:media];
         [EWSync save];
-        
     }
     
     if ([type isEqualToString:kPushMediaTypeVoice]) {
@@ -92,7 +100,7 @@
 }
 
 - (void)handleAlarmTimerEvent:(NSDictionary *)info{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     if ([EWSession sharedSession].isWakingUp) {
         DDLogWarn(@"WakeUpManager is already handling alarm timer, skip");
         return;
@@ -153,11 +161,10 @@
     }
 
     //state change
-    [EWSession sharedSession].isSleeping = NO;
-    [EWSession sharedSession].isWakingUp = YES;
+    [self startToWake];
     
     //update media
-    [[EWMediaManager sharedInstance] checkMediaAssets];
+    [[EWMediaManager sharedInstance] checkUnreadMedias];
     NSArray *medias = [EWPerson myUnreadMedias];
     
     //fill media from mediaAssets, if no media for task, create a pseudo media
@@ -181,17 +188,17 @@
     
     if (isLaunchedFromLocalNotification) {
         
-        NSLog(@"Entered from local notification, start wakeup view now");
+        DDLogVerbose(@"Entered from local notification, start wakeup view now");
         [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
     }else if (isLaunchedFromRemoteNotification){
         
-        NSLog(@"Entered from remote notification, start wakeup view now");
+        DDLogVerbose(@"Entered from remote notification, start wakeup view now");
         [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
     }else{
         //fire an alarm
-        NSLog(@"=============> Firing Alarm timer notification <===============");
+        DDLogVerbose(@"=============> Firing Alarm timer notification <===============");
         UILocalNotification *note = [[UILocalNotification alloc] init];
         note.alertBody = [NSString stringWithFormat:@"It's time to wake up (%@)", [alarm.time date2String]];
         note.alertAction = @"Wake up!";
@@ -233,7 +240,10 @@
 
 //indicate that the user has woke
 - (void)wake{
-    
+    if ([EWSession sharedSession].isWakingUp == NO) {
+        DDLogWarn(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
+        return;
+    }
     [EWSession sharedSession].isSleeping = NO;
     [EWSession sharedSession].isWakingUp = NO;
     
@@ -254,6 +264,12 @@
     //check that current alarm activity and alarm are correct
     [self alarmTimerCheck];
     [EWSession sharedSession].isSleeping = YES;
+    [EWSession sharedSession].isWakingUp = NO;
+}
+
+- (void)startToWake{
+    [EWSession sharedSession].isSleeping = NO;
+    [EWSession sharedSession].isWakingUp = YES;
 }
 
 #pragma mark - CHECK TIMER
@@ -358,7 +374,7 @@
     }
     //return if no  medias
     if (!_medias.count) {
-        DDLogWarn(@"[%s] No media to play", __FUNCTION__);
+        DDLogWarn(@"%s No media to play", __FUNCTION__);
         return;
     }
     
@@ -405,4 +421,11 @@
     return [_medias indexOfObjectIdenticalTo:_currentMedia];
 }
 
+- (void)reloadMedias{
+    if ([EWSession sharedSession].isWakingUp) {
+        self.medias = [EWPerson myUnreadMedias];
+    }else{
+        DDLogWarn(@"You have already woken up, playing media list will not load from myUnreadMedias");
+    }
+}
 @end

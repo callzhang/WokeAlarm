@@ -42,7 +42,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 #pragma mark - CREATE USER
 -(EWPerson *)getPersonByServerID:(NSString *)ID{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     if(!ID) return nil;
     EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:@"EWPerson" withID:ID error:nil];
     
@@ -93,7 +93,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 }
 
 //- (NSArray *)getWakeeList{
-//    NSParameterAssert([NSThread isMainThread]);
+//    EWAssertMainThread
 //    //check
 //    if (self.isFetchingWakees) {
 //        return nil;
@@ -107,7 +107,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 //}
 
 - (void)getWakeesInBackgroundWithCompletion:(VoidBlock)block{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     //add finish block to the queue
     if (block) {
         [_wakeeListChangeBlocks addObject:block];

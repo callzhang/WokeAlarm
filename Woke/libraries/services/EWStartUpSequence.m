@@ -57,7 +57,7 @@
 
 #pragma mark - Login Check
 - (void)loginDataCheck{
-    DDLogVerbose(@"=== [%s] Logged in, performing login tasks.===", __func__);
+    DDLogVerbose(@"=== %s Logged in, performing login tasks.===", __func__);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (![currentInstallation[kUserID] isEqualToString: [EWPerson me].objectId]){
         currentInstallation[kUserID] = [EWPerson me].objectId;
@@ -88,12 +88,12 @@
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
     DDLogVerbose(@"4. Check my unread media");//media also will be checked with background fetch
-    [[EWMediaManager sharedInstance] checkUnreadMediasInBackground];
+    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:^(NSArray *array) {
+        DDLogInfo(@"Found %ld new media", array.count);
+    }];
     
-    //updating facebook friends
-    //DDLogVerbose(@"5. Updating facebook friends");
-    //TODO: why?
-//    [EWUserManager getFacebookFriends];
+    DDLogVerbose(@"5. Updating facebook friends");
+    [[EWAccountManager sharedInstance] updateMyFacebookInfo];
     
     //update facebook info
     //DDLogVerbose(@"6. Updating facebook info");

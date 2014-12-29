@@ -16,15 +16,14 @@
 
 @interface EWPreWakeViewController(){
     NSTimer *progressUpdateTimer;
-    //NSUInteger currentPlayCount;
 }
-
 @end
 
-@implementation EWPreWakeViewController
 
+@implementation EWPreWakeViewController
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
     //data source
     [[EWWakeUpManager sharedInstance] playNextVoice];
     
@@ -96,10 +95,11 @@
         if (!error) {
             DDLogInfo(@"Finished test voice request");
             //check new media
-            BOOL newMedia = [[EWMediaManager sharedInstance] checkMediaAssets];
-            if (newMedia) {
+            NSArray *newMedias = [[EWMediaManager sharedInstance] checkUnreadMedias];
+            if (newMedias.count) {
                 //update view
-                DDLogVerbose(@"New media found");
+                DDLogVerbose(@"New media found (%ld)", newMedias.count);
+                
             }
         }else{
             DDLogError(@"Failed test voice request: %@", error.description);

@@ -138,7 +138,7 @@ NSManagedObjectContext *mainContext;
 
 - (void)uploadToServer{
     //make sure it is called on main thread
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     if([mainContext hasChanges]){
         NSLog(@"There is still some change, save and do it later");
         [EWSync save];
@@ -215,8 +215,9 @@ NSManagedObjectContext *mainContext;
                 DDLogVerbose(@"*** MO %@(%@) to upload haven't saved", MO.entity.name, MO.serverID);
                 continue;
             }
-			
+			//=================>> Upload method <<===================
             [self updateParseObjectFromManagedObject:localMO];
+            //=======================================================
             
             //remove changed record
             NSArray *changes = workingChangedRecords[localMO.objectID];
@@ -460,8 +461,6 @@ NSManagedObjectContext *mainContext;
         }
     }];
     
-    
-    
     //time stamp for updated date. This is very important, otherwise mo might seems to be outdated
 	//this is for relation, if do not set kUpdateDateKey, means the relation haven't been downloaded yet.
 	[managedObject setValue:[NSDate date] forKey:kUpdatedDateKey];
@@ -510,7 +509,7 @@ NSManagedObjectContext *mainContext;
 
 
 - (void)performSaveCallbacksWithParseObject:(PFObject *)parseObject andManagedObjectID:(NSManagedObjectID *)managedObjectID{
-    NSArray *saveCallbacks = [[self parseSaveCallbacks] objectForKey:managedObjectID];
+    NSArray *saveCallbacks = [self.parseSaveCallbacks objectForKey:managedObjectID];
     if (saveCallbacks) {
         for (PFObjectResultBlock callback in saveCallbacks) {
             NSError *err;
@@ -564,7 +563,7 @@ NSManagedObjectContext *mainContext;
 
 //queue functions
 - (NSSet *)getObjectFromQueue:(NSString *)queue{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     NSArray *array = [[NSUserDefaults standardUserDefaults] valueForKey:queue];
     NSMutableArray *validMOs = [array mutableCopy];
     NSMutableSet *set = [NSMutableSet new];
@@ -671,7 +670,7 @@ NSManagedObjectContext *mainContext;
 
 #pragma mark - Core Data
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
-	NSParameterAssert([NSThread isMainThread]);
+	EWAssertMainThread
     
     NSManagedObject * MO = [self findObjectWithClass:className withID:serverID inContext:mainContext error:error];
     return MO;
@@ -679,7 +678,7 @@ NSManagedObjectContext *mainContext;
 
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
     if (objectID == nil) {
-        DDLogError(@"[%s] !!! Passed in nil to get current MO", __func__);
+        DDLogError(@"%s !!! Passed in nil to get current MO", __func__);
         return nil;
     }
     NSManagedObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectID inContext:context];
@@ -858,7 +857,7 @@ NSManagedObjectContext *mainContext;
         return object;
     }
     
-    DDLogError(@"[%s] Passed in empty ID, upload first!", __func__);
+    DDLogError(@"%s Passed in empty ID, upload first!", __func__);
     return nil;
 }
 

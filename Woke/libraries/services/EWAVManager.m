@@ -115,7 +115,7 @@
 
 #pragma mark - PLAY FUNCTIONS
 - (void)playMedia:(EWMedia *)mi{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
 	//set to max volume
 	[self setDeviceVolume:1.0];
     if (!mi){

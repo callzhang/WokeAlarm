@@ -112,7 +112,7 @@
 }
 
 + (NSArray *)myAlarms {
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     return [[EWAlarmManager sharedInstance] alarmsForPerson:[EWPerson me]];
 }
 

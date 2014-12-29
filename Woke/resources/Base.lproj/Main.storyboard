@@ -481,7 +481,7 @@
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
                                 <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
                                 <connections>
-                                    <segue destination="VN0-T7-2gC" kind="custom" customClass="MSReplaceFadeSegue" id="oOK-jK-Klq"/>
+                                    <segue destination="VN0-T7-2gC" kind="custom" identifier="toSleepViewController" customClass="MSReplaceFadeSegue" id="oOK-jK-Klq"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -917,10 +917,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <progressView key="tableFooterView" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" id="B2D-59-F8u">
-                            <rect key="frame" x="0.0" y="170" width="320" height="2"/>
+                        <label key="tableHeaderView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Misty, Jim and Celina sent you wake up messages." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="el6-mk-ibO">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </progressView>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label key="tableFooterView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Z9c-XX-NXc">
+                            <rect key="frame" x="0.0" y="-21" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EWWakeUpViewCell" rowHeight="70" id="c06-qU-1p3" customClass="EWWakeUpViewCell">
                                 <autoresizingMask key="autoresizingMask"/>

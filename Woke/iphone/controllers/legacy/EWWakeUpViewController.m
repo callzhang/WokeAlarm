@@ -22,7 +22,6 @@
     CGRect headerFrame;
     NSTimer *timeTimer;
     NSTimer *progressTimer;
-    NSUInteger timePast;
 }
 @end
 
@@ -35,7 +34,6 @@
 
 
 #pragma mark - Life Cycle
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -43,20 +41,18 @@
     //headerFrame = header.frame;
     
     //HUD
-    [self.view showLoopingWithTimeout:0];
+    //[self.view showLoopingWithTimeout:0];
     
     //Refresh for new media
     [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self.tableView reloadData];
+        if ([EWSession sharedSession].isWakingUp) {
+            [self.tableView reloadData];
+        }
     }];
     //update view when new media starts playing
     [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
-        //update view
+        //nothing
     }];
-    
-    //first time loop
-    timePast = 1;
-    [EWWakeUpManager sharedInstance].loopCount = kLoopMediaPlayCount;
     
     //responder to remote control
     [self prepareRemoteControlEventsListener];
@@ -68,13 +64,13 @@
     
     //start playing
     [self updatePlayingCellAndProgress];
-    
 }
 
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
+    //nav button
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
     //[self initView];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //timer updates
@@ -474,6 +470,8 @@
 }
 */
 
+- (IBAction)finish:(id)sender {
+}
 @end
 
 

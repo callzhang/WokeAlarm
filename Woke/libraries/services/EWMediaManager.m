@@ -25,7 +25,7 @@
 //@synthesize context;
 
 +(EWMediaManager *)sharedInstance{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     static EWMediaManager *sharedStore_ = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -36,7 +36,7 @@
 
 
 - (NSArray *)myMedias{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     return [self mediasForPerson:[EWPerson me]];
 }
 
@@ -108,23 +108,31 @@
     return medias;
 }
 
-- (BOOL)checkMediaAssets{
-    NSParameterAssert([NSThread isMainThread]);
-
-    BOOL new;
-    new = [self checkUnreadMediasInContext:mainContext];
-    return new;
+- (NSArray *)checkUnreadMedias{
+    EWAssertMainThread
+    return [self checkUnreadMediasInContext:mainContext];
 }
 
-- (void)checkUnreadMediasInBackground{
+- (void)checkUnreadMediasWithCompletion:(ArrayBlock)block{
+    EWAssertMainThread
+    __block NSArray *mediaIDsIncontext;
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        [self checkUnreadMediasInContext:localContext];
+        mediaIDsIncontext = [[self checkUnreadMediasInContext:localContext] valueForKey:@"objectID"];
+    } completion:^(BOOL contextDidSave, NSError *error) {
+        if (contextDidSave && block) {
+            NSMutableArray *medias = [NSMutableArray new];
+            for (NSManagedObjectID *ID in mediaIDsIncontext) {
+                NSManagedObject *MO = [mainContext existingObjectWithID:ID error:nil];
+                [medias addObject:MO];
+            }
+            return block(medias.copy);
+        }
     }];
 }
 
-- (BOOL)checkUnreadMediasInContext:(NSManagedObjectContext *)context{
+- (NSArray *)checkUnreadMediasInContext:(NSManagedObjectContext *)context{
     if (![PFUser currentUser]) {
-        return NO;
+        return nil;
     }
     EWPerson *localMe = [[EWPerson me] MR_inContext:context];
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWMedia class])];
@@ -132,7 +140,7 @@
     NSSet *localAssetIDs = [localMe.unreadMedias valueForKey:kParseObjectID];
     [query whereKey:kParseObjectID notContainedIn:localAssetIDs.allObjects];
     NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query error:nil];
-	BOOL newMedia = NO;
+	NSMutableArray *newMedia = [NSMutableArray new];
     for (PFObject *po in mediaPOs) {
         //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
         EWMedia *mo = [EWMedia getMediaByID:po.objectId];
@@ -151,15 +159,14 @@
             });
         }
         
-        newMedia = YES;
+        [newMedia addObject:mo];
     }
 	
-    if (newMedia) {
+    if (newMedia.count) {
         //notify user for the new media
         dispatch_async(dispatch_get_main_queue(), ^{
             EWAlert(@"You got voice for your next wake up");
         });
-        return YES;
     }
     
     //check exisitng media
@@ -172,7 +179,7 @@
         [media refresh];
     }
     
-    return NO;
+    return newMedia.copy;
 }
 
 - (NSArray *)unreadMediasForPerson:(EWPerson *)person{

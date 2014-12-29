@@ -11,7 +11,7 @@
 
 #pragma mark - create media
 + (EWMedia *)newMedia{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     EWMedia *m = [EWMedia MR_createEntity];
     m.updatedAt = [NSDate date];
     m.author = [EWPerson me];

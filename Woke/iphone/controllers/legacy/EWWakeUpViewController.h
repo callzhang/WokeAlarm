@@ -5,11 +5,11 @@
 //  Created by Lei Zhang on 7/28/13.
 //  Copyright (c) 2013 Shens. All rights reserved.
 //
-#import "EWShakeProgressView.h"
+#import "EWBaseTableViewController.h"
 #import <UIKit/UIKit.h>
 @class EWPerson, EWMedia, EWAlarm, EWMediaCell;
 
-@interface EWWakeUpViewController : UITableViewController <UIPopoverControllerDelegate>
+@interface EWWakeUpViewController : EWBaseTableViewController// <UIPopoverControllerDelegate>
 //@property (weak, nonatomic) IBOutlet UILabel *title;
 //@property (weak, nonatomic) IBOutlet UILabel *timer;
 //@property (weak, nonatomic) IBOutlet UILabel *AM;
@@ -23,6 +23,7 @@
 
 @property (nonatomic, weak) EWPerson *person;
 @property (nonatomic, weak) EWActivity *activity;
+- (IBAction)finish:(id)sender;
 
 
 /**

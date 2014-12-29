@@ -10,5 +10,5 @@
  *
  *  @param block Passing EWServerObject's counterparty - PFObject back to the block
  */
-- (void)updateToServerWithCompletion:(void (^)(PFObject *PO))block;
+- (void)updateToServerWithCompletion:(PFObjectResultBlock)block;
 @end

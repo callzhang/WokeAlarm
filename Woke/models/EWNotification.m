@@ -19,7 +19,7 @@
 @dynamic importance;
 
 + (EWNotification *)newNotification {
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     EWNotification *notice = [EWNotification MR_createEntity];
     notice.updatedAt = [NSDate date];
     notice.owner = [EWPerson me];
@@ -49,7 +49,11 @@
     note.receiver = [EWPerson me].objectId;
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     if (!activity.objectId) {
-        [activity updateToServerWithCompletion:^(PFObject *PO) {
+        [activity updateToServerWithCompletion:^(PFObject *PO, NSError *error) {
+            if (!PO) {
+                DDLogError(@"MO %@ failed to save to server: %@", media.serverClassName, error.description);
+                return;
+            }
             note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
             [EWSync save];
         }];

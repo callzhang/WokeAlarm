@@ -18,18 +18,19 @@
     return self.objectId;
 }
 
-- (void)updateToServerWithCompletion:(void (^)(PFObject *PO))block{
+- (void)updateToServerWithCompletion:(PFObjectResultBlock)block{
     if (!self.objectId) {
-        [EWSync saveWithCompletion:^{
-            NSAssert(self.objectId, @"MO doesn't have an objectId after server update");
-            PFObject *PO = self.parseObject;
-            if (block) {
-                block(PO);
-            }
-        }];
+        //create save block
+        PFObjectResultBlock resultBlock = ^(PFObject *object, NSError *error) {
+            block(object, error);
+        };
+        //add sync block
+        [[EWSync sharedInstance] addSaveCallback:resultBlock forManagedObjectID:self.objectID];
+        //save
+        [EWSync save];
     }else{
         if (block) {
-            block(self.parseObject);
+            block(self.parseObject, nil);
         }
     }
     

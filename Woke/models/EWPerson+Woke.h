@@ -31,7 +31,6 @@
 - (BOOL)isFriend;
 - (BOOL)friendPending;
 - (BOOL)friendWaiting;
-- (NSString *)genderObjectiveCaseString;
 - (void)updateMyCachedFriends;
 - (void)requestFriend:(EWPerson *)person;
 - (void)acceptFriend:(EWPerson *)person;
