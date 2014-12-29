@@ -19,12 +19,12 @@
     return mediaFile;
 }
 
-+ (EWMediaFile *)findMediaFileByID:(NSString *)ID{
-    EWMediaFile *m = (EWMediaFile *)[EWSync findObjectWithClass:@"EWMediaFile" withID:ID];
++ (EWMediaFile *)getMediaFileByID:(NSString *)ID{
+    EWMediaFile *m = (EWMediaFile *)[EWSync findObjectWithClass:@"EWMediaFile" withID:ID error:nil];
     return m;
 }
 
-- (NSString *)audioKey{
+- (NSString *)audioFilePath{
     if (audioKey) {
         return audioKey;
     }
@@ -87,8 +87,14 @@
 
 
 - (BOOL)validate{
-    //TODO
-    return YES;
+    BOOL good = YES;
+    if (!self.audio) {
+        good = NO;
+    }
+    if (!self.medias.count == 0){
+        good = NO;
+    }
+    return good;
 }
 
 @end

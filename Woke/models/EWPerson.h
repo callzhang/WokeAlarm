@@ -25,20 +25,6 @@ extern NSString * const EWPersonDefaultName;
 @property (nonatomic, strong) NSArray *images;
 @property (nonatomic, readwrite) NSString *name;
 
-//validate
-- (BOOL)validate;
-
-//helper
-- (BOOL)isFriend;
-- (BOOL)friendPending;
-- (BOOL)friendWaiting;
-- (NSString *)genderObjectiveCaseString;
-+ (void)updateMyCachedFriends;
-
-//friend
-+ (void)requestFriend:(EWPerson *)person;
-+ (void)acceptFriend:(EWPerson *)person;
-+ (void)unfriend:(EWPerson *)person;
 /**
  *  Find or create EWPerson from PFUser
  *
@@ -47,24 +33,8 @@ extern NSString * const EWPersonDefaultName;
  *  @return EWPerson
  */
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
-@end
 
 
-@interface EWPerson(Woke)
-+ (EWPerson *)me;
-- (BOOL)isMe;
-
-//my stuff
-+ (NSArray *)myActivities;
-+ (NSArray *)myNotifications;
-+ (NSArray *)myUnreadNotifications;
-+ (NSArray *)myAlarms;
-+ (NSArray *)myFriends;
-+ (EWSocial *)mySocialGraph;
-
-- (void)updateStatus:(NSString *)status completion:(void (^)(NSError *error))completion;
-
-+ (EWAlarm *)myCurrentAlarm;
-+ (EWActivity *)myCurrentAlarmActivity;
-
+//validate
+- (BOOL)validate;
 @end

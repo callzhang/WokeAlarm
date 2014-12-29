@@ -27,7 +27,7 @@
 }
 
 - (IBAction)onContinueWithFacebookButton:(id)sender {
-    [[EWAccountManager shared] loginFacebookCompletion:^(BOOL isNewUser, NSError *error) {
+    [[EWAccountManager shared] loginFacebookCompletion:^(NSError *error) {
         if (error) {
             [EWErrorManager handleError:error];
         }

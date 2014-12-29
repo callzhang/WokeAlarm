@@ -27,7 +27,7 @@
 
 + (EWAlarmManager *)sharedInstance {
     //make sure core data stuff is always on main thread
-    //NSParameterAssert([NSThread isMainThread]);
+    //EWAssertMainThread
     static EWAlarmManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -141,7 +141,7 @@
 #pragma mark - SCHEDULE
 //schedule according to alarms array. If array is empty, schedule according to default template.
 - (NSArray *)scheduleAlarm{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     if ([EWSession sharedSession].isSchedulingAlarm) {
         DDLogVerbose(@"Skip scheduling alarm because it is scheduling already!");
         return nil;
@@ -314,7 +314,7 @@
 
 #pragma mark - Alarm timer local notofication
 - (void)checkScheduledLocalNotifications{
-	NSParameterAssert([NSThread isMainThread]);
+	EWAssertMainThread
 	NSMutableArray *allNotification = [[[UIApplication sharedApplication] scheduledLocalNotifications] mutableCopy];
 	DDLogInfo(@"There are %ld scheduled local notification", (long)allNotification.count);
 	
@@ -341,10 +341,10 @@
 
 
 #pragma mark - Local notification
-- (void)scheduleAlarmTimerNotifications{
+- (void)scheduleAllNotifications{
     NSArray *alarms = [EWPerson myAlarms];
     for (EWAlarm *alarm in alarms) {
-        [alarm scheduleAlarmTimerLocalNotification];
+        [alarm scheduleLocalNotification];
     }
 }
 
@@ -362,10 +362,10 @@
     }
 }
 
-- (void)cancelAlarmTimerNotifications{
+- (void)cancelAllNotifications{
     NSArray *alarms = [EWPerson myAlarms];
     for (EWAlarm *alarm in alarms) {
-        [alarm cancelAlarmTimerLocalNotification];
+        [alarm cancelLocalNotification];
     }
 }
 

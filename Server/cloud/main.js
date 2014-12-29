@@ -55,9 +55,9 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
       query.limit(2*topk);
       // Final list of objects
       query.find({
-        
         success: function(nearbyUsers) {
           //var relation = userObject.relation("friends");
+          console.log(userObject);
           var friendsList = userObject.get("friends") === undefined ? [] 
                                                                     : userObject.get("friends").map(
                                                                         function(x) { 
@@ -171,9 +171,9 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
           }
           });
         },
-        error: function(list, error) {
-
-          console.error("search nearby users failed: " + error);
+        error: function(error) {
+          response.error("Can't find any user with criteria: "+error.message);
+          console.log("search nearby users failed: " + error.message);
         }
       });
     },
@@ -182,7 +182,6 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
     }
   });
 });
-
 
 //parameters:
 //  sender: objectId for sender
@@ -318,7 +317,7 @@ Parse.Cloud.define("sendFriendAcceptNotificationToUser", function(request, respo
                   //push message to the owner. 
                   var query = new Parse.Query(Parse.Installation);
                   //query.equalTo('username', ownerObject.get("username"));
-                  query.equalTo('user_object_id', ownerObject.id);
+                  query.equalTo('userId', ownerObject.id);
 
                   var gender = "this person";
                   if (senderObject.get("gender") === "male") gender = "him";
@@ -377,57 +376,67 @@ Parse.Cloud.define("sendFriendAcceptNotificationToUser", function(request, respo
 
 
 Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
-  var objectId = request.params.objectId;
+  var currentUserId = request.params.objectId;
   var query = new Parse.Query(Parse.User);
-  query.equalTo("objectId", objectId);
-  var user = null;
-  query.first({
-    success: function(user) {
-      var userObject = result;
-      var userQuery = new Parse.Query(Parse.User);
+  query.get(currentUserId, {
+    success: function (user) {
+      //var user = Parse.User.current();
+      console.log("Current user: " + user.get("name"));
+      var query = new Parse.Query(Parse.User);
       query.equalTo("username", "woke");
-      query.find({
+      query.first({
         success: function (woke) {
-          if (!woke) {
-            response.error("cannot find Woke");
-          }
+          console.log("Found woke: "+ woke.id);
           //create a meida
           var EWMedia = Parse.Object.extend("EWMedia");
-          var voice = new EWMedia;
-          voice.set("receiver", user);
-          voice.set("author", woke);
+          var media = new EWMedia;
+          media.set("receiver", user);
+          media.set("author", woke);
           //TODO: assign activity
-          var EWMediaFile = Parse.Object.extend("EWMediaFile");
-          var mediaFileQuery = new Parse.Query(EWMediaFile);
-          mediaFileQuery.equalTo("owner", woke.get("objectId"));
+          var voiceFile = Parse.Object.extend("EWMediaFile");
+          var mediaFileQuery = new Parse.Query(voiceFile);
+          mediaFileQuery.equalTo("owner", woke.id);
           mediaFileQuery.find({
-            success: function (voiceFiles) {
-              var voiceFile = voiceFiles[math.ceil(random() * voices.length)];
-              voice.set("mediaFile", voiceFile);
-              voice.save();
+            success: function (voices) {
+              console.log("Get Woke voices: "+voices.length);
+              var n = Math.floor(Math.random() * voices.length);
+              console.log("Random voice chosen: "+n);
+              voiceFile = voices[n];
+              media.set("mediaFile", voiceFile);
+
+              //save file->medias relation
+              media.save().then(function(media){
+                var mediasRelation = voiceFile.relation("medias");
+                mediasRelation.add(media);
+                voiceFile.save();
+              }, function(error){
+                console.log("Relation mediaFile->media failed: "+error.message);
+              });
 
               //send a push
               var query = new Parse.Query(Parse.Installation);
-              query.equalTo('username', objectId);
+              query.equalTo('userId', currentUserId);
 
               Parse.Push.send({
                 where: query,
                 data: {
-                  alert: "You got a new voice",
-                  title: "You got a new voice",
-                  body: "Woke send you a new voice.",
+                  alert: "You got a new media",
+                  title: "You got a new media",
+                  body: "Woke send you a new media.",
                   type: "media",
-                  media_type: "voice",
-                  media: voice.get("objectId")
+                  media_type: "media",
+                  media: media.get("objectId")
                 }
               }, {
                 success: function () {
                   // Push was successful
-                  console.log("Test voice Sent");
+                  response.success("Push sent");
+                  console.log("Test media Sent");
                 },
                 error: function (error) {
                   // Handle error
-                  console.log("Failed to send push for test voice");
+                  console.error("Failed to send push");
+                  console.log("Failed to send push for test media: "+error.message);
                 }
               });
             }, error: function (list, error) {
@@ -439,10 +448,14 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
           console.log("failed to find Woke: " + error.message);
         }
       });
-    }, error: function (list, error){
-      console.log("failed to find test receiver user: " + error.message);
+    },
+    error: function (error) {
+      console.log("Failed to find current user: ", error.message);
     }
-  });
+  })
+
+
+
 });
 
 

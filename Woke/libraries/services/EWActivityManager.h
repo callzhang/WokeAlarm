@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
 
+//#define kNotificationTypeActivityHasNewMedia    @"activity_new_media"
+
 extern NSString *const EWActivityTypeAlarm;
 extern NSString *const EWActivityTypeFriendship;
 extern NSString *const EWActivityTypeMedia;
@@ -23,6 +25,6 @@ extern NSString *const EWActivityTypeMedia;
 + (NSArray *)myActivities;
 + (NSArray *)myAlarmActivities;
 - (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context;
-- (EWActivity *)myCurrentAlarmActivity;
+- (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person;
 - (void)completeAlarmActivity:(EWActivity *)activity;
 @end

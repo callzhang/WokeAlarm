@@ -7,6 +7,6 @@
 
 + (EWMediaFile *)newMediaFile;
 //- (void)remove;
-+ (EWMediaFile *)findMediaFileByID:(NSString *)ID;
++ (EWMediaFile *)getMediaFileByID:(NSString *)ID;
 
 @end

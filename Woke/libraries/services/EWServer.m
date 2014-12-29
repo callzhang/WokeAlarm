@@ -169,7 +169,7 @@
 
 
 
-+ (void)broadcastMessage:msg onSuccess:(void (^)(void))block onFailure:(void (^)(void))failureBlock{
++ (void)broadcastMessage:msg onSuccess:(VoidBlock)block onFailure:(VoidBlock)failureBlock{
     
     NSDictionary *payload = @{@"alert": msg,
                               @"sound": @"new.caf",

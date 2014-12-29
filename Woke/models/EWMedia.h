@@ -4,7 +4,6 @@
 
 @interface EWMedia : _EWMedia
 
-
 //new
 + (EWMedia *)newMedia;
 //delete
@@ -17,6 +16,7 @@
 - (void)createACL;
 //download
 - (void)downloadMediaFile;
+- (void)downloadMediaFileWithCompletion:(ErrorBlock)block;
 
 //data
 - (NSData *)audio;

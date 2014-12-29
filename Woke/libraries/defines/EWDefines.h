@@ -58,9 +58,9 @@ typedef void (^SenderBlock)(id sender);
 #define EWAlert(str)                    [[[UIAlertView alloc] initWithTitle:@"Alert" message:str delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 
 #define UIColorFromHex(rgbValue)        [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-
 #define TICK                            NSDate *startTime = [NSDate date];
 #define TOCK                            NSLog(@"Time: %f", -[startTime timeIntervalSinceNow]);
+#define EWAssertMainThread              NSAssert([NSThread isMainThread], @"%s not in main thread", __FUNCTION__);
 
 //Account Management
 #define EWAccountDidLoginNotification    @"EWAccountDidLoginNotification"
@@ -76,7 +76,6 @@ typedef void (^SenderBlock)(id sender);
 #define kBackgroundFetchInterval        600.0 //TODO: possible conflict with serverUpdateInterval
 #define kSocialGraphUpdateInterval      3600*24*7
 #define kMaxVoicePerTask                3
-#define kLoopMediaPlayCount             100
 #define kServerUpdateInterval			7200
 
 //DEFAULT DATA
@@ -106,6 +105,12 @@ typedef void (^SenderBlock)(id sender);
 #define kSleepNotification              @"Sleep"
 #define kNewMediaNotification           @"media_event" //key: task & media
 #define kNewTimerNotification           @"alarm_timer"
+
+//Notification types
+#define kNotificationTypeFriendRequest  @"friendship_request"
+#define kNotificationTypeFriendAccepted @"friendship_accepted"
+#define kNotificationTypeSystemNotice   @"notice"
+#define kNotificationTypeNewMedia       @"new_media"
 
 #pragma mark - Data event
 //alarm store
@@ -154,12 +159,6 @@ typedef void (^SenderBlock)(id sender);
 #define kCollectionViewCellWidth        80
 #define kCollectionViewCellHeight       80
 
-//Notification types
-#define kNotificationTypeFriendRequest      @"friendship_request"
-#define kNotificationTypeFriendAccepted     @"friendship_accepted"
-#define kNotificationTypeSystemNotice             @"notice"
-#define kNotificationTypeNextTaskHasMedia   @"task_has_media"
-
 //Navgation Controller
 #define kMaxPersonNavigationConnt       6
 
@@ -177,5 +176,5 @@ typedef void (^SenderBlock)(id sender);
 
 //Wake Up
 #define kSleepTimeNotification          @"sleep_time"
-#define kWakeTimeNotification           @"wake_time"
+#define kWakeStartNotification           @"wake_time"
 #define kVoicePlayNotification          @"voice_play"

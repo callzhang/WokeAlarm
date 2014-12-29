@@ -22,23 +22,6 @@
 #import "EWActivityManager.h"
 #import "EWAlarmManager.h"
 #import "NSTimer+BlocksKit.h"
-//#import "AppDelegate.h"
-
-//UI
-#import "EWWakeUpViewController.h"
-#import "EWPostWakeUpViewController.h"
-//#import "EWSleepViewController.h"
-//#import "EWPostWakeUpViewController.h"
-//#import "UIView+Extend.h"
-//#import "UIView+Blur.h"
-//#import "UIViewController+Blur.h"
-
-
-@interface EWWakeUpManager()
-//retain the controller so that it won't deallocate when needed
-//@property (nonatomic, retain) EWWakeUpViewController *controller;
-@end
-
 
 @implementation EWWakeUpManager
 
@@ -53,25 +36,28 @@
 
 - (id)init{
 	self = [super init];
-    _currentActivity = [EWPerson myCurrentAlarmActivity];
-    _alarm = [EWPerson myCurrentAlarm];
+    if ([EWSession sharedSession].isWakingUp) {
+        self.medias = [EWPerson myUnreadMedias];
+    }else{
+        [self reloadMedias];
+    }
+    
+    self.continuePlay = YES;
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingEnterNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[self alarmTimerCheck];
 		[self sleepTimerCheck];
 	}];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithPause) name:kAVManagerDidFinishPlaying object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoice) name:kAudioPlayerDidFinishPlaying object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kNewMediaNotification object:nil];
+    //first time loop
+    self.loopCount = kLoopMediaPlayCount;
     
 	return self;
 }
 
-- (EWAlarm *)alarm{
-    return [EWPerson myCurrentAlarm];
-}
-
-- (EWActivity *)currentActivity{
-    return [EWPerson myCurrentAlarmActivity];
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Handle push notification
@@ -80,72 +66,41 @@
     NSParameterAssert([pushType isEqualToString:kPushTypeMedia]);
     NSString *type = notification[kPushMediaType];
     NSString *mediaID = notification[kPushMediaID];
-    EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivity];
 	
     if (!mediaID) {
         NSLog(@"Push doesn't have media ID, abort!");
         return;
     }
     
+    //download media
     EWMedia *media = [EWMedia getMediaByID:mediaID];
-    //NSDate *nextTimer = nextAlarm.time;
+    //Woke state -> assign media to next task, download
+    if (![[EWPerson me].unreadMedias containsObject:media]) {
+        [[EWPerson me] addUnreadMediasObject:media];
+        [EWSync save];
+    }
     
     if ([type isEqualToString:kPushMediaTypeVoice]) {
         // ============== Media ================
         NSParameterAssert(mediaID);
         NSLog(@"Received voice type push");
         
-
-        //download media
-        NSLog(@"Downloading media: %@", media.objectId);
-        [media downloadMediaFile];
-        
-        //determin action based on task timing
-        if ([[NSDate date] isEarlierThan:activity.time]) {
-            
-            //============== pre alarm -> download ==============
-            
-        }else if (!activity.completed && [[NSDate date] timeIntervalSinceDate:activity.time] < kMaxWakeTime){
-            
-            //============== struggle ==============
-            
-            //assign activity
-            media.activity = activity;
-            
-            //broadcast so wakeupVC can react to it
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:self userInfo:activity];
-            
-            //save
-            [EWSync save];
-            
-        }else{
-            
-            //Woke state -> assign media to next task, download
-            if (![[EWPerson me].unreadMedias containsObject:media]) {
-                [[EWPerson me] addUnreadMediasObject:media];
-                [EWSync save];
-                
-            }
-            
-        }
-        
 #ifdef DEBUG
         [[[UIAlertView alloc] initWithTitle:@"Voice来啦" message:@"收到一条神秘的语音."  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 #endif
-        
         
     }else if([type isEqualToString:@"test"]){
         
         // ============== Test ================
         
-        NSLog(@"Received === test === type push");
-        [UIApplication sharedApplication].applicationIconBadgeNumber = 9;
-        
+        DDLogInfo(@"Received === test === type push");
+        EWAlert(@"Received === test === type push");
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 99;
     }
 }
 
 - (void)handleAlarmTimerEvent:(NSDictionary *)info{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     if ([EWSession sharedSession].isWakingUp) {
         DDLogWarn(@"WakeUpManager is already handling alarm timer, skip");
         return;
@@ -159,14 +114,14 @@
 	
     //get target activity
     EWAlarm *alarm;
-    EWActivity *activity = self.currentActivity;
+    EWActivity *activity = [EWActivityManager sharedManager].currentAlarmActivity;
     if (info) {
         NSString *alarmID = info[kPushAlarmID];
         NSString *alarmLocalID = info[kLocalAlarmID];
         NSParameterAssert(alarmID || alarmLocalID);
         if (alarmID) {
             isLaunchedFromRemoteNotification = YES;
-            alarm = (EWAlarm *)[EWSync findObjectWithClass:@"EWAlarm" withID:alarmID];
+            alarm = [EWAlarm getAlarmByID:alarmID];
         }else if (alarmLocalID){
             isLaunchedFromLocalNotification = YES;
             NSURL *url = [NSURL URLWithString:alarmLocalID];
@@ -193,59 +148,33 @@
         NSLog(@"Alarm is OFF, skip today's alarm");
         return;
     }
+    if (alarm.time.nextOccurTime.timeElapsed > kMaxWakeTime) {
+        NSLog(@"Activity(%@) from notification has passed the wake up window. Handle it with checkPastTasks.", activity.objectId);
+        [[EWActivityManager sharedManager] currentAlarmActivity];
+        return;
+    }
     
     if (activity.completed) {
         // task completed
         NSLog(@"Activity has completed at %@, skip.", activity.completed.date2String);
         return;
     }
-    if (activity.time.timeElapsed > kMaxWakeTime) {
-        NSLog(@"Activity(%@) from notification has passed the wake up window. Handle it with checkPastTasks.", activity.objectId);
-        [[EWActivityManager sharedManager] currentAlarmActivity];
-        return;
-    }
-#if !DEBUG
-    if (task.time.timeIntervalSinceNow>0) {
-        DDLogWarn(@"Task %@(%@) passed in is in the future", task.time.date2String, task.objectId);
-        return;
-    }
-#endif
+
     //state change
-    [EWSession sharedSession].isSleeping = NO;
-    [EWSession sharedSession].isWakingUp = YES;
+    [self startToWake];
     
     //update media
-    [[EWMediaManager sharedInstance] checkMediaAssets];
-    NSArray *medias = [EWPerson me].unreadMedias.allObjects;
+    [[EWMediaManager sharedInstance] checkUnreadMedias];
+    NSArray *medias = [EWPerson myUnreadMedias];
     
     //fill media from mediaAssets, if no media for task, create a pseudo media
-    NSInteger nVoiceNeeded = 1;
-    
-    for (EWMedia *media in medias) {
-        if (!media.targetDate || [media.targetDate timeIntervalSinceNow]<0) {
-            
-            //find media to add
-            [activity addMediasObject: media];
-            //remove media from mediaAssets, need to remove relation doesn't have inverse relation. This is to make sure the sender doesn't need to modify other person
-            [[EWPerson me] removeUnreadMediasObject:media];
-            //!!!single directional relation? Remove media.receiver?
-            
-            //stop if enough
-            if ([media.type isEqualToString: kMediaTypeVoice]) {
-                //reduce the counter
-                nVoiceNeeded--;
-                if (nVoiceNeeded <= 0) {
-                    break;
-                }
-            }
-        }
-    }
+    //NSInteger nVoiceNeeded = 1;
     
     //add Woke media is needed
-    if (activity.medias.count == 0) {
+    if (medias.count == 0) {
         //need to create some voice
         EWMedia *media = [[EWMediaManager sharedInstance] getWokeVoice];
-        [activity addMediasObject:media];
+        [[EWPerson me] addUnreadMediasObject:media];
     }
     
     //save
@@ -259,17 +188,17 @@
     
     if (isLaunchedFromLocalNotification) {
         
-        NSLog(@"Entered from local notification, start wakeup view now");
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
+        DDLogVerbose(@"Entered from local notification, start wakeup view now");
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
     }else if (isLaunchedFromRemoteNotification){
         
-        NSLog(@"Entered from remote notification, start wakeup view now");
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
+        DDLogVerbose(@"Entered from remote notification, start wakeup view now");
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
     }else{
         //fire an alarm
-        NSLog(@"=============> Firing Alarm timer notification <===============");
+        DDLogVerbose(@"=============> Firing Alarm timer notification <===============");
         UILocalNotification *note = [[UILocalNotification alloc] init];
         note.alertBody = [NSString stringWithFormat:@"It's time to wake up (%@)", [alarm.time date2String]];
         note.alertAction = @"Wake up!";
@@ -289,7 +218,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(d * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //present wakeupVC and paly when displayed
             [[EWAVManager sharedManager] volumeFadeWithCompletion:^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:kWakeTimeNotification object:activity];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
             }];
         });
     }
@@ -299,9 +228,9 @@
 + (BOOL)isRootPresentingWakeUpView{
     //determin if WakeUpViewController is presenting
     UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
-    if ([vc isKindOfClass:[EWWakeUpViewController class]]) {
+    if ([NSStringFromClass([vc class]) isEqualToString:@"EWWakeUpViewController"]) {
         return YES;
-    }else if ([vc isKindOfClass:[EWPostWakeUpViewController class]]){
+    }else if ([NSStringFromClass([vc class]) isEqualToString:@"EWPreWakeViewController"]){
         return YES;
     }
     return NO;
@@ -311,7 +240,10 @@
 
 //indicate that the user has woke
 - (void)wake{
-    
+    if ([EWSession sharedSession].isWakingUp == NO) {
+        DDLogWarn(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
+        return;
+    }
     [EWSession sharedSession].isSleeping = NO;
     [EWSession sharedSession].isWakingUp = NO;
     
@@ -319,7 +251,7 @@
     [[ATConnect sharedConnection] engage:kWakeupSuccess fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
     
     //set wakeup time, move to past, schedule and save
-    [[EWActivityManager sharedManager] completeAlarmActivity:self.currentActivity];
+    [[EWActivityManager sharedManager] completeAlarmActivity:[EWPerson myCurrentAlarmActivity]];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     
@@ -332,6 +264,12 @@
     //check that current alarm activity and alarm are correct
     [self alarmTimerCheck];
     [EWSession sharedSession].isSleeping = YES;
+    [EWSession sharedSession].isWakingUp = NO;
+}
+
+- (void)startToWake{
+    [EWSession sharedSession].isSleeping = NO;
+    [EWSession sharedSession].isWakingUp = YES;
 }
 
 #pragma mark - CHECK TIMER
@@ -413,78 +351,81 @@
 }
 
 #pragma mark - Play for wake up view
-- (void)playNextVoice{
-    EWMedia *mediaJustFinished = mediaJustFinished = [EWAVManager sharedManager].media;
-    float t = 0;
-    if (mediaJustFinished) {
-        t = kMediaPlayInterval;
-    }
-    //delay 3s if there is a media playing previously
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(t * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+- (void)playNextVoiceWithPause{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kMediaPlayInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //check if playing media is changed
-        if (mediaJustFinished != [EWAVManager sharedManager].media) {
+        if (self.currentMedia != [EWAVManager sharedManager].media) {
             DDLogInfo(@"Media has changed since during the delay. Skip!");
             return;
         }
+        [self playNextVoice];
+    });
+}
+
+- (void)playNextVoice{
+    
+    //Active session
+    [[EWAVManager sharedManager] registerActiveAudioSession];
+    
+    //check if need to play next
+    if (!self.continuePlay){
+        DDLogInfo(@"Next is disabled, stop playing next");
+        return;
+    }
+    //return if no  medias
+    if (!_medias.count) {
+        DDLogWarn(@"%s No media to play", __FUNCTION__);
+        return;
+    }
+    
+    NSUInteger mediaJustPlayedIdx = [_medias indexOfObject:self.currentMedia];//if not found, next = 0
+    if (mediaJustPlayedIdx == NSNotFound) {
+        mediaJustPlayedIdx = 0;
+    } else {
+        mediaJustPlayedIdx ++;
+    }
+    
+    if (mediaJustPlayedIdx < _medias.count){
+        //get next cell
+        NSLog(@"Play next song (%ld)", (long)mediaJustPlayedIdx);
+        self.currentMedia = _medias[mediaJustPlayedIdx];
+        [[EWAVManager sharedManager] playMedia:_currentMedia];
         
-        //check if need to play next
-        if (!self.playNext){
-            DDLogInfo(@"Next is disabled, stop playing next");
-            return;
-        }
-        //return if no  medias
-        if (!_medias.count) {
-            return;
-        }
-        
-        NSUInteger mediaJustPlayed = [_medias indexOfObject:mediaJustFinished];//if not found, next = 0
-        if (mediaJustPlayed != _currentMediaIndex) {
-            DDLogInfo(@"Media order has changed since last known. Skip!");
-            return;
-        }
-        _currentMediaIndex ++;
-        
-        if (_currentMediaIndex < _medias.count){
-            //get next cell
-            NSLog(@"Play next song (%ld)", (long)_currentMediaIndex);
-            [[EWAVManager sharedManager] playMedia:_medias[_currentMediaIndex]];
+    }else{
+        if ((--_loopCount)>0) {
+            //play the first if loopCount > 0
+            NSLog(@"Looping, %ld loop left", (long)_loopCount);
+            self.currentMedia = _medias.firstObject;
+            [[EWAVManager sharedManager] playMedia:_currentMedia];
             
         }else{
-            if ((--_loopCount)>0) {
-                //play the first if loopCount > 0
-                NSLog(@"Looping, %ld loop left", (long)_loopCount);
-                [[EWAVManager sharedManager] playMedia:_medias.firstObject];
-                
-            }else{
-                NSLog(@"Loop finished, stop playing");
-                //nullify all cell info in EWAVManager
-                self.currentMediaIndex = 0;
-                self.currentActivity = nil;
-                
-                [EWAVManager sharedManager].media = nil;
-                return;
-            }
+            NSLog(@"Loop finished, stop playing");
+            //nullify all info in EWAVManager
+            [self stopPlayingVoice];
+            self.currentMedia = nil;
+            return;
         }
-    });
+    }
 }
 
 - (void)stopPlayingVoice{
     [[EWAVManager sharedManager] stopAllPlaying];
 }
 
-- (float)playingProgress{
-    float t = [EWAVManager sharedManager].player.currentTime;
-    float T = [EWAVManager sharedManager].player.duration;
-    return t/T;
-}
-
 - (void)playVoiceAtIndex:(NSUInteger)n{
+    self.currentMedia = _medias[n];
     [[EWAVManager sharedManager] playMedia:_medias[n]];
 }
 
-- (EWPerson *)currentWaker{
-    EWMedia *mediaPlaying = _medias[_currentMediaIndex];
-    return mediaPlaying.author;
+- (NSUInteger)currentMediaIndex{
+    return [_medias indexOfObjectIdenticalTo:_currentMedia];
 }
 
+- (void)reloadMedias{
+    if ([EWSession sharedSession].isWakingUp) {
+        self.medias = [EWPerson myUnreadMedias];
+    }else{
+        DDLogWarn(@"You have already woken up, playing media list will not load from myUnreadMedias");
+    }
+}
 @end

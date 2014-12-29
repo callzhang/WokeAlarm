@@ -19,6 +19,7 @@
 #import "EWMainViewController.h"
 
 #import <CrashlyticsLogger.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 #import "DDLog.h"
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
@@ -60,7 +61,8 @@ UIViewController *rootViewController;
     //crashlytics logger
     [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
 #endif
-    
+    // Enable Crash Reporting
+    [ParseCrashReporting enable];
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
     //[EWStartUpSequence deleteDatabase];
@@ -69,14 +71,21 @@ UIViewController *rootViewController;
     //watch for login
     [EWStartUpSequence sharedInstance];
     
+    DDLogInfo(@"Bundle ID: %@", [[NSBundle mainBundle] bundleIdentifier]);
+    
 #ifdef caoer115
     EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
-#else
+#endif
+    
+    //Login process: https://www.lucidchart.com/documents/edit/47d70f1c-5306-dbab-81ce-6d480a005610
     if ([EWAccountManager isLoggedIn]) {
         [[EWAccountManager sharedInstance] fetchCurrentUser:[PFUser currentUser]];
-        [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *error) {
+        [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
+            if (error) {
+                DDLogError(@"With error: %@", error);
+            }
         }];
         
         //show main view controller
@@ -89,7 +98,6 @@ UIViewController *rootViewController;
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
         
     }
-#endif
     return YES;
 }
 

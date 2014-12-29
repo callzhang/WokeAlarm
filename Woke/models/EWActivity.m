@@ -14,6 +14,7 @@ const struct EWActivityTypes EWActivityTypes = {
 @end
 
 @implementation EWActivity
+@dynamic mediaIDs;
 
 + (EWActivity *)newActivity{
     EWActivity *activity = [EWActivity MR_createEntity];
@@ -29,33 +30,27 @@ const struct EWActivityTypes EWActivityTypes = {
 
 - (BOOL)validate{
     BOOL good = YES;
-    PFObject *selfPO = self.parseObject;
     if (!self.owner) {
-        PFUser *ownerPO = selfPO[EWActivityRelationships.owner];
-        EWPerson *owner = (EWPerson *)[ownerPO managedObjectInContext:mainContext];
-        self.owner = owner;
-        if (!self.owner) {
-            good = NO;
-        }
+        good = NO;
     }
     if (!self.type) {
-        self.type = selfPO[EWActivityAttributes.type];
-        if (!self.type) {
+        good = NO;
+    }
+    else if ([self.type isEqualToString:EWActivityTypes.alarm]) {
+        if (!self.time) {
+            DDLogError(@"Activity %@ missing time", self.objectId);
             good = NO;
         }
     }
-    
-    //TODO: check more values
     
     return good;
 }
 
-- (EWActivity *)createWithMedia:(EWMedia *)media {
-    EWActivity *activity = [EWActivity newActivity];
-    activity.type = EWActivityTypes.media;
-    [activity addMediasObject:media];
-    
-    return activity;
+- (void)addMediaID:(NSString *)objectID{
+    NSMutableArray *mediaArray = self.mediaIDs.mutableCopy ?: [NSMutableArray new];
+    [mediaArray addObject:objectID];
+    self.mediaIDs = mediaArray.copy;
+    [EWSync save];
 }
 
 

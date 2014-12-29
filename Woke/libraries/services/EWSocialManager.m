@@ -29,11 +29,26 @@
         if (!manager) {
             manager = [[EWSocialManager alloc] init];
             [manager.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) block:^(id observer, id object, NSDictionary *change) {
-                DDLogVerbose(@"Obverved friends added");
-                NSArray *new = change[NSKeyValueChangeNewKey];
-                NSArray *old = change[NSKeyValueChangeOldKey];
-                NSArray *addition = [new filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT SELF IN %@", old]];
-                [manager updateFriendshipTimelineForFrendsIDs:[addition valueForKey:kParseObjectID]];
+                //add new friends to the friendship timeline
+                [manager updateFriendshipTimeline];
+                
+                //test
+                NSIndexSet *indices = [change objectForKey:NSKeyValueChangeIndexesKey];
+                if (indices == nil)
+                    return;
+                DDLogVerbose(@"Obverved friends changed");
+                [indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+                    if ([change[NSKeyValueChangeKindKey] integerValue] == NSKeyValueChangeInsertion) {
+                        //insertion
+                        DDLogVerbose(@"New friends");
+                    }else if ([change[NSKeyValueChangeNewKey] integerValue] == NSKeyValueChangeRemoval){
+                        //removal
+                        DDLogVerbose(@"removed friends");
+                    }else if ([change[NSKeyValueChangeNewKey] integerValue] == NSKeyValueChangeReplacement){
+                        //replacement
+                        DDLogVerbose(@"replaced friends");
+                    }
+                }];
             }];
         }
     });
@@ -42,21 +57,29 @@
 }
 
 
-- (void)updateFriendshipTimelineForFrendsIDs:(NSArray *)friendsIDs{
+- (void)updateFriendshipTimeline{
     EWPerson *me = [EWPerson me];
-    if (!me.socialGraph.friendshipTimeline) {
-        me.socialGraph.friendshipTimeline = [NSMutableDictionary new];
-    }
     
-    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline;
+    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline?:[NSMutableDictionary new];
+    //diff
+    NSMutableSet *allFriendsInTimeline = [NSMutableSet new];
+    NSMutableSet *allFriends = [me.friends mutableSetValueForKey:kParseObjectID];
+    for (NSArray *friends in friendsActivityDic.allValues) {
+        [allFriendsInTimeline addObjectsFromArray:friends];
+    }
+    [allFriends minusSet:allFriendsInTimeline];
+    //get friends for today
     NSString *dateKey = [NSDate date].date2YYMMDDString;
     NSArray *friendedArray = friendsActivityDic[dateKey]?:[NSArray new];
     NSMutableSet *friendedSet = [NSMutableSet setWithArray:friendedArray];;
-    
-    [friendedSet addObjectsFromArray:friendsIDs];
-    
+    //add new friends
+    [friendedSet setByAddingObjectsFromSet:allFriends];
+    if (friendedSet.count == 0) {
+        return;
+    }
+    //save
     friendsActivityDic[dateKey] = [friendedSet allObjects];
-    
+    me.socialGraph.friendshipTimeline = friendsActivityDic;
     [EWSync save];
 }
 

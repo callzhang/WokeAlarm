@@ -213,14 +213,14 @@
 
 
 #pragma mark - Update Activity
-- (void)updateActivityCacheWithCompletion:(void (^)(void))block{
+- (void)updateActivityCacheWithCompletion:(VoidBlock)block{
     //TODO
     NSParameterAssert([_person isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWPerson *localPerson = [_person MR_inContext:localContext];
         NSArray *activities = [localPerson.activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];//newest on top
         
-        NSSet *medias = localPerson.medias;
+        NSSet *medias = localPerson.sentMedias;
         NSMutableDictionary *cache = localPerson.cachedInfo.mutableCopy;
         NSMutableDictionary *activityCache = [cache[kActivityCache] mutableCopy]?:[NSMutableDictionary new];
         if (activityCache.count == activities.count) {

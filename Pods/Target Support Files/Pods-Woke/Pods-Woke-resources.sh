@@ -31,6 +31,10 @@ install_resource()
       echo "xcrun momc \"${PODS_ROOT}/$1\" \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcdatamodeld`.momd\""
       xcrun momc "${PODS_ROOT}/$1" "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcdatamodeld`.momd"
       ;;
+    *.xcmappingmodel)
+      echo "xcrun mapc \"${PODS_ROOT}/$1\" \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcmappingmodel`.cdm\""
+      xcrun mapc "${PODS_ROOT}/$1" "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcmappingmodel`.cdm"
+      ;;
     *.xcassets)
       ;;
     /*)
@@ -43,7 +47,15 @@ install_resource()
       ;;
   esac
 }
-          install_resource "GPUImage/framework/Resources/lookup.png"
+          install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton@2x.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed@2x.png"
+                    install_resource "GPUImage/framework/Resources/lookup.png"
                     install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
                     install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
                     install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"

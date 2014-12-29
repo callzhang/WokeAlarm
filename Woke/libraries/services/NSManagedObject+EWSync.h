@@ -31,7 +31,7 @@
  Refresh ManagedObject value from server in background
  @discussion If the ParseID is not found on this ManagedObject, an insert action will performed.
  */
-- (void)refreshInBackgroundWithCompletion:(void (^)(void))block;
+- (void)refreshInBackgroundWithCompletion:(ErrorBlock)block;
 
 /**
  Refresh ManagedObject value from server in the current thread
@@ -47,13 +47,13 @@
  *TODO: It also checks that if any data on server has duplication.
  *@discussion it is usually used for current user object (me)
  */
-- (void)refreshRelatedWithCompletion:(void (^)(void))block;
+- (void)refreshRelatedWithCompletion:(ErrorBlock)block;
 
 /**
  Update object from PO for value, and related PO that is returned as Array of pointers
  The goal is to call server once and get as much as possible.
  */
-- (void)refreshShallowWithCompletion:(void (^)(void))block;
+- (void)refreshShallowWithCompletion:(ErrorBlock)block;
 
 /**
  Assign only attribute values (not relation) to the ManagedObject from the Parse Object

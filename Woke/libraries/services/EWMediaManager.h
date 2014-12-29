@@ -35,9 +35,11 @@
  */
 - (NSArray *)mediasForPerson:(EWPerson *)person;
 
+- (NSArray *)unreadMediasForPerson:(EWPerson *)person;
+
 //Check media assets relationship
-- (BOOL)checkMediaAssets;
-- (void)checkMediaAssetsInBackground;
+- (NSArray *)checkUnreadMedias;
+- (void)checkUnreadMediasWithCompletion:(ArrayBlock)block;
 
 //get ramdom voice
 - (EWMedia *)getWokeVoice;

@@ -7,37 +7,51 @@
 //
 
 #import "EWPreWakeViewController.h"
-#import "EWSession.h"
 #import "EWWakeUpManager.h"
 #import "EWMedia.h"
-#import "EWActivity.h"
 #import "EWAVManager.h"
 #import "NSTimer+BlocksKit.h"
-#import "EWAVManager.h"
+#import "EWAlarm.h"
+#import "EWMediaManager.h"
 
 @interface EWPreWakeViewController(){
     NSTimer *progressUpdateTimer;
 }
-
 @end
 
-@implementation EWPreWakeViewController
 
+@implementation EWPreWakeViewController
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.medias = [EWWakeUpManager sharedInstance].currentActivity.medias.allObjects;
-    self.currentMedia = self.medias.firstObject;
+    
+    //data source
+    [[EWWakeUpManager sharedInstance] playNextVoice];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        if (note.object == [EWPerson myCurrentAlarmActivity]) {
+            [self updateViewForCurrentMedia];
+        }
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
+        
+        [self updateViewForCurrentMedia];
+        //[[EWAVManager sharedManager] playMedia:self.currentMedia];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    
     //update view
     [self updateViewForCurrentMedia];
     
     //update progress
-    progressUpdateTimer = [NSTimer bk_scheduledTimerWithTimeInterval:0.05 block:^(NSTimer *timer) {
+    progressUpdateTimer = [NSTimer bk_scheduledTimerWithTimeInterval:.1 block:^(NSTimer *timer) {
         if ([EWAVManager sharedManager].player.isPlaying) {
-            if (self.progress.alpha < 1) {
+            if (self.progress.alpha == 0) {
                 [UIView animateWithDuration:0.5 animations:^{
                     self.progress.alpha = 1;
                 }];
@@ -46,36 +60,32 @@
             float d = [EWAVManager sharedManager].player.duration;
             self.progress.progress = t / d;
         }else{
-            if (self.progress.alpha >0) {
+            if (self.progress.alpha == 1) {
                 [UIView animateWithDuration:0.5 animations:^{
                     self.progress.alpha = 0;
                 }];
             }
         }
-        
     } repeats:YES];
     
-    //register playing info
-    [[NSNotificationCenter defaultCenter] addObserverForName:kAudioPlayerPlayingNewMedia object:nil queue:nil usingBlock:^(NSNotification *note) {
-        //update info
-        [self updateViewForCurrentMedia];
-    }];
-    
-    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
 }
 
-- (void)dealloc{
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [progressUpdateTimer invalidate];
 }
 
-//UI
+
+#pragma mark - UI
 - (void)updateViewForCurrentMedia{
-    self.profileImage.image = self.currentMedia.author.profilePic;
-    self.name.text = self.currentMedia.author.name;
+    EWPerson *author = [EWWakeUpManager sharedInstance].currentMedia.author;
+    self.profileImage.image = author.profilePic;
+    self.name.text = author.name;
 }
 
 - (IBAction)wakeUp:(UIButton *)sender {
     DDLogInfo(@"Wake button pressed!");
+    [[EWWakeUpManager sharedInstance] wake];
 }
 
 - (IBAction)newMedia:(id)sender {
@@ -84,9 +94,20 @@
         //
         if (!error) {
             DDLogInfo(@"Finished test voice request");
+            //check new media
+            NSArray *newMedias = [[EWMediaManager sharedInstance] checkUnreadMedias];
+            if (newMedias.count) {
+                //update view
+                DDLogVerbose(@"New media found (%ld)", newMedias.count);
+                
+            }
         }else{
             DDLogError(@"Failed test voice request: %@", error.description);
         }
     }];
+}
+
+- (IBAction)next:(id)sender {
+    [[EWWakeUpManager sharedInstance] playNextVoice];
 }
 @end

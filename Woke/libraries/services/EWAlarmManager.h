@@ -42,9 +42,9 @@
 
 //local notification
 - (void)checkScheduledLocalNotifications;
-- (void)scheduleAlarmTimerNotifications;
+- (void)scheduleAllNotifications;
 - (void)scheduleSleepNotifications;
-- (void)cancelAlarmTimerNotifications;
+- (void)cancelAllNotifications;
 - (void)cancelSleepNotifications;
 
 

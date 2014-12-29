@@ -24,5 +24,5 @@
 //- (BOOL)hasAddressBookAccess;
 - (void)loadAddressBookCompletion:(void (^)(NSArray *contacts, NSError *error))completion;
 
-- (void)updateFriendshipTimelineForFrendsIDs:(NSArray *)friendsIDs;
+- (void)updateFriendshipTimeline;
 @end

@@ -11,6 +11,8 @@
 #import "EWActivity.h"
 #import "EWAlarm.h"
 #import "NSArray+BlocksKit.h"
+#import "EWMedia.h"
+#import "EWAlarmManager.h"
 
 NSString *const EWActivityTypeAlarm = @"alarm";
 NSString *const EWActivityTypeFriendship = @"friendship";
@@ -27,6 +29,26 @@ NSString *const EWActivityTypeMedia = @"media";
         });
     }
     return manager;
+}
+
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        /* no need to observe new media
+        //observe new media notification
+        [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            DDLogVerbose(@"Activity manager observed new media notification and added new media to my current alarm activity");
+            EWMedia *newMedia = note.object;
+            EWActivity *alarmActivity = [EWPerson myCurrentAlarmActivity];
+            NSMutableArray *mediaArray = alarmActivity.mediaIDs.mutableCopy;
+            [mediaArray addObject:newMedia.objectId];
+            alarmActivity.mediaIDs = mediaArray.copy;
+            [EWSync save];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTypeActivityHasNewMedia object:alarmActivity];
+        }];
+         */
+    }
+    return self;
 }
 
 + (NSArray *)myActivities{
@@ -51,30 +73,29 @@ NSString *const EWActivityTypeMedia = @"media";
     return activities;
 }
 
-- (EWActivity *)myCurrentAlarmActivity{
-    
-    EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
+- (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person{
+    EWAlarm *nextAlarm = [[EWAlarmManager sharedInstance] nextAlarmForPerson:person];
     
     if (!_currentAlarmActivity) {
-        NSArray *activities = [EWActivityManager myActivities];
-        NSArray *alarmActivities = [activities bk_select:^BOOL(EWActivity *obj) {
-            return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
-        }];
-        EWActivity *lastAlarmActivity = alarmActivities.lastObject;
-        if (lastAlarmActivity && fabs([lastAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])<1) {
-            //the last activity is the current activity
-            _currentAlarmActivity = lastAlarmActivity;
-        }else{
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, nextAlarm.time.nextOccurTime];
+        NSArray *activities = [EWActivity MR_findAllWithPredicate:predicate];
+        _currentAlarmActivity = activities.lastObject;
+        if (activities.count > 1) {
+            DDLogError(@"Multiple current alarm activities found, please check: \n%@", [activities valueForKey:EWActivityAttributes.time]);
+        }
+        
+        if (!_currentAlarmActivity) {
             //create new activity
             _currentAlarmActivity = [EWActivity newActivity];
-            _currentAlarmActivity.owner = [EWPerson me];
+            _currentAlarmActivity.owner = person;
             _currentAlarmActivity.type = EWActivityTypeAlarm;
             _currentAlarmActivity.time = nextAlarm.time.nextOccurTime;
+            [EWSync save];
         }
     }else{
         if (fabs([_currentAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])>1) {
             _currentAlarmActivity = nil;
-            return self.currentAlarmActivity;
+            [self currentAlarmActivityForPerson:person];
         }
     }
     return _currentAlarmActivity;
@@ -82,7 +103,16 @@ NSString *const EWActivityTypeMedia = @"media";
 
 - (void)completeAlarmActivity:(EWActivity *)activity{
     NSParameterAssert([activity.type isEqualToString:EWActivityTypeAlarm]);
-    //TODO
+    if (activity != self.currentAlarmActivity) {
+        DDLogError(@"%s The activity passed in is not the current activity", __FUNCTION__);
+    }else{
+        //add unread medias to current media
+        for (EWMedia *media in [EWPerson myUnreadMedias]) {
+            [activity addMediaID:media.objectId];
+        }
+        [EWPerson me].unreadMedias = nil;
+    }
+    
     activity.completed = [NSDate date];
     self.currentAlarmActivity = nil;
 }

@@ -27,9 +27,10 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	.activities = @"activities",
 	.alarms = @"alarms",
 	.friends = @"friends",
-	.medias = @"medias",
 	.notifications = @"notifications",
+	.receivedMedias = @"receivedMedias",
 	.receivedMessages = @"receivedMessages",
+	.sentMedias = @"sentMedias",
 	.sentMessages = @"sentMessages",
 	.socialGraph = @"socialGraph",
 	.unreadMedias = @"unreadMedias",
@@ -140,17 +141,6 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	return result;
 }
 
-@dynamic medias;
-
-- (NSMutableSet*)mediasSet {
-	[self willAccessValueForKey:@"medias"];
-
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medias"];
-
-	[self didAccessValueForKey:@"medias"];
-	return result;
-}
-
 @dynamic notifications;
 
 - (NSMutableSet*)notificationsSet {
@@ -162,9 +152,49 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	return result;
 }
 
+@dynamic receivedMedias;
+
+- (NSMutableSet*)receivedMediasSet {
+	[self willAccessValueForKey:@"receivedMedias"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"receivedMedias"];
+
+	[self didAccessValueForKey:@"receivedMedias"];
+	return result;
+}
+
 @dynamic receivedMessages;
 
+- (NSMutableSet*)receivedMessagesSet {
+	[self willAccessValueForKey:@"receivedMessages"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"receivedMessages"];
+
+	[self didAccessValueForKey:@"receivedMessages"];
+	return result;
+}
+
+@dynamic sentMedias;
+
+- (NSMutableSet*)sentMediasSet {
+	[self willAccessValueForKey:@"sentMedias"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"sentMedias"];
+
+	[self didAccessValueForKey:@"sentMedias"];
+	return result;
+}
+
 @dynamic sentMessages;
+
+- (NSMutableSet*)sentMessagesSet {
+	[self willAccessValueForKey:@"sentMessages"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"sentMessages"];
+
+	[self didAccessValueForKey:@"sentMessages"];
+	return result;
+}
 
 @dynamic socialGraph;
 

@@ -57,7 +57,7 @@
         if ([value isKindOfClass:[NSData class]]) {
             //data
             if (!expectChange && POValue) {
-                DDLogVerbose(@"MO attribute %@(%@)->%@ not change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
+                DDLogVerbose(@"MO attribute %@(%@)->%@ no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
                 return;
             }
             //TODO: video file
@@ -108,8 +108,7 @@
             if ([obj isToMany]) {
                 //To-Many relation
                 //First detect if has inverse relation, if not, we use Array to represent the relation
-                //Exceptin: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
-                //TODO: in the next release we need to use Array for all relation except relation to EWPerson
+                //TODO: Exceptin: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
                 if (!obj.inverseRelationship/* && ![key isEqualToString:kUserClass]*/) {
                     //No inverse relation, use array of pointer
                     
@@ -146,7 +145,7 @@
                     for (PFObject *PO in relatedParseObjectsToDelete) {
                         [parseRelation removeObject:PO];
                         //We don't update the inverse PFRelation as they should be updated from that MO
-                        NSLog(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], obj.name, PO.objectId);
+                        DDLogVerbose(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, managedObject.serverID, key, PO.objectId);
                     }
                 }
                 
@@ -159,7 +158,7 @@
                         //PFObject *relatedParseObject = [EWDataStore getCachedParseObjectForID:parseID];
                         PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
                         
-                        DDLogVerbose(@"+++> To-many relation on PO %@->%@(%@) added when updating from MO", managedObject.entity.name, relatedParseObject.parseClassName, relatedParseObject.objectId);
+                        DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
                         [parseRelation addObject:relatedParseObject];
                         
                     } else {
@@ -171,9 +170,9 @@
                             //the relation can only be additive, which is not a problem for new relation
                             [blockParseRelation addObject:object];
                             [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e   ) {
-                                NSLog(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, object.parseClassName, object.objectId);
+                                DDLogInfo(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, object.parseClassName, object.objectId);
                                 if (e) {
-                                    NSLog(@"Failed to save: %@", e.description);
+                                    DDLogError(@"Failed to save: %@", e.description);
                                     @try {
                                         [blockObject saveEventually];
                                     }
@@ -257,21 +256,22 @@
     
 }
 
-- (NSManagedObject *)managedObjectInContext:(NSManagedObjectContext *)context{
+- (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{
     
     if (!self.objectId) {
         return nil;
     }
     
     if (!context) {
+        EWAssertMainThread
         context = mainContext;
     }
-    NSMutableArray *MOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
+    NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
     //NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
-    while (MOs.count > 1) {
+    while (SOs.count > 1) {
         DDLogError(@"Find duplicated MO for ID %@", self.objectId);
-        NSManagedObject *mo_ = MOs.lastObject;
-        [MOs removeLastObject];
+        EWServerObject *mo_ = SOs.lastObject;
+        [SOs removeLastObject];
         [mo_ MR_deleteEntityInContext:context];
         
         [[EWSync sharedInstance].deleteToLocalItems addObject:self.objectId];
@@ -279,22 +279,22 @@
         //remove from the update queue
         [[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
     }
-    NSManagedObject *mo = MOs.firstObject;
+    EWServerObject *SO = SOs.firstObject;
     
-    if (!mo) {
+    if (!SO) {
         //if managedObject not exist, create it locally
-        mo = [NSClassFromString(self.localClassName) MR_createInContext:context];
-        [mo assignValueFromParseObject:self];
+        SO = [NSClassFromString(self.localClassName) MR_createInContext:context];
+        [SO assignValueFromParseObject:self];
         DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
     }else{
         
-        if ([mo valueForKey:kUpdatedDateKey] && (mo.isOutDated || self.isNewerThanMO)) {
-            [mo assignValueFromParseObject:self];
+        if ([SO valueForKey:kUpdatedDateKey] && (SO.isOutDated || self.isNewerThanMO)) {
+            [SO assignValueFromParseObject:self];
             //[EWDataStore saveToLocal:mo];//mo will be saved later
         }
     }
     
-    return mo;
+    return SO;
 }
 
 - (BOOL)isNewerThanMO{
@@ -303,7 +303,7 @@
     NSDate *updatedMO = [mo valueForKey:kUpdatedDateKey];
     if (updatedPO && updatedMO) {
         if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {
-            DDLogVerbose(@"PO is newer than MO: %@ > %@", updatedPO, updatedMO);
+            //DDLogVerbose(@"PO is newer than MO: %@ > %@", updatedPO, updatedMO);
             return YES;
         }else{
             return NO;

@@ -57,7 +57,7 @@
 
 #pragma mark - Login Check
 - (void)loginDataCheck{
-    DDLogVerbose(@"=== [%s] Logged in, performing login tasks.===", __func__);
+    DDLogVerbose(@"=== %s Logged in, performing login tasks.===", __func__);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (![currentInstallation[kUserID] isEqualToString: [EWPerson me].objectId]){
         currentInstallation[kUserID] = [EWPerson me].objectId;
@@ -75,10 +75,6 @@
 	//init backgrounding manager
 	[EWBackgroundingManager sharedInstance];
 	
-    //continue upload to server if any
-    DDLogVerbose(@"0. Continue uploading to server");
-    [[EWSync sharedInstance] resumeUploadToServer];
-	
 	//fetch everyone
 	DDLogVerbose(@"1. Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
@@ -92,12 +88,12 @@
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
     DDLogVerbose(@"4. Check my unread media");//media also will be checked with background fetch
-    [[EWMediaManager sharedInstance] checkMediaAssetsInBackground];
+    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:^(NSArray *array) {
+        DDLogInfo(@"Found %ld new media", array.count);
+    }];
     
-    //updating facebook friends
     DDLogVerbose(@"5. Updating facebook friends");
-    //TODO: why?
-//    [EWUserManager getFacebookFriends];
+    [[EWAccountManager sharedInstance] updateMyFacebookInfo];
     
     //update facebook info
     //DDLogVerbose(@"6. Updating facebook info");
@@ -110,7 +106,7 @@
     //[[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWPerson me]];
 	
 	//location
-	DDLogVerbose(@"8. Start location recurring update");
+	DDLogVerbose(@"8. Start location update");
 	[[EWAccountManager shared] registerLocation];
 	
     
@@ -138,18 +134,20 @@
     if (![EWPerson me]) {
         return;
     }
-    //this will run at the beginning and every 600s
-    DDLogVerbose(@"Start sync service");
 	
 	//fetch everyone
 	DDLogVerbose(@"[1] Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
-	
+
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
 		DDLogVerbose(@"[2] Start location recurring update");
 		[[EWAccountManager shared] registerLocation];
 	}
+    
+    //unread media
+    DDLogVerbose(@"[3] Check unread medias");
+    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:NULL];
     
 }
 

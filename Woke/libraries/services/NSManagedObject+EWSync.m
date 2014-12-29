@@ -15,11 +15,11 @@
 #pragma mark - Server sync
 - (void)updateValueAndRelationFromParseObject:(PFObject *)parseObject{
     if (!parseObject) {
-        DDLogWarn(@"*** PO is nil, please check!");
+        DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
         return;
     }
     if (!parseObject.isDataAvailable) {
-        DDLogWarn(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
+        DDLogError(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
         return;
     }
     
@@ -146,6 +146,7 @@
         }
     }];
     
+    //update updatedAt
     [self setValue:[NSDate date] forKey:kUpdatedDateKey];
     
     //pre save check
@@ -183,30 +184,40 @@
             return;
         }
         id parseValue = [object objectForKey:key];
-        
+        //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
             //PFFile
             PFFile *file = (PFFile *)parseValue;
-            
-            [self.managedObjectContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+            NSString *className = [self getPropertyClassByName:key];
+            if ([NSThread isMainThread]) { //download in background
+                [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    if (!data) {
+                        DDLogError(@"Failed to download PFFile: %@", error.description);
+                        return;
+                    }
+                    if ([className isEqualToString:@"UIImage"]) {
+                        UIImage *img = [UIImage imageWithData:data];
+                        [self setValue:img forKey:key];
+                    }else{
+                        [self setValue:data forKey:key];
+                    }
+                }];
+            }
+            else{//download directly if already in background
                 NSError *error;
                 NSData *data = [file getData:&error];
                 //[file getDataWithBlock:^(NSData *data, NSError *error) {
-                if (error || !data) {
+                if (!data) {
                     DDLogError(@"Failed to download PFFile: %@", error.description);
                     return;
                 }
-                NSManagedObject *localSelf = [self MR_inContext:localContext];
-                NSString *className = [localSelf getPropertyClassByName:key];
                 if ([className isEqualToString:@"UIImage"]) {
                     UIImage *img = [UIImage imageWithData:data];
-                    [localSelf setValue:img forKey:key];
+                    [self setValue:img forKey:key];
+                }else{
+                    [self setValue:data forKey:key];
                 }
-                else{
-                    [localSelf setValue:data forKey:key];
-                }
-                
-            }];
+            }
             
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
             //contains value
@@ -236,8 +247,9 @@
             }
         }
     }];
-    
-    [self setValue:[NSDate date] forKey:kUpdatedDateKey];
+    //assigned value from PO should not be considered complete, therefore we don't timestamp on this SO
+    //[self setValue:[NSDate date] forKey:kUpdatedDateKey];
+    [self saveToLocal];
 }
 
 #pragma mark - Parse related
@@ -245,7 +257,10 @@
     
     NSError *err;
     PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:self.serverClassName ID:self.serverID error:&err];
-    if (err) return nil;
+    if (err){
+        DDLogError(@"Failed to find PO for MO(%@) with error: %@", self.serverID, err.description);
+        return nil;
+    }
     
     //update value
     if ([object isNewerThanMO]) {
@@ -258,36 +273,35 @@
 #pragma mark - Download methods
 
 
-- (void)refreshInBackgroundWithCompletion:(void (^)(void))block{
+- (void)refreshInBackgroundWithCompletion:(ErrorBlock)block{
     //network check
     if (![EWSync isReachable]) {
         DDLogDebug(@"Network not reachable, skip refreshing.");
         //refresh later
         [self refreshEventually];
         if (block) {
-            block();
+            NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
+            block(err);
         }
         return;
     }
     
-    NSString *parseObjectId = self.serverID;
-    if (!parseObjectId) {
+    if (!self.serverID) {
         DDLogVerbose(@"When refreshing, MO missing serverID %@, prepare to upload", self.entity.name);
         [self uploadEventually];
         [EWSync save];
+        NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
         if (block) {
-            block();
+            block(err);
         }
     }else{
-        if ([self changedKeys]) {
-            DDLogVerbose(@"The MO %@(%@) you are trying to refresh HAS CHANGES, which makes the process UNSAFE!(%@)", self.entity.name, self.serverID, self.changedKeys);
-        }
-        
-        
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
             NSManagedObject *currentMO = [self MR_inContext:localContext];
             if (!currentMO) {
                 DDLogError(@"*** Failed to obtain object from database: %@", self);
+                if (block) {
+                    block(nil);
+                }
                 return;
             }
             //============ Refresh
@@ -296,7 +310,7 @@
             
         } completion:^(BOOL success, NSError *error) {
             if (block) {
-                block();
+                block(error);
             }
             
         }];
@@ -314,9 +328,7 @@
         return;
     }
     
-    NSString *parseObjectId = self.serverID;
-    
-    if (!parseObjectId) {
+    if (!self.serverID) {
         //NSParameterAssert([self isInserted]);
         DDLogWarn(@"!!! The MO %@(%@) trying to refresh doesn't have servreID, skip! %@", self.entity.name, self.serverID, self);
     }else{
@@ -331,8 +343,8 @@
         [object fetch];
         //update MO
         [self updateValueAndRelationFromParseObject:object];
-        //save
-        [self saveToLocal];
+        //save: already saved in update
+        //[self saveToLocal];
     }
 }
 
@@ -340,15 +352,22 @@
     [[EWSync sharedInstance] appendObject:self toQueue:kParseQueueRefresh];
 }
 
-- (void)refreshRelatedWithCompletion:(void (^)(void))block{
+- (void)refreshRelatedWithCompletion:(ErrorBlock)block{
     if (![EWSync isReachable]) {
         DDLogWarn(@"Network not reachable, refresh later.");
         //refresh later
+        if (block) {
+            NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
+            block(err);
+        }
         [self refreshEventually];
         return;
     }
     
     if (![self isKindOfClass:[EWPerson class]]) {
+        if (block) {
+            block(nil);
+        }
         return;
     }
     
@@ -374,19 +393,26 @@
     }];
     
     if (block) {
-        block();
+        block(nil);
     }
 }
 
-- (void)refreshShallowWithCompletion:(void (^)(void))block{
+- (void)refreshShallowWithCompletion:(ErrorBlock)block{
     if (![EWSync isReachable]) {
         DDLogInfo(@"Network not reachable, refresh later.");
         //refresh later
         [self refreshEventually];
+        if (block) {
+            NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
+            block(err);
+        }
         return;
     }
     
     if (!self.isOutDated) {
+        if (block) {
+            block(nil);
+        }
         return;
     }
     
@@ -440,7 +466,7 @@
         
     }completion:^(BOOL success, NSError *error) {
         if (block) {
-            block();
+            block(error);
         }
         
         

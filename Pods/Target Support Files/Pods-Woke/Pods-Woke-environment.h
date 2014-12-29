@@ -145,6 +145,12 @@
 #define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 20
 #define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 0
 
+// GKImagePicker
+#define COCOAPODS_POD_AVAILABLE_GKImagePicker
+#define COCOAPODS_VERSION_MAJOR_GKImagePicker 0
+#define COCOAPODS_VERSION_MINOR_GKImagePicker 0
+#define COCOAPODS_VERSION_PATCH_GKImagePicker 1
+
 // GPUImage
 #define COCOAPODS_POD_AVAILABLE_GPUImage
 #define COCOAPODS_VERSION_MAJOR_GPUImage 0
@@ -223,6 +229,12 @@
 #define COCOAPODS_VERSION_MINOR_Parse 6
 #define COCOAPODS_VERSION_PATCH_Parse 0
 
+// ParseCrashReporting
+#define COCOAPODS_POD_AVAILABLE_ParseCrashReporting
+#define COCOAPODS_VERSION_MAJOR_ParseCrashReporting 1
+#define COCOAPODS_VERSION_MINOR_ParseCrashReporting 6
+#define COCOAPODS_VERSION_PATCH_ParseCrashReporting 0
+
 // ParseFacebookUtils
 #define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
 #define COCOAPODS_VERSION_MAJOR_ParseFacebookUtils 1
@@ -282,6 +294,12 @@
 #define COCOAPODS_VERSION_MAJOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_MINOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_PATCH_VBFPopFlatButton 5
+
+// WellCached
+#define COCOAPODS_POD_AVAILABLE_WellCached
+#define COCOAPODS_VERSION_MAJOR_WellCached 0
+#define COCOAPODS_VERSION_MINOR_WellCached 1
+#define COCOAPODS_VERSION_PATCH_WellCached 1
 
 // apptentive-ios
 #define COCOAPODS_POD_AVAILABLE_apptentive_ios

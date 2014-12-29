@@ -15,9 +15,9 @@
 
 
 #pragma mark - NEW
-//add new alarm, save, add to current user, save user
-+ (EWAlarm *)newAlarm{
-    NSParameterAssert([NSThread isMainThread]);
+//add new alarm, save, add to current user, save  Ouser
++ (instancetype)newAlarm{
+    EWAssertMainThread
     DDLogVerbose(@"Create new Alarm");
     
     //add relationMagicalRecord
@@ -28,6 +28,17 @@
     a.tone = [EWPerson me].preference[@"DefaultTone"];
     
     return a;
+}
+
+#pragma mark - Search
++ (instancetype)getAlarmByID:(NSString *)alarmID{
+    EWAssertMainThread
+    NSError *error;
+    EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:alarmID error:&error];
+    if (error) {
+        DDLogError(error.description);
+    }
+    return alarm;
 }
 
 #pragma mark - DELETE
@@ -128,6 +139,8 @@
     //schedule local notification
     [self scheduleLocalNotification];
     
+    //TODO: update current activity time
+    
     // schedule on server
     [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];
@@ -152,7 +165,7 @@
     [self setPrimitiveStatement:statement];
     [self didChangeValueForKey:EWAlarmAttributes.statement];
     [self updateCachedStatement];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmToneChanged object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStatementChanged object:self];
 }
 
 

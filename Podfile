@@ -6,8 +6,9 @@ source 'https://github.com/CocoaPods/Specs.git'
 target 'Woke' do
   pod 'Facebook-iOS-SDK', '~> 3.20.0'
   pod 'GPUImage', '~> 0.1.6'
-  pod 'Parse', '~> 1.6.0'
-  pod 'ParseUI', '~> 1.0'
+  pod 'Parse'
+  pod 'ParseUI'
+  pod 'ParseCrashReporting'
   pod 'AFNetworking', '~> 2.4.1'
   pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
   #pod 'MagicalRecord/Shorthand', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
@@ -34,6 +35,8 @@ target 'Woke' do
   pod 'ReactiveViewModel', '~> 0.2'
   pod 'NYXImagesKit', '~> 2.3'
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
+  pod 'WellCached'
+  pod 'GKImagePicker'
 end
 
 target 'WokeTests' do

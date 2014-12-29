@@ -16,7 +16,13 @@
 extern NSManagedObjectContext *mainContext;
 typedef void (^EWSavingCallback)(void);
 
-@class AFNetworkReachabilityManager;
+//Error codes:
+//http://www.lifeasbob.com/Code/ErrorCodes.aspx
+//or https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/NSError_Codes
+#define kEWSyncErrorNoConnection            668 //NO_CONNECTION
+#define kEWSyncErrorNoServerID              113 //NO_MORE_SEARCH_HANDLES: No more internal file identifiers available
+
+@class ELAWellCached;
 
 #pragma mark - Sync parameters
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
@@ -52,8 +58,7 @@ typedef void (^EWSavingCallback)(void);
 
 @interface EWSync : NSObject
 @property NSMutableArray *saveCallbacks; //MO save callback
-@property AFNetworkReachabilityManager *reachability;
-@property NSMutableDictionary *serverObjectPool;
+@property ELAWellCached *serverObjectCache;
 @property NSMutableDictionary *changeRecords;
 @property NSMutableArray *saveToLocalItems;
 @property NSMutableArray *deleteToLocalItems;
@@ -146,13 +151,13 @@ typedef void (^EWSavingCallback)(void);
 - (BOOL)contains:(NSManagedObject *)mo inQueue:(NSString *)queue;
 
 #pragma mark - CoreData
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID;
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
 
 #pragma mark - Parse helper methods
 //PO query
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query;
 + (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error;
 + (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 //- (PFObject *)getCachedParseObjectForID:(NSString *)parseID;

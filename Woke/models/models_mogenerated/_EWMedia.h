@@ -15,14 +15,12 @@ extern const struct EWMediaAttributes {
 } EWMediaAttributes;
 
 extern const struct EWMediaRelationships {
-	__unsafe_unretained NSString *activity;
 	__unsafe_unretained NSString *author;
 	__unsafe_unretained NSString *mediaFile;
 	__unsafe_unretained NSString *messages;
 	__unsafe_unretained NSString *receiver;
 } EWMediaRelationships;
 
-@class EWActivity;
 @class EWPerson;
 @class EWMediaFile;
 @class EWMessage;
@@ -72,10 +70,6 @@ extern const struct EWMediaRelationships {
 @property (nonatomic, strong) NSString* type;
 
 //- (BOOL)validateType:(id*)value_ error:(NSError**)error_;
-
-@property (nonatomic, strong) EWActivity *activity;
-
-//- (BOOL)validateActivity:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) EWPerson *author;
 
@@ -128,9 +122,6 @@ extern const struct EWMediaRelationships {
 
 - (NSDate*)primitiveTargetDate;
 - (void)setPrimitiveTargetDate:(NSDate*)value;
-
-- (EWActivity*)primitiveActivity;
-- (void)setPrimitiveActivity:(EWActivity*)value;
 
 - (EWPerson*)primitiveAuthor;
 - (void)setPrimitiveAuthor:(EWPerson*)value;
