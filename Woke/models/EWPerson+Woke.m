@@ -71,7 +71,6 @@
             //2. check
         }];
         
-        
         [[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:kLastCheckedMe];
     }
 }

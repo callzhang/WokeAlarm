@@ -57,6 +57,7 @@ PODS:
   - Expecta (0.3.1)
   - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
+  - GKImagePicker (0.0.1)
   - GPUImage (0.1.6)
   - IDMPhotoBrowser (1.5.2):
     - AFNetworking
@@ -148,6 +149,7 @@ DEPENDENCIES:
   - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.20.0)
+  - GKImagePicker
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
   - JGProgressHUD (~> 1.2.2)
@@ -189,6 +191,7 @@ SPEC CHECKSUMS:
   dyci: 63f19224ff515c438e26387546c9301af917953c
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
+  GKImagePicker: 6039f7bf8d517eed0f7583af123c4422784e6c81
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: 9639f7c57bdf942dc4e214ff9d8108e08ebd3f27
   JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398

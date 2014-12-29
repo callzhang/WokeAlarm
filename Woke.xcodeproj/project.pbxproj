@@ -125,15 +125,16 @@
 		8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B95C7310A02172389FEF1951 /* libPods-Woke.a */; };
 		9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B25631E1A1952FA00010B9E /* _EWSocial.m */; };
 		9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */; };
+		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
+		9B3895091A514022004D4290 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B3895081A514022004D4290 /* libz.dylib */; };
+		9B38950B1A51404B004D4290 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B38950A1A51404B004D4290 /* libstdc++.6.dylib */; };
+		9B38950D1A51405A004D4290 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B38950C1A51405A004D4290 /* SystemConfiguration.framework */; };
+		9B38950F1A514072004D4290 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B38950E1A514072004D4290 /* MobileCoreServices.framework */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; };
 		9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */; };
 		9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B71AC741A22927C00E300CE /* AlarmTest.m */; };
-		9B8139701A15D65900F1A56C /* GKCropBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81395C1A15D65900F1A56C /* GKCropBorderView.m */; };
-		9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139601A15D65900F1A56C /* GKImageCropView.m */; };
-		9B8139741A15D65900F1A56C /* GKImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139641A15D65900F1A56C /* GKImagePicker.m */; };
-		9B8139751A15D65900F1A56C /* GKResizeableCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8139661A15D65900F1A56C /* GKResizeableCropOverlayView.m */; };
 		9B8139791A15D65900F1A56C /* PLCameraSheetButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396B1A15D65900F1A56C /* PLCameraSheetButtonPressed@2x.png */; };
 		9B81397A1A15D65900F1A56C /* PLCameraSheetDoneButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396C1A15D65900F1A56C /* PLCameraSheetDoneButton.png */; };
 		9B81397B1A15D65900F1A56C /* PLCameraSheetDoneButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396D1A15D65900F1A56C /* PLCameraSheetDoneButton@2x.png */; };
@@ -399,6 +400,10 @@
 		9B25631E1A1952FA00010B9E /* _EWSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWSocial.m; sourceTree = "<group>"; };
 		9B3895011A4FBA17004D4290 /* EWWakeUpViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpViewCell.h; sourceTree = "<group>"; };
 		9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeUpViewCell.m; sourceTree = "<group>"; };
+		9B3895081A514022004D4290 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		9B38950A1A51404B004D4290 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
+		9B38950C1A51405A004D4290 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		9B38950E1A514072004D4290 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		9B6797041A3E34ED007B8188 /* NSDictionary+KeyPathAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KeyPathAccess.h"; sourceTree = "<group>"; };
 		9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+KeyPathAccess.m"; sourceTree = "<group>"; };
 		9B6AB8171A16F1F6003372A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -465,6 +470,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B38950F1A514072004D4290 /* MobileCoreServices.framework in Frameworks */,
+				9B38950D1A51405A004D4290 /* SystemConfiguration.framework in Frameworks */,
+				9B38950B1A51404B004D4290 /* libstdc++.6.dylib in Frameworks */,
+				9B3895091A514022004D4290 /* libz.dylib in Frameworks */,
 				9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */,
 				9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */,
 				9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */,
@@ -1073,6 +1082,10 @@
 		AA1A75AA2E60E49CC73E6319 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9B38950E1A514072004D4290 /* MobileCoreServices.framework */,
+				9B38950C1A51405A004D4290 /* SystemConfiguration.framework */,
+				9B38950A1A51404B004D4290 /* libstdc++.6.dylib */,
+				9B3895081A514022004D4290 /* libz.dylib */,
 				9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */,
 				9B6AB8191A16F201003372A8 /* CoreGraphics.framework */,
 				9B6AB8171A16F1F6003372A8 /* UIKit.framework */,
@@ -1259,7 +1272,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=/usr/local/bin:$PATH\ncd Server\n\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "export PATH=/usr/local/bin:$PATH\ncd /Users/Lee/Documents/Projects/WokeAlarm/Server\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1361,7 +1374,6 @@
 				09DF4F7D1A1434AF00BEA328 /* EWMessage.m in Sources */,
 				9B88293E1A317E3900EF572E /* EWBlurAnimator.m in Sources */,
 				096AAAE11A195A3900B4CBFF /* EWImageManager.m in Sources */,
-				9B8139741A15D65900F1A56C /* GKImagePicker.m in Sources */,
 				096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */,
 				09DF4F7B1A1434AF00BEA328 /* EWMediaFile.m in Sources */,
 				09D737111A32951000E8C9ED /* EWAlarmViewController.m in Sources */,
@@ -1372,7 +1384,6 @@
 				096AAAD31A195A3900B4CBFF /* NSDate+Extend.m in Sources */,
 				9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */,
 				9BF1816A1A37FF0800D25DBA /* EWWaveformView.m in Sources */,
-				9B8139701A15D65900F1A56C /* GKCropBorderView.m in Sources */,
 				09DF4F7E1A1434AF00BEA328 /* EWNotification.m in Sources */,
 				096AAAD61A195A3900B4CBFF /* UIView+Blur.m in Sources */,
 				09DF4F881A1434AF00BEA328 /* _EWMediaFile.m in Sources */,
@@ -1406,7 +1417,6 @@
 				096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */,
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
 				096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */,
-				9B8139751A15D65900F1A56C /* GKResizeableCropOverlayView.m in Sources */,
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
 				09DF4F831A1434AF00BEA328 /* _EWActivity.m in Sources */,
 				09DF4F801A1434AF00BEA328 /* EWServerObject.m in Sources */,
@@ -1424,7 +1434,6 @@
 				09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */,
 				09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */,
 				09DF4F8B1A1434AF00BEA328 /* _EWPerson.m in Sources */,
-				9B8139721A15D65900F1A56C /* GKImageCropView.m in Sources */,
 				097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */,
 				097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */,
 				091C675D1A3523AF0091B8A6 /* EWMediaCell.m in Sources */,
@@ -1432,6 +1441,7 @@
 				9BFF57121A4C8FB90067EE9B /* EWPerson+Woke.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
 				096AAAE21A195A3900B4CBFF /* EWMediaManager.m in Sources */,
+				9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */,
 				096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */,
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,
 				09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */,

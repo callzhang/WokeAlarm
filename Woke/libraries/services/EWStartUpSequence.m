@@ -147,7 +147,7 @@
     
     //unread media
     DDLogVerbose(@"[3] Check unread medias");
-    [[EWMediaManager sharedInstance] checkUnreadMediasInBackground];
+    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:NULL];
     
 }
 

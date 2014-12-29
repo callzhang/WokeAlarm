@@ -36,6 +36,7 @@ target 'Woke' do
   pod 'NYXImagesKit', '~> 2.3'
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
   pod 'WellCached'
+  pod 'GKImagePicker'
 end
 
 target 'WokeTests' do
