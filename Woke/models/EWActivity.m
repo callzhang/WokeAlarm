@@ -23,6 +23,10 @@ const struct EWActivityTypes EWActivityTypes = {
     return activity;
 }
 
++ (EWActivity *)getActivityWithID:(NSString *)ID{
+    return (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([self class]) withID:ID error:nil];
+}
+
 - (void)remove{
     [self MR_deleteEntity];
     [EWSync save];

@@ -18,11 +18,9 @@
 #import "EWAlarmManager.h"
 #import "EWAlarm.h"
 #import "NSDictionary+KeyPathAccess.h"
+#import "EWMediaFile.h"
 
 @implementation EWMediaManager
-//@synthesize context, model;
-@synthesize myMedias;
-//@synthesize context;
 
 +(EWMediaManager *)sharedInstance{
     EWAssertMainThread
@@ -34,41 +32,68 @@
     return sharedStore_;
 }
 
-
-- (NSArray *)myMedias{
-    EWAssertMainThread
-    return [self mediasForPerson:[EWPerson me]];
+#pragma mark - Handle media push notification
+- (void)handlePushMedia:(NSDictionary *)notification{
+    NSString *pushType = notification[kPushType];
+    NSParameterAssert([pushType isEqualToString:kPushTypeMedia]);
+    NSString *type = notification[kPushMediaType];
+    NSString *mediaID = notification[kPushMediaID];
+    
+    if (!mediaID) {
+        NSLog(@"Push doesn't have media ID, abort!");
+        return;
+    }
+    
+    //download media
+    EWMedia *media = [EWMedia getMediaByID:mediaID];
+    //Woke state -> assign media to next task, download
+    if (![[EWPerson me].unreadMedias containsObject:media]) {
+        [[EWPerson me] addUnreadMediasObject:media];
+        [EWSync save];
+    }
+    
+    if ([type isEqualToString:kPushMediaTypeVoice]) {
+        // ============== Media ================
+        NSParameterAssert(mediaID);
+        NSLog(@"Received voice type push");
+        
+#ifdef DEBUG
+        [[[UIAlertView alloc] initWithTitle:@"Voice来啦" message:@"收到一条神秘的语音."  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+#endif
+        
+    }else if([type isEqualToString:@"test"]){
+        
+        // ============== Test ================
+        
+        DDLogInfo(@"Received === test === type push");
+        EWAlert(@"Received === test === type push");
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 99;
+    }
 }
 
 
-- (EWMedia *)getWokeVoice{
-    PFQuery *q = [PFQuery queryWithClassName:@"EWMedia"];
-    [q whereKey:EWMediaRelationships.author equalTo:[PFQuery getUserObjectWithId:WokeUserID]];
-    [q whereKey:EWMediaAttributes.type equalTo:kPushMediaTypeVoice];
-    NSArray *mediasFromWoke = [EWPerson me].cachedInfo[kWokeVoiceReceived]?:[NSArray new];
-#if !DEBUG
-    [q whereKey:kParseObjectID notContainedIn:mediasFromWoke];
-#endif
-    NSArray *voices = [EWSync findServerObjectWithQuery:q error:nil];
-    NSUInteger i = arc4random_uniform(voices.count);
-    PFObject *voice = voices[i];
-    if (voice) {
-        EWMedia *media = (EWMedia *)[voice managedObjectInContext:nil];
-        [media refresh];
-        //add to my unread medias
-        [[EWPerson me] addUnreadMediasObject:media];
-        DDLogDebug(@"Got woke voice %@", media.objectId);
-        //save
-        NSMutableDictionary *cache = [[EWPerson me].cachedInfo mutableCopy];
-        NSMutableArray *receivedVoices = [mediasFromWoke mutableCopy];
-        [receivedVoices addObject:media.objectId];
-        [cache setObject:receivedVoices forKey:kWokeVoiceReceived];
-        [EWPerson me].cachedInfo = [cache copy];
-        [EWSync save];
-        
-        return media;
-    }
-    return nil;
+- (void)getWokeVoice{
+    //call server test function
+    [PFCloud callFunctionInBackground:@"getWokeVoice" withParameters:@{kParseObjectID: [EWPerson me].objectId} block:^(id object, NSError *error) {
+        if (object) {
+            NSParameterAssert([object isKindOfClass:[NSString class]]);
+            DDLogInfo(@"Finished get woke voice request with response: %@", object);
+            //check media
+            EWMedia *newMedia = [EWMedia getMediaByID:(NSString *)object];
+            if (![newMedia validate]) {
+                DDLogError(@"Get new woke voice but not valid: %@", newMedia);
+                return;
+            }
+            DDLogVerbose(@"New media found: %@", newMedia.objectId);
+            //make sure the relationship is established
+            [[EWPerson me] addUnreadMediasObject:newMedia];
+            [EWSync save];
+            //notification
+            [EWNotification newMediaNotification:newMedia];
+        }else{
+            DDLogError(@"Failed test voice request: %@", error.description);
+        }
+    }];
 }
 
 //possible redundant API, my media should be ready on start
@@ -173,7 +198,7 @@
     NSMutableSet *mediasNeedToRefresh = localMe.unreadMedias.mutableCopy;
     [mediasNeedToRefresh unionSet:localMe.receivedMedias];
     [mediasNeedToRefresh unionSet:localMe.sentMedias];
-    [mediasNeedToRefresh filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K != nil", kParseObjectID]];
+    [mediasNeedToRefresh filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K == nil", kParseObjectID]];
     for (EWMedia *media in mediasNeedToRefresh) {
         DDLogVerbose(@"%s Refresh media: %@",__FUNCTION__, media.objectId);
         [media refresh];

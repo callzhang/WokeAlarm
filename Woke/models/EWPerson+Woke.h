@@ -15,8 +15,9 @@
 
 //my stuff
 + (NSArray *)myActivities;
-+ (NSArray *)myNotifications;
++ (NSArray *)myAlarmActivities;
 + (NSArray *)myUnreadNotifications;
++ (NSArray *)myNotifications;
 + (NSArray *)myAlarms;
 + (NSArray *)myFriends;
 + (EWSocial *)mySocialGraph;

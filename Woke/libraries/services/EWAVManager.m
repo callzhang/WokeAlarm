@@ -221,7 +221,7 @@
 	player.volume = 1.0;
 	
 	if (err) {
-		DDLogVerbose(@"*** Cannot init AVAudioPlayer. Reason: %@", err);
+		DDLogError(@"*** Cannot init AVAudioPlayer. Reason: %@", err);
 		NSString *path = [NSTemporaryDirectory() stringByAppendingString:@"audioTempFile"];
 		[data writeToFile:path atomically:YES];
 		[self playSystemSound:[NSURL URLWithString:path]];
@@ -231,7 +231,7 @@
 	if ([player play]){
 		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:data];
 	}else{
-		DDLogVerbose(@"*** Could not play with AVAudioPlayer, using system sound");
+		DDLogError(@"*** Could not play with AVAudioPlayer, using system sound");
 		NSString *path = [NSTemporaryDirectory() stringByAppendingString:@"audioTempFile"];
 		[data writeToFile:path atomically:YES];
 		[self playSystemSound:[NSURL URLWithString:path]];

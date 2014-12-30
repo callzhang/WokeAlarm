@@ -47,12 +47,12 @@
 	NSString *type = push[kPushType];
 					  
     if ([type isEqualToString:kPushTypeMedia]) {
-		[[EWWakeUpManager sharedInstance] handlePushMedia:push];
+		[[EWMediaManager sharedInstance] handlePushMedia:push];
 		
 	}
 	else if([type isEqualToString:kPushTypeAlarmTimer]){
 		// ============== Alarm Timer ================
-		[[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:push];
+		[[EWWakeUpManager sharedInstance] startToWakeUp:push];
 		
 	}
 	else if ([type isEqualToString:kPushTypeNotification]){
@@ -80,7 +80,7 @@
     DDLogVerbose(@"Received local notification: %@", type);
     
     if ([type isEqualToString:kLocalNotificationTypeAlarmTimer]) {
-        [[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:notification.userInfo];
+        [[EWWakeUpManager sharedInstance] startToWakeUp:notification.userInfo];
 		
     }else if([type isEqualToString:kLocalNotificationTypeReactivate]){
         DDLogVerbose(@"==================> Reactivated Woke <======================");
@@ -89,9 +89,7 @@
     }else if ([type isEqualToString:kLocalNotificationTypeSleepTimer]){
         DDLogVerbose(@"=== Received Sleep timer local notification, broadcasting sleep event, and enter sleep mode... \n%@", notification);
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
-        
-        [[EWWakeUpManager sharedInstance] handleSleepTimerEvent:notification];
+        [[EWWakeUpManager sharedInstance] sleep:notification];
     }
     else{
         DDLogWarn(@"Unexpected Local Notification Type. Detail: %@", notification);

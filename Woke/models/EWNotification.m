@@ -27,6 +27,18 @@
     return notice;
 }
 
+
+
++ (EWNotification *)getNotificationByID:(NSString *)notificationID{
+    NSError *error;
+    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID error:&error];
+    if (!notification) {
+        DDLogError(@"%s fail to get notification: %@", __FUNCTION__, error.description);
+    }
+    return notification;
+}
+
+
 + (EWNotification *)newMediaNotification:(EWMedia *)media{
     EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
         if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {

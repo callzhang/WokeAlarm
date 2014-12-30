@@ -43,7 +43,9 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 //    _blurDelegate = [EWBlurNavigationControllerDelegate new];
 //    self.delegate = _blurDelegate;
     // listern for notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentWakeUpViewWithActivity:) name:kWakeStartNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        //TODO
+    }];
 }
 
 - (void)onMenuButton:(UIButton *)sender {

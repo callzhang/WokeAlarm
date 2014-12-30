@@ -60,46 +60,15 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - Handle push notification
-- (void)handlePushMedia:(NSDictionary *)notification{
-    NSString *pushType = notification[kPushType];
-    NSParameterAssert([pushType isEqualToString:kPushTypeMedia]);
-    NSString *type = notification[kPushMediaType];
-    NSString *mediaID = notification[kPushMediaID];
-	
-    if (!mediaID) {
-        NSLog(@"Push doesn't have media ID, abort!");
-        return;
-    }
-    
-    //download media
-    EWMedia *media = [EWMedia getMediaByID:mediaID];
-    //Woke state -> assign media to next task, download
-    if (![[EWPerson me].unreadMedias containsObject:media]) {
-        [[EWPerson me] addUnreadMediasObject:media];
-        [EWSync save];
-    }
-    
-    if ([type isEqualToString:kPushMediaTypeVoice]) {
-        // ============== Media ================
-        NSParameterAssert(mediaID);
-        NSLog(@"Received voice type push");
-        
-#ifdef DEBUG
-        [[[UIAlertView alloc] initWithTitle:@"Voice来啦" message:@"收到一条神秘的语音."  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-#endif
-        
-    }else if([type isEqualToString:@"test"]){
-        
-        // ============== Test ================
-        
-        DDLogInfo(@"Received === test === type push");
-        EWAlert(@"Received === test === type push");
-        [UIApplication sharedApplication].applicationIconBadgeNumber = 99;
-    }
-}
-
-- (void)handleAlarmTimerEvent:(NSDictionary *)info{
+#pragma mark - Handle events
+- (void)startToWakeUp:(NSDictionary *)info{
+    /*
+     There are a few entries here:
+     1. from Push notifiaction: detected by kPushAlarmID
+     2. from local notification: detected by kLocalAlarmID
+     3. from sleep timer event: detected by kActivityID
+     4. manual button pressed: pass in nil
+     */
     EWAssertMainThread
     if ([EWSession sharedSession].isWakingUp) {
         DDLogWarn(@"WakeUpManager is already handling alarm timer, skip");
@@ -111,18 +80,21 @@
     
     BOOL isLaunchedFromLocalNotification = NO;
     BOOL isLaunchedFromRemoteNotification = NO;
+    BOOL isLaunchedFromAlarmTimer = NO;
 	
-    //get target activity
+    //alarm is a reference info from notification
     EWAlarm *alarm;
-    EWActivity *activity = [EWActivityManager sharedManager].currentAlarmActivity;
+    //activity tells if the activity is completed or not
+    EWActivity *activity;
     if (info) {
         NSString *alarmID = info[kPushAlarmID];
         NSString *alarmLocalID = info[kLocalAlarmID];
-        NSParameterAssert(alarmID || alarmLocalID);
+        NSString *activityID = info[kActivityLocalID];
+        NSParameterAssert(alarmID || alarmLocalID || activityID);
         if (alarmID) {
             isLaunchedFromRemoteNotification = YES;
             alarm = [EWAlarm getAlarmByID:alarmID];
-        }else if (alarmLocalID){
+        }else if (alarmLocalID) {
             isLaunchedFromLocalNotification = YES;
             NSURL *url = [NSURL URLWithString:alarmLocalID];
             NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
@@ -130,51 +102,61 @@
                 alarm = (EWAlarm *)[mainContext existingObjectWithID:ID error:NULL];
             }else{
                 DDLogError(@"The task objectID is invalid for alarm timer local notif: %@",alarmLocalID);
+                alarm = [EWPerson myCurrentAlarm];
+            }
+        }else if (activityID) {
+            isLaunchedFromAlarmTimer = YES;
+            NSURL *url = [NSURL URLWithString:alarmLocalID];
+            NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+            if (ID) {
+                activity = (EWActivity *)[mainContext existingObjectWithID:ID error:NULL];
+            }else{
+                DDLogError(@"The task objectID is invalid for alarm timer local notif: %@",alarmLocalID);
+                activity = [EWActivity getActivityWithID:activityID];
             }
         }
-		
-	}else{
-		alarm = [EWPerson myCurrentAlarm];
 	}
+    
+    //assign if no value
+    if (!activity) activity = [EWPerson myCurrentAlarmActivity];
 	
 	
-    NSLog(@"Start handle timer event");
-    if (!alarm) {
-        DDLogError(@"*** %s No alarm found for next alarm, abord", __func__);
+    //check alarm
+    if (alarm && ![alarm.time.nextOccurTime isEqualToDate:activity.time]) {
+        DDLogError(@"*** %s Alarm time (%@) doesn't match with activity time (%@), abord", __func__, alarm.time.nextOccurTime.date2detailDateString, activity.time.date2detailDateString);
         return;
     }
-    
-    if (alarm.state == NO) {
-        NSLog(@"Alarm is OFF, skip today's alarm");
-        return;
-    }
-    if (alarm.time.nextOccurTime.timeElapsed > kMaxWakeTime) {
-        NSLog(@"Activity(%@) from notification has passed the wake up window. Handle it with checkPastTasks.", activity.objectId);
-        [[EWActivityManager sharedManager] currentAlarmActivity];
-        return;
-    }
-    
+    //check activity
     if (activity.completed) {
-        // task completed
-        NSLog(@"Activity has completed at %@, skip.", activity.completed.date2String);
+        DDLogError(@"Activity is completed at %@, skip today's alarm. Please check the code", activity.completed.date2detailDateString);
         return;
     }
-
+    else if (activity.time.timeElapsed > kMaxWakeTime) {
+        DDLogInfo(@"Activity(%@) from notification has passed the wake up window. Handle it with complete activity.", activity.objectId);
+        [[EWActivityManager sharedManager] completeAlarmActivity:activity];
+        return;
+    }
+    else if (activity.time.timeIntervalSinceNow > 1.5*3600) {
+        // too early to wake
+        DDLogInfo(@"Wake %.1f hours early, skip.", activity.time.timeIntervalSinceNow/3600);
+        return;
+    }
+    
+    DDLogInfo(@"Start handle timer event");
     //state change
-    [self startToWake];
+    [EWSession sharedSession].isSleeping = NO;
+    [EWSession sharedSession].isWakingUp = YES;
     
     //update media
     [[EWMediaManager sharedInstance] checkUnreadMedias];
     NSArray *medias = [EWPerson myUnreadMedias];
     
     //fill media from mediaAssets, if no media for task, create a pseudo media
-    //NSInteger nVoiceNeeded = 1;
     
     //add Woke media is needed
     if (medias.count == 0) {
         //need to create some voice
-        EWMedia *media = [[EWMediaManager sharedInstance] getWokeVoice];
-        [[EWPerson me] addUnreadMediasObject:media];
+        [[EWMediaManager sharedInstance] getWokeVoice];
     }
     
     //save
@@ -224,22 +206,47 @@
     }
 }
 
-#pragma mark - Utility
-+ (BOOL)isRootPresentingWakeUpView{
-    //determin if WakeUpViewController is presenting
-    UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
-    if ([NSStringFromClass([vc class]) isEqualToString:@"EWWakeUpViewController"]) {
-        return YES;
-    }else if ([NSStringFromClass([vc class]) isEqualToString:@"EWPreWakeViewController"]){
-        return YES;
+
+
+- (void)sleep:(UILocalNotification *)notification{
+    //we use local alarm ID because when scheduling sleep notification, alarm could be be available
+    NSString *alarmID = notification.userInfo[kLocalAlarmID];
+    if ([EWPerson me]) {
+        //logged in enter sleep mode
+        EWAlarm *alarm;
+        EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+        NSNumber *duration = [EWPerson me].preference[kSleepDuration];
+        if (alarmID) {
+            alarm = [EWAlarm getAlarmByID:alarmID];
+            BOOL nextAlarmMatched = [activity.time isEqualToDate:alarm.time.nextOccurTime];
+            if (!nextAlarmMatched) {
+                DDLogError(@"The sleep notification sent is not the same as the next alarm");
+                return;
+            }
+        }
+        
+        NSInteger sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
+        BOOL needSleep = sleepTimeLeft < duration.floatValue+5 && sleepTimeLeft > 0;
+        if (!needSleep) {
+            DDLogWarn(@"Start sleep with %ld hours left", sleepTimeLeft);
+        }
+        
+        //state change
+        [EWSession sharedSession].isSleeping = YES;
+        [EWSession sharedSession].isWakingUp = NO;
+        //send notification so baseNavigationView can present the sleepView
+        [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
+        //mark sleep time on activity
+        activity.sleepTime = [NSDate date];
+        [EWSync save];
+        //start check sleep timer
+        [self alarmTimerCheck];
     }
-    return NO;
 }
 
-#pragma mark - Actions
 
 //indicate that the user has woke
-- (void)wake{
+- (void)wake:(EWActivity *)activity{
     if ([EWSession sharedSession].isWakingUp == NO) {
         DDLogWarn(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
         return;
@@ -253,6 +260,7 @@
     //set wakeup time, move to past, schedule and save
     [[EWActivityManager sharedManager] completeAlarmActivity:[EWPerson myCurrentAlarmActivity]];
     
+    //post notification
     [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     
     //TODO: something to do in the future
@@ -260,39 +268,41 @@
     //update history stats
 }
 
-- (void)sleep{
-    //check that current alarm activity and alarm are correct
-    [self alarmTimerCheck];
-    [EWSession sharedSession].isSleeping = YES;
-    [EWSession sharedSession].isWakingUp = NO;
-}
 
-- (void)startToWake{
-    [EWSession sharedSession].isSleeping = NO;
-    [EWSession sharedSession].isWakingUp = YES;
+#pragma mark - Utility
++ (BOOL)isRootPresentingWakeUpView{
+    //determin if WakeUpViewController is presenting
+    UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
+    if ([NSStringFromClass([vc class]) isEqualToString:@"EWWakeUpViewController"]) {
+        return YES;
+    }else if ([NSStringFromClass([vc class]) isEqualToString:@"EWPreWakeViewController"]){
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - CHECK TIMER
 - (void) alarmTimerCheck{
     //check time
     if (![EWPerson me]) return;
-    EWAlarm *alarm = [EWPerson myCurrentAlarm];
-    if (alarm.state == NO) return;
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     
     //alarm time up
-    NSTimeInterval timeLeft = [alarm.time timeIntervalSinceNow];
+    NSTimeInterval timeLeft = [activity.time timeIntervalSinceNow];
 
 	
     static NSTimer *timerScheduled;
-    if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:alarm.time])) {
+    //set up a wake Up Timer
+    if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:activity.time])) {
         NSLog(@"%s: About to init alart timer in %fs", __func__, timeLeft);
 		[timerScheduled invalidate];
-		[NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
-			[[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:nil];
+		timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
+            NSDictionary *info = @{kActivityLocalID: activity.objectID};
+			[[EWWakeUpManager sharedInstance] startToWakeUp:info];
 		} repeats:NO];
-		NSLog(@"===========================>> Alarm Timer scheduled on %@) <<=============================", alarm.time.date2String);
+		NSLog(@"===========================>> Alarm Timer scheduled on %@) <<=============================", activity.time.date2String);
     }
-	
+	//schedule next check
 	if (timeLeft > kServerUpdateInterval) {
 		[NSTimer scheduledTimerWithTimeInterval:timeLeft/2 target:self selector:@selector(alarmTimerCheck) userInfo:nil repeats:NO];
 		DDLogVerbose(@"Next alarm timer check in %.1fs", timeLeft/2);
@@ -302,51 +312,29 @@
 - (void)sleepTimerCheck{
     //check time
     if (![EWPerson me]) return;
-    EWAlarm *alarm = [EWPerson myCurrentAlarm];
-    if (alarm.state == NO) return;
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     
     //alarm time up
     NSNumber *sleepDuration = [EWPerson me].preference[kSleepDuration];
     NSInteger durationInSeconds = sleepDuration.integerValue * 3600;
-    NSDate *sleepTime = [alarm.time dateByAddingTimeInterval:-durationInSeconds];
+    NSDate *sleepTime = [activity.time dateByAddingTimeInterval:-durationInSeconds];
 	NSTimeInterval timeLeft = sleepTime.timeIntervalSinceNow;
     static NSTimer *timerScheduled;
+    
+    //if there is time left and the sleepTimer is either not set up or the sleepTimer is not correct, reschedule a sleepTimer
     if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:sleepTime])) {
-        NSLog(@"%s: About to init alart timer in %fs", __func__, timeLeft);
+        NSLog(@"%s: About to init alarm timer in %fs", __func__, timeLeft);
 		[timerScheduled invalidate];
 		timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
-			[[EWWakeUpManager sharedInstance] handleSleepTimerEvent:nil];
+			[[EWWakeUpManager sharedInstance] sleep:nil];
 		} repeats:NO];
 		NSLog(@"===========================>> Sleep Timer scheduled on %@ <<=============================", sleepTime.date2String);
     }
-	
-	if (timeLeft > 300) {
-		[NSTimer scheduledTimerWithTimeInterval:timeLeft/2 target:self selector:@selector(alarmTimerCheck) userInfo:nil repeats:NO];
-		DDLogVerbose(@"Next alarm timer check in %.1fs", timeLeft);
-	}
-}
-
-- (void)handleSleepTimerEvent:(UILocalNotification *)notification{
-    NSString *alarmID = notification.userInfo[kLocalAlarmID];
-    if ([EWPerson me]) {
-        //logged in enter sleep mode
-        EWAlarm *alarm = [EWPerson myCurrentAlarm];
-        NSNumber *duration = [EWPerson me].preference[kSleepDuration];
-        if (alarmID) {
-            BOOL nextAlarmMatched = [alarm.objectID.URIRepresentation.absoluteString isEqualToString:alarmID];
-            if (!nextAlarmMatched) {
-                DDLogError(@"The sleep notification sent is not the same as the next alarm");
-                return;
-            }
-        }
-        
-        NSInteger h = alarm.time.timeIntervalSinceNow/3600;
-        BOOL needSleep = h < duration.floatValue && h > 1;
-        
-        if (needSleep) {
-            //send notification so baseNavigationView can present the sleepView
-            [[NSNotificationCenter defaultCenter] postNotificationName:kSleepTimeNotification object:alarm];
-        }
+    
+    //schedule next sleep timer check if the time left is larger than 5mim
+    if (timeLeft > 300) {
+        [NSTimer scheduledTimerWithTimeInterval:timeLeft/2 target:self selector:@selector(sleepTimerCheck) userInfo:nil repeats:NO];
+        DDLogVerbose(@"Next alarm timer check in %.1fs", timeLeft);
     }
 }
 

@@ -100,11 +100,17 @@ typedef void (^SenderBlock)(id sender);
 
 #pragma mark - User / External events
 
-//============> App wide events
-#define kWokeNotification               @"woke"
+//============> App wide events <==============
+#define kWakeStartNotification          @"wake_time"//start wake
+#define kWokeNotification               @"woke"//finished wake
 #define kSleepNotification              @"Sleep"
 #define kNewMediaNotification           @"media_event" //key: task & media
 #define kNewTimerNotification           @"alarm_timer"
+
+//wakeUpManager
+#define kPushAlarmID					@"alarm_server_ID"
+#define kLocalAlarmID					@"alarm_local_ID"
+#define kActivityLocalID                @"activity_object_ID"
 
 //Notification types
 #define kNotificationTypeFriendRequest  @"friendship_request"
@@ -112,7 +118,6 @@ typedef void (^SenderBlock)(id sender);
 #define kNotificationTypeSystemNotice   @"notice"
 #define kNotificationTypeNewMedia       @"new_media"
 
-#pragma mark - Data event
 //alarm store
 #define kAlarmNew						@"EWAlarmNew" //key: alarm
 #define kAlarmStateChanged				@"EWAlarmStateChanged"//key: alarm
@@ -125,14 +130,15 @@ typedef void (^SenderBlock)(id sender);
 //media store
 //#define kMediaNewNotification           @"EWMediaNew"
 
-#define kADIDKey                        @"ADID" //key for ADID
-#define kPushAPNSRegisteredNotification @"APNSRegistered"
+#define kADIDKey                            @"ADID" //key for ADID
+#define kPushAPNSRegisteredNotification     @"APNSRegistered"
 
 //Notification key
-#define kLocalNotificationTypeKey       @"type"
+#define kLocalNotificationTypeKey           @"type"
 #define kLocalNotificationTypeAlarmTimer    @"alarm_timer"
 #define kLocalNotificationTypeReactivate    @"reactivate"
 #define kLocalNotificationTypeSleepTimer    @"sleep_timer"
+
 //push
 #define kPushType						@"type"
 #define kPushTypeAlarmTimer				@"timer"
@@ -145,8 +151,6 @@ typedef void (^SenderBlock)(id sender);
 #define kPushMediaTypeBuzz				@"buzz"
 #define kPushMediaTypeVoice				@"voice"
 #define kPushPersonID					@"person"
-#define kPushAlarmID					@"alarm_server_ID"
-#define kLocalAlarmID					@"alarm_local_ID"
 #define kPushMediaID					@"media"
 //notification
 #define kPushNofiticationID				@"notificationID"
@@ -173,8 +177,3 @@ typedef void (^SenderBlock)(id sender);
 
 #define kCachedAlarmTimes                @"alarm_schedule"
 #define kCachedStatements                @"statements"
-
-//Wake Up
-#define kSleepTimeNotification          @"sleep_time"
-#define kWakeStartNotification           @"wake_time"
-#define kVoicePlayNotification          @"voice_play"

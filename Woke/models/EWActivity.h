@@ -15,7 +15,7 @@ extern const struct EWActivityTypes {
 // delete
 - (void)remove;
 // search
-//+ (EWActivity *)findActivityWithID:(NSString *)ID;
++ (EWActivity *)getActivityWithID:(NSString *)ID;
 // valid
 - (BOOL)validate;
 

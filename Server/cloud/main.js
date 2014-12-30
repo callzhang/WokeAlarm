@@ -375,24 +375,25 @@ Parse.Cloud.define("sendFriendAcceptNotificationToUser", function(request, respo
 });
 
 
-Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
+Parse.Cloud.define("getWokeVoice", function(request, response) {
   var currentUserId = request.params.objectId;
   var query = new Parse.Query(Parse.User);
   query.get(currentUserId, {
     success: function (user) {
-      //var user = Parse.User.current();
       console.log("Current user: " + user.get("name"));
       var query = new Parse.Query(Parse.User);
       query.equalTo("username", "woke");
       query.first({
         success: function (woke) {
           console.log("Found woke: "+ woke.id);
-          //create a meida
+          //create a media
           var EWMedia = Parse.Object.extend("EWMedia");
           var media = new EWMedia;
           media.set("receiver", user);
           media.set("author", woke);
-          //TODO: assign activity
+          media.set("message", "Voice from Woke");
+          media.set("type", "voice");
+          //get voice
           var voiceFile = Parse.Object.extend("EWMediaFile");
           var mediaFileQuery = new Parse.Query(voiceFile);
           mediaFileQuery.equalTo("owner", woke.id);
@@ -404,11 +405,19 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
               voiceFile = voices[n];
               media.set("mediaFile", voiceFile);
 
-              //save file->medias relation
+              //save
               media.save().then(function(media){
+                //save file->medias relation
                 var mediasRelation = voiceFile.relation("medias");
                 mediasRelation.add(media);
                 voiceFile.save();
+                //add woke->sentMedias relation
+                var sentMedias = woke.relation("sentMedias");
+                sentMedias.add(media);
+                woke.save();
+                //add user->unreadMedia relation
+                user.add("unreadMedias", media);
+                user.save();
               }, function(error){
                 console.log("Relation mediaFile->media failed: "+error.message);
               });
@@ -425,13 +434,13 @@ Parse.Cloud.define("testSendWakeUpVoice", function(request, response) {
                   body: "Woke send you a new media.",
                   type: "media",
                   media_type: "media",
-                  media: media.get("objectId")
+                  media: media.id
                 }
               }, {
                 success: function () {
                   // Push was successful
-                  response.success("Push sent");
-                  console.log("Test media Sent");
+                  response.success(media.id);
+                  console.log("Woke voice (" +media.id +") created and push sent");
                 },
                 error: function (error) {
                   // Handle error

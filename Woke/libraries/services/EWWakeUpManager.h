@@ -1,6 +1,8 @@
 //
 //  EWWakeUpManager.h
-//  EarlyWorm
+//
+//  For detailed process diagram
+//  https://www.lucidchart.com/documents/view/92f751f4-f226-430f-8526-cbb93730f251
 //
 //  Created by Lei on 3/25/14.
 //  Copyright (c) 2014 Shens. All rights reserved.
@@ -25,22 +27,7 @@ NSUInteger static maxLoop = 100;
 
 + (EWWakeUpManager *)sharedInstance;
 
-/**
- *Handles push media in varies mode
- @Discuss
- *1. Buzz
- *   active: sound + wakeupView
- *   suspend: not handle
- *
- *2. Voice
- *   active:
- *       alarm time passed but not woke(struggle): play media
- *       before alarm: download
- *       woke: alert with no name
- *   suspend: background download
- */
-- (void)handlePushMedia:(NSDictionary *)notification;
-
+#pragma mark - Actions
 /**
  Handle alarm time up event
  1. Get next task
@@ -51,20 +38,28 @@ NSUInteger static maxLoop = 100;
     b. fire silent alarm
     c. present wakeupVC and start play in 30s
  */
-- (void)handleAlarmTimerEvent:(NSDictionary *)pushInfo;
+- (void)startToWakeUp:(NSDictionary *)pushInfo;
 
 /**
  *  Handle the sleep timer event
  *
- *  @param notification the notification used to identify which alarm/activity it is going to sleep for.
+ *  @param notification the notification used to identify which alarm/activity it is going to sleep for. Pass nil to sleep for current alarm/activity
  */
-- (void)handleSleepTimerEvent:(UILocalNotification *)notification;
+- (void)sleep:(UILocalNotification *)notification;
 
+/**
+ Release the reference to wakeupVC
+ Post notification: kWokeNotification
+ */
+- (void)wake:(EWActivity *)activity;
+
+#pragma mark - Util
 /**
  Detect if root view is presenting EWWakeUpViewController
  */
 + (BOOL)isRootPresentingWakeUpView;
 
+#pragma mark - Timer check
 /**
  Timely alarm timer check task
  Will schedule an alarm if the time left is within the service update interval
@@ -74,26 +69,7 @@ NSUInteger static maxLoop = 100;
 
 - (void)sleepTimerCheck;
 
-#pragma mark - Sleep/Wake related
-/**
- Release the reference to wakeupVC
- Post notification: kWokeNotification
- */
-- (void)wake;
-
-/**
- *  Prepare to wake
- */
-- (void)startToWake;
-
-/**
- *  Handles the sleep action.
- *  When called, the app goes to sleep status
- */
-- (void)sleep;
-
-
-#pragma mark - Play for wakeup view
+#pragma mark - Play control
 /**
  *  The single API exposed for playing sound
  */

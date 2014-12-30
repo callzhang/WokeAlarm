@@ -16,6 +16,8 @@
 #import "EWNotificationManager.h"
 #import "EWCachedInfoManager.h"
 #import "EWNotification.h"
+#import "NSArray+BlocksKit.h"
+#import "EWActivity.h"
 
 @implementation EWPerson(Woke)
 
@@ -91,8 +93,20 @@
 #pragma mark - My Stuffs
 
 + (NSArray *)myActivities {
-    NSArray *activities = [EWPerson me].activities.allObjects;
-    return [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.updatedAt ascending:NO]]];
+    return [[EWActivityManager sharedManager] activitiesForPerson:[EWPerson me] inContext:mainContext];
+}
+
++ (NSArray *)myAlarmActivities{
+    NSArray *activities = [self myActivities];
+    NSArray *alarmActivities = [activities bk_select:^BOOL(EWActivity *obj) {
+        return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
+    }];
+    return alarmActivities;
+}
+
++ (EWActivity *)myCurrentAlarmActivity{
+    EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivityForPerson:[EWPerson me]];
+    return activity;
 }
 
 + (NSArray *)myUnreadNotifications {
@@ -116,14 +130,10 @@
 }
 
 + (EWAlarm *)myCurrentAlarm {
-    EWAlarm *next = [[EWAlarmManager sharedInstance] nextAlarmForPerson:[self me]];
+    EWAlarm *next = [[EWAlarmManager sharedInstance] currentAlarmForPerson:[self me]];
     return next;
 }
 
-+ (EWActivity *)myCurrentAlarmActivity{
-    EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivityForPerson:[EWPerson me]];
-    return activity;
-}
 
 + (NSArray *)myUnreadMedias{
     return [[EWMediaManager sharedInstance] unreadMediasForPerson:[EWPerson me]];

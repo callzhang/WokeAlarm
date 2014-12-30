@@ -74,7 +74,8 @@
         viewController.person = [EWPerson me];
     }
     else if ([segue.identifier isEqualToString:@"toSleepViewController"]){
-        [[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:nil];
+        //[[EWWakeUpManager sharedInstance] handleSleepTimerEvent:nil];
+        [[EWWakeUpManager sharedInstance] sleep:nil];
     }
 }
 

@@ -25,11 +25,6 @@
 + (void)handleNotification:(NSString *)notificationID;
 
 /**
- check if store notification is the same state as server
- */
-+ (EWNotification *)getNotificationByID:(NSString *)notificationID;
-
-/**
  Tells the manager that user clicked the notice and ask for appropreate action
  */
 + (void)clickedNotification:(EWNotification *)notification;

@@ -51,17 +51,6 @@ NSString *const EWActivityTypeMedia = @"media";
     return self;
 }
 
-+ (NSArray *)myActivities{
-    return [[EWActivityManager sharedManager] activitiesForPerson:[EWPerson me] inContext:nil];
-}
-
-+ (NSArray *)myAlarmActivities{
-    NSArray *activities = [self myActivities];
-    NSArray *alarmActivities = [activities bk_select:^BOOL(EWActivity *obj) {
-        return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
-    }];
-    return alarmActivities;
-}
 
 - (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context{
     if (!context) {
@@ -74,31 +63,41 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person{
-    EWAlarm *nextAlarm = [[EWAlarmManager sharedInstance] nextAlarmForPerson:person];
+    EWAssertMainThread
+    EWAlarm *alarm = [[EWAlarmManager sharedInstance] currentAlarmForPerson:person];
+    NSInteger n = 1;
     
-    if (!_currentAlarmActivity) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, nextAlarm.time.nextOccurTime];
-        NSArray *activities = [EWActivity MR_findAllWithPredicate:predicate];
-        _currentAlarmActivity = activities.lastObject;
-        if (activities.count > 1) {
-            DDLogError(@"Multiple current alarm activities found, please check: \n%@", [activities valueForKey:EWActivityAttributes.time]);
-        }
-        
-        if (!_currentAlarmActivity) {
-            //create new activity
-            _currentAlarmActivity = [EWActivity newActivity];
-            _currentAlarmActivity.owner = person;
-            _currentAlarmActivity.type = EWActivityTypeAlarm;
-            _currentAlarmActivity.time = nextAlarm.time.nextOccurTime;
-            [EWSync save];
-        }
-    }else{
-        if (fabs([_currentAlarmActivity.time timeIntervalSinceDate: nextAlarm.time.nextOccurTime])>1) {
-            _currentAlarmActivity = nil;
-            [self currentAlarmActivityForPerson:person];
-        }
+    //validate: current activity has to be either nil or valide
+    while (_currentAlarmActivity &&
+           (_currentAlarmActivity.completed || ![_currentAlarmActivity.time isEqual: alarm.time.nextOccurTime])) {
+        DDLogVerbose(@"%s activity completed or mismatch: %@", __FUNCTION__, _currentAlarmActivity);
+        //invalid activity, try next
+        _currentAlarmActivity = nil;
+        alarm = [[EWAlarmManager sharedInstance] next:n thAlarmForPerson:person];
+        _currentAlarmActivity = [self activityForAlarm:alarm];
     }
+    
+    //generate if needed
+    if (!_currentAlarmActivity) {
+        //create new activity
+        _currentAlarmActivity = [EWActivity newActivity];
+        _currentAlarmActivity.owner = person;
+        _currentAlarmActivity.type = EWActivityTypeAlarm;
+        _currentAlarmActivity.time = alarm.time.nextOccurTime;
+        [EWSync save];
+    }
+    
     return _currentAlarmActivity;
+}
+
+- (EWActivity *)activityForAlarm:(EWAlarm *)alarm{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, alarm.time.nextOccurTime, EWActivityRelationships.owner, alarm.owner];
+    NSArray *activities = [EWActivity MR_findAllWithPredicate:predicate];
+    activities = [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
+    if (activities.count > 1) {
+        DDLogError(@"Multiple current alarm activities found, please check: \n%@", [activities valueForKey:EWActivityAttributes.time]);
+    }
+    return activities.lastObject;
 }
 
 - (void)completeAlarmActivity:(EWActivity *)activity{

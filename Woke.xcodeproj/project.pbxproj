@@ -126,14 +126,10 @@
 		9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B25631E1A1952FA00010B9E /* _EWSocial.m */; };
 		9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */; };
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
-		9B3895091A514022004D4290 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B3895081A514022004D4290 /* libz.dylib */; };
-		9B38950B1A51404B004D4290 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B38950A1A51404B004D4290 /* libstdc++.6.dylib */; };
-		9B38950D1A51405A004D4290 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B38950C1A51405A004D4290 /* SystemConfiguration.framework */; };
-		9B38950F1A514072004D4290 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B38950E1A514072004D4290 /* MobileCoreServices.framework */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
-		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; };
-		9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */; };
+		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B71AC741A22927C00E300CE /* AlarmTest.m */; };
 		9B8139791A15D65900F1A56C /* PLCameraSheetButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396B1A15D65900F1A56C /* PLCameraSheetButtonPressed@2x.png */; };
 		9B81397A1A15D65900F1A56C /* PLCameraSheetDoneButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396C1A15D65900F1A56C /* PLCameraSheetDoneButton.png */; };
@@ -470,10 +466,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B38950F1A514072004D4290 /* MobileCoreServices.framework in Frameworks */,
-				9B38950D1A51405A004D4290 /* SystemConfiguration.framework in Frameworks */,
-				9B38950B1A51404B004D4290 /* libstdc++.6.dylib in Frameworks */,
-				9B3895091A514022004D4290 /* libz.dylib in Frameworks */,
 				9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */,
 				9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */,
 				9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */,

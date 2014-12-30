@@ -16,6 +16,7 @@
 #import "EWPersonManager.h"
 #import "EWAlarmScheduleViewController.h"
 #import "AFNetworking.h"
+#import "NSArray+BlocksKit.h"
 
 @interface EWAlarmManager(){
     NSTimer *alarmPushScheduleTimer;
@@ -105,9 +106,9 @@
 - (NSArray *)alarmsForPerson:(EWPerson *)user{
     NSMutableArray *alarms = [[user.alarms allObjects] mutableCopy];
     
-    NSComparator alarmComparator = ^NSComparisonResult(id obj1, id obj2) {
-        NSInteger wkd1 = [(EWAlarm *)obj1 time].mt_weekdayOfWeek - 1;
-        NSInteger wkd2 = [(EWAlarm *)obj2 time].mt_weekdayOfWeek - 1;
+    NSComparator alarmComparator = ^NSComparisonResult(EWAlarm *obj1, EWAlarm *obj2) {
+        NSInteger wkd1 = obj1.time.mt_weekdayOfWeek - 1;
+        NSInteger wkd2 = obj2.time.mt_weekdayOfWeek - 1;
         if (wkd1 > wkd2) {
             return NSOrderedDescending;
         }else if (wkd1 < wkd2){
@@ -123,19 +124,29 @@
     return sortedAlarms;
 }
 
-- (EWAlarm *)nextAlarmForPerson:(EWPerson *)person {
-    float interval = CGFLOAT_MAX;
-    EWAlarm *next;
-    for (EWAlarm *alarm in [self alarmsForPerson:person]) {
-        float timeLeft = alarm.time.nextOccurTime.timeIntervalSinceNow;
-        //if (alarm.state) {
-            if (interval == 0 || timeLeft < interval) {
-                interval = timeLeft;
-                next = alarm;
+- (EWAlarm *)currentAlarmForPerson:(EWPerson *)person {
+    return [self next:0 thAlarmForPerson:person];
+}
+
+- (EWAlarm *)next:(NSInteger)n thAlarmForPerson:(EWPerson *)person{
+    if (!person.isMe) DDLogError(@"%s person passed in is not me!", __FUNCTION__);
+    
+    NSArray *sortedAlarms = [person.alarms.allObjects sortedArrayUsingComparator:^NSComparisonResult(EWAlarm *obj1, EWAlarm *obj2) {
+        return obj1.time.nextOccurTime < obj2.time.nextOccurTime;
+    }];
+
+    for (EWAlarm *alarm in sortedAlarms) {
+        if (alarm.state == nil) {
+            DDLogError(@"Alarm doesn't have state, please check! %@", alarm);
+            alarm.stateValue = YES;
+            if (![alarm validate]) {
+                continue;
             }
-        //}
+        }
+        if (alarm.stateValue) n--;
+        if (n<0) return alarm;
     }
-    return next;
+    return nil;
 }
 
 #pragma mark - SCHEDULE

@@ -46,7 +46,7 @@
 
 - (void)testSleep{
     //sleep
-    [[EWWakeUpManager sharedInstance] sleep];
+    [[EWWakeUpManager sharedInstance] sleep:nil];
     NSDate *alarmTime = [EWPerson myCurrentAlarm].time;
     NSLog(@"Current alarm time is: %@", alarmTime);
     XCTAssert([EWSession sharedSession].isSleeping, @"Sleep status not detacted");
@@ -54,7 +54,7 @@
 
 - (void)testAlarmTimeUp{
     //waking up: test for 30s and expect local notification is fired
-    [[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:nil];
+    [[EWWakeUpManager sharedInstance] startToWakeUp:nil];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     //expected states
@@ -88,7 +88,7 @@
 - (void)testWake{
     //wake up
     NSDate *alarmTime = [EWPerson myCurrentAlarmActivity].time;
-    [[EWWakeUpManager sharedInstance] wake];
+    [[EWWakeUpManager sharedInstance] wake:nil];
     NSDate *nextAlarmTime = [EWPerson myCurrentAlarmActivity].time;
     NSLog(@"Next alarm time is: %@", nextAlarmTime);
     XCTAssert(![alarmTime isEqualToDate:nextAlarmTime]);

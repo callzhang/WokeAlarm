@@ -84,6 +84,23 @@
     
     return UIStatusBarStyleLightContent;
 }
+
+#pragma mark - view presentation for events
+- (void)presentWakeUpViewWithActivity:(NSNotification *)note{
+    DDLogDebug(@"Presenting Wake Up View");
+    //EWActivity *activity = note.object;
+    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
+        //init wake up view controller
+        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithNibName:nil bundle:nil];
+        
+        //push sleep view
+        [self pushViewController:controller animated:YES];
+        
+    }else{
+        DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
+        //NSParameterAssert([EWSession sharedSession].isWakingUp == YES);
+    }
+}
 @end
 
 @implementation UIViewController(EWBaseNavigationController)
@@ -99,22 +116,3 @@
     return nil;
 }
 @end
-
-//- (void)presentWakeUpViewWithActivity:(NSNotification *)note{
-//    DDLogDebug(@"Presenting Wake Up View");
-//    //EWActivity *activity = note.object;
-//    if (![EWWakeUpManager isRootPresentingWakeUpView]) {
-//        //init wake up view controller
-//        EWWakeUpViewController *controller = [[EWWakeUpViewController alloc] initWithNibName:nil bundle:nil];
-//
-//        //save to manager
-//        //[EWWakeUpManager sharedInstance].controller = controller;
-//
-//        //push sleep view
-//        [self pushViewController:controller animated:YES];
-//
-//    }else{
-//        DDLogInfo(@"Wake up view is already presenting, skip presenting wakeUpView");
-//        //NSParameterAssert([EWSession sharedSession].isWakingUp == YES);
-//    }
-//}

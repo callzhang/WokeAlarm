@@ -49,7 +49,7 @@
 
 #pragma mark - CREATE
 + (void)handleNotification:(NSString *)notificationID{
-    EWNotification *notification = [EWNotificationManager getNotificationByID:notificationID];
+    EWNotification *notification = [EWNotification getNotificationByID:notificationID];
     if (!notification) {
         DDLogError(@"@@@ Cannot find notification %@", notificationID);
         return;
@@ -134,13 +134,6 @@
         NSLog(@"@@@ unknown type of notification");
     }
 }
-
-+ (EWNotification *)getNotificationByID:(NSString *)notificationID{
-    
-    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID error:nil];
-    return notification;
-}
-
 
 + (void)clickedNotification:(EWNotification *)notice{
     [EWNotificationManager handleNotification:notice.objectId];

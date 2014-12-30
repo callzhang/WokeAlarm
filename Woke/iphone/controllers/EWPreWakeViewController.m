@@ -85,26 +85,12 @@
 
 - (IBAction)wakeUp:(UIButton *)sender {
     DDLogInfo(@"Wake button pressed!");
-    [[EWWakeUpManager sharedInstance] wake];
+    [[EWWakeUpManager sharedInstance] wake:nil];
 }
 
 - (IBAction)newMedia:(id)sender {
     //call server test function
-    [PFCloud callFunctionInBackground:@"testSendWakeUpVoice" withParameters:@{kParseObjectID: [EWPerson me].objectId} block:^(id object, NSError *error) {
-        //
-        if (!error) {
-            DDLogInfo(@"Finished test voice request");
-            //check new media
-            NSArray *newMedias = [[EWMediaManager sharedInstance] checkUnreadMedias];
-            if (newMedias.count) {
-                //update view
-                DDLogVerbose(@"New media found (%ld)", newMedias.count);
-                
-            }
-        }else{
-            DDLogError(@"Failed test voice request: %@", error.description);
-        }
-    }];
+    [[EWMediaManager sharedInstance] getWokeVoice];
 }
 
 - (IBAction)next:(id)sender {
