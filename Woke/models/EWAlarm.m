@@ -10,6 +10,8 @@
 #import "EWSession.h"
 #import "EWAlarmManager.h"
 #import "NSDictionary+KeyPathAccess.h"
+#import "EWActivityManager.h"
+#import "EWActivity.h"
 
 @implementation EWAlarm
 
@@ -123,6 +125,7 @@
         DDLogInfo(@"Set same time to alarm: %@", self);
         return;
     }
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     
     [self willChangeValueForKey:EWAlarmAttributes.time];
     [self setPrimitiveTime:time];
@@ -130,8 +133,6 @@
     if (![self validate]) {
         return;
     }
-    //update saved time in user defaults
-    //[self setSavedAlarmTime];
     
     //update cached alarm time in currentUser
     [self updateCachedAlarmTime];
@@ -139,7 +140,8 @@
     //schedule local notification
     [self scheduleLocalNotification];
     
-    //TODO: update current activity time
+    //update activity's time
+    activity.time = time.nextOccurTime;
     
     // schedule on server
     [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
@@ -222,7 +224,7 @@
 	for (unsigned i=0; i<nWeeksToSchedule; i++) {
         for (unsigned j = 0; j<nLocalNotifPerAlarm; j++) {
             //get time
-            NSDate *time_j = [[self.time nextOccurTime:i] dateByAddingTimeInterval: j * 60];
+            NSDate *time_j = [[self.time nextOccurTimeInWeeks:i] dateByAddingTimeInterval: j * 60];
             BOOL foundMatchingLocalNotif = NO;
             for (UILocalNotification *notification in notifications) {
                 if ([time_j isEqualToDate:notification.fireDate]) {

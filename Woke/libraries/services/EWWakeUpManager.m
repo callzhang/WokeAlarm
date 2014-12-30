@@ -82,7 +82,7 @@
     BOOL isLaunchedFromRemoteNotification = NO;
     BOOL isLaunchedFromAlarmTimer = NO;
 	
-    //alarm is a reference info from notification
+    //alarm is a reference info from notification, also used to cancel local notification
     EWAlarm *alarm;
     //activity tells if the activity is completed or not
     EWActivity *activity;
@@ -119,12 +119,11 @@
     
     //assign if no value
     if (!activity) activity = [EWPerson myCurrentAlarmActivity];
-	
-	
+    if (!alarm) alarm = [EWPerson myCurrentAlarm];
     //check alarm
     if (alarm && ![alarm.time.nextOccurTime isEqualToDate:activity.time]) {
         DDLogError(@"*** %s Alarm time (%@) doesn't match with activity time (%@), abord", __func__, alarm.time.nextOccurTime.date2detailDateString, activity.time.date2detailDateString);
-        return;
+        [[NSException exceptionWithName:@"EWInternalInconsistance" reason:@"Alarm and Activity mismatched" userInfo:@{@"alarm": alarm, @"activity;=": activity}] raise];
     }
     //check activity
     if (activity.completed) {
@@ -136,9 +135,11 @@
         [[EWActivityManager sharedManager] completeAlarmActivity:activity];
         return;
     }
-    else if (activity.time.timeIntervalSinceNow > 1.5*3600) {
+    else if (activity.time.timeIntervalSinceNow > kMaxEalyWakeInterval) {
         // too early to wake
-        DDLogInfo(@"Wake %.1f hours early, skip.", activity.time.timeIntervalSinceNow/3600);
+        DDLogWarn(@"Wake %.1f hours early, skip.", activity.time.timeIntervalSinceNow/3600.0);
+        // add unread media albeit too early to wake
+        self.medias = [EWPerson myUnreadMedias];
         return;
     }
     
@@ -169,16 +170,16 @@
     [alarm cancelLocalNotification];
     
     if (isLaunchedFromLocalNotification) {
-        
+        //from alarm timer local notification
         DDLogVerbose(@"Entered from local notification, start wakeup view now");
         [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
     }else if (isLaunchedFromRemoteNotification){
-        
+        //from push notification
         DDLogVerbose(@"Entered from remote notification, start wakeup view now");
         [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
         
-    }else{
+    }else if (isLaunchedFromAlarmTimer){
         //fire an alarm
         DDLogVerbose(@"=============> Firing Alarm timer notification <===============");
         UILocalNotification *note = [[UILocalNotification alloc] init];
@@ -194,15 +195,15 @@
         
         //play sounds after 30s - time for alarm
         double d = 10;
-#ifdef DEBUG
-        d = 5;
-#endif
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(d * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //present wakeupVC and paly when displayed
             [[EWAVManager sharedManager] volumeFadeWithCompletion:^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
             }];
         });
+    }else{
+        //from button pressed
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
     }
 }
 
@@ -237,6 +238,9 @@
         //send notification so baseNavigationView can present the sleepView
         [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
         //mark sleep time on activity
+        if (activity.sleepTime) {
+            DDLogInfo(@"Back to sleep again. Last sleep time was %@", activity.sleepTime.date2detailDateString);
+        }
         activity.sleepTime = [NSDate date];
         [EWSync save];
         //start check sleep timer
@@ -248,7 +252,11 @@
 //indicate that the user has woke
 - (void)wake:(EWActivity *)activity{
     if ([EWSession sharedSession].isWakingUp == NO) {
-        DDLogWarn(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
+        DDLogError(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
+        return;
+    }
+    else if (activity.time.timeIntervalSinceNow > kMaxEalyWakeInterval){
+        DDLogWarn(@"Wake too early. Skip ");
         return;
     }
     [EWSession sharedSession].isSleeping = NO;
@@ -413,7 +421,7 @@
     if ([EWSession sharedSession].isWakingUp) {
         self.medias = [EWPerson myUnreadMedias];
     }else{
-        DDLogWarn(@"You have already woken up, playing media list will not load from myUnreadMedias");
+        DDLogWarn(@"Current seesion is not in wakingUp mode, playing media list will not load from myUnreadMedias");
     }
 }
 @end

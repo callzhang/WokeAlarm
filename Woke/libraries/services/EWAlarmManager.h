@@ -31,7 +31,7 @@
 //Get next alarm statement from person's cachedInfo
 - (NSString *)nextStatementForPerson:(EWPerson *)person;
 /**
- *  current valid alarm for person
+ *  current valid alarm for person. It first finds the next alarm that is turned on. then, look for activity for that alarm and make sure that activity is not completed, otherwise the next valid alarm is returned.
  *
  *  @param person Person should be me, or otherwise return nil
  *

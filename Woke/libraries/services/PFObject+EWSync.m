@@ -102,7 +102,7 @@
     NSMutableDictionary *mutableRelationships = [managedObject.entity.relationshipsByName mutableCopy];
     [mutableRelationships enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
         id relatedManagedObjects = [managedObject valueForKey:key];
-        DDLogVerbose(@"Updating PFObject relation %@->%@(%@)", self.parseClassName, key, managedObject.entity.name);
+        //DDLogVerbose(@"Updating PFObject relation %@->%@(%@)", self.parseClassName, key, managedObject.entity.name);
         
         if (relatedManagedObjects){
             if ([obj isToMany]) {
@@ -170,7 +170,7 @@
                             //the relation can only be additive, which is not a problem for new relation
                             [blockParseRelation addObject:object];
                             [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e   ) {
-                                DDLogInfo(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, object.parseClassName, object.objectId);
+                                DDLogInfo(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, key, object.objectId);
                                 if (e) {
                                     DDLogError(@"Failed to save: %@", e.description);
                                     @try {

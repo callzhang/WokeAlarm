@@ -731,7 +731,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <segue destination="cn9-tj-CIm" kind="custom" customClass="MSReplaceFadeSegue" id="mXC-I0-GpE"/>
+                                    <segue destination="cn9-tj-CIm" kind="custom" identifier="toPreWakeView" customClass="MSReplaceFadeSegue" id="mXC-I0-GpE"/>
                                 </connections>
                             </button>
                         </subviews>

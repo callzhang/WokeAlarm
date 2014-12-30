@@ -69,8 +69,8 @@
  *
  * However, this method is flawed. Just after we finished the most recent task, that task will be moved to past. But a new task with identical time will created becuase it is still not considered past time.
  */
-- (NSDate *)nextOccurTime:(NSInteger)n withExtraSeconds:(NSInteger)seconds;
-- (NSDate *)nextOccurTime:(NSInteger)n;
+- (NSDate *)nextOccurTimeInWeeks:(NSInteger)n withExtraSeconds:(NSInteger)seconds;
+- (NSDate *)nextOccurTimeInWeeks:(NSInteger)n;
 - (NSDate *)nextOccurTime;
 
 /**

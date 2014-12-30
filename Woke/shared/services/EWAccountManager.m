@@ -493,17 +493,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     static CLLocation *loc;
+    static NSTimer *locationTimeOut;
     loc = locations.lastObject;
-    [NSTimer bk_scheduledTimerWithTimeInterval:300 block:^(NSTimer *timer) {
-        DDLogInfo(@"After 300s, we accept location with accuracy of %.0fm", loc.horizontalAccuracy);
-        [manager stopUpdatingLocation];
-        [self processLocation:loc];
-    } repeats:NO];
+    
     if (loc.horizontalAccuracy <100 && loc.verticalAccuracy < 100) {
-        
         //bingo
         [manager stopUpdatingLocation];
+        [locationTimeOut invalidate];
         [self processLocation:loc];
+    } else if (!locationTimeOut) {
+        locationTimeOut = [NSTimer bk_scheduledTimerWithTimeInterval:300 block:^(NSTimer *timer) {
+            DDLogInfo(@"After 300s, we accept location with accuracy of %.0fm", loc.horizontalAccuracy);
+            [manager stopUpdatingLocation];
+            [self processLocation:loc];
+        } repeats:NO];
     }
 }
 
@@ -514,7 +517,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         location = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
     }
     
-    DDLogVerbose(@"Get user location with lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    //DDLogVerbose(@"Get user location with lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude);
     
     //reverse search address
     CLGeocoder *geoloc = [[CLGeocoder alloc] init];

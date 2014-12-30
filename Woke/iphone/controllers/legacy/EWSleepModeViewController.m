@@ -14,6 +14,7 @@
 #import "EWActivityManager.h"
 #import "EWActivity.h"
 #import "UIViewController+Blur.h"
+#import "EWWakeUpManager.h"
 
 @interface EWSleepModeViewController (){
     NSTimer *timer;
@@ -84,5 +85,12 @@
     
     //timer
     timer = [NSTimer scheduledTimerWithTimeInterval:currentActivity.time.timeIntervalSinceNow/30 target:self selector:@selector(updateTimer:) userInfo:nil repeats:NO];
+}
+
+#pragma mark - Storyboard
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"toPreWakeView"]) {
+        [[EWWakeUpManager sharedInstance] startToWakeUp:nil];
+    }
 }
 @end

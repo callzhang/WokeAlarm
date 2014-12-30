@@ -17,6 +17,8 @@
 #import "EWAlarmScheduleViewController.h"
 #import "AFNetworking.h"
 #import "NSArray+BlocksKit.h"
+#import "EWActivityManager.h"
+#import "EWActivity.h"
 
 @interface EWAlarmManager(){
     NSTimer *alarmPushScheduleTimer;
@@ -70,7 +72,7 @@
     }
     
     for (NSDate *time in times.allValues) {
-        NSDate *t = [time nextOccurTime:0];
+        NSDate *t = time.nextOccurTime;
         if (!nextTime || [t isEarlierThan:nextTime]) {
             nextTime = t;
         }
@@ -92,7 +94,7 @@
     __block NSString *nextWeekday;
     NSDate *nextTime;
     [times enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDate *time, BOOL *stop) {
-        NSDate *t = [time nextOccurTime:0];
+        NSDate *t = time.nextOccurTime;
         if (!nextTime || [t isEarlierThan:nextTime]) {
             nextWeekday = key;
         }
@@ -100,8 +102,6 @@
     NSString *nextStatement = statements[nextWeekday];
     return nextStatement?:@"";
 }
-
-
 
 - (NSArray *)alarmsForPerson:(EWPerson *)user{
     NSMutableArray *alarms = [[user.alarms allObjects] mutableCopy];
@@ -125,14 +125,27 @@
 }
 
 - (EWAlarm *)currentAlarmForPerson:(EWPerson *)person {
-    return [self next:0 thAlarmForPerson:person];
+    NSInteger n = 0;
+    EWAlarm *currentAlarm;
+    EWActivity *activity;
+    
+    do {
+        currentAlarm = [self next:n thAlarmForPerson:person];
+        activity = [[EWActivityManager sharedManager] activityForAlarm:currentAlarm];
+        n++;
+    } while (activity.completed);
+    
+    return currentAlarm;
 }
 
 - (EWAlarm *)next:(NSInteger)n thAlarmForPerson:(EWPerson *)person{
+    NSParameterAssert(n<7);
     if (!person.isMe) DDLogError(@"%s person passed in is not me!", __FUNCTION__);
     
     NSArray *sortedAlarms = [person.alarms.allObjects sortedArrayUsingComparator:^NSComparisonResult(EWAlarm *obj1, EWAlarm *obj2) {
-        return obj1.time.nextOccurTime < obj2.time.nextOccurTime;
+        NSDate *d1 = [obj1.time nextOccurTimeInWeeks:0 withExtraSeconds:kMaxWakeTime];
+        NSDate *d2 = [obj2.time nextOccurTimeInWeeks:0 withExtraSeconds:kMaxWakeTime];
+        return [d1 compare:d2];
     }];
 
     for (EWAlarm *alarm in sortedAlarms) {

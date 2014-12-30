@@ -153,7 +153,13 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
             NSInteger n1 = [obj1 integerValue];
             NSInteger n2 = [obj2 integerValue];
-            return n1 < n2;
+            if (n1>n2) {
+                return NSOrderedDescending;
+            } else if (n1<n2) {
+                return NSOrderedAscending;
+            } else {
+                return NSOrderedSame;
+            }
         }];
         if (person.isMe) {
             if (!_activities || _activities.count != person.activities.count) {
@@ -163,7 +169,13 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                     dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
                         NSInteger n1 = [obj1 integerValue];
                         NSInteger n2 = [obj2 integerValue];
-                        return n1 < n2;
+                        if (n1>n2) {
+                            return NSOrderedDescending;
+                        } else if (n1<n2) {
+                            return NSOrderedAscending;
+                        } else {
+                            return NSOrderedSame;
+                        }
                     }];
                     [taskTableView reloadData];
                 }];

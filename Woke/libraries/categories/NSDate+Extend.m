@@ -109,9 +109,7 @@
 }
 
 - (BOOL)isEarlierThan:(NSDate *)date{
-	NSTimeInterval t1 = [self timeIntervalSinceReferenceDate];
-	NSTimeInterval t2 = [date timeIntervalSinceReferenceDate];
-	if (t2-t1>1) {
+	if ([self earlierDate:date] == self) {
 		return TRUE;
 	}else{
 		return FALSE;
@@ -124,7 +122,7 @@
 	return weekdayOfDate - 1; //0:sunday ... 6:saturday
 }
 
-- (NSDate *)nextOccurTime:(NSInteger)n withExtraSeconds:(NSInteger)seconds{
+- (NSDate *)nextOccurTimeInWeeks:(NSInteger)n withExtraSeconds:(NSInteger)seconds{
 	NSDate *time = self;
 	//bring to past
 	while ([time timeIntervalSinceNow]>seconds) {
@@ -146,12 +144,12 @@
 	return time;
 }
 
-- (NSDate *)nextOccurTime:(NSInteger)n{
-	return [self nextOccurTime:n withExtraSeconds:0];
+- (NSDate *)nextOccurTimeInWeeks:(NSInteger)n{
+	return [self nextOccurTimeInWeeks:n withExtraSeconds:0];
 }
 
 - (NSDate *)nextOccurTime{
-	return [self nextOccurTime:0];
+	return [self nextOccurTimeInWeeks:0];
 }
 
 - (NSDate *)nextWeekTime{

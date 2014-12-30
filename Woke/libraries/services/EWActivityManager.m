@@ -34,19 +34,10 @@ NSString *const EWActivityTypeMedia = @"media";
 - (instancetype)init{
     self = [super init];
     if (self) {
-        /* no need to observe new media
-        //observe new media notification
-        [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            DDLogVerbose(@"Activity manager observed new media notification and added new media to my current alarm activity");
-            EWMedia *newMedia = note.object;
-            EWActivity *alarmActivity = [EWPerson myCurrentAlarmActivity];
-            NSMutableArray *mediaArray = alarmActivity.mediaIDs.mutableCopy;
-            [mediaArray addObject:newMedia.objectId];
-            alarmActivity.mediaIDs = mediaArray.copy;
-            [EWSync save];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTypeActivityHasNewMedia object:alarmActivity];
+        [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
+            //change current activity time according to alarm
+            
         }];
-         */
     }
     return self;
 }
@@ -65,16 +56,22 @@ NSString *const EWActivityTypeMedia = @"media";
 - (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person{
     EWAssertMainThread
     EWAlarm *alarm = [[EWAlarmManager sharedInstance] currentAlarmForPerson:person];
-    NSInteger n = 1;
     
-    //validate: current activity has to be either nil or valide
+    //try to find current activity if nil
+    if (!_currentAlarmActivity) {
+        _currentAlarmActivity = [self activityForAlarm:alarm];
+    }
+    
+    //validate: current activity if exists
+    NSInteger n = 1;
     while (_currentAlarmActivity &&
-           (_currentAlarmActivity.completed || ![_currentAlarmActivity.time isEqual: alarm.time.nextOccurTime])) {
+           (_currentAlarmActivity.completed || ![_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime])) {
         DDLogVerbose(@"%s activity completed or mismatch: %@", __FUNCTION__, _currentAlarmActivity);
         //invalid activity, try next
         _currentAlarmActivity = nil;
         alarm = [[EWAlarmManager sharedInstance] next:n thAlarmForPerson:person];
         _currentAlarmActivity = [self activityForAlarm:alarm];
+        n++;
     }
     
     //generate if needed
@@ -92,15 +89,22 @@ NSString *const EWActivityTypeMedia = @"media";
 
 - (EWActivity *)activityForAlarm:(EWAlarm *)alarm{
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, alarm.time.nextOccurTime, EWActivityRelationships.owner, alarm.owner];
-    NSArray *activities = [EWActivity MR_findAllWithPredicate:predicate];
-    activities = [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
+    NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
+    [activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.objectId ascending:YES],
+                                       [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
     if (activities.count > 1) {
-        DDLogError(@"Multiple current alarm activities found, please check: \n%@", [activities valueForKey:EWActivityAttributes.time]);
+        DDLogError(@"Multiple current alarm activities found, please check: \n%@", [activities valueForKey:EWServerObjectAttributes.objectId]);
+        while (activities.count >1) {
+            EWActivity *activity = activities.firstObject;
+            [activities removeObject:activity];
+            [activity remove];
+        }
     }
     return activities.lastObject;
 }
 
 - (void)completeAlarmActivity:(EWActivity *)activity{
+    if (!activity) DDLogError(@"%s passed in empty activity", __FUNCTION__);
     NSParameterAssert([activity.type isEqualToString:EWActivityTypeAlarm]);
     if (activity != self.currentAlarmActivity) {
         DDLogError(@"%s The activity passed in is not the current activity", __FUNCTION__);
@@ -109,7 +113,7 @@ NSString *const EWActivityTypeMedia = @"media";
         for (EWMedia *media in [EWPerson myUnreadMedias]) {
             [activity addMediaID:media.objectId];
         }
-        [EWPerson me].unreadMedias = nil;
+        [[EWPerson me] removeUnreadMedias:[NSSet setWithArray:[EWPerson myUnreadMedias]]];
     }
     
     activity.completed = [NSDate date];

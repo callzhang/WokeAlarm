@@ -72,6 +72,7 @@ typedef void (^SenderBlock)(id sender);
 #define kAlarmTimerCheckInterval        90 //10 min
 #define alarmInterval                   600 //10 min
 #define kMaxWakeTime                    3600 // 60min
+#define kMaxEalyWakeInterval            1.5*3600
 #define kMediaPlayInterval              5 //5s
 #define kBackgroundFetchInterval        600.0 //TODO: possible conflict with serverUpdateInterval
 #define kSocialGraphUpdateInterval      3600*24*7
@@ -121,6 +122,7 @@ typedef void (^SenderBlock)(id sender);
 //alarm store
 #define kAlarmNew						@"EWAlarmNew" //key: alarm
 #define kAlarmStateChanged				@"EWAlarmStateChanged"//key: alarm
+//#define kAlarmTimeWillChange			@"EWAlarmTimeWillChange"//key: alarm, time, used to notify activity time change
 #define kAlarmTimeChanged				@"EWAlarmTimeChanged"//key: alarm
 #define kAlarmDelete					@"EWAlarmDelete" //key: tasks
 #define kAlarmChanged					@"EWAlarmChanged" //key: alarm

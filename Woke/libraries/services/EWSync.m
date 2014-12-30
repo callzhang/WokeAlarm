@@ -200,17 +200,15 @@ NSManagedObjectContext *mainContext;
         return;
     }
     //logging
-    NSDictionary *updated = [NSDictionary dictionaryWithObjectsAndKeys:[updatedManagedObjects valueForKeyPath:@"entity.name"], [updatedManagedObjects valueForKey:kParseObjectID], nil];
-    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], updated, deletedServerObjects);
-    DDLogVerbose(@"Change records:\n%@", workingChangedRecords);
+    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], workingChangedRecords, deletedServerObjects);
     
     NSArray *callbacks = [self.saveCallbacks copy];
     [_saveCallbacks removeAllObjects];
     
     //start background update
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        for (NSManagedObject *MO in workingObjects) {
-            NSManagedObject *localMO = [MO MR_inContext:localContext];
+        for (EWServerObject *MO in workingObjects) {
+            EWServerObject *localMO = [MO MR_inContext:localContext];
             if (!localMO) {
                 DDLogVerbose(@"*** MO %@(%@) to upload haven't saved", MO.entity.name, MO.serverID);
                 continue;
@@ -220,9 +218,9 @@ NSManagedObjectContext *mainContext;
             //=======================================================
             
             //remove changed record
-            NSArray *changes = workingChangedRecords[localMO.objectID];
-            [workingChangedRecords removeObjectForKey:localMO.objectID];
-            DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.serverClassName, localMO.serverID, changes, (unsigned long)workingChangedRecords.allKeys.count);
+            NSMutableSet *changes = workingChangedRecords[localMO.serverID];
+            [workingChangedRecords removeObjectForKey:localMO.serverID];
+            DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)workingChangedRecords.allKeys.count);
             
             //remove from queue
             [self removeObjectFromWorkingQueue:localMO];
@@ -321,7 +319,7 @@ NSManagedObjectContext *mainContext;
             continue;
         }
         
-        if ([insertedObjects containsObject:SO]) {
+        if ([insertedObjects containsObject:SO] || !SO.objectId) {
             //enqueue to insertQueue
             [self appendInsertQueue:SO];
             
@@ -333,15 +331,15 @@ NSManagedObjectContext *mainContext;
         
         //additional check for updated object
         if ([updatedObjects containsObject:SO]) {
-            
+            NSParameterAssert(SO.objectId);
             //check if updated keys exist
             NSArray *changedKeys = SO.changedKeys;
             if (changedKeys.count > 0) {
                 
                 //add changed keys to record
-                NSSet *changed = [self.changeRecords objectForKey:SO.serverID] ?:[NSSet new];
-                changed = [changed setByAddingObjectsFromArray:changedKeys];
-                [self.changeRecords setObject:changed forKey:SO.objectID];
+                NSMutableSet *changed = _changeRecords[SO.objectId] ?:[NSMutableSet new];
+                [changed addObjectsFromArray:changedKeys];
+                [self.changeRecords setObject:changed forKey:SO.objectId];
                 
                 //add to queue
                 [self appendUpdateQueue:SO];
