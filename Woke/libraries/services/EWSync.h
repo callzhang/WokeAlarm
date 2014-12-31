@@ -161,7 +161,7 @@ typedef void (^EWSavingCallback)(void);
 + (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error;
 + (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 //- (PFObject *)getCachedParseObjectForID:(NSString *)parseID;
-//- (void)setCachedParseObject:(PFObject *)PO;
+- (void)setCachedParseObject:(PFObject *)PO;
 /**
  1. Try to get PO from cache
  2. If not, then request a network call with query cache life of 1 hour

@@ -45,6 +45,7 @@
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alarmChanged:) name:kAlarmTimeChanged object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alarmChanged:) name:kAlarmStateChanged object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleAlarm) name:kUserNotificationRegistered object:nil];
     }
     return self;
 }
@@ -202,8 +203,6 @@
             hasChange = YES;
             continue;
         }
-        
-        
         //fill that day to the new alarm array
         newAlarms[i] = a;
     }

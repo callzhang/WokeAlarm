@@ -392,6 +392,7 @@
 		3F10CE727EA990DC609D7F05 /* Pods-WokeTests.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.adhoc.xcconfig"; sourceTree = "<group>"; };
 		568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
 		6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WokeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B1375DA1A536CD100D5E8F5 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		9B25631D1A1952FA00010B9E /* _EWSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _EWSocial.h; sourceTree = "<group>"; };
 		9B25631E1A1952FA00010B9E /* _EWSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWSocial.m; sourceTree = "<group>"; };
 		9B3895011A4FBA17004D4290 /* EWWakeUpViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpViewCell.h; sourceTree = "<group>"; };
@@ -455,7 +456,6 @@
 		9BF7291D1A4DF5FF006C6C51 /* new.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = new.caf; sourceTree = "<group>"; };
 		9BFF57101A4C8FB90067EE9B /* EWPerson+Woke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EWPerson+Woke.h"; sourceTree = "<group>"; };
 		9BFF57111A4C8FB90067EE9B /* EWPerson+Woke.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EWPerson+Woke.m"; sourceTree = "<group>"; };
-		9BFF57131A4CC0E30067EE9B /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.adhoc.xcconfig"; sourceTree = "<group>"; };
 		B95C7310A02172389FEF1951 /* libPods-Woke.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Woke.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E99CC22C9AEFD7C29BAB9044 /* Pods-WokeTests.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.profiling.xcconfig"; sourceTree = "<group>"; };
@@ -869,7 +869,7 @@
 		09A777251A11E2BD004AF902 /* support */ = {
 			isa = PBXGroup;
 			children = (
-				9BFF57131A4CC0E30067EE9B /* KZBootstrapUserMacros.h */,
+				9B1375DA1A536CD100D5E8F5 /* KZBootstrapUserMacros.h */,
 				09A777261A11E2BD004AF902 /* Info.plist */,
 				09A777271A11E2BD004AF902 /* KZBEnvironments.plist */,
 				09A777291A11E2BD004AF902 /* PrefixHeader.pch */,

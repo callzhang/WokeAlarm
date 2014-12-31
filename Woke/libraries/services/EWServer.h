@@ -64,7 +64,7 @@
 /**
  Initiate the Push Notification registration to APNS
  */
-+ (void)registerAPNS;
++ (void)requestNotificationPermissions;
 /**
  Handle the returned token for registered device. Register the push service to 3rd party server.
  */

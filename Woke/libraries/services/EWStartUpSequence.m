@@ -81,7 +81,7 @@
     
     //refresh current user
     DDLogVerbose(@"2. Register AWS push key");
-    [EWServer registerAPNS];
+    [EWServer requestNotificationPermissions];
     
     //check alarm, task, and local notif
     DDLogVerbose(@"3. Check alarm");

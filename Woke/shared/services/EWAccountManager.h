@@ -23,4 +23,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 //tools
 - (void)updateMyFacebookInfo;
 - (void)registerLocation;
+
+// sync user
+/**
+ *  Sync user at start up. Send local object ID and updatedAt. When returned from server, update all returned objects.
+ *
+ *  @param info Dictionary with first level: 1) relation 2) {objectID: updatedAt}
+ */
+- (void)syncUserWithCompletion:(ErrorBlock)block;
 @end

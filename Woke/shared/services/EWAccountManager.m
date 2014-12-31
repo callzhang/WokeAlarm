@@ -538,4 +538,118 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }];
 }
 
+#pragma mark - Sync user
+- (void)syncUserWithCompletion:(ErrorBlock)block{
+    EWAssertMainThread
+    
+    //generate info dic
+    EWPerson *me = [EWPerson me];
+    NSMutableDictionary *info = [NSMutableDictionary new];
+    info[kUserID] = me.objectId;
+    //get the updated objects
+    NSSet *workingObjects = [EWSync sharedInstance].workingQueue;
+    workingObjects = [workingObjects setByAddingObjectsFromSet:[EWSync sharedInstance].insertQueue];
+    
+    //enumerate
+    [me.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *relation, BOOL *stop) {
+        if ([relation.entity.name isEqualToString:kSyncUserClass]) {
+            //skip user class
+            return;
+        }
+        id objects = [me valueForKey:key];
+        if (objects) {
+            if ([relation isToMany]) {
+                NSMutableDictionary *graph = [NSMutableDictionary new];
+                for (EWServerObject *SO in objects) {
+                    if (!SO.objectId) {
+                        //skip
+                    }
+                    else if ([workingObjects containsObject:SO]) {
+                        //has change, do not update from server, use current time
+                        graph[SO.objectId] = [NSDate date];
+                    }
+                    else {
+                        graph[SO.objectId] = SO.updatedAt;
+                    }
+                }
+                //add the graph to the info dic
+                info[key] = graph;
+            }
+            else {
+                //to-one relation
+                EWServerObject *SO = (EWServerObject *)objects;
+                if (!SO.objectId) {
+                    //skip
+                }
+                else if ([workingObjects containsObject:SO]) {
+                    //has change, do not update from server, use current time
+                    info[key] = @{SO.objectId: [NSDate date]};
+                }
+                else {
+                    info[key] = @{SO.objectId: SO.updatedAt};
+                }
+            }
+        }else{
+            info[key] = @0;
+        }
+    }];
+    
+    //send to cloud
+    [PFCloud callFunctionInBackground:@"syncUser" withParameters:info block:^(NSDictionary *graph, NSError *error) {
+        //expecting a dictionary of objects needed to update
+        //return graph level: 1) relation name 2) Array of PFObjects or PFObject
+        [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+            NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
+            //save PO first
+            if (relation.isToMany) {
+                for (PFObject *PO in obj) {
+                    [[EWSync sharedInstance] setCachedParseObject:PO];
+                }
+            }else{
+                [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
+            }
+        }];
+        
+        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+            [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+                if ([key isEqualToString:@"delete"]) {
+                    //delete all objects in this Dictionary
+                    [(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *className, BOOL *stop2) {
+                        EWServerObject *SO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:localContext];
+                        [SO remove];
+                    }];
+                    return;
+                }
+                NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
+                //update SO
+                if (relation.isToMany) {
+                    NSArray *objects = (NSArray *)obj;
+                    NSMutableSet *relatedSO = [me mutableSetValueForKey:key];
+                    for (PFObject *PO in objects) {
+                        NSManagedObject *SO = [PO managedObjectInContext:localContext];
+                        [SO refresh];
+                        if (![relatedSO containsObject:SO]) {
+                            //add relation
+                            [relatedSO addObject:SO];
+                            [me setValue:relatedSO.copy forKey:key];
+                        }
+                    }
+                }else{
+                    NSManagedObject *SO = [(PFObject *)obj managedObjectInContext:localContext];
+                    [me setValue:SO forKey:key];
+                }
+            }];
+        } completion:^(BOOL contextDidSave, NSError *error2) {
+            if (contextDidSave) {
+                DDLogInfo(@"========> Finished user syncing <=========");
+            }else{
+                DDLogError(@"Failed to sync user: %@", error2.description);
+            }
+            
+        }];
+        
+        
+    }];
+}
+
 @end

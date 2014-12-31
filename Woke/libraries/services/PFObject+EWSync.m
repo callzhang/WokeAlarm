@@ -99,8 +99,7 @@
     }];
     
     //=============== relation ===============
-    NSMutableDictionary *mutableRelationships = [managedObject.entity.relationshipsByName mutableCopy];
-    [mutableRelationships enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+    [managedObject.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
         id relatedManagedObjects = [managedObject valueForKey:key];
         //DDLogVerbose(@"Updating PFObject relation %@->%@(%@)", self.parseClassName, key, managedObject.entity.name);
         

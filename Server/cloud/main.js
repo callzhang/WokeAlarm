@@ -376,7 +376,7 @@ Parse.Cloud.define("sendFriendAcceptNotificationToUser", function(request, respo
 
 
 Parse.Cloud.define("getWokeVoice", function(request, response) {
-  var currentUserId = request.params.objectId;
+  var currentUserId = request.params.userId;
   var query = new Parse.Query(Parse.User);
   query.get(currentUserId, {
     success: function (user) {
@@ -462,12 +462,114 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
       console.log("Failed to find current user: ", error.message);
     }
   })
-
-
-
 });
 
+Parse.Cloud.define("syncUser", function(request, response) {
 
+  //define the return object
+  var info = {};
+
+  //placeholder for deletion
+  var objectsToDelete = {};
+
+  //find the user
+  var currentUserId = request.params.userId;
+  var query = new Parse.Query(Parse.User);
+  query.get(currentUserId).then( function(user){
+    console.log("Get user "+user.id+" for syncing");
+
+
+    //create an array of promise
+    var promises = [];
+
+    //create function "work" for each key
+    for (var key in request){
+        if (key == "userId") continue;
+
+        var work = function (){
+          //dict is {ID: updatedAt} pair
+          var dict = request[key];
+          var relation = user.relation(key);
+          if (relation){
+            //toMany relation
+            var objectsNeedUpdate = [];
+
+            relation.query().find({
+              success: function(list) {
+                _.each(list, function(PO){
+                  var clientUpdatedAt = dict[PO.id];
+                  if (clientUpdatedAt) {
+                    //exists, compare date
+                    if (clientUpdatedAt.getTime() < PO.updatedAt.getTime()){
+                      objectsNeedUpdate.push(PO);
+                    }
+                    //delete after compare
+                    delete dict[PO.id];
+                  }else{
+                    //do not exists, add
+                    objectsNeedUpdate.push(PO);
+                  }
+                });
+              }
+            });
+            // add remaining ID to delete dic
+            for (var objectId in dict){
+              objectsToDelete[objectId] = key;
+            }
+
+            //assign updates to response
+            if(objectsNeedUpdate.length > 0){
+              console.log("For relation "+key+", updates: "+objectsNeedUpdate);
+              info[key] = objectsNeedUpdate;
+            }
+          }
+          else {
+            //toOne relation
+            var PO = user[key];
+            if (PO){
+              var clientUpdatedAt = dict[PO.id];
+              if (clientUpdatedAt){
+                //object exists in local, compare date
+                if (clientUpdatedAt.getTime() < PO.updatedAt.getTime()){
+                  info[key] = PO;
+                  console.log("For relation "+key+", updates: "+PO);
+                }
+              }else {
+                //object do not exist, add PO to response and add objectID to delete dic
+                info[key] = PO;
+                console.log("For relation "+key+", updates: "+PO);
+                for (var ID in dict){
+                  objectsToDelete[ID] = key;
+                }
+              }
+            }else{
+              for (var ID in dict){
+                objectsToDelete[ID] = key;
+              }
+            }
+
+          }
+        };
+
+        //add each work function to promise
+        promises.push(work());
+
+      }
+
+    //wait until promises finish
+    return Parse.Promise.when(promises);
+
+  }).then(function(){
+    console.log("Finished all property inspection");
+    //add the delete queue to response
+    console.log("Object to delete: "+ objectsToDelete);
+    info["delete"] = objectsToDelete;
+    //return
+    response.success(info);
+  }, function(error){
+    console.log("Failed to run parallel inspection. "+error.message);
+  });
+});
 
 //=================Background Job==================
 Parse.Cloud.job("backgroundJob", function(request, status) {

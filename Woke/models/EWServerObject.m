@@ -14,6 +14,11 @@
     return NO;
 }
 
+- (void)remove{
+    [self MR_deleteEntity];
+    [EWSync save];
+}
+
 - (NSString *)serverID{
     return self.objectId;
 }
@@ -33,7 +38,6 @@
             block(self.parseObject, nil);
         }
     }
-    
 }
 
 @end

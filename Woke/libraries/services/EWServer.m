@@ -207,9 +207,8 @@
 }
 
 
-#pragma mark - PUSH
-
-+ (void)registerAPNS{
+#pragma mark - Notification
++ (void)requestNotificationPermissions{
     //push
     UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeNone;
     UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];

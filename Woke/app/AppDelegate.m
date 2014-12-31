@@ -137,4 +137,11 @@ UIViewController *rootViewController;
     
     return handled_1 && handled_2;
 }
+
+#pragma mark - User notification
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings{
+    UIUserNotificationType type = notificationSettings.types;
+    DDLogInfo(@"Application registered user notification (%lu)", type);
+    [[NSNotificationCenter defaultCenter] postNotificationName:kUserNotificationRegistered object:nil];
+}
 @end

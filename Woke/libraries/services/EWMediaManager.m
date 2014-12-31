@@ -74,7 +74,7 @@
 
 - (void)getWokeVoice{
     //call server test function
-    [PFCloud callFunctionInBackground:@"getWokeVoice" withParameters:@{kParseObjectID: [EWPerson me].objectId} block:^(id object, NSError *error) {
+    [PFCloud callFunctionInBackground:@"getWokeVoice" withParameters:@{kUserID: [EWPerson me].objectId} block:^(id object, NSError *error) {
         if (object) {
             NSParameterAssert([object isKindOfClass:[NSString class]]);
             DDLogInfo(@"Finished get woke voice request with response: %@", object);

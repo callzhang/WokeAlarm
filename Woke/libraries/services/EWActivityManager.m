@@ -36,7 +36,7 @@ NSString *const EWActivityTypeMedia = @"media";
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
             //change current activity time according to alarm
-            
+            //currently it is done in EWAlarm
         }];
     }
     return self;

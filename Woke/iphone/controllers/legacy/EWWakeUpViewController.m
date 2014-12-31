@@ -71,6 +71,10 @@
     [super viewWillAppear:animated];
     //nav button
     self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    //add background
+    UIImageView *background = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"woke-background"]];
+    background.frame = self.view.frame;
+    [self.view insertSubview:background atIndex:0];
     //[self initView];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //timer updates
@@ -182,7 +186,7 @@
         [self.tableView deselectRowAtIndexPath:path animated:YES];
     });
     
-    [EWWakeUpManager sharedInstance].continuePlay = NO;
+    //[EWWakeUpManager sharedInstance].continuePlay = NO;
 }
 
 -(void)done {

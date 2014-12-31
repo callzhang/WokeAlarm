@@ -73,7 +73,7 @@
         EWSetStatusViewController *viewController = [[segue.destinationViewController viewControllers] firstObject];
         viewController.person = [EWPerson me];
     }
-    else if ([segue.identifier isEqualToString:@"toSleepViewController"]){
+    else if ([segue.identifier isEqualToString:@"toSleepModeView"]){
         //[[EWWakeUpManager sharedInstance] handleSleepTimerEvent:nil];
         [[EWWakeUpManager sharedInstance] sleep:nil];
     }

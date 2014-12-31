@@ -150,7 +150,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-234" y="320"/>
+            <point key="canvasLocation" x="-265.5" y="194.5"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="A03-OI-Odh">
@@ -309,7 +309,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lfc-sK-lhw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-991.5" y="530.5"/>
+            <point key="canvasLocation" x="-991.5" y="656.5"/>
         </scene>
         <!--Sleep View Controller-->
         <scene sceneID="Ttp-Td-LPN">
@@ -481,7 +481,7 @@
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
                                 <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
                                 <connections>
-                                    <segue destination="VN0-T7-2gC" kind="custom" identifier="toSleepViewController" customClass="MSReplaceFadeSegue" id="oOK-jK-Klq"/>
+                                    <segue destination="VN0-T7-2gC" kind="custom" identifier="toSleepModeView" customClass="MSReplaceFadeSegue" id="oOK-jK-Klq"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -803,7 +803,7 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZr-RW-npd">
                                 <rect key="frame" x="224" y="474" width="80" height="58"/>
-                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="0.20999999999999999" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="3Tn-EA-l4E"/>
                                     <constraint firstAttribute="height" constant="58" id="4Xh-nN-0ZO"/>
@@ -817,6 +817,9 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="5"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="keyPath">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -829,7 +832,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zWk-bo-o67">
                                 <rect key="frame" x="138" y="474" width="78" height="58"/>
-                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="0.20999999999999999" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="58" id="6pN-0r-RXx"/>
                                     <constraint firstAttribute="width" constant="78" id="N0t-15-bS0"/>
@@ -848,7 +851,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gna-Bz-U0d">
                                 <rect key="frame" x="16" y="474" width="108" height="58"/>
-                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="0.20999999999999999" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="108" id="hV6-89-u2B"/>
                                     <constraint firstAttribute="height" constant="58" id="irK-7l-6QT"/>
@@ -863,7 +866,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="wakeUp:" destination="cn9-tj-CIm" eventType="touchUpInside" id="VUZ-bg-866"/>
-                                    <segue destination="XCh-yV-M0m" kind="show" id="4hA-zB-cmI"/>
+                                    <segue destination="XCh-yV-M0m" kind="custom" identifier="toWakeUpView" customClass="MSReplaceFadeSegue" id="4hA-zB-cmI"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -924,13 +927,22 @@
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label key="tableFooterView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Z9c-XX-NXc">
-                            <rect key="frame" x="0.0" y="-21" width="320" height="44"/>
+                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="GB0-Qb-NFR">
+                            <rect key="frame" x="-23" y="-15" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <color key="backgroundColor" white="1" alpha="0.20999999999999999" colorSpace="calibratedWhite"/>
+                            <state key="normal" title="Done">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="keyPath">
+                                    <integer key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <segue destination="aF8-hD-EeQ" kind="custom" identifier="toSleepView" customClass="MSReplaceFadeSegue" id="XpI-l3-z9N"/>
+                            </connections>
+                        </button>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EWWakeUpViewCell" rowHeight="70" id="c06-qU-1p3" customClass="EWWakeUpViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -977,6 +989,7 @@
                                             </state>
                                         </button>
                                     </subviews>
+                                    <color key="backgroundColor" red="0.50035107540237567" green="0.78378468461157247" blue="1" alpha="0.31" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="trailingMargin" secondItem="lBZ-cE-TEw" secondAttribute="trailing" constant="48" id="Ca9-qG-53a"/>
                                         <constraint firstAttribute="centerY" secondItem="BcY-OD-Vu0" secondAttribute="centerY" constant="5" id="ILg-dG-puP"/>
@@ -1300,7 +1313,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-blur-tmp-background" translatesAutoresizingMaskIntoConstraints="NO" id="zc0-Iv-s4c">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="woke-blur-tmp-background" translatesAutoresizingMaskIntoConstraints="NO" id="zc0-Iv-s4c">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7bQ-xp-Rdn">
@@ -1309,7 +1322,7 @@
                                     <constraint firstAttribute="width" id="RbG-12-qMN"/>
                                 </constraints>
                             </view>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Status" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JcO-C9-XpN">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Status" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JcO-C9-XpN">
                                 <rect key="frame" x="0.0" y="234" width="320" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="rwS-4o-T8a"/>
@@ -1321,7 +1334,7 @@
                                     <outlet property="delegate" destination="5cY-YF-Z9o" id="J9d-xe-Rma"/>
                                 </connections>
                             </textField>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bEa-nT-ate">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bEa-nT-ate">
                                 <rect key="frame" x="15" y="277" width="290" height="1"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
