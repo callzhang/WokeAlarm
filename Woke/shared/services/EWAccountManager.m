@@ -84,36 +84,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     //2) New user, everything copied from defaul template and upload to server
     //3) Existing user but first time login on this phone, we need to download user data first and THEN execute login sequence
     
-    //save me
-    if (![PFUser currentUser].isNewerThanMO || [PFUser currentUser].isNew){
-        //Scenario (1): Old user continue using app, no need to refresh
-        //Scenario (2): new user, nothing to refresh
+    //Delta sync
+    [[EWAccountManager shared] syncUserWithCompletion:^(NSError *error){
         [[EWSync sharedInstance] resumeUploadToServer];
-        
+        DDLogInfo(@"[c] Broadcast Person login notification");
+        [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
         if (completion) {
-            DDLogInfo(@"[c] Broadcast Person login notification");
-            [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
-
-            completion(nil);
+            
+            DDLogInfo(@"[d] Run completion block.");
+            completion(error);
         }
-    }
-    else {
-        //scenario (3)
-        //refresh self and regardless of any pending uploads (they will be uploaded later)
-        //TODO: create a server function to update self
-
-        [[EWPerson me] refreshInBackgroundWithCompletion:^(NSError *error){
-            if (completion) {
-                DDLogInfo(@"[c] Broadcast Person login notification");
-                [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
-                
-                DDLogInfo(@"[d] Run completion block.");
-                completion(error);
-                
-                [[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
-            }
-        }];
-    }
+        
+        [[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    }];
 }
 
 - (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion {
@@ -552,7 +535,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     //enumerate
     [me.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *relation, BOOL *stop) {
-        if ([relation.entity.name isEqualToString:kSyncUserClass]) {
+        if ([relation.destinationEntity.name isEqualToString:kSyncUserClass]) {
             //skip user class
             return;
         }
@@ -564,8 +547,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     if (!SO.objectId) {
                         //skip
                     }
-                    else if ([workingObjects containsObject:SO]) {
+                    else if ([workingObjects containsObject:SO] || !SO.updatedAt) {
                         //has change, do not update from server, use current time
+                        //or has not updated to Server, meaning it will uploaded with newer data, use current time
                         graph[SO.objectId] = [NSDate date];
                     }
                     else {
@@ -581,8 +565,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 if (!SO.objectId) {
                     //skip
                 }
-                else if ([workingObjects containsObject:SO]) {
+                else if ([workingObjects containsObject:SO] || !SO.updatedAt) {
                     //has change, do not update from server, use current time
+                    //or has not updated to Server, meaning it will uploaded with newer data, use current time
                     info[key] = @{SO.objectId: [NSDate date]};
                 }
                 else {
@@ -596,6 +581,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     //send to cloud
     [PFCloud callFunctionInBackground:@"syncUser" withParameters:info block:^(NSDictionary *graph, NSError *error) {
+        if (error) {
+            block(error);
+            return;
+        }
         //expecting a dictionary of objects needed to update
         //return graph level: 1) relation name 2) Array of PFObjects or PFObject
         [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
@@ -642,8 +631,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         } completion:^(BOOL contextDidSave, NSError *error2) {
             if (contextDidSave) {
                 DDLogInfo(@"========> Finished user syncing <=========");
+                block(nil);
             }else{
                 DDLogError(@"Failed to sync user: %@", error2.description);
+                block(error2);
             }
             
         }];

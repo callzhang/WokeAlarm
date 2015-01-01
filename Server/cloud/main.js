@@ -476,91 +476,145 @@ Parse.Cloud.define("syncUser", function(request, response) {
   var currentUserId = request.params.userId;
   var query = new Parse.Query(Parse.User);
   query.get(currentUserId).then( function(user){
-    console.log("Get user "+user.id+" for syncing");
 
+    console.log("Get user "+user.get("firstName")+" for syncing");
+
+    //========== FUNCTIONS DEFINITION =============
+
+    //process list function
+    var processPOListForDicForRelationName = function(list, relationName){
+      var dict = request.params[relationName];
+      console.log("Got "+list.length+" object in relation "+relationName);
+
+      var objectsNeedUpdate = [];
+      list.forEach(function(PO){
+
+        if (dict.hasOwnProperty(PO.id)) {
+          //exists, compare date
+          var clientUpdatedAt = dict[PO.id];
+          if (clientUpdatedAt < PO.updatedAt){
+            objectsNeedUpdate.push(PO);
+            console.log("~Update object "+PO.id+" in relation "+relationName);
+          }
+          //delete after compare
+          delete dict[PO.id];
+
+        }else{
+          //do not exists, add
+          objectsNeedUpdate.push(PO);
+          console.log("+New object "+PO.id+" in relation "+relationName);
+        }
+      });
+      for (var objectId in dict){
+        console.log("-Delete objects: "+ objectId  + " for relation: "+relationName);
+        objectsToDelete[objectId] = relationName;
+      }
+
+      //assign updates to response
+      if(objectsNeedUpdate.length > 0){
+        info[relationName] = objectsNeedUpdate;
+      }
+    }
+
+    //process single PO function
+    var updatePOThenProcess = function(PO, relationName){
+      console.log("Parsing too-one relation "+relationName);
+      var dict = request.params[relationName];
+      if (PO){
+        var clientUpdatedAt = dict[PO.id];
+        if (clientUpdatedAt){
+          //object exists in local, compare date
+          if (clientUpdatedAt < PO.updatedAt){
+            info[relationName] = PO;
+            console.log("~Updated object: "+PO.id+ " for relation "+relationName);
+          }
+          delete dict[PO.id];
+        }else {
+          //object do not exist, add PO to response and add objectID to delete dic
+          info[relationName] = PO;
+          console.log("+New object: "+PO.id+ " for relation "+relationName);
+        }
+      }
+
+      for (var ID in dict){
+        console.log("-Delete objects: "+ ID  + " for relation: "+relationName);
+        objectsToDelete[ID] = relationName;
+      }
+    }
+
+    //=========== END OF FUNCTIONS =============
 
     //create an array of promise
     var promises = [];
 
-    //create function "work" for each key
-    for (var key in request){
-        if (key == "userId") continue;
+    for (var key in request.params){
+      if (key == "userId") continue;
 
-        var work = function (){
-          //dict is {ID: updatedAt} pair
-          var dict = request[key];
-          var relation = user.relation(key);
-          if (relation){
-            //toMany relation
-            var objectsNeedUpdate = [];
+       //dict is {ID: updatedAt} pair
+      var dict = request.params[key];
 
-            relation.query().find({
-              success: function(list) {
-                _.each(list, function(PO){
-                  var clientUpdatedAt = dict[PO.id];
-                  if (clientUpdatedAt) {
-                    //exists, compare date
-                    if (clientUpdatedAt.getTime() < PO.updatedAt.getTime()){
-                      objectsNeedUpdate.push(PO);
-                    }
-                    //delete after compare
-                    delete dict[PO.id];
-                  }else{
-                    //do not exists, add
-                    objectsNeedUpdate.push(PO);
-                  }
-                });
-              }
+      //socialGraph is the only to-one relation
+      //we currently don't have a way to distinguish PFRelation or
+      if (key == "socialGraph"){
+        //toOne relation
+        var PO = user.get(key);
+        var toOnePromise = function (PO, relationName) {
+          if(PO){
+            return PO.fetch().then(function () {
+              updatePOThenProcess(PO, relationName);
+            })
+          }else{
+            updatePOThenProcess(PO, relationName);
+            return Parse.Promise.as();
+          }
+        }
+        promises.push(toOnePromise(PO, key));
+
+      }else {//toMany relation
+
+        if(key == "unreadMedias") {
+          //Relation is Array of POs
+          var objects = user.get(key);
+          var arrayPromise = function (objects, relationName) {
+            var fetchAllPromise = Parse.Promise.as();
+            objects.forEach(function(object){
+              fetchAllPromise = fetchAllPromise.then(function () {
+                return object.fetch();
+              });
             });
-            // add remaining ID to delete dic
-            for (var objectId in dict){
-              objectsToDelete[objectId] = key;
-            }
-
-            //assign updates to response
-            if(objectsNeedUpdate.length > 0){
-              console.log("For relation "+key+", updates: "+objectsNeedUpdate);
-              info[key] = objectsNeedUpdate;
-            }
+            fetchAllPromise = fetchAllPromise.then(function () {
+              console.log("Fetched POs for "+relationName);
+              processPOListForDicForRelationName(objects, relationName);
+            }, function(error){
+              console.log("***Failed to fetch array for relation "+relationName+" with error: "+error.message);
+            });
+            return fetchAllPromise;
           }
-          else {
-            //toOne relation
-            var PO = user[key];
-            if (PO){
-              var clientUpdatedAt = dict[PO.id];
-              if (clientUpdatedAt){
-                //object exists in local, compare date
-                if (clientUpdatedAt.getTime() < PO.updatedAt.getTime()){
-                  info[key] = PO;
-                  console.log("For relation "+key+", updates: "+PO);
-                }
-              }else {
-                //object do not exist, add PO to response and add objectID to delete dic
-                info[key] = PO;
-                console.log("For relation "+key+", updates: "+PO);
-                for (var ID in dict){
-                  objectsToDelete[ID] = key;
-                }
-              }
-            }else{
-              for (var ID in dict){
-                objectsToDelete[ID] = key;
-              }
-            }
+          promises.push(arrayPromise(objects, key));
 
-          }
-        };
 
-        //add each work function to promise
-        promises.push(work());
+        }else {
+          //Relation
+          //create promise to work on to-many relation and add it to the 'When()' collection
+          var toManyRelationPromise = function (relationName){
+            var relation = user.relation(relationName);
+            return relation.query().find().then(function (list) {
+              processPOListForDicForRelationName(list, relationName);
+            }, function(error){
+              console.log("failed to get result for relation: "+relationName+" with error: "+error);
+            })
+          };
+          promises.push(toManyRelationPromise(key));
 
+        }
       }
+    }
 
-    //wait until promises finish
+    //wait until all promises finish
     return Parse.Promise.when(promises);
 
+
   }).then(function(){
-    console.log("Finished all property inspection");
     //add the delete queue to response
     console.log("Object to delete: "+ objectsToDelete);
     info["delete"] = objectsToDelete;
@@ -569,6 +623,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
   }, function(error){
     console.log("Failed to run parallel inspection. "+error.message);
   });
+
 });
 
 //=================Background Job==================
