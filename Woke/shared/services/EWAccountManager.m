@@ -547,12 +547,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     if (!SO.objectId) {
                         //skip
                     }
-                    else if ([workingObjects containsObject:SO] || !SO.updatedAt) {
+                    else if ([workingObjects containsObject:SO]) {
                         //has change, do not update from server, use current time
                         //or has not updated to Server, meaning it will uploaded with newer data, use current time
                         graph[SO.objectId] = [NSDate date];
                     }
-                    else {
+                    else if (SO.updatedAt){
                         graph[SO.objectId] = SO.updatedAt;
                     }
                 }
@@ -565,13 +565,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 if (!SO.objectId) {
                     //skip
                 }
-                else if ([workingObjects containsObject:SO] || !SO.updatedAt) {
+                else if ([workingObjects containsObject:SO]) {
                     //has change, do not update from server, use current time
                     //or has not updated to Server, meaning it will uploaded with newer data, use current time
                     info[key] = @{SO.objectId: [NSDate date]};
                 }
-                else {
+                else if (SO.updatedAt){
                     info[key] = @{SO.objectId: SO.updatedAt};
+                }else{
+                    info[key] = @{};
                 }
             }
         }else{
@@ -589,6 +591,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //return graph level: 1) relation name 2) Array of PFObjects or PFObject
         [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
             NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
+            if (!relation) return;
             //save PO first
             if (relation.isToMany) {
                 for (PFObject *PO in obj) {
@@ -600,32 +603,42 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }];
         
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+            EWPerson *localMe = [me MR_inContext:localContext];
             [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
                 if ([key isEqualToString:@"delete"]) {
                     //delete all objects in this Dictionary
-                    [(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *className, BOOL *stop2) {
+                    [(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
+                        NSRelationshipDescription *relation =  localMe.entity.relationshipsByName[relationName];
+                        NSString *className = relation.destinationEntity.name;
                         EWServerObject *SO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:localContext];
                         [SO remove];
                     }];
                     return;
                 }
-                NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
+                
+                NSRelationshipDescription *relation = localMe.entity.relationshipsByName[key];
                 //update SO
                 if (relation.isToMany) {
                     NSArray *objects = (NSArray *)obj;
-                    NSMutableSet *relatedSO = [me mutableSetValueForKey:key];
+                    NSMutableSet *relatedSO = [localMe mutableSetValueForKey:key];
                     for (PFObject *PO in objects) {
+                        if(!PO.isDataAvailable) {
+                            DDLogError(@"Returned PO without data: %@", PO);
+                            [PO fetch];
+                        }
                         NSManagedObject *SO = [PO managedObjectInContext:localContext];
-                        [SO refresh];
+                        [SO updateValueAndRelationFromParseObject:PO];
                         if (![relatedSO containsObject:SO]) {
                             //add relation
                             [relatedSO addObject:SO];
-                            [me setValue:relatedSO.copy forKey:key];
+                            [localMe setValue:relatedSO.copy forKey:key];
                         }
                     }
                 }else{
+                    //to one
                     NSManagedObject *SO = [(PFObject *)obj managedObjectInContext:localContext];
-                    [me setValue:SO forKey:key];
+                    [SO updateValueAndRelationFromParseObject:obj];
+                    [localMe setValue:SO forKey:key];
                 }
             }];
         } completion:^(BOOL contextDidSave, NSError *error2) {

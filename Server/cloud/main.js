@@ -565,7 +565,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
             })
           }else{
             updatePOThenProcess(PO, relationName);
-            return Parse.Promise.as();
+            return Parse.Promise.success();
           }
         }
         promises.push(toOnePromise(PO, key));

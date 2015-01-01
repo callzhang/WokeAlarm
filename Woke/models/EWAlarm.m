@@ -93,7 +93,7 @@
 - (void)setState:(NSNumber *)state {
     //update cached time in person
     if (self.stateValue == state.boolValue) {
-        DDLogInfo(@"Set same state to alarm: %@", self);
+        //DDLogInfo(@"Set same state to alarm: %@", self);
         return;
     }
     
@@ -122,7 +122,7 @@
 
 - (void)setTime:(NSDate *)time {
     if ([self.time isEqualToDate:time]) {
-        DDLogInfo(@"Set same time to alarm: %@", self);
+        //DDLogInfo(@"Set same time to alarm: %@", self);
         return;
     }
     EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];

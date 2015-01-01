@@ -825,7 +825,12 @@ NSManagedObjectContext *mainContext;
 }
 
 - (void)setCachedParseObject:(PFObject *)PO {
-    [self.serverObjectCache setObject:PO forKey:PO.objectId];
+    if (PO.isDataAvailable) {
+        [self.serverObjectCache setObject:PO forKey:PO.objectId];
+    }else{
+        DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
+    }
+    
 }
 
 - (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error{
