@@ -483,8 +483,10 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
     //process list function
     var processPOListForDicForRelationName = function(list, relationName){
+      console.log("===>Parsing "+list.length+" objects in relation "+relationName);
+
+      //dict is {ID: updatedAt} pair
       var dict = request.params[relationName];
-      console.log("Got "+list.length+" object in relation "+relationName);
 
       var objectsNeedUpdate = [];
       list.forEach(function(PO){
@@ -518,7 +520,9 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
     //process single PO function
     var updatePOThenProcess = function(PO, relationName){
-      console.log("Parsing too-one relation "+relationName);
+      console.log("===>Parsing too-one relation "+relationName);
+
+      //dict is {ID: updatedAt} pair
       var dict = request.params[relationName];
       if (PO){
         var clientUpdatedAt = dict[PO.id];
@@ -550,29 +554,26 @@ Parse.Cloud.define("syncUser", function(request, response) {
     for (var key in request.params){
       if (key == "userId") continue;
 
-       //dict is {ID: updatedAt} pair
-      var dict = request.params[key];
-
       //socialGraph is the only to-one relation
       //we currently don't have a way to distinguish PFRelation or
       if (key == "socialGraph"){
         //toOne relation
         var PO = user.get(key);
+        console.log("Got socialGraph "+PO);
         var toOnePromise = function (PO, relationName) {
           if(PO){
             return PO.fetch().then(function () {
               updatePOThenProcess(PO, relationName);
             })
           }else{
-            updatePOThenProcess(PO, relationName);
-            return Parse.Promise.success();
+            return Parse.Promise.as().then(function () {
+              updatePOThenProcess(PO, relationName);
+            });
           }
         }
         promises.push(toOnePromise(PO, key));
 
-      }else {//toMany relation
-
-        if(key == "unreadMedias") {
+      }else if(key == "unreadMedias") {
           //Relation is Array of POs
           var objects = user.get(key);
           var arrayPromise = function (objects, relationName) {
@@ -593,20 +594,18 @@ Parse.Cloud.define("syncUser", function(request, response) {
           promises.push(arrayPromise(objects, key));
 
 
-        }else {
-          //Relation
-          //create promise to work on to-many relation and add it to the 'When()' collection
-          var toManyRelationPromise = function (relationName){
-            var relation = user.relation(relationName);
-            return relation.query().find().then(function (list) {
-              processPOListForDicForRelationName(list, relationName);
-            }, function(error){
-              console.log("failed to get result for relation: "+relationName+" with error: "+error);
-            })
-          };
-          promises.push(toManyRelationPromise(key));
-
-        }
+      }else {
+         //To-Many Relation
+         //create promise to work on to-many relation and add it to the 'When()' collection
+        var toManyRelationPromise = function (relationName){
+          var relation = user.relation(relationName);
+          return relation.query().find().then(function (list) {
+            processPOListForDicForRelationName(list, relationName);
+          }, function(error){
+            console.log("failed to get result for relation: "+relationName+" with error: "+error);
+          })
+        };
+        promises.push(toManyRelationPromise(key));
       }
     }
 

@@ -15,6 +15,7 @@
 @property (nonatomic, retain) NSDate *lastChecked;//The date that last sync with server
 + (EWStartUpSequence *)sharedInstance;
 + (void)deleteDatabase;
+- (void)loginDataCheck;
 @end
 
 

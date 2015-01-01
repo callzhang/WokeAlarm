@@ -17,6 +17,7 @@
 #import "AppDelegate.h"
 #import "EWUIUtil.h"
 #import "NSTimer+BlocksKit.h"
+#import "EWStartUpSequence.h"
 @import CoreLocation;
 
 @interface EWAccountManager()
@@ -83,11 +84,18 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     //1) Old user, everything should be update to date
     //2) New user, everything copied from defaul template and upload to server
     //3) Existing user but first time login on this phone, we need to download user data first and THEN execute login sequence
-    
+    TICK
+    DDLogVerbose(@"Start sync user");
     //Delta sync
     [[EWAccountManager shared] syncUserWithCompletion:^(NSError *error){
+        TOCK
         [[EWSync sharedInstance] resumeUploadToServer];
         DDLogInfo(@"[c] Broadcast Person login notification");
+        
+        //startup sequence
+        [[EWStartUpSequence sharedInstance] loginDataCheck];
+        
+        //post notification
         [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
         if (completion) {
             
