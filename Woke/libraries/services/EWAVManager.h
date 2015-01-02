@@ -105,6 +105,6 @@
 //- (void)resignRemoteControlEventsListener;
 
 #pragma mark - Tools
-- (void)volumeFadeWithCompletion:(VoidBlock)block;
+- (void)volumeTo:(float)volume withCompletion:(VoidBlock)block;
 - (void)setDeviceVolume:(float)volume;
 @end

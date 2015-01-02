@@ -287,7 +287,7 @@
         DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
     }else{
         
-        if ([SO valueForKey:kUpdatedDateKey] && (SO.isOutDated || self.isNewerThanMO)) {
+        if (SO.isOutDated || self.isNewerThanMO) {
             [SO assignValueFromParseObject:self];
             //[EWDataStore saveToLocal:mo];//mo will be saved later
         }

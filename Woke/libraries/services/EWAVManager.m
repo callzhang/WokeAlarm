@@ -494,11 +494,15 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 
 
 #pragma mark - Volume control
-- (void)volumeFadeWithCompletion:(VoidBlock)block{
-    if (self.player.volume > 0) {
-        self.player.volume = (float)self.player.volume - 0.1f;
-        [self performSelector:@selector(volumeFadeWithCompletion:) withObject:block afterDelay:0.2];
+- (void)volumeTo:(float)volume withCompletion:(VoidBlock)block{
+	float step = 0.1 * (volume-self.player.volume)?1:-1;
+    if (ABS(self.player.volume - volume) > 0) {
+        self.player.volume = (float)self.player.volume - step;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+			[self volumeTo:volume withCompletion:block];
+		});
     } else {
+		self.player.volume = volume;
         // Stop and get the sound ready for playing again
         [self.player stop];
         self.player.currentTime = 0;
@@ -519,6 +523,12 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 		}
 	}
 	
+	//change
+	[volumeViewSlider setValue:volume animated:YES];
+	[volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+	
+	//change graduately
+	/*
 	[NSTimer bk_scheduledTimerWithTimeInterval:0.2 block:^(NSTimer *aTimer){
 		float currentVolume = volumeViewSlider.value;
 		float delta = volume - currentVolume;
@@ -536,7 +546,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 			return;
 		}
 	} repeats:YES];
-	
+	*/
 	
 }
 @end

@@ -532,8 +532,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     //generate info dic
     EWPerson *me = [EWPerson me];
-    NSMutableDictionary *info = [NSMutableDictionary new];
-    info[kUserID] = me.objectId;
+    NSMutableDictionary *graph = [NSMutableDictionary new];
+	graph[kUserID] = @{me.objectId: me.updatedAt?me.updatedAt:[NSDate dateWithTimeIntervalSince1970:0]};
     //get the updated objects
     NSSet *workingObjects = [EWSync sharedInstance].workingQueue;
     workingObjects = [workingObjects setByAddingObjectsFromSet:[EWSync sharedInstance].insertQueue];
@@ -547,7 +547,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         id objects = [me valueForKey:key];
         if (objects) {
             if ([relation isToMany]) {
-                NSMutableDictionary *graph = [NSMutableDictionary new];
+                NSMutableDictionary *related = [NSMutableDictionary new];
                 for (EWServerObject *SO in objects) {
                     if (!SO.objectId) {
                         //skip
@@ -555,14 +555,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     else if ([workingObjects containsObject:SO]) {
                         //has change, do not update from server, use current time
                         //or has not updated to Server, meaning it will uploaded with newer data, use current time
-                        graph[SO.objectId] = [NSDate date];
+                        related[SO.objectId] = [NSDate date];
                     }
                     else if (SO.updatedAt){
-                        graph[SO.objectId] = SO.updatedAt;
+                        related[SO.objectId] = SO.updatedAt;
                     }
                 }
                 //add the graph to the info dic
-                info[key] = graph;
+                graph[key] = related;
             }
             else {
                 //to-one relation
@@ -573,21 +573,21 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 else if ([workingObjects containsObject:SO]) {
                     //has change, do not update from server, use current time
                     //or has not updated to Server, meaning it will uploaded with newer data, use current time
-                    info[key] = @{SO.objectId: [NSDate date]};
+                    graph[key] = @{SO.objectId: [NSDate date]};
                 }
                 else if (SO.updatedAt){
-                    info[key] = @{SO.objectId: SO.updatedAt};
+                    graph[key] = @{SO.objectId: SO.updatedAt};
                 }else{
-                    info[key] = @{};
+                    graph[key] = @{};
                 }
             }
         }else{
-            info[key] = @0;
+            graph[key] = @0;
         }
     }];
     
     //send to cloud
-    [PFCloud callFunctionInBackground:@"syncUser" withParameters:info block:^(NSDictionary *graph, NSError *error) {
+    [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *graph, NSError *error) {
         DDLogInfo(@"Server returned sync info: %@", graph);
         if (error) {
             block(error);
@@ -617,11 +617,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                         NSRelationshipDescription *relation =  localMe.entity.relationshipsByName[relationName];
                         NSString *className = relation.destinationEntity.name;
                         EWServerObject *SO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:localContext];
-                        [SO remove];
+						if (relation.isToMany) {
+							NSMutableSet *related = [localMe valueForKey:key];
+							[related removeObject:SO];
+							[localMe setValue:related forKey:key];
+						} else {
+							[localMe setValue:nil forKey:key];
+						}
                     }];
                     return;
-                }
-                
+				}else if ([key isEqualToString:@"user"]){
+					//update me
+					[localMe updateValueAndRelationFromParseObject:obj];
+				}
+					
                 NSRelationshipDescription *relation = localMe.entity.relationshipsByName[key];
                 //update SO
                 if (relation.isToMany) {
@@ -647,6 +656,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     [localMe setValue:SO forKey:key];
                 }
             }];
+			
+			localMe.updatedAt = [NSDate date];
         } completion:^(BOOL contextDidSave, NSError *error2) {
             if (!error2) {
                 DDLogDebug(@"========> Finished user syncing <=========");

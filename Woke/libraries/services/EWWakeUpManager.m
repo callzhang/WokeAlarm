@@ -197,7 +197,7 @@
         double d = 10;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(d * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //present wakeupVC and paly when displayed
-            [[EWAVManager sharedManager] volumeFadeWithCompletion:^{
+			[[EWAVManager sharedManager] volumeTo:0 withCompletion:^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:activity];
             }];
         });
@@ -418,7 +418,12 @@
 }
 
 - (void)reloadMedias{
-    if ([EWSession sharedSession].isWakingUp) {
+	BOOL forceLoad = NO;
+#ifdef DEBUG
+	forceLoad = YES;
+#endif
+	
+    if ([EWSession sharedSession].isWakingUp || forceLoad) {
         self.medias = [EWPerson myUnreadMedias];
     }else{
         DDLogVerbose(@"Current seesion is not in wakingUp mode, playing media list will not load from myUnreadMedias");

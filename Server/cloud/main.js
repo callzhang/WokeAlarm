@@ -465,7 +465,7 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
 });
 
 Parse.Cloud.define("syncUser", function(request, response) {
-
+  Parse.Cloud.useMasterKey();
   //define the return object
   var info = {};
 
@@ -473,16 +473,30 @@ Parse.Cloud.define("syncUser", function(request, response) {
   var objectsToDelete = {};
 
   //find the user
-  var currentUserId = request.params.userId;
+  var userInfo = request.params.user;
+  var userID = "";
+  var userUpdatedAt;
+  for (var ID in userInfo){
+    userID = ID;
+    userUpdatedAt = userInfo[ID];
+    console.log("Request for user "+userID+" with udpatedAt: "+userUpdatedAt);
+  }
   var query = new Parse.Query(Parse.User);
-  query.get(currentUserId).then( function(user){
+  query.get(userID).then( function(user){
+
+    //create an array of promise
+    var promises = [];
 
     console.log("Get user "+user.get("firstName")+" for syncing");
-
+    if (user.updatedAt > userUpdatedAt) {
+      info["user"] = user;
+      promises.push(user.save());
+    };
     //========== FUNCTIONS DEFINITION =============
 
     //process list function
     var processPOListForDicForRelationName = function(list, relationName){
+      if (!list) return;
       console.log("===>Parsing "+list.length+" objects in relation "+relationName);
 
       //dict is {ID: updatedAt} pair
@@ -548,9 +562,6 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
     //=========== END OF FUNCTIONS =============
 
-    //create an array of promise
-    var promises = [];
-
     for (var key in request.params){
       if (key == "userId") continue;
 
@@ -578,17 +589,18 @@ Parse.Cloud.define("syncUser", function(request, response) {
           var objects = user.get(key);
           var arrayPromise = function (objects, relationName) {
             var fetchAllPromise = Parse.Promise.as();
-            objects.forEach(function(object){
-              fetchAllPromise = fetchAllPromise.then(function () {
-                return object.fetch();
+            if (objects) {
+              objects.forEach(function(object){
+                fetchAllPromise = fetchAllPromise.then(object.fetch());
               });
-            });
-            fetchAllPromise = fetchAllPromise.then(function () {
-              console.log("Fetched POs for "+relationName);
-              processPOListForDicForRelationName(objects, relationName);
-            }, function(error){
-              console.log("***Failed to fetch array for relation "+relationName+" with error: "+error.message);
-            });
+              fetchAllPromise = fetchAllPromise.then(function () {
+                console.log("Fetched "+ objects.length +"POs for "+relationName);
+                processPOListForDicForRelationName(objects, relationName);
+              }, function(error){
+                console.log("***Failed to fetch array for relation "+relationName+" with error: "+error.message);
+              });
+            };
+            
             return fetchAllPromise;
           }
           promises.push(arrayPromise(objects, key));
