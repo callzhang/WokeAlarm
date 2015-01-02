@@ -160,8 +160,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
                            withParameters:@{@"objectId": localMe.objectId,
                                             @"topk" : numberOfRelevantUsers,
                                             @"radius" : radiusOfRelevantUsers,
-                                            @"location": @{@"latitude": @([EWPerson me].location.coordinate.latitude),
-                                                           @"longitude": @([EWPerson me].location.coordinate.longitude)}}
+                                            @"location": @{@"latitude": @(localMe.location.coordinate.latitude),
+                                                           @"longitude": @(localMe.location.coordinate.longitude)}}
                                     error:&error];
     
     if (error && list.count == 0) {
@@ -206,7 +206,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     //still need to save me
     //localMe.score = @100;
     
-    NSLog(@"Received everyone list: %@", [allPerson valueForKey:@"name"]);
+    DDLogVerbose(@"Received everyone list: %@", [allPerson valueForKey:@"name"]);
     self.isFetchingWakees = NO;
     
     return allPerson;

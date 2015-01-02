@@ -102,10 +102,10 @@
 #pragma mark - Send Voice tone
 + (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block{
     
-    
-    
     //save
     [EWSync saveWithCompletion:^{
+        //update Person->medias relation
+        [self updateRelation:@"medias" for:person.parseObject withObject:media.parseObject withOperation:@"add" completion:NULL];
         
         //set ACL
         PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -121,31 +121,19 @@
         
         PFObject *object = media.parseObject;
         [object setACL:acl];
-        //[object saveInBackground];
+        [object saveInBackground];
         
-        NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
+        NSDictionary *pushMessage = @{@"badge": @"Increment",
+                                      @"alert": @"Someone has sent you an voice greeting",
+                                      @"content-available": @1,
+                                      kPushType: kPushTypeMedia,
+                                      kPushMediaType: kPushMediaTypeVoice,
+                                      kPushPersonID: [EWPerson me].objectId,
+                                      kPushMediaID: media.objectId,
+                                      @"sound": @"media.caf",
+                                      @"alert": @"Someone has sent you an voice greeting"
+                                      };
         
-        NSMutableDictionary *pushMessage = [@{@"badge": @"Increment",
-                                              @"alert": @"Someone has sent you an voice greeting",
-                                              @"content-available": @1,
-                                              kPushType: kPushTypeMedia,
-                                              kPushMediaType: kPushMediaTypeVoice,
-                                              kPushPersonID: [EWPerson me].objectId,
-                                              kPushMediaID: media.objectId} mutableCopy];
-        
-        //form push payload
-        if ([[NSDate date] isEarlierThan:time]) {
-            //early, silent message
-            
-        }else if(time.timeElapsed < kMaxWakeTime){
-            //struggle state
-            pushMessage[@"sound"] = @"media.caf";
-            pushMessage[@"alert"] = @"Someone has sent you an voice greeting";
-            
-        }else{
-            //send silent push for next task
-            
-        }
         
         //push
         [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error) {
@@ -440,5 +428,17 @@
    
  }
 
+#pragma mark - Util
++ (void)updateRelation:(NSString *)relation for:(PFObject *)target withObject:(PFObject *)related withOperation:(NSString *)operation completion:(ErrorBlock)block{
+    NSDictionary *dic = @{@"target": target, @"related": related, @"relation": relation, @"operation": operation};
+    
+    [PFCloud callFunctionInBackground:@"updateRelation" withParameters:dic block:^(id object, NSError *error) {
+        if (!object) {
+            DDLogError(@"Failed to update relation: %@ with error:%@", dic, error.description);
+        }else{
+            DDLogVerbose(@"Updated relation: %@(%@) -> %@(%@)", target.parseClassName, target.objectId, relation, related.objectId);
+        }
+    }];
+}
 
 @end

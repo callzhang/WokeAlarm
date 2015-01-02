@@ -31,7 +31,6 @@
 		091C675E1A3523AF0091B8A6 /* EWMediaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67501A3523AF0091B8A6 /* EWMediaCell.xib */; };
 		091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67521A3523AF0091B8A6 /* EWMediaSlider.m */; };
 		091C67601A3523AF0091B8A6 /* EWPostWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67531A3523AF0091B8A6 /* EWPostWakeUpView.xib */; };
-		091C67611A3523AF0091B8A6 /* EWRecordingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67541A3523AF0091B8A6 /* EWRecordingViewController.xib */; };
 		091C67621A3523AF0091B8A6 /* EWShakeProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67561A3523AF0091B8A6 /* EWShakeProgressView.m */; };
 		091C67631A3523AF0091B8A6 /* EWSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67571A3523AF0091B8A6 /* EWSleepViewController.xib */; };
 		091C67641A3523AF0091B8A6 /* EWWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67581A3523AF0091B8A6 /* EWWakeUpView.xib */; };
@@ -250,7 +249,7 @@
 		096AAAB91A195A3900B4CBFF /* EWPersonManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EWPersonManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		096AAABA1A195A3900B4CBFF /* EWPersonManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWPersonManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAABB1A195A3900B4CBFF /* EWServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EWServer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		096AAABC1A195A3900B4CBFF /* EWServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWServer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		096AAABC1A195A3900B4CBFF /* EWServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWServer.m; sourceTree = "<group>"; usesTabs = 0; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAABD1A195A3900B4CBFF /* EWSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSession.h; sourceTree = "<group>"; };
 		096AAABE1A195A3900B4CBFF /* EWSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSession.m; sourceTree = "<group>"; };
 		096AAABF1A195A3900B4CBFF /* EWSocialManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSocialManager.h; sourceTree = "<group>"; };
@@ -1198,7 +1197,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BF7291C1A4CFCFD006C6C51 /* PLCameraSheetButton.png in Resources */,
-				091C67611A3523AF0091B8A6 /* EWRecordingViewController.xib in Resources */,
 				091C675C1A3523AF0091B8A6 /* EWLogInView.xib in Resources */,
 				9BF7291B1A4CFCFD006C6C51 /* PLCameraSheetButton@2x.png in Resources */,
 				091C67601A3523AF0091B8A6 /* EWPostWakeUpView.xib in Resources */,

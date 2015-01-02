@@ -84,4 +84,7 @@
 +(void)uploadOGStoryWithPhoto:(UIImage *)image;// use this to update a OG story
 
 +(void)makeRequestToPostStoryWithId:(NSString *)objectId andUrlString:(NSString *)url;
+
+#pragma mark - Util
++ (void)updateRelation:(NSString *)relation for:(PFObject *)target withObject:(PFObject *)related withOperation:(NSString *)operation completion:(ErrorBlock)block;
 @end

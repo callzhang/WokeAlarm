@@ -86,7 +86,7 @@ NSManagedObjectContext *mainContext;
     [self.reachability startMonitoring];
     [self.reachability setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status > 0) {
-            DDLogInfo(@"====== Network is reachable. Start upload. ======");
+            DDLogDebug(@"====== Network is reachable. Start upload. ======");
             //in background thread
             [[EWSync sharedInstance] resumeUploadToServer];
             

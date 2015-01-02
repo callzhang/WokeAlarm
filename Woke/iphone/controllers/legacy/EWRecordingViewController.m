@@ -9,30 +9,26 @@
 #import "EWRecordingViewController.h"
 //#import "EWAppDelegate.h"
 
-//Util
+//UI
 #import "NSDate+Extend.h"
 #import "SCSiriWaveformView.h"
 #import "EWUIUtil.h"
-#import "EWDefines.h"
 #import "UAProgressView.h"
+
+//model
+#import "ATConnect.h"
+#import "EWMediaFile.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
-
-//backend
-#import "EWStartUpSequence.h"
-#import "EWServer.h"
-#import "ATConnect.h"
-#import "EWBackgroundingManager.h"
-#import "UAProgressView.h"
+#import "EWAVManager.h"
 #import "EWAlarmManager.h"
-#import "EWMediaFile.h"
-#import "UIViewController+Blur.h"
+#import "EWBackgroundingManager.h"
+#import "EWServer.h"
 #define BUTTONCENTER  CGPointMake(470, EWScreenWidth/2)
 
 @interface EWRecordingViewController (){
-    NSArray *personSet;
     NSURL *recordingFileUrl;
     
     BOOL  everPlayed;
@@ -44,138 +40,18 @@
 
 @implementation EWRecordingViewController
 @synthesize playBtn, recordBtn;
-
-- (EWRecordingViewController *)initWithPerson:(EWPerson *)user{
-    self = [super init];
-    if (self) {
-        //person
-        personSet = @[user];
-        _manager = [EWAVManager sharedManager];
-    }
-    return self;
-}
-
-- (EWRecordingViewController *)initWithPeople:(NSSet *)ps{
-    self = [super init];
-    if (self) {
-        personSet = [ps allObjects];
-        _manager = [EWAVManager sharedManager];
-    }
-    return self;
-}
+@synthesize wakees;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
     [self initProgressView];
-    [self initButtonAndLabel];
-    [self initView];
     
-    //NavigationController
-    [EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
-    //self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MoreButton"] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
-    
-    //collection view
-    UINib *nib = [UINib nibWithNibName:@"EWCollectionPersonCell" bundle:nil];
-    [self.peopleView registerNib:nib forCellWithReuseIdentifier:@"cellIdentifier"];
-    self.peopleView.backgroundColor = [UIColor clearColor];
-    
-
-    //waveform
-    [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
-    //[EWAVManager sharedManager].waveformView = self.waveformView;
-
-    //[EWAVManager sharedManager].playStopBtn = playBtn;
-    //[EWAVManager sharedManager].recordStopBtn = recordBtn;
-}
-
--(void)initProgressView{
-    
-    self.progressView.tintColor = [UIColor whiteColor];
-	self.progressView.borderWidth = 0.0;
-	self.progressView.lineWidth = 1;
-    
-//	self.progressView.fillOnTouch = YES;
-	
-	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 32.0)];
-	textLabel.font = [UIFont fontWithName:@"Lane-Narrow.ttf" size:24];
-	textLabel.textAlignment = NSTextAlignmentCenter;
-	textLabel.textColor = self.progressView.tintColor;
-	textLabel.backgroundColor = [UIColor clearColor];
-	self.progressView.centralView = textLabel;
-	
-      __weak  typeof (self) copySelf =  self;
-    
-	self.progressView.fillChangedBlock = ^(UAProgressView *progressView, BOOL filled, BOOL animated){
-//		UIColor *color = (filled ? [UIColor redColor] : progressView.tintColor);
-//      
-//		if (animated) {
-//			[UIView animateWithDuration:0.3 animations:^{
-//                progressView.tintColor = [UIColor redColor];
-//				[(UILabel *)progressView.centralView setTextColor:color];
-//                [copySelf record:nil];
-//			}];
-//		} else {
-//            progressView.tintColor = [UIColor whiteColor];
-//			[(UILabel *)progressView.centralView setTextColor:color];
-//		}
-	};
-	
-	self.progressView.progressChangedBlock = ^(UAProgressView *progressView, float progress){
-        
-//        self.progressView.tintColor = [UIColor clearColor];
-//        copySelf.progressView.borderWidth = 0;
-        
-        if (copySelf.manager.recorder.isRecording) {
-            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f",copySelf.manager.recorder.currentTime]];
-            
-        }
-        if (copySelf.manager.player.isPlaying) {
-            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f",copySelf.manager.player.currentTime]];
-        }
-		
-	};
-	
-		
-	self.progressView.didSelectBlock = ^(UAProgressView *progressView){
-		
-//		[copySelf record:nil];
-	};
-	
-	self.progressView.progress = 0;
-    
-	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateProgress:) userInfo:nil repeats:YES];
-    
-}
--(void)initButtonAndLabel
-{
-    self.playLabel.text = @"Take";
-    [self.playBtn setImage:[UIImage imageNamed:@"Record Button Red "] forState:UIControlStateNormal];
-//    self.recordBtn.hidden = YES;
-//    self.sendBtn.hidden = YES;
-//
-//    self.retakeLabel.hidden = YES;
-//    self.sendLabel.hidden = YES;
-    everPlayed = NO;
-    everRecord = NO;
-    self.recordBtn.alpha = 0.0;
-    self.sendBtn.alpha = 0.0;
-    self.sendLabel.alpha = 0.0;
-    self.retakeLabel.alpha = 0.0;
-    
-    
-}
--(void)initView{
-    
+    //texts
     self.title = @"Recording";
-    
-    if (personSet.count == 1) {
-        EWPerson *receiver = personSet[0];
+    if (wakees.count == 1) {
+        EWPerson *receiver = wakees.anyObject;
         
         NSString *statement = [[EWAlarmManager sharedInstance] nextStatementForPerson:receiver];
-        
-        _detail.font = [UIFont fontWithName:@"Lato-Light.ttf" size:20];
-        _wish.font = [UIFont fontWithName:@"Lato-Light.ttf" size:16];
         
         self.detail.text = [NSString stringWithFormat:@"%@ wants to hear", receiver.name];
         if (statement) {
@@ -188,7 +64,54 @@
         self.detail.text = @"Sent voice greeting for their next morning";
         self.wish.text = @"";
     }
+
     
+    //NavigationController
+    //[EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
+    //self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MoreButton"] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
+    
+    //collection view
+//    UINib *nib = [UINib nibWithNibName:@"EWCollectionPersonCell" bundle:nil];
+//    [self.peopleView registerNib:nib forCellWithReuseIdentifier:@"cellIdentifier"];
+//    self.peopleView.backgroundColor = [UIColor clearColor];
+    
+
+    //waveform
+    [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
+}
+
+-(void)initProgressView{
+    
+    self.progressView.tintColor = [UIColor whiteColor];
+	self.progressView.borderWidth = 0.0;
+	self.progressView.lineWidth = 1;
+    
+//	self.progressView.fillOnTouch = YES;
+	
+	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 32.0)];
+	textLabel.font = [UIFont fontWithName:@"Lane-Narrow.ttf" size:48];
+	textLabel.textAlignment = NSTextAlignmentCenter;
+	textLabel.textColor = self.progressView.tintColor;
+	textLabel.backgroundColor = [UIColor clearColor];
+	self.progressView.centralView = textLabel;
+	
+	self.progressView.progressChangedBlock = ^(UAProgressView *progressView, float progress){
+        
+//        self.progressView.tintColor = [UIColor clearColor];
+        
+        if ([EWAVManager sharedManager].recorder.isRecording) {
+            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f", [EWAVManager sharedManager].recorder.currentTime]];
+            
+        }
+        if ([EWAVManager sharedManager].player.isPlaying) {
+            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f", [EWAVManager sharedManager].player.currentTime]];
+        }
+	};
+	
+	self.progressView.progress = 0;
+    
+    [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress:)];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -217,7 +140,7 @@
     return 1;
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return personSet.count;
+    return wakees.count;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -237,7 +160,7 @@
 
 - (IBAction)play:(id)sender {
     
-    if (!everRecord || self.manager.recorder.isRecording) {
+    if (!everRecord || [EWAVManager sharedManager].recorder.isRecording) {
         [self record:nil];
         
         
@@ -250,39 +173,42 @@
         return;
     }
     
-    if ([self.manager.recorder isRecording]) {
+    if ([[EWAVManager sharedManager].recorder isRecording]) {
         return;
     }
     
-    if (!self.manager.player.isPlaying) {
-
+    if (![EWAVManager sharedManager].player.isPlaying) {
+        //play
         everPlayed = YES;
-        [self.manager playSoundFromURL:recordingFileUrl];
+        [[EWAVManager sharedManager] playSoundFromURL:recordingFileUrl];
         self.playLabel.text = @"Stop";
         [self.playBtn setImage:[UIImage imageNamed:@"Stop Button"] forState:UIControlStateNormal];
         
     }else{
-        
-        self.playLabel.text = @"Play";
-        [self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];     [self.manager stopAllPlaying];
+        //stop
+        [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
+        //self.playLabel.text = @"Play";
+        //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
+        [[EWAVManager sharedManager] stopAllPlaying];
     }
 }
 
+
 - (IBAction)record:(id)sender {
     
-    if (self.manager.player.isPlaying) {
-        
+    if ([EWAVManager sharedManager].player.isPlaying) {
         return ;
     }
     
+    //record or stop
+    recordingFileUrl = [[EWAVManager sharedManager] record];
     
-    recordingFileUrl = [self.manager record];
-    
-    if (self.manager.recorder.isRecording) {
+    if ([EWAVManager sharedManager].recorder.isRecording) {
+        //is recording
         if (!everRecord) {
-            // 第一次进入 直接改变
-            [self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
+            //[self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
             self.playLabel.text = @"Stop";
+            [self.playBtn setTitle:@"stop" forState:UIControlStateNormal];
         }
         else
         {
@@ -292,14 +218,14 @@
                 self.sendLabel.alpha = 0.0;
                 self.retakeLabel.alpha = 0.0;
                 self.playLabel.text = @"Stop";
-                  [self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
+                [self.playBtn setTitle:@"stop" forState:UIControlStateNormal];
+                //[self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
                 
             }];
         }
     }else{
-        if (!everRecord) {
-            everRecord = YES;
-        }
+        //stopped
+        if (!everRecord) everRecord = YES;
         [UIView animateWithDuration:1.0 animations:^(){
             self.sendBtn.alpha = 1.0;
             self.recordBtn.alpha = 1.0;
@@ -307,7 +233,8 @@
             self.retakeLabel.alpha = 1.0;
             self.retakeLabel.text = @"Retake";
             self.playLabel.text  = @"Play";
-            [self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
+            [self.playBtn setTitle:@"play" forState:UIControlStateNormal];
+            //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
         }];
         
     }
@@ -315,13 +242,13 @@
 
 - (IBAction)send:(id)sender {
     if (recordingFileUrl) {
-        
+        [self.view showLoopingWithTimeout:0];
         
         //finished recording, prepare for data
         NSError *err;
         NSData *recordData = [NSData dataWithContentsOfFile:[recordingFileUrl path] options:0 error:&err];
         if (!recordData) {
-            //TODO: Warning
+            DDLogWarn(@"No recorded file found");
             return;
         }
         //NSString *fileName = [NSString stringWithFormat:@"voice_%@_%@.m4a", me.username, [[NSDate date] date2numberDateString]];
@@ -334,15 +261,15 @@
         EWMediaFile *mediaFile = [EWMediaFile newMediaFile];
         mediaFile.audio = recordData;
         
-        for (EWPerson *receiver in personSet) {
+        for (EWPerson *receiver in wakees) {
             EWMedia *media = [EWMedia newMedia];
             media.type = kMediaTypeVoice;
             //media.message = self.message.text;
             
             //Add to media queue instead of task
             media.receiver = receiver;
-            
             media.mediaFile = mediaFile;
+            media.author = [EWPerson me];
             
             [EWServer pushVoice:media toUser:receiver withCompletion:^(BOOL success) {
                 
@@ -351,7 +278,7 @@
                 [EWUIUtil dismissHUDinView:self.view];
                 
                 //dismiss
-                [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+                //[self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
             }];
         }
         
@@ -360,14 +287,10 @@
     }
 }
 
-- (IBAction)seek:(id)sender {
-    //
-}
-
 - (IBAction)close:(id)sender {
 
     
-    if ([self.manager.recorder isRecording]) {
+    if ([[EWAVManager sharedManager].recorder isRecording]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stop Record Before Close" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
         
@@ -380,27 +303,27 @@
 }
 
 
-- (void)updateProgress:(NSTimer *)timer {
+- (void)updateProgress:(CADisplayLink *)link {
     
-    if ([self.manager.recorder isRecording]) {
+    if ([[EWAVManager sharedManager].recorder isRecording]) {
         
-        CGFloat progress = (CGFloat) self.manager.recorder.currentTime /kMaxRecordTime;
+        CGFloat progress = (CGFloat) [EWAVManager sharedManager].recorder.currentTime /kMaxRecordTime;
         [self.progressView  setProgress:(float) (progress>0.999?0.999:progress)];
     
     }
-    if(self.manager.player.isPlaying)
+    if([EWAVManager sharedManager].player.isPlaying)
     {
-        CGFloat progress = (CGFloat) self.manager.player.currentTime /kMaxRecordTime;
+        CGFloat progress = (CGFloat) [EWAVManager sharedManager].player.currentTime /kMaxRecordTime;
         [self.progressView  setProgress:(float) (progress>0.999?0.999:progress)];
    
     }
-    if (!self.manager.player.isPlaying&&everPlayed&&!self.manager.recorder.recording) {
+    if (![EWAVManager sharedManager].player.isPlaying&&everPlayed&&![EWAVManager sharedManager].recorder.recording) {
         [playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
 //        [self.progressView  setProgress: 0];
         
         [self.playLabel setText:@"Play"];
     }
-    if (!self.manager.recorder.isRecording && recordingFileUrl) {
+    if (![EWAVManager sharedManager].recorder.isRecording && recordingFileUrl) {
         [recordBtn setTitle:@"Retake" forState:UIControlStateNormal];
     }
   

@@ -13,9 +13,7 @@
 @class EWPerson;
 
 @interface EWRecordingViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
-
-@property (strong,nonatomic)     EWAVManager *manager;
-
+@property (nonatomic, strong) NSSet *wakees;
 
 @property (strong, nonatomic) IBOutlet UIButton *playBtn;
 @property (strong, nonatomic) IBOutlet UIButton *recordBtn;
@@ -33,7 +31,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *sendLabel;
 
-- (IBAction)play:(id)sender;
+- (IBAction)play:(id)sender;//or stop
 - (IBAction)record:(id)sender;
 - (IBAction)send:(id)sender;
 

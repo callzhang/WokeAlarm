@@ -5,7 +5,7 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>5F55F9A6-9CE7-42FB-A095-17B107EC2C9B</UUID>
-        <nextObjectID>131</nextObjectID>
+        <nextObjectID>137</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
@@ -204,7 +204,7 @@
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z116"></relationship>
     </object>
     <object type="LMREQUEST" id="z116">
-        <attribute name="body" type="string">["{\\"medias\\":{\\"__op\\":\\"AddRelation\\",\\"objects\\":[{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWMedia\\",\\"objectId\\":\\"tgbmLiIPdf\\"}]}}"]</attribute>
+        <attribute name="body" type="string">["{\\n  \\"medias\\": {\\n    \\"__op\\": \\"AddRelation\\",\\n    \\"objects\\": [\\n      {\\n        \\"__type\\": \\"Pointer\\",\\n        \\"className\\": \\"EWMedia\\",\\n        \\"objectId\\": \\"tgbmLiIPdf\\"\\n      }\\n    ]\\n  }\\n}"]</attribute>
         <attribute name="uuid" type="string">46657BF0-B5B7-4E18-B727-555B0A974415</attribute>
         <attribute name="url" type="string">https://api.parse.com/1/classes/EWMediaFile/iGAA4ufKx0</attribute>
         <attribute name="storecookies" type="bool">1</attribute>
@@ -217,7 +217,7 @@
         <attribute name="name" type="string">Updating MediaFile</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z115 z118 z119 z117"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z118 z119 z115 z117"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z117">
         <attribute name="value" type="string"></attribute>
@@ -380,5 +380,71 @@
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z126"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z132">
+        <attribute name="value" type="string">ZtAlif0L5UiL1HzXGS71XfI6dxyTJWXgis37t2oo</attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string">X-Parse-REST-API-Key</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z133"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z133">
+        <attribute name="uuid" type="string">ECC45FDE-DC94-43C9-BCBD-A11957F0A45B</attribute>
+        <attribute name="url" type="string">https://api.parse.com/1/functions/updateRelation</attribute>
+        <attribute name="storecookies" type="bool">1</attribute>
+        <attribute name="sendcookies" type="bool">1</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">[{"data":{"json":"{\\"target\\":{\\"__type\\":\\"Pointer\\",\\"className\\":\\"_User\\",\\"objectId\\":\\"td3zwhA3sF\\"},\\"related\\":{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWMedia\\",\\"objectId\\":\\"AbP4c45g5S\\"},\\"relation\\":\\"unreadMedias\\"\\/*,\\"operation\\":\\"add\\",\\"operation\\":\\"remove\\",\\"operation\\":\\"delete\\",\\"operation\\":\\"set\\"*\\/,\\"operation\\":\\"append\\"\\/*,\\"operation\\":\\"pop\\"*\\/}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">5</attribute>
+        <attribute name="name" type="string">updateRelation</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z136 z134 z135 z137 z132"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z134">
+        <attribute name="value" type="string">QHWs9RBxMxmuzMmOB9QliQVKBqOLhifPKyJIGrXx</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">X-Parse-Application-Id</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z133"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z135">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">4</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z133"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z136">
+        <attribute name="value" type="string">application/json</attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string">Content-Type</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z133"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z137">
+        <attribute name="value" type="string">iEjKEePThBb4KxJVj64o3nbkBGYrGzm6NPiFaFoN</attribute>
+        <attribute name="order" type="int64">3</attribute>
+        <attribute name="name" type="string">X-Parse-Master-Key</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z133"></relationship>
     </object>
 </database>

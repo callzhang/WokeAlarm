@@ -71,8 +71,6 @@ UIViewController *rootViewController;
     //watch for login
     [EWStartUpSequence sharedInstance];
     
-    DDLogInfo(@"Bundle ID: %@", [[NSBundle mainBundle] bundleIdentifier]);
-    
 #ifdef caoer115
     EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
     [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
@@ -141,7 +139,7 @@ UIViewController *rootViewController;
 #pragma mark - User notification
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings{
     UIUserNotificationType type = notificationSettings.types;
-    DDLogInfo(@"Application registered user notification (%lu)", type);
+    DDLogVerbose(@"Application registered user notification (%lu)", type);
     [[NSNotificationCenter defaultCenter] postNotificationName:kUserNotificationRegistered object:nil];
 }
 @end

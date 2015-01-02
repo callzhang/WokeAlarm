@@ -159,7 +159,7 @@
     if (![PFUser currentUser]) {
         return nil;
     }
-    EWPerson *localMe = [[EWPerson me] MR_inContext:context];
+    EWPerson *localMe = [EWPerson meInContext:context];
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWMedia class])];
     [query whereKey:EWMediaRelationships.receiver equalTo:[PFUser currentUser]];
     NSSet *localAssetIDs = [localMe.unreadMedias valueForKey:kParseObjectID];

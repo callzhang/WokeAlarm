@@ -58,6 +58,7 @@
 
 
 - (void)updateFriendshipTimeline{
+    EWAssertMainThread
     EWPerson *me = [EWPerson me];
     
     NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline?:[NSMutableDictionary new];
@@ -129,7 +130,7 @@
     //data
     sg.owner = person;
     //save
-    //[EWSync save];
+    [EWSync save];
     NSLog(@"Created new social graph for user %@", person.name);
     return sg;
 }

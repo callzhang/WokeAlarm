@@ -302,7 +302,7 @@
     static NSTimer *timerScheduled;
     //set up a wake Up Timer
     if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:activity.time])) {
-        NSLog(@"%s: About to init alart timer in %fs", __func__, timeLeft);
+        NSLog(@"About to init alart timer in %fs", timeLeft);
 		[timerScheduled invalidate];
 		timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
             NSDictionary *info = @{kActivityLocalID: activity.objectID};
@@ -331,12 +331,12 @@
     
     //if there is time left and the sleepTimer is either not set up or the sleepTimer is not correct, reschedule a sleepTimer
     if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:sleepTime])) {
-        NSLog(@"%s: About to init alarm timer in %fs", __func__, timeLeft);
+        DDLogVerbose(@"About to init alarm timer in %fs", timeLeft);
 		[timerScheduled invalidate];
 		timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
 			[[EWWakeUpManager sharedInstance] sleep:nil];
 		} repeats:NO];
-		NSLog(@"===========================>> Sleep Timer scheduled on %@ <<=============================", sleepTime.date2String);
+		DDLogVerbose(@"===========================>> Sleep Timer scheduled on %@ <<=============================", sleepTime.date2String);
     }
     
     //schedule next sleep timer check if the time left is larger than 5mim
@@ -421,7 +421,7 @@
     if ([EWSession sharedSession].isWakingUp) {
         self.medias = [EWPerson myUnreadMedias];
     }else{
-        DDLogWarn(@"Current seesion is not in wakingUp mode, playing media list will not load from myUnreadMedias");
+        DDLogVerbose(@"Current seesion is not in wakingUp mode, playing media list will not load from myUnreadMedias");
     }
 }
 @end

@@ -99,7 +99,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
         if (completion) {
             
-            DDLogInfo(@"[d] Run completion block.");
+            DDLogDebug(@"[d] Run completion block.");
             completion(error);
         }
         
@@ -164,42 +164,39 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 //after fb login, fetch user managed object
 - (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
+    EWSocial *sg = [EWPerson mySocialGraph];
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *person = [[EWPerson me] MR_inContext:localContext];
+        EWPerson *localMe = [EWPerson meInContext:localContext];
+        EWSocial *localSocial = [sg MR_inContext:localContext];
         
-        NSParameterAssert(person);
+        NSParameterAssert(localMe);
         
         //name
-        if (!person.firstName) {
-            person.firstName = user.first_name;
-        }
-        if (!person.lastName) {
-            person.lastName = user.last_name;
-        }
+        if (!localMe.firstName) localMe.firstName = user.first_name;
+        if (!localMe.lastName) localMe.lastName = user.last_name;
         
         //email
-        if (!person.email) person.email = user[@"email"];
+        if (!localMe.email) localMe.email = user[@"email"];
         
         //birthday format: "01/21/1984";
-        if (!person.birthday) {
+        if (!localMe.birthday) {
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateFormat = @"mm/dd/yyyy";
-            person.birthday = [formatter dateFromString:user[@"birthday"]];
+            localMe.birthday = [formatter dateFromString:user[@"birthday"]];
         }
         //facebook link
-        [EWPerson mySocialGraph].facebookID = user.objectID;
+        localSocial.facebookID = user.objectID;
         //gender
-        person.gender = user[@"gender"];
+        localMe.gender = user[@"gender"];
         //city
-        person.city = user.location[@"name"];
+        localMe.city = user.location[@"name"];
         //preference
-        if(!person.preference){
+        if(!localMe.preference){
             //new user
-            person.preference = kUserDefaults;
+            localMe.preference = kUserDefaults;
         }
         
-        
-        if (!person.profilePic) {
+        if (!localMe.profilePic) {
             //download profile picture if needed
             //profile pic, async download, need to assign img to person before leave
             NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", user.objectID];
@@ -209,7 +206,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             if (!img) {
                 img = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];
             }
-            person.profilePic = img;
+            localMe.profilePic = img;
         }
         
     }completion:^(BOOL success, NSError *error) {
@@ -244,7 +241,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //get social graph of current user
         //if not, create one
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
+            EWPerson *localMe = [EWPerson meInContext:localContext];
             EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:localMe];
             //skip if checked within a week
             if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
@@ -591,6 +588,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     //send to cloud
     [PFCloud callFunctionInBackground:@"syncUser" withParameters:info block:^(NSDictionary *graph, NSError *error) {
+        DDLogInfo(@"Server returned sync info: %@", graph);
         if (error) {
             block(error);
             return;
@@ -650,8 +648,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 }
             }];
         } completion:^(BOOL contextDidSave, NSError *error2) {
-            if (contextDidSave) {
-                DDLogInfo(@"========> Finished user syncing <=========");
+            if (!error2) {
+                DDLogDebug(@"========> Finished user syncing <=========");
                 block(nil);
             }else{
                 DDLogError(@"Failed to sync user: %@", error2.description);

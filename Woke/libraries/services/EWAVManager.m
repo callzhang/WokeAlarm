@@ -171,12 +171,12 @@
         file = [array firstObject];
         type = [array lastObject];
     }else {
-        DDLogVerbose(@"Wrong file name(%@) passed to play sound", fileName);
+        DDLogWarn(@"Wrong file name(%@) passed to play sound", fileName);
         return;
     }
     NSString *str = [[NSBundle mainBundle] pathForResource:file ofType:type];
     if (!str) {
-        DDLogVerbose(@"File doesn't exsits in main bundle");
+        DDLogWarn(@"File doesn't exsits in main bundle");
         return;
     }
     NSURL *soundURL = [[NSURL alloc] initFileURLWithPath:str];

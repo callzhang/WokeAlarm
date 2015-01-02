@@ -516,7 +516,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
       if(objectsNeedUpdate.length > 0){
         info[relationName] = objectsNeedUpdate;
       }
-    }
+    };
 
     //process single PO function
     var updatePOThenProcess = function(PO, relationName){
@@ -544,7 +544,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
         console.log("-Delete objects: "+ ID  + " for relation: "+relationName);
         objectsToDelete[ID] = relationName;
       }
-    }
+    };
 
     //=========== END OF FUNCTIONS =============
 
@@ -621,6 +621,96 @@ Parse.Cloud.define("syncUser", function(request, response) {
     response.success(info);
   }, function(error){
     console.log("Failed to run parallel inspection. "+error.message);
+  });
+
+});
+
+Parse.Cloud.define("updateRelation", function(request, response) {
+  Parse.Cloud.useMasterKey();
+  var target = request.params.target;
+  var related = request.params.related;
+  var relationName = request.params.relation;
+  var operation = request.params.operation;
+
+  var update = function () {
+    if (operation == "add"){
+      //add to relation
+      return target.fetch().then(function(){
+        var relation = target.relation(relationName);
+        relation.add(related);
+        return target.save();
+      }).then(function () {
+        return target.fetch();
+      });
+    }
+    else if(operation == "remove"){
+      //remove from relation
+      return target.fetch().then(function(){
+        var relation = target.relation(relationName);
+        relation.remove(related);
+        target.save();
+      }).then(function () {
+        response.success(target);
+      });
+    }
+    else if(operation == "delete"){
+      //delete from to-one relation
+      return target.fetch().then(function(){
+        target.unset(relationName);
+        target.save();
+      }).then(function () {
+        return target.fetch();
+      });
+    }
+    else if(operation == "set"){
+      //set to-one relation
+      return target.fetch().then(function(){
+        target.set(relationName, related);
+        target.save();
+      }).then(function () {
+        return target.fetch();
+      });
+    }
+    else if(operation == "append"){
+      //add object array
+      return target.fetch().then(function(){
+        var array = target.get(relationName);
+        if (!array){
+          array = [];
+        }
+        array.push(related);
+        target.set(relationName, array);
+        target.save();
+      }).then(function () {
+        return target.fetch();
+      }).then(function () {
+        response.success(target);
+      }, function(error){
+        response.error(error.message);
+      });
+    }
+    else if(operation == "pop"){
+      //pop from object array
+      return target.fetch().then(function(){
+        var array = target.get(relationName);
+        var newArr = [];
+        array.forEach(function(obj){
+          if(obj.id != related.id){
+            newArr.push(obj);
+          }
+        });
+        target.set(relationName, newArr);
+        return target.save();
+      });
+    }
+  };
+
+  update().then(function () {
+    return target.fetch();
+  }).then(function () {
+    response.success(target);
+  }, function(error){
+    response.error(error.message);
   });
 
 });
