@@ -529,11 +529,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Sync user
 - (void)syncUserWithCompletion:(ErrorBlock)block{
     EWAssertMainThread
+    const NSString *userKey = @"user";
     
     //generate info dic
     EWPerson *me = [EWPerson me];
     NSMutableDictionary *graph = [NSMutableDictionary new];
-	graph[kUserID] = @{me.objectId: me.updatedAt?me.updatedAt:[NSDate dateWithTimeIntervalSince1970:0]};
+	graph[userKey] = @{me.objectId: me.updatedAt?me.updatedAt:[NSDate dateWithTimeIntervalSince1970:0]};
     //get the updated objects
     NSSet *workingObjects = [EWSync sharedInstance].workingQueue;
     workingObjects = [workingObjects setByAddingObjectsFromSet:[EWSync sharedInstance].insertQueue];
@@ -596,6 +597,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //expecting a dictionary of objects needed to update
         //return graph level: 1) relation name 2) Array of PFObjects or PFObject
         [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+            if ([key isEqualToString:userKey]) {
+                [[EWSync sharedInstance] setCachedParseObject:obj];
+            }
             NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
             if (!relation) return;
             //save PO first
@@ -626,7 +630,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 						}
                     }];
                     return;
-				}else if ([key isEqualToString:@"user"]){
+				}else if ([key isEqualToString:userKey]){
 					//update me
 					[localMe updateValueAndRelationFromParseObject:obj];
 				}

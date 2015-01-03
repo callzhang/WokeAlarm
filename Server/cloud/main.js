@@ -474,7 +474,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
   //find the user
   var userInfo = request.params.user;
-  var userID = "";
+  var userID;
   var userUpdatedAt;
   for (var ID in userInfo){
     userID = ID;
@@ -484,19 +484,11 @@ Parse.Cloud.define("syncUser", function(request, response) {
   var query = new Parse.Query(Parse.User);
   query.get(userID).then( function(user){
 
-    //create an array of promise
-    var promises = [];
-
-    console.log("Get user "+user.get("firstName")+" for syncing");
-    if (user.updatedAt > userUpdatedAt) {
-      info["user"] = user;
-      promises.push(user.save());
-    };
     //========== FUNCTIONS DEFINITION =============
 
     //process list function
-    var processPOListForDicForRelationName = function(list, relationName){
-      if (!list) return;
+    var processPOListForRelation = function(list, relationName){
+      if (!list) list = [];
       console.log("===>Parsing "+list.length+" objects in relation "+relationName);
 
       //dict is {ID: updatedAt} pair
@@ -533,7 +525,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
     };
 
     //process single PO function
-    var updatePOThenProcess = function(PO, relationName){
+    var updatePOForRelation = function(PO, relationName){
       console.log("===>Parsing too-one relation "+relationName);
 
       //dict is {ID: updatedAt} pair
@@ -562,48 +554,65 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
     //=========== END OF FUNCTIONS =============
 
+    //create an array of promise
+    var promises = [];
+
+    //add user
+    console.log("Get user "+user.get("firstName")+" for syncing");
+    if (user.updatedAt > userUpdatedAt) {
+      var saveMe = function () {
+        return user.fetch().then(function () {
+          info["user"] = user;
+        });
+      };
+      promises.push(saveMe());
+    }
+
+    //enumerate through keys
     for (var key in request.params){
-      if (key == "userId") continue;
+      if (key == "user") continue;
 
       //socialGraph is the only to-one relation
       //we currently don't have a way to distinguish PFRelation or
       if (key == "socialGraph"){
         //toOne relation
         var PO = user.get(key);
-        console.log("Got socialGraph "+PO);
+
         var toOnePromise = function (PO, relationName) {
           if(PO){
             return PO.fetch().then(function () {
-              updatePOThenProcess(PO, relationName);
+              updatePOForRelation(PO, relationName);
             })
           }else{
             return Parse.Promise.as().then(function () {
-              updatePOThenProcess(PO, relationName);
+              updatePOForRelation(PO, relationName);
             });
           }
         }
         promises.push(toOnePromise(PO, key));
 
       }else if(key == "unreadMedias") {
-          //Relation is Array of POs
-          var objects = user.get(key);
-          var arrayPromise = function (objects, relationName) {
-            var fetchAllPromise = Parse.Promise.as();
-            if (objects) {
-              objects.forEach(function(object){
-                fetchAllPromise = fetchAllPromise.then(object.fetch());
-              });
+        //Relation is Array of POs
+        var objects = user.get(key);
+        var arrayPromise = function (objects, relationName) {
+          var fetchAllPromise = Parse.Promise.as();
+          if (objects) {
+            objects.forEach(function(object){
               fetchAllPromise = fetchAllPromise.then(function () {
-                console.log("Fetched "+ objects.length +"POs for "+relationName);
-                processPOListForDicForRelationName(objects, relationName);
-              }, function(error){
-                console.log("***Failed to fetch array for relation "+relationName+" with error: "+error.message);
+                return object.fetch();
               });
-            };
-            
-            return fetchAllPromise;
+            });
           }
-          promises.push(arrayPromise(objects, key));
+
+          fetchAllPromise = fetchAllPromise.then(function () {
+            processPOListForRelation(objects, relationName);
+          }, function(error){
+            console.log("***Failed to fetch array for relation "+relationName+" with error: "+error.message);
+          });
+
+          return fetchAllPromise;
+        }
+        promises.push(arrayPromise(objects, key));
 
 
       }else {
@@ -612,7 +621,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
         var toManyRelationPromise = function (relationName){
           var relation = user.relation(relationName);
           return relation.query().find().then(function (list) {
-            processPOListForDicForRelationName(list, relationName);
+            processPOListForRelation(list, relationName);
           }, function(error){
             console.log("failed to get result for relation: "+relationName+" with error: "+error);
           })
@@ -627,7 +636,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
   }).then(function(){
     //add the delete queue to response
-    console.log("Object to delete: "+ objectsToDelete);
+    console.log("Object to delete: "+ objectsToDelete.length);
     info["delete"] = objectsToDelete;
     //return
     response.success(info);
