@@ -441,8 +441,8 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 }
 
 - (void)sendVoice{
-    EWRecordingViewController *controller = [[EWRecordingViewController alloc] initWithPerson:self.person];
-    [self.navigationController pushViewController:controller animated:YES];
+    //EWRecordingViewController *controller = [[EWRecordingViewController alloc] initWithPerson:self.person];
+    //[self.navigationController pushViewController:controller animated:YES];
 }
 
 @end

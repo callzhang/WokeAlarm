@@ -43,7 +43,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    //self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
     
     //update view
     [self updateViewForCurrentMedia];

@@ -60,6 +60,11 @@
 //        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
     }];
 }
+- (IBAction)onVoice:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:^{
+//        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+    }];
+}
 #pragma mark -
 - (void)onTap {
     if (self.tapHandler) {

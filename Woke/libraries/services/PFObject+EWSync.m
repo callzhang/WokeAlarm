@@ -10,7 +10,7 @@
 #import "EWSync.h"
 
 @implementation PFObject(EWSync)
-- (void)updateFromManagedObject:(NSManagedObject *)managedObject{
+- (void)updateFromManagedObject:(EWServerObject *)managedObject{
     NSError *err;
     [self fetchIfNeeded:&err];
     if (err && self.objectId) {
@@ -68,7 +68,7 @@
         else if ([value isKindOfClass:[UIImage class]]){
             //image
             if (!expectChange && POValue) {
-                DDLogVerbose(@"MO attribute %@(%@)->%@ not change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
+                DDLogVerbose(@"MO attribute %@(%@)->%@ no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
                 return;
             }
             PFFile *dataFile = [PFFile fileWithName:@"Image.png" data:UIImagePNGRepresentation((UIImage *)value)];
@@ -195,22 +195,24 @@
             }
             else {
                 //TO-One relation
-                NSManagedObject *relatedMO = [managedObject valueForKey:key];
+                EWServerObject *relatedMO = [managedObject valueForKey:key];
                 NSString *parseID = relatedMO.serverID;
-                PFObject *relatedPO ;//TODO: test if we can use empty PO
+                PFObject *relatedPO ;
                 if (parseID) {
                     NSError *error;
                     relatedPO = [[EWSync sharedInstance] getParseObjectWithClass:relatedMO.serverClassName ID:relatedMO.serverID error:&error];
-                    if (error) {
-                        DDLogError(@"Failed to get related PO: %@", error);
-                        if (kPFErrorObjectNotFound) {
-                            [relatedMO setValue:nil forKey:kParseObjectID];
+                    if (!relatedPO) {
+                        if (error.code == kPFErrorObjectNotFound) {
+                            DDLogError(@"Related PO cannot be found for %@->%@(%@) with error: %@", managedObject.serverClassName, relatedMO.serverClassName, relatedMO.serverID, error);
+                            if (self.isNewerThanMO) DDLogWarn(@"PO is newer, we should remove related MO, but here we will create a new PO");
+                            relatedMO.objectId = nil;
+                        }else {
+                            DDLogError(@"Failed to get related PO: %@", error);
                         }
-                    }
-                    else {
+                    }else {
                         [self setObject:relatedPO forKey:key];
                     }
-                    //NSLog(@"+++> To-one relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], obj.name, relatedPO.objectId);
+                    DDLogVerbose(@"+++> To-one relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], obj.name, relatedPO.objectId);
                 }
                 if (!parseID || !relatedPO){
                     //MO doesn't have parse id, save to parse

@@ -34,11 +34,7 @@
 }
 
 - (BOOL)isMe {
-    BOOL isme = NO;
-    if ([EWPerson me]) {
-        isme = [self.username isEqualToString:[EWPerson me].username];
-    }
-    return isme;
+    return [self.objectId isEqualToString:[PFUser currentUser].objectId];
 }
 
 - (NSString *)name{

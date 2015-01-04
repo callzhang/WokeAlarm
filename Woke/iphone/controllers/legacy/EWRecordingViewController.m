@@ -30,10 +30,7 @@
 
 @interface EWRecordingViewController (){
     NSURL *recordingFileUrl;
-    
-    BOOL  everPlayed;
-    BOOL  everRecord;
-    //EWMedia *media;
+    CADisplayLink *displayLink;
 }
 
 @end
@@ -111,7 +108,7 @@
 	
 	self.progressView.progress = 0;
     
-    [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress:)];
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress:)];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -160,7 +157,7 @@
 
 - (IBAction)play:(id)sender {
     
-    if (!everRecord || [EWAVManager sharedManager].recorder.isRecording) {
+    if ([EWAVManager sharedManager].recorder.isRecording) {
         [self record:nil];
         
         
@@ -179,15 +176,24 @@
     
     if (![EWAVManager sharedManager].player.isPlaying) {
         //play
-        everPlayed = YES;
+        displayLink.paused = NO;
         [[EWAVManager sharedManager] playSoundFromURL:recordingFileUrl];
-        self.playLabel.text = @"Stop";
-        [self.playBtn setImage:[UIImage imageNamed:@"Stop Button"] forState:UIControlStateNormal];
-        
+        //[self.playBtn setImage:[UIImage imageNamed:@"Stop Button"] forState:UIControlStateNormal];
+        [UIView animateWithDuration:1 animations:^{
+            self.recordBtn.alpha = 0;
+            self.sendBtn.alpha = 0;
+            self.playLabel.text = @"Stop";
+            [self.playBtn setTitle:@"Stop" forState:UIControlStateNormal];
+        }];
     }else{
         //stop
-        [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
-        //self.playLabel.text = @"Play";
+        displayLink.paused = YES;
+        [UIView animateWithDuration:1 animations:^{
+            self.recordBtn.alpha = 1;
+            self.sendBtn.alpha = 1;
+            [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
+            self.playLabel.text = @"Play";
+        }];
         //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
         [[EWAVManager sharedManager] stopAllPlaying];
     }
@@ -204,36 +210,28 @@
     recordingFileUrl = [[EWAVManager sharedManager] record];
     
     if ([EWAVManager sharedManager].recorder.isRecording) {
-        //is recording
-        if (!everRecord) {
-            //[self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
+        [UIView animateWithDuration:1.0 animations:^(){
+            self.sendBtn.alpha = 0.0;
+            self.recordBtn.alpha = 0.0;
+            self.sendLabel.alpha = 0.0;
+            self.retakeLabel.alpha = 0.0;
             self.playLabel.text = @"Stop";
-            [self.playBtn setTitle:@"stop" forState:UIControlStateNormal];
-        }
-        else
-        {
-            [UIView animateWithDuration:1.0 animations:^(){
-                self.sendBtn.alpha = 0.0;
-                self.recordBtn.alpha = 0.0;
-                self.sendLabel.alpha = 0.0;
-                self.retakeLabel.alpha = 0.0;
-                self.playLabel.text = @"Stop";
-                [self.playBtn setTitle:@"stop" forState:UIControlStateNormal];
-                //[self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
-                
-            }];
-        }
+            [self.playBtn setTitle:@"Stop" forState:UIControlStateNormal];
+            //[self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
+            
+        }];
     }else{
         //stopped
-        if (!everRecord) everRecord = YES;
+        displayLink.paused = YES;
         [UIView animateWithDuration:1.0 animations:^(){
             self.sendBtn.alpha = 1.0;
             self.recordBtn.alpha = 1.0;
             self.sendLabel.alpha = 1.0;
             self.retakeLabel.alpha = 1.0;
             self.retakeLabel.text = @"Retake";
+            [self.recordBtn setTitle:@"Retake" forState:UIControlStateNormal];
             self.playLabel.text  = @"Play";
-            [self.playBtn setTitle:@"play" forState:UIControlStateNormal];
+            [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
             //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
         }];
         
@@ -293,10 +291,8 @@
     if ([[EWAVManager sharedManager].recorder isRecording]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stop Record Before Close" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
-        
     }
     else{
-
         //TODO: check
 //        [self dismissBlurViewControllerWithCompletionHandler:NULL];
     }
@@ -304,30 +300,21 @@
 
 
 - (void)updateProgress:(CADisplayLink *)link {
-    
-    if ([[EWAVManager sharedManager].recorder isRecording]) {
-        
-        CGFloat progress = (CGFloat) [EWAVManager sharedManager].recorder.currentTime /kMaxRecordTime;
-        [self.progressView  setProgress:(float) (progress>0.999?0.999:progress)];
-    
+    CGFloat progress = 0.0;
+    if ([EWAVManager sharedManager].recorder.isRecording) {
+        progress = (CGFloat) [EWAVManager sharedManager].recorder.currentTime /kMaxRecordTime;
     }
-    if([EWAVManager sharedManager].player.isPlaying)
-    {
-        CGFloat progress = (CGFloat) [EWAVManager sharedManager].player.currentTime /kMaxRecordTime;
-        [self.progressView  setProgress:(float) (progress>0.999?0.999:progress)];
-   
+    else if([EWAVManager sharedManager].player.isPlaying) {
+        progress = (CGFloat) [EWAVManager sharedManager].player.currentTime /kMaxRecordTime;
     }
-    if (![EWAVManager sharedManager].player.isPlaying&&everPlayed&&![EWAVManager sharedManager].recorder.recording) {
-        [playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
-//        [self.progressView  setProgress: 0];
-        
-        [self.playLabel setText:@"Play"];
+    //set prpgress
+    if (progress<1) {
+        self.progressView.progress = progress;
+    }else{
+        self.progressView.progress = 1;
+        link.paused = YES;
     }
-    if (![EWAVManager sharedManager].recorder.isRecording && recordingFileUrl) {
-        [recordBtn setTitle:@"Retake" forState:UIControlStateNormal];
-    }
-  
-//		[self.progressView setProgress:_localProgress];
-
 }
+
+
 @end

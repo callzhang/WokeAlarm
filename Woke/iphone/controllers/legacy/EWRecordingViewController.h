@@ -34,8 +34,4 @@
 - (IBAction)play:(id)sender;//or stop
 - (IBAction)record:(id)sender;
 - (IBAction)send:(id)sender;
-
-
-- (EWRecordingViewController *)initWithPerson:(EWPerson *)user;
-- (EWRecordingViewController *)initWithPeople:(NSSet *)personSet;
 @end

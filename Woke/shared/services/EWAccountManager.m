@@ -529,12 +529,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Sync user
 - (void)syncUserWithCompletion:(ErrorBlock)block{
     EWAssertMainThread
-    const NSString *userKey = @"user";
+    NSString *userKey = @"user";
     
     //generate info dic
     EWPerson *me = [EWPerson me];
     NSMutableDictionary *graph = [NSMutableDictionary new];
-	graph[userKey] = @{me.objectId: me.updatedAt?me.updatedAt:[NSDate dateWithTimeIntervalSince1970:0]};
+    //if no date available for me, it must be up to date.
+	graph[userKey] = @{me.objectId: me.updatedAt?me.updatedAt:[NSDate date]};
     //get the updated objects
     NSSet *workingObjects = [EWSync sharedInstance].workingQueue;
     workingObjects = [workingObjects setByAddingObjectsFromSet:[EWSync sharedInstance].insertQueue];
@@ -588,20 +589,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }];
     
     //send to cloud
-    [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *graph, NSError *error) {
-        DDLogInfo(@"Server returned sync info: %@", graph);
+    [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *POGraph, NSError *error) {
+        DDLogInfo(@"Server returned sync info: %@", POGraph);
         if (error) {
             block(error);
             return;
         }
         //expecting a dictionary of objects needed to update
         //return graph level: 1) relation name 2) Array of PFObjects or PFObject
-        [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
             if ([key isEqualToString:userKey]) {
                 [[EWSync sharedInstance] setCachedParseObject:obj];
             }
             NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
-            if (!relation) return;
+            if (!relation || ![obj isKindOfClass:[PFObject class]]) return;
             //save PO first
             if (relation.isToMany) {
                 for (PFObject *PO in obj) {
@@ -614,7 +615,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
             EWPerson *localMe = [me MR_inContext:localContext];
-            [graph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+            [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
                 if ([key isEqualToString:@"delete"]) {
                     //delete all objects in this Dictionary
                     [(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
@@ -633,9 +634,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 				}else if ([key isEqualToString:userKey]){
 					//update me
 					[localMe updateValueAndRelationFromParseObject:obj];
+                    return;
 				}
 					
                 NSRelationshipDescription *relation = localMe.entity.relationshipsByName[key];
+                if (!relation) return;
+                
                 //update SO
                 if (relation.isToMany) {
                     NSArray *objects = (NSArray *)obj;

@@ -70,7 +70,6 @@
 		096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAD21A195A3900B4CBFF /* PFQuery+EWQuery.m */; };
 		096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF31A19666A00B4CBFF /* EWErrorManager.m */; };
 		096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF71A1972B800B4CBFF /* EWAlarmScheduleViewController.m */; };
-		096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB011A1972B800B4CBFF /* EWPostWakeUpViewController.m */; };
 		096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB031A1972B800B4CBFF /* EWRecordingViewController.m */; };
 		096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB051A1972B800B4CBFF /* EWRingtoneSelectionViewController.m */; };
 		096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB071A1972B800B4CBFF /* EWSettingsViewController.m */; };
@@ -1408,7 +1407,6 @@
 				09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */,
 				9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */,
 				09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */,
-				096AAB131A1972B800B4CBFF /* EWPostWakeUpViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */,
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,

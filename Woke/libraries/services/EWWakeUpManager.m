@@ -243,8 +243,9 @@
         }
         activity.sleepTime = [NSDate date];
         [EWSync save];
+        
         //start check sleep timer
-        [self alarmTimerCheck];
+        //[self alarmTimerCheck];//No need to check, sleepVC will check alarm time
     }
 }
 

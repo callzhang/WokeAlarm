@@ -66,7 +66,6 @@ typedef void (^EWSavingCallback)(void);
 
 
 
-
 + (EWSync *)sharedInstance;
 - (void)setup;
 
