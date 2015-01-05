@@ -8,6 +8,7 @@
 
 #import <Parse/Parse.h>
 
+@class EWServerObject;
 @interface PFObject(EWSync)
 /**
  Update parse value and relation to server object. Create if no ParseID on ManagedObject.
@@ -22,7 +23,7 @@
 /**
  The ManagedObject will only update attributes but not relations
  */
-- (NSManagedObject *)managedObjectInContext:(NSManagedObjectContext *)context;
+- (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context;
 - (BOOL)isNewerThanMO;
 - (NSString *)localClassName;
 @end

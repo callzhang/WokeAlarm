@@ -293,6 +293,7 @@ static const CGFloat initialDownSampling = 2;
 
 	}
     self.displayLink.paused = YES;
+	[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
 }
 
 @end

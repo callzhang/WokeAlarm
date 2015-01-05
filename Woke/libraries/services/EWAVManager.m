@@ -21,15 +21,12 @@
 @import MediaPlayer;
 
 @interface EWAVManager(){
-    id AVPlayerUpdateTimer;
-    CADisplayLink *displaylink;
 	MPVolumeView *volumeView;
 }
 
 @end
 
 @implementation EWAVManager
-@synthesize player, recorder;
 
 
 +(EWAVManager *)sharedManager{
@@ -57,11 +54,29 @@
         
         //audio session notification
         [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioSessionInterruptionNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            static NSString *currentSessionType;
             NSNumber *type = (NSNumber *)note.userInfo[AVAudioSessionInterruptionTypeKey];
             if (type.integerValue == AVAudioSessionInterruptionTypeEnded) {
                 NSNumber *option = note.userInfo[AVAudioSessionInterruptionOptionKey];
                 NSInteger optionValue = option.integerValue;
-                [self endInterruptionWithFlags:optionValue];
+                if (optionValue == AVAudioSessionInterruptionOptionShouldResume) {
+                    if ([currentSessionType isEqualToString:@"playing"]) {
+                        [self.player play];
+                    }
+                    else if ([currentSessionType isEqualToString:@"recording"]) {
+                        [self.recorder record];
+                    }
+                }
+            }
+            else if (type.integerValue == AVAudioSessionInterruptionTypeBegan){
+                if (self.player.playing) {
+                    currentSessionType = @"playing";
+                    [self.player pause];
+                }
+                else if (self.recorder.recording){
+                    currentSessionType = @"recording";
+                    [self.recorder pause];
+                }
             }
         }];
     }
@@ -194,8 +209,8 @@
 	
 	//data
 	NSError *err;
-	player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&err];
-	player.volume = 1.0;
+	_player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&err];
+	_player.volume = 1.0;
 	
 	if (err) {
 		DDLogVerbose(@"*** Cannot init player. Reason: %@", err);
@@ -203,7 +218,7 @@
 		return;
 	}
 	self.player.delegate = self;
-	if ([player play]){
+	if ([_player play]){
 		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:url];
 	}else{
 		DDLogVerbose(@"*** Could not play with AVPlayer, using system sound");
@@ -217,8 +232,8 @@
 		return;
 	}
 	NSError *err;
-	player = [[AVAudioPlayer alloc] initWithData:data error:&err];
-	player.volume = 1.0;
+	_player = [[AVAudioPlayer alloc] initWithData:data error:&err];
+	_player.volume = 1.0;
 	
 	if (err) {
 		DDLogError(@"*** Cannot init AVAudioPlayer. Reason: %@", err);
@@ -227,8 +242,8 @@
 		[self playSystemSound:[NSURL URLWithString:path]];
 		return;
 	}
-	self.player.delegate = self;
-	if ([player play]){
+	_player.delegate = self;
+	if ([_player play]){
 		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:data];
 	}else{
 		DDLogError(@"*** Could not play with AVAudioPlayer, using system sound");
@@ -240,7 +255,7 @@
 }
 
 - (void)stopAllPlaying{
-	[player stop];
+	[_player stop];
 	//[qPlayer pause];
 	[avplayer pause];
 	//[updateTimer invalidate];
@@ -249,15 +264,14 @@
 
 #pragma mark - Record
 - (NSURL *)record{
-    if (recorder.isRecording) {
+    if (_recorder.isRecording) {
         
-        [recorder stop];
-        recorder = nil;
+        [_recorder stop];
+        _recorder = nil;
         
-        [[AVAudioSession sharedInstance] setActive: NO error: nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishRecording object:nil];
         DDLogVerbose(@"Recording stopped");
     } else {
+        [self registerRecordingAudioSession];
         NSDictionary *recordSettings = @{AVEncoderAudioQualityKey: @(AVAudioQualityLow),
                                          //AVEncoderAudioQualityKey: [NSNumber numberWithInt:kAudioFormatLinearPCM],
                                          //AVEncoderBitRateKey: @64,
@@ -270,14 +284,14 @@
                                                                    settings: recordSettings
                                                                       error: &err];
         self.recorder = newRecorder;
-        recorder.meteringEnabled = YES;
-        recorder.delegate = self;
+        _recorder.meteringEnabled = YES;
+        _recorder.delegate = self;
         NSTimeInterval maxTime = kMaxRecordTime;
-        [recorder recordForDuration:maxTime];
-        if (![recorder prepareToRecord]) {
+        [_recorder recordForDuration:maxTime];
+        if (![_recorder prepareToRecord]) {
             DDLogVerbose(@"Unable to start record");
         };
-        if (![recorder record]){
+        if (![_recorder record]){
             DDLogVerbose(@"Error: %@ [%ld])" , [err localizedDescription], (long)err.code);
             DDLogVerbose(@"Unable to record");
             return nil;
@@ -340,73 +354,21 @@
 
 
 #pragma mark - AVAudioPlayer delegate method
-- (void)audioPlayerDidFinishPlaying: (AVAudioPlayer *)p successfully:(BOOL)flag {
+- (void)audioPlayerDidFinishPlaying: (AVAudioPlayer *)player successfully:(BOOL)flag {
     DDLogVerbose(@"Player finished (%@)", flag?@"Success":@"Failed");
     //[updateTimer invalidate];
     self.player.currentTime = 0.0;
     if (self.media) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:self.media];
+    }else if(self.recorder.url){
+        //recording replay stopped
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:player];
     }
 }
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
-    //[updateTimer invalidate];
-    [displaylink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    displaylink = nil;
-    DDLogVerbose(@"Recording reached max length");
-}
-
-
-
-- (void)audioPlayerBeginInterruption:(AVAudioPlayer *)p{
-	[p stop];
-}
-
-- (void)audioPlayerEndInterruption:(AVAudioPlayer *)p{
-	[p play];
-}
-
-#pragma mark - AudioSeesion Delegate events
-- (void)beginInterruption{
-	//
-}
-
-- (void)endInterruptionWithFlags:(NSUInteger)flags{
-    if (flags) {
-        if (AVAudioSessionInterruptionOptionShouldResume) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				if (self.media) {
-					[self.player play];
-				}
-            });
-        }
-    }
-}
-
-#pragma mark - AVPlayer (Depreciated)
-- (void)playAvplayerWithURL:(NSURL *)url{
-    if (AVPlayerUpdateTimer) {
-        [avplayer removeTimeObserver:AVPlayerUpdateTimer];
-        [AVPlayerUpdateTimer invalidate];
-    }
-    
-    //AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
-    
-}
-
-
-- (void)stopAvplayer{
-    [avplayer pause];
-    @try {
-        [avplayer removeTimeObserver:AVPlayerUpdateTimer];
-        [AVPlayerUpdateTimer invalidate];
-    }
-    @catch (NSException *exception) {
-        DDLogVerbose(@"AVplayer cannot remove update timer: %@", exception.description);
-        
-    }
-    
-    avplayer = nil;
+    DDLogVerbose(@"Recording reached max length (%@)", flag?@"Success":@"Failed");
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:recorder];
 }
 
 

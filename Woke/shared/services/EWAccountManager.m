@@ -633,7 +633,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     return;
 				}else if ([key isEqualToString:userKey]){
 					//update me
-					[localMe updateValueAndRelationFromParseObject:obj];
+					[localMe assignValueFromParseObject:obj];
                     return;
 				}
 					
@@ -655,12 +655,16 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                             //add relation
                             [relatedSO addObject:SO];
                             [localMe setValue:relatedSO.copy forKey:key];
+                            DDLogVerbose(@"+++> Added relation Me->%@(%@)", key, PO.objectId);
                         }
                     }
                 }else{
                     //to one
-                    NSManagedObject *SO = [(PFObject *)obj managedObjectInContext:localContext];
+                    EWServerObject *SO = [(PFObject *)obj managedObjectInContext:localContext];
                     [SO updateValueAndRelationFromParseObject:obj];
+                    if (![localMe valueForKey:key]) {
+                        DDLogVerbose(@"+++> Added relation Me->%@(%@)", key, SO.objectId);
+                    }
                     [localMe setValue:SO forKey:key];
                 }
             }];

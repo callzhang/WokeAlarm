@@ -33,11 +33,11 @@
     
     //realtion
     NSMutableDictionary *relations = [self.entity.relationshipsByName mutableCopy];
-    [relations enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+    [relations enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *relation, BOOL *stop) {
         
-        if ([obj isToMany]) {
+        if ([relation isToMany]) {
             //if no inverse relation, use Array of pointers
-            if (!obj.inverseRelationship) {
+            if (!relation.inverseRelationship) {
                 NSArray *relatedPOs = parseObject[key];
                 NSMutableSet *relatedMOs = [NSMutableSet new];
                 for (PFObject *PO in relatedPOs) {
@@ -111,8 +111,9 @@
                 NSManagedObject *relatedMO;
                 PFObject *relatedPO;//related PO get from relatedMO
                 
-                if (!obj.inverseRelationship) {
+                if (!relation.inverseRelationship) {
                     //no inverse relation, skip check
+                    [self setValue:nil forKey:key];
                     return;
                 }else{
                     //relation empty, check inverse relation first
@@ -120,13 +121,13 @@
                     if (!relatedMO) return;//no need to do anything
                     relatedPO = relatedMO.parseObject;//find relatedPO
                     //check if relatedPO's inverse relation contains PO
-                    if (obj.inverseRelationship.isToMany) {
-                        PFRelation *reflectRelation = [relatedPO valueForKey:obj.inverseRelationship.name];
+                    if (relation.inverseRelationship.isToMany) {
+                        PFRelation *reflectRelation = [relatedPO valueForKey:relation.inverseRelationship.name];
                         NSArray *reflectPOs = [[reflectRelation query] findObjects];
                         inverseRelationExists = [reflectPOs containsObject:parseObject];
                     }else{
-                        PFObject *reflectPO = [relatedPO valueForKey:obj.inverseRelationship.name];
-                        inverseRelationExists = [reflectPO.objectId isEqualToString:parseObject.objectId] ? YES:NO;
+                        PFObject *reflectPO = [relatedPO valueForKey:relation.inverseRelationship.name];
+                        inverseRelationExists = [reflectPO.objectId isEqualToString:parseObject.objectId];
                         //it could be that the inversePO is not our PO, in this case, the relation at server side is wrong, but we don't care?
                     }
                 }
@@ -134,10 +135,10 @@
                 if (!inverseRelationExists) {
                     //both side of PO doesn't have
                     [self setValue:nil forKey:key];
-                    DDLogInfo(@"~~~> Delete to-one relation on MO %@(%@)->%@(%@)", self.entity.name, parseObject.objectId, obj.name, [relatedMO valueForKey:kParseObjectID]);
+                    DDLogInfo(@"~~~> Delete to-one relation on MO %@(%@)->%@(%@)", self.entity.name, parseObject.objectId, relation.name, [relatedMO valueForKey:kParseObjectID]);
                 }else{
                     DDLogError(@"*** Something wrong, the inverse relation %@(%@) <-> %@(%@) deoesn't agree", self.entity.name, [self valueForKey:kParseObjectID], relatedMO.entity.name, [relatedMO valueForKey:kParseObjectID]);
-                    if ([relatedPO.updatedAt isEarlierThan:parseObject.updatedAt]) {
+                    if (relatedPO.isNewerThanMO) {
                         //PO wins
                         [self setValue:nil forKey:key];
                     }
@@ -149,8 +150,11 @@
     //update updatedAt
     [self setValue:[NSDate date] forKey:kUpdatedDateKey];
     
-    //pre save check
-    [self saveToLocal];
+    //save to local has been applied in assignValueFromParseObject:
+    if (self.hasChanges && ![[EWSync sharedInstance].saveToLocalItems containsObject:self.objectID]) {
+        [self saveToLocal];
+    }
+    
 }
 
 
@@ -249,7 +253,10 @@
     }];
     //assigned value from PO should not be considered complete, therefore we don't timestamp on this SO
     //[self setValue:[NSDate date] forKey:kUpdatedDateKey];
-    [self saveToLocal];
+    if (self.hasChanges) {
+        //add save to local label
+        [self saveToLocal];
+    }
 }
 
 #pragma mark - Parse related

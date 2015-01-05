@@ -822,9 +822,6 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="5"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                        <integer key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -1416,20 +1413,20 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="FES-2y-3LP">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bnE-dN-Jfk" customClass="UAProgressView">
-                                <rect key="frame" x="128" y="289" width="64" height="64"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bnE-dN-Jfk" customClass="UAProgressView">
+                                <rect key="frame" x="128" y="312" width="64" height="64"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="64" id="Up5-dK-h8I"/>
                                     <constraint firstAttribute="height" constant="64" id="jzd-Zv-r8q"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4YG-wt-UWi">
-                                <rect key="frame" x="133" y="286" width="56" height="58"/>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4YG-wt-UWi">
+                                <rect key="frame" x="143" y="290" width="35" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="chm-kg-Zdo"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="48"/>
+                                <fontDescription key="fontDescription" name="Lato-Hairline" family="Lato" pointSize="40"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
@@ -1487,7 +1484,7 @@
                                 </items>
                             </toolbar>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sps-2J-W7b" customClass="SCSiriWaveformView">
-                                <rect key="frame" x="0.0" y="184" width="320" height="100"/>
+                                <rect key="frame" x="0.0" y="164" width="320" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="KVt-UM-q0d"/>
@@ -1506,11 +1503,11 @@
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="bnE-dN-Jfk" secondAttribute="centerX" constant="0.5" id="Mxo-LE-LCz"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="niG-8q-xiY" secondAttribute="centerY" constant="30" id="cdi-Zk-Idj"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="niG-8q-xiY" secondAttribute="centerX" id="gFY-zP-sU1"/>
-                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="bnE-dN-Jfk" secondAttribute="centerY" constant="-6.5" id="hUj-oE-UmV"/>
+                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="bnE-dN-Jfk" secondAttribute="centerY" constant="-30" id="hUj-oE-UmV"/>
                             <constraint firstItem="2vU-KR-SZ0" firstAttribute="top" secondItem="pka-It-sOi" secondAttribute="bottom" id="jv1-o1-u9M"/>
                             <constraint firstItem="FES-2y-3LP" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="mzO-mk-Urv"/>
                             <constraint firstAttribute="trailing" secondItem="FES-2y-3LP" secondAttribute="trailing" id="oZN-L7-p3D"/>
-                            <constraint firstAttribute="centerY" secondItem="sps-2J-W7b" secondAttribute="centerY" constant="50" id="vAI-ow-n6v"/>
+                            <constraint firstAttribute="centerY" secondItem="sps-2J-W7b" secondAttribute="centerY" constant="70" id="vAI-ow-n6v"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>

@@ -62,17 +62,9 @@
         self.wish.text = @"";
     }
 
-    
     //NavigationController
     //[EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
-    //self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MoreButton"] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
-    
-    //collection view
-//    UINib *nib = [UINib nibWithNibName:@"EWCollectionPersonCell" bundle:nil];
-//    [self.peopleView registerNib:nib forCellWithReuseIdentifier:@"cellIdentifier"];
-//    self.peopleView.backgroundColor = [UIColor clearColor];
-    
 
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
@@ -86,11 +78,7 @@
     
 //	self.progressView.fillOnTouch = YES;
 	
-	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 32.0)];
-	textLabel.font = [UIFont fontWithName:@"Lane-Narrow.ttf" size:48];
-	textLabel.textAlignment = NSTextAlignmentCenter;
-	textLabel.textColor = self.progressView.tintColor;
-	textLabel.backgroundColor = [UIColor clearColor];
+    UILabel *textLabel = (UILabel *)[self.view viewWithTag:30];
 	self.progressView.centralView = textLabel;
 	
 	self.progressView.progressChangedBlock = ^(UAProgressView *progressView, float progress){
@@ -106,10 +94,17 @@
         }
 	};
 	
-	self.progressView.progress = 0;
-    
+    //progress views and display link
+    self.progressView.progress = 0;
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress:)];
+    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    displayLink.paused = YES;
+    
+    //listen to finish notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopUpdatingProgress:) name:kAVManagerDidFinishPlaying object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopUpdatingProgress:) name:kAVManagerDidFinishRecording object:nil];
 }
+
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -119,7 +114,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
-    
+    [displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     [[EWBackgroundingManager sharedInstance] registerBackgroudingAudioSession];
 }
 
@@ -158,19 +153,13 @@
 - (IBAction)play:(id)sender {
     
     if ([EWAVManager sharedManager].recorder.isRecording) {
+        //stop recording
         [self record:nil];
-        
-        
         return ;
     }
     
     if (!recordingFileUrl){
         DDLogError(@"Recording url empty");
-        
-        return;
-    }
-    
-    if ([[EWAVManager sharedManager].recorder isRecording]) {
         return;
     }
     
@@ -182,6 +171,9 @@
         [UIView animateWithDuration:1 animations:^{
             self.recordBtn.alpha = 0;
             self.sendBtn.alpha = 0;
+            self.retakeLabel.alpha = 0;
+            self.sendLabel.alpha = 0;
+            self.waveformView.alpha = 1;
             self.playLabel.text = @"Stop";
             [self.playBtn setTitle:@"Stop" forState:UIControlStateNormal];
         }];
@@ -191,6 +183,9 @@
         [UIView animateWithDuration:1 animations:^{
             self.recordBtn.alpha = 1;
             self.sendBtn.alpha = 1;
+            self.retakeLabel.alpha = 1;
+            self.sendLabel.alpha = 1;
+            self.waveformView.alpha = 0;
             [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
             self.playLabel.text = @"Play";
         }];
@@ -203,6 +198,7 @@
 - (IBAction)record:(id)sender {
     
     if ([EWAVManager sharedManager].player.isPlaying) {
+        //never happen
         return ;
     }
     
@@ -210,11 +206,13 @@
     recordingFileUrl = [[EWAVManager sharedManager] record];
     
     if ([EWAVManager sharedManager].recorder.isRecording) {
+        displayLink.paused = NO;
         [UIView animateWithDuration:1.0 animations:^(){
             self.sendBtn.alpha = 0.0;
             self.recordBtn.alpha = 0.0;
             self.sendLabel.alpha = 0.0;
             self.retakeLabel.alpha = 0.0;
+            self.waveformView.alpha = 1;
             self.playLabel.text = @"Stop";
             [self.playBtn setTitle:@"Stop" forState:UIControlStateNormal];
             //[self.playBtn setImage:[UIImage imageNamed:@"Stop Button Red "] forState:UIControlStateNormal];
@@ -228,6 +226,7 @@
             self.recordBtn.alpha = 1.0;
             self.sendLabel.alpha = 1.0;
             self.retakeLabel.alpha = 1.0;
+            self.waveformView.alpha = 0;
             self.retakeLabel.text = @"Retake";
             [self.recordBtn setTitle:@"Retake" forState:UIControlStateNormal];
             self.playLabel.text  = @"Play";
@@ -299,22 +298,42 @@
 }
 
 
+#pragma mark - Update progress
 - (void)updateProgress:(CADisplayLink *)link {
     CGFloat progress = 0.0;
     if ([EWAVManager sharedManager].recorder.isRecording) {
         progress = (CGFloat) [EWAVManager sharedManager].recorder.currentTime /kMaxRecordTime;
+        //set prpgress
+        if (progress<1) {
+            self.progressView.progress = progress;
+            [self updateMeters];
+        }
     }
     else if([EWAVManager sharedManager].player.isPlaying) {
         progress = (CGFloat) [EWAVManager sharedManager].player.currentTime /kMaxRecordTime;
-    }
-    //set prpgress
-    if (progress<1) {
-        self.progressView.progress = progress;
-    }else{
-        self.progressView.progress = 1;
-        link.paused = YES;
+        //set prpgress
+        if (progress<1) {
+            self.progressView.progress = progress;
+            [self updateMeters];
+        }
     }
 }
 
+- (void)stopUpdatingProgress:(NSNotification *)note{
+    self.progressView.progress = 1;
+    displayLink.paused = YES;
+    if ([note.object isKindOfClass:[AVAudioPlayer class]]) {
+        [self play:nil];
+    }
+    else if ([note.object isKindOfClass:[AVAudioRecorder class]]){
+        [self record:nil];
+    }
+}
+
+- (void)updateMeters{
+    [[EWAVManager sharedManager].recorder updateMeters];
+    CGFloat normalizedValue = (float)pow (10, [[EWAVManager sharedManager].recorder averagePowerForChannel:0]/30);
+    [self.waveformView updateWithLevel:normalizedValue];
+}
 
 @end

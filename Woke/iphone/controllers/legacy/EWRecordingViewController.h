@@ -34,4 +34,9 @@
 - (IBAction)play:(id)sender;//or stop
 - (IBAction)record:(id)sender;
 - (IBAction)send:(id)sender;
+
+
+//waveform
+- (void)startWaveform;
+- (void)stopWaveform;
 @end
