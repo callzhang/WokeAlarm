@@ -14,7 +14,6 @@
 + (EWSocialManager *)sharedInstance;
 
 //Search
-- (EWSocial *)mySocialGraph;
 - (EWSocial *)socialGraphForPerson:(EWPerson *)person;
 
 //Create

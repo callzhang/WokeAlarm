@@ -12,9 +12,21 @@
 @dynamic friendshipTimeline;
 // Custom logic goes here.
 
++ (instancetype)newSocialForPerson:(EWPerson *)person{
+	EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
+	sg.updatedAt = [NSDate date];
+	
+	//data
+	sg.owner = person;
+	//save
+	[EWSync save];
+	NSLog(@"Created new social graph for user %@", person.name);
+	return sg;
+}
+
 - (BOOL)validate{
     BOOL good = YES;
-    if (!self.facebookID || !self.weiboID) {
+    if (!self.facebookID && !self.weiboID) {
         good = NO;
     }
     return good;

@@ -39,11 +39,14 @@
 - (NSArray *)mediaCreatedByPerson:(EWPerson *)person;
 
 /**
- Fetch media by receiver
+ Check unread medias
  */
-- (NSArray *)mediasForPerson:(EWPerson *)person;
-
 - (NSArray *)unreadMediasForPerson:(EWPerson *)person;
+
+/**
+ *Check all my meidas, making sure they have the media file ready.
+ */
+- (void)checkMediasForPerson:(EWPerson *)person;
 
 //Check media assets relationship
 - (NSArray *)checkUnreadMedias;

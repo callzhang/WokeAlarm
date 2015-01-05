@@ -16,7 +16,7 @@
 - (void)createACL;
 //download
 - (void)downloadMediaFile;
-- (void)downloadMediaFileWithCompletion:(ErrorBlock)block;
+- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block;
 
 //data
 - (NSData *)audio;

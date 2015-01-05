@@ -103,7 +103,7 @@
 	[[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
 
     DDLogVerbose(@"7. Refresh my media");
-    //[[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWPerson me]];
+    [[EWMediaManager sharedInstance] checkMediasForPerson:[EWPerson me]];
 	
 	//location
 	DDLogVerbose(@"8. Start location update");

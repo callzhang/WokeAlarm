@@ -258,12 +258,12 @@
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">PUT</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="body" type="string">[{"data":{"json":"{\\"alarms\\":{\\"__op\\":\\"AddRelation\\",\\"objects\\":[{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWAlarm\\",\\"objectId\\":\\"FgdJJTBNTY\\"},{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWAlarm\\",\\"objectId\\":\\"0XYpIZgDY1\\"},{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWAlarm\\",\\"objectId\\":\\"Vgty6GvpuB\\"},{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWAlarm\\",\\"objectId\\":\\"zTpPa6e9tE\\"},{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWAlarm\\",\\"objectId\\":\\"uG37ycyBrN\\"},{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWAlarm\\",\\"objectId\\":\\"CoWHmDneTB\\"},{\\"__type\\":\\"Pointer\\",\\"className\\":\\"EWAlarm\\",\\"objectId\\":\\"UKIUZzWav4\\"}]}}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
+        <attribute name="body" type="string">["{\\n  \\"activities\\": {\\n    \\"__op\\": \\"AddRelation\\",\\n    \\"objects\\": [\\n      {\\n        \\"__type\\": \\"Pointer\\",\\n        \\"className\\": \\"EWNotification\\",\\n        \\"objectId\\": \\"8ujO2qYCx8\\"\\n      }\\n    ]\\n  }\\n}"]</attribute>
         <attribute name="order" type="int64">3</attribute>
         <attribute name="name" type="string">Updating Me</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z125 z122 z123 z124 z121"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z123 z125 z122 z124 z121"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z121">
         <attribute name="value" type="string">QHWs9RBxMxmuzMmOB9QliQVKBqOLhifPKyJIGrXx</attribute>

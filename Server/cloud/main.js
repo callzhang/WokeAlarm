@@ -559,13 +559,16 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
     //add user
     console.log("Get user "+user.get("firstName")+" for syncing");
-    if (user.updatedAt > userUpdatedAt) {
+    if (user.updatedAt - userUpdatedAt > 10000) {
       var saveMe = function () {
         return user.fetch().then(function () {
           info["user"] = user;
         });
       };
       promises.push(saveMe());
+    }else{
+      //client user is newer, return
+      response.success({});
     }
 
     //enumerate through keys

@@ -83,9 +83,9 @@
     BOOL isLaunchedFromAlarmTimer = NO;
 	
     //alarm is a reference info from notification, also used to cancel local notification
-    EWAlarm *alarm;
+	EWAlarm *alarm = [EWPerson myCurrentAlarm];
     //activity tells if the activity is completed or not
-    EWActivity *activity;
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     if (info) {
         NSString *alarmID = info[kPushAlarmID];
         NSString *alarmLocalID = info[kLocalAlarmID];
@@ -117,9 +117,6 @@
         }
 	}
     
-    //assign if no value
-    if (!activity) activity = [EWPerson myCurrentAlarmActivity];
-    if (!alarm) alarm = [EWPerson myCurrentAlarm];
     //check alarm
     if (alarm && ![alarm.time.nextOccurTime isEqualToDate:activity.time]) {
         DDLogError(@"*** %s Alarm time (%@) doesn't match with activity time (%@), abord", __func__, alarm.time.nextOccurTime.date2detailDateString, activity.time.date2detailDateString);

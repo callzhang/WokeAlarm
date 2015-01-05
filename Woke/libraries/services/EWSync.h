@@ -51,6 +51,7 @@ typedef void (^EWSavingCallback)(void);
 #define kParseQueueDelete                   @"parse_queue_delete"
 #define kParseQueueWorking                  @"parse_queue_working"
 #define kParseQueueRefresh                  @"parse_queue_refresh"//queue for refresh
+#define kChangedRecords						@"changed_records"
 #define kUserID                             @"userId"
 #define kUsername                           @"username"
 
@@ -59,7 +60,10 @@ typedef void (^EWSavingCallback)(void);
 @interface EWSync : NSObject
 @property NSMutableArray *saveCallbacks; //MO save callback
 @property ELAWellCached *serverObjectCache;
-@property NSMutableDictionary *changeRecords;
+/**
+ * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
+ */
+@property NSDictionary *changedRecords;
 @property NSMutableArray *saveToLocalItems;
 @property NSMutableArray *deleteToLocalItems;
 @property BOOL isUploading;

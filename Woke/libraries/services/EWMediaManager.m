@@ -8,15 +8,14 @@
 
 #import "EWMediaManager.h"
 #import "EWMedia.h"
-#import "EWImageManager.h"
 #import "EWPerson.h"
 
 #import "EWNotificationManager.h"
 #import "EWNotification.h"
 #import "EWActivity.h"
 #import "NSArray+BlocksKit.h"
-#import "EWAlarmManager.h"
-#import "EWAlarm.h"
+//#import "EWAlarmManager.h"
+//#import "EWAlarm.h"
 #import "NSDictionary+KeyPathAccess.h"
 #import "EWMediaFile.h"
 
@@ -120,17 +119,18 @@
     return medias;
 }
 
-- (NSArray *)mediasForPerson:(EWPerson *)person{
-    NSMutableArray *medias = [[NSMutableArray alloc] init];
-    for (EWActivity *activity in person.activities) {
-        for (EWMedia *media in activity.medias) {
-            [medias addObject:media];
-        }
-    }
-    //sort
-    [medias sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
-    
-    return medias;
+- (void)checkMediasForPerson:(EWPerson *)person{
+	NSMutableSet *medias = person.sentMedias.mutableCopy;
+	[medias unionSet:person.receivedMedias];
+	[medias unionSet:person.unreadMedias];
+	//check
+	for (EWMedia *media in medias) {
+		[media downloadMediaFileWithCompletion:^(BOOL success, NSError *error) {
+			if (success) {
+				DDLogInfo(@"Updated media %@", media.objectId);
+			}
+		}];
+	}
 }
 
 - (NSArray *)checkUnreadMedias{
@@ -162,9 +162,11 @@
     EWPerson *localMe = [EWPerson meInContext:context];
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWMedia class])];
     [query whereKey:EWMediaRelationships.receiver equalTo:[PFUser currentUser]];
-    NSSet *localAssetIDs = [localMe.unreadMedias valueForKey:kParseObjectID];
-    [query whereKey:kParseObjectID notContainedIn:localAssetIDs.allObjects];
-    NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query error:nil];
+    NSSet *unreadMediaIDs = [localMe.unreadMedias valueForKey:kParseObjectID];
+	NSSet *receivedMediaIDs = [localMe.receivedMedias valueForKey:kParseObjectID];
+    [query whereKey:kParseObjectID notContainedIn:[unreadMediaIDs setByAddingObjectsFromSet:receivedMediaIDs].allObjects];
+	NSError *err;
+    NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query error:&err];
 	NSMutableArray *newMedia = [NSMutableArray new];
     for (PFObject *po in mediaPOs) {
         //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
@@ -172,8 +174,7 @@
         mo.receiver = [EWPerson me];
         [[EWPerson me] addUnreadMediasObject:mo];
         //new media
-        //[mo refresh];
-        DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
+		DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
         //notification
         if ([NSThread isMainThread]) {
             [EWNotification newMediaNotification:mo];
@@ -213,7 +214,7 @@
     NSArray *unreadMediasForToday = [unreadMedias bk_select:^BOOL(EWMedia *obj) {
         if (!obj.targetDate) {
             return YES;
-        }else if ([obj.targetDate timeIntervalSinceDate:[EWPerson myCurrentAlarm].time.nextOccurTime] < 0){
+        }else if ([obj.targetDate timeIntervalSinceDate:[EWPerson myCurrentAlarmActivity].time.nextOccurTime] < 0){
             return YES;
         }
         return NO;

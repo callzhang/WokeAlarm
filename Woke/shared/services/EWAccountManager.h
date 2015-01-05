@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GCDSingleton.h"
-
+#define kFacebookLastUpdated	@"facebook_last_updated"
 
 @interface EWAccountManager : NSObject <CLLocationManagerDelegate>
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);

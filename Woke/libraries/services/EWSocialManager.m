@@ -93,47 +93,24 @@
     return _addressBook;
 }
 
-- (EWSocial *)mySocialGraph{
-    EWSocial *sg = [EWPerson me].socialGraph;
-    if (!sg) {
-        sg = [self  createSocialGraphForPerson:[EWPerson me]];
-    }
-    return sg;
-}
-
 - (EWSocial *)socialGraphForPerson:(EWPerson *)person{
     if (person.socialGraph) {
         return person.socialGraph;
     }
-    
-    if (person.isMe) {
-        //first check from PFUser
-        PFObject *sg = [PFUser currentUser][EWPersonRelationships.socialGraph];
-        EWSocial *graph;
-        if (sg) {
-            graph = (EWSocial *)[sg managedObjectInContext:mainContext];
-        }else{
-            //need to create one for self
-            graph = [self createSocialGraphForPerson:person];
-        }
-        return graph;
-    }
-
-    
-    return person.socialGraph;
+	
+    EWSocial *graph = [EWSocial newSocialForPerson:person];
+	if (person.isMe) {
+		[self loadAddressBookCompletion:^(NSArray *contacts, NSError *error) {
+			if (contacts) {
+				DDLogInfo(@"Loaded %ld contacts to social graph", contacts.count);
+			}else{
+				DDLogError(@"Failed to load contacts: %@", error.description);
+			}
+		}];
+	}
+    return graph;
 }
 
-- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person{
-    EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
-    sg.updatedAt = [NSDate date];
-
-    //data
-    sg.owner = person;
-    //save
-    [EWSync save];
-    NSLog(@"Created new social graph for user %@", person.name);
-    return sg;
-}
 
 - (BOOL)hasAddressBookAccess {
     return [APAddressBook access] == APAddressBookAccessGranted;
@@ -176,7 +153,7 @@
         }];
         
         //FIXME: set address book friends to person object?
-        self.mySocialGraph.addressBookFriends = mapContacts;
+        [EWPerson mySocialGraph].addressBookFriends = mapContacts;
         
         [EWSync save];
         

@@ -154,7 +154,7 @@
             if (mi.mediaFile.audio) {
                 [self playSoundFromData:mi.mediaFile.audio];
             }else{
-                [mi downloadMediaFileWithCompletion:^(NSError *error){
+				[mi downloadMediaFileWithCompletion:^(BOOL success, NSError *error){
                     if (error) {
                         DDLogError(@"Failed to download media file: %@", error.description);
                     }

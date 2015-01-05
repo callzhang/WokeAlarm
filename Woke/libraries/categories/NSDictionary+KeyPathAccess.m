@@ -10,15 +10,20 @@
 
 @implementation NSDictionary(KeyPathAccess)
 - (instancetype)setValue:(id)value forImmutableKeyPath:(NSString *)keyPath{
-    if ([keyPath isEqualToString:@""]) {
-        DDLogWarn(@"%s passed in empty path", __func__);
+    if (!keyPath || [keyPath isEqualToString:@""]) {
+        DDLogError(@"%s passed in empty path", __func__);
         return self;
     }
     NSArray *paths = [keyPath componentsSeparatedByString:@"."];
-    NSMutableDictionary *newDictionary = [self mutableCopy];
+    NSMutableDictionary *mutableDictionary = [self mutableCopy];
     if (paths.count == 1) {
         //last keypath, set value directly
-        newDictionary[paths.firstObject] = value;
+		if (value) {
+			mutableDictionary[paths.lastObject] = value;
+		}else{
+			[mutableDictionary removeObjectForKey:paths.lastObject];
+		}
+		
     }else{
         //divide the task
         NSString *childPath = paths[1];
@@ -27,19 +32,33 @@
         }
         NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];
         childDic = [childDic setValue:value forImmutableKeyPath:childPath];
-        newDictionary[paths.firstObject] = childDic;
+        mutableDictionary[paths.firstObject] = childDic;
     }
-    return newDictionary.copy;
+    return mutableDictionary.copy;
 }
 
 - (instancetype)addValue:(id)value toArrayAtImmutableKeyPath:(NSString *)keyPath{
+	if (!keyPath || [keyPath isEqualToString:@""]) {
+		DDLogError(@"%s passed in empty path", __func__);
+		return self;
+	}
+	else if (!value) {
+		NSLog(@"%s passed nil as value", __func__);
+		return self;
+	}
     NSArray *paths = [keyPath componentsSeparatedByString:@"."];
-    NSMutableDictionary *newDictionary = [self mutableCopy];
+    NSMutableDictionary *mutableDictionary = [self mutableCopy];
     if (paths.count == 1) {
         //last keypath, add value directly
-        NSMutableArray *array = [(NSArray *)newDictionary[paths.firstObject] mutableCopy]?:[NSMutableArray array];
-        [array addObject:value];
-        newDictionary[paths.firstObject] = array.copy;
+        NSMutableArray *array = [(NSArray *)mutableDictionary[paths.firstObject] mutableCopy]?:[NSMutableArray array];
+		if ([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSSet class]]) {
+			for (id obj in value) {
+				[array addObject:obj];
+			}
+		}else{
+			[array addObject:value];
+		}
+        mutableDictionary[paths.lastObject] = array.copy;
     }else{
         //divide the task
         NSString *childPath = paths[1];
@@ -48,9 +67,9 @@
         }
         NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];
         childDic = [childDic setValue:value forImmutableKeyPath:childPath];
-        newDictionary[paths.firstObject] = childDic;
+        mutableDictionary[paths.firstObject] = childDic;
     }
-    return newDictionary.copy;
+    return mutableDictionary.copy;
 }
 
 @end

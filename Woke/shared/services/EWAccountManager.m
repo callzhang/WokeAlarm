@@ -149,13 +149,25 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     if (self.isUpdatingFacebookInfo) {
         return;
     }
-    self.isUpdatingFacebookInfo = YES;
-    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+	//outdate
+	BOOL outDated = NO;
+	BOOL needUpdate = NO;
+	BOOL hasFacebook = NO;
+	NSDate *lastUpdated = [[NSUserDefaults standardUserDefaults] valueForKey:kFacebookLastUpdated];
+	if (!lastUpdated || lastUpdated.timeElapsed > 7*24*3600) {
+		outDated = YES;
+	}
+	if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) hasFacebook = YES;
+	if (![EWPerson me].firstName || ![EWPerson mySocialGraph]) {
+		needUpdate = YES;
+	}
+	
+    if ((outDated || needUpdate) && hasFacebook) {
+		self.isUpdatingFacebookInfo = YES;
         [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *data, NSError *error) {
             if (error) {
                 [EWAccountManager handleFacebookException:error];
             }
-            
             //update with facebook info
             [[EWAccountManager shared] updateUserWithFBData:data];
         }];
@@ -211,6 +223,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         
     }completion:^(BOOL success, NSError *error) {
         //update friends
+		[[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:@"facebook_last_updated"];
         [self getFacebookFriends];
         self.isUpdatingFacebookInfo = NO;
     }];
@@ -501,7 +514,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 - (void)processLocation:(CLLocation *)location{
     
     if (location.coordinate.latitude == 0 && location.coordinate.longitude == 0) {
-        DDLogInfo(@"Using NYC coordinate on simulator");
+        EWAlert(@"Using NYC coordinate on simulator");
         location = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
     }
     
@@ -522,7 +535,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             DDLogWarn(@"%@", err.debugDescription);
         }
         [EWSync save];
-        
     }];
 }
 

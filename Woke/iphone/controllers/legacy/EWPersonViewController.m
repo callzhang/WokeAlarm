@@ -521,7 +521,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 break;
             case 1:
             {
-                NSArray *receivedMedias = [[EWMediaManager sharedInstance] mediasForPerson:person];
+                NSArray *receivedMedias = person.receivedMedias.allObjects;
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (unsigned long)receivedMedias.count];
                 if (!person.isMe) {
                     cell.textLabel.text = male? @"People woke him up":@"People woke her up";

@@ -104,4 +104,8 @@ NSString * const EWPersonDefaultName = @"New User";
     
     return good;
 }
+
+- (NSString *)serverClassName{
+	return @"_User";
+}
 @end

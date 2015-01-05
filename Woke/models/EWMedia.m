@@ -95,20 +95,25 @@
     [file refresh];
 }
 
-- (void)downloadMediaFileWithCompletion:(ErrorBlock)block{
+- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{
     EWMediaFile *file = self.mediaFile;
+	BOOL good = self.mediaFile.audio != nil;
     if (!file) {
         [self refreshInBackgroundWithCompletion:^(NSError *error){
             [self.mediaFile refreshInBackgroundWithCompletion:^(NSError *err){
+				BOOL hasFile = self.mediaFile.audio != nil;
+				BOOL changed = good != hasFile;
                 if (block) {
-                    block(err);
+                    block(changed,err);
                 }
             }];
         }];
     }else{
         [file refreshInBackgroundWithCompletion:^(NSError *error){
             if (block) {
-                block(error);
+				BOOL hasFile = self.mediaFile.audio != nil;
+				BOOL changed = good != hasFile;
+                block(changed, error);
             }
         }];
     }

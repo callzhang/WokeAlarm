@@ -23,6 +23,10 @@
     return self.objectId;
 }
 
+- (NSString *)serverClassName{
+	return self.entity.name;
+}
+
 - (void)updateToServerWithCompletion:(PFObjectResultBlock)block{
     if (!self.objectId) {
         //create save block

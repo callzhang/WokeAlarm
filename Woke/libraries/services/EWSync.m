@@ -11,15 +11,13 @@
 #import "EWServerObject.h"
 #import "AFNetworkReachabilityManager.h"
 #import <WellCached/ELAWellCached.h>
-
+#import "NSDictionary+KeyPathAccess.h"
 
 //============ Global shortcut to main context ===========
 NSManagedObjectContext *mainContext;
 //=======================================================
 
-@interface EWSync(){
-	NSMutableDictionary *workingChangedRecords;
-}
+@interface EWSync()
 @property NSManagedObjectContext *context; //the main context(private)
 @property NSMutableDictionary *parseSaveCallbacks;
 @property (nonatomic) NSTimer *saveToServerDelayTimer;
@@ -104,8 +102,7 @@ NSManagedObjectContext *mainContext;
     self.saveToLocalItems = [NSMutableArray new];
     self.deleteToLocalItems = [NSMutableArray new];
     self.serverObjectCache = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
-    self.changeRecords = [NSMutableDictionary new];
-    
+	
 }
 
 
@@ -139,10 +136,10 @@ NSManagedObjectContext *mainContext;
     }
     
     if ([self workingQueue].count >0 && self.isUploading) {
-        DDLogWarn(@"Data Store is uploading, delay for 30s: %@", workingChangedRecords);
+        DDLogWarn(@"Data Store is uploading, delay for 10s: %@", self.changedRecords);
         static NSTimer *uploadDelay;
         [uploadDelay invalidate];
-        uploadDelay = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(uploadToServer) userInfo:nil repeats:NO];
+        uploadDelay = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(uploadToServer) userInfo:nil repeats:NO];
         return;
     }
     self.isUploading = YES;
@@ -165,8 +162,6 @@ NSManagedObjectContext *mainContext;
     //clear queues
     [self clearQueue:kParseQueueInsert];
     [self clearQueue:kParseQueueUpdate];
-    workingChangedRecords = _changeRecords;
-    _changeRecords = [NSMutableDictionary new];
     
     //save to local items check
     NSSet *workingObjects = self.workingQueue.copy;
@@ -187,7 +182,7 @@ NSManagedObjectContext *mainContext;
     }
     
     //logging
-    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], workingChangedRecords, deletedServerObjects);
+    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.changedRecords, deletedServerObjects);
     
     //save callbacks
     NSArray *callbacks = [self.saveCallbacks copy];
@@ -206,9 +201,9 @@ NSManagedObjectContext *mainContext;
             //=======================================================
             
             //remove changed record
-            NSMutableSet *changes = workingChangedRecords[localMO.objectId];
-            [workingChangedRecords removeObjectForKey:localMO.objectId];
-            DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)workingChangedRecords.allKeys.count);
+            NSMutableSet *changes = self.changedRecords[localMO.objectId];
+			self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:localMO.objectId];
+            DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
             
             //remove from queue
             [self removeObjectFromWorkingQueue:localMO];
@@ -325,10 +320,8 @@ NSManagedObjectContext *mainContext;
             if (changedKeys.count > 0) {
                 
                 //add changed keys to record
-                NSMutableSet *changed = _changeRecords[SO.objectId] ?:[NSMutableSet new];
-                [changed addObjectsFromArray:changedKeys];
-                [self.changeRecords setObject:changed forKey:SO.objectId];
-                
+				self.changedRecords = [self.changedRecords addValue:changedKeys toArrayAtImmutableKeyPath:SO.objectId];
+				
                 //add to queue
                 [self appendUpdateQueue:SO];
                 
@@ -653,6 +646,14 @@ NSManagedObjectContext *mainContext;
     [[NSUserDefaults standardUserDefaults] setObject:[dic copy] forKey:kParseQueueDelete];
 }
 
+//changed records
+- (NSDictionary *)changedRecords{
+	return [[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] ?: [NSDictionary new];
+}
+
+- (void)setChangedRecords:(NSDictionary *)changedRecords{
+	[[NSUserDefaults standardUserDefaults] setValue:changedRecords forKey:kChangedRecords];
+}
 
 #pragma mark - Core Data
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
