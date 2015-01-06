@@ -9,11 +9,12 @@
 //#import "EWViewController.h"
 #import "EWAVManager.h"
 #import "UAProgressView.h"
+#import "EWBaseViewController.h"
 @class SCSiriWaveformView;
 @class EWPerson;
 
-@interface EWRecordingViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) NSSet *wakees;
+@interface EWRecordingViewController : EWBaseViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@property (nonatomic, strong) NSArray *wakees;
 
 @property (strong, nonatomic) IBOutlet UIButton *playBtn;
 @property (strong, nonatomic) IBOutlet UIButton *recordBtn;
@@ -35,8 +36,4 @@
 - (IBAction)record:(id)sender;
 - (IBAction)send:(id)sender;
 
-
-//waveform
-- (void)startWaveform;
-- (void)stopWaveform;
 @end

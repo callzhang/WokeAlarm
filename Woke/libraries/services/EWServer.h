@@ -24,7 +24,7 @@
  @params users: array of EWPerson
  @params taskId: taskId
  */
-+ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block;
++ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(BoolErrorBlock)block;
 
 #pragma mark - Push methods
 + (void)broadcastMessage:(NSString *)msg onSuccess:(VoidBlock)block onFailure:(VoidBlock)failureBlock;
@@ -57,7 +57,7 @@
  Blcok called when failure
  
  */
-+ (void)parsePush:(NSDictionary *)pushPayload toUsers:(NSArray *)users completion:(PFBooleanResultBlock)block;
++ (void)parsePush:(NSDictionary *)pushPayload toUsers:(NSArray *)users completion:(BoolErrorBlock)block;
 
 
 #pragma mark - Push notification

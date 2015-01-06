@@ -48,7 +48,7 @@
     [self showMenu];
 }
 
-#pragma mark -
+#pragma mark - Segue actions
 - (IBAction)onAlarms:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
 //        [self performSegueWithIdentifier:@"MenuToAlarmReplace" sender:self];
@@ -62,7 +62,8 @@
 }
 - (IBAction)onVoice:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
-//        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
+        
     }];
 }
 #pragma mark -

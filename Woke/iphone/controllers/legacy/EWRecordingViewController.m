@@ -26,6 +26,7 @@
 #import "EWAlarmManager.h"
 #import "EWBackgroundingManager.h"
 #import "EWServer.h"
+#import "EWCollectionPersonCell.h"
 #define BUTTONCENTER  CGPointMake(470, EWScreenWidth/2)
 
 @interface EWRecordingViewController (){
@@ -36,17 +37,22 @@
 @end
 
 @implementation EWRecordingViewController
-@synthesize playBtn, recordBtn;
-@synthesize wakees;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
     [self initProgressView];
     
+#ifdef  DEBUG
+    [[EWPersonManager shared] nextWakeeWithCompletion:^(EWPerson *person) {
+        self.wakees = @[person];
+        [self.peopleView reloadData];
+    }];
+#endif
+    
     //texts
     self.title = @"Recording";
-    if (wakees.count == 1) {
-        EWPerson *receiver = wakees.anyObject;
+    if (_wakees.count == 1) {
+        EWPerson *receiver = _wakees.firstObject;
         
         NSString *statement = [[EWAlarmManager sharedInstance] nextStatementForPerson:receiver];
         
@@ -64,10 +70,18 @@
 
     //NavigationController
     //[EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
+    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
 
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
+    
+    //collection view
+    self.peopleView.delegate = self;
+    self.peopleView.dataSource = self;
+    UINib *nib = [UINib nibWithNibName:@"EWCollectionPersonCell" bundle:nil];
+    [self.peopleView registerNib:nib forCellWithReuseIdentifier:@"cellIdentifier"];
+    self.peopleView.backgroundColor = [UIColor clearColor];
 }
 
 -(void)initProgressView{
@@ -121,18 +135,17 @@
 #pragma mark - collection view
 //TODO: remove below methods?
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-//    EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
-//    cell.showName = NO;
-//    EWPerson *receiver = personSet[indexPath.row];
-//    cell.person = receiver;
-//    return cell;
-    return nil;
+    EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
+    cell.showName = NO;
+    EWPerson *receiver = _wakees[indexPath.row];
+    cell.person = receiver;
+    return cell;
 }
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return wakees.count;
+    return _wakees.count;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -141,11 +154,11 @@
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
     
-//    NSInteger numberOfCells = personSet.count;
-//    NSInteger edgeInsets = (self.peopleView.frame.size.width - (numberOfCells * kCollectionViewCellWidth) - numberOfCells * 10) / 2;
-//    edgeInsets = MAX(edgeInsets, 20);
-//    return UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets);
-    return UIEdgeInsetsZero;
+    NSInteger numberOfCells = _wakees.count;
+    NSInteger edgeInsets = (self.peopleView.frame.size.width - (numberOfCells * kCollectionViewCellWidth) - numberOfCells * 10) / 2;
+    edgeInsets = MAX(edgeInsets, 20);
+    return UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets);
+    //return UIEdgeInsetsZero;
 }
 
 #pragma mark- Actions
@@ -178,20 +191,23 @@
             [self.playBtn setTitle:@"Stop" forState:UIControlStateNormal];
         }];
     }else{
-        //stop
-        displayLink.paused = YES;
-        [UIView animateWithDuration:1 animations:^{
-            self.recordBtn.alpha = 1;
-            self.sendBtn.alpha = 1;
-            self.retakeLabel.alpha = 1;
-            self.sendLabel.alpha = 1;
-            self.waveformView.alpha = 0;
-            [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
-            self.playLabel.text = @"Play";
-        }];
-        //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
-        [[EWAVManager sharedManager] stopAllPlaying];
+        [self stopPlaying];
     }
+}
+
+- (void)stopPlaying{
+    displayLink.paused = YES;
+    [UIView animateWithDuration:1 animations:^{
+        self.recordBtn.alpha = 1;
+        self.sendBtn.alpha = 1;
+        self.retakeLabel.alpha = 1;
+        self.sendLabel.alpha = 1;
+        self.waveformView.alpha = 0;
+        [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
+        self.playLabel.text = @"Play";
+    }];
+    //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
+    [[EWAVManager sharedManager] stopAllPlaying];
 }
 
 
@@ -202,10 +218,9 @@
         return ;
     }
     
-    //record or stop
-    recordingFileUrl = [[EWAVManager sharedManager] record];
-    
-    if ([EWAVManager sharedManager].recorder.isRecording) {
+    //record
+    if (![EWAVManager sharedManager].recorder.isRecording) {
+        recordingFileUrl = [[EWAVManager sharedManager] record];
         displayLink.paused = NO;
         [UIView animateWithDuration:1.0 animations:^(){
             self.sendBtn.alpha = 0.0;
@@ -219,22 +234,25 @@
             
         }];
     }else{
-        //stopped
-        displayLink.paused = YES;
-        [UIView animateWithDuration:1.0 animations:^(){
-            self.sendBtn.alpha = 1.0;
-            self.recordBtn.alpha = 1.0;
-            self.sendLabel.alpha = 1.0;
-            self.retakeLabel.alpha = 1.0;
-            self.waveformView.alpha = 0;
-            self.retakeLabel.text = @"Retake";
-            [self.recordBtn setTitle:@"Retake" forState:UIControlStateNormal];
-            self.playLabel.text  = @"Play";
-            [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
-            //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
-        }];
-        
+        [self stopRecording];
     }
+}
+
+- (void)stopRecording{
+    [[EWAVManager sharedManager].recorder stop];
+    displayLink.paused = YES;
+    [UIView animateWithDuration:1.0 animations:^(){
+        self.sendBtn.alpha = 1.0;
+        self.recordBtn.alpha = 1.0;
+        self.sendLabel.alpha = 1.0;
+        self.retakeLabel.alpha = 1.0;
+        self.waveformView.alpha = 0;
+        self.retakeLabel.text = @"Retake";
+        [self.recordBtn setTitle:@"Retake" forState:UIControlStateNormal];
+        self.playLabel.text  = @"Play";
+        [self.playBtn setTitle:@"Play" forState:UIControlStateNormal];
+        //[self.playBtn setImage:[UIImage imageNamed:@"Play Button"] forState:UIControlStateNormal];
+    }];
 }
 
 - (IBAction)send:(id)sender {
@@ -258,7 +276,7 @@
         EWMediaFile *mediaFile = [EWMediaFile newMediaFile];
         mediaFile.audio = recordData;
         
-        for (EWPerson *receiver in wakees) {
+        for (EWPerson *receiver in _wakees) {
             EWMedia *media = [EWMedia newMedia];
             media.type = kMediaTypeVoice;
             //media.message = self.message.text;
@@ -268,14 +286,18 @@
             media.mediaFile = mediaFile;
             media.author = [EWPerson me];
             
-            [EWServer pushVoice:media toUser:receiver withCompletion:^(BOOL success) {
+            [EWServer pushVoice:media toUser:receiver withCompletion:^(BOOL success, NSError *error) {
                 
-                
-                //dismiss hud
-                [EWUIUtil dismissHUDinView:self.view];
-                
-                //dismiss
-                //[self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+                if (!success) {
+                    DDLogError(@"Failed to push media: %@", error.localizedDescription);
+                    [self.view showFailureNotification:@"Failed to send media"];
+                }else{
+                    //dismiss hud
+                    [EWUIUtil dismissHUDinView:self.view];
+                    
+                    //dismiss blur view
+                    //[self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+                }
             }];
         }
         
@@ -285,8 +307,6 @@
 }
 
 - (IBAction)close:(id)sender {
-
-    
     if ([[EWAVManager sharedManager].recorder isRecording]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stop Record Before Close" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
@@ -323,10 +343,12 @@
     self.progressView.progress = 1;
     displayLink.paused = YES;
     if ([note.object isKindOfClass:[AVAudioPlayer class]]) {
-        [self play:nil];
+        //stop
+        [self stopPlaying];
     }
     else if ([note.object isKindOfClass:[AVAudioRecorder class]]){
-        [self record:nil];
+        //stopped
+        [self stopRecording];
     }
 }
 

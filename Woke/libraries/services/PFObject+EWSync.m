@@ -89,116 +89,119 @@
     
     //=============== relation ===============
     [managedObject.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *relation, BOOL *stop) {
-		
+		BOOL expectChange = [changeValues containsObject:key] ? YES : NO;
         id relatedManagedObjects = [managedObject valueForKey:key];
-        //DDLogVerbose(@"Updating PFObject relation %@->%@(%@)", self.parseClassName, key, managedObject.entity.name);
         
-        if (relatedManagedObjects){
-            if ([relation isToMany]) {
-                //To-Many relation
-                //First detect if has inverse relation, if not, we use Array to represent the relation
-                //TODO: Exceptin: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
-                if (!relation.inverseRelationship/* && ![key isEqualToString:kUserClass]*/) {
-                    //No inverse relation, use array of pointer
-                    
-                    NSSet *relatedMOs = [managedObject valueForKey:key];
-                    NSMutableArray *relatedPOs = [NSMutableArray new];
-                    for (NSManagedObject *MO in relatedMOs) {
-                        //PFObject *PO = [EWDataStore getCachedParseObjectForID:MO.serverID];
-                        //if (!PO) {
-                        PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:[MO valueForKey:kParseObjectID]];
-                        //}
-                        if (PO.objectId) {
-                            [relatedPOs addObject:PO];
-                        }else{
-                            NSLog(@"objectId not found");
-                        }
+        if ([relation isToMany]) {
+            //To-Many relation
+            //First detect if has inverse relation, if not, we use Array to represent the relation
+            //TODO: Exceptin: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
+            if (!relation.inverseRelationship/* && ![key isEqualToString:kUserClass]*/) {
+                //No inverse relation, use array of pointer
+                
+                NSSet *relatedMOs = [managedObject valueForKey:key];
+                NSMutableArray *relatedPOs = [NSMutableArray new];
+                for (NSManagedObject *MO in relatedMOs) {
+                    //PFObject *PO = [EWDataStore getCachedParseObjectForID:MO.serverID];
+                    //if (!PO) {
+                    PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:[MO valueForKey:kParseObjectID]];
+                    //}
+                    if (PO.objectId) {
+                        [relatedPOs addObject:PO];
+                    }else{
+                        NSLog(@"objectId not found");
+                    }
+                }
+                [self setObject:[relatedPOs copy] forKey:key];
+                return;
+            }
+            
+            //========================== relation ==========================
+            PFRelation *parseRelation = [self relationForKey:key];
+            if (parseRelation.targetClass) {
+                NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
+            }
+            
+            //TODO: create a new PFRelation so that we don't need to deal with deletion
+            
+            //Find related PO to delete async
+            NSMutableArray *relatedParseObjects = [[[parseRelation query] findObjects] mutableCopy];
+            if (relatedParseObjects.count) {
+                NSArray *relatedParseObjectsToDelete = [relatedParseObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [relatedManagedObjects valueForKey:kParseObjectID]]];
+                for (PFObject *PO in relatedParseObjectsToDelete) {
+                    [parseRelation removeObject:PO];
+                    //We don't update the inverse PFRelation as they should be updated from that MO
+                    DDLogVerbose(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, managedObject.serverID, key, PO.objectId);
+                    if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                }
+            }
+            
+            //related managedObject that needs to add
+            for (NSManagedObject *relatedManagedObject in relatedManagedObjects) {
+                NSString *parseID = relatedManagedObject.serverID;
+                if (parseID) {
+                    //the pfobject already exists, need to inspect PFRelation to determin add or remove
+                    if (![[relatedParseObjects valueForKey:kParseObjectID] containsObject:parseID]) {
+                        PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
                         
-                    }
-                    [self setObject:[relatedPOs copy] forKey:key];
-                    return;
-                }
-                
-                //========================== relation ==========================
-                PFRelation *parseRelation = [self relationForKey:key];
-                if (parseRelation.targetClass) {
-                    NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
-                }
-                
-                //TODO: create a new PFRelation so that we don't need to deal with deletion
-                
-                //Find related PO to delete async
-                NSMutableArray *relatedParseObjects = [[[parseRelation query] findObjects] mutableCopy];
-                if (relatedParseObjects.count) {
-                    NSArray *relatedParseObjectsToDelete = [relatedParseObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [relatedManagedObjects valueForKey:kParseObjectID]]];
-                    for (PFObject *PO in relatedParseObjectsToDelete) {
-                        [parseRelation removeObject:PO];
-                        //We don't update the inverse PFRelation as they should be updated from that MO
-                        DDLogVerbose(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, managedObject.serverID, key, PO.objectId);
+                        DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
+                        if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                        [parseRelation addObject:relatedParseObject];
                     }
                 }
-                
-                //related managedObject that needs to add
-                for (NSManagedObject *relatedManagedObject in relatedManagedObjects) {
-                    NSString *parseID = relatedManagedObject.serverID;
-                    if (parseID) {
-                        //the pfobject already exists, need to inspect PFRelation to determin add or remove
-						if (![[relatedParseObjects valueForKey:kParseObjectID] containsObject:parseID]) {
-							PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
-							
-							DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
-							[parseRelation addObject:relatedParseObject];
-						}
-                    }
-					else {
-                        __block PFObject *blockObject = self;
-                        __block PFRelation *blockParseRelation = parseRelation;
-                        //set up a saving block
-                        //NSLog(@"Relation %@ -> %@ save block setup", blockObject.parseClassName, relatedManagedObject.entity.serverClassName);
-                        PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
-                            //the relation can only be additive, which is not a problem for new relation
-                            [blockParseRelation addObject:object];
-                            [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e   ) {
-                                DDLogInfo(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, key, object.objectId);
-                                if (e) {
-                                    DDLogError(@"Failed to save: %@", e.description);
-                                    @try {
-                                        [blockObject saveEventually];
-                                    }
-                                    @catch (NSException *exception) {
-                                        [managedObject uploadEventually];
-                                        DDLogError(@"saveEventually failed, move to uploadEventually, got exeption:%@", exception);
-                                    }
+                else {
+                    __block PFObject *blockObject = self;
+                    __block PFRelation *blockParseRelation = parseRelation;
+                    if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                    //set up a saving block
+                    //NSLog(@"Relation %@ -> %@ save block setup", blockObject.parseClassName, relatedManagedObject.entity.serverClassName);
+                    PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
+                        //the relation can only be additive, which is not a problem for new relation
+                        [blockParseRelation addObject:object];
+                        [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e   ) {
+                            DDLogInfo(@"PO Relation %@(%@) -> %@ (%@) established in PO save callback", blockObject.parseClassName, blockObject.objectId, key, object.objectId);
+                            if (e) {
+                                DDLogError(@"Failed to save: %@", e.description);
+                                @try {
+                                    [blockObject saveEventually];
                                 }
-                            }];
-                        };
-                        
-                        //add to global save callback distionary
-                        [[EWSync sharedInstance] addSaveCallback:connectRelationship forManagedObjectID:relatedManagedObject.objectID];
-                        
-                        //add relatedMO to insertQueue
-                        if (![[EWSync sharedInstance] contains:relatedManagedObject inQueue:kParseQueueWorking]) {
-							DDLogWarn(@"Added missing insert object: %@", relatedManagedObject);
-                            [[EWSync sharedInstance] appendInsertQueue:relatedManagedObject];
-                        }
+                                @catch (NSException *exception) {
+                                    [managedObject uploadEventually];
+                                    DDLogError(@"saveEventually failed, move to uploadEventually, got exeption:%@", exception);
+                                }
+                            }
+                        }];
+                    };
+                    
+                    //add to global save callback distionary
+                    [[EWSync sharedInstance] addSaveCallback:connectRelationship forManagedObjectID:relatedManagedObject.objectID];
+                    
+                    //add relatedMO to insertQueue
+                    if (![[EWSync sharedInstance] contains:relatedManagedObject inQueue:kParseQueueWorking]) {
+                        DDLogWarn(@"Added missing insert object: %@", relatedManagedObject);
+                        [[EWSync sharedInstance] appendInsertQueue:relatedManagedObject];
                     }
                 }
             }
-            else {
-                //TO-One relation
-                EWServerObject *relatedMO = [managedObject valueForKey:key];
+        }
+        else {
+            //TO-One relation
+            if (relatedManagedObjects) {
+                EWServerObject *relatedMO = (EWServerObject *)relatedManagedObjects;
                 NSString *parseID = relatedMO.serverID;
                 PFObject *relatedPO = self[key];
                 if (parseID) {
-					if (![parseID isEqualToString:relatedPO.objectId]) {
-						relatedPO = [PFObject objectWithoutDataWithClassName:relatedMO.serverClassName objectId:parseID];
-						[self setObject:relatedPO forKey:key];
-						DDLogVerbose(@"+++> To-one relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], relation.name, relatedPO.objectId);
-					}
+                    if (![parseID isEqualToString:relatedPO.objectId]) {
+                        relatedPO = [PFObject objectWithoutDataWithClassName:relatedMO.serverClassName objectId:parseID];
+                        [self setObject:relatedPO forKey:key];
+                        DDLogVerbose(@"+++> To-one relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], relation.name, relatedPO.objectId);
+                        if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                    }
                 }
-                if (!parseID || !relatedPO){
+                else {
                     //MO doesn't have parse id, save to parse
                     __block PFObject *blockObject = self;
+                    if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
                     //set up a saving block
                     PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
                         [blockObject setObject:object forKey:key];
@@ -218,27 +221,19 @@
                     };
                     //add to global save callback distionary
                     [[EWSync sharedInstance] addSaveCallback:connectRelationship forManagedObjectID:relatedMO.objectID];
-					
-					//add relatedMO to insertQueue
-					if (![[EWSync sharedInstance] contains:relatedMO inQueue:kParseQueueWorking]) {
-						DDLogWarn(@"Added missing insert object: %@", relatedMO);
-						[[EWSync sharedInstance] appendInsertQueue:relatedMO];
-					}
+                    
+                    //add relatedMO to insertQueue
+                    if (![[EWSync sharedInstance] contains:relatedMO inQueue:kParseQueueWorking]) {
+                        DDLogWarn(@"Added missing insert object: %@", relatedMO);
+                        [[EWSync sharedInstance] appendInsertQueue:relatedMO];
+                    }
                 }
-            }
-        }
-		
-        else{
-            
-            //relation cannot be to-many, as it's always has value
-            //empty related object, delete PO relationship
-            if ([self valueForKey:key]) {
-                DDLogVerbose(@"Empty relationship on MO %@(%@) -> %@, delete PO relation.", managedObject.entity.name, self.objectId, relation.name);
+            }else{
+                //delete
+                DDLogVerbose(@"~~~>Empty relationship on MO %@(%@) -> %@, delete PO relation.", managedObject.entity.name, self.objectId, relation.name);
                 [self removeObjectForKey:key];
-                
             }
         }
-        
     }];
     
 }

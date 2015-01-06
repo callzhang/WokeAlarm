@@ -100,7 +100,7 @@
 
 
 #pragma mark - Send Voice tone
-+ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block{
++ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(BoolErrorBlock)block{
     
     //save
     [EWSync saveWithCompletion:^{
@@ -141,7 +141,7 @@
                 DDLogError(@"Send push message about media %@ failed. Reason:%@", media.objectId, error.description);
             }
             if (block) {
-                block(succeeded);
+                block(succeeded, error);
             }
         }];
         

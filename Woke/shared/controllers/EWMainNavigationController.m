@@ -104,7 +104,6 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
         };
         
         [self.menuViewController.view pop_addAnimation:anim forKey:@"fade"];
-        
         [self.menuViewController closeMenu];
     }
 }

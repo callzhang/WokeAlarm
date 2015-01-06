@@ -140,7 +140,7 @@
 }
 
 + (EWSocial *)mySocialGraph{
-    return [[EWSocialManager sharedInstance] mySocialGraph];
+    return [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
 }
 
 #pragma mark - Helper methods

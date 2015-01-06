@@ -265,11 +265,7 @@
 #pragma mark - Record
 - (NSURL *)record{
     if (_recorder.isRecording) {
-        
-        [_recorder stop];
-        _recorder = nil;
-        
-        DDLogVerbose(@"Recording stopped");
+        return nil;
     } else {
         [self registerRecordingAudioSession];
         NSDictionary *recordSettings = @{AVEncoderAudioQualityKey: @(AVAudioQualityLow),
@@ -367,7 +363,7 @@
 }
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
-    DDLogVerbose(@"Recording reached max length (%@)", flag?@"Success":@"Failed");
+    DDLogVerbose(@"Recording stopped (%@)", flag?@"Success":@"Failed");
     [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:recorder];
 }
 

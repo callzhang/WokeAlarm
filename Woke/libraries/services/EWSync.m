@@ -681,7 +681,7 @@ NSManagedObjectContext *mainContext;
 }
 
 + (void)save{
-	NSAssert([NSThread isMainThread], @"Calling +[self save] on background context is not allowed. Use [context MR_saveToPersistentStoreAndWait] instead");
+	EWAssertMainThread
 	if (mainContext.hasChanges) {
 		[mainContext MR_saveToPersistentStoreAndWait];
 	}
@@ -689,9 +689,7 @@ NSManagedObjectContext *mainContext;
 
 + (void)saveWithCompletion:(EWSavingCallback)block{
     [[EWSync sharedInstance].saveCallbacks addObject:block];
-    if ([NSThread isMainThread]) {
-        [mainContext MR_saveToPersistentStoreAndWait];
-    }
+    [EWSync save];
     [[EWSync sharedInstance] uploadToServer];
 }
 
