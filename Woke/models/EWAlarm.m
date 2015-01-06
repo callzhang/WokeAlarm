@@ -151,7 +151,6 @@
 
 - (void)setTone:(NSString *)tone {
     if ([self.tone isEqualToString:tone]) {
-        DDLogVerbose(@"Set same tone for alarm: %@", self.objectId);
         return;
     }
     [self willChangeValueForKey:EWAlarmAttributes.tone];
@@ -188,21 +187,23 @@
 #pragma mark - Cached alarm time to user defaults
 //the alarm time stored in person's cached info
 - (void)updateCachedAlarmTime{
-    NSDictionary *cache = [EWPerson me].cachedInfo;
+    EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
+    NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
     NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedAlarmTimes, wkday];
-    [EWPerson me].cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:path];
+    me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:path];
 
-    [EWSync save];
+    [me save];
     DDLogVerbose(@"Updated cached alarm times: %@ on %@", self.time.nextOccurTime, wkday);
 }
 
 - (void)updateCachedStatement{
-    NSDictionary *cache = [EWPerson me].cachedInfo;
+    EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
+    NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
     NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedStatements, wkday];
-    [EWPerson me].cachedInfo = [cache setValue:self.statement forImmutableKeyPath:path];
-    [EWSync save];
+    me.cachedInfo = [cache setValue:self.statement forImmutableKeyPath:path];
+    [me save];
     DDLogVerbose(@"Updated cached statements: %@ on %@", self.statement, wkday);
 }
 

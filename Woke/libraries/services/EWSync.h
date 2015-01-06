@@ -83,7 +83,7 @@ typedef void (^EWSavingCallback)(void);
 /**
  The main save function, it save and upload to the server
  */
-+ (void)save;
++ (void)save __deprecated;
 + (void)saveWithCompletion:(EWSavingCallback)block;
 + (void)saveAllToLocal:(NSArray *)MOs;
 /**

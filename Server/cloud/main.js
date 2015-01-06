@@ -500,7 +500,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
         if (dict.hasOwnProperty(PO.id)) {
           //exists, compare date
           var clientUpdatedAt = dict[PO.id];
-          if (clientUpdatedAt < PO.updatedAt){
+          if (PO.updatedAt - clientUpdatedAt > 5000){
             objectsNeedUpdate.push(PO);
             console.log("~Update object "+PO.id+" in relation "+relationName);
           }
@@ -534,7 +534,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
         var clientUpdatedAt = dict[PO.id];
         if (clientUpdatedAt){
           //object exists in local, compare date
-          if (clientUpdatedAt < PO.updatedAt){
+          if (PO.updatedAt - clientUpdatedAt > 5000){
             info[relationName] = PO;
             console.log("~Updated object: "+PO.id+ " for relation "+relationName);
           }

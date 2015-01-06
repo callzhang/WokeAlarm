@@ -6,6 +6,7 @@
 - (BOOL)validate;
 - (void)remove;
 - (NSString *)serverID;
+- (void)save;
 /**
  *  Upload to server immediately
  *

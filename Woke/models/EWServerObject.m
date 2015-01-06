@@ -27,6 +27,12 @@
 	return self.entity.name;
 }
 
+- (void)save{
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
+        //
+    }];
+}
+
 - (void)updateToServerWithCompletion:(PFObjectResultBlock)block{
     if (!self.objectId) {
         //create save block
