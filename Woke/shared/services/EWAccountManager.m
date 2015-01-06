@@ -222,8 +222,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }
         
     }completion:^(BOOL success, NSError *error) {
-        //update friends
+        
+        //set location
+        if (![EWPerson me].location) {
+            [self setProxymateLocationForPerson:[EWPerson me]];
+        }
+        //save time
 		[[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:@"facebook_last_updated"];
+        //update friends
         [self getFacebookFriends];
         self.isUpdatingFacebookInfo = NO;
     }];
@@ -419,42 +425,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             //need pop alert
             DDLogError(@"Location service disabled");
             EWAlert(@"Location service is disabled. To find the best match around your area, please enable location service in settings.")
+            [self setProxymateLocationForPerson:[EWPerson me]];
         }else{
             [self.manager startUpdatingLocation];
         }
     }else{
         [self.manager startUpdatingLocation];
     }
-    
-//    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-//        
-//        if (geoPoint.latitude == 0 && geoPoint.longitude == 0) {
-//            //NYC coordinate if on simulator
-//            geoPoint.latitude = 40.732019;
-//            geoPoint.longitude = -73.992684;
-//        }
-//        
-//        CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
-//        
-//        DDLogVerbose(@"Get user location with lat: %f, lon: %f", geoPoint.latitude, geoPoint.longitude);
-//        
-//        //reverse search address
-//        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
-//        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
-//            
-//            [EWPerson me].lastLocation = location;
-//            
-//            if (err == nil && [placemarks count] > 0) {
-//                CLPlacemark *placemark = [placemarks lastObject];
-//                //get info
-//                [EWPerson me].city = placemark.locality;
-//                [EWPerson me].region = placemark.country;
-//            } else {
-//                NSLog(@"%@", err.debugDescription);
-//            }
-//            [EWSync save];
-//        }];
-//    }];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
@@ -464,12 +441,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alertView show];
+            [self setProxymateLocationForPerson:[EWPerson me]];
         }
             break;
         case kCLAuthorizationStatusAuthorizedWhenInUse:
         {
             DDLogInfo(@"kCLAuthorizationStatusAuthorizedWhenInUse");
-            manager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+            manager.desiredAccuracy = kCLLocationAccuracyBest;
             manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
             [manager startUpdatingLocation];
             
@@ -479,7 +457,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         {
             DDLogInfo(@"kCLAuthorizationStatusAuthorizedAlways");
             manager.desiredAccuracy = kCLLocationAccuracyBest;
-            manager.distanceFilter = kCLLocationAccuracyHundredMeters;
+            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
             [manager startUpdatingLocation];
         }
             break;
@@ -535,6 +513,24 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             DDLogWarn(@"%@", err.debugDescription);
         }
         [EWSync save];
+    }];
+}
+
+- (void)setProxymateLocationForPerson:(EWPerson *)person{
+    if (person.location) {
+        DDLogWarn(@"Override location for person: %@", person.name);
+    }
+    CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+    [person.managedObjectContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+        EWPerson *localPerson = [person MR_inContext:localContext];
+        [geoloc geocodeAddressString:[NSString stringWithFormat:@"%@, %@", localPerson.city, localPerson.country]  completionHandler:^(NSArray *placemarks, NSError *error) {
+            if (placemarks.count) {
+                CLPlacemark *pm = placemarks.firstObject;
+                CLLocation *loc = pm.location;
+                localPerson.location = loc;
+                DDLogInfo(@"Get proxymate location: %@", loc);
+            }
+        }];
     }];
 }
 

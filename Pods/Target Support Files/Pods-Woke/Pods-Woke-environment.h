@@ -60,6 +60,12 @@
 #define COCOAPODS_VERSION_MINOR_APAddressBook_Core 1
 #define COCOAPODS_VERSION_PATCH_APAddressBook_Core 5
 
+// APTimeZones
+#define COCOAPODS_POD_AVAILABLE_APTimeZones
+#define COCOAPODS_VERSION_MAJOR_APTimeZones 1
+#define COCOAPODS_VERSION_MINOR_APTimeZones 1
+#define COCOAPODS_VERSION_PATCH_APTimeZones 0
+
 // BlocksKit
 #define COCOAPODS_POD_AVAILABLE_BlocksKit
 #define COCOAPODS_VERSION_MAJOR_BlocksKit 2

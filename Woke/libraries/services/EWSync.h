@@ -16,6 +16,9 @@
 extern NSManagedObjectContext *mainContext;
 typedef void (^EWSavingCallback)(void);
 
+//Diagram:
+//https://drive.draw.io/#G0B8EqrGjPaSeTakN6VzRwZzdFaDA
+
 //Error codes:
 //http://www.lifeasbob.com/Code/ErrorCodes.aspx
 //or https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/NSError_Codes

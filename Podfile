@@ -37,6 +37,7 @@ target 'Woke' do
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
   pod 'WellCached'
   pod 'GKImagePicker'
+  pod 'APTimeZones'
 end
 
 target 'WokeTests' do

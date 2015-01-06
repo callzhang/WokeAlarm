@@ -47,7 +47,8 @@ install_resource()
       ;;
   esac
 }
-          install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
+          install_resource "APTimeZones/APTimeZones/timezonesDB.json"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
                     install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
                     install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
                     install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"

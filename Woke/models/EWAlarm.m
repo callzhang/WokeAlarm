@@ -125,6 +125,7 @@
         //DDLogInfo(@"Set same time to alarm: %@", self);
         return;
     }
+    
     EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     
     [self willChangeValueForKey:EWAlarmAttributes.time];
