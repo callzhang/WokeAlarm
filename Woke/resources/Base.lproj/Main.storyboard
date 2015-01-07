@@ -170,6 +170,28 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZEp-fY-6cD" userLabel="backgroundView">
                                 <rect key="frame" x="0.0" y="-50" width="320" height="618"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="027-dv-aEP">
+                                        <rect key="frame" x="21" y="406" width="96" height="46"/>
+                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                        <state key="normal" title="Settings">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
+                                        <rect key="frame" x="21" y="352" width="123" height="46"/>
+                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                        <state key="normal" title="My Profile">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onProfile:" destination="ztM-CD-1sO" eventType="touchUpInside" id="Y6z-ay-5sS"/>
+                                            <segue destination="T0a-bL-MOd" kind="custom" identifier="MenuToProfileReplace" customClass="MSReplaceFadeSegue" id="Xze-aa-Hu3"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x94-DL-jrO">
@@ -216,25 +238,6 @@
                                     <segue destination="qpL-rI-Npc" kind="custom" identifier="MenuToVoiceReplace" customClass="MSReplaceFadeSegue" id="Mja-j3-wqm"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
-                                <rect key="frame" x="21" y="302" width="123" height="46"/>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
-                                <state key="normal" title="My Profile">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="T0a-bL-MOd" kind="custom" identifier="MenuToProfileReplace" customClass="MSReplaceFadeSegue" id="Xze-aa-Hu3"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="027-dv-aEP">
-                                <rect key="frame" x="21" y="356" width="96" height="46"/>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
-                                <state key="normal" title="Settings">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIq-mw-Cq6">
                                 <rect key="frame" x="216" y="502" width="84" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
@@ -255,12 +258,8 @@
                             <constraint firstAttribute="trailing" secondItem="ZEp-fY-6cD" secondAttribute="trailing" id="7M7-hJ-xrd"/>
                             <constraint firstItem="x94-DL-jrO" firstAttribute="leading" secondItem="wHV-nd-2l3" secondAttribute="leading" id="Avd-5g-nO1"/>
                             <constraint firstItem="p4y-rw-jgD" firstAttribute="leading" secondItem="wHV-nd-2l3" secondAttribute="leading" id="Jda-L7-KSc"/>
-                            <constraint firstItem="027-dv-aEP" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="336" id="Pbs-hm-uEl"/>
-                            <constraint firstItem="027-dv-aEP" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="RYX-N0-RIk"/>
                             <constraint firstItem="wHV-nd-2l3" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="120" id="UXf-Np-fB7"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="p4y-rw-jgD" secondAttribute="leading" id="VsB-JA-8OM"/>
-                            <constraint firstItem="mrU-oI-fkp" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="282" id="d41-6E-Lhy"/>
-                            <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="dLq-2s-VIV"/>
                             <constraint firstAttribute="trailing" secondItem="RIq-mw-Cq6" secondAttribute="trailing" constant="20" id="l0M-MW-trF"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="228" id="qJi-rd-S1n"/>
                             <constraint firstItem="x94-DL-jrO" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="66" id="ruz-zV-7t8"/>
@@ -277,11 +276,9 @@
                         <outlet property="home" destination="x94-DL-jrO" id="3GL-fU-ucC"/>
                         <outlet property="homeTopLayoutConstraint" destination="ruz-zV-7t8" id="wFK-x6-Uwf"/>
                         <outlet property="me" destination="mrU-oI-fkp" id="TXD-vs-gjV"/>
-                        <outlet property="meTopLayoutConstraint" destination="d41-6E-Lhy" id="xjr-3N-Gcd"/>
                         <outlet property="notification" destination="wHV-nd-2l3" id="mE5-1g-6dJ"/>
                         <outlet property="notificationTopLayoutConstraint" destination="UXf-Np-fB7" id="Y0B-DC-CD9"/>
                         <outlet property="settings" destination="027-dv-aEP" id="6VF-b0-2it"/>
-                        <outlet property="settingsTopLayoutConstraint" destination="Pbs-hm-uEl" id="COk-MN-geW"/>
                         <outlet property="voice" destination="6Mb-bv-HXk" id="HA1-Sb-6eY"/>
                         <outlet property="voiceTopLayoutConstraint" destination="qJi-rd-S1n" id="q4Y-tT-VrY"/>
                     </connections>
@@ -1051,6 +1048,30 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="ibX-eO-0pB">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="62M-3o-8hg">
+                                <rect key="frame" x="16" y="520" width="288" height="40"/>
+                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="0.35999999999999999" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="248" id="fEt-cK-Ydw"/>
+                                    <constraint firstAttribute="height" constant="40" id="h75-yW-b9I"/>
+                                </constraints>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="titleShadowOffset" width="1" height="1"/>
+                                <state key="normal" title="Wake Her Up"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="fEt-cK-Ydw"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="wake:" destination="T0a-bL-MOd" eventType="touchUpInside" id="wNO-ZP-chZ"/>
+                                </connections>
+                            </button>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Xwo-Q3-Shc">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1085,22 +1106,7 @@
                                             <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9p-bJ-mQ5">
-                                            <rect key="frame" x="218" y="38" width="40" height="40"/>
-                                            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="40" id="bVu-Uk-IZ9"/>
-                                                <constraint firstAttribute="width" constant="40" id="jLF-2C-4QB"/>
-                                            </constraints>
-                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="titleShadowOffset" width="1" height="1"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="5"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Unf-1S-sZT">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Unf-1S-sZT" userLabel="picture">
                                             <rect key="frame" x="110" y="8" width="100" height="100"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="100" id="mOL-T3-90i"/>
@@ -1124,6 +1130,24 @@
                                             <color key="shadowColor" red="0.0" green="0.47817748999999998" blue="0.72598453439999999" alpha="0.28999999999999998" colorSpace="calibratedRGB"/>
                                             <size key="shadowOffset" width="1" height="1"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9p-bJ-mQ5" userLabel="addFriend">
+                                            <rect key="frame" x="218" y="38" width="40" height="40"/>
+                                            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="40" id="bVu-Uk-IZ9"/>
+                                                <constraint firstAttribute="width" constant="40" id="jLF-2C-4QB"/>
+                                            </constraints>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <size key="titleShadowOffset" width="1" height="1"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="5"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="addFriend:" destination="T0a-bL-MOd" eventType="touchUpInside" id="lGs-Zo-Jf7"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="gLZ-qp-e0x" firstAttribute="top" secondItem="WWw-11-z9T" secondAttribute="bottom" id="44f-zQ-jzD"/>
@@ -1145,27 +1169,6 @@
                                     </constraints>
                                 </view>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="62M-3o-8hg">
-                                <rect key="frame" x="16" y="520" width="288" height="40"/>
-                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="0.35999999999999999" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="248" id="fEt-cK-Ydw"/>
-                                    <constraint firstAttribute="height" constant="40" id="h75-yW-b9I"/>
-                                </constraints>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="titleShadowOffset" width="1" height="1"/>
-                                <state key="normal" title="Wake Her Up"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="fEt-cK-Ydw"/>
-                                    </mask>
-                                </variation>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
@@ -1191,13 +1194,14 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="addFriend" destination="F9p-bJ-mQ5" id="plR-QL-5So"/>
-                        <outlet property="addFriendButton" destination="F9p-bJ-mQ5" id="wil-Fk-Re4"/>
+                        <outlet property="headerView" destination="yJy-dQ-Ted" id="1gz-oO-bCl"/>
                         <outlet property="location" destination="Diy-Sh-ZB5" id="aUz-wG-q4I"/>
                         <outlet property="name" destination="tDD-T6-Yyg" id="unX-gG-bGI"/>
                         <outlet property="nextAlarm" destination="WWw-11-z9T" id="Z2r-Q0-DRB"/>
                         <outlet property="picture" destination="Unf-1S-sZT" id="5po-M2-SJX"/>
                         <outlet property="statement" destination="gLZ-qp-e0x" id="zhH-Ew-K7n"/>
                         <outlet property="tableView" destination="Xwo-Q3-Shc" id="Zfv-aV-bGW"/>
+                        <outlet property="wakeBtn" destination="62M-3o-8hg" id="YBV-Wr-OuE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k5t-j9-YCU" userLabel="First Responder" sceneMemberID="firstResponder"/>

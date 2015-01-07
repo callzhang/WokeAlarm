@@ -98,9 +98,10 @@
         
         //alert
         if (notification.completed) {
-            EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:person];
-            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-            [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
+            EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+			controller.person = person;
+			
+            [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:controller withCompletion:^{
                 //
             }];
         }else{
@@ -158,7 +159,8 @@
                 break;
             }
             case 2:{ //profile
-                EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:self.person];
+				EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+				controller.person = _person;
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
                 [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
                     //
@@ -177,7 +179,8 @@
                 break;
             
             case 1:{//view profile
-                EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:self.person];
+				EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+				controller.person = _person;
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
                 [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
                     //

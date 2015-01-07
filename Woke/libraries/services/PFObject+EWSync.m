@@ -215,7 +215,6 @@
                                 @catch (NSException *exception) {
                                     [managedObject uploadEventually];
                                 }
-                                
                             }
                         }];
                     };

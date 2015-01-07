@@ -19,6 +19,7 @@
 #import "NSArray+BlocksKit.h"
 #import "EWActivityManager.h"
 #import "EWActivity.h"
+#import "EWCachedInfoManager.h"
 
 @interface EWAlarmManager(){
     NSTimer *alarmPushScheduleTimer;
@@ -69,7 +70,7 @@
     //first try to get it from cache
     NSDictionary *times = person.cachedInfo[kCachedAlarmTimes];
     if (!times && person.isMe) {
-        [self updateCachedAlarmTimes];
+        [[EWCachedInfoManager shared] updateCachedAlarmTimes];
     }
     
     for (NSDate *time in times.allValues) {
@@ -86,10 +87,7 @@
     NSDictionary *statements = person.cachedInfo[kCachedStatements];
     NSDictionary *times = person.cachedInfo[kCachedAlarmTimes];
     if (!statements && person.isMe) {
-        [self updateCachedStatements];
-    }
-    if (!times && person.isMe) {
-        [self updateCachedAlarmTimes];
+        [[EWCachedInfoManager shared] updateCachedStatements];
     }
     
     __block NSString *nextWeekday;
@@ -323,14 +321,6 @@
         [defaults synchronize];
     }
     return alarmTimes;
-}
-
-#pragma mark - Person cachedInfo updates
-- (void)updateCachedAlarmTimes{
-    //TODO
-}
-- (void)updateCachedStatements{
-    //TODO
 }
 
 

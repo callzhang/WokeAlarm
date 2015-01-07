@@ -10,7 +10,11 @@
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
 
-#define kMaxWakabilityTime      600
+#define kMaxWakabilityTime	600
+
+//alarm
+//#define kCachedAlarmTimes   @"alarm_schedule"
+//#define kCachedStatements   @"statements"
 
 //stats
 #define kStatsCache         @"stats_cache"
@@ -21,7 +25,6 @@
 
 //activity
 #define kActivityCache      @"activity_cache"
-//dictionary keys
 #define kActivityType       @"type"
 #define kActivityTime       @"time"
 #define kWokeTime           @"wake"
@@ -47,6 +50,7 @@
 @property (nonatomic) NSNumber *wakability;
 @property (nonatomic) NSString *wakabilityStr;
 
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
 + (EWCachedInfoManager *)managerWithPerson:(EWPerson *)person;
 + (EWCachedInfoManager *)myManager;
 
@@ -54,4 +58,6 @@
 - (void)checkCachedActivity;
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block;
 - (void)updateCachedFriends;
+- (void)updateCachedAlarmTimes;
+- (void)updateCachedStatements;
 @end

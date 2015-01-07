@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "EWSession.h"
-#define kCachedAlarmTimes                @"alarm_schedule"
-#define kCachedStatements                @"statements"
 
 
 @class EWAlarm, EWPerson;
@@ -53,10 +51,6 @@
 // schedule + check
 - (NSArray *)scheduleAlarm;
 - (void)checkAlarmsFromServer;
-
-//update cached info
-- (void)updateCachedAlarmTimes;
-- (void)updateCachedStatements;
 
 //UTIL
 - (NSDate *)getSavedAlarmTimeOnWeekday:(NSInteger)wkd;

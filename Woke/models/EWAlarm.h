@@ -24,6 +24,10 @@
 //validate
 - (BOOL)validate;
 
+//cached info
+- (void)updateCachedAlarmTime;
+- (void)updateCachedStatement;
+
 //timer local notification
 /**
  Schedule both timer and sleep notification

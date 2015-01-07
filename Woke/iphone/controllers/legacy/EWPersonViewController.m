@@ -42,6 +42,7 @@
 // ImageBrowser
 #import "GKImagePicker.h"
 #import "IDMPhotoBrowser.h"
+#import "APTimeZones.h"
 
 #define kProfileTableArray              @[@"Friends", @"People woke me up", @"People I woke up", @"Last Seen", @"Next wake-up time", @"Wake-ability Score", @"Average wake up time"]
 
@@ -68,6 +69,11 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	//set me
+	if (!person) {
+		self.person = [EWPerson me];
+	}
     
     //data source
     stats = [[EWCachedInfoManager alloc] init];
@@ -78,10 +84,11 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     _tableView.dataSource = self;
     _tableView.delegate = self;
     _tableView.backgroundColor = [UIColor clearColor];
-    _tableView.backgroundView = nil;
+	_tableView.backgroundView = nil;
+	[self.tableView setTableHeaderView:self.headerView];
     //UINib *taskNib = [UINib nibWithNibName:@"EWTaskHistoryCell" bundle:nil];
     //[tableView registerNib:taskNib forCellReuseIdentifier:taskCellIdentifier];
-    [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.10]];
+	//[EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.10]];
     //tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
     
     //default state
@@ -89,26 +96,26 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     self.name.text = @"";
     self.location.text = @"";
     self.statement.text = @"";
-    
-    [self initData];
-    [self initView];
-    
+	
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //navigation
+	self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MoreButton"] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
 
     if (!person.isMe && person.isOutDated) {
         DDLogInfo(@"Person %@ is outdated and needs refresh in background", person.name);
         [person refreshShallowWithCompletion:^(NSError *error){
-            [self initData];
-            [self initView];
+			[self initData];
+			[self initView];
         }];
-    }
+	}else{
+		[self initData];
+		[self initView];
+	}
 }
-
 
 - (void)initData {
     if (person) {
@@ -143,7 +150,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     if (!person) return;
     //======= Person =======
     
-    
     if (!person.isMe) {
         //other user
         if (person.isFriend) {
@@ -156,12 +162,15 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         }else{
             [self.addFriend setImage:[UIImage imageNamed:@"Add Friend Button"] forState:UIControlStateNormal];
         }
+		//wake him/her up
+		[self.wakeBtn setTitle:[NSString stringWithFormat:@"Wake %@ up", person.genderObjectiveCaseString] forState:UIControlStateNormal];
         
     }else{//self
         self.addFriend.hidden = YES;
+		self.wakeBtn.hidden = YES;
     }
-    
     [_tableView reloadData];
+	
     //UI
     [self.picture setImage:person.profilePic forState:UIControlStateNormal];
     self.name.text = person.name;
@@ -191,7 +200,13 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     
     //next alarm
     NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
-    self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString];
+	if (person.location) {
+		NSTimeZone *userTimezone = [[APTimeZones sharedInstance] timeZoneWithLocation:person.location];
+		NSDate *userTime = [time mt_inTimeZone:userTimezone];
+		self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@ (%@)", userTime.date2detailDateString, userTimezone.abbreviation];
+	}else{
+		self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString];
+	}
 }
 
 
@@ -280,6 +295,18 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
     
     [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+}
+
+- (IBAction)photos:(id)sender{
+	//show photo
+}
+
+- (IBAction)addFriend:(id)sender {
+	//add friend
+}
+
+- (IBAction)wake:(id)sender {
+	//wake
 }
 
 #pragma mark - Actionsheet

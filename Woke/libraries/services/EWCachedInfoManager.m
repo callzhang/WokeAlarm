@@ -15,10 +15,12 @@
 
 //#import <KVOController/NSObject+FBKVOController.h>
 #import <KVOController/FBKVOController.h>
+#import "EWAlarm.h"
 
 @implementation EWCachedInfoManager
 //TODO: There is unfinished work
 //The manager should monitor my activities and update the statistics automatically
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
 + (EWCachedInfoManager *)managerWithPerson:(EWPerson *)p{
     
@@ -320,5 +322,17 @@
     cache[kCachedFriends] = friends;
     [EWPerson me].cachedInfo = cache;
     
+}
+
+- (void)updateCachedAlarmTimes{
+	for (EWAlarm *alarm in [EWPerson me].alarms) {
+		[alarm updateCachedAlarmTime];
+	}
+}
+
+- (void)updateCachedStatements{
+	for (EWAlarm *alarm in [EWPerson me].alarms) {
+		[alarm updateCachedStatement];
+	}
 }
 @end

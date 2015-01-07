@@ -65,11 +65,6 @@ NSManagedObjectContext *mainContext;
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:EWAccountDidLogoutNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        //remove all queue
-        //[[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueDelete];
-        //[[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueInsert];
-        //[[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueUpdate];
-        //[[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueWorking];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueRefresh];
 
     }];

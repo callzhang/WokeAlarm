@@ -225,7 +225,8 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
     if ([self.navigationController.viewControllers count] <kMaxPersonNavigationConnt) {
         
         EWPerson * friend = [friendIDs objectAtIndex:number];
-        EWPersonViewController *viewController = [[EWPersonViewController alloc] initWithPerson:friend ];
+		EWPersonViewController *viewController = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+		viewController.person = friend;
         [self.navigationController pushViewController:viewController animated:YES];
         
     }

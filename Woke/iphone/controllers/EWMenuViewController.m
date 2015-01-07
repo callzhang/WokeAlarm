@@ -66,6 +66,13 @@
         
     }];
 }
+- (IBAction)onProfile:(id)sender {
+	
+	[self.mainNavigationController toogleMenuCompletion:^{
+		//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
+		
+	}];
+}
 #pragma mark -
 - (void)onTap {
     if (self.tapHandler) {

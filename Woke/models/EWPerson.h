@@ -37,4 +37,7 @@ extern NSString * const EWPersonDefaultName;
 
 //validate
 - (BOOL)validate;
+
+//helper
+- (NSString *)genderObjectiveCaseString;
 @end

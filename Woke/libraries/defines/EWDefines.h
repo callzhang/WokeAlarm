@@ -170,7 +170,9 @@ typedef void (^SenderBlock)(id sender);
 #define kMaxPersonNavigationConnt       6
 
 //Cached Info
-#define kCachedFriends                      @"friends"
+#define kCachedFriends                   @"friends"
+#define kCachedAlarmTimes                @"alarm_schedule"
+#define kCachedStatements                @"statements"
 
 
 // ATConnect
@@ -178,5 +180,3 @@ typedef void (^SenderBlock)(id sender);
 #define kWakeupSuccess          @"wake_success"
 #define kRecordVoiceSuccess     @"record_success"
 
-#define kCachedAlarmTimes                @"alarm_schedule"
-#define kCachedStatements                @"statements"
