@@ -394,6 +394,7 @@
 		568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
 		6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WokeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B1375DA1A536CD100D5E8F5 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
+		9B1551821A5CBD7B00C2EE41 /* EWPersonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWPersonView.xib; sourceTree = "<group>"; };
 		9B25631D1A1952FA00010B9E /* _EWSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _EWSocial.h; sourceTree = "<group>"; };
 		9B25631E1A1952FA00010B9E /* _EWSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWSocial.m; sourceTree = "<group>"; };
 		9B3895011A4FBA17004D4290 /* EWWakeUpViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpViewCell.h; sourceTree = "<group>"; };
@@ -491,11 +492,10 @@
 		091C67471A3523AF0091B8A6 /* legacy */ = {
 			isa = PBXGroup;
 			children = (
+				9B1551821A5CBD7B00C2EE41 /* EWPersonView.xib */,
 				091C67481A3523AF0091B8A6 /* EWAlarmEditCell.h */,
 				091C67491A3523AF0091B8A6 /* EWAlarmEditCell.m */,
 				091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */,
-				091C674B1A3523AF0091B8A6 /* EWCollectionPersonCell.h */,
-				091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */,
 				091C674D1A3523AF0091B8A6 /* EWLogInView.xib */,
 				091C674E1A3523AF0091B8A6 /* EWMediaCell.h */,
 				091C674F1A3523AF0091B8A6 /* EWMediaCell.m */,
@@ -557,10 +557,10 @@
 			children = (
 				9B3895011A4FBA17004D4290 /* EWWakeUpViewCell.h */,
 				9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */,
-				9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */,
-				091C67471A3523AF0091B8A6 /* legacy */,
 				091C67651A3523C40091B8A6 /* EWAlarmTableViewCell.h */,
 				091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */,
+				9B1551841A5CBDC200C2EE41 /* components */,
+				091C67471A3523AF0091B8A6 /* legacy */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -767,11 +767,11 @@
 			children = (
 				09A7770E1A11E2BD004AF902 /* app */,
 				096AAA3E1A19593300B4CBFF /* iphone */,
+				096AAA901A195A3900B4CBFF /* libraries */,
 				09A777221A11E2BD004AF902 /* shared */,
 				09DF4F0E1A1434AF00BEA328 /* models */,
 				09A7771B1A11E2BD004AF902 /* resources */,
 				09A777251A11E2BD004AF902 /* support */,
-				096AAA901A195A3900B4CBFF /* libraries */,
 				09A7772A1A11E2BD004AF902 /* vendor */,
 				09A777121A11E2BD004AF902 /* ipad */,
 			);
@@ -983,6 +983,16 @@
 				9B25631E1A1952FA00010B9E /* _EWSocial.m */,
 			);
 			path = models_mogenerated;
+			sourceTree = "<group>";
+		};
+		9B1551841A5CBDC200C2EE41 /* components */ = {
+			isa = PBXGroup;
+			children = (
+				9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */,
+				091C674B1A3523AF0091B8A6 /* EWCollectionPersonCell.h */,
+				091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */,
+			);
+			path = components;
 			sourceTree = "<group>";
 		};
 		9B8139591A15D65900F1A56C /* GCPickerView */ = {

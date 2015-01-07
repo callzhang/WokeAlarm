@@ -62,6 +62,7 @@
 + (EWCachedInfoManager *)myManager{
     return [EWCachedInfoManager managerWithPerson:[EWPerson me]];
 }
+
 - (void)getStatsFromCache{
     
     //load cached info
@@ -213,6 +214,27 @@
 
 
 #pragma mark - Update Activity
+- (void)checkCachedActivity{
+    
+//    if (!self.activities || self.activities.count != [EWPerson me].activities.count) {
+//        [[EWCachedInfoManager myManager] updateActivityCacheWithCompletion:^{
+//            self.activities = [EWPerson me].cachedInfo[kActivityCache];
+//            dates = _activities.allKeys;
+//            dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+//                NSInteger n1 = [obj1 integerValue];
+//                NSInteger n2 = [obj2 integerValue];
+//                if (n1>n2) {
+//                    return NSOrderedDescending;
+//                } else if (n1<n2) {
+//                    return NSOrderedAscending;
+//                } else {
+//                    return NSOrderedSame;
+//                }
+//            }];
+//            [tableView reloadData];
+//        }];
+//    }
+}
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block{
     //TODO
     NSParameterAssert([_person isMe]);

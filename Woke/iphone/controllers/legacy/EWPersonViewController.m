@@ -11,35 +11,37 @@
 #import "EWPersonViewController.h"
 // Util
 #import "EWUIUtil.h"
-#import "UIViewController+Blur.h"
 #import "NSDate+Extend.h"
+#import "UIView+Extend.h"
 
 // Model
 #import "EWPerson.h"
 #import "EWAlarm.h"
-#import "EWMedia.h"
-#import "NSDate+Extend.h"
-#import "EWAchievement.h"
+//#import "EWMedia.h"
+//#import "EWAchievement.h"
+#import "EWAccountManager.h"
 
 //manager
 #import "EWAlarmManager.h"
 #import "EWPersonManager.h"
-#import "EWMediaManager.h"
+//#import "EWMediaManager.h"
 #import "EWCachedInfoManager.h"
-#import "EWNotificationManager.h"
+//#import "EWNotificationManager.h"
 #import "PFFacebookUtils.h"
 
 //view
 #import "EWRecordingViewController.h"
-//#import "EWLogInViewController.h"
+#import "EWLogInViewController.h"
 #import "EWFriendsViewController.h"
-#import "EWBlurNavigationControllerDelegate.h"
 #import "EWSettingsViewController.h"
-#import "GKImagePicker.h"
+
+//blur
+#import "EWBlurNavigationControllerDelegate.h"
+#import "UIViewController+Blur.h"
+
 // ImageBrowser
+#import "GKImagePicker.h"
 #import "IDMPhotoBrowser.h"
-#import "UIView+Extend.h"
-#import "EWAccountManager.h"
 
 #define kProfileTableArray              @[@"Friends", @"People woke me up", @"People I woke up", @"Last Seen", @"Next wake-up time", @"Wake-ability Score", @"Average wake up time"]
 
@@ -58,37 +60,10 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 @end
 
 @interface EWPersonViewController (UITableView) <UITableViewDataSource, UITableViewDelegate>
-
 @end
-
-@interface EWPersonViewController (UICollectionViewAdditions) <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-
-@end
-
 
 @implementation EWPersonViewController
-
-@synthesize person, taskTableView;
-//@synthesize collectionView;
-@synthesize tabView;
-
-- (EWPersonViewController *)initWithPerson:(EWPerson *)p{
-    NSParameterAssert(p);
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        self.person = p;
-    }
-    return self;
-}
-
-
-//- (void)setPerson:(EWPerson *)p{
-//    //[self.view showLoopingWithTimeout:0];
-//    person = p;
-//    [self initData];
-//    [self initView];
-//    //[EWUIUtil dismissHUDinView:self.view];
-//}
+@synthesize person;
 
 
 - (void)viewDidLoad {
@@ -98,25 +73,19 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     stats = [[EWCachedInfoManager alloc] init];
     self.activities = [NSDictionary new];
     profileItemsArray = kProfileTableArray;
-
-    //login event
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedIn:) name:EWAccountDidLoginNotification object:nil];
     
     //table view
-    taskTableView.dataSource = self;
-    taskTableView.delegate = self;
-    taskTableView.backgroundColor = [UIColor clearColor];
-    taskTableView.backgroundView = nil;
-    UINib *taskNib = [UINib nibWithNibName:@"EWTaskHistoryCell" bundle:nil];
-    [taskTableView registerNib:taskNib forCellReuseIdentifier:taskCellIdentifier];
-    [EWUIUtil applyAlphaGradientForView:taskTableView withEndPoints:@[@0.10]];
-    //taskTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
-    
-    //tab view
-    tabView.selectedSegmentIndex = 0;//initial tab
+    _tableView.dataSource = self;
+    _tableView.delegate = self;
+    _tableView.backgroundColor = [UIColor clearColor];
+    _tableView.backgroundView = nil;
+    //UINib *taskNib = [UINib nibWithNibName:@"EWTaskHistoryCell" bundle:nil];
+    //[tableView registerNib:taskNib forCellReuseIdentifier:taskCellIdentifier];
+    [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.10]];
+    //tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
     
     //default state
-    [EWUIUtil applyHexagonSoftMaskForView:self.profilePic];
+    [EWUIUtil applyHexagonSoftMaskForView:self.picture];
     self.name.text = @"";
     self.location.text = @"";
     self.statement.text = @"";
@@ -129,14 +98,10 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //navigation
-    [EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MoreButton"] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
 
     if (!person.isMe && person.isOutDated) {
-        NSLog(@"Person %@ is outdated and needs refresh in background", person.name);
-        
-
+        DDLogInfo(@"Person %@ is outdated and needs refresh in background", person.name);
         [person refreshShallowWithCompletion:^(NSError *error){
             [self initData];
             [self initView];
@@ -161,27 +126,8 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 return NSOrderedSame;
             }
         }];
-        if (person.isMe) {
-            if (!_activities || _activities.count != person.activities.count) {
-                [[EWCachedInfoManager myManager] updateActivityCacheWithCompletion:^{
-                    _activities = person.cachedInfo[kActivityCache];
-                    dates = _activities.allKeys;
-                    dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-                        NSInteger n1 = [obj1 integerValue];
-                        NSInteger n2 = [obj2 integerValue];
-                        if (n1>n2) {
-                            return NSOrderedDescending;
-                        } else if (n1<n2) {
-                            return NSOrderedAscending;
-                        } else {
-                            return NSOrderedSame;
-                        }
-                    }];
-                    [taskTableView reloadData];
-                }];
-            }
-        }
         
+        //TODO: improve stats manager structure
         stats.person = person;
         
         if (!_photos) {
@@ -198,10 +144,8 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     //======= Person =======
     
     
-    if (!person.isMe) {//other user
-        [self.loginBtn setTitle:@"" forState:UIControlStateNormal];
-//        self.loginBtn.hidden = YES;
-        
+    if (!person.isMe) {
+        //other user
         if (person.isFriend) {
             [self.addFriend setImage:[UIImage imageNamed:@"FriendedIcon"] forState:UIControlStateNormal];
         }else if (person.friendWaiting){
@@ -215,18 +159,11 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         
     }else{//self
         self.addFriend.hidden = YES;
-        if(![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]){
-            
-            [self.loginBtn setTitle:@"Log in" forState:UIControlStateNormal];
-            
-        }else{
-            
-            [self.loginBtn setTitle:@"Edit" forState:UIControlStateNormal];
-        }
     }
-    [taskTableView reloadData];
+    
+    [_tableView reloadData];
     //UI
-    self.profilePic.image = person.profilePic;
+    [self.picture setImage:person.profilePic forState:UIControlStateNormal];
     self.name.text = person.name;
     self.location.text = person.city;
     if (person.location && !person.isMe) {
@@ -237,25 +174,24 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
             self.location.text =[NSString stringWithFormat:@"%@ | ",person.city];
             self.location.text = [self.location.text stringByAppendingString:[NSString stringWithFormat:@"%1.f km",distance]];
         }
-        else
-        {
+        else {
             self.location.text = [NSString stringWithFormat:@"%1.f km",distance];
         }
-        //            self.location.text = [NSString stringWithFormat:@"%@ | %.1f km", person.city, distance];
-        
     }
     
     //statement
-    EWAlarm *alarm = [EWPerson myCurrentAlarm];
     NSString *str;
-    if (alarm.statement) {
-        str = alarm.statement;
+    if (person.statement) {
+        str = person.statement;
     }
     else{
         str = @"No statement written";
     }
     self.statement.text = [NSString stringWithFormat:@"\"%@\"",str];
     
+    //next alarm
+    NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
+    self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString];
 }
 
 
@@ -282,9 +218,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 - (IBAction)close:(id)sender {
     if ([[self.navigationController viewControllers] objectAtIndex:0] == self || !self.navigationController) {
-        [self.navigationController
-        dismissBlurViewControllerWithCompletionHandler:NULL];
-
+        [self.navigationController dismissBlurViewControllerWithCompletionHandler:NULL];
     }else{
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -323,26 +257,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
     
     [self presentViewController:_photoBrower animated:YES completion:nil];
-}
-
-- (void)userLoggedIn:(NSNotification *)note{
-    //
-}
-
-- (IBAction)tabTapped:(UISegmentedControl *)sender {
-    if (sender.selectedSegmentIndex == 0) {
-//        taskTableView.contentInset = UIEdgeInsetsMake(0, 0, 200, 0);
-        taskTableView.tableHeaderView = nil;
-    }
-    else
-    {
-        taskTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
-
-    }
-    
-    [taskTableView reloadData];
-    
-
 }
 
 
@@ -452,47 +366,14 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 #pragma mark - TableView DataSource
 
 @implementation EWPersonViewController(UITableView)
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    return @"XXXX";
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     //alarm shown in sections
-//    return tasks.count;
-    NSInteger tapItem =  [tabView selectedSegmentIndex];
-    switch (tapItem) {
-        case 0:
-            return 1;
-        case 1:
-            return _activities.count;
-        default:
-            return 0;
-            break;
-    }
-    
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tabView.selectedSegmentIndex==0) {
-         return profileItemsArray.count;
-    }
-    else
-    {
-        return 3;
-        
-    }
-    return 0;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tabView.selectedSegmentIndex == 0) {
-        return 40;
-    }
-    else
-    {
-        return 45;
-    }
+    
+    return profileItemsArray.count;
 }
 
 
@@ -501,7 +382,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     
-    if (tabView.selectedSegmentIndex == 0){
+    //if (tabView.selectedSegmentIndex == 0){
         //summary
         UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:profileCellIdentifier];
         if (!cell) {
@@ -530,12 +411,12 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 break;
             case 2:
             {
-                NSArray *medias = [[EWMediaManager sharedInstance] mediaCreatedByPerson:person];
+                NSArray *medias = person.sentMedias.allObjects;
+                cell.textLabel.text = male? @"People he woke up":@"People she woke up";
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (unsigned long)medias.count];
-                if (!person.isMe) {
-                    cell.textLabel.text = male? @"People he woke up":@"People she woke up";
+                if (person.isMe) {
+                    cell.textLabel.text = @"People I woke up";
                 }
-                
             }
                 break;
             case 3://last seen, get it async
@@ -549,15 +430,12 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         date = person.parseObject.updatedAt;
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            blockCell.accessoryView = nil;
+                            __strong UITableViewCell *strongCell = blockCell;
+                            strongCell.accessoryView = nil;
                             [loader stopAnimating];
-                            if (blockCell) {
-                                blockCell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ago", date.timeElapsedString];
-                            }
-                            
+                            strongCell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ago", date.timeElapsedString];
                         });
                     });
-                    
                 }else{
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ago", date.timeElapsedString];
                 }
@@ -586,69 +464,69 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         }
         
         return cell;
-    }else if (tabView.selectedSegmentIndex == 1) {
-        //activities
-        
-        NSDictionary *activity = _activities[dates[indexPath.section]];
-        
-        UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:activitiyCellIdentifier];
-        
-        if (!cell) {
-            
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:activitiyCellIdentifier];
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.textLabel.font = [UIFont systemFontOfSize:17];
-            
-        }
-        switch (indexPath.row) {
-            case 0:{
-                NSDate *time = activity[kActivityTime];
-                NSDate *completed = activity[kWokeTime];
-                if (!completed) {
-                    completed = [time timeByAddingMinutes:kMaxWakeTime];
-                }
-                float elapsed = [completed timeIntervalSinceDate:time];
-                if (completed && elapsed < kMaxWakeTime) {
-                    
-                    cell.textLabel.text = [NSString stringWithFormat:@"Woke up at %@ (%@)", completed.date2String, completed.timeElapsedString];
-                }
-                else
-                {
-                    cell.textLabel.numberOfLines = 0;
-                    cell.textLabel.text = [NSString stringWithFormat:@"Failed to wake up at %@",[time date2String]];
-
-                }
-                
-            }
-                break;
-                
-            case 1:{
-                NSArray *wokeBy = activity[kWokeBy];
-                if ([wokeBy isEqual: @0]) {
-                    wokeBy = [NSArray new];
-                }
-                cell.textLabel.text = [NSString stringWithFormat:@"Helped by %ld people", (unsigned long)[wokeBy count]];
-            }
-                break;
-            case 2:{
-                //advanced query
-                NSArray *wokeTo = activity[kWokeTo];
-                if ([wokeTo isEqual: @0]) {
-                    wokeTo = [NSArray new];
-                }
-                cell.textLabel.text = [NSString stringWithFormat:@"Woke up %lu people",(unsigned long)[wokeTo count]];
-
-                break;
-            }
-            default:
-                break;
-        }
-        
-        return cell;
-        
-    }
-    return nil;
+//    }else if (tabView.selectedSegmentIndex == 1) {
+//        //activities
+//        
+//        NSDictionary *activity = _activities[dates[indexPath.section]];
+//        
+//        UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:activitiyCellIdentifier];
+//        
+//        if (!cell) {
+//            
+//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:activitiyCellIdentifier];
+//            cell.textLabel.textColor = [UIColor lightGrayColor];
+//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            cell.textLabel.font = [UIFont systemFontOfSize:17];
+//            
+//        }
+//        switch (indexPath.row) {
+//            case 0:{
+//                NSDate *time = activity[kActivityTime];
+//                NSDate *completed = activity[kWokeTime];
+//                if (!completed) {
+//                    completed = [time timeByAddingMinutes:kMaxWakeTime];
+//                }
+//                float elapsed = [completed timeIntervalSinceDate:time];
+//                if (completed && elapsed < kMaxWakeTime) {
+//                    
+//                    cell.textLabel.text = [NSString stringWithFormat:@"Woke up at %@ (%@)", completed.date2String, completed.timeElapsedString];
+//                }
+//                else
+//                {
+//                    cell.textLabel.numberOfLines = 0;
+//                    cell.textLabel.text = [NSString stringWithFormat:@"Failed to wake up at %@",[time date2String]];
+//
+//                }
+//                
+//            }
+//                break;
+//                
+//            case 1:{
+//                NSArray *wokeBy = activity[kWokeBy];
+//                if ([wokeBy isEqual: @0]) {
+//                    wokeBy = [NSArray new];
+//                }
+//                cell.textLabel.text = [NSString stringWithFormat:@"Helped by %ld people", (unsigned long)[wokeBy count]];
+//            }
+//                break;
+//            case 2:{
+//                //advanced query
+//                NSArray *wokeTo = activity[kWokeTo];
+//                if ([wokeTo isEqual: @0]) {
+//                    wokeTo = [NSArray new];
+//                }
+//                cell.textLabel.text = [NSString stringWithFormat:@"Woke up %lu people",(unsigned long)[wokeTo count]];
+//
+//                break;
+//            }
+//            default:
+//                break;
+//        }
+//        
+//        return cell;
+//        
+//    }
+//    return nil;
     
 }
 
@@ -661,10 +539,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 //tap cell
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    //return if it is not at the first tab
-    if ([tabView selectedSegmentIndex] != 0) {
-        return;
-    }
     
     UIViewController *controller ;
     switch (indexPath.row) {
@@ -677,9 +551,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 [self.navigationController pushViewController:controller animated:YES];
                 return;
             }
-      
         }
-        
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -796,13 +668,11 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     if (person.isMe) {
         // 结束时候保存一次
         [EWPerson me].images = _photos;
-        [EWSync save];
+        [person save];
     }
 }
 
 #pragma mark - Upload Photo
-
-
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     
@@ -910,7 +780,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         [_photos addObject:fileUrl];
         
         [EWPerson me].images = _photos;
-        [EWSync save];
+        [person save];
         
         [EWUIUtil dismissHUDinView:_photoBrower.view];
         
