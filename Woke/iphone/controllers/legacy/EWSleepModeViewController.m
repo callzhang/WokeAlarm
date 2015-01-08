@@ -15,6 +15,7 @@
 #import "EWActivity.h"
 #import "UIViewController+Blur.h"
 #import "EWWakeUpManager.h"
+#import "EWCachedInfoManager.h"
 
 @interface EWSleepModeViewController (){
     NSTimer *timer;
@@ -43,7 +44,7 @@
 	
 	NSDate *cachedNextTime = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:[EWPerson me]];
 	if (![cachedNextTime isEqualToDate:currentActivity.time]) {
-		[[EWAlarmManager sharedInstance] updateCachedAlarmTimes];
+		[[EWCachedInfoManager sharedInstance] updateCachedAlarmTimes];
 	}
     
     self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
