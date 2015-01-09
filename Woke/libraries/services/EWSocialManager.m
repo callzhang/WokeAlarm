@@ -61,7 +61,7 @@
     EWAssertMainThread
     EWPerson *me = [EWPerson me];
     
-    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline?:[NSMutableDictionary new];
+    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline.mutableCopy?:[NSMutableDictionary new];
     //diff
     NSMutableSet *allFriendsInTimeline = [NSMutableSet new];
     NSMutableSet *allFriends = [me.friends mutableSetValueForKey:kParseObjectID];
@@ -80,8 +80,8 @@
     }
     //save
     friendsActivityDic[dateKey] = [friendedSet allObjects];
-    me.socialGraph.friendshipTimeline = friendsActivityDic;
-    [EWSync save];
+    me.socialGraph.friendshipTimeline = friendsActivityDic.copy;
+    [me.socialGraph save];
 }
 
 

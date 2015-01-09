@@ -631,11 +631,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                         NSString *className = relation.destinationEntity.name;
                         EWServerObject *SO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:localContext];
 						if (relation.isToMany) {
-							NSMutableSet *related = [localMe valueForKey:key];
+							NSMutableSet *related = [localMe valueForKey:relationName];
 							[related removeObject:SO];
-							[localMe setValue:related forKey:key];
+							[localMe setValue:related forKey:relationName];
 						} else {
-							[localMe setValue:nil forKey:key];
+							[localMe setValue:nil forKey:relationName];
 						}
                     }];
                     return;

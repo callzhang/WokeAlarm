@@ -9,6 +9,7 @@
 #define kModelViewPresent       101
 #define kModelViewDismiss       102
 #define kGPUImageViewTag        201
+#define kBackgroundImageTag     804
 
 #import <Foundation/Foundation.h>
 

@@ -11,6 +11,8 @@
 #import "EWPersonManager.h"
 #import "EWAlarmManager.h"
 #import "EWAlarm.h"
+#import "EWPersonViewController.h"
+#import "UIViewController+Blur.h"
 
 @interface EWWakeViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
@@ -47,7 +49,14 @@
 - (IBAction)onWakeHerButton:(id)sender {
 }
 
-- (void)setNextWake:(EWPerson *)nextWakee {
+- (IBAction)profile:(id)sender {
+    EWPersonViewController *vc = (EWPersonViewController *)[[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWPersonViewController class])];
+    //vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    vc.person = _nextWakee;
+    [self presentViewControllerWithBlurBackground:vc];
+}
+
+- (void)setNextWakee:(EWPerson *)nextWakee {
     _nextWakee = nextWakee;
     
     self.profileImageView.image = nextWakee.profilePic;

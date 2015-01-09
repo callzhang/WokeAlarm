@@ -38,7 +38,7 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 	}
 	
 	//hide status bar
-	[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+	//[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 
 	[self presentViewController:viewController animated:YES completion:block];
 
@@ -56,6 +56,7 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 
 }
 
+//automatic presenting: if already has presented view, dismiss it first
 - (void)presentWithBlur:(UIViewController *)controller withCompletion:(VoidBlock)completion{
 	if (self.presentedViewController) {
 		if ([self.presentedViewController isKindOfClass:[controller class]]) {

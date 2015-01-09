@@ -102,7 +102,12 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //navigation
-	self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    if (self.navigationController) {
+        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    }else{
+        [EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
+        //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
+    }
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MoreButton"] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
 
     if (!person.isMe && person.isOutDated) {
@@ -232,12 +237,15 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 }
 
 - (IBAction)close:(id)sender {
-    if ([[self.navigationController viewControllers] objectAtIndex:0] == self || !self.navigationController) {
-        [self.navigationController dismissBlurViewControllerWithCompletionHandler:NULL];
-    }else{
-        [self.navigationController popViewControllerAnimated:YES];
+    if (self.navigationController) {
+        if ([[self.navigationController viewControllers] objectAtIndex:0] == self || !self.navigationController) {
+            [self.navigationController dismissBlurViewControllerWithCompletionHandler:NULL];
+        }else{
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }else if (self.presentingViewController){
+        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
     }
-    
 }
 
 - (IBAction)login:(id)sender {
@@ -581,27 +589,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-//    if (tabView.selectedSegmentIndex == 0) {
-//        
-//        return  [[UIView alloc] initWithFrame:CGRectZero];
-//        
-//    }else if (tabView.selectedSegmentIndex == 1){
-//        
-//        NSDictionary *activity = _taskActivity[dates[section]];
-//        NSDate *time = activity[kTaskTime];
-//        
-//        EWActivityHeadView *headView = [[EWActivityHeadView alloc]initWithFrame:CGRectMake(0, 0, 320, 80)];
-//        headView.titleLabel.text = [time date2dayString];
-//    
-//        return headView;
-//    }
-    
-    return nil;
 }
 
 

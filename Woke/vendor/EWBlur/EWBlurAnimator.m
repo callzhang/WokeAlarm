@@ -86,6 +86,10 @@ static const CGFloat initialDownSampling = 2;
     toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     toViewController.view.backgroundColor = [UIColor clearColor];
+	UIView *img = [toViewController.view viewWithTag:kBackgroundImageTag];
+	if ([img isKindOfClass:[UIImageView class]]) {
+		[img removeFromSuperview];
+	}
     if ([toViewController isKindOfClass:[UINavigationController class]]) {
         UINavigationController *nav = (UINavigationController *)toViewController;
         nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
