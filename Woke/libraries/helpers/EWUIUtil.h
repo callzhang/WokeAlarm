@@ -65,7 +65,9 @@
 
 + (void)applyAlphaGradientForView:(UIView *)view withEndPoints:(NSArray *)locations;
 
-+ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc withLeftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem;
++ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc;
+
++ (void)addNavigationButtonsForViewController:(UIViewController *)vc backButton:(UIButton *)leftBtn rightButton:(UIButton *)rightBtn;
 
 //+ (NSString *)getStringFromTime:(float)time;
 

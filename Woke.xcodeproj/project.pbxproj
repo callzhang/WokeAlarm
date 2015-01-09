@@ -45,7 +45,6 @@
 		096AAAD31A195A3900B4CBFF /* NSDate+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA931A195A3900B4CBFF /* NSDate+Extend.m */; };
 		096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA951A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m */; };
 		096AAAD51A195A3900B4CBFF /* NSString+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA971A195A3900B4CBFF /* NSString+Extend.m */; };
-		096AAAD61A195A3900B4CBFF /* UIView+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA991A195A3900B4CBFF /* UIView+Blur.m */; };
 		096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA9B1A195A3900B4CBFF /* UIView+Extend.m */; };
 		096AAAD81A195A3900B4CBFF /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA9D1A195A3900B4CBFF /* UIView+Layout.m */; };
 		096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAA61A195A3900B4CBFF /* EWUIUtil.m */; };
@@ -1394,7 +1393,6 @@
 				9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */,
 				9BF1816A1A37FF0800D25DBA /* EWWaveformView.m in Sources */,
 				09DF4F7E1A1434AF00BEA328 /* EWNotification.m in Sources */,
-				096AAAD61A195A3900B4CBFF /* UIView+Blur.m in Sources */,
 				09DF4F881A1434AF00BEA328 /* _EWMediaFile.m in Sources */,
 				09A087151A425DC200FCE9FA /* EWSleepingViewController.m in Sources */,
 				9B840A201A1705CE00D6C2A3 /* EWSocial.m in Sources */,

@@ -321,7 +321,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 graph.facebookUpdated = [NSDate date];
 
                 //save
-                [EWSync save];
+                [graph save];
             }
 
         } else {
@@ -512,7 +512,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         } else {
             DDLogWarn(@"%@", err.debugDescription);
         }
-        [EWSync save];
+        [[EWPerson me] save];
     }];
 }
 
@@ -521,16 +521,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         DDLogWarn(@"Override location for person: %@", person.name);
     }
     CLGeocoder *geoloc = [[CLGeocoder alloc] init];
-    [person.managedObjectContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *localPerson = [person MR_inContext:localContext];
-        [geoloc geocodeAddressString:[NSString stringWithFormat:@"%@, %@", localPerson.city, localPerson.country]  completionHandler:^(NSArray *placemarks, NSError *error) {
-            if (placemarks.count) {
-                CLPlacemark *pm = placemarks.firstObject;
-                CLLocation *loc = pm.location;
-                localPerson.location = loc;
-                DDLogInfo(@"Get proxymate location: %@", loc);
-            }
-        }];
+    [geoloc geocodeAddressString:[NSString stringWithFormat:@"%@, %@", person.city, person.country]  completionHandler:^(NSArray *placemarks, NSError *error) {
+        if (placemarks.count) {
+            CLPlacemark *pm = placemarks.firstObject;
+            CLLocation *loc = pm.location;
+            person.location = loc;
+            DDLogInfo(@"Get proxymate location: %@", loc);
+            [person save];
+        }
     }];
 }
 

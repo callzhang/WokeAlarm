@@ -202,8 +202,6 @@ static const CGFloat initialDownSampling = 2;
     self.blurFilter.downsampling = initialDownSampling + _progress * 4;
     self.blurFilter.blurRadiusInPixels = 1 + _progress * 9;
     [self triggerRenderOfNextFrame];
-    
-	NSAssert(!self.interactive, @"Interactive transition is not supported");
 	
     if ((self.type == UINavigationControllerOperationPush || self.type == kModelViewPresent)) {
 		if (_progress>0) {
@@ -226,7 +224,9 @@ static const CGFloat initialDownSampling = 2;
         if (self.type == UINavigationControllerOperationPop) {
 			[[self.context containerView] addSubview:toView];
 			self.imageView.alpha = 0;
-        }
+		}else{
+			[self.imageView removeFromSuperview];
+		}
 		
 		//make toView visible
 		toView.alpha = 1;
@@ -297,7 +297,10 @@ static const CGFloat initialDownSampling = 2;
 
 	}
     self.displayLink.paused = YES;
-	[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+	if (self.type == UINavigationControllerOperationPop || self.type == kModelViewDismiss) {
+		[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+	}
+	
 }
 
 @end

@@ -105,7 +105,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     if (self.navigationController) {
         self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
     }else{
-        [EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
+        [EWUIUtil addNavigationButtonsForViewController:self backButton:nil rightButton:nil];
         //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
     }
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MoreButton"] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
@@ -315,6 +315,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 - (IBAction)wake:(id)sender {
 	//wake
+    [self close:sender];
 }
 
 #pragma mark - Actionsheet

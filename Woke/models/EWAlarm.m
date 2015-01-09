@@ -326,7 +326,7 @@
                 if ([sleep.fireDate isEqualToDate:sleepTime]) {
                     sleepNotificationScheduled = YES;
                 }else{
-                    DDLogError(@"Found sleep notification with incorrect time %@, should be %@. (%@)", sleep.fireDate, sleepTime, sleepTime.mt_stringFromDateWithFullWeekdayTitle);
+                    DDLogError(@"Found sleep notification with incorrect time %@, should be %@.", sleep.fireDate.date2detailDateString, sleepTime.date2detailDateString);
                     [[UIApplication sharedApplication] cancelLocalNotification:sleep];
                 }
                 

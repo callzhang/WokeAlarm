@@ -53,7 +53,7 @@
     EWPersonViewController *vc = (EWPersonViewController *)[[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWPersonViewController class])];
     //vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     vc.person = _nextWakee;
-    [self presentViewControllerWithBlurBackground:vc];
+    [self.navigationController presentViewControllerWithBlurBackground:vc];
 }
 
 - (void)setNextWakee:(EWPerson *)nextWakee {
@@ -61,8 +61,8 @@
     
     self.profileImageView.image = nextWakee.profilePic;
     self.nameLabel.text = nextWakee.name;
-    EWAlarm *nextAlarm = [[EWAlarmManager sharedInstance] currentAlarmForPerson:nextWakee];
-    self.wantsToWakeUpAtLabel.text = [NSString stringWithFormat:@"wants to wake up at %@", [nextAlarm.time mt_stringFromDateWithHourAndMinuteFormat:MTDateHourFormat12Hour]];
-    self.statusLabel.text = nextAlarm.statement;
+    NSDate *nextTime = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:nextWakee];
+    self.wantsToWakeUpAtLabel.text = [NSString stringWithFormat:@"wants to wake up at %@", [nextTime mt_stringFromDateWithHourAndMinuteFormat:MTDateHourFormat12Hour]];
+    self.statusLabel.text = [[EWAlarmManager sharedInstance] nextStatementForPerson:nextWakee];
 }
 @end
