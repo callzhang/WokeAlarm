@@ -168,8 +168,8 @@
 
 
 - (void)requestFriend:(EWPerson *)person{
-    [self addFriendsObject:person];
-    [self updateMyCachedFriends];
+    //[self addFriendsObject:person];
+    //[self updateMyCachedFriends];
     [EWNotificationManager sendFriendRequestNotificationToUser:person];
     
     [self save];
@@ -177,7 +177,7 @@
 
 - (void)acceptFriend:(EWPerson *)person{
     [self addFriendsObject:person];
-    [self updateMyCachedFriends];
+    //[self updateMyCachedFriends];
     [EWNotificationManager sendFriendAcceptNotificationToUser:person];
     
     [self save];
@@ -185,42 +185,13 @@
 
 - (void)unfriend:(EWPerson *)person{
     [self removeFriendsObject:person];
-    [self updateMyCachedFriends];
+    //[self updateMyCachedFriends];
     [self save];
 }
 
-- (void)updateMyCachedFriends{
-    [[EWCachedInfoManager myManager] updateCachedFriends];
-}
-
-//- (void)updateMyFriends {
-//    NSArray *friendsCached = self.cachedInfo[kCachedFriends]?:[NSArray new];
-//    NSSet *friends = self.friends;
-//    BOOL friendsNeedUpdate = self.isMe && friendsCached.count !=self.friends.count;
-//    if (!friends || friendsNeedUpdate) {
-//        
-//        DDLogInfo(@"Friends mismatch, fetch from server");
-//        
-//        //friend need update
-//        PFQuery *q = [PFQuery queryWithClassName:self.serverClassName];
-//        [q includeKey:@"friends"];
-//        [q whereKey:kParseObjectID equalTo:self.serverID];
-//        PFObject *user = [[EWSync findServerObjectWithQuery:q] firstObject];
-//        NSArray *friendsPO = user[@"friends"];
-//        if (friendsPO.count == 0) return;//prevent 0 friend corrupt data
-//        NSMutableSet *friendsMO = [NSMutableSet new];
-//        for (PFObject *f in friendsPO) {
-//            if ([f isKindOfClass:[NSNull class]]) {
-//                continue;
-//            }
-//            EWPerson *mo = (EWPerson *)[f managedObjectInContext:self.managedObjectContext];
-//            [friendsMO addObject:mo];
-//        }
-//        self.friends = [friendsMO copy];
-//        if (self.isMe) {
-//            [EWPerson updateMyCachedFriends];
-//        }
-//    }
+//- (void)updateMyCachedFriends{
+//    [[EWCachedInfoManager shared] updateCachedFriends];
 //}
+
 @end
 

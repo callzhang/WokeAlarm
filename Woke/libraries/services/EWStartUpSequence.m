@@ -87,10 +87,8 @@
     DDLogVerbose(@"3. Check alarm");
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
-    DDLogVerbose(@"4. Check my unread media");//media also will be checked with background fetch
-    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:^(NSArray *array) {
-        DDLogInfo(@"Found %ld new media", array.count);
-    }];
+    DDLogVerbose(@"4. Start cache management");
+    [[EWCachedInfoManager shared] startAutoCacheUpdateForPerson:[EWPerson me]];
     
     DDLogVerbose(@"5. Updating facebook friends");
     [[EWAccountManager sharedInstance] updateMyFacebookInfo];
