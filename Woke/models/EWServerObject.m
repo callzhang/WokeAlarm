@@ -15,8 +15,9 @@
 }
 
 - (void)remove{
+    NSManagedObjectContext *context = self.managedObjectContext;
     [self MR_deleteEntity];
-    [EWSync save];
+    [context MR_saveToPersistentStoreWithCompletion:NULL];
 }
 
 - (NSString *)serverID{
@@ -42,8 +43,16 @@
         //add sync block
         [[EWSync sharedInstance] addSaveCallback:resultBlock forManagedObjectID:self.objectID];
         //save
-        [EWSync save];
-    }else{
+        [self save];
+    }
+    else if(self.changedKeys.count){
+        [EWSync saveWithCompletion:^{
+            if (block) {
+                block(self.parseObject, nil);
+            }
+        }];
+    }
+    else{
         if (block) {
             block(self.parseObject, nil);
         }

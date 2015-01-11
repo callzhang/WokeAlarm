@@ -40,7 +40,7 @@
 
 @interface EWCachedInfoManager : NSObject
 
-@property (nonatomic) EWPerson *person;
+@property (nonatomic) EWPerson *currentPerson;
 @property (nonatomic) NSArray *activities;
 @property (nonatomic) NSNumber *aveWakingLength;
 @property (nonatomic) NSString *aveWakingLengthString;
@@ -51,10 +51,10 @@
 @property (nonatomic) NSString *wakabilityStr;
 
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
-+ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)person;
-+ (EWCachedInfoManager *)myManager;
+//+ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)person;
 
 //cachedInfo management
+- (void)startAutoCacheUpdateForPerson:(EWPerson *)person;
 - (void)checkCachedActivity;
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block;
 - (void)updateCachedFriends;

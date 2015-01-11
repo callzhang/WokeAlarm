@@ -133,6 +133,8 @@ static const CGFloat initialDownSampling = 2;
         self.blurImage = [[GPUImagePicture alloc] initWithImage:fromViewImage];
         [self.blurImage addTarget:self.zoomFilter];
 		//[self.zoomFilter addTarget:self.blendFilter];
+		
+		//update first frame so the transition will be smoother
 		[self updateFrame:nil];
         
         //trigger GPU rendering
@@ -297,10 +299,12 @@ static const CGFloat initialDownSampling = 2;
 
 	}
     self.displayLink.paused = YES;
-	if (self.type == UINavigationControllerOperationPop || self.type == kModelViewDismiss) {
+}
+
+- (void)dealloc{
+	if (self.displayLink) {
 		[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
 	}
-	
 }
 
 @end

@@ -22,7 +22,7 @@
 //The manager should monitor my activities and update the statistics automatically
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
-+ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)p{
+- (void)startAutoCacheUpdateForPerson:(EWPerson *)p{
     
     if (p.isMe) {
         //newest on top
@@ -36,39 +36,31 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
                 
                 //observe activities
                 [myManager.KVOController observe:p keyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-                    DDLogInfo(@"Activity changed detected and statistics updated");
+                    DDLogVerbose(@"CachedManager detected Activity change,  detected and statistics updated");
                     [myManager updateStatistics];
                     [myManager updateActivityCacheWithCompletion:nil];
                 }];
                 
                 //observer friends
                 [myManager.KVOController observe:p keyPath:EWPersonRelationships.friends options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+                    DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends");
                     [myManager updateCachedFriends];
                 }];
 
             });
         }
-        return myManager;
         
     }else{
         
-        EWCachedInfoManager *manager = [EWCachedInfoManager new];
-        manager.person = p;
-        [manager getStatsFromCache];
-        
-        return manager;
+        DDLogError(@"%s Person passed in is not me!", __func__);
     }
-    return nil;
 }
 
-+ (EWCachedInfoManager *)myManager{
-    return [EWCachedInfoManager managerWithPerson:[EWPerson me]];
-}
 
 - (void)getStatsFromCache{
     
     //load cached info
-    NSDictionary *stats = self.person.cachedInfo[kStatsCache];
+    NSDictionary *stats = self.currentPerson.cachedInfo[kStatsCache];
     self.aveWakingLength = stats[kAveWakeLength];
     self.aveWakeUpTime = stats[kAveWakeTime];
     self.successRate = stats[kSuccessRate];
@@ -76,7 +68,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 }
 
 - (void)setStatsToCache{
-    NSMutableDictionary *cache = self.person.cachedInfo.mutableCopy;
+    NSMutableDictionary *cache = self.currentPerson.cachedInfo.mutableCopy;
     NSMutableDictionary *stats = [cache[kStatsCache] mutableCopy]?:[NSMutableDictionary new];
     
     stats[kAveWakeLength] = self.aveWakingLength;
@@ -85,8 +77,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     stats[kWakeability] = self.wakability;
     
     cache[kStatsCache] = stats;
-    self.person.cachedInfo = cache;
-    [EWSync save];
+    self.currentPerson.cachedInfo = cache;
+    [self.currentPerson save];
 }
 
 - (void)updateStatistics{
@@ -218,30 +210,30 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 #pragma mark - Update Activity
 - (void)checkCachedActivity{
     
-//    if (!self.activities || self.activities.count != [EWPerson me].activities.count) {
-//        [[EWCachedInfoManager myManager] updateActivityCacheWithCompletion:^{
-//            self.activities = [EWPerson me].cachedInfo[kActivityCache];
-//            dates = _activities.allKeys;
-//            dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-//                NSInteger n1 = [obj1 integerValue];
-//                NSInteger n2 = [obj2 integerValue];
-//                if (n1>n2) {
-//                    return NSOrderedDescending;
-//                } else if (n1<n2) {
-//                    return NSOrderedAscending;
-//                } else {
-//                    return NSOrderedSame;
-//                }
-//            }];
-//            [tableView reloadData];
-//        }];
-//    }
+    if (!self.activities || self.activities.count != [EWPerson me].activities.count) {
+        [[EWCachedInfoManager myManager] updateActivityCacheWithCompletion:^{
+            self.activities = [EWPerson me].cachedInfo[kActivityCache];
+            dates = _activities.allKeys;
+            dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+                NSInteger n1 = [obj1 integerValue];
+                NSInteger n2 = [obj2 integerValue];
+                if (n1>n2) {
+                    return NSOrderedDescending;
+                } else if (n1<n2) {
+                    return NSOrderedAscending;
+                } else {
+                    return NSOrderedSame;
+                }
+            }];
+            [tableView reloadData];
+        }];
+    }
 }
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block{
     //TODO
-    NSParameterAssert([_person isMe]);
+    //NSParameterAssert([_person isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *localPerson = [_person MR_inContext:localContext];
+        EWPerson *localPerson = [_currentPerson MR_inContext:localContext];
         NSArray *activities = [localPerson.activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];//newest on top
         
         NSSet *medias = localPerson.sentMedias;

@@ -61,26 +61,26 @@
     EWAssertMainThread
     EWPerson *me = [EWPerson me];
     
-    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline.mutableCopy?:[NSMutableDictionary new];
+    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline?:[NSMutableDictionary new];
     //diff
-    NSMutableSet *allFriendsInTimeline = [NSMutableSet new];
-    NSMutableSet *allFriends = [me.friends mutableSetValueForKey:kParseObjectID];
+    NSMutableSet *existingFriendIDsInTimeline = [NSMutableSet new];
+    NSMutableSet *allFriendIDs = [[me.friends valueForKey:kParseObjectID] mutableCopy];
     for (NSArray *friends in friendsActivityDic.allValues) {
-        [allFriendsInTimeline addObjectsFromArray:friends];
+        [existingFriendIDsInTimeline addObjectsFromArray:friends];
     }
-    [allFriends minusSet:allFriendsInTimeline];
+    [allFriendIDs minusSet:existingFriendIDsInTimeline];
     //get friends for today
     NSString *dateKey = [NSDate date].date2YYMMDDString;
     NSArray *friendedArray = friendsActivityDic[dateKey]?:[NSArray new];
     NSMutableSet *friendedSet = [NSMutableSet setWithArray:friendedArray];;
     //add new friends
-    [friendedSet setByAddingObjectsFromSet:allFriends];
+    [friendedSet setByAddingObjectsFromSet:allFriendIDs];
     if (friendedSet.count == 0) {
         return;
     }
     //save
     friendsActivityDic[dateKey] = [friendedSet allObjects];
-    me.socialGraph.friendshipTimeline = friendsActivityDic.copy;
+    me.socialGraph.friendshipTimeline = friendsActivityDic;
     [me.socialGraph save];
 }
 

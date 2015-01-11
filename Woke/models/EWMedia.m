@@ -108,7 +108,7 @@
                 }
             }];
         }];
-    }else{
+    }else if(!file.audio){
         [file refreshInBackgroundWithCompletion:^(NSError *error){
             if (block) {
 				BOOL hasFile = self.mediaFile.audio != nil;
@@ -121,8 +121,7 @@
 
 #pragma mark - DELETE
 - (void)remove{
-    [self MR_deleteEntity];
-    [EWSync save];
+    [super remove];
 }
 
 #pragma mark - Underlying data

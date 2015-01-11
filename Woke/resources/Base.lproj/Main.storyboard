@@ -1090,7 +1090,7 @@
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Xwo-Q3-Shc">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <view key="tableFooterView" contentMode="scaleToFill" id="yJy-dQ-Ted">
+                                <view key="tableHeaderView" contentMode="scaleToFill" id="yJy-dQ-Ted">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="219"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
@@ -1127,7 +1127,7 @@
                                                 <constraint firstAttribute="width" constant="100" id="mOL-T3-90i"/>
                                                 <constraint firstAttribute="height" constant="100" id="uck-gb-qJK"/>
                                             </constraints>
-                                            <state key="normal" title="Button" image="1">
+                                            <state key="normal" title="Button" image="10">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
@@ -1183,6 +1183,15 @@
                                         <constraint firstItem="Diy-Sh-ZB5" firstAttribute="top" secondItem="tDD-T6-Yyg" secondAttribute="bottom" constant="1" id="yxB-9w-cvC"/>
                                     </constraints>
                                 </view>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="IBX-bu-Bx3">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IBX-bu-Bx3" id="DZj-95-zlJ">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -1735,7 +1744,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="1" width="128" height="128"/>
+        <image name="10" width="128" height="128"/>
         <image name="alarm-dots" width="6" height="40"/>
         <image name="stary night" width="640" height="1136"/>
         <image name="woke-alarm-arrow-right" width="9" height="15"/>

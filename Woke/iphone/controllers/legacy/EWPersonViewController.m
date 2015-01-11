@@ -85,7 +85,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     _tableView.delegate = self;
     _tableView.backgroundColor = [UIColor clearColor];
 	_tableView.backgroundView = nil;
-	[self.tableView setTableHeaderView:self.headerView];
+    
     //UINib *taskNib = [UINib nibWithNibName:@"EWTaskHistoryCell" bundle:nil];
     //[tableView registerNib:taskNib forCellReuseIdentifier:taskCellIdentifier];
 	//[EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.10]];
@@ -158,8 +158,9 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     if (!person.isMe) {
         //other user
         if (person.isFriend) {
-            [self.addFriend setImage:[UIImage imageNamed:@"FriendedIcon"] forState:UIControlStateNormal];
+            [self.addFriend setImage:[UIImage imageNamed:@"Friended Icon"] forState:UIControlStateNormal];
         }else if (person.friendWaiting){
+            //TODO: change to friend waiting button
             [self.addFriend setImage:[UIImage imageNamed:@"Add Friend Button"] forState:UIControlStateNormal];
         }else if(person.friendPending){
             [self.addFriend setImage:[UIImage imageNamed:@"Add Friend Button"] forState:UIControlStateNormal];
@@ -178,6 +179,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 	
     //UI
     [self.picture setImage:person.profilePic forState:UIControlStateNormal];
+    self.picture.contentMode = UIViewContentModeScaleAspectFill;
     self.name.text = person.name;
     self.location.text = person.city;
     if (person.location && !person.isMe) {
@@ -217,7 +219,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 #pragma mark - UI Events
 //this is the button next to profile pic
-- (IBAction)extProfile:(id)sender{
+- (IBAction)addFriend:(id)sender{
     if (person.isMe) {
         //this button is hidden
         return;
@@ -248,41 +250,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
 }
 
-- (IBAction)login:(id)sender {
-    
-    if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
-        //EWLogInViewController *loginVC = [[EWLogInViewController alloc] init];
-        //[loginVC connect:nil];
-        return;
-        
-    }
-    
-    NSMutableArray *urlArray = [person.images mutableCopy];
-    
-    if (!urlArray) {
-        urlArray = [[NSMutableArray alloc] init];
-    }
-    
-    [urlArray insertObject:person.profilePic atIndex:0];
-    _photoBrower = [[IDMPhotoBrowser alloc] initWithPhotoURLs:urlArray];
-    
-    _photoBrower.delegate = self;
-    
-    if (person.isMe) {
-        
-        _photoBrower.actionButtonTitles = @[@"Uplode from library",@"Upload from taking photo",@"delete this image",@"Set this as profile"];
-        
-     
-    }else{
-        
-        _photoBrower.displayActionButton = NO;
-        
-    }
-    
-    [self presentViewController:_photoBrower animated:YES completion:nil];
-}
-
-
 - (IBAction)more:(id)sender {
     UIActionSheet *sheet;
     if (person.isMe) {
@@ -309,10 +276,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 	//show photo
 }
 
-- (IBAction)addFriend:(id)sender {
-	//add friend
-}
-
 - (IBAction)wake:(id)sender {
 	//wake
     [self close:sender];
@@ -320,12 +283,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 #pragma mark - Actionsheet
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    
- 
-    
     NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
-    
-
     
     if ([title isEqualToString:@"Add friend"]) {
         

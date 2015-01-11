@@ -172,7 +172,7 @@
     [self updateMyCachedFriends];
     [EWNotificationManager sendFriendRequestNotificationToUser:person];
     
-    [EWSync save];
+    [self save];
 }
 
 - (void)acceptFriend:(EWPerson *)person{
@@ -180,13 +180,13 @@
     [self updateMyCachedFriends];
     [EWNotificationManager sendFriendAcceptNotificationToUser:person];
     
-    [EWSync save];
+    [self save];
 }
 
 - (void)unfriend:(EWPerson *)person{
     [self removeFriendsObject:person];
     [self updateMyCachedFriends];
-    [EWSync save];
+    [self save];
 }
 
 - (void)updateMyCachedFriends{
