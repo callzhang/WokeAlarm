@@ -6,8 +6,6 @@
 
 //new
 + (EWMedia *)newMedia;
-//delete
-- (void)remove;
 //search
 + (EWMedia *)getMediaByID:(NSString *)mediaID;
 //validate

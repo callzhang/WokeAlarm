@@ -244,16 +244,16 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
             NSDate *bod = activity.time.beginingOfDay;
             
             //woke to receivers
-            NSSet *wokeTo = [localMe.sentMedias filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"%K < %@ & %K > %@", EWServerObjectAttributes.updatedAt, eod, EWServerObjectAttributes.updatedAt, bod]];
+            NSSet *wokeTo = [localMe.sentMedias filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"%K < %@ AND %K > %@", EWServerObjectAttributes.updatedAt, eod, EWServerObjectAttributes.updatedAt, bod]];
             //woke by sender
             NSArray *wokeBy = activity.mediaIDs;
             NSDictionary *activityLog;
             @try {
                 activityLog = @{kActivityType: activity.type,
                                 kActivityTime: activity.time?:@0,
-                                kWokeTime: activity.completed?:@0,
-                                               kWokeTo: wokeTo.allObjects,
-                                               kWokeBy: wokeBy};
+                                    kWokeTime: activity.completed?:@0,
+                                        kWokeTo: wokeTo.allObjects,
+                                kWokeBy: wokeBy?:@0};
                 
                 //activityCache[dateKey] = activityLog;
             }
@@ -270,10 +270,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 }
 
 - (void)updateCachedFriends{
-    NSArray *friends = [[EWPerson me].friends valueForKey:kParseObjectID];
+    NSSet *friends = [[EWPerson me].friends valueForKey:kParseObjectID];
     NSDictionary *cache = [EWPerson me].cachedInfo;
     NSArray *cachedFriends = cache[kCachedFriends]?:[NSArray new];
-    if (![friends isEqualToArray:cachedFriends]) {
+    if (![friends.allObjects isEqualToArray:cachedFriends]) {
         [EWPerson me].cachedInfo = [cache setValue:friends forImmutableKeyPath:@[kCachedFriends]];
         [[EWPerson me] save];
     }
