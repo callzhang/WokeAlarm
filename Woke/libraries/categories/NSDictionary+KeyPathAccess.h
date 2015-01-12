@@ -17,6 +17,6 @@
  *
  *  @return a new NSDictionary instance
  */
-- (instancetype)setValue:(id)value forImmutableKeyPath:(NSString *)keyPath;
-- (instancetype)addValue:(id)value toArrayAtImmutableKeyPath:(NSString *)keyPath;
+- (instancetype)setValue:(id)value forImmutableKeyPath:(NSArray *)firstPath;
+- (instancetype)addValue:(id)value toImmutableKeyPath:(NSArray *)firstPath;
 @end

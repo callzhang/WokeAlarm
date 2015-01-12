@@ -76,7 +76,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 	}
     
     //data source
-    stats = [[EWCachedInfoManager alloc] init];
+    stats = [EWCachedInfoManager shared];
     self.activities = [NSDictionary new];
     profileItemsArray = kProfileTableArray;
     
@@ -138,9 +138,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 return NSOrderedSame;
             }
         }];
-        
-        //TODO: improve stats manager structure
-        stats.person = person;
         
         if (!_photos) {
             _photos = [[NSMutableArray alloc] init];

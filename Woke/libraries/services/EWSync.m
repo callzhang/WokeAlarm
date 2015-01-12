@@ -126,7 +126,7 @@ NSManagedObjectContext *mainContext;
     EWAssertMainThread
     if([mainContext hasChanges]){
         NSLog(@"There is still some change, save and do it later");
-        [EWSync save];
+        [mainContext MR_saveToPersistentStoreAndWait];
         return;
     }
     
@@ -197,7 +197,7 @@ NSManagedObjectContext *mainContext;
             
             //remove changed record
             NSMutableSet *changes = self.changedRecords[localMO.objectId];
-			self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:localMO.objectId];
+			self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.objectId]];
             DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
             
             //remove from queue
@@ -315,7 +315,7 @@ NSManagedObjectContext *mainContext;
             if (changedKeys.count > 0) {
                 
                 //add changed keys to record
-				self.changedRecords = [self.changedRecords addValue:changedKeys toArrayAtImmutableKeyPath:SO.objectId];
+				self.changedRecords = [self.changedRecords addValue:changedKeys toImmutableKeyPath:@[SO.objectId]];
 				
                 //add to queue
                 [self appendUpdateQueue:SO];
@@ -684,7 +684,7 @@ NSManagedObjectContext *mainContext;
 
 + (void)saveWithCompletion:(EWSavingCallback)block{
     [[EWSync sharedInstance].saveCallbacks addObject:block];
-    [EWSync save];
+    [mainContext MR_saveToPersistentStoreAndWait];
     [[EWSync sharedInstance] uploadToServer];
 }
 

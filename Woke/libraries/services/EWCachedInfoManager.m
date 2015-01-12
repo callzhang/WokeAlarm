@@ -1,9 +1,9 @@
 //
 //  EWStatisticsManager.m
-//  EarlyWorm
+//  WokeAlarm
 //
 //  Created by Lei on 1/8/14.
-//  Copyright (c) 2014 Shens. All rights reserved.
+//  Copyright (c) 2014 Woke. All rights reserved.
 //
 
 #import "EWCachedInfoManager.h"
@@ -12,72 +12,71 @@
 #import "EWMedia.h"
 #import "EWActivity.h"
 #import "EWActivityManager.h"
-
-//#import <KVOController/NSObject+FBKVOController.h>
 #import <KVOController/FBKVOController.h>
 #import "EWAlarm.h"
+#import "NSDictionary+KeyPathAccess.h"
 
 @implementation EWCachedInfoManager
 //TODO: There is unfinished work
 //The manager should monitor my activities and update the statistics automatically
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
-- (void)startAutoCacheUpdateForPerson:(EWPerson *)p{
+//for me
+- (void)startAutoCacheUpdateForMe{
+    NSAssert(self == [EWCachedInfoManager shared], @"Self is not the shared instance!");
+    EWAssertMainThread
     
-    if (p.isMe) {
-        //newest on top
-        static EWCachedInfoManager *myManager;
-        if (!myManager) {
-            static dispatch_once_t onceToken;
-            dispatch_once(&onceToken, ^{
-                myManager = [EWCachedInfoManager new];
-                
-                myManager.activities = [EWPerson myActivities];
-                
-                //observe activities
-                [myManager.KVOController observe:p keyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-                    DDLogVerbose(@"CachedManager detected Activity change,  detected and statistics updated");
-                    [myManager updateStatistics];
-                    [myManager updateActivityCacheWithCompletion:nil];
-                }];
-                
-                //observer friends
-                [myManager.KVOController observe:p keyPath:EWPersonRelationships.friends options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-                    DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends");
-                    [myManager updateCachedFriends];
-                }];
-
-            });
-        }
-        
-    }else{
-        
-        DDLogError(@"%s Person passed in is not me!", __func__);
-    }
+    //set me
+    self.currentPerson = [EWPerson me];
+    
+    //observe activities
+    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        DDLogVerbose(@"CachedManager detected Activity change,  detected and statistics updated");
+        [self updateStatistics];
+        [self updateActivityCacheWithCompletion:nil];
+    }];
+    
+    //observer friends
+    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends");
+        [self updateCachedFriends];
+    }];
+    
+    //update stats then update stats
+    [self updateActivityCacheWithCompletion:^{
+        [self updateStatistics];
+    }];
 }
 
+//for others
++ (instancetype)managerForPerson:(EWPerson *)person{
+    NSParameterAssert(!person.isMe);
+    EWCachedInfoManager *manager = [EWCachedInfoManager new];
+    manager.currentPerson = person;
+    [manager loadStatsFromCache];
+    return manager;
+}
 
-- (void)getStatsFromCache{
-    
+- (void)loadStatsFromCache{
+
     //load cached info
     NSDictionary *stats = self.currentPerson.cachedInfo[kStatsCache];
-    self.aveWakingLength = stats[kAveWakeLength];
-    self.aveWakeUpTime = stats[kAveWakeTime];
-    self.successRate = stats[kSuccessRate];
-    self.wakability = stats[kWakeability];
+    self.aveWakingLength = stats[kAveWakeLength]?:@kMaxWakeTime;
+    self.aveWakeUpTime = stats[kAveWakeTime]?:@0;
+    self.successRate = stats[kSuccessRate]?:@0;
+    self.wakability = stats[kWakeability]?:@0;
 }
 
 - (void)setStatsToCache{
-    NSMutableDictionary *cache = self.currentPerson.cachedInfo.mutableCopy;
-    NSMutableDictionary *stats = [cache[kStatsCache] mutableCopy]?:[NSMutableDictionary new];
+    NSParameterAssert(_currentPerson.isMe);
+    NSMutableDictionary *stats = [NSMutableDictionary new];
     
     stats[kAveWakeLength] = self.aveWakingLength;
     stats[kAveWakeTime] = self.aveWakeUpTime;
     stats[kSuccessRate] = self.successRate;
     stats[kWakeability] = self.wakability;
     
-    cache[kStatsCache] = stats;
-    self.currentPerson.cachedInfo = cache;
+    [[self class] setCachedInfoWithValue:stats forKeyPath:@[kStatsCache]];
     [self.currentPerson save];
 }
 
@@ -94,11 +93,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         return _aveWakingLength;
     }
     
-    if (_activities.count) {
+    if (_currentPerson.activities.count) {
         NSInteger totalTime = 0;
         NSUInteger wakes = 0;
         
-        for (EWActivity *activity in self.activities) {
+        for (EWActivity *activity in self.currentPerson.activities) {
             
             wakes++;
             NSInteger length;
@@ -132,12 +131,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         return _successRate;
     }
     
-    if (_activities.count) {
+    if (_currentPerson.activities.count) {
         float rate = 0.0;
         float wakes = 0;
         float totalWakes = 0;
         
-        for (EWActivity *activity in self.activities) {
+        for (EWActivity *activity in self.currentPerson.activities) {
             if ([activity.type isEqualToString:EWActivityTypes.alarm]) {
                 totalWakes++;
                 if (activity.completed && [activity.completed timeIntervalSinceDate:activity.time] < kMaxWakeTime) {
@@ -166,7 +165,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         return _wakability;
     }
     
-    if (_activities.count) {
+    if (_currentPerson.activities.count) {
         double ratio = MIN(self.aveWakingLength.integerValue / kMaxWakabilityTime, 1);
         double level = 10 - ratio*10;
         _wakability = [NSNumber numberWithDouble:level];
@@ -187,11 +186,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         return _aveWakeUpTime;
     }
     
-    if (_activities.count) {
+    if (_currentPerson.activities.count) {
         NSInteger totalTime = 0;
         NSUInteger wakes = 0;
         
-        for (EWActivity *activity in self.activities) {
+        for (EWActivity *activity in self.currentPerson.activities) {
             
             wakes++;
             totalTime += activity.time.minutesFrom5am;
@@ -207,113 +206,77 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 }
 
 
-#pragma mark - Update Activity
-- (void)checkCachedActivity{
-    
-    if (!self.activities || self.activities.count != [EWPerson me].activities.count) {
-        [[EWCachedInfoManager myManager] updateActivityCacheWithCompletion:^{
-            self.activities = [EWPerson me].cachedInfo[kActivityCache];
-            dates = _activities.allKeys;
-            dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-                NSInteger n1 = [obj1 integerValue];
-                NSInteger n2 = [obj2 integerValue];
-                if (n1>n2) {
-                    return NSOrderedDescending;
-                } else if (n1<n2) {
-                    return NSOrderedAscending;
-                } else {
-                    return NSOrderedSame;
-                }
-            }];
-            [tableView reloadData];
-        }];
-    }
-}
+#pragma mark - Update cache
+//Snapshot activity cache and save to cachedInfo (Unused)
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block{
-    //TODO
+    
     //NSParameterAssert([_person isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *localPerson = [_currentPerson MR_inContext:localContext];
-        NSArray *activities = [localPerson.activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];//newest on top
+        EWPerson *localMe = [EWPerson meInContext:localContext];
+        NSArray *activities = [localMe.activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];//newest on top
         
-        NSSet *medias = localPerson.sentMedias;
-        NSMutableDictionary *cache = localPerson.cachedInfo.mutableCopy;
-        NSMutableDictionary *activityCache = [cache[kActivityCache] mutableCopy]?:[NSMutableDictionary new];
+        NSDictionary *activityCache = localMe.cachedInfo[kActivityCache];
+        
+        //check if update is necessary
         if (activityCache.count == activities.count) {
-            NSLog(@"=== cached activities count is same as past _activity count (%ld)", (long)activities.count);
+            DDLogVerbose(@"=== cached activities count is same as past _activity count (%ld)", (long)activities.count);
             return;
         }
         
-        for (NSUInteger i =0; i<activities.count; i++) {
+        for (EWActivity *activity in activities) {
+            
+            NSString *dateKey = activity.time.date2YYMMDDString;
+            //check if we need to update
+            if (activityCache[dateKey]) continue;
+            
             //start from the newest task
-            EWActivity *_activity = activities[i];
-            if ([_activity.type isEqualToString:EWActivityTypes.media]) {
+            if ([activity.type isEqualToString:EWActivityTypes.alarm]) {
                 NSDate *wakeTime;
-                //NSArray *wokeTo;
                 
-                
-                if (_activity.completed && [_activity.completed timeIntervalSinceDate:_activity.time] < kMaxWakeTime) {
-                    wakeTime = _activity.completed;
+                if (activity.completed && [activity.completed timeIntervalSinceDate:activity.time] < kMaxWakeTime) {
+                    wakeTime = activity.completed;
                 }else{
-                    wakeTime = [_activity.time dateByAddingTimeInterval:kMaxWakeTime];
-                }
-                
-                NSDate *eod = _activity.time.endOfDay;
-                NSDate *bod = _activity.time.beginingOfDay;
-                
-                //woke to receivers
-                NSSet *wokeTo = [medias filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"%K < %@ & %K > %@", EWServerObjectAttributes.updatedAt, eod, EWServerObjectAttributes.updatedAt, bod]];
-                
-                
-                //woke by sender
-                NSArray *wokeBy = [NSArray new];
-                NSMutableArray *senders = [NSMutableArray new];
-                for (EWMedia *m in _activity.medias) {
-                    NSString *sender = m.author.objectId;
-                    if (!sender) continue;
-                    [senders addObject:sender];
-                }
-                wokeBy = senders.copy;
-                
-                @try {
-                    NSDictionary *taskActivity = @{kActivityType: _activity.type,
-                                                   kActivityTime: _activity.time,
-                                                   kWokeTime: wakeTime,
-                                                   kWokeTo: wokeTo.allObjects,
-                                                   kWokeBy: wokeBy};
-                    
-                    NSString *dateKey = _activity.time.date2YYMMDDString;
-                    activityCache[dateKey] = taskActivity;
-                }
-                @catch (NSException *exception) {
-                    NSLog(@"*** Failed to generate activity: %@", exception.description);
+                    wakeTime = [activity.time dateByAddingTimeInterval:kMaxWakeTime];
+                    activity.completed = wakeTime;
                 }
             }
+            NSDate *eod = activity.time.endOfDay;
+            NSDate *bod = activity.time.beginingOfDay;
             
+            //woke to receivers
+            NSSet *wokeTo = [localMe.sentMedias filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"%K < %@ & %K > %@", EWServerObjectAttributes.updatedAt, eod, EWServerObjectAttributes.updatedAt, bod]];
+            //woke by sender
+            NSArray *wokeBy = activity.mediaIDs;
+            NSDictionary *activityLog;
+            @try {
+                activityLog = @{kActivityType: activity.type,
+                                kActivityTime: activity.time?:@0,
+                                kWokeTime: activity.completed?:@0,
+                                               kWokeTo: wokeTo.allObjects,
+                                               kWokeBy: wokeBy};
+                
+                //activityCache[dateKey] = activityLog;
+            }
+            @catch (NSException *exception) {
+                NSLog(@"*** Failed to generate activity: %@", exception.description);
+                continue;
+            }
             
-            
+            localMe.cachedInfo = [localMe.cachedInfo setValue:activityLog forImmutableKeyPath:@[kActivityCache, dateKey]];
+            NSLog(@"activity activity cache updated on %@", dateKey);
         }
-        
-        cache[kActivityCache] = [activityCache copy];
-        localPerson.cachedInfo = [cache copy];
-        
-        NSLog(@"_activity activity cache updated with %lu records", (unsigned long)activityCache.count);
-
-    } completion:^(BOOL success, NSError *error) {
-        NSLog(@"Finished updating activity cache");
-        if (block) {
-            block();
-        }
-    }];
+    } ];
     
 }
 
 - (void)updateCachedFriends{
     NSArray *friends = [[EWPerson me].friends valueForKey:kParseObjectID];
-    NSMutableDictionary *cache = [[EWPerson me].cachedInfo mutableCopy];
-    cache[kCachedFriends] = friends;
-    [EWPerson me].cachedInfo = cache;
-    
+    NSDictionary *cache = [EWPerson me].cachedInfo;
+    NSArray *cachedFriends = cache[kCachedFriends]?:[NSArray new];
+    if (![friends isEqualToArray:cachedFriends]) {
+        [EWPerson me].cachedInfo = [cache setValue:friends forImmutableKeyPath:@[kCachedFriends]];
+        [[EWPerson me] save];
+    }
 }
 
 - (void)updateCachedAlarmTimes{
@@ -326,5 +289,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 	for (EWAlarm *alarm in [EWPerson me].alarms) {
 		[alarm updateCachedStatement];
 	}
+}
+
+#pragma mark - Helper
++ (void)setCachedInfoWithValue:(id)value forKeyPath:(NSArray *)keyPathArray{
+    EWAssertMainThread
+    [EWPerson me].cachedInfo = [[EWPerson me].cachedInfo setValue:value forImmutableKeyPath:keyPathArray];
+    [[EWPerson me] save];
 }
 @end

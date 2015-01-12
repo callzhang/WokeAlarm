@@ -43,13 +43,6 @@
     return alarm;
 }
 
-#pragma mark - DELETE
-- (void)remove{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmDelete object:self userInfo:nil];
-    [self MR_deleteEntity];
-    [EWSync save];
-}
-
 + (void)deleteAll{
     //delete
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -190,8 +183,7 @@
     EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
     NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
-    NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedAlarmTimes, wkday];
-    me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:path];
+    me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:@[kCachedStatements, wkday]];
 
     [me save];
     DDLogVerbose(@"Updated cached alarm times: %@ on %@", self.time.nextOccurTime, wkday);
@@ -201,8 +193,7 @@
     EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
     NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
-    NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedStatements, wkday];
-    me.cachedInfo = [cache setValue:self.statement forImmutableKeyPath:path];
+    me.cachedInfo = [cache setValue:self.statement forImmutableKeyPath:@[kCachedStatements, wkday]];
     [me save];
     DDLogVerbose(@"Updated cached statements: %@ on %@", self.statement, wkday);
 }

@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
 //  The statisticsManager managers stats of person, and activity logs. Both of which stores in EWPerson's cachedInfo.
+//  For current user, the manager must be initiated with shared instance, and then call startAutoCacheUpdateForPerson to start update cache automatically
+//  For other user, it is a instance that extract helpful info from Person's cachedInfo. We should use "managerForPerson" to init the manager.
 
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
@@ -41,7 +43,6 @@
 @interface EWCachedInfoManager : NSObject
 
 @property (nonatomic) EWPerson *currentPerson;
-@property (nonatomic) NSArray *activities;
 @property (nonatomic) NSNumber *aveWakingLength;
 @property (nonatomic) NSString *aveWakingLengthString;
 @property (nonatomic) NSString *aveWakeUpTime;
@@ -51,13 +52,19 @@
 @property (nonatomic) NSString *wakabilityStr;
 
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
-//+ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)person;
++ (instancetype)managerForPerson:(EWPerson *)person;
 
 //cachedInfo management
-- (void)startAutoCacheUpdateForPerson:(EWPerson *)person;
-- (void)checkCachedActivity;
+- (void)startAutoCacheUpdateForMe;
+/**
+ * Snapshot activity cache and save to cachedInfo 
+ @attention Currently the cached activities are unused 
+ */
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block;
 - (void)updateCachedFriends;
 - (void)updateCachedAlarmTimes;
 - (void)updateCachedStatements;
+
+//Helper
++ (void)setCachedInfoWithValue:(id)value forKeyPath:(NSArray *)keyPathArray;
 @end

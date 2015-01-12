@@ -88,7 +88,7 @@
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
     DDLogVerbose(@"4. Start cache management");
-    [[EWCachedInfoManager shared] startAutoCacheUpdateForPerson:[EWPerson me]];
+    [[EWCachedInfoManager shared] startAutoCacheUpdateForMe];
     
     DDLogVerbose(@"5. Updating facebook friends");
     [[EWAccountManager sharedInstance] updateMyFacebookInfo];

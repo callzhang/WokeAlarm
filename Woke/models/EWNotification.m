@@ -50,8 +50,8 @@
     }];
     
     if (notification) {
-        notification.userInfo = [notification.userInfo addValue:media.objectId toArrayAtImmutableKeyPath:@"medias"];
-        [EWSync save];
+        notification.userInfo = [notification.userInfo addValue:media.objectId toImmutableKeyPath:@[@"medias"]];
+        [notification save];
         return notification;
     }
 
@@ -67,19 +67,13 @@
                 return;
             }
             note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
-            [EWSync save];
+            [note save];
         }];
     }else{
         note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
-        [EWSync save];
+        [note save];
     }
     return note;
-}
-
-- (void)remove {
-    DDLogInfo(@"Notification of type %@ deleted", self.type);
-    [self MR_deleteEntity];
-    [EWSync save];
 }
 
 - (BOOL)validate{
