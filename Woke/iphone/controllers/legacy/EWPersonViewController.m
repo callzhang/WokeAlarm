@@ -17,16 +17,12 @@
 // Model
 #import "EWPerson.h"
 #import "EWAlarm.h"
-//#import "EWMedia.h"
-//#import "EWAchievement.h"
 #import "EWAccountManager.h"
 
 //manager
 #import "EWAlarmManager.h"
 #import "EWPersonManager.h"
-//#import "EWMediaManager.h"
 #import "EWCachedInfoManager.h"
-//#import "EWNotificationManager.h"
 #import "PFFacebookUtils.h"
 
 //view
@@ -43,6 +39,7 @@
 #import "GKImagePicker.h"
 #import "IDMPhotoBrowser.h"
 #import "APTimeZones.h"
+#import "EWNotificationManager.h"
 
 #define kProfileTableArray              @[@"Friends", @"People woke me up", @"People I woke up", @"Last Seen", @"Next wake-up time", @"Wake-ability Score", @"Average wake up time"]
 
@@ -50,8 +47,9 @@
 NSString *const taskCellIdentifier = @"taskCellIdentifier";
 NSString *const profileCellIdentifier = @"ProfileCell";
 NSString *const activitiyCellIdentifier = @"ActivityCell";
-@interface EWPersonViewController()<GKImagePickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, IDMPhotoBrowserDelegate>{
-    NSArray *dates;
+@interface EWPersonViewController()<GKImagePickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, IDMPhotoBrowserDelegate> {
+    EWCachedInfoManager *statsManager;
+    NSArray *profileItemsArray;
 }
 @property (strong,nonatomic)GKImagePicker *imagePicker;
 @property (strong,nonatomic)NSMutableArray *photos;
@@ -76,7 +74,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 	}
     
     //data source
-    stats = [EWCachedInfoManager shared];
+    statsManager = [EWCachedInfoManager managerForPerson:person];
     self.activities = [NSDictionary new];
     profileItemsArray = kProfileTableArray;
     
@@ -124,20 +122,19 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 - (void)initData {
     if (person) {
-        //tasks = [[EWTaskStore sharedInstance] pastTasksByPerson:person];
-        _activities = person.cachedInfo[kActivityCache];
-        dates = _activities.allKeys;
-        dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-            NSInteger n1 = [obj1 integerValue];
-            NSInteger n2 = [obj2 integerValue];
-            if (n1>n2) {
-                return NSOrderedDescending;
-            } else if (n1<n2) {
-                return NSOrderedAscending;
-            } else {
-                return NSOrderedSame;
-            }
-        }];
+//        _activities = person.cachedInfo[kActivityCache];
+//        dates = _activities.allKeys;
+//        dates = [dates sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+//            NSInteger n1 = [obj1 integerValue];
+//            NSInteger n2 = [obj2 integerValue];
+//            if (n1>n2) {
+//                return NSOrderedDescending;
+//            } else if (n1<n2) {
+//                return NSOrderedAscending;
+//            } else {
+//                return NSOrderedSame;
+//            }
+//        }];
         
         if (!_photos) {
             _photos = [[NSMutableArray alloc] init];
@@ -231,6 +228,9 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         [[[UIAlertView alloc] initWithTitle:@"Friendship pending" message:@"You have already requested friendship to this person." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
     }else{
         UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Add friend", nil];
+#ifdef DEBUG
+        [as addButtonWithTitle:@"Generate friendship request from this user"];
+#endif
         [as showInView:self.view];
     }
 }
@@ -336,6 +336,10 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         
         [sheet showInView:self.view];
     }
+    else if ([title isEqualToString:@"Generate friendship request from this user"]){
+        //test function
+        [EWNotificationManager generateFriendRequestFrom:person];
+    }
         
     [self initView];
 }
@@ -358,21 +362,15 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 
 @implementation EWPersonViewController(UITableView)
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    //alarm shown in sections
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
     return profileItemsArray.count;
 }
 
-
-
 //display cell
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    
     //if (tabView.selectedSegmentIndex == 0){
         //summary
         UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:profileCellIdentifier];
@@ -391,7 +389,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (unsigned long)person.friends.count];
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 break;
-            case 1:
+            case 1://received medias
             {
                 NSArray *receivedMedias = person.receivedMedias.allObjects;
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (unsigned long)receivedMedias.count];
@@ -433,7 +431,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 
                 break;
             }
-            case 4://next task time
+            case 4://next alarm time
             {
                 NSDate *date = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
                 cell.detailTextLabel.text = [[date time2HMMSS] stringByAppendingString:[date date2am]];
@@ -441,13 +439,13 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
             }
             case 5://wake-ability
             {
-                cell.detailTextLabel.text =  stats.wakabilityStr;
+                cell.detailTextLabel.text =  statsManager.wakabilityStr;
                 break;
             }
                 
             case 6://average wake up time
             {
-                cell.detailTextLabel.text =  stats.aveWakingLengthString;
+                cell.detailTextLabel.text =  statsManager.aveWakingLengthString;
             }
                 
             default:
@@ -455,69 +453,6 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         }
         
         return cell;
-//    }else if (tabView.selectedSegmentIndex == 1) {
-//        //activities
-//        
-//        NSDictionary *activity = _activities[dates[indexPath.section]];
-//        
-//        UITableViewCell *cell = [table dequeueReusableCellWithIdentifier:activitiyCellIdentifier];
-//        
-//        if (!cell) {
-//            
-//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:activitiyCellIdentifier];
-//            cell.textLabel.textColor = [UIColor lightGrayColor];
-//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//            cell.textLabel.font = [UIFont systemFontOfSize:17];
-//            
-//        }
-//        switch (indexPath.row) {
-//            case 0:{
-//                NSDate *time = activity[kActivityTime];
-//                NSDate *completed = activity[kWokeTime];
-//                if (!completed) {
-//                    completed = [time timeByAddingMinutes:kMaxWakeTime];
-//                }
-//                float elapsed = [completed timeIntervalSinceDate:time];
-//                if (completed && elapsed < kMaxWakeTime) {
-//                    
-//                    cell.textLabel.text = [NSString stringWithFormat:@"Woke up at %@ (%@)", completed.date2String, completed.timeElapsedString];
-//                }
-//                else
-//                {
-//                    cell.textLabel.numberOfLines = 0;
-//                    cell.textLabel.text = [NSString stringWithFormat:@"Failed to wake up at %@",[time date2String]];
-//
-//                }
-//                
-//            }
-//                break;
-//                
-//            case 1:{
-//                NSArray *wokeBy = activity[kWokeBy];
-//                if ([wokeBy isEqual: @0]) {
-//                    wokeBy = [NSArray new];
-//                }
-//                cell.textLabel.text = [NSString stringWithFormat:@"Helped by %ld people", (unsigned long)[wokeBy count]];
-//            }
-//                break;
-//            case 2:{
-//                //advanced query
-//                NSArray *wokeTo = activity[kWokeTo];
-//                if ([wokeTo isEqual: @0]) {
-//                    wokeTo = [NSArray new];
-//                }
-//                cell.textLabel.text = [NSString stringWithFormat:@"Woke up %lu people",(unsigned long)[wokeTo count]];
-//
-//                break;
-//            }
-//            default:
-//                break;
-//        }
-//        
-//        return cell;
-//        
-//    }
-//    return nil;
     
 }
 

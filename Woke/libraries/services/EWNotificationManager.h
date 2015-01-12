@@ -32,4 +32,5 @@
 //Send
 + (void)sendFriendRequestNotificationToUser:(EWPerson *)person;
 + (void)sendFriendAcceptNotificationToUser:(EWPerson *)person;
++ (void)generateFriendRequestFrom:(EWPerson *)person;
 @end

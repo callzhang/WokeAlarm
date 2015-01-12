@@ -44,7 +44,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 -(EWPerson *)getPersonByServerID:(NSString *)ID{
     EWAssertMainThread
     if(!ID) return nil;
-    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:@"EWPerson" withID:ID error:nil];
+    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:NSStringFromClass([EWPerson class]) withID:ID error:nil];
     
     return person;
 }

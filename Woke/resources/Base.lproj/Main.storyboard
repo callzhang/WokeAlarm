@@ -1942,6 +1942,7 @@
                             </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PUK-qr-7Bs">
                                 <rect key="frame" x="0.0" y="33" width="320" height="140"/>
+                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="0.35999999999999999" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="140" id="rfM-yg-lsB"/>
                                 </constraints>

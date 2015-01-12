@@ -596,7 +596,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     //send to cloud
     [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *POGraph, NSError *error) {
-        DDLogInfo(@"Server returned sync info: %@", POGraph);
+        DDLogInfo(@"Server returned sync info keys: %@", POGraph.allKeys);
         if (error) {
             block(error);
             return;
