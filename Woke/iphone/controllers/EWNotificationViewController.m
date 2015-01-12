@@ -15,7 +15,6 @@
 
 #import "EWNotificationCell.h"
 #import "UIView+Layout.h"
-#import "EWBaseViewController.h"
 
 #define kNotificationCellIdentifier     @"NotificationCellIdentifier"
 
@@ -49,6 +48,7 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.1];
     self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.tableView.backgroundColor = [UIColor clearColor];
     //[EWUIUtil applyAlphaGradientForView:self.tableView withEndPoints:@[@0.13]];
     UINib *nib = [UINib nibWithNibName:@"EWNotificationCell" bundle:nil];
     [self.tableView registerNib:nib forCellReuseIdentifier:kNotificationCellIdentifier];
@@ -75,7 +75,7 @@
     [super viewDidAppear:animated];
     
     //refresh
-    if ([EWSession sharedSession].currentUser.isOutDated) {
+    if ([EWPerson me].isOutDated) {
         [self refresh:nil];
     }
 }
