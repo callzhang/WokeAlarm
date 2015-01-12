@@ -135,32 +135,36 @@
 }
 
 - (void)loadAddressBookCompletion:(void (^)(NSArray *contacts, NSError *error))completion {
-    [self.addressBook loadContactsOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSArray *contacts, NSError *error) {
-        DDLogInfo(@"got contacts: %@", contacts);
-        NSArray *mapContacts = [contacts bk_map:^id(APContact *obj) {
-            NSDictionary *contact = @{
-                                      @"firstName": obj.firstName,
-                                      @"middleName": obj.middleName,
-                                      @"lastName": obj.lastName,
-                                      @"emails": obj.emails,
-                                      @"recordID": obj.recordID,
-                                      @"socialProfiles": obj.socialProfiles,
-                                      @"phones": obj.phones,
-                                      @"phonesWithLabels": obj.phonesWithLabels
-                                      };
-            
-            return contact;
-        }];
-        
-        //FIXME: set address book friends to person object?
-        [EWPerson mySocialGraph].addressBookFriends = mapContacts;
-        
-        [EWSync save];
-        
+    
+    //FIXME: enable this shit
+    
+//    [self.addressBook loadContactsOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSArray *contacts, NSError *error) {
+//        DDLogInfo(@"got contacts: %@", contacts);
+//        NSArray *mapContacts = [contacts bk_map:^id(APContact *obj) {
+//            NSDictionary *contact = @{
+//                                      @"firstName": obj.firstName,
+//                                      @"middleName": obj.middleName,
+//                                      @"lastName": obj.lastName,
+//                                      @"emails": obj.emails,
+//                                      @"recordID": obj.recordID,
+//                                      @"socialProfiles": obj.socialProfiles,
+//                                      @"phones": obj.phones,
+//                                      @"phonesWithLabels": obj.phonesWithLabels
+//                                      };
+//            
+//            return contact;
+//        }];
+//        
+//        //FIXME: set address book friends to person object?
+//        [EWPerson mySocialGraph].addressBookFriends = mapContacts;
+//        
+//        [EWSync save];
+    
         if (completion) {
-            completion(contacts, error);
+//            completion(contacts, error);
+            completion(nil, nil);
         }
-    }];
+//    }];
 }
 
 - (void)getUsersFromParse:(NSArray *)emails completion:(void (^)(NSArray *contacts, NSError *error))completion {

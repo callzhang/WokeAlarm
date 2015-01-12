@@ -9,17 +9,14 @@
 #import "EWSleepViewController.h"
 #import "EWSetStatusViewController.h"
 #import "EWWakeUpManager.h"
+#import "EWTimeChildViewController.h"
 
 @interface EWSleepViewController ()
-@property (weak, nonatomic) IBOutlet UILabel *labelTime1;
-@property (weak, nonatomic) IBOutlet UILabel *labelTime2;
-@property (weak, nonatomic) IBOutlet UILabel *labelTime3;
-@property (weak, nonatomic) IBOutlet UILabel *labelTime4;
-@property (weak, nonatomic) IBOutlet UILabel *labelAmpm;
+
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
 @property (weak, nonatomic) IBOutlet UILabel *labelWakeupText;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *firstLetterLeadingConstraint;
+@property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
 @end
 
 @implementation EWSleepViewController
@@ -31,44 +28,31 @@
     self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
    
     [self bindViewModel];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
     
     //remove background color set in interface builder[used for layouting].
     self.view.backgroundColor = [UIColor clearColor];
     
-    
-#ifdef caoer115
-    //test
-    self.sleepViewModel.alarm = [EWPerson myNextAlarm];
-    self.sleepViewModel.alarm.time = [NSDate mt_dateFromYear:200 month:0 day:0 hour:12 minute:50];
-#endif
+    self.timeChildViewController.topLabelLine1.text = @"";
+    self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
 - (void)bindViewModel {
-    RAC(self.labelTime1, text, @"") = [RACObserve(self.sleepViewModel, time1) distinctUntilChanged];
-    RAC(self.labelTime2, text)= [RACObserve(self.sleepViewModel, time2) distinctUntilChanged];
-    RAC(self.labelTime3, text)= [RACObserve(self.sleepViewModel, time3) distinctUntilChanged];
-    RAC(self.labelTime4, text)= [RACObserve(self.sleepViewModel, time4) distinctUntilChanged];
     RAC(self.labelDateString, text)= [RACObserve(self.sleepViewModel, dateString) distinctUntilChanged];
     RAC(self.labelWakeupText, text)= [RACObserve(self.sleepViewModel, wakeupText) distinctUntilChanged];
-    
-    [RACObserve(self.sleepViewModel, time1) subscribeNext:^(NSString *value) {
-        if (!value) {
-            self.firstLetterLeadingConstraint.constant = -35;
-        }
-        else {
-            self.firstLetterLeadingConstraint.constant = -5;
-        }
-    }];
+    RAC(self, timeChildViewController.date) = [RACObserve(self.sleepViewModel, date) distinctUntilChanged];
 }
+
 - (IBAction)onStatusOverlayButton:(id)sender {
     [self performSegueWithIdentifier:@"toSetStatusController" sender:self];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [super prepareForSegue:segue sender:sender];
+    
     if ([segue.identifier isEqualToString:@"toSetStatusController"]) {
         EWSetStatusViewController *viewController = [[segue.destinationViewController viewControllers] firstObject];
         viewController.person = [EWPerson me];

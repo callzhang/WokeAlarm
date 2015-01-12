@@ -1,5 +1,5 @@
 //
-//  EWSleepingViewController.h
+//  EWPreWakeupViewController.h
 //  Woke
 //
 //  Created by Zitao Xiong on 1/11/15.
@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
 
-@interface EWSleepingViewController : EWBaseViewController
+@interface EWPreWakeupViewController : UIViewController
 
 @end

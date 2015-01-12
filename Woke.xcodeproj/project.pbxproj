@@ -35,6 +35,10 @@
 		091C67631A3523AF0091B8A6 /* EWSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67571A3523AF0091B8A6 /* EWSleepViewController.xib */; };
 		091C67641A3523AF0091B8A6 /* EWWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67581A3523AF0091B8A6 /* EWWakeUpView.xib */; };
 		091C67671A3523C40091B8A6 /* EWAlarmTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */; };
+		09229C981A6317F8008061E5 /* EWPreWakeupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09229C971A6317F8008061E5 /* EWPreWakeupViewController.m */; };
+		09229C9B1A6318BB008061E5 /* EWSleepingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09229C9A1A6318BB008061E5 /* EWSleepingViewController.m */; };
+		09229C9F1A631BA6008061E5 /* EWPeopleArrayChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09229C9E1A631BA6008061E5 /* EWPeopleArrayChildViewController.m */; };
+		09229CA21A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 09229CA11A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.m */; };
 		09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDE1A1316580048DC44 /* Lato-Light.ttf */; };
 		09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DE01A1316640048DC44 /* Lato-Hairline.ttf */; };
 		09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */; };
@@ -81,7 +85,7 @@
 		0990EF7A1A22C606001AF099 /* MSPushFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF751A22C606001AF099 /* MSPushFadeSegue.m */; };
 		0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */; };
 		0990EF7C1A22C606001AF099 /* MSReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF791A22C606001AF099 /* MSReplaceSegue.m */; };
-		09A087151A425DC200FCE9FA /* EWSleepingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A087141A425DC200FCE9FA /* EWSleepingViewController.m */; };
+		099A6C751A6367B8000B9686 /* EWTimeChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 099A6C741A6367B8000B9686 /* EWTimeChildViewController.m */; };
 		09A087181A425EBE00FCE9FA /* EWSetStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */; };
 		09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A776FE1A11D8D9004AF902 /* WokeTests.m */; };
 		09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777101A11E2BD004AF902 /* AppDelegate.m */; };
@@ -150,7 +154,7 @@
 		9BF181621A35222F00D25DBA /* Sunny Afternoon.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF1815A1A35222F00D25DBA /* Sunny Afternoon.caf */; };
 		9BF181631A35222F00D25DBA /* tock.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF1815B1A35222F00D25DBA /* tock.caf */; };
 		9BF181641A35222F00D25DBA /* Tropical Delight.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF1815C1A35222F00D25DBA /* Tropical Delight.caf */; };
-		9BF181671A37C1B600D25DBA /* EWPreWakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF181661A37C1B600D25DBA /* EWPreWakeViewController.m */; };
+		9BF181671A37C1B600D25DBA /* EWPreWakeViewControllerZL.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF181661A37C1B600D25DBA /* EWPreWakeViewControllerZL.m */; };
 		9BF1816A1A37FF0800D25DBA /* EWWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF181691A37FF0800D25DBA /* EWWaveformView.m */; };
 		9BF729191A4CFCFD006C6C51 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDF1A1316580048DC44 /* Lato-Regular.ttf */; };
 		9BF7291A1A4CFCFD006C6C51 /* PLCameraSheetButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396A1A15D65900F1A56C /* PLCameraSheetButtonPressed.png */; };
@@ -200,6 +204,14 @@
 		091C67581A3523AF0091B8A6 /* EWWakeUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWWakeUpView.xib; sourceTree = "<group>"; };
 		091C67651A3523C40091B8A6 /* EWAlarmTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmTableViewCell.h; sourceTree = "<group>"; };
 		091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmTableViewCell.m; sourceTree = "<group>"; };
+		09229C961A6317F8008061E5 /* EWPreWakeupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPreWakeupViewController.h; sourceTree = "<group>"; };
+		09229C971A6317F8008061E5 /* EWPreWakeupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPreWakeupViewController.m; sourceTree = "<group>"; };
+		09229C991A6318BB008061E5 /* EWSleepingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepingViewController.h; sourceTree = "<group>"; };
+		09229C9A1A6318BB008061E5 /* EWSleepingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepingViewController.m; sourceTree = "<group>"; };
+		09229C9D1A631BA6008061E5 /* EWPeopleArrayChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPeopleArrayChildViewController.h; sourceTree = "<group>"; };
+		09229C9E1A631BA6008061E5 /* EWPeopleArrayChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPeopleArrayChildViewController.m; sourceTree = "<group>"; };
+		09229CA01A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPeopleArrayCollectionViewCell.h; sourceTree = "<group>"; };
+		09229CA11A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPeopleArrayCollectionViewCell.m; sourceTree = "<group>"; };
 		09269DDE1A1316580048DC44 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		09269DDF1A1316580048DC44 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		09269DE01A1316640048DC44 /* Lato-Hairline.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Hairline.ttf"; sourceTree = "<group>"; };
@@ -311,8 +323,8 @@
 		0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSReplaceFadeSegue.m; sourceTree = "<group>"; };
 		0990EF781A22C606001AF099 /* MSReplaceSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSReplaceSegue.h; sourceTree = "<group>"; };
 		0990EF791A22C606001AF099 /* MSReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSReplaceSegue.m; sourceTree = "<group>"; };
-		09A087131A425DC200FCE9FA /* EWSleepingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepingViewController.h; sourceTree = "<group>"; };
-		09A087141A425DC200FCE9FA /* EWSleepingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepingViewController.m; sourceTree = "<group>"; };
+		099A6C731A6367B8000B9686 /* EWTimeChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWTimeChildViewController.h; sourceTree = "<group>"; };
+		099A6C741A6367B8000B9686 /* EWTimeChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWTimeChildViewController.m; sourceTree = "<group>"; };
 		09A087161A425EBE00FCE9FA /* EWSetStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSetStatusViewController.h; sourceTree = "<group>"; };
 		09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSetStatusViewController.m; sourceTree = "<group>"; };
 		09A776DF1A11D8D9004AF902 /* Woke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woke.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -452,8 +464,8 @@
 		9BF1815A1A35222F00D25DBA /* Sunny Afternoon.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sunny Afternoon.caf"; sourceTree = "<group>"; };
 		9BF1815B1A35222F00D25DBA /* tock.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = tock.caf; sourceTree = "<group>"; };
 		9BF1815C1A35222F00D25DBA /* Tropical Delight.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tropical Delight.caf"; sourceTree = "<group>"; };
-		9BF181651A37C1B600D25DBA /* EWPreWakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPreWakeViewController.h; sourceTree = "<group>"; };
-		9BF181661A37C1B600D25DBA /* EWPreWakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPreWakeViewController.m; sourceTree = "<group>"; };
+		9BF181651A37C1B600D25DBA /* EWPreWakeViewControllerZL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPreWakeViewControllerZL.h; sourceTree = "<group>"; };
+		9BF181661A37C1B600D25DBA /* EWPreWakeViewControllerZL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPreWakeViewControllerZL.m; sourceTree = "<group>"; };
 		9BF181681A37FF0800D25DBA /* EWWaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWaveformView.h; sourceTree = "<group>"; };
 		9BF181691A37FF0800D25DBA /* EWWaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWaveformView.m; sourceTree = "<group>"; };
 		9BF7291D1A4DF5FF006C6C51 /* new.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = new.caf; sourceTree = "<group>"; };
@@ -511,6 +523,17 @@
 			path = legacy;
 			sourceTree = "<group>";
 		};
+		09229C9C1A6319C1008061E5 /* child-viewcontrollers */ = {
+			isa = PBXGroup;
+			children = (
+				09229C9D1A631BA6008061E5 /* EWPeopleArrayChildViewController.h */,
+				09229C9E1A631BA6008061E5 /* EWPeopleArrayChildViewController.m */,
+				099A6C731A6367B8000B9686 /* EWTimeChildViewController.h */,
+				099A6C741A6367B8000B9686 /* EWTimeChildViewController.m */,
+			);
+			path = "child-viewcontrollers";
+			sourceTree = "<group>";
+		};
 		096AAA3E1A19593300B4CBFF /* iphone */ = {
 			isa = PBXGroup;
 			children = (
@@ -524,8 +547,9 @@
 		096AAA3F1A19593300B4CBFF /* controllers */ = {
 			isa = PBXGroup;
 			children = (
-				9BF181651A37C1B600D25DBA /* EWPreWakeViewController.h */,
-				9BF181661A37C1B600D25DBA /* EWPreWakeViewController.m */,
+				09229C9C1A6319C1008061E5 /* child-viewcontrollers */,
+				9BF181651A37C1B600D25DBA /* EWPreWakeViewControllerZL.h */,
+				9BF181661A37C1B600D25DBA /* EWPreWakeViewControllerZL.m */,
 				097A82C71A2163FA0030A2E8 /* EWSleepViewController.h */,
 				097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */,
 				096AAB081A1972B800B4CBFF /* EWSleepModeViewController.h */,
@@ -543,10 +567,12 @@
 				09D737101A32951000E8C9ED /* EWAlarmViewController.m */,
 				090665511A3CD40800FF76E6 /* EWAlarmToneViewController.h */,
 				090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */,
-				09A087131A425DC200FCE9FA /* EWSleepingViewController.h */,
-				09A087141A425DC200FCE9FA /* EWSleepingViewController.m */,
 				09A087161A425EBE00FCE9FA /* EWSetStatusViewController.h */,
 				09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */,
+				09229C961A6317F8008061E5 /* EWPreWakeupViewController.h */,
+				09229C971A6317F8008061E5 /* EWPreWakeupViewController.m */,
+				09229C991A6318BB008061E5 /* EWSleepingViewController.h */,
+				09229C9A1A6318BB008061E5 /* EWSleepingViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -560,6 +586,8 @@
 				091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */,
 				9B1551841A5CBDC200C2EE41 /* components */,
 				091C67471A3523AF0091B8A6 /* legacy */,
+				09229CA01A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.h */,
+				09229CA11A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.m */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -1372,6 +1400,7 @@
 				9B88293F1A317E3900EF572E /* UIViewController+Blur.m in Sources */,
 				096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */,
 				09DF4F821A1434AF00BEA328 /* _EWAchievement.m in Sources */,
+				09229C9B1A6318BB008061E5 /* EWSleepingViewController.m in Sources */,
 				096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */,
 				096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */,
 				096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */,
@@ -1394,14 +1423,13 @@
 				9BF1816A1A37FF0800D25DBA /* EWWaveformView.m in Sources */,
 				09DF4F7E1A1434AF00BEA328 /* EWNotification.m in Sources */,
 				09DF4F881A1434AF00BEA328 /* _EWMediaFile.m in Sources */,
-				09A087151A425DC200FCE9FA /* EWSleepingViewController.m in Sources */,
 				9B840A201A1705CE00D6C2A3 /* EWSocial.m in Sources */,
 				096AAB191A1972B800B4CBFF /* ViewController.m in Sources */,
 				096AAADF1A195A3900B4CBFF /* EWBackgroundingManager.m in Sources */,
 				0990EF7A1A22C606001AF099 /* MSPushFadeSegue.m in Sources */,
 				09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */,
 				09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */,
-				9BF181671A37C1B600D25DBA /* EWPreWakeViewController.m in Sources */,
+				9BF181671A37C1B600D25DBA /* EWPreWakeViewControllerZL.m in Sources */,
 				096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */,
 				096AAAEF1A195A3900B4CBFF /* PFObject+EWSync.m in Sources */,
 				096AAAD81A195A3900B4CBFF /* UIView+Layout.m in Sources */,
@@ -1413,14 +1441,17 @@
 				096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */,
 				096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */,
 				096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */,
+				09229C981A6317F8008061E5 /* EWPreWakeupViewController.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
 				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
 				09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */,
 				9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */,
+				09229CA21A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.m in Sources */,
 				09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */,
+				099A6C751A6367B8000B9686 /* EWTimeChildViewController.m in Sources */,
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
 				096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */,
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
@@ -1456,6 +1487,7 @@
 				9BFCFFDF1A3E74DE002B8A83 /* EWFriendsViewController.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
+				09229C9F1A631BA6008061E5 /* EWPeopleArrayChildViewController.m in Sources */,
 				09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */,
 				096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */,
 				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,

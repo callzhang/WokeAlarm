@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 wokealarm. All rights reserved.
 //
 
-#import "EWPreWakeViewController.h"
+#import "EWPreWakeViewControllerZL.h"
 #import "EWWakeUpManager.h"
 #import "EWMedia.h"
 #import "EWAVManager.h"
@@ -14,13 +14,13 @@
 #import "EWAlarm.h"
 #import "EWMediaManager.h"
 
-@interface EWPreWakeViewController(){
+@interface EWPreWakeViewControllerZL(){
     NSTimer *progressUpdateTimer;
 }
 @end
 
 
-@implementation EWPreWakeViewController
+@implementation EWPreWakeViewControllerZL
 - (void)viewDidLoad{
     [super viewDidLoad];
     

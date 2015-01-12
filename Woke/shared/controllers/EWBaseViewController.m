@@ -14,4 +14,13 @@
 @end
 
 @implementation EWBaseViewController
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [super prepareForSegue:segue sender:sender];
+    
+    // 2. All known destination controllers assigned to properties
+    if ([self respondsToSelector:NSSelectorFromString(segue.identifier)]) {
+        [self setValue:segue.destinationViewController forKey:segue.identifier];
+    }
+}
+
 @end

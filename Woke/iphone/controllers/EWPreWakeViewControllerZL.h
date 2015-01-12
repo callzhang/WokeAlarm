@@ -9,7 +9,7 @@
 #import "EWBaseViewController.h"
 @class EWMedia;
 
-@interface EWPreWakeViewController : EWBaseViewController
+@interface EWPreWakeViewControllerZL : EWBaseViewController
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
 - (IBAction)wakeUp:(UIButton *)sender;
 - (IBAction)newMedia:(id)sender;
