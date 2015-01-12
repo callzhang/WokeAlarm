@@ -338,7 +338,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
     else if ([title isEqualToString:@"Generate friendship request from this user"]){
         //test function
-        [EWNotificationManager generateFriendRequestFrom:person];
+        [[EWNotificationManager sharedInstance] generateFriendRequestFrom:person];
     }
         
     [self initView];

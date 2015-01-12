@@ -59,7 +59,7 @@
             EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
             [localMe refreshRelatedWithCompletion:^(NSError *error){
                 
-                [localMe updateMyCachedFriends];
+                [[EWCachedInfoManager shared] updateCachedFriends];
                 [[EWAccountManager shared] updateMyFacebookInfo];
             }];
             //TODO: we need a better sync method
@@ -112,12 +112,7 @@
 }
 
 + (NSArray *)myNotifications {
-    NSArray *notifications = [EWPerson me].notifications.allObjects;
-    NSSortDescriptor *sortCompelete = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.completed ascending:NO];
-    NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:NO];
-    NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];
-    notifications = [notifications sortedArrayUsingDescriptors:@[sortDate, sortCompelete, sortImportance]];
-    return notifications;
+    return [[EWNotificationManager shared] notificationsForPerson:[EWPerson me]];
 }
 
 + (NSArray *)myAlarms {
@@ -170,7 +165,7 @@
 - (void)requestFriend:(EWPerson *)person{
     //[self addFriendsObject:person];
     //[self updateMyCachedFriends];
-    [EWNotificationManager sendFriendRequestNotificationToUser:person];
+    [[EWNotificationManager shared] sendFriendRequestNotificationToUser:person];
     
     [self save];
 }
@@ -178,7 +173,7 @@
 - (void)acceptFriend:(EWPerson *)person{
     [self addFriendsObject:person];
     //[self updateMyCachedFriends];
-    [EWNotificationManager sendFriendAcceptNotificationToUser:person];
+    [[EWNotificationManager shared] sendFriendAcceptNotificationToUser:person];
     
     [self save];
 }

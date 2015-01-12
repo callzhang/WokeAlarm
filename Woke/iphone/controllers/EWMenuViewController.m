@@ -49,15 +49,17 @@
 }
 
 #pragma mark - Segue actions
+- (IBAction)onHome:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:^{
+        //        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+    }];
+}
+- (IBAction)onNotification:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:NULL];
+}
 - (IBAction)onAlarms:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
 //        [self performSegueWithIdentifier:@"MenuToAlarmReplace" sender:self];
-    }];
-}
-
-- (IBAction)onHome:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:^{
-//        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
     }];
 }
 - (IBAction)onVoice:(id)sender {
@@ -67,12 +69,15 @@
     }];
 }
 - (IBAction)onProfile:(id)sender {
-	
 	[self.mainNavigationController toogleMenuCompletion:^{
-		//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
-		
+//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
 	}];
 }
+- (IBAction)onSetting:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:NULL];
+}
+
+
 #pragma mark -
 - (void)onTap {
     if (self.tapHandler) {

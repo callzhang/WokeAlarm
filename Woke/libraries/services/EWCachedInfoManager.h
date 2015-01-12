@@ -45,7 +45,7 @@
 @property (nonatomic) EWPerson *currentPerson;
 @property (nonatomic) NSNumber *aveWakingLength;
 @property (nonatomic) NSString *aveWakingLengthString;
-@property (nonatomic) NSString *aveWakeUpTime;
+@property (nonatomic) NSString *aveWakeUpTime;//TODO: need to change to NSDate
 @property (nonatomic) NSNumber *successRate;
 @property (nonatomic) NSString *successString;
 @property (nonatomic) NSNumber *wakability;

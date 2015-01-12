@@ -143,6 +143,9 @@
 		9B88293E1A317E3900EF572E /* EWBlurAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B88293B1A317E3900EF572E /* EWBlurAnimator.m */; };
 		9B88293F1A317E3900EF572E /* UIViewController+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B88293D1A317E3900EF572E /* UIViewController+Blur.m */; };
 		9B8829421A31868100EF572E /* EWBlurNavigationControllerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */; };
+		9B8D75611A6397C20013B011 /* EWNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8D75601A6397C20013B011 /* EWNotificationViewController.m */; };
+		9B8D75671A6399550013B011 /* EWNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8D75651A6399550013B011 /* EWNotificationCell.m */; };
+		9B8D75681A6399550013B011 /* EWNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D75661A6399550013B011 /* EWNotificationCell.xib */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
 		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
@@ -453,9 +456,14 @@
 		9B88293D1A317E3900EF572E /* UIViewController+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+Blur.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9B8829401A31868100EF572E /* EWBlurNavigationControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlurNavigationControllerDelegate.h; sourceTree = "<group>"; };
 		9B8829411A31868100EF572E /* EWBlurNavigationControllerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBlurNavigationControllerDelegate.m; sourceTree = "<group>"; };
+		9B8D755F1A6397C20013B011 /* EWNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWNotificationViewController.h; sourceTree = "<group>"; };
+		9B8D75601A6397C20013B011 /* EWNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWNotificationViewController.m; sourceTree = "<group>"; };
+		9B8D75621A6397CC0013B011 /* EWNotificationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWNotificationViewController.xib; sourceTree = "<group>"; };
+		9B8D75641A6399550013B011 /* EWNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWNotificationCell.h; sourceTree = "<group>"; };
+		9B8D75651A6399550013B011 /* EWNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWNotificationCell.m; sourceTree = "<group>"; };
+		9B8D75661A6399550013B011 /* EWNotificationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWNotificationCell.xib; sourceTree = "<group>"; };
 		9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpProcessTest.m; sourceTree = "<group>"; };
 		9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpPlayingTest.m; sourceTree = "<group>"; };
-		9BC0B7531A56FDEF0059D4E7 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		9BF181551A35222F00D25DBA /* Autumn Spring.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Autumn Spring.caf"; sourceTree = "<group>"; };
 		9BF181561A35222F00D25DBA /* Daybreak.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Daybreak.caf; sourceTree = "<group>"; };
 		9BF181571A35222F00D25DBA /* Drive.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Drive.caf; sourceTree = "<group>"; };
@@ -547,6 +555,8 @@
 		096AAA3F1A19593300B4CBFF /* controllers */ = {
 			isa = PBXGroup;
 			children = (
+				9B8D755F1A6397C20013B011 /* EWNotificationViewController.h */,
+				9B8D75601A6397C20013B011 /* EWNotificationViewController.m */,
 				09229C9C1A6319C1008061E5 /* child-viewcontrollers */,
 				9BF181651A37C1B600D25DBA /* EWPreWakeViewControllerZL.h */,
 				9BF181661A37C1B600D25DBA /* EWPreWakeViewControllerZL.m */,
@@ -721,6 +731,7 @@
 		096AAAF51A1972B800B4CBFF /* legacy */ = {
 			isa = PBXGroup;
 			children = (
+				9B8D75621A6397CC0013B011 /* EWNotificationViewController.xib */,
 				096AAAF61A1972B800B4CBFF /* EWAlarmScheduleViewController.h */,
 				096AAAF71A1972B800B4CBFF /* EWAlarmScheduleViewController.m */,
 				096AAAF81A1972B800B4CBFF /* EWFirstTimeViewController.h */,
@@ -902,7 +913,6 @@
 		09A777251A11E2BD004AF902 /* support */ = {
 			isa = PBXGroup;
 			children = (
-				9BC0B7531A56FDEF0059D4E7 /* KZBootstrapUserMacros.h */,
 				9B1375DA1A536CD100D5E8F5 /* KZBootstrapUserMacros.h */,
 				09A777261A11E2BD004AF902 /* Info.plist */,
 				09A777271A11E2BD004AF902 /* KZBEnvironments.plist */,
@@ -1015,6 +1025,9 @@
 		9B1551841A5CBDC200C2EE41 /* components */ = {
 			isa = PBXGroup;
 			children = (
+				9B8D75641A6399550013B011 /* EWNotificationCell.h */,
+				9B8D75651A6399550013B011 /* EWNotificationCell.m */,
+				9B8D75661A6399550013B011 /* EWNotificationCell.xib */,
 				9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */,
 				091C674B1A3523AF0091B8A6 /* EWCollectionPersonCell.h */,
 				091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */,
@@ -1264,6 +1277,7 @@
 				9BF1815F1A35222F00D25DBA /* Drive.caf in Resources */,
 				9B81397D1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				9B81397A1A15D65900F1A56C /* PLCameraSheetDoneButton.png in Resources */,
+				9B8D75681A6399550013B011 /* EWNotificationCell.xib in Resources */,
 				09269DE11A1316E20048DC44 /* Lato-Light.ttf in Resources */,
 				9B81397B1A15D65900F1A56C /* PLCameraSheetDoneButton@2x.png in Resources */,
 				9BF1815D1A35222F00D25DBA /* Autumn Spring.caf in Resources */,
@@ -1455,6 +1469,7 @@
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
 				096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */,
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
+				9B8D75671A6399550013B011 /* EWNotificationCell.m in Sources */,
 				09DF4F831A1434AF00BEA328 /* _EWActivity.m in Sources */,
 				09DF4F801A1434AF00BEA328 /* EWServerObject.m in Sources */,
 				090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */,
@@ -1488,6 +1503,7 @@
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
 				09229C9F1A631BA6008061E5 /* EWPeopleArrayChildViewController.m in Sources */,
+				9B8D75611A6397C20013B011 /* EWNotificationViewController.m in Sources */,
 				09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */,
 				096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */,
 				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,

@@ -12,7 +12,7 @@
 @interface EWServer : NSObject
 
 #pragma mark - Handle Push Notification
-+ (void)handlePushNotification:(NSDictionary *)push;
++ (void)handlePushNotification:(NSDictionary *)payload;
 
 #pragma mark - Handle Local Notification
 + (void)handleLocalNotification:(UILocalNotification *)localNotif;

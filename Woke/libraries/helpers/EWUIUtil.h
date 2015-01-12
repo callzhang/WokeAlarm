@@ -65,7 +65,7 @@
 
 + (void)applyAlphaGradientForView:(UIView *)view withEndPoints:(NSArray *)locations;
 
-+ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc;
++ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc __deprecated;
 
 + (void)addNavigationButtonsForViewController:(UIViewController *)vc backButton:(UIButton *)leftBtn rightButton:(UIButton *)rightBtn;
 

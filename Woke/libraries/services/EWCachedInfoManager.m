@@ -15,6 +15,7 @@
 #import <KVOController/FBKVOController.h>
 #import "EWAlarm.h"
 #import "NSDictionary+KeyPathAccess.h"
+#import "NSDate+MTDates.h"
 
 @implementation EWCachedInfoManager
 //TODO: There is unfinished work
@@ -111,10 +112,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         }
         NSInteger aveTime = totalTime / wakes;
         _aveWakingLength = [NSNumber numberWithInteger:aveTime];
-        [self setStatsToCache];
         return _aveWakingLength;
     }
-    return 0;
+    return @kMaxWakeTime;
 }
 
 - (NSString *)aveWakingLengthString{
@@ -148,10 +148,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         rate = wakes / totalWakes;
         
         _successRate =  [NSNumber numberWithFloat:rate];
-        [self setStatsToCache];
         return _successRate;
     }
-    return 0;
+    return @0;
 }
 
 - (NSString *)successString{
@@ -169,10 +168,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         double ratio = MIN(self.aveWakingLength.integerValue / kMaxWakabilityTime, 1);
         double level = 10 - ratio*10;
         _wakability = [NSNumber numberWithDouble:level];
-        [self setStatsToCache];
         return _wakability;
     }
-    return 0;
+    return @0;
 }
 
 - (NSString *)wakabilityStr{
@@ -198,7 +196,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         NSInteger aveTime = totalTime / wakes;
         NSDate *time = [[NSDate date] timeByMinutesFrom5am:aveTime];
         _aveWakeUpTime = time.date2String;
-        [self setStatsToCache];
         return _aveWakeUpTime;
     }
     
@@ -273,8 +270,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     NSSet *friends = [[EWPerson me].friends valueForKey:kParseObjectID];
     NSDictionary *cache = [EWPerson me].cachedInfo;
     NSArray *cachedFriends = cache[kCachedFriends]?:[NSArray new];
-    if (![friends.allObjects isEqualToArray:cachedFriends]) {
-        [EWPerson me].cachedInfo = [cache setValue:friends forImmutableKeyPath:@[kCachedFriends]];
+    if (![friends isEqualToSet:[NSSet setWithArray:cachedFriends]]) {
+        [EWPerson me].cachedInfo = [cache setValue:friends.allObjects forImmutableKeyPath:@[kCachedFriends]];
         [[EWPerson me] save];
     }
 }

@@ -43,29 +43,28 @@
 }
 
 #pragma mark - Handle Push Notification
-+ (void)handlePushNotification:(NSDictionary *)push{
-	NSString *type = push[kPushType];
++ (void)handlePushNotification:(NSDictionary *)payload{
+	NSString *type = payload[kPushType];
 					  
     if ([type isEqualToString:kPushTypeMedia]) {
-		[[EWMediaManager sharedInstance] handlePushMedia:push];
+		[[EWMediaManager sharedInstance] handlePushMedia:payload];
 		
 	}
 	else if([type isEqualToString:kPushTypeAlarmTimer]){
 		// ============== Alarm Timer ================
-		[[EWWakeUpManager sharedInstance] startToWakeUp:push];
+		[[EWWakeUpManager sharedInstance] startToWakeUp:payload];
 		
 	}
 	else if ([type isEqualToString:kPushTypeNotification]){
-		NSString *notificationID = push[kPushNofiticationID];
-		[EWNotificationManager handleNotification:notificationID];
+		[[EWNotificationManager sharedInstance] handleNotificatoinFromPush:payload];
 	}
     else if ([type isEqualToString:kPushTypeBroadcast]){
-        NSString *message = push[@"alert"];
+        NSString *message = payload[@"alert"];
         EWAlert(message);
     }
 	else{
 		// Other push type not supported
-		NSString *str = [NSString stringWithFormat:@"Unknown push type received: %@", push];
+		NSString *str = [NSString stringWithFormat:@"Unknown push type received: %@", payload];
 		DDLogError(@"Received unknown type of push msg: %@", str);
 #ifdef DEBUG
 		EWAlert(str);
