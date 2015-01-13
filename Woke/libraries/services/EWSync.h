@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <Parse/Parse.h>
-#import "NSManagedObject+EWSync.h"
+#import "EWServerObject+EWSync.h"
 #import "PFObject+EWSync.h"
 #import "EWServerObject.h"
 
@@ -30,10 +30,8 @@ typedef void (^EWSavingCallback)(void);
 #pragma mark - Sync parameters
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
 #define kServerTransformClasses             @{@"EWPerson": @"_User"} //localClass: serverClass
-#define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, @"score"]
+#define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey]
 #define kSyncUserClass                      @"EWPerson"
-//#define classSkipped                        @[@"EWPerson"]
-
 
 //Server update time
 #define kStalelessInterval                  30
@@ -68,7 +66,6 @@ typedef void (^EWSavingCallback)(void);
  */
 @property NSDictionary *changedRecords;
 @property NSMutableArray *saveToLocalItems;
-@property NSMutableArray *deleteToLocalItems;
 @property BOOL isUploading;
 
 
@@ -137,28 +134,28 @@ typedef void (^EWSavingCallback)(void);
 #pragma mark - Queue
 //update queue
 - (NSSet *)updateQueue;
-- (void)appendUpdateQueue:(NSManagedObject *)mo;
-- (void)removeObjectFromUpdateQueue:(NSManagedObject *)mo;
+- (void)appendUpdateQueue:(EWServerObject *)mo;
+- (void)removeObjectFromUpdateQueue:(EWServerObject *)mo;
 //insert queue
 - (NSSet *)insertQueue;
-- (void)appendInsertQueue:(NSManagedObject *)mo;
-- (void)removeObjectFromInsertQueue:(NSManagedObject *)mo;
+- (void)appendInsertQueue:(EWServerObject *)mo;
+- (void)removeObjectFromInsertQueue:(EWServerObject *)mo;
 //uploading queue
 - (NSSet *)workingQueue;
-- (void)appendObjectToWorkingQueue:(NSManagedObject *)mo;
-- (void)removeObjectFromWorkingQueue:(NSManagedObject *)mo;
+- (void)appendObjectToWorkingQueue:(EWServerObject *)mo;
+- (void)removeObjectFromWorkingQueue:(EWServerObject *)mo;
 //delete queue
 - (NSSet *) deleteQueue;
 - (void)appendObjectToDeleteQueue:(PFObject *)object;
 - (void)removeObjectFromDeleteQueue:(PFObject *)object;
 //worker
 - (NSSet *)getObjectFromQueue:(NSString *)queue;
-- (void)appendObject:(NSManagedObject *)mo toQueue:(NSString *)queue;
-- (BOOL)contains:(NSManagedObject *)mo inQueue:(NSString *)queue;
+- (void)appendObject:(EWServerObject *)mo toQueue:(NSString *)queue;
+- (BOOL)contains:(EWServerObject *)mo inQueue:(NSString *)queue;
 
 #pragma mark - CoreData
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
++ (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;
++ (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
 

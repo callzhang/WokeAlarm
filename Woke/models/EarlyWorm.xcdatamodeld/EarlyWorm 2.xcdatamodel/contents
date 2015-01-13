@@ -19,7 +19,7 @@
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="activities" inverseEntity="EWPerson" syncable="YES"/>
         <fetchedProperty name="medias" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="EWMedia" predicateString="objectID IN mediaIDs"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="EWMedia" predicateString="SELF.objectId IN $FETCG_SOURCE.mediaIDs"/>
         </fetchedProperty>
     </entity>
     <entity name="EWAlarm" representedClassName="EWAlarm" parentEntity="EWServerObject" syncable="YES">

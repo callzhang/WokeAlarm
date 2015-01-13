@@ -68,7 +68,7 @@
 		096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAC41A195A3900B4CBFF /* EWSync.m */; };
 		096AAAEC1A195A3900B4CBFF /* EWUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACA1A195A3900B4CBFF /* EWUtil.m */; };
 		096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACC1A195A3900B4CBFF /* EWWakeUpManager.m */; };
-		096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACE1A195A3900B4CBFF /* NSManagedObject+EWSync.m */; };
+		096AAAEE1A195A3900B4CBFF /* EWServerObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACE1A195A3900B4CBFF /* EWServerObject+EWSync.m */; };
 		096AAAEF1A195A3900B4CBFF /* PFObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAD01A195A3900B4CBFF /* PFObject+EWSync.m */; };
 		096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAD21A195A3900B4CBFF /* PFQuery+EWQuery.m */; };
 		096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAF31A19666A00B4CBFF /* EWErrorManager.m */; };
@@ -128,7 +128,7 @@
 		9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */; };
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */; };
-		9B3D24171A54BECD0026B824 /* NSManagedObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACE1A195A3900B4CBFF /* NSManagedObject+EWSync.m */; };
+		9B3D24171A54BECD0026B824 /* EWServerObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACE1A195A3900B4CBFF /* EWServerObject+EWSync.m */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -278,8 +278,8 @@
 		096AAACA1A195A3900B4CBFF /* EWUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWUtil.m; sourceTree = "<group>"; };
 		096AAACB1A195A3900B4CBFF /* EWWakeUpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpManager.h; sourceTree = "<group>"; };
 		096AAACC1A195A3900B4CBFF /* EWWakeUpManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeUpManager.m; sourceTree = "<group>"; };
-		096AAACD1A195A3900B4CBFF /* NSManagedObject+EWSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "NSManagedObject+EWSync.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		096AAACE1A195A3900B4CBFF /* NSManagedObject+EWSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSManagedObject+EWSync.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		096AAACD1A195A3900B4CBFF /* EWServerObject+EWSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "EWServerObject+EWSync.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		096AAACE1A195A3900B4CBFF /* EWServerObject+EWSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "EWServerObject+EWSync.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAACF1A195A3900B4CBFF /* PFObject+EWSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PFObject+EWSync.h"; sourceTree = "<group>"; };
 		096AAAD01A195A3900B4CBFF /* PFObject+EWSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PFObject+EWSync.m"; sourceTree = "<group>"; };
 		096AAAD11A195A3900B4CBFF /* PFQuery+EWQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PFQuery+EWQuery.h"; sourceTree = "<group>"; };
@@ -683,6 +683,7 @@
 		096AAAA71A195A3900B4CBFF /* services */ = {
 			isa = PBXGroup;
 			children = (
+				9BC0F0611A658B560033E5A7 /* sync */,
 				096AAAA81A195A3900B4CBFF /* EWActivityManager.h */,
 				096AAAA91A195A3900B4CBFF /* EWActivityManager.m */,
 				096AAAAA1A195A3900B4CBFF /* EWAlarmManager.h */,
@@ -710,18 +711,12 @@
 				096AAAC01A195A3900B4CBFF /* EWSocialManager.m */,
 				096AAAC11A195A3900B4CBFF /* EWCachedInfoManager.h */,
 				096AAAC21A195A3900B4CBFF /* EWCachedInfoManager.m */,
-				096AAAC31A195A3900B4CBFF /* EWSync.h */,
-				096AAAC41A195A3900B4CBFF /* EWSync.m */,
 				096AAAC71A195A3900B4CBFF /* EWUserManager.h */,
 				096AAAC81A195A3900B4CBFF /* EWUserManager.m */,
 				096AAAC91A195A3900B4CBFF /* EWUtil.h */,
 				096AAACA1A195A3900B4CBFF /* EWUtil.m */,
 				096AAACB1A195A3900B4CBFF /* EWWakeUpManager.h */,
 				096AAACC1A195A3900B4CBFF /* EWWakeUpManager.m */,
-				096AAACD1A195A3900B4CBFF /* NSManagedObject+EWSync.h */,
-				096AAACE1A195A3900B4CBFF /* NSManagedObject+EWSync.m */,
-				096AAACF1A195A3900B4CBFF /* PFObject+EWSync.h */,
-				096AAAD01A195A3900B4CBFF /* PFObject+EWSync.m */,
 				096AAAD11A195A3900B4CBFF /* PFQuery+EWQuery.h */,
 				096AAAD21A195A3900B4CBFF /* PFQuery+EWQuery.m */,
 			);
@@ -1103,6 +1098,19 @@
 			sourceTree = "<group>";
 			usesTabs = 1;
 		};
+		9BC0F0611A658B560033E5A7 /* sync */ = {
+			isa = PBXGroup;
+			children = (
+				096AAAC31A195A3900B4CBFF /* EWSync.h */,
+				096AAAC41A195A3900B4CBFF /* EWSync.m */,
+				096AAACD1A195A3900B4CBFF /* EWServerObject+EWSync.h */,
+				096AAACE1A195A3900B4CBFF /* EWServerObject+EWSync.m */,
+				096AAACF1A195A3900B4CBFF /* PFObject+EWSync.h */,
+				096AAAD01A195A3900B4CBFF /* PFObject+EWSync.m */,
+			);
+			name = sync;
+			sourceTree = "<group>";
+		};
 		9BDF60911A149685009E3C4A /* SCSiriWaveformView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1454,7 +1462,7 @@
 				091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */,
 				096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */,
 				096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */,
-				096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */,
+				096AAAEE1A195A3900B4CBFF /* EWServerObject+EWSync.m in Sources */,
 				09229C981A6317F8008061E5 /* EWPreWakeupViewController.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
@@ -1516,7 +1524,7 @@
 			files = (
 				9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */,
 				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
-				9B3D24171A54BECD0026B824 /* NSManagedObject+EWSync.m in Sources */,
+				9B3D24171A54BECD0026B824 /* EWServerObject+EWSync.m in Sources */,
 				9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */,
 				9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */,
 				9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */,
@@ -1635,7 +1643,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Lei Zhang (SDR7T9YB58)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1679,7 +1687,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1699,7 +1706,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1862,7 +1868,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iOS Development: Derek Zhang (SRS98HY45T)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2004,7 +2010,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -2037,7 +2042,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iOS Development: Derek Zhang (SRS98HY45T)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2081,7 +2086,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",

@@ -32,14 +32,33 @@
 #import "FBSession.h"
 
 @implementation EWServer
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 
-+ (EWServer *)sharedInstance{
-    static EWServer *manager;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[EWServer alloc] init];
-    });
-    return manager;
+- (EWServer *)init{
+    self = [super init];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kUserNotificationRegistered object:nil queue:nil usingBlock:^(NSNotification *note) {
+#if !TARGET_IPHONE_SIMULATOR
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+#endif
+    }];
+    
+    return self;
+}
+
+
+#pragma mark - Notification
+- (void)requestNotificationPermissions{
+    //push
+    UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeNone;
+    UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+}
+
+- (void)registerPushNotificationWithToken:(NSData *)deviceToken{
+    DDLogVerbose(@"Push token updated");
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
 }
 
 #pragma mark - Handle Push Notification
@@ -187,48 +206,7 @@
     }];
 }
 
-
-#pragma mark - Notification
-+ (void)requestNotificationPermissions{
-    //push
-    UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeNone;
-    UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
-#if !TARGET_IPHONE_SIMULATOR
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-
-#endif
-}
-
-+ (void)registerPushNotificationWithToken:(NSData *)deviceToken{
-    
-    //Parse: Store the deviceToken in the current Installation and save it to Parse.
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    [currentInstallation saveInBackground];
-}
-
-
-+(void)searchForFriendsOnServer
-{
-    PFQuery *q = [PFQuery queryWithClassName:@"User"];
-    
-    //[q whereKey:@"email" containedIn:[EWUtil readContactsEmailsFromAddressBooks]];
-    
-    [EWSync findServerObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            
-            // push  notification;
-            
-            
-        } else {
-            // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
-        }
-    }];
-    
-}
-
+#pragma mark - Social publish
 +(void)publishOpenGraphUsingAPICallsWithObjectId:(NSString *)objectId andUrlString:(NSString *)url {
     
     // We will post a story on behalf of the user

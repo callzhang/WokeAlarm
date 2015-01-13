@@ -29,14 +29,14 @@
 }
 
 - (void)save{
-    if (self.updated) {
+    if (self.updated && self.updatedAt) {
         self.updatedAt = [NSDate date];
     }
 	[self.managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 - (void)saveWithCompletion:(BoolErrorBlock)block{
-    if (self.updated) {
+    if (self.updated && self.updatedAt) {
         self.updatedAt = [NSDate date];
     }
 	[self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {

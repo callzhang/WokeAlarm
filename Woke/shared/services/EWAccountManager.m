@@ -544,18 +544,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     if (me.updatedAt) {
         graph[userKey] = @{me.objectId: me.updatedAt};
     } else {
-        if (me.hasChanges) {
-            //local has change and skip sync
-            DDLogWarn(@"Me has change and skip sync: %@", me.changedValues);
-            block(nil);
-            return;
-        }else if ([EWSync sharedInstance].workingQueue.count || [EWSync sharedInstance].updateQueue.count || [EWSync sharedInstance].insertQueue.count){
-            DDLogWarn(@"Pending updates in EWSync, skip upload");
-            block(nil);
-            return;
-        }
-        
-        //first time update
+		//Even though there might be pending changes, but the fact that local user missing update time is a sign of bad run from last session, therefore we should resync from server
         graph[userKey] = @{me.objectId: [NSDate dateWithTimeIntervalSince1970:0]};
     }
 	graph[userKey] = @{me.objectId: me.updatedAt?:[NSDate date]};
@@ -672,7 +661,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                             DDLogError(@"Returned PO without data: %@", PO);
                             [PO fetch];
                         }
-                        NSManagedObject *SO = [PO managedObjectInContext:localContext];
+                        EWServerObject *SO = [PO managedObjectInContext:localContext];
                         [SO updateValueAndRelationFromParseObject:PO];
                         if (![relatedSO containsObject:SO]) {
                             //add relation

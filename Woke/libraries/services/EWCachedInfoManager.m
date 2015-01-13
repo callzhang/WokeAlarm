@@ -31,19 +31,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     self.currentPerson = [EWPerson me];
     
     //observe activities
-    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        if (change.allKeys.count) {
-            DDLogVerbose(@"CachedManager detected Activity change,  detected and statistics updated");
+    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.activities options:0 block:^(id observer, id object, NSDictionary *change) {
+		//If the value of the NSKeyValueChangeKindKey entry is NSKeyValueChangeInsertion, NSKeyValueChangeRemoval, or NSKeyValueChangeReplacement, the value of this key is an NSIndexSet object that contains the indexes of the inserted, removed, or replaced objects.
+        if (change[NSKeyValueChangeIndexesKey]) {
+            DDLogVerbose(@"CachedManager detected Activity change, detected and statistics updated: %@", change[NSKeyValueChangeIndexesKey]);
             [self updateStatistics];
             [self updateActivityCacheWithCompletion:nil];
         }
-        
     }];
     
     //observer friends
-    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        if (change.allKeys.count) {
-            DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends");
+    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:0 block:^(id observer, id object, NSDictionary *change) {
+		//If the value of the NSKeyValueChangeKindKey entry is NSKeyValueChangeInsertion, NSKeyValueChangeRemoval, or NSKeyValueChangeReplacement, the value of this key is an NSIndexSet object that contains the indexes of the inserted, removed, or replaced objects.
+        if (change[NSKeyValueChangeIndexesKey]) {
+            DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends: %@",change[NSKeyValueChangeIndexesKey]);
             [self updateCachedFriends];
         }
     }];
@@ -254,8 +255,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
                 activityLog = @{kActivityType: activity.type,
                                 kActivityTime: activity.time?:@0,
                                     kWokeTime: activity.completed?:@0,
-                                        kWokeTo: wokeTo.allObjects,
-                                kWokeBy: wokeBy?:@0};
+									kWokeTo: wokeTo.allObjects,
+									kWokeBy: wokeBy?:@0};
                 
                 //activityCache[dateKey] = activityLog;
             }

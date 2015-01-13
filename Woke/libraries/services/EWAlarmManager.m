@@ -275,14 +275,10 @@
                 [alarm remove];
             }else if (![alarms containsObject:alarm]) {
                 [alarms addObject:alarm];
-                hasChange = YES;
+				[alarm save];
                 DDLogVerbose(@"Alarm found from server %@", alarm);
             }
         }
-    }
-    
-    if (hasChange) {
-        [EWSync save];
     }
 }
 

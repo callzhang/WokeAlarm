@@ -8,8 +8,9 @@
 
 #import <CoreData/CoreData.h>
 #import <Parse/Parse.h>
+#import "EWServerObject.h"
 
-@interface NSManagedObject(EWSync)
+@interface EWServerObject(EWSync)
 /**
  Update ManagedObject from correspoinding Server Object
  
@@ -95,11 +96,6 @@
  Check if the MO's updatedAt time is more than the server refresh interval
  */
 - (BOOL)isOutDated;
-
-//Parse objectId
-- (NSString *)serverID;
-
-- (NSString *)serverClassName;
 
 @end
 
