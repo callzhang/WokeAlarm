@@ -207,7 +207,7 @@
         
         notice.completed = [NSDate date];
     }
-    [EWSync save];
+    [notice save];
     [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationCompleted object:notice];
     
     self.notification = nil;
@@ -235,9 +235,10 @@
                                 block:^(id object, NSError *error)
      {
          if (error) {
-             NSLog(@"Failed sending friendship request: %@", error.description);
+             DDLogError(@"Failed sending friendship request: %@", error.description);
              EWAlert(@"Network error, please send it later");
          }else{
+             DDLogInfo(@"Cloud code sendFriendRequestNotificationToUser successful");
              [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
          }
      }];
@@ -261,13 +262,30 @@
                                 block:^(id object, NSError *error)
     {
         if (error) {
-            NSLog(@"Failed sending friendship acceptance: %@", error.description);
+            DDLogError(@"Failed sending friendship acceptance: %@", error.description);
             EWAlert(@"Network error, please send it later");
         }else{
             [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
         }
         
     }];
+}
+
++ (void)generateFriendRequestFrom:(EWPerson *)person{
+    [PFCloud callFunctionInBackground:@"sendFriendRequestNotificationToUser"
+                       withParameters:@{@"sender": person.objectId,
+                                        @"owner": [EWPerson me].objectId}
+                                block:^(id object, NSError *error)
+     {
+         if (error) {
+             DDLogError(@"Failed generating friendship request: %@", error.description);
+             EWAlert(@"Network error, please send it later");
+         }else{
+             DDLogInfo(@"generateFriendRequestFrom %@ successful", person.name);
+             [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"Request generated"];
+             
+         }
+     }];
 }
 
 @end

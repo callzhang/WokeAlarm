@@ -12,11 +12,7 @@
 @class EWPerson;
 @class EWCachedInfoManager;
 
-@interface EWPersonViewController : EWBaseViewController<UIAlertViewDelegate, UIActionSheetDelegate> {
-    //NSArray *tasks;
-    EWCachedInfoManager *stats;
-    NSArray *profileItemsArray;
-}
+@interface EWPersonViewController : EWBaseViewController<UIAlertViewDelegate, UIActionSheetDelegate> 
 
 
 @property (weak, nonatomic) IBOutlet UIButton *picture;
