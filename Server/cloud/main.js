@@ -19,20 +19,25 @@ Parse.Cloud.define("findUsersWithEmails", function (request, response) {
 // parameters: objectId - user id,
 //             topk - preferred number of user ids 
 //             radius - search radius in kilometers(optional)
-// TODO: 
-//       1. get task for calculating task score
+//
 Parse.Cloud.define("getRelevantUsers", function(request, response) {
   var objectId = request.params.objectId;
   var radius = -1;
   if (request.params.radius !== undefined) radius = request.params.radius;
   var topk = request.params.topk;
   var userLocation = request.params.location;
-  //console.log(radius);
+
+  //runtime objects
+  var userObject;
+  var nearbyUsers;
+  var friends;;
+  var userGeoPoint
 
   //query using objectId
   var query = new Parse.Query(Parse.User);
-  query.get(objectId).then(function (userObject) {
-    var userGeoPoint =  new Parse.GeoPoint({latitude: userLocation.latitude, longitude: userLocation.longitude});
+  query.get(objectId).then(function (user) {
+    userObject = user;
+    userGeoPoint =  new Parse.GeoPoint({latitude: userLocation.latitude, longitude: userLocation.longitude});
     // Create a query for places
     var query = new Parse.Query(Parse.User);
     // Interested in locations near user.
@@ -45,172 +50,106 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
     query.limit(2*topk);
     // Final list of objects
     return query.find();
-  }).then(function (nearbyUsers) {
+  }).then(function (list) {
+    nearbyUsers = list;
     var relation = userObject.relation("friends");
     return relation.query().find();
-  }).then(function (friends) {
+  }).then(function (list) {
+    friends = list;
     friends.forEach(function (friend) {
-        if (!nearbyUsers.includes(friend)){
-          nearbyUsers.push(friend);
-        }
-      });
-      //generate k users by gender
-      var query = new Parse.Query(Parse.User);
-
-      query.notEqualTo("gender", userObject.gender);
-      query.limit(topk);
-    return query.find();
-  }).then(function () {
-    
-  })
-
-  var user = null;
-  query.first({
-    success: function(result) {
-
-    //response.success(results[0]);
-    //user = results[0];
-    var userObject = result;
-    // User's location
-    //var userGeoPoint = userObject.get("location");
-    var userGeoPoint =  new Parse.GeoPoint({latitude: userLocation.latitude, longitude: userLocation.longitude});
-    // Create a query for places
-    var query = new Parse.Query(Parse.User);
-    // Interested in locations near user.
-    if (radius > 0 && radius < 6371)
-      query.withinKilometers("location", userGeoPoint, radius);
-    else
-      query.near("location", userGeoPoint);
-    query.ascending();
-    // Limit what could be a lot of points.
-    query.limit(2*topk);
-    // Final list of objects
-    query.find({
-      success: function(nearbyUsers) {
-        var relation = userObject.relation("friends");
-        console.log(userObject);
-        var friendsList = userObject.get("friends") === undefined ? []
-            : userObject.get("friends").map(
-            function(x) {
-              if (x===undefined) return "";
-              return x.id; });
-        console.log("friends:" +friendsList);
-        var queryFriends = new Parse.Query(Parse.User);
-        queryFriends.containedIn("objectId", friendsList);
-        queryFriends.find({success: function(list) {
-          //a list of friends
-          //var friendsList = list.map(function(x) { return x.id; });
-
-          for (i = 0; i < list.length; i++) {
-            var hit = false;
-            for (j = 0; j < nearbyUsers; j++) {
-              if (nearbyUsers[j].id === list[i].id)
-                hit = true;
-            }
-            if (hit) nearbyUsers.push(list[i]);
-          }
-
-          //generate k users by gender
-          var query = new Parse.Query(Parse.User);
-
-          query.notEqualTo("gender", userObject.gender);
-          query.limit(topk);
-          query.find({
-            success: function(list) {
-              for (i = 0; i < list.length; i++) {
-                var hit = false;
-                for (j = 0; j < nearbyUsers; j++) {
-                  if (nearbyUsers[j].id != list[i].id)
-                    hit = true;
-                }
-                if (hit) nearbyUsers.push(list[i]);
-              }
-
-              //remove him/herself
-              var mergedList = nearbyUsers.filter(function (x) { return x.id != userObject.id});
-              var minDistance = 9999;
-              var maxDistance = -1;
-              //var myGeoPoint = (userObject.get("location"));
-
-              for (i = 0; i < mergedList.length; i++) {
-                var geoPoint = (mergedList[i].get("location"));
-
-                var distance = geoPoint.kilometersTo(userGeoPoint);
-                //set distance for every user
-                mergedList[i].set("distance", distance);
-                //console.log(distance);
-                if (distance > maxDistance) maxDistance = distance;
-                if (distance < minDistance) minDistance = distance;
-              }
-
-              //make ranking
-              // var myCachedInfo = userObject.get("cachedInfo");
-              // var mytime = null;
-
-              // //console.log(myCachedInfo);
-              // if (myCachedInfo != null) {
-              //   var test = myCachedInfo.next_task_time;
-              //   mytime = test;
-              //   console.log(mytime);
-              // }
-
-              for (i = 0; i < mergedList.length; i++) {
-                var distance = mergedList[i].get("distance");
-                var locationScore = 1;
-                if (maxDistance - minDistance > 0.0001) {
-                  locationScore = (distance - minDistance) * 2 / (maxDistance - minDistance);
-                  locationScore = (locationScore - 1)^2;
-                }
-                var genderScore = 1;
-                if (userObject.gender === mergedList[i].gender)
-                  genderScore = 0;
-                var friendScore = 0;
-                if (friendsList.indexOf(mergedList[i].id) != -1)
-                  friendScore = 1;
-                var taskScore = 0;
-
-                //time in sec
-                var currentTime = new Date().getTime() / 1000
-                if (currentTime != null) {
-                  var otherCachedInfo = mergedList[i].get("cachedInfo");
-                  if (otherCachedInfo != null) {
-                    var otherTime = otherCachedInfo.next_task_time;
-                    //console.log(otherTime + " " + mytime);
-                    var timeDiff = Math.abs(otherTime - currentTime) / 60000 / 10;//10min
-                    //console.log("time diff: " + timeDiff);
-                    taskScore = Math.pow(1.1, -timeDiff);
-                  }
-                }
-
-                //TODO: query task and compare with current user's alarm
-                mergedList[i].score = locationScore + genderScore + friendScore + taskScore;
-              }
-
-              mergedList.sort(function(x, y) {
-                if (x.score < y.score) return -1;
-                if (x.score > y.score) return 1;
-                return 0; } );
-
-              while (mergedList.length > topk) {
-                mergedList.pop();
-              }
-
-              response.success(mergedList.map(function(x) { return x.id; }));
-
-            }
-          });
-        }
-        });
-      },
-      error: function(error) {
-        response.error("Can't find any user with criteria: "+error.message);
-        console.log("search nearby users failed: " + error.message);
+      if (nearbyUsers.indexOf(friend) != -1){
+        nearbyUsers.push(friend);
       }
     });
-  },
-    error: function() {
-      response.error("user lookup failed");
+    //generate k users by gender
+    var query = new Parse.Query(Parse.User);
+
+    query.notEqualTo("gender", userObject.gender);
+    query.limit(topk);
+    return query.find();
+  }).then(function (opGenderList) {
+    opGenderList.forEach(function (user) {
+      if (nearByUsers.indexOf(user) != -1){
+        nearByUsers.push(user);
+      }
+    });
+
+    //remove him/herself
+    var mergedList = nearbyUsers.filter(function (x) { return x.id != userObject.id});
+
+    //get distance
+    var minDistance = 9999;
+    var maxDistance = -1;
+    mergedList.forEach(function (user) {
+      var geoPoint = user.get("location");
+      var distance = geoPoint.kilometersTo(userGeoPoint);
+      //set distance for every user
+      if (distance > maxDistance) maxDistance = distance;
+      if (distance < minDistance) minDistance = distance;
+      user.set("distance", distance);
+    });
+
+    //sort distance
+    mergedList.forEach(function (user) {
+      var distance = user.get("distance");
+      var locationScore = 1.0;
+      //console.log(distance+"|"+maxDistance+"|"+minDistance);
+      var base = maxDistance==minDistance ? 0.01:(maxDistance-minDistance);
+      locationScore = (distance - minDistance)  / base;
+      locationScore = Math.pow(locationScore - 1, 2);
+      //gender score
+      var genderScore = 1;
+      if (userObject.get("gender ")=== user.get("gender"))
+        genderScore = 0;
+      var friendScore = 0;
+      if (friends.indexOf(user.id) != -1)
+        friendScore = 1;
+
+      //time score
+      var timeScore = 0;
+      var currentTime = new Date();//time in sec
+        var otherCachedInfo = user.get("cachedInfo");
+        if (otherCachedInfo != null) {
+          var alarms = otherCachedInfo["alarm_schedule"];
+          var nextAlarm = new Date(currentTime.getTime()+7*24*3600*1000);
+          for(var wkd in alarms) {
+            var time = alarms[wkd];
+            var t = new Date(time);
+            //console.log("time for "+wkd+": "+time+"|"+typeof(time));
+            while (t < currentTime) {
+              var t_ = t.getTime() + 7 * 24 * 3600 * 1000;
+              t = new Date(t_);
+            }
+            if (t < nextAlarm) {
+              nextAlarm = t;
+            }
+          }
+          var timeDiff = Math.abs(nextAlarm - currentTime) / 600 / 1000;//10min
+          timeScore = Math.pow(1.1, -timeDiff);
+          //console.log(timeScore+"|"+timeDiff+"|"+nextAlarm);
+        }
+      console.log(locationScore + "|" + genderScore + "|" + friendScore + "|" + timeScore)
+      user.set("score", locationScore + genderScore + friendScore + timeScore);
+    });
+
+    //sort
+    mergedList.sort(function(x, y) {
+      return y.get("score") - x.get("score")
+    });
+    //remove redundant
+    while (mergedList.length > topk) {
+      mergedList.pop();
     }
+    //log
+    var sampleN = 5;
+    for (var i= 0; i<sampleN; i++){
+      var j = Math.floor(topk / sampleN * i);
+      var user = mergedList[j];
+      console.log("Sample "+j+": ("+user.get("score")+")");
+    }
+
+    response.success(mergedList.map(function(x) { return x.id; }));
+
   });
 });
 
@@ -805,7 +744,7 @@ Parse.Cloud.job("backgroundJob", function(request, status) {
           title: "Hello From Woke",
           body: "It has been a while since your last used Woke. Come to see what's new.",
           type: "notice",
-          userInfo: "{User:" + user + ", type:notice}",
+          userInfo: "{User:" + user + ", type:notice}"
         }
       }, {
         success: function() {
