@@ -119,7 +119,7 @@
             //========================== relation ==========================
             PFRelation *parseRelation = [self relationForKey:key];
             if (parseRelation.targetClass) {
-                NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
+                NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name.serverClass], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
             }
             
             //TODO: create a new PFRelation so that we don't need to deal with deletion

@@ -29,9 +29,15 @@
 }
 
 - (void)save{
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
-        //
-    }];
+	[self.managedObjectContext MR_saveToPersistentStoreAndWait];
+}
+
+- (void)saveWithCompletion:(BoolErrorBlock)block{
+	[self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
+		if (block) {
+			block(contextDidSave, error);
+		}
+	}];
 }
 
 - (void)updateToServerWithCompletion:(PFObjectResultBlock)block{

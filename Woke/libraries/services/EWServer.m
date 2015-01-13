@@ -143,13 +143,7 @@
                 block(succeeded, error);
             }
         }];
-        
-        //save
-        [EWSync save];
     }];
-    
-    
-    
 }
 
 

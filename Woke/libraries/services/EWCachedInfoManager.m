@@ -51,7 +51,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
 //for others
 + (instancetype)managerForPerson:(EWPerson *)person{
-    NSParameterAssert(!person.isMe);
+	//NSParameterAssert(!person.isMe);
     EWCachedInfoManager *manager = [EWCachedInfoManager new];
     manager.currentPerson = person;
     [manager loadStatsFromCache];

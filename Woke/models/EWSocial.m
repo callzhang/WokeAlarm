@@ -19,7 +19,7 @@
 	//data
 	sg.owner = person;
 	//save
-	[EWSync save];
+	[sg save];
 	NSLog(@"Created new social graph for user %@", person.name);
 	return sg;
 }

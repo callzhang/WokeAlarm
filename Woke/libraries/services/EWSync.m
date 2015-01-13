@@ -868,7 +868,7 @@ NSManagedObjectContext *mainContext;
 
 - (NSString *)serverType{
     NSDictionary *typeDic = kServerTransformTypes;
-    NSString *serverType = typeDic[self];
+	NSString *serverType = typeDic[self];
     return serverType;
 }
 

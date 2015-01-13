@@ -7,6 +7,7 @@
 - (void)remove;
 - (NSString *)serverID;
 - (void)save;
+- (void)saveWithCompletion:(BoolErrorBlock)block;
 /**
  *  Upload to server immediately
  *

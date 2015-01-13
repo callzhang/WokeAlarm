@@ -225,7 +225,8 @@
             
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
             //contains value
-            if ([[self getPropertyClassByName:key] serverType]){
+			NSString *localClass = [self getPropertyClassByName:key];
+            if (localClass.serverType){
                 
                 //need to deal with local type
                 if ([parseValue isKindOfClass:[PFGeoPoint class]]) {
@@ -233,7 +234,7 @@
                     CLLocation *loc = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
                     [self setValue:loc forKey:key];
                 }else{
-                    [NSException raise:@"Server class not handled" format:@"Check your code!"];
+                    [NSException raise:[NSString stringWithFormat:@"Server class %@ not handled (%@)", localClass.serverClass, key] format:@"Check your code!"];
                 }
             }else{
                 @try {
@@ -246,7 +247,7 @@
         }else{
             //parse value empty, delete
             if ([self valueForKey:key]) {
-                //NSLog(@"~~~> Delete attribute on MO %@(%@)->%@", self.entity.name, [obj valueForKey:kParseObjectID], obj.name);
+                DDLogVerbose(@"~~~> Delete attribute on MO %@(%@)->%@", self.entity.name, [obj valueForKey:kParseObjectID], obj.name);
                 [self setValue:nil forKey:key];
             }
         }
