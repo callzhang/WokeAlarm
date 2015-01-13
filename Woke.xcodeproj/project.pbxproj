@@ -86,6 +86,7 @@
 		0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */; };
 		0990EF7C1A22C606001AF099 /* MSReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF791A22C606001AF099 /* MSReplaceSegue.m */; };
 		099A6C751A6367B8000B9686 /* EWTimeChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 099A6C741A6367B8000B9686 /* EWTimeChildViewController.m */; };
+		099A6C781A64B49C000B9686 /* EWWakeUpChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 099A6C771A64B49C000B9686 /* EWWakeUpChildViewController.m */; };
 		09A087181A425EBE00FCE9FA /* EWSetStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */; };
 		09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A776FE1A11D8D9004AF902 /* WokeTests.m */; };
 		09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A777101A11E2BD004AF902 /* AppDelegate.m */; };
@@ -325,6 +326,8 @@
 		0990EF791A22C606001AF099 /* MSReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSReplaceSegue.m; sourceTree = "<group>"; };
 		099A6C731A6367B8000B9686 /* EWTimeChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWTimeChildViewController.h; sourceTree = "<group>"; };
 		099A6C741A6367B8000B9686 /* EWTimeChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWTimeChildViewController.m; sourceTree = "<group>"; };
+		099A6C761A64B49C000B9686 /* EWWakeUpChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpChildViewController.h; sourceTree = "<group>"; };
+		099A6C771A64B49C000B9686 /* EWWakeUpChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeUpChildViewController.m; sourceTree = "<group>"; };
 		09A087161A425EBE00FCE9FA /* EWSetStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSetStatusViewController.h; sourceTree = "<group>"; };
 		09A087171A425EBE00FCE9FA /* EWSetStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSetStatusViewController.m; sourceTree = "<group>"; };
 		09A776DF1A11D8D9004AF902 /* Woke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woke.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -530,6 +533,8 @@
 				09229C9E1A631BA6008061E5 /* EWPeopleArrayChildViewController.m */,
 				099A6C731A6367B8000B9686 /* EWTimeChildViewController.h */,
 				099A6C741A6367B8000B9686 /* EWTimeChildViewController.m */,
+				099A6C761A64B49C000B9686 /* EWWakeUpChildViewController.h */,
+				099A6C771A64B49C000B9686 /* EWWakeUpChildViewController.m */,
 			);
 			path = "child-viewcontrollers";
 			sourceTree = "<group>";
@@ -1442,6 +1447,7 @@
 				096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */,
 				096AAAEE1A195A3900B4CBFF /* NSManagedObject+EWSync.m in Sources */,
 				09229C981A6317F8008061E5 /* EWPreWakeupViewController.m in Sources */,
+				099A6C781A64B49C000B9686 /* EWWakeUpChildViewController.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
 				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,

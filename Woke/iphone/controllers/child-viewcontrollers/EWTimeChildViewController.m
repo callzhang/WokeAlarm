@@ -14,7 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelTime3;
 @property (weak, nonatomic) IBOutlet UILabel *labelTime4;
 @property (weak, nonatomic) IBOutlet UILabel *labelAmpm;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *firstLetterLeadingConstant;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *firstLetterWidthConstraint;
 @end
 
 @implementation EWTimeChildViewController
@@ -30,12 +30,17 @@
         NSString *minutes = [date mt_stringFromDateWithFormat:@"mm" localized:NO];
         if (hour.length == 1) {
             self.labelTime1.text = @"";
-            self.firstLetterLeadingConstant.constant = -35;
+            self.firstLetterWidthConstraint.constant = 0;
             self.labelTime2.text = hour;
         }
         else if (hour.length == 2) {
             self.labelTime1.text = @"1";
-            self.firstLetterLeadingConstant.constant = -5;
+            if (self.type == EWTimeChildViewControllerTypeNormal) {
+                self.firstLetterWidthConstraint.constant = 50;
+            }
+            else if (self.type == EWTimeChildViewControllerTypeSmall) {
+                self.firstLetterWidthConstraint.constant = 38;
+            }
             self.labelTime2.text = [hour substringWithRange:NSMakeRange(1, 1)];
         }
         
