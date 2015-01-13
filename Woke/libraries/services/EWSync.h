@@ -20,7 +20,7 @@ typedef void (^EWSavingCallback)(void);
 //https://drive.draw.io/#G0B8EqrGjPaSeTakN6VzRwZzdFaDA
 
 //Error codes:
-//http://www.lifeasbob.com/Code/ErrorCodes.aspx
+//http://parse.com/docs/dotnet/api/html/T_Parse_ParseException_ErrorCode.htm
 //or https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/NSError_Codes
 #define kEWSyncErrorNoConnection            668 //NO_CONNECTION
 #define kEWSyncErrorNoServerID              113 //NO_MORE_SEARCH_HANDLES: No more internal file identifiers available

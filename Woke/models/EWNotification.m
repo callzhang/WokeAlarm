@@ -93,4 +93,8 @@
     
     return good;
 }
+
+- (EWServerObject *)ownerObject{
+    return self.owner;
+}
 @end

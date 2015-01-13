@@ -102,4 +102,8 @@ NSString * const EWPersonDefaultName = @"New User";
 - (NSString *)serverClassName{
 	return @"_User";
 }
+
+- (EWServerObject *)ownerObject{
+    return self;
+}
 @end

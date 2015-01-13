@@ -32,15 +32,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     
     //observe activities
     [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        DDLogVerbose(@"CachedManager detected Activity change,  detected and statistics updated");
-        [self updateStatistics];
-        [self updateActivityCacheWithCompletion:nil];
+        if (change.allKeys.count) {
+            DDLogVerbose(@"CachedManager detected Activity change,  detected and statistics updated");
+            [self updateStatistics];
+            [self updateActivityCacheWithCompletion:nil];
+        }
+        
     }];
     
     //observer friends
     [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends");
-        [self updateCachedFriends];
+        if (change.allKeys.count) {
+            DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends");
+            [self updateCachedFriends];
+        }
     }];
     
     //update stats then update stats

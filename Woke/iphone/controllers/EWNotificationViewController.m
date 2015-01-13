@@ -97,14 +97,16 @@
 - (IBAction)refresh:(id)sender{
     [loading startAnimating];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"EWNotification"];
-    [query whereKey:kParseObjectID notContainedIn:[[EWSession sharedSession].currentUser.notifications valueForKey:kParseObjectID]];
-    [query whereKey:@"owner" equalTo:[PFUser currentUser]];
+    PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWNotification class])];
+    if ([EWPerson me].notifications.count) {
+        [query whereKey:kParseObjectID notContainedIn:[[EWPerson me].notifications valueForKey:kParseObjectID]];
+    }
+    [query whereKey:EWNotificationRelationships.owner equalTo:[PFUser currentUser]];
     [EWSync findServerObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
         for (PFObject *PO in objects) {
             EWNotification *notification = (EWNotification *)[PO managedObjectInContext:mainContext];
             NSLog(@"Found new notification %@(%@)", notification.type, notification.objectId);
-            notification.owner = [EWSession sharedSession].currentUser;
+            notification.owner = [EWPerson me];
         }
         notifications = [EWPerson myUnreadNotifications];
         [self.tableView reloadData];
@@ -114,6 +116,7 @@
 		
 		if (notifications.count != 0){
 			self.title = [NSString stringWithFormat:@"Notifications (%ld)",(unsigned long)notifications.count];
+            [[EWPerson me] save];
 		}
     }];
 }

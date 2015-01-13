@@ -11,5 +11,7 @@
 
 
 @implementation EWMessage
-
+- (instancetype)ownerObject{
+    return self.sender;
+}
 @end

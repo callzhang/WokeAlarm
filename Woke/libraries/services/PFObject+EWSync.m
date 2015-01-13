@@ -265,13 +265,18 @@
     if (!SO) {
         //if managedObject not exist, create it locally
         SO = [NSClassFromString(self.localClassName) MR_createInContext:context];
-        [SO assignValueFromParseObject:self];
+        if ([(EWPerson *)SO.ownerObject isMe]) {
+            [SO updateValueAndRelationFromParseObject:self];
+        }else{
+            [SO assignValueFromParseObject:self];
+        }
         DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
     }else{
         
-        if (SO.isOutDated || self.isNewerThanMO) {
+        if ([(EWPerson *)SO.ownerObject isMe]) {
+            [SO updateValueAndRelationFromParseObject:self];
+        }else{
             [SO assignValueFromParseObject:self];
-            //[EWDataStore saveToLocal:mo];//mo will be saved later
         }
     }
     

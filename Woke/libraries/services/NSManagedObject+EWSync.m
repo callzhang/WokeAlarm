@@ -247,7 +247,7 @@
         }else{
             //parse value empty, delete
             if ([self valueForKey:key]) {
-                DDLogVerbose(@"~~~> Delete attribute on MO %@(%@)->%@", self.entity.name, [obj valueForKey:kParseObjectID], obj.name);
+                DDLogVerbose(@"~~~> Delete attribute on MO %@(%@)->%@", self.entity.name, self.serverID, key);
                 [self setValue:nil forKey:key];
             }
         }

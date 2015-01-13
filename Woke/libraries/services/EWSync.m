@@ -761,17 +761,20 @@ NSManagedObjectContext *mainContext;
     }
     
     //if no ACL, use MO to determine
-    __block EWPerson *p;
-    if ([SO.entity.name isEqualToString:kSyncUserClass]) {
-        p = (EWPerson *)SO;
-    }else{
-        [SO.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-            if ([obj.destinationEntity.name isEqualToString:kSyncUserClass]) {
-                p = [SO valueForKey:key];
-                *stop = YES;
-            }
-        }];
-    }
+//    __block EWPerson *p;
+//    if ([SO.entity.name isEqualToString:kSyncUserClass]) {
+//        p = (EWPerson *)SO;
+//    }else{
+//        [SO.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+//            if ([obj.destinationEntity.name isEqualToString:kSyncUserClass]) {
+//                if (!obj.isToMany) {
+//                    p = [SO valueForKey:key];
+//                    *stop = YES;
+//                }
+//            }
+//        }];
+//    }
+    EWPerson *p = (EWPerson *)SO.ownerObject;
     if (p.isMe){
         return YES;
     }
@@ -781,7 +784,7 @@ NSManagedObjectContext *mainContext;
 
 #pragma mark - Parse helper methods
 + (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error{
-
+    //EWAssertMainThread
 	NSArray *result = [query findObjects:error];
 	for (PFObject *PO in result) {
 		[[EWSync sharedInstance] setCachedParseObject:PO];
@@ -790,16 +793,26 @@ NSManagedObjectContext *mainContext;
 }
 
 + (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
-
-	[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-		
-		for (PFObject *PO in objects) {
-			[[EWSync sharedInstance] setCachedParseObject:PO];
-		}
-		if (block) {
-			block(objects, error);
-		}
-	}];
+    EWAssertMainThread
+    @try {
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            for (PFObject *PO in objects) {
+                [[EWSync sharedInstance] setCachedParseObject:PO];
+                [PO managedObjectInContext:mainContext];
+            }
+            if (block) {
+                block(objects, error);
+            }
+        }];
+    }
+    @catch (NSException *exception) {
+        if (block) {
+            NSError *error = [NSError errorWithDomain:@"com.wokealarm.woke" code:102 userInfo:@{@"localizedDescription": @"Error code indicating you tried to query with a datatype that doesn't support it, like exact matching an array or object."}];
+            block(nil, error);
+        }
+    }
+	
 }
 
 - (PFObject *)getCachedParseObjectForID:(NSString *)objectId{

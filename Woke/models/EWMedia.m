@@ -134,4 +134,8 @@
     //TODO
     return nil;
 }
+
+- (EWServerObject *)ownerObject{
+    return self.author;
+}
 @end

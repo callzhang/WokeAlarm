@@ -29,10 +29,16 @@
 }
 
 - (void)save{
+    if (self.updated) {
+        self.updatedAt = [NSDate date];
+    }
 	[self.managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 - (void)saveWithCompletion:(BoolErrorBlock)block{
+    if (self.updated) {
+        self.updatedAt = [NSDate date];
+    }
 	[self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
 		if (block) {
 			block(contextDidSave, error);
@@ -63,6 +69,10 @@
             block(self.parseObject, nil);
         }
     }
+}
+
+- (EWServerObject *)ownerObject{
+    return nil;
 }
 
 @end

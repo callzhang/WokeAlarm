@@ -67,5 +67,7 @@ const struct EWActivityTypes EWActivityTypes = {
     return activity;
 }
 
-
+-(EWServerObject *)ownerObject{
+    return self.owner;
+}
 @end

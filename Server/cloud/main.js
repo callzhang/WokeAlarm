@@ -91,16 +91,13 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
 
     //sort distance
     mergedList.forEach(function (user) {
-      var distance = user.get("distance");
-      var locationScore = 1.0;
-      //console.log(distance+"|"+maxDistance+"|"+minDistance);
+      //distance score
       var base = maxDistance==minDistance ? 0.01:(maxDistance-minDistance);
-      locationScore = (distance - minDistance)  / base;
+      var locationScore = (user.get("distance") - minDistance)  / base;
       locationScore = Math.pow(locationScore - 1, 2);
+
       //gender score
-      var genderScore = 1;
-      if (userObject.get("gender ")=== user.get("gender"))
-        genderScore = 0;
+      var genderScore = userObject.get("gender") == user.get("gender") ? 0 : 1;
       var friendScore = 0;
       if (friends.indexOf(user.id) != -1)
         friendScore = 1;
@@ -115,7 +112,6 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
           for(var wkd in alarms) {
             var time = alarms[wkd];
             var t = new Date(time);
-            //console.log("time for "+wkd+": "+time+"|"+typeof(time));
             while (t < currentTime) {
               var t_ = t.getTime() + 7 * 24 * 3600 * 1000;
               t = new Date(t_);
@@ -126,9 +122,8 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
           }
           var timeDiff = Math.abs(nextAlarm - currentTime) / 600 / 1000;//10min
           timeScore = Math.pow(1.1, -timeDiff);
-          //console.log(timeScore+"|"+timeDiff+"|"+nextAlarm);
         }
-      console.log(locationScore + "|" + genderScore + "|" + friendScore + "|" + timeScore)
+      //console.log(locationScore + "|" + genderScore + "|" + friendScore + "|" + timeScore)
       user.set("score", locationScore + genderScore + friendScore + timeScore);
     });
 
@@ -143,7 +138,7 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
     //log
     var sampleN = 5;
     for (var i= 0; i<sampleN; i++){
-      var j = Math.floor(topk / sampleN * i);
+      var j = Math.floor(mergedList.length / sampleN * i);
       var user = mergedList[j];
       console.log("Sample "+j+": ("+user.get("score")+")");
     }

@@ -361,5 +361,8 @@
     DDLogInfo(@"Cancelled %ld sleep notification", (long)n);
 }
 
+- (EWServerObject *)ownerObject{
+    return self.owner;
+}
 
 @end
