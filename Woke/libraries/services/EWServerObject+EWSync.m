@@ -196,7 +196,6 @@
     //NSArray *allKeys = object.allKeys;
     //add or delete some attributes here
     [managedObjectAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
-        key = [NSString stringWithFormat:@"%@", key];
         id parseValue = [object objectForKey:key];
         //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
@@ -255,6 +254,9 @@
                 }
             }
         }else{
+			if ([attributeUploadSkipped containsObject:key]) {
+				return;
+			}
             //parse value empty, delete
 			id MOValue = [self valueForKey:key];
             if (MOValue) {
