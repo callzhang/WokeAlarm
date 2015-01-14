@@ -43,6 +43,8 @@
 		09269DE21A1316E40048DC44 /* Lato-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DE01A1316640048DC44 /* Lato-Hairline.ttf */; };
 		09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */; };
 		09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */; };
+		093DB77F1A65FC8D0032E7EB /* EWPostWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */; };
+		093DB7821A65FD970032E7EB /* EWPostWakeupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */; };
 		096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */; };
 		096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA4B1A19593300B4CBFF /* EWMainViewController.m */; };
 		096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */; };
@@ -220,6 +222,10 @@
 		09285A3B1A1F0E8100C808C0 /* EWMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMenuViewController.m; sourceTree = "<group>"; };
 		09285A3D1A1F115000C808C0 /* UIStoryboard+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Extensions.h"; sourceTree = "<group>"; };
 		09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStoryboard+Extensions.m"; sourceTree = "<group>"; };
+		093DB77D1A65FC8D0032E7EB /* EWPostWakeUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPostWakeUpViewController.h; sourceTree = "<group>"; };
+		093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPostWakeUpViewController.m; sourceTree = "<group>"; };
+		093DB7801A65FD970032E7EB /* EWPostWakeupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPostWakeupTableViewCell.h; sourceTree = "<group>"; };
+		093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPostWakeupTableViewCell.m; sourceTree = "<group>"; };
 		096AAA461A19593300B4CBFF /* EWLoginGateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWLoginGateViewController.h; sourceTree = "<group>"; };
 		096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWLoginGateViewController.m; sourceTree = "<group>"; };
 		096AAA4A1A19593300B4CBFF /* EWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainViewController.h; sourceTree = "<group>"; };
@@ -578,6 +584,8 @@
 				09229C971A6317F8008061E5 /* EWPreWakeupViewController.m */,
 				09229C991A6318BB008061E5 /* EWSleepingViewController.h */,
 				09229C9A1A6318BB008061E5 /* EWSleepingViewController.m */,
+				093DB77D1A65FC8D0032E7EB /* EWPostWakeUpViewController.h */,
+				093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -593,6 +601,8 @@
 				091C67471A3523AF0091B8A6 /* legacy */,
 				09229CA01A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.h */,
 				09229CA11A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.m */,
+				093DB7801A65FD970032E7EB /* EWPostWakeupTableViewCell.h */,
+				093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -1399,6 +1409,7 @@
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */,
 				091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */,
+				093DB77F1A65FC8D0032E7EB /* EWPostWakeUpViewController.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
 				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
 				09DF4F891A1434AF00BEA328 /* _EWMessage.m in Sources */,
@@ -1489,6 +1500,7 @@
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,
 				09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */,
 				091C67671A3523C40091B8A6 /* EWAlarmTableViewCell.m in Sources */,
+				093DB7821A65FD970032E7EB /* EWPostWakeupTableViewCell.m in Sources */,
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
 				9BFCFFDF1A3E74DE002B8A83 /* EWFriendsViewController.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
