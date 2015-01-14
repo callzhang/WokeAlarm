@@ -32,7 +32,6 @@
 - (BOOL)isFriend;
 - (BOOL)friendPending;
 - (BOOL)friendWaiting;
-- (void)updateMyCachedFriends;
 - (void)requestFriend:(EWPerson *)person;
 - (void)acceptFriend:(EWPerson *)person;
 - (void)unfriend:(EWPerson *)person;

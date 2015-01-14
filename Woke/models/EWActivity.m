@@ -50,11 +50,11 @@ const struct EWActivityTypes EWActivityTypes = {
     return good;
 }
 
-- (void)addMediaID:(NSString *)objectID{
+- (void)addMediaID:(NSString *)serverID{
     NSMutableArray *mediaArray = self.mediaIDs.mutableCopy ?: [NSMutableArray new];
-    [mediaArray addObject:objectID];
+    [mediaArray addObject:serverID];
     self.mediaIDs = mediaArray.copy;
-    [EWSync save];
+    [self save];
 }
 
 
@@ -67,5 +67,7 @@ const struct EWActivityTypes EWActivityTypes = {
     return activity;
 }
 
-
+-(EWServerObject *)ownerObject{
+    return self.owner;
+}
 @end

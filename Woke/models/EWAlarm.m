@@ -124,9 +124,7 @@
     [self willChangeValueForKey:EWAlarmAttributes.time];
     [self setPrimitiveTime:time];
     [self didChangeValueForKey:EWAlarmAttributes.time];
-    if (![self validate]) {
-        return;
-    }
+    if (![self validate]) return;
     
     //update cached alarm time in currentUser
     [self updateCachedAlarmTime];
@@ -149,7 +147,7 @@
     [self willChangeValueForKey:EWAlarmAttributes.tone];
     [self setPrimitiveTone:tone];
     [self didChangeValueForKey:EWAlarmAttributes.tone];
-    
+    if (![self validate]) return;
     [self cancelLocalNotification];
     [self scheduleLocalNotification];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmToneChanged object:self];
@@ -159,6 +157,7 @@
     [self willChangeValueForKey:EWAlarmAttributes.statement];
     [self setPrimitiveStatement:statement];
     [self didChangeValueForKey:EWAlarmAttributes.statement];
+    if (![self validate]) return;
     [self updateCachedStatement];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStatementChanged object:self];
 }
@@ -183,6 +182,7 @@
     EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
     NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
+    if (!wkday) return;
     me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:@[kCachedStatements, wkday]];
 
     [me save];
@@ -361,5 +361,8 @@
     DDLogInfo(@"Cancelled %ld sleep notification", (long)n);
 }
 
+- (EWServerObject *)ownerObject{
+    return self.owner;
+}
 
 @end

@@ -352,6 +352,33 @@ static const float originalSize = 80.0;
 }
 
 
+#pragma mark - HUD
++ (void)showSuccessHUBWithString:(NSString *)string{
+	UIView *rootView = [self getTopView];
+	[rootView showSuccessNotification:string];
+}
+
++ (void)showFailureHUBWithString:(NSString *)string{
+	UIView *rootView = [self getTopView];
+	[rootView showFailureNotification:string];
+}
+
++ (void)showWarningHUBWithString:(NSString *)string{
+	UIView *rootView = [self getTopView];
+	[rootView showNotification:string WithStyle:hudStyleWarning audoHide:5];
+}
+
++ (UIView *)getTopView{
+	UIView *rootView;
+	UIViewController *rootController = [UIWindow mainWindow].rootViewController;
+	if ([rootController isKindOfClass:[UINavigationController class]]) {
+		rootView = [(UINavigationController *)rootController topViewController].view;
+	}else{
+		rootView = rootController.view;
+	}
+	return rootView;
+}
+
 + (void)dismissHUDinView:(UIView *)view{
     NSArray *huds = [JGProgressHUD allProgressHUDsInView:view];
     for (JGProgressHUD *hud in huds) {

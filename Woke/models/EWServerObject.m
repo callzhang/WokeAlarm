@@ -29,9 +29,21 @@
 }
 
 - (void)save{
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
-        //
-    }];
+    if (self.updated && self.updatedAt) {
+        self.updatedAt = [NSDate date];
+    }
+	[self.managedObjectContext MR_saveToPersistentStoreAndWait];
+}
+
+- (void)saveWithCompletion:(BoolErrorBlock)block{
+    if (self.updated && self.updatedAt) {
+        self.updatedAt = [NSDate date];
+    }
+	[self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
+		if (block) {
+			block(contextDidSave, error);
+		}
+	}];
 }
 
 - (void)updateToServerWithCompletion:(PFObjectResultBlock)block{
@@ -57,6 +69,10 @@
             block(self.parseObject, nil);
         }
     }
+}
+
+- (EWServerObject *)ownerObject{
+    return nil;
 }
 
 @end

@@ -10,9 +10,10 @@
 #import "EWPerson.h"
 
 @interface EWServer : NSObject
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWServer)
 
 #pragma mark - Handle Push Notification
-+ (void)handlePushNotification:(NSDictionary *)push;
++ (void)handlePushNotification:(NSDictionary *)payload;
 
 #pragma mark - Handle Local Notification
 + (void)handleLocalNotification:(UILocalNotification *)localNotif;
@@ -64,14 +65,14 @@
 /**
  Initiate the Push Notification registration to APNS
  */
-+ (void)requestNotificationPermissions;
+- (void)requestNotificationPermissions;
 /**
  Handle the returned token for registered device. Register the push service to 3rd party server.
  */
-+ (void)registerPushNotificationWithToken:(NSData *)deviceToken;
+- (void)registerPushNotificationWithToken:(NSData *)deviceToken;
 
 
-+ (void)searchForFriendsOnServer;
+//+ (void)searchForFriendsOnServer;
 
 //+(void)publishOpenGraphUsingAPICallsWithObjectId:(NSString *)objectId andUrlString:(NSString *)url;
 

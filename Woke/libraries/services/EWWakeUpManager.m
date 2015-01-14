@@ -156,9 +156,6 @@
         //need to create some voice
         [[EWMediaManager sharedInstance] getWokeVoice];
     }
-    
-    //save
-    [EWSync save];
 	
 	//set volume
 	[[EWAVManager sharedManager] setDeviceVolume:1.0];

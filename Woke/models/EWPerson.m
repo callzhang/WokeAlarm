@@ -96,16 +96,14 @@ NSString * const EWPersonDefaultName = @"New User";
         self.preference = kUserDefaults;
     }
     
-    //friends
-    NSArray *friendsID = self.cachedInfo[kFriended];
-    if (self.friends.count != friendsID.count) {
-        [[EWPerson me] updateMyCachedFriends];
-    }
-    
     return good;
 }
 
 - (NSString *)serverClassName{
 	return @"_User";
+}
+
+- (EWServerObject *)ownerObject{
+    return self;
 }
 @end

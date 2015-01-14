@@ -15,6 +15,7 @@
 #import <KVOController/FBKVOController.h>
 #import "EWAlarm.h"
 #import "NSDictionary+KeyPathAccess.h"
+#import "NSDate+MTDates.h"
 
 @implementation EWCachedInfoManager
 //TODO: There is unfinished work
@@ -30,16 +31,22 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     self.currentPerson = [EWPerson me];
     
     //observe activities
-    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.activities options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        DDLogVerbose(@"CachedManager detected Activity change,  detected and statistics updated");
-        [self updateStatistics];
-        [self updateActivityCacheWithCompletion:nil];
+    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.activities options:0 block:^(id observer, id object, NSDictionary *change) {
+		//If the value of the NSKeyValueChangeKindKey entry is NSKeyValueChangeInsertion, NSKeyValueChangeRemoval, or NSKeyValueChangeReplacement, the value of this key is an NSIndexSet object that contains the indexes of the inserted, removed, or replaced objects.
+        if (change[NSKeyValueChangeIndexesKey]) {
+            DDLogVerbose(@"CachedManager detected Activity change, detected and statistics updated: %@", change[NSKeyValueChangeIndexesKey]);
+            [self updateStatistics];
+            [self updateActivityCacheWithCompletion:nil];
+        }
     }];
     
     //observer friends
-    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends");
-        [self updateCachedFriends];
+    [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:0 block:^(id observer, id object, NSDictionary *change) {
+		//If the value of the NSKeyValueChangeKindKey entry is NSKeyValueChangeInsertion, NSKeyValueChangeRemoval, or NSKeyValueChangeReplacement, the value of this key is an NSIndexSet object that contains the indexes of the inserted, removed, or replaced objects.
+        if (change[NSKeyValueChangeIndexesKey]) {
+            DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends: %@",change[NSKeyValueChangeIndexesKey]);
+            [self updateCachedFriends];
+        }
     }];
     
     //update stats then update stats
@@ -50,7 +57,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
 //for others
 + (instancetype)managerForPerson:(EWPerson *)person{
-    NSParameterAssert(!person.isMe);
+	//NSParameterAssert(!person.isMe);
     EWCachedInfoManager *manager = [EWCachedInfoManager new];
     manager.currentPerson = person;
     [manager loadStatsFromCache];
@@ -111,10 +118,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         }
         NSInteger aveTime = totalTime / wakes;
         _aveWakingLength = [NSNumber numberWithInteger:aveTime];
-        [self setStatsToCache];
         return _aveWakingLength;
     }
-    return 0;
+    return @kMaxWakeTime;
 }
 
 - (NSString *)aveWakingLengthString{
@@ -148,10 +154,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         rate = wakes / totalWakes;
         
         _successRate =  [NSNumber numberWithFloat:rate];
-        [self setStatsToCache];
         return _successRate;
     }
-    return 0;
+    return @0;
 }
 
 - (NSString *)successString{
@@ -169,10 +174,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         double ratio = MIN(self.aveWakingLength.integerValue / kMaxWakabilityTime, 1);
         double level = 10 - ratio*10;
         _wakability = [NSNumber numberWithDouble:level];
-        [self setStatsToCache];
         return _wakability;
     }
-    return 0;
+    return @0;
 }
 
 - (NSString *)wakabilityStr{
@@ -198,7 +202,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         NSInteger aveTime = totalTime / wakes;
         NSDate *time = [[NSDate date] timeByMinutesFrom5am:aveTime];
         _aveWakeUpTime = time.date2String;
-        [self setStatsToCache];
         return _aveWakeUpTime;
     }
     
@@ -252,8 +255,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
                 activityLog = @{kActivityType: activity.type,
                                 kActivityTime: activity.time?:@0,
                                     kWokeTime: activity.completed?:@0,
-                                        kWokeTo: wokeTo.allObjects,
-                                kWokeBy: wokeBy?:@0};
+									kWokeTo: wokeTo.allObjects,
+									kWokeBy: wokeBy?:@0};
                 
                 //activityCache[dateKey] = activityLog;
             }
@@ -273,8 +276,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     NSSet *friends = [[EWPerson me].friends valueForKey:kParseObjectID];
     NSDictionary *cache = [EWPerson me].cachedInfo;
     NSArray *cachedFriends = cache[kCachedFriends]?:[NSArray new];
-    if (![friends.allObjects isEqualToArray:cachedFriends]) {
-        [EWPerson me].cachedInfo = [cache setValue:friends forImmutableKeyPath:@[kCachedFriends]];
+    if (![friends isEqualToSet:[NSSet setWithArray:cachedFriends]]) {
+        [EWPerson me].cachedInfo = [cache setValue:friends.allObjects forImmutableKeyPath:@[kCachedFriends]];
         [[EWPerson me] save];
     }
 }

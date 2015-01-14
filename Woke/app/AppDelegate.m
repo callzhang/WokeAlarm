@@ -25,6 +25,7 @@
 #import "DDTTYLogger.h"
 #import "DDFileLogger.h"
 #import "EWStyleController.h"
+#import "EWServer.h"
 
 UIViewController *rootViewController;
 
@@ -140,6 +141,21 @@ UIViewController *rootViewController;
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings{
     UIUserNotificationType type = notificationSettings.types;
     DDLogVerbose(@"Application registered user notification (%lu)", type);
-    [[NSNotificationCenter defaultCenter] postNotificationName:kUserNotificationRegistered object:nil];
+	if (notificationSettings.types != UIUserNotificationTypeNone) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:kUserNotificationRegistered object:notificationSettings];
+	}else{
+		DDLogError(@"Failed to register user notification");
+		//TODO: add alert view
+		[application openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+	}
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+	[[EWServer shared] registerPushNotificationWithToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+	//TODO: add alert view
+	DDLogError(@"Failed to register push: %@", error);
 }
 @end

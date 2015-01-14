@@ -19,7 +19,7 @@ extern const struct EWActivityTypes {
 // valid
 - (BOOL)validate;
 
-- (void)addMediaID:(NSString *)objectID;
+- (void)addMediaID:(NSString *)serverID;
 
 - (EWActivity *)createWithPerson:(EWPerson *)person friended:(BOOL)friended;
 @end

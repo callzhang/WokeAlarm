@@ -6,23 +6,31 @@
 //  Copyright (c) 2014 WokeAlarm.com. All rights reserved.
 //
 
-#import "NSManagedObject+EWSync.h"
+#import "EWServerObject+EWSync.h"
 #import "EWSync.h"
 #import "EWPerson.h"
 #import <objc/runtime.h>
 
-@implementation NSManagedObject(EWSync)
+@implementation EWServerObject(EWSync)
 #pragma mark - Server sync
 - (void)updateValueAndRelationFromParseObject:(PFObject *)parseObject{
     if (!parseObject) {
         DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
         return;
     }
-    if (!parseObject.isDataAvailable) {
-        DDLogError(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
-        return;
-    }
-    
+	NSError *err;
+	[parseObject fetchIfNeeded:&err];
+	if (!parseObject.isDataAvailable) {
+		if (err.code == kPFErrorObjectNotFound) {
+			DDLogError(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
+			NSManagedObject *trueSelf = [self.managedObjectContext existingObjectWithID:self.objectID error:&err];
+			if (trueSelf) {
+				[self setValue:nil forKeyPath:kParseObjectID];
+			}
+		}
+		return;
+	}
+	
     NSManagedObjectContext *localContext = self.managedObjectContext;
     
     //download data: the fetch here is just a prevention or default state that data is only refreshed when absolutely necessary. If we need check new data, we should refresh PO before passed in here. For example, we fetch PO at app launch for current user update purpose.
@@ -56,21 +64,21 @@
             }
             
             //download related PO
-            NSError *err;
-            NSArray *relatedParseObjects = [[toManyRelation query] findObjects:&err];
+            NSError *err2;
+            NSArray *relatedParseObjects = [[toManyRelation query] findObjects:&err2];
             //TODO: handle error
-            if ([err code] == kPFErrorObjectNotFound) {
+            if ([err2 code] == kPFErrorObjectNotFound) {
                 DDLogWarn(@"*** Uh oh, we couldn't find the related PO!");
                 NSManagedObject *trueSelf = [self.managedObjectContext existingObjectWithID:self.objectID error:NULL];
                 if (trueSelf) {
                     [self setValue:nil forKey:key];
                 }
                 return;
-            } else if ([err code] == kPFErrorConnectionFailed) {
+            } else if ([err2 code] == kPFErrorConnectionFailed) {
                 DDLogWarn(@"Uh oh, we couldn't even connect to the Parse Cloud!");
                 [self uploadEventually];
-            } else if (err) {
-                DDLogError(@"Error: %@", [err userInfo][@"error"]);
+            } else if (err2) {
+                DDLogError(@"Error: %@", [err2 userInfo][@"error"]);
                 return;
             }
             
@@ -103,46 +111,52 @@
             }
             if (relatedParseObject) {
                 //find corresponding MO
-                NSManagedObject *relatedManagedObject = [relatedParseObject managedObjectInContext:localContext];
+                EWServerObject *relatedManagedObject = [relatedParseObject managedObjectInContext:localContext];
                 [self setValue:relatedManagedObject forKey:key];
             }else{
-                //Handle no related PO, I doubt that we need to check the inverse related PO
-                BOOL inverseRelationExists;
-                NSManagedObject *relatedMO;
-                PFObject *relatedPO;//related PO get from relatedMO
-                
-                if (!relation.inverseRelationship) {
-                    //no inverse relation, skip check
-                    [self setValue:nil forKey:key];
-                    return;
-                }else{
-                    //relation empty, check inverse relation first
-                    relatedMO = [self valueForKey:key];
-                    if (!relatedMO) return;//no need to do anything
-                    relatedPO = relatedMO.parseObject;//find relatedPO
-                    //check if relatedPO's inverse relation contains PO
-                    if (relation.inverseRelationship.isToMany) {
-                        PFRelation *reflectRelation = [relatedPO valueForKey:relation.inverseRelationship.name];
-                        NSArray *reflectPOs = [[reflectRelation query] findObjects];
-                        inverseRelationExists = [reflectPOs containsObject:parseObject];
-                    }else{
-                        PFObject *reflectPO = [relatedPO valueForKey:relation.inverseRelationship.name];
-                        inverseRelationExists = [reflectPO.objectId isEqualToString:parseObject.objectId];
-                        //it could be that the inversePO is not our PO, in this case, the relation at server side is wrong, but we don't care?
-                    }
-                }
-                
-                if (!inverseRelationExists) {
-                    //both side of PO doesn't have
-                    [self setValue:nil forKey:key];
-                    DDLogInfo(@"~~~> Delete to-one relation on MO %@(%@)->%@(%@)", self.entity.name, parseObject.objectId, relation.name, [relatedMO valueForKey:kParseObjectID]);
-                }else{
-                    DDLogError(@"*** Something wrong, the inverse relation %@(%@) <-> %@(%@) deoesn't agree", self.entity.name, [self valueForKey:kParseObjectID], relatedMO.entity.name, [relatedMO valueForKey:kParseObjectID]);
-                    if (relatedPO.isNewerThanMO) {
-                        //PO wins
-                        [self setValue:nil forKey:key];
-                    }
-                }
+				//related PO is nil
+				if ([self valueForKey:key]) {
+					DDLogVerbose(@"~~~> Deleted to-one relation %@(%@)->%@(%@)", parseObject.parseClassName, parseObject.objectId, key, relatedParseObject.objectId);
+					[self setValue:nil forKey:key];
+				}
+				
+//                //Handle no related PO, I doubt that we need to check the inverse related PO
+//                BOOL inverseRelatedPOExists;
+//                EWServerObject *relatedMO;
+//                PFObject *relatedPO;//related PO get from relatedMO
+//                
+//                if (!relation.inverseRelationship) {
+//                    //no inverse relation, skip check
+//                    [self setValue:nil forKey:key];
+//                    return;
+//                }else{
+//                    //relation empty, check inverse relation first
+//                    relatedMO = [self valueForKey:key];
+//                    if (!relatedMO) return;//no need to do anything
+//                    relatedPO = relatedMO.parseObject;//find relatedPO
+//                    //check if relatedPO's inverse relation contains PO
+//                    if (relation.inverseRelationship.isToMany) {
+//                        PFRelation *reflectRelation = [relatedPO valueForKey:relation.inverseRelationship.name];
+//                        NSArray *reflectPOs = [[reflectRelation query] findObjects];
+//                        inverseRelatedPOExists = [reflectPOs containsObject:parseObject];
+//                    }else{
+//                        PFObject *reflectPO = [relatedPO valueForKey:relation.inverseRelationship.name];
+//                        inverseRelatedPOExists = [reflectPO.objectId isEqualToString:parseObject.objectId];
+//                        //it could be that the inversePO is not our PO, in this case, the relation at server side is wrong, but we don't care?
+//                    }
+//                }
+//                
+//                if (!inverseRelatedPOExists) {
+//                    //both side of PO doesn't have
+//                    [self setValue:nil forKey:key];
+//                    DDLogInfo(@"~~~> Delete to-one relation on MO %@(%@)->%@(%@)", self.entity.name, parseObject.objectId, relation.name, [relatedMO valueForKey:kParseObjectID]);
+//                }else{
+//                    DDLogError(@"*** Something wrong, the inverse relation %@(%@) <-> %@(%@) deoesn't agree", self.entity.name, [self valueForKey:kParseObjectID], relatedMO.entity.name, [relatedMO valueForKey:kParseObjectID]);
+//                    if (relatedPO.isNewerThanMO) {
+//                        //PO wins
+//                        [self setValue:nil forKey:key];
+//                    }
+//                }
             }
         }
     }];
@@ -163,9 +177,9 @@
     NSError *err;
     [object fetchIfNeeded:&err];
     if (!object.isDataAvailable) {
-        DDLogWarn(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", object.parseClassName, object.objectId);
         if (err.code == kPFErrorObjectNotFound) {
-            NSManagedObject *trueSelf = [self.managedObjectContext existingObjectWithID:self.objectID error:NULL];
+			DDLogError(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", object.parseClassName, object.objectId);
+            NSManagedObject *trueSelf = [self.managedObjectContext existingObjectWithID:self.objectID error:&err];
             if (trueSelf) {
                 [self setValue:nil forKeyPath:kParseObjectID];
             }
@@ -182,11 +196,6 @@
     //NSArray *allKeys = object.allKeys;
     //add or delete some attributes here
     [managedObjectAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
-        key = [NSString stringWithFormat:@"%@", key];
-        if (key.skipUpload) {
-            //skip the updatedAt
-            return;
-        }
         id parseValue = [object objectForKey:key];
         //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
@@ -225,7 +234,8 @@
             
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
             //contains value
-            if ([[self getPropertyClassByName:key] serverType]){
+			NSString *localClass = [self getPropertyClassByName:key];
+            if (localClass.serverType){
                 
                 //need to deal with local type
                 if ([parseValue isKindOfClass:[PFGeoPoint class]]) {
@@ -233,7 +243,7 @@
                     CLLocation *loc = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
                     [self setValue:loc forKey:key];
                 }else{
-                    [NSException raise:@"Server class not handled" format:@"Check your code!"];
+                    [NSException raise:[NSString stringWithFormat:@"Server class %@ not handled (%@)", localClass.serverClass, key] format:@"Check your code!"];
                 }
             }else{
                 @try {
@@ -244,15 +254,18 @@
                 }
             }
         }else{
+			if ([attributeUploadSkipped containsObject:key]) {
+				return;
+			}
             //parse value empty, delete
-            if ([self valueForKey:key]) {
-                //NSLog(@"~~~> Delete attribute on MO %@(%@)->%@", self.entity.name, [obj valueForKey:kParseObjectID], obj.name);
+			id MOValue = [self valueForKey:key];
+            if (MOValue) {
+                DDLogVerbose(@"~~~> Delete attribute on MO %@(%@)->%@(%@)", self.entity.name, self.serverID, key, MOValue);
                 [self setValue:nil forKey:key];
             }
         }
     }];
     //assigned value from PO should not be considered complete, therefore we don't timestamp on this SO
-    //[self setValue:[NSDate date] forKey:kUpdatedDateKey];
     if (self.hasChanges) {
         //add save to local label
         [self saveToLocal];
@@ -271,7 +284,8 @@
     
     //update value
     if ([object isNewerThanMO]) {
-        [self assignValueFromParseObject:object];
+		DDLogWarn(@"Getting PO(%@) newer than SO %@(%@)", object.objectId, self.entity.name, self.serverID);
+		//[object updateFromManagedObject:self];
     }
     return object;
 }
@@ -296,14 +310,14 @@
     if (!self.serverID) {
         DDLogVerbose(@"When refreshing, MO missing serverID %@, prepare to upload", self.entity.name);
         [self uploadEventually];
-        [EWSync save];
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
         NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
         if (block) {
             block(err);
         }
     }else{
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            NSManagedObject *currentMO = [self MR_inContext:localContext];
+            EWServerObject *currentMO = [self MR_inContext:localContext];
             if (!currentMO) {
                 DDLogError(@"*** Failed to obtain object from database: %@", self);
                 if (block) {
@@ -387,14 +401,14 @@
         if ([description isToMany]) {
             NSSet *relatedMOs = [self valueForKey:key];
             
-            for (NSManagedObject *MO in relatedMOs) {
+            for (EWServerObject *MO in relatedMOs) {
                 if ([MO isKindOfClass:[EWPerson class]]) {
                     return ;
                 }
                 [MO refresh];
             }
         }else{
-            NSManagedObject *MO = [self valueForKey:key];
+            EWServerObject *MO = [self valueForKey:key];
             [MO refresh];
         }
     }];
@@ -432,18 +446,17 @@
             return ;
         }
         
-        //Get PO from server, also add inlcude key for pointer
+        //Get PO, also add inlcude key for pointer
         PFObject *PO = self.parseObject;
+		[PO fetch:&err];
         
         //update properties
         [self assignValueFromParseObject:PO];
         
-        //get related object parsimoniously, if
+        //get related object parsimoniously, if it is in array form
         [backMO.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
             if (obj.isToMany) {
-                if (obj.inverseRelationship) {
-                    //PFRelation, skip
-                }else{
+                if (!obj.inverseRelationship) {
                     //Pointer
                     NSArray *relatedPOs = PO[key];
                     if (relatedPOs.count == 0) {
@@ -559,16 +572,6 @@
     }
     BOOL outdated = !date.isUpToDated;
     return outdated;
-}
-
-- (NSString *)serverID{
-    return [self valueForKey:kParseObjectID];
-}
-
-- (NSString *)serverClassName{
-    NSDictionary *map = kServerTransformClasses;
-    NSString *serverClass = [map objectForKey:self.entity.name];
-    return serverClass ?: self.entity.name;
 }
 
 

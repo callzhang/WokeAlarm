@@ -80,8 +80,8 @@
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
     
     //refresh current user
-    DDLogVerbose(@"2. Register AWS push key");
-    [EWServer requestNotificationPermissions];
+    DDLogVerbose(@"2. Register user notification");
+    [[EWServer shared] requestNotificationPermissions];
     
     //check alarm, task, and local notif
     DDLogVerbose(@"3. Check alarm");

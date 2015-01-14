@@ -97,4 +97,9 @@
     return good;
 }
 
+- (EWServerObject *)ownerObject{
+    EWPerson *owner = [EWPerson MR_findFirstByAttribute:kParseObjectID withValue:self.owner];
+    return owner;
+}
+
 @end

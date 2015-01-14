@@ -81,7 +81,7 @@ NSString *const EWActivityTypeMedia = @"media";
         _currentAlarmActivity.owner = person;
         _currentAlarmActivity.type = EWActivityTypeAlarm;
         _currentAlarmActivity.time = alarm.time.nextOccurTime;
-        [EWSync save];
+        [_currentAlarmActivity save];
     }
     
     return _currentAlarmActivity;

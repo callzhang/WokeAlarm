@@ -40,7 +40,7 @@
     [managedObject.entity.attributesByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
 		BOOL expectChange = [changeValues containsObject:key] ? YES : NO;
 		
-        //check if changed
+        //check if need to skip
         if (key.skipUpload) {
             return;
         }
@@ -101,7 +101,7 @@
                 
                 NSSet *relatedMOs = [managedObject valueForKey:key];
                 NSMutableArray *relatedPOs = [NSMutableArray new];
-                for (NSManagedObject *MO in relatedMOs) {
+                for (EWServerObject *MO in relatedMOs) {
                     //PFObject *PO = [EWDataStore getCachedParseObjectForID:MO.serverID];
                     //if (!PO) {
                     PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:[MO valueForKey:kParseObjectID]];
@@ -119,7 +119,7 @@
             //========================== relation ==========================
             PFRelation *parseRelation = [self relationForKey:key];
             if (parseRelation.targetClass) {
-                NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
+                NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name.serverClass], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
             }
             
             //TODO: create a new PFRelation so that we don't need to deal with deletion
@@ -137,7 +137,7 @@
             }
             
             //related managedObject that needs to add
-            for (NSManagedObject *relatedManagedObject in relatedManagedObjects) {
+            for (EWServerObject *relatedManagedObject in relatedManagedObjects) {
                 NSString *parseID = relatedManagedObject.serverID;
                 if (parseID) {
                     //the pfobject already exists, need to inspect PFRelation to determin add or remove
@@ -238,46 +238,66 @@
 }
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{
-    
-    if (!self.objectId) {
-        return nil;
-    }
-    
-    if (!context) {
-        EWAssertMainThread
-        context = mainContext;
-    }
-    NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
-    //NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
-    while (SOs.count > 1) {
-        DDLogError(@"Find duplicated MO for ID %@", self.objectId);
-        EWServerObject *mo_ = SOs.lastObject;
-        [SOs removeLastObject];
-        [mo_ MR_deleteEntityInContext:context];
-        
-        [[EWSync sharedInstance].deleteToLocalItems addObject:self.objectId];
-        
-        //remove from the update queue
-        [[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
-    }
-    EWServerObject *SO = SOs.firstObject;
-    
-    if (!SO) {
-        //if managedObject not exist, create it locally
-        SO = [NSClassFromString(self.localClassName) MR_createInContext:context];
-        [SO assignValueFromParseObject:self];
-        DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
-    }else{
-        
-        if (SO.isOutDated || self.isNewerThanMO) {
-            [SO assignValueFromParseObject:self];
-            //[EWDataStore saveToLocal:mo];//mo will be saved later
-        }
-    }
-    
-    return SO;
+	return [self managedObjectInContext:context option:EWSyncUpdateAttributesOnly completion:NULL];
 }
 
+- (EWServerObject *)managedObjectUpdatedInContext:(NSManagedObjectContext *)context{
+	return [self managedObjectInContext:context option:EWSyncUpdateRelation completion:NULL];
+}
+
+- (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context option:(EWSyncOption)option completion:(void (^)(EWServerObject *, NSError *))block{
+	if (!self.objectId) {
+		return nil;
+	}
+	
+	if (!context) {
+		EWAssertMainThread
+		context = mainContext;
+	}
+	
+	[self fetchIfNeeded];
+	
+	NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
+	//NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
+	while (SOs.count > 1) {
+		DDLogError(@"Find duplicated MO for ID %@(%@)", self.localClassName, self.objectId);
+		EWServerObject *mo_ = SOs.lastObject;
+		[SOs removeLastObject];
+		mo_.objectId = nil;
+		[mo_ saveWithCompletion:^(BOOL success, NSError *error) {
+			[mo_ MR_deleteEntityInContext:context];
+		}];
+		
+		//remove from the update queue
+		[[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
+	}
+	EWServerObject *SO = SOs.firstObject;
+	
+	if (!SO) {
+		//if managedObject not exist, create it locally by assigning value from PO (quick)
+		//and assign relation in child context
+		SO = [NSClassFromString(self.localClassName) MR_createInContext:context];
+		[SO assignValueFromParseObject:self];
+		DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
+	}
+	
+	if (option == EWSyncUpdateRelation) {
+		[SO updateValueAndRelationFromParseObject:self];
+	}else if (option == EWSyncUpdateAttributesOnly){
+		[SO assignValueFromParseObject:self];
+	}else if (option == EWSyncOptionAsync){
+		[context saveWithBlock:^(NSManagedObjectContext *localContext) {
+			EWServerObject *localSO = [SO MR_inContext:localContext];
+			[localSO updateValueAndRelationFromParseObject:self];
+		} completion:^(BOOL contextDidSave, NSError *error) {
+			if (block) {
+				block(SO, error);
+			}
+		}];
+	}
+	
+	return SO;
+}
 - (BOOL)isNewerThanMO{
     NSDate *updatedPO = [self valueForKey:kUpdatedDateKey];
     NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId];

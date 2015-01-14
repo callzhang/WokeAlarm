@@ -7,6 +7,7 @@
 - (void)remove;
 - (NSString *)serverID;
 - (void)save;
+- (void)saveWithCompletion:(BoolErrorBlock)block;
 /**
  *  Upload to server immediately
  *
@@ -15,4 +16,10 @@
 - (void)updateToServerWithCompletion:(PFObjectResultBlock)block;
 - (NSString *)serverClassName;
 
+/**
+ *  The owner of this object, used to determine if we need to fully download the object or upload this object to server.
+ *  @attention EWPerson will return itself
+ *  @return Owner
+ */
+- (EWServerObject *)ownerObject;
 @end

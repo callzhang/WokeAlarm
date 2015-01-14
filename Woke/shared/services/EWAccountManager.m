@@ -541,7 +541,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     EWPerson *me = [EWPerson me];
     NSMutableDictionary *graph = [NSMutableDictionary new];
     //if no date available for me, it must be up to date.
-	graph[userKey] = @{me.objectId: me.updatedAt?me.updatedAt:[NSDate date]};
+    if (me.updatedAt) {
+        graph[userKey] = @{me.objectId: me.updatedAt};
+    } else {
+		//Even though there might be pending changes, but the fact that local user missing update time is a sign of bad run from last session, therefore we should resync from server
+        graph[userKey] = @{me.objectId: [NSDate dateWithTimeIntervalSince1970:0]};
+    }
+	graph[userKey] = @{me.objectId: me.updatedAt?:[NSDate date]};
     //get the updated objects
     NSSet *workingObjects = [EWSync sharedInstance].workingQueue;
     workingObjects = [workingObjects setByAddingObjectsFromSet:[EWSync sharedInstance].insertQueue];
@@ -655,7 +661,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                             DDLogError(@"Returned PO without data: %@", PO);
                             [PO fetch];
                         }
-                        NSManagedObject *SO = [PO managedObjectInContext:localContext];
+                        EWServerObject *SO = [PO managedObjectInContext:localContext];
                         [SO updateValueAndRelationFromParseObject:PO];
                         if (![relatedSO containsObject:SO]) {
                             //add relation

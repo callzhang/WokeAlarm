@@ -84,7 +84,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     _tableView.backgroundColor = [UIColor clearColor];
 	_tableView.backgroundView = nil;
     
-    //UINib *taskNib = [UINib nibWithNibName:@"EWTaskHistoryCell" bundle:nil];
+    //UINib *taskNib = [UINib nibWithNibName:@"EWTaskHistorØyCell" bundle:nil];
     //[tableView registerNib:taskNib forCellReuseIdentifier:taskCellIdentifier];
 	//[EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.10]];
     //tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
@@ -338,7 +338,9 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     }
     else if ([title isEqualToString:@"Generate friendship request from this user"]){
         //test function
-        [EWNotificationManager generateFriendRequestFrom:person];
+        [[EWNotificationManager sharedInstance] generateFriendRequestFrom:person completion:^(EWNotification *notice, NSError *error) {
+			DDLogVerbose(@"Received test generate friends request notice: %@", notice);
+		}];
     }
         
     [self initView];

@@ -25,5 +25,7 @@
 //    NSData *picData = UIImagePNGRepresentation(pic);
 //    self.image_key = [SMBinaryDataConversion stringForBinaryData:picData name:@"achievement_icon.png" contentType:@"image/png"];
 //}
-
+-(EWServerObject *)ownerObject{
+    return self.owner;
+}
 @end

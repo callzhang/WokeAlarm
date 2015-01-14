@@ -18,9 +18,6 @@
 // sarch
 + (instancetype)getAlarmByID:(NSString *)alarmID;
 
-// delete
-- (void)remove;
-
 //validate
 - (BOOL)validate;
 
