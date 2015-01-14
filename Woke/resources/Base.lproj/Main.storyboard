@@ -767,7 +767,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KJ6-XR-Sql" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1417" y="758"/>
+            <point key="canvasLocation" x="1435" y="788"/>
         </scene>
         <!--Pre Wake View ControllerZL-->
         <scene sceneID="6cz-Rb-LEO">
@@ -1016,7 +1016,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5NO-W4-wQ1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2426" y="988"/>
+            <point key="canvasLocation" x="2407" y="788"/>
         </scene>
         <!--Person View Controller-->
         <scene sceneID="Hfm-WI-dL4">
@@ -2046,7 +2046,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Grv-bH-UnW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1714" y="1704"/>
+            <point key="canvasLocation" x="1499" y="1729"/>
         </scene>
     </scenes>
     <resources>

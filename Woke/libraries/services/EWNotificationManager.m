@@ -295,8 +295,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
              EWAlert(@"Network error, please send it later");
          }else{
              DDLogInfo(@"generateFriendRequestFrom %@ successful", person.name);
-			 [EWUIUtil showSuccessHUBWithString:@"Request generated"];
-			 //[[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"Request generated"];
+			 [EWUIUtil showSuccessHUBWithString:@"Request generated and pushed"];
          }
 		 if (block) {
 			 block(object, error);

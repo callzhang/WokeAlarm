@@ -75,9 +75,7 @@
     [super viewDidAppear:animated];
     
     //refresh
-    if ([EWPerson me].isOutDated) {
-        [self refresh:nil];
-    }
+    [self refresh:nil];
 }
 
 - (BOOL)prefersStatusBarHidden{
