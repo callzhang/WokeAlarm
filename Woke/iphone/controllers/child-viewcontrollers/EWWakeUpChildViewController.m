@@ -7,8 +7,16 @@
 //
 
 #import "EWWakeUpChildViewController.h"
+#import "EWTimeChildViewController.h"
+#import "SCSiriWaveformView.h"
 
 @interface EWWakeUpChildViewController ()
+@property (nonatomic, strong) EWTimeChildViewController *smallTimeChildViewController;
+@property (nonatomic, strong) RACDisposable *timerDisposable;
+
+@property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet SCSiriWaveformView *waveView;
 
 @end
 
@@ -16,6 +24,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor clearColor];
+    
+    self.smallTimeChildViewController.type = EWTimeChildViewControllerTypeSmall;
+    @weakify(self);
+    self.timerDisposable = [[RACSignal interval:1 onScheduler:[RACScheduler mainThreadScheduler]] subscribeNext:^(NSDate *date) {
+        @strongify(self);
+        self.smallTimeChildViewController.date = date;
+    }];
 }
 @end

@@ -173,7 +173,7 @@
 #define COCOAPODS_POD_AVAILABLE_JGProgressHUD
 #define COCOAPODS_VERSION_MAJOR_JGProgressHUD 1
 #define COCOAPODS_VERSION_MINOR_JGProgressHUD 2
-#define COCOAPODS_VERSION_PATCH_JGProgressHUD 2
+#define COCOAPODS_VERSION_PATCH_JGProgressHUD 3
 
 // KVOController
 #define COCOAPODS_POD_AVAILABLE_KVOController
@@ -233,25 +233,25 @@
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1
 #define COCOAPODS_VERSION_MINOR_Parse 6
-#define COCOAPODS_VERSION_PATCH_Parse 0
+#define COCOAPODS_VERSION_PATCH_Parse 1
 
 // ParseCrashReporting
 #define COCOAPODS_POD_AVAILABLE_ParseCrashReporting
 #define COCOAPODS_VERSION_MAJOR_ParseCrashReporting 1
 #define COCOAPODS_VERSION_MINOR_ParseCrashReporting 6
-#define COCOAPODS_VERSION_PATCH_ParseCrashReporting 0
+#define COCOAPODS_VERSION_PATCH_ParseCrashReporting 1
 
 // ParseFacebookUtils
 #define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
 #define COCOAPODS_VERSION_MAJOR_ParseFacebookUtils 1
 #define COCOAPODS_VERSION_MINOR_ParseFacebookUtils 6
-#define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 0
+#define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 1
 
 // ParseUI
 #define COCOAPODS_POD_AVAILABLE_ParseUI
 #define COCOAPODS_VERSION_MAJOR_ParseUI 1
 #define COCOAPODS_VERSION_MINOR_ParseUI 0
-#define COCOAPODS_VERSION_PATCH_ParseUI 2
+#define COCOAPODS_VERSION_PATCH_ParseUI 3
 
 // RHAddressBook
 #define COCOAPODS_POD_AVAILABLE_RHAddressBook
@@ -289,17 +289,17 @@
 #define COCOAPODS_VERSION_MINOR_ReactiveCocoa_no_arc 3
 #define COCOAPODS_VERSION_PATCH_ReactiveCocoa_no_arc 1
 
-// ReactiveViewModel
-#define COCOAPODS_POD_AVAILABLE_ReactiveViewModel
-#define COCOAPODS_VERSION_MAJOR_ReactiveViewModel 0
-#define COCOAPODS_VERSION_MINOR_ReactiveViewModel 2
-#define COCOAPODS_VERSION_PATCH_ReactiveViewModel 0
+// Tweaks
+#define COCOAPODS_POD_AVAILABLE_Tweaks
+#define COCOAPODS_VERSION_MAJOR_Tweaks 1
+#define COCOAPODS_VERSION_MINOR_Tweaks 1
+#define COCOAPODS_VERSION_PATCH_Tweaks 0
 
 // VBFPopFlatButton
 #define COCOAPODS_POD_AVAILABLE_VBFPopFlatButton
 #define COCOAPODS_VERSION_MAJOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_MINOR_VBFPopFlatButton 0
-#define COCOAPODS_VERSION_PATCH_VBFPopFlatButton 5
+#define COCOAPODS_VERSION_PATCH_VBFPopFlatButton 6
 
 // WellCached
 #define COCOAPODS_POD_AVAILABLE_WellCached

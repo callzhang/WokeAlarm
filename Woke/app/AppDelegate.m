@@ -26,10 +26,14 @@
 #import "DDFileLogger.h"
 #import "EWStyleController.h"
 #import "EWServer.h"
+#import "BlocksKit.h"
+#import "BlocksKit+UIKit.h"
+#import "FBTweakViewController.h"
+#import "FBTweakStore.h"
 
 UIViewController *rootViewController;
 
-@interface AppDelegate ()
+@interface AppDelegate ()<FBTweakViewControllerDelegate>
 
 @end
 
@@ -72,11 +76,6 @@ UIViewController *rootViewController;
     //watch for login
     [EWStartUpSequence sharedInstance];
     
-#ifdef caoer115
-    EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
-    [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
-#endif
-    
     //Login process: https://www.lucidchart.com/documents/edit/47d70f1c-5306-dbab-81ce-6d480a005610
     if ([EWAccountManager isLoggedIn]) {
         [[EWAccountManager sharedInstance] fetchCurrentUser:[PFUser currentUser]];
@@ -97,7 +96,22 @@ UIViewController *rootViewController;
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
         
     }
+    
+    UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
+        viewController.tweaksDelegate = self;
+        [[[UIWindow mainWindow] rootViewController] presentViewController:viewController animated:YES completion:nil];
+    }];
+    longGesture.numberOfTouchesRequired = 2;
+    longGesture.minimumPressDuration = 2;
+    
+    [[UIWindow mainWindow].rootViewController.view addGestureRecognizer:longGesture];
+    
     return YES;
+}
+
+- (void)tweakViewControllerPressedDone:(FBTweakViewController *)tweakViewController {
+    [tweakViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

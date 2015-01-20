@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RVMViewModel.h"
 #import "EWAlarm.h"
 
-@interface EWSleepViewModel : RVMViewModel
+@interface EWSleepViewModel : NSObject
 @property (nonatomic, strong) NSString *dateString;
 @property (nonatomic, strong) NSString *timeLeft;
 @property (nonatomic, strong) NSString *wakeupText;

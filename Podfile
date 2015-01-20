@@ -32,12 +32,13 @@ target 'Woke' do
   pod 'libextobjc', '~> 0.4.1'
   pod 'KVOController', '~> 1.0.3'
   pod 'ReactiveCocoa', '~> 2.3.1'
-  pod 'ReactiveViewModel', '~> 0.2'
+  #pod 'ReactiveViewModel', '~> 0.2'
   pod 'NYXImagesKit', '~> 2.3'
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
   pod 'WellCached'
   pod 'GKImagePicker'
   pod 'APTimeZones'
+  pod 'Tweaks', '~> 1.1.0'
 end
 
 target 'WokeTests' do

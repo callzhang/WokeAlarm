@@ -14,11 +14,26 @@
 #import "EWPeopleArrayChildViewController.h"
 #import "NSArray+BlocksKit.h"
 #import "EWMedia.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
+#import "EWWakeUpChildViewController.h"
+
+NSString *kShowWakeUpChildVCNotification = @"kShowWakeUpChildVCNotification";
+NSString *kHideWakeUpChildVCNotification = @"kHideWakeUpChildVCNotification";
+
+FBTweakAction(@"Sleeping VC", @"UI", @"Show Wake Up VC", ^{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kShowWakeUpChildVCNotification object:nil];
+});
+
+FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^ {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kHideWakeUpChildVCNotification object:nil];
+});
 
 @interface EWSleepingViewController ()
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
 @property (nonatomic, strong) EWPeopleArrayChildViewController *peopleArrayChildViewController;
 @property (nonatomic, strong) EWAlarm *nextAlarm;
+@property (nonatomic, strong) EWWakeUpChildViewController *wakeUpChildViewController;
 @property (nonatomic, strong) RACDisposable *timerDisposable;
 @end
 
@@ -34,10 +49,28 @@
     
     @weakify(self);
     self.timerDisposable = [[RACSignal interval:1 onScheduler:[RACScheduler mainThreadScheduler]] subscribeNext:^(NSDate *date) {
-       @strongify(self);
+        @strongify(self);
         self.timeChildViewController.topLabelLine1.text = [NSString stringWithFormat:@"It is now %@.", [date mt_stringFromDateWithFormat:@"hh:mma" localized:YES]];
     }];
     
     RAC(self, timeChildViewController.date) = [RACObserve(self, nextAlarm.time) distinctUntilChanged];
+    
+    
+    self.wakeUpChildViewController.view.hidden = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showWakeUpVC) name:kShowWakeUpChildVCNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideWakeUpVC) name:kHideWakeUpChildVCNotification object:nil];
+}
+
+- (void)showWakeUpVC {
+    self.wakeUpChildViewController.view.hidden = NO;
+    self.timeChildViewController.view.hidden = YES;
+    self.peopleArrayChildViewController.view.hidden = YES;
+}
+
+- (void)hideWakeUpVC {
+    self.wakeUpChildViewController.view.hidden = YES;
+    self.timeChildViewController.view.hidden = NO;
+    self.peopleArrayChildViewController.view.hidden = NO;
 }
 @end
