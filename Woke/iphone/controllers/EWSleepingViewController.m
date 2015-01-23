@@ -17,6 +17,7 @@
 #import "FBTweak.h"
 #import "FBTweakInline.h"
 #import "EWWakeUpChildViewController.h"
+#import "EWMediaManager.h"
 
 NSString *kShowWakeUpChildVCNotification = @"kShowWakeUpChildVCNotification";
 NSString *kHideWakeUpChildVCNotification = @"kHideWakeUpChildVCNotification";
@@ -25,10 +26,21 @@ FBTweakAction(@"Sleeping VC", @"UI", @"Show Wake Up VC", ^{
     [[NSNotificationCenter defaultCenter] postNotificationName:kShowWakeUpChildVCNotification object:nil];
 });
 
-FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^ {
+FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^{
     [[NSNotificationCenter defaultCenter] postNotificationName:kHideWakeUpChildVCNotification object:nil];
 });
 
+FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up[With Delay 5]", ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        DDLogCInfo(@"Add Woke Voice");
+        [[EWMediaManager sharedInstance] getWokeVoice];
+    });
+});
+
+FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
+    DDLogCInfo(@"Add Woke Voice");
+    [[EWMediaManager sharedInstance] getWokeVoice];
+});
 @interface EWSleepingViewController ()
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
 @property (nonatomic, strong) EWPeopleArrayChildViewController *peopleArrayChildViewController;
@@ -38,9 +50,15 @@ FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^ {
 @end
 
 @implementation EWSleepingViewController
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNewMediaNotification) name:kNewMediaNotification object:nil];
     
     self.nextAlarm = [EWPerson myCurrentAlarm];
     self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] bk_map:^id(EWMedia *obj) {
@@ -72,5 +90,11 @@ FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^ {
     self.wakeUpChildViewController.view.hidden = YES;
     self.timeChildViewController.view.hidden = NO;
     self.peopleArrayChildViewController.view.hidden = NO;
+}
+
+- (void)onNewMediaNotification {
+    self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] bk_map:^id(EWMedia *obj) {
+        return obj.author;
+    }];
 }
 @end

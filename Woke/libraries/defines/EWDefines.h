@@ -101,7 +101,9 @@ typedef void (^SenderBlock)(id sender);
 #define kWakeStartNotification          @"wake_time"//start wake
 #define kWokeNotification               @"woke"//finished wake
 #define kSleepNotification              @"Sleep"
-#define kNewMediaNotification           @"media_event" //key: task & media
+//#define kNewMediaNotification           @"" //key: task & media
+extern NSString * const kNewMediaNotification;
+
 #define kNewTimerNotification           @"alarm_timer"
 #define kUserNotificationRegistered		@"local_notification_registered"
 

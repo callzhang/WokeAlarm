@@ -36,6 +36,10 @@
         else {
             self.bottomLabel.text = [NSString stringWithFormat:@"%@ people will wake you up.", @(self.people.count)];
         }
+        
+        [self.collectionView reloadData];
+        
+        DDLogVerbose(@"reload collection view data: people: %@", self.people);
     }];
     
     self.view.backgroundColor = [UIColor clearColor];

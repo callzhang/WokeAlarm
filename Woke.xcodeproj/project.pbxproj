@@ -80,6 +80,7 @@
 		096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB071A1972B800B4CBFF /* EWSettingsViewController.m */; };
 		096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */; };
 		096AAB191A1972B800B4CBFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0D1A1972B800B4CBFF /* ViewController.m */; };
+		0971F73F1A71EA5B005A7709 /* EWDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0971F73E1A71EA5B005A7709 /* EWDefines.m */; };
 		097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */; };
 		097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */; };
 		098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 098D2EA91A3D2F1000026D0C /* UIImage+Extensions.m */; };
@@ -318,6 +319,7 @@
 		096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeUpViewController.m; sourceTree = "<group>"; };
 		096AAB0C1A1972B800B4CBFF /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		096AAB0D1A1972B800B4CBFF /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		0971F73E1A71EA5B005A7709 /* EWDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWDefines.m; sourceTree = "<group>"; };
 		097A82C71A2163FA0030A2E8 /* EWSleepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewController.h; sourceTree = "<group>"; };
 		097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewController.m; sourceTree = "<group>"; };
 		097A82CB1A2282980030A2E8 /* EWSleepViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewModel.h; sourceTree = "<group>"; };
@@ -682,6 +684,7 @@
 			isa = PBXGroup;
 			children = (
 				096AAAA11A195A3900B4CBFF /* EWDefines.h */,
+				0971F73E1A71EA5B005A7709 /* EWDefines.m */,
 			);
 			path = defines;
 			sourceTree = "<group>";
@@ -1345,7 +1348,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Starting dSYM uploading\"\n\nif [ \"$BUILD_STYLE\" == \"Debug\" ]; then\necho \"Skipping debug build\"\nexit 0;\nfi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\necho \"Skipping simulator build\"\nexit 0;\nfi\n\nexport PATH=/usr/local/bin:$PATH\ncd /Users/Lee/Documents/Projects/WokeAlarm/Server\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "echo \"Starting dSYM uploading\"\n\nif [ \"$BUILD_STYLE\" == \"Debug\" ]; then\necho \"Skipping debug build\"\nexit 0;\nfi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\necho \"Skipping simulator build\"\nexit 0;\nfi\n\n# export PATH=/usr/local/bin:$PATH\n# cd /Users/Lee/Documents/Projects/WokeAlarm/Server\n# parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1490,6 +1493,7 @@
 				09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */,
+				0971F73F1A71EA5B005A7709 /* EWDefines.m in Sources */,
 				099A6C751A6367B8000B9686 /* EWTimeChildViewController.m in Sources */,
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
 				096AAADB1A195A3900B4CBFF /* EWUIUtil.m in Sources */,
@@ -1705,6 +1709,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Derek Zhang (SRS98HY45T)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Derek Zhang (SRS98HY45T)";
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
