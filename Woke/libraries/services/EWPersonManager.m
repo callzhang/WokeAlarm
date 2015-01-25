@@ -66,7 +66,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 - (void)nextWakeeWithCompletion:(void (^)(EWPerson *person))block{
     if (!_wakeeList || _wakeeList.count == 0) {
         //need to fetch everyone first
-        if (self.isFetchingWakees) {
+        if (!self.isFetchingWakees) {
             [self getWakeesInBackgroundWithCompletion:^{
                 //return next
                 if (block) {
@@ -115,6 +115,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     
     //check
     if (self.isFetchingWakees) {
+        DDLogWarn(@"Already fetching wakees");
         return;
     }
     

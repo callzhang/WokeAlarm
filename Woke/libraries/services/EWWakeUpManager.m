@@ -96,13 +96,12 @@
             alarm = [EWAlarm getAlarmByID:alarmID];
         }else if (alarmLocalID) {
             isLaunchedFromLocalNotification = YES;
-            NSURL *url = [NSURL URLWithString:alarmLocalID];
-            NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+            NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:[NSURL URLWithString:alarmLocalID]];
             if (ID) {
                 alarm = (EWAlarm *)[mainContext existingObjectWithID:ID error:NULL];
             }else{
                 DDLogError(@"The task objectID is invalid for alarm timer local notif: %@",alarmLocalID);
-                alarm = [EWPerson myCurrentAlarm];
+//                alarm = [EWPerson myCurrentAlarm];
             }
         }else if (activityID) {
             isLaunchedFromAlarmTimer = YES;
