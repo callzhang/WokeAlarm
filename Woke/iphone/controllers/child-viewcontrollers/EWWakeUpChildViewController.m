@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet SCSiriWaveformView *waveView;
+@property (nonatomic, strong) id didPlayNextObserver;
 
 @end
 
@@ -35,14 +36,27 @@
         @strongify(self);
         self.smallTimeChildViewController.date = date;
     }];
+    
+    self.profileImageView.image = [self currentMedia].author.profilePic;
+    
+    self.didPlayNextObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kEWWakeUpDidPlayNextMediaNotification
+                                                                                 object:nil queue:nil usingBlock:^(NSNotification *note) {
+                                                                                   @strongify(self);
+                                                                                     self.profileImageView.image = [self currentMedia].author.profilePic;
+                                                                                 }];
+    
 }
 
-- (void)startPlayMedia {
-    EWMedia *media = self.medias.firstObject;
-    self.profileImageView.image = media.author.profilePic;
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[EWWakeUpManager sharedInstance] playNextVoice];
 }
 
 - (NSArray *)medias {
     return [EWWakeUpManager sharedInstance].medias;
+}
+
+- (EWMedia *)currentMedia {
+    return [EWWakeUpManager sharedInstance].currentMedia;
 }
 @end

@@ -18,6 +18,9 @@ NSUInteger static maxLoop = 100;
 
 extern NSString * const kAlarmTimerDidFireNotification;
 
+extern NSString * const kEWWakeUpDidPlayNextMediaNotification;
+extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
+
 @protocol EWWakeUpDelegate <NSObject>
 @required
 - (BOOL)wakeupManager:(EWWakeUpManager *)manager shouldWakeUpWithAlarm:(EWAlarm *)alarm;
@@ -90,7 +93,7 @@ extern NSString * const kAlarmTimerDidFireNotification;
  *  Play the n'th voice
  *
  */
-- (void)playVoiceAtIndex:(NSUInteger)n;
+- (void)playVoiceAtIndex:(NSUInteger)index;
 /**
  *  The current waker for the voice that is being played
  *

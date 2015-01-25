@@ -24,6 +24,8 @@
 #import "NSTimer+BlocksKit.h"
 
 NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotification";
+NSString * const kEWWakeUpDidPlayNextMediaNotification = @"kEWWakeUpDidPlayNextMediaNotification";
+NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayMediaNotification";
 
 @interface EWWakeUpManager ()
 @property (nonatomic, strong) NSTimer *alarmTimer;
@@ -400,13 +402,12 @@ NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotificati
         return;
     }
     
-    NSUInteger mediaJustPlayedIdx = self.currentMediaIndex;
-    
-    if (mediaJustPlayedIdx < _medias.count){
+    if (self.currentMediaIndex < _medias.count){
         //get next cell
-        DDLogInfo(@"Play next song (%@)", @(mediaJustPlayedIdx));
+        DDLogInfo(@"Play next song (%@)", @(self.currentMediaIndex));
         [[EWAVManager sharedManager] playMedia:self.currentMedia];
-        
+        self.currentMediaIndex++;
+        [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
     }
     else{
         if ((self.loopCount)>0) {
@@ -415,7 +416,7 @@ NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotificati
             self.loopCount++;
             self.currentMediaIndex = 0;
             [[EWAVManager sharedManager] playMedia:self.currentMedia];
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
         }
         else{
             DDLogInfo(@"Loop finished, stop playing");
@@ -426,11 +427,12 @@ NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotificati
     }
 }
 
-- (void)stopPlayingVoice{
+- (void)stopPlayingVoice {
     [[EWAVManager sharedManager] stopAllPlaying];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidStopPlayMediaNotification object:nil];
 }
 
-- (void)playVoiceAtIndex:(NSUInteger)n{
+- (void)playVoiceAtIndex:(NSUInteger)index {
     [[EWAVManager sharedManager] playMedia:self.currentMedia];
 }
 
@@ -448,7 +450,7 @@ NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotificati
 }
 
 - (EWMedia *)currentMedia {
-    if (_currentMediaIndex < self.medias.count || _currentMediaIndex >= self.medias.count) {
+    if (_currentMediaIndex >= self.medias.count) {
         DDLogError(@"currentMedia index overflow");
         return nil;
     }
