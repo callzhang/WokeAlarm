@@ -227,6 +227,10 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="onNotification:" destination="ztM-CD-1sO" eventType="touchUpInside" id="n9g-rR-cWy"/>
+                                    <segue destination="Xcq-Wo-KpO" kind="custom" identifier="MenuToNotificationReplace" customClass="MSReplaceFadeSegue" id="rP3-hS-qLM"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4y-rw-jgD">
                                 <rect key="frame" x="21" y="194" width="83" height="46"/>
@@ -1646,7 +1650,7 @@
                                     <segue destination="BcC-eX-WTH" kind="embed" identifier="peopleArrayChildViewController" id="fWu-BY-1M2"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gpM-jP-AUb" userLabel="center 40 spacer top">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gpM-jP-AUb" userLabel="center 40 spacer top">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="6Pg-dc-Es5"/>
@@ -1666,7 +1670,7 @@
                                     <constraint firstAttribute="width" constant="30" id="lRE-6N-yCS"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQN-Cp-KEY" userLabel="center 40 spacer bottom">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wQN-Cp-KEY" userLabel="center 40 spacer bottom">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="eaS-do-PaT"/>
@@ -2342,6 +2346,56 @@ TGFiZWwgERHigKhMYWJlbA
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Grv-bH-UnW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1714" y="1704"/>
+        </scene>
+        <!--Notification View Controller-->
+        <scene sceneID="kGd-rI-gtZ">
+            <objects>
+                <viewController storyboardIdentifier="EWNotificationViewController" id="Xcq-Wo-KpO" customClass="EWNotificationViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="DoG-28-9EE"/>
+                        <viewControllerLayoutGuide type="bottom" id="IUa-El-gRL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="MUG-Nf-sCc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" tag="804" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="NPA-UM-4b2">
+                                <rect key="frame" x="10" y="10" width="320" height="568"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="XSU-Ry-b1X">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="FGy-bq-mzX">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FGy-bq-mzX" id="AaU-IR-N5c">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="NPA-UM-4b2" secondAttribute="trailing" id="0FH-zx-78m"/>
+                            <constraint firstItem="NPA-UM-4b2" firstAttribute="leading" secondItem="MUG-Nf-sCc" secondAttribute="leading" id="C5P-nh-M0X"/>
+                            <constraint firstItem="IUa-El-gRL" firstAttribute="top" secondItem="NPA-UM-4b2" secondAttribute="bottom" id="CgU-92-xzT"/>
+                            <constraint firstItem="NPA-UM-4b2" firstAttribute="top" secondItem="MUG-Nf-sCc" secondAttribute="top" id="adD-0y-EPL"/>
+                            <constraint firstItem="IUa-El-gRL" firstAttribute="top" secondItem="XSU-Ry-b1X" secondAttribute="bottom" id="ajb-DH-EMp"/>
+                            <constraint firstAttribute="trailing" secondItem="XSU-Ry-b1X" secondAttribute="trailing" id="kgZ-pg-Cpw"/>
+                            <constraint firstItem="XSU-Ry-b1X" firstAttribute="top" secondItem="MUG-Nf-sCc" secondAttribute="top" id="oZm-0I-u3A"/>
+                            <constraint firstItem="XSU-Ry-b1X" firstAttribute="leading" secondItem="MUG-Nf-sCc" secondAttribute="leading" id="ugT-7R-TzF"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="tableView" destination="XSU-Ry-b1X" id="hqf-og-y5B"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1BP-Uf-e5I" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="76" y="1048"/>
         </scene>
     </scenes>
     <resources>
