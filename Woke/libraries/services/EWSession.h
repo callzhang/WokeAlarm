@@ -11,13 +11,17 @@
 #import "NSManagedObject+MagicalFinders.h"
 #import "GCDSingleton.h"
 
+typedef NS_ENUM(NSUInteger, EWWakeUpStatus) {
+    EWWakeUpStatusSleeping,
+    EWWakeUpStatusWakingUp,
+    EWWakeUpStatusWoke,
+};
 
 @interface EWSession : NSObject
 
 @property (nonatomic, assign) BOOL isSchedulingAlarm;
 @property (nonatomic, strong) EWPerson *currentUser;
-@property (nonatomic) BOOL isSleeping;
-@property (nonatomic) BOOL isWakingUp;
+@property (nonatomic, assign) EWWakeUpStatus wakeupStatus;
 
 @property (nonatomic, copy) NSArray *alarmTones;
 @property (nonatomic, copy) NSString *currentAlarmTone;

@@ -45,7 +45,7 @@
     
     //Refresh for new media
     [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        if ([EWSession sharedSession].isWakingUp) {
+        if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
             [self.tableView reloadData];
         }
     }];

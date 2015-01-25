@@ -9,6 +9,9 @@
 #import "EWWakeUpChildViewController.h"
 #import "EWTimeChildViewController.h"
 #import "SCSiriWaveformView.h"
+#import "EWMedia.h"
+#import "EWPerson+Woke.h"
+#import "EWWakeUpManager.h"
 
 @interface EWWakeUpChildViewController ()
 @property (nonatomic, strong) EWTimeChildViewController *smallTimeChildViewController;
@@ -32,5 +35,14 @@
         @strongify(self);
         self.smallTimeChildViewController.date = date;
     }];
+}
+
+- (void)startPlayMedia {
+    EWMedia *media = self.medias.firstObject;
+    self.profileImageView.image = media.author.profilePic;
+}
+
+- (NSArray *)medias {
+    return [EWWakeUpManager sharedInstance].medias;
 }
 @end

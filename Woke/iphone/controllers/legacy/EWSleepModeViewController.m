@@ -91,7 +91,7 @@
 #pragma mark - Storyboard
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"toPreWakeView"]) {
-        [[EWWakeUpManager sharedInstance] startToWakeUp:nil];
+        [[EWWakeUpManager sharedInstance] startToWakeUp];
     }
 }
 @end

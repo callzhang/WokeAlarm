@@ -71,8 +71,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 	}
 	else if([type isEqualToString:kPushTypeAlarmTimer]){
 		// ============== Alarm Timer ================
-		[[EWWakeUpManager sharedInstance] startToWakeUp:payload];
-		
+        NSString *alarmID = payload[kPushAlarmID];
+        EWAlarm *alarm = [EWAlarm getAlarmByID:alarmID];
+        [[EWWakeUpManager sharedInstance] startToWakeUpWithAlarm:alarm];
 	}
 	else if ([type isEqualToString:kPushTypeNotification]){
 		[[EWNotificationManager sharedInstance] handleNotificatoinFromPush:payload];
@@ -98,8 +99,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
     DDLogVerbose(@"Received local notification: %@", type);
     
     if ([type isEqualToString:kLocalNotificationTypeAlarmTimer]) {
-        [[EWWakeUpManager sharedInstance] startToWakeUp:notification.userInfo];
-		
+        EWAlarm *alarm;
+        NSString *alarmLocalID = notification.userInfo[kLocalAlarmID];
+        NSURL *url = [NSURL URLWithString:alarmLocalID];
+        NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+        if (ID) {
+            alarm = (EWAlarm *)[mainContext existingObjectWithID:ID error:NULL];
+        }
+        [[EWWakeUpManager sharedInstance] startToWakeUpWithAlarm:alarm];
+        
     }else if([type isEqualToString:kLocalNotificationTypeReactivate]){
         DDLogVerbose(@"==================> Reactivated Woke <======================");
         EWAlert(@"You brought me back!");

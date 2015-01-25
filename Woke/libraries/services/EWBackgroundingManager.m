@@ -125,13 +125,13 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 #pragma mark - Application state change
 - (void)enterBackground{
-    if ([EWSession sharedSession].isSleeping || self.isBackgrounding || BACKGROUNDING_FROM_START) {
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusSleeping || self.isBackgrounding || BACKGROUNDING_FROM_START) {
         [self startBackgrounding];
     }
 }
 
 - (void)enterForeground{
-	if (![EWSession sharedSession].isWakingUp) {
+	if (![EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
 		[self registerBackgroudingAudioSession];
 	}
 	
@@ -175,7 +175,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 #pragma mark - Backgrounding
 - (void)startBackgrounding{
-	if (![EWSession sharedSession].isWakingUp) {
+	if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWakingUp) {
 		[self registerBackgroudingAudioSession];
 	}
     [self backgroundKeepAlive:nil];

@@ -13,33 +13,45 @@
 #define kLoopMediaPlayCount             100
 
 @import UIKit;
-@class EWActivity, EWAlarm, EWPerson;
+@class EWActivity, EWAlarm, EWPerson, EWWakeUpManager;
 NSUInteger static maxLoop = 100;
 
+extern NSString * const kAlarmTimerDidFireNotification;
+
+@protocol EWWakeUpDelegate <NSObject>
+@required
+- (BOOL)wakeupManager:(EWWakeUpManager *)manager shouldWakeUpWithAlarm:(EWAlarm *)alarm;
+
+@optional
+- (void)wakeUpManagerWillWakeUp:(EWWakeUpManager*)wakeUpManager;
+- (void)wakeUpManagerDidWakeUp:(EWWakeUpManager*)wakeUpManager;
+@end
+
 @interface EWWakeUpManager : NSObject
-//@property (nonatomic, strong) EWAlarm *alarm;
-//@property (nonatomic, strong) EWActivity *currentActivity;
-@property (nonatomic, strong) NSArray *medias;
+@property (nonatomic, copy) NSArray *medias;
 @property (nonatomic) NSUInteger loopCount;
-@property (nonatomic) EWMedia *currentMedia;
-//@property (nonatomic) BOOL isWakingUp;//moved to session manager
+@property (nonatomic, readonly) EWMedia *currentMedia;
+@property (nonatomic, assign) NSUInteger currentMediaIndex;
 @property (nonatomic) BOOL continuePlay;
+@property (nonatomic, weak) NSObject<EWWakeUpDelegate> *delegate;
 
 + (EWWakeUpManager *)sharedInstance;
 
 #pragma mark - Actions
 /**
  Handle alarm time up event
- 1. Get next task
+ 1. Get next activity
  2. Try to download all medias for task
- 3. If there is no media, create a pesudo media
- 4. After download
-    a. cancel local notif
-    b. fire silent alarm
-    c. present wakeupVC and start play in 30s
+ 3. If there is no media, create a woke media
+ 4. After download all medias
+    a. cancel local notification
+    b. fire silent local notification [lock screen]
+    c. present wakeupVC and start play in 15s
  */
 - (void)startToWakeUp:(NSDictionary *)pushInfo;
+- (void)startToWakeUp;
 
+- (void)startToWakeUpWithAlarm:(EWAlarm *)alarm;
 /**
  *  Handle the sleep timer event
  *

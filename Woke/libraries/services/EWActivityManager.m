@@ -13,6 +13,7 @@
 #import "NSArray+BlocksKit.h"
 #import "EWMedia.h"
 #import "EWAlarmManager.h"
+#import "EWWakeUpManager.h"
 
 NSString *const EWActivityTypeAlarm = @"alarm";
 NSString *const EWActivityTypeFriendship = @"friendship";
@@ -41,7 +42,6 @@ NSString *const EWActivityTypeMedia = @"media";
     }
     return self;
 }
-
 
 - (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context{
     if (!context) {
@@ -120,4 +120,36 @@ NSString *const EWActivityTypeMedia = @"media";
     self.currentAlarmActivity = nil;
 }
 
+#pragma mark - Delegate
+- (BOOL)wakeupManager:(EWWakeUpManager *)manager shouldWakeUpWithAlarm:(EWAlarm *)alarm {
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
+        DDLogWarn(@"WakeUpManager is already handling alarm timer, skip");
+        return NO;
+    }
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+    //check alarm
+    if (alarm && ![alarm.time.nextOccurTime isEqualToDate:activity.time]) {
+        DDLogError(@"*** %s Alarm time (%@) doesn't match with activity time (%@), abord", __func__, alarm.time.nextOccurTime.date2detailDateString, activity.time.date2detailDateString);
+        [[NSException exceptionWithName:@"EWInternalInconsistance" reason:@"Alarm and Activity mismatched" userInfo:@{@"alarm": alarm, @"activity;=": activity}] raise];
+        return NO;
+    }
+    //check activity
+    if (activity.completed) {
+        DDLogError(@"Activity is completed at %@, skip today's alarm. Please check the code", activity.completed.date2detailDateString);
+        return NO;
+    }
+    else if (activity.time.timeElapsed > kMaxWakeTime) {
+        DDLogInfo(@"Activity(%@) from notification has passed the wake up window. Handle it with complete activity.", activity.objectId);
+        [[EWActivityManager sharedManager] completeAlarmActivity:activity];
+        return NO;
+    }
+    else if (activity.time.timeIntervalSinceNow > kMaxEalyWakeInterval) {
+        // too early to wake
+        DDLogWarn(@"Wake %.1f hours early, skip.", activity.time.timeIntervalSinceNow/3600.0);
+        // add unread media albeit too early to wake
+        return NO;
+    }
+    
+    return YES;
+}
 @end
