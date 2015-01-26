@@ -130,7 +130,7 @@
 	[self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
 		if (error) {
 			NSLog(@"Timeout Error: %@", error);
-		}
+		}	
 	}];
 }
 

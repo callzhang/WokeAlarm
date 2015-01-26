@@ -222,11 +222,13 @@
 #pragma mark - Search facebook friends
 - (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block{
     //get list of fb id
-    NSArray *facebookIDs = [EWPerson mySocialGraph].facebookFriends ?:[NSArray new];
+    NSArray *facebookIDs = [EWPerson mySocialGraph].facebookFriends;
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
     [query whereKey:EWSocialAttributes.facebookID containedIn:facebookIDs];
 	NSArray *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
-    [query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs];
+	if (friendsFbIDs.count) {
+		[query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs];
+	}
 	[query includeKey:EWSocialRelationships.owner];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
