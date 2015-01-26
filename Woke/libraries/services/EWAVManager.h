@@ -14,7 +14,7 @@
 //  - playSoundFromURL: Lower level control, may called from outside
 //
 */
-
+@import UIKit;
 @import Foundation;
 @import AVFoundation;
 @import AudioToolbox;

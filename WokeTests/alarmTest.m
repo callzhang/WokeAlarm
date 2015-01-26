@@ -15,6 +15,7 @@
 #import "UIWindow+Extensions.h"
 #import "EWPerson.h"
 #import "EWAlarm.h"
+#import "EWPerson+Woke.h"
 
 @interface AlarmTest : XCTestCase
 

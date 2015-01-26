@@ -23,5 +23,5 @@
 - (void)updateFriendshipTimeline;
 
 //return an array of EWPerson
-- (void)getUsersWithEmails:(NSArray *)emails completion:(void (^)(NSArray *users, NSError *error))completion;
+- (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block;
 @end

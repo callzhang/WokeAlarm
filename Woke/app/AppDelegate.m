@@ -7,8 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "EWUtil.h"
-#import "EWSync.h"
 #import "EWStartUpSequence.h"
 #import "FBSession.h"
 #import "FBAppCall.h"

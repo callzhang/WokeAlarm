@@ -6,8 +6,7 @@
 //  Copyright (c) 2013年 Shens. All rights reserved.
 //
 
-//#ifndef EarlyWorm_Defines_h
-//#define EarlyWorm_Defines_h
+#import "EWBlockTypes.h"
 
 //System
 #define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
@@ -22,17 +21,6 @@
 #define kColorMediumGray                EWSTR2COLOR(@"7e7e7e")
 #define kCustomLightGray                EWSTR2COLOR(@"#DDDDDD")
 
-//blocks
-typedef void (^DictionaryBlock)(NSDictionary *dictionary);
-typedef void (^BoolBlock)(BOOL success);
-typedef void (^BoolErrorBlock)(BOOL success, NSError *error);
-typedef void (^DictionaryErrorBlock)(NSDictionary *dictioanry, NSError *error);
-typedef void (^ErrorBlock)(NSError *error);
-typedef void (^VoidBlock)(void);
-typedef void (^UIImageBlock)(UIImage *image);
-typedef void (^ArrayBlock)(NSArray *array);
-typedef void (^FloatBlock)(float percent);
-typedef void (^SenderBlock)(id sender);
 
 #define ringtoneNameList                @[@"Autumn Spring.caf", @"Daybreak.caf", @"Drive.caf", @"Parisian Dream.caf", @"Sunny Afternoon.caf", @"Tropical Delight.caf"]
 
