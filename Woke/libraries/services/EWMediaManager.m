@@ -150,7 +150,7 @@
                 NSManagedObject *MO = [mainContext existingObjectWithID:ID error:nil];
                 [medias addObject:MO];
             }
-            return block(medias.copy);
+            return block(medias.copy, nil);
         }
     }];
 }

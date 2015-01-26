@@ -1,4 +1,7 @@
 #import "_EWServerObject.h"
+#import "EWBlockTypes.h"
+
+#import <Parse/Parse.h>
 
 @interface EWServerObject : _EWServerObject {}
 // Custom logic goes here.

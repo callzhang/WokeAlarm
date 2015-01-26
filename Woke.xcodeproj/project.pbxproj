@@ -133,7 +133,6 @@
 		9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */; };
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */; };
-		9B3D24171A54BECD0026B824 /* EWServerObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACE1A195A3900B4CBFF /* EWServerObject+EWSync.m */; };
 		9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
@@ -1556,7 +1555,6 @@
 				9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */,
 				9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */,
 				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
-				9B3D24171A54BECD0026B824 /* EWServerObject+EWSync.m in Sources */,
 				9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */,
 				9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */,
 				9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */,
@@ -1762,10 +1760,6 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = WokeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1812,10 +1806,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = WokeTests/Info.plist;

@@ -10,5 +10,6 @@
 #import "UIWindow+Extensions.h"
 #import "UIStoryboard+Extensions.h"
 #import "UIView+Mask.h"
+#import "EWPerson+Woke.h"
 
 #endif

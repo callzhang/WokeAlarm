@@ -9,6 +9,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EWMedia.h"
 #define kNewNediaPlaying        @"new_media_playing"
 #define kLoopMediaPlayCount             100
 
