@@ -92,14 +92,13 @@ NSString *const EWActivityTypeMedia = @"media";
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
     [activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.objectId ascending:YES],
                                        [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
-    if (activities.count > 1) {
-        DDLogError(@"Multiple current alarm activities found, please check: \n%@", [activities valueForKey:EWServerObjectAttributes.objectId]);
-        while (activities.count >1) {
-            EWActivity *activity = activities.firstObject;
-            [activities removeObject:activity];
-            [activity remove];
-        }
+    while (activities.count >1) {
+        EWActivity *activity = activities.firstObject;
+        DDLogError(@"Multiple current alarm activities found, please check: \n%@", activity.serverID);
+        [activities removeObject:activity];
+        [activity remove];
     }
+    
     return activities.lastObject;
 }
 

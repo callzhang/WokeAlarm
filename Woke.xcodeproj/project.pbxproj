@@ -134,6 +134,7 @@
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */; };
 		9B3D24171A54BECD0026B824 /* EWServerObject+EWSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAACE1A195A3900B4CBFF /* EWServerObject+EWSync.m */; };
+		9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -432,6 +433,7 @@
 		9B38950C1A51405A004D4290 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9B38950E1A514072004D4290 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudFunctionTest.m; sourceTree = "<group>"; };
+		9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchUserTest.m; sourceTree = "<group>"; };
 		9B6797041A3E34ED007B8188 /* NSDictionary+KeyPathAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KeyPathAccess.h"; sourceTree = "<group>"; };
 		9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+KeyPathAccess.m"; sourceTree = "<group>"; };
 		9B6AB8171A16F1F6003372A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -842,6 +844,7 @@
 				9B71AC741A22927C00E300CE /* AlarmTest.m */,
 				09A776FE1A11D8D9004AF902 /* WokeTests.m */,
 				9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */,
+				9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */,
 				09A776FC1A11D8D9004AF902 /* Supporting Files */,
 			);
 			path = WokeTests;
@@ -1551,6 +1554,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */,
+				9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */,
 				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
 				9B3D24171A54BECD0026B824 /* EWServerObject+EWSync.m in Sources */,
 				9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */,
