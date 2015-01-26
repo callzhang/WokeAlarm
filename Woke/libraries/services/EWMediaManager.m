@@ -171,7 +171,7 @@
     for (PFObject *po in mediaPOs) {
         //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
         EWMedia *mo = [EWMedia getMediaByID:po.objectId];
-        mo.receiver = [EWPerson me];
+        mo.receiver = [EWPerson meInContext:context];
         [[EWPerson me] addUnreadMediasObject:mo];
         //new media
 		DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);

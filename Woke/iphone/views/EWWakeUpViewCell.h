@@ -13,5 +13,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UIProgressView *progress;
+@property (weak, nonatomic) IBOutlet UIImageView *playIndicator;
 @property (nonatomic, strong) EWMedia *media;
 @end
