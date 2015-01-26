@@ -111,24 +111,19 @@
     return graph;
 }
 
-
+#pragma mark - Addressbook
 - (BOOL)hasAddressBookAccess {
     return [APAddressBook access] == APAddressBookAccessGranted;
 }
 
-- (void)testFindWithUsersCompletion:(void (^)(NSArray *users))completion {
+- (void)findUsersFromContactsWithCompletion:(void (^)(NSArray *users))completion {
     [self loadAddressBookCompletion:^(NSArray *contacts, NSError *error) {
         NSArray *emails = [contacts bk_map:^id(APContact *obj) {
             return obj.emails;
         }];
         
-        NSMutableArray *allEmails = [NSMutableArray array];
-        for (NSArray *obj in emails) {
-            [allEmails addObjectsFromArray:obj];
-        }
-        
-        [self getUsersFromParse:allEmails completion:^(NSArray *contacts2, NSError *error2) {
-            DDLogInfo(@"contacts:%@", contacts);
+        [self getUsersWithEmails:emails completion:^(NSArray *users, NSError *error2) {
+            DDLogDebug(@"Found contacts:%@ with error:%@", contacts, error2);
             completion(contacts);
         }];
     }];
@@ -167,12 +162,56 @@
 //    }];
 }
 
-- (void)getUsersFromParse:(NSArray *)emails completion:(void (^)(NSArray *contacts, NSError *error))completion {
-    [PFCloud callFunctionInBackground:@"findUsersWithEmails" withParameters:@{@"emails": emails} block:^(id object, NSError *error) {
+#pragma mark - Search user
+- (void)getUsersWithEmails:(NSArray *)emails completion:(void (^)(NSArray *users, NSError *error))completion {
+    PFQuery *emailQ = [PFUser query];
+    [emailQ whereKey:EWPersonAttributes.email containedIn:emails];
+    [emailQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        completion(objects, error);
+    }];
+}
+
+- (void)getUsersWithName:(NSString *)name completion:(void (^)(NSArray *users, NSError *error))completion {
+    NSInteger spaceIdx = [name rangeOfString:@" "].location;
+    NSInteger spaceInx2 = [name rangeOfString:@", "].location;
+    NSString *firstName;
+    NSString *lastName;
+    PFQuery *firstNameQ = [PFUser query];
+    PFQuery *lastNameQ = [PFUser query];
+    if (spaceIdx != NSNotFound) {
+        firstName = [name substringToIndex:spaceIdx];
+        lastName = [name substringFromIndex:spaceIdx+1];
+        
+        DDLogVerbose(@"Search for first name: %@ AND last name: %@", firstName, lastName);
+    }else if(spaceInx2 != NSNotFound){
+        firstName = [name substringFromIndex:spaceInx2+2];
+        lastName = [name substringToIndex:spaceInx2];
+        DDLogVerbose(@"Search for first name: %@ AND last name: %@", firstName, lastName);
+    }else{
+        firstName = name;
+        DDLogVerbose(@"Search for first name: %@ OR last name: %@", firstName, firstName);
+    }
+    
+    PFQuery *query;
+    [firstNameQ whereKey:EWPersonAttributes.firstName hasPrefix:firstName];
+    if (lastName) {
+        [firstNameQ whereKey:EWPersonAttributes.lastName hasPrefix:lastName];
+        query = firstNameQ;
+    }else{
+        [lastNameQ whereKey:EWPersonAttributes.lastName hasPrefix:firstName];
+        query = [PFQuery orQueryWithSubqueries:@[firstNameQ, lastNameQ]];
+    }
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableArray *persons = [NSMutableArray new];
+        for (PFUser *user in objects) {
+            EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
+            [persons addObject:person];
+        }
         if (completion) {
-            completion(object, error);
+            completion(persons, error);
         }
     }];
+    
 }
 
 @end

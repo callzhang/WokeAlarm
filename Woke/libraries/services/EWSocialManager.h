@@ -21,4 +21,7 @@
 - (void)loadAddressBookCompletion:(void (^)(NSArray *contacts, NSError *error))completion;
 
 - (void)updateFriendshipTimeline;
+
+//return an array of EWPerson
+- (void)getUsersWithEmails:(NSArray *)emails completion:(void (^)(NSArray *users, NSError *error))completion;
 @end
