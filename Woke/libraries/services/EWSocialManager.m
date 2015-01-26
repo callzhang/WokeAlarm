@@ -9,15 +9,13 @@
 #import "EWSocialManager.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
-
-#import "APAddressBook.h"
-#import "APContact.h"
 #import "NSArray+BlocksKit.h"
 #import "EWSocial.h"
 #import "FBKVOController.h"
+#import <RHAddressBook/AddressBook.h>
 
 @interface EWSocialManager()
-@property (nonatomic, strong) APAddressBook *addressBook;
+@property (nonatomic, strong) RHAddressBook *addressBook;
 @end
 
 @implementation EWSocialManager
@@ -85,14 +83,6 @@
 }
 
 
-- (APAddressBook *)addressBook {
-    if (!_addressBook) {
-        _addressBook = [[APAddressBook alloc] init];
-    }
-    
-    return _addressBook;
-}
-
 - (EWSocial *)socialGraphForPerson:(EWPerson *)person{
     if (person.socialGraph) {
         return person.socialGraph;
@@ -100,67 +90,69 @@
 	
     EWSocial *graph = [EWSocial newSocialForPerson:person];
 	if (person.isMe) {
-		[self loadAddressBookCompletion:^(NSArray *contacts, NSError *error) {
-			if (contacts) {
-				DDLogInfo(@"Loaded %ld contacts to social graph", contacts.count);
-			}else{
-				DDLogError(@"Failed to load contacts: %@", error.description);
-			}
-		}];
+        //TODO: update facebook friends
 	}
     return graph;
 }
 
 #pragma mark - Addressbook
-- (BOOL)hasAddressBookAccess {
-    return [APAddressBook access] == APAddressBookAccessGranted;
+
+- (RHAddressBook *)addressBook {
+    if (!_addressBook) {
+        _addressBook = [[RHAddressBook alloc] init];
+    }
+    return _addressBook;
 }
 
-- (void)findUsersFromContactsWithCompletion:(void (^)(NSArray *users))completion {
-    [self loadAddressBookCompletion:^(NSArray *contacts, NSError *error) {
-        NSArray *emails = [contacts bk_map:^id(APContact *obj) {
-            return obj.emails;
-        }];
-        
-        [self getUsersWithEmails:emails completion:^(NSArray *users, NSError *error2) {
-            DDLogDebug(@"Found contacts:%@ with error:%@", contacts, error2);
-            completion(contacts);
-        }];
+- (void)findAddressbookUsersFromContactsWithCompletion:(ArrayBlock)completion {
+    //request for access
+    switch ([RHAddressBook authorizationStatus]) {
+        case RHAuthorizationStatusNotDetermined:{
+            //request authorization
+            [self.addressBook requestAuthorizationWithCompletion:^(bool granted, NSError *error) {
+                if (granted) {
+                    [self findAddressbookUsersFromContactsWithCompletion:completion];
+                }else{
+                    completion(nil, error);
+                }
+            }];
+        }
+            return;
+        case RHAuthorizationStatusDenied:{
+            DDLogError(@"Addressbook authorization denied");
+            NSError *error = [NSError errorWithDomain:@"com.wokealarm.woke" code:-1 userInfo:nil];
+            completion(nil, error);
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }
+            return;
+        default:
+            break;
+    }
+    
+    //get a list of PHPerson
+    EWSocial *social = [EWPerson mySocialGraph];
+    NSArray *contacts = [self.addressBook people];
+    NSMutableArray *myContactFriends = social.addressBookFriends ?: [NSMutableArray array];
+    for (RHPerson *contact in contacts) {
+        for (NSString *email in contact.emails.values) {
+            if (![myContactFriends containsObject:email]) {
+                [myContactFriends addObject:email];
+            }
+        }
+    };
+    social.addressBookFriends = myContactFriends;
+    [social save];
+    
+    //Update email to EWSocial
+    
+    [self getUsersWithEmails:myContactFriends completion:^(NSArray *people, NSError *error) {
+        if (completion) {
+            completion(people, error);
+        }
     }];
 }
 
-- (void)loadAddressBookCompletion:(void (^)(NSArray *contacts, NSError *error))completion {
-    
-    //FIXME: enable this shit
-    
-//    [self.addressBook loadContactsOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSArray *contacts, NSError *error) {
-//        DDLogInfo(@"got contacts: %@", contacts);
-//        NSArray *mapContacts = [contacts bk_map:^id(APContact *obj) {
-//            NSDictionary *contact = @{
-//                                      @"firstName": obj.firstName,
-//                                      @"middleName": obj.middleName,
-//                                      @"lastName": obj.lastName,
-//                                      @"emails": obj.emails,
-//                                      @"recordID": obj.recordID,
-//                                      @"socialProfiles": obj.socialProfiles,
-//                                      @"phones": obj.phones,
-//                                      @"phonesWithLabels": obj.phonesWithLabels
-//                                      };
-//            
-//            return contact;
-//        }];
-//        
-//        //FIXME: set address book friends to person object?
-//        [EWPerson mySocialGraph].addressBookFriends = mapContacts;
-//        
-//        [EWSync save];
-    
-        if (completion) {
-//            completion(contacts, error);
-            completion(nil, nil);
-        }
-//    }];
-}
+
 
 #pragma mark - Search user
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block{
@@ -227,4 +219,23 @@
     return [emailTest evaluateWithObject:candidate];
 }
 
+#pragma mark - Search facebook friends
+- (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block{
+    //get list of fb id
+    NSArray *facebookIDs = [EWPerson mySocialGraph].facebookFriends ?:[NSArray new];
+    PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
+    [query whereKey:EWSocialAttributes.facebookID containedIn:facebookIDs];
+    [query whereKey:EWSocialAttributes.facebookID notContainedIn:[[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]]];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
+        NSMutableArray *resultPeople = [NSMutableArray new];
+        for (PFObject *s in objects) {
+            EWSocial *social = [EWSocial getSocialByID:s.objectId];
+            [resultPeople addObject:social];
+        }
+        if (block) {
+            block(resultPeople, error);
+        }
+    }];
+}
 @end

@@ -103,6 +103,22 @@
     }];
 }
 
+- (void)testFindAddressBookFriends{
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Expect to find adressbook friends"];
+    [[EWSocialManager sharedInstance] findAddressbookUsersFromContactsWithCompletion:^(NSArray *array, NSError *error) {
+        NSLog(@"Found %ld ab matched friends from server", array.count);
+        if (!error) {
+            [expectation fulfill];
+        }
+    }];
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout Error: %@", error);
+        }
+    }];
+}
+
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{

@@ -24,6 +24,16 @@
 	return sg;
 }
 
++ (instancetype)getSocialByID:(NSString *)socialID{
+    EWAssertMainThread
+    NSError *error;
+    EWSocial *social = (EWSocial *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:socialID error:&error];
+    if (error) {
+        DDLogError(error.description);
+    }
+    return social;
+}
+
 - (BOOL)validate{
     BOOL good = YES;
     if (!self.facebookID && !self.weiboID) {

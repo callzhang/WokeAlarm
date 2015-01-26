@@ -48,18 +48,6 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 4
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 1
 
-// APAddressBook
-#define COCOAPODS_POD_AVAILABLE_APAddressBook
-#define COCOAPODS_VERSION_MAJOR_APAddressBook 0
-#define COCOAPODS_VERSION_MINOR_APAddressBook 1
-#define COCOAPODS_VERSION_PATCH_APAddressBook 5
-
-// APAddressBook/Core
-#define COCOAPODS_POD_AVAILABLE_APAddressBook_Core
-#define COCOAPODS_VERSION_MAJOR_APAddressBook_Core 0
-#define COCOAPODS_VERSION_MINOR_APAddressBook_Core 1
-#define COCOAPODS_VERSION_PATCH_APAddressBook_Core 5
-
 // APTimeZones
 #define COCOAPODS_POD_AVAILABLE_APTimeZones
 #define COCOAPODS_VERSION_MAJOR_APTimeZones 1
