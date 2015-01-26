@@ -10,13 +10,27 @@
 #import "EWMediaFile.h"
 #import "EWMedia.h"
 @interface EWWakeUpViewCell()
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *peopleViewLeadingConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *peopleViewWidthConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *peopleViewLeadingConstraint;
 @property (nonatomic, assign) BOOL open;
+@property (weak, nonatomic) IBOutlet UIView *replyView;
+@property (nonatomic, assign) NSInteger replyWidth;
 
 @end
 
 @implementation EWWakeUpViewCell
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.replyView.hidden = YES;
+    self.playIndicator.hidden = YES;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.peopleViewLeadingConstraint.constant = self.replyView.frame.size.width;
+    });
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+}
+
 - (void)setMedia:(EWMedia *)media{
     self.backgroundColor = [UIColor clearColor];
     //set value
@@ -26,16 +40,30 @@
 }
 
 - (IBAction)onToggleButton:(id)sender {
+    self.replyView.hidden = NO;
+    
     if (self.open) {
         self.open = NO;
-        self.peopleViewWidthConstraint.priority = 750;
-        self.peopleViewLeadingConstraint.priority = 749;
     }
     else {
         self.open = YES;
-        self.peopleViewWidthConstraint.priority = 749;
-        self.peopleViewLeadingConstraint.priority = 750;
     }
+    
+    if (self.open) {
+        self.peopleViewLeadingConstraint.constant = 0;
+    }
+    else {
+        self.peopleViewLeadingConstraint.constant = self.replyView.frame.size.width;
+    }
+    
+    [self setNeedsUpdateConstraints];
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        [self layoutIfNeeded];
+    }];
 }
 
+- (void)updateConstraints {
+    [super updateConstraints];
+}
 @end
