@@ -193,10 +193,11 @@ NSManagedObjectContext *mainContext;
 			//=================>> Upload method <<===================
             [self updateParseObjectFromManagedObject:localMO];
             //=======================================================
+            NSAssert(localMO.serverID, @"serverID is nil");
             
             //remove changed record
-            NSMutableSet *changes = self.changedRecords[localMO.objectId];
-			self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.objectId]];
+            NSMutableSet *changes = self.changedRecords[localMO.serverID];
+			self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.serverID]];
             DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
             
             //remove from queue

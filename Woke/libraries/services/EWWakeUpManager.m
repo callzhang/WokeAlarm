@@ -331,36 +331,6 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 }
 
 #pragma mark - CHECK TIMER
-// timer to notify sleep
-- (void)sleepTimerCheck{
-    //check time
-    if (![EWPerson me]) return;
-    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    
-    //alarm time up
-    NSNumber *sleepDuration = [EWPerson me].preference[kSleepDuration];
-    NSInteger durationInSeconds = sleepDuration.integerValue * 3600;
-    NSDate *sleepTime = [activity.time dateByAddingTimeInterval:-durationInSeconds];
-	NSTimeInterval timeLeft = sleepTime.timeIntervalSinceNow;
-    static NSTimer *timerScheduled;
-    
-    //if there is time left and the sleepTimer is either not set up or the sleepTimer is not correct, reschedule a sleepTimer
-    if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:sleepTime])) {
-        DDLogVerbose(@"About to init alarm timer in %fs", timeLeft);
-		[timerScheduled invalidate];
-		timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
-			[[EWWakeUpManager sharedInstance] sleep:nil];
-		} repeats:NO];
-		DDLogVerbose(@"===========================>> Sleep Timer scheduled on %@ <<=============================", sleepTime.date2String);
-    }
-    
-    //schedule next sleep timer check if the time left is larger than 5mim
-    if (timeLeft > 300) {
-        [NSTimer scheduledTimerWithTimeInterval:timeLeft/2 target:self selector:@selector(sleepTimerCheck) userInfo:nil repeats:NO];
-        DDLogVerbose(@"Next alarm timer check in %.1fs", timeLeft);
-    }
-}
-
 - (void)scheduleAlarmTimer {
     if (![EWPerson me]) return;
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
@@ -402,14 +372,18 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
         return;
     }
     
-    if (self.currentMediaIndex < _medias.count){
+    if (self.currentMediaIndex < _medias.count - 1){
         //get next cell
         DDLogInfo(@"Play next song (%@)", @(self.currentMediaIndex));
         [[EWAVManager sharedManager] playMedia:self.currentMedia];
         self.currentMediaIndex++;
         [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
     }
-    else{
+    else if (self.currentMediaIndex == _medias.count - 1) {
+        [[EWAVManager sharedManager] playMedia:self.currentMedia];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
+    }
+    else { //index == _medias.count
         if ((self.loopCount)>0) {
             //play the first if loopCount > 0
             DDLogInfo(@"Looping, %ld loop left", (long)_loopCount);

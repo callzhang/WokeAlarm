@@ -10,5 +10,5 @@
 #import "EWBaseViewController.h"
 
 @interface EWWakeUpChildViewController : EWBaseViewController
-@property (nonatomic, readonly) NSArray *medias;
+@property (nonatomic, assign) BOOL active;
 @end

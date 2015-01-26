@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ReactiveViewModel.h"
 
-@interface EWWakeupChildViewModel : NSObject
-
+@class EWMedia;
+@interface EWWakeupChildViewModel : RVMViewModel
+@property (nonatomic, strong) NSArray *medias;
+@property (nonatomic, strong) EWMedia *currentMedia;
 @end

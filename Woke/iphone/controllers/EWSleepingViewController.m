@@ -82,12 +82,14 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 
 - (void)showWakeUpVC {
     self.wakeUpChildViewController.view.hidden = NO;
+    self.wakeUpChildViewController.active = YES;
     self.timeChildViewController.view.hidden = YES;
     self.peopleArrayChildViewController.view.hidden = YES;
 }
 
 - (void)hideWakeUpVC {
     self.wakeUpChildViewController.view.hidden = YES;
+    self.wakeUpChildViewController.active = NO;
     self.timeChildViewController.view.hidden = NO;
     self.peopleArrayChildViewController.view.hidden = NO;
 }
