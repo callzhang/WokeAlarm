@@ -211,9 +211,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
 #pragma mark - Update cache
 //Snapshot activity cache and save to cachedInfo (Unused)
-- (void)updateActivityCacheWithCompletion:(VoidBlock)block{
-    NSString *currentActivityID = [EWPerson myCurrentAlarmActivity].serverID;
-    
+- (void)updateActivityCacheWithCompletion:(VoidBlock)block{    
     //NSParameterAssert([_person isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWPerson *localMe = [EWPerson meInContext:localContext];
@@ -228,7 +226,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         }
         
         for (EWActivity *activity in activities) {
-            if ([activity.serverID isEqualToString:currentActivityID]) {
+            if (!activity.completed || !activity.time) {
                 DDLogDebug(@"Skip current Activity");
                 continue;
             }

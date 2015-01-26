@@ -266,10 +266,7 @@
         }
     }];
     //assigned value from PO should not be considered complete, therefore we don't timestamp on this SO
-    if (self.hasChanges) {
-        //add save to local label
-        [self saveToLocal];
-    }
+	[self saveToLocal];
 }
 
 #pragma mark - Parse related
@@ -530,6 +527,9 @@
 }
 
 - (void)saveToLocal{
+	if (!self.hasChanges) {
+		return;
+	}
     //mark MO as save to local
     if (self.objectID.isTemporaryID) {
         [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
@@ -539,6 +539,9 @@
     //remove from queue
     [[EWSync sharedInstance] removeObjectFromInsertQueue:self];
     [[EWSync sharedInstance] removeObjectFromUpdateQueue:self];
+	
+	//save
+	[self save];
 }
 
 - (void)saveToServer{

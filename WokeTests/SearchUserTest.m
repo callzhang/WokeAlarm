@@ -119,6 +119,21 @@
     }];
 }
 
+- (void)testSearchFacebookUser{
+	XCTestExpectation *expectation = [self expectationWithDescription:@"Expect to find facebook friends"];
+	[[EWSocialManager sharedInstance] searchForFacebookFriendsWithCompletion:^(NSArray *array, NSError *error) {
+		NSLog(@"Found %ld face matched friends from server", array.count);
+		if (!error) {
+			[expectation fulfill];
+		}
+	}];
+	[self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
+		if (error) {
+			NSLog(@"Timeout Error: %@", error);
+		}
+	}];
+}
+
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{

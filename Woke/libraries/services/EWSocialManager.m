@@ -225,13 +225,20 @@
     NSArray *facebookIDs = [EWPerson mySocialGraph].facebookFriends ?:[NSArray new];
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
     [query whereKey:EWSocialAttributes.facebookID containedIn:facebookIDs];
-    [query whereKey:EWSocialAttributes.facebookID notContainedIn:[[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]]];
+	NSArray *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
+    [query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs];
+	[query includeKey:EWSocialRelationships.owner];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
-        for (PFObject *s in objects) {
-            EWSocial *social = [EWSocial getSocialByID:s.objectId];
-            [resultPeople addObject:social];
+        for (PFObject *social in objects) {
+			PFUser *owner = social[EWSocialRelationships.owner];
+			if (!owner) {
+				[social fetch:&error];
+				owner = social[EWSocialRelationships.owner];
+			}
+			EWPerson *person = (EWPerson *)[owner managedObjectInContext:mainContext];
+            [resultPeople addObject:person];
         }
         if (block) {
             block(resultPeople, error);
