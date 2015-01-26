@@ -212,6 +212,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 #pragma mark - Update cache
 //Snapshot activity cache and save to cachedInfo (Unused)
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block{
+    NSString *currentActivityID = [EWPerson myCurrentAlarmActivity].serverID;
     
     //NSParameterAssert([_person isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -227,6 +228,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         }
         
         for (EWActivity *activity in activities) {
+            if ([activity.serverID isEqualToString:currentActivityID]) {
+                DDLogDebug(@"Skip current Activity");
+                continue;
+            }
             
             NSString *dateKey = activity.time.date2YYMMDDString;
             //check if we need to update
@@ -269,7 +274,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
             NSLog(@"activity activity cache updated on %@", dateKey);
         }
     } ];
-    
 }
 
 - (void)updateCachedFriends{
