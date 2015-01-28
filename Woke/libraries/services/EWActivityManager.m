@@ -43,7 +43,7 @@ NSString *const EWActivityTypeMedia = @"media";
     return self;
 }
 
-- (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context{
+- (NSArray *)activitiesForPerson:(EWPerson *)person{
     if (!context) {
         context = [NSManagedObjectContext MR_defaultContext];
     }

@@ -59,13 +59,13 @@ typedef void (^EWSavingCallback)(void);
 
 
 @interface EWSync : NSObject
-@property NSMutableArray *saveCallbacks; //MO save callback
-@property ELAWellCached *serverObjectCache;
+@property (strong) NSMutableArray *saveCallbacks; //MO save callback
+@property (strong) ELAWellCached *serverObjectCache;
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
  */
-@property NSMutableDictionary *changedRecords;
-@property NSMutableArray *saveToLocalItems;
+@property (strong) NSMutableDictionary *changedRecords;
+@property (strong) NSMutableArray *saveToLocalItems;
 @property BOOL isUploading;
 
 

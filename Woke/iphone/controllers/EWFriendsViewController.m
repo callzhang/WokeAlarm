@@ -32,7 +32,7 @@
     self.friends = [EWPerson myFriends];
     
     //search
-    _resultController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWFriendsViewController class])];
+    _resultController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWPersonSearchResultTableViewController class])];
     _searchController = [[UISearchController alloc] initWithSearchResultsController:_resultController];
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.searchController.searchBar.scopeButtonTitles = searchScopes;

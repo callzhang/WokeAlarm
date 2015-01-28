@@ -28,7 +28,7 @@ extern NSString *const EWActivityTypeMedia;
 + (EWActivityManager *)sharedManager;
 
 //methods
-- (NSArray *)activitiesForPerson:(EWPerson *)person inContext:(NSManagedObjectContext *)context;
+- (NSArray *)activitiesForPerson:(EWPerson *)person;
 - (EWActivity *)activityForAlarm:(EWAlarm *)alarm;
 /**
  *  Current activity for current alarm. If the current activity is completed, or not matched with current alarm, this function will generate a new activity

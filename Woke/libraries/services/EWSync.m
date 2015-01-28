@@ -27,7 +27,6 @@ NSManagedObjectContext *mainContext;
 
 @implementation EWSync
 @synthesize parseSaveCallbacks;
-@synthesize changedRecords = _changedRecords;
 @synthesize isUploading = _isUploading;
 
 + (EWSync *)sharedInstance{

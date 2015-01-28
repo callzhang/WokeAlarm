@@ -89,10 +89,12 @@
 #pragma mark - My Stuffs
 
 + (NSArray *)myActivities {
-    return [[EWActivityManager sharedManager] activitiesForPerson:[EWPerson me] inContext:mainContext];
+    EWAssertMainThread
+    return [[EWActivityManager sharedManager] activitiesForPerson:[EWPerson me]];
 }
 
 + (NSArray *)myAlarmActivities{
+    EWAssertMainThread
     NSArray *activities = [self myActivities];
     NSArray *alarmActivities = [activities bk_select:^BOOL(EWActivity *obj) {
         return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
@@ -101,17 +103,21 @@
 }
 
 + (EWActivity *)myCurrentAlarmActivity{
+    EWAssertMainThread
     EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivityForPerson:[EWPerson me]];
     return activity;
 }
 
 + (NSArray *)myUnreadNotifications {
+    //TODO: move to notification manager
+    EWAssertMainThread
     NSArray *notifications = [self myNotifications];
     NSArray *unread = [notifications filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"completed == nil"]];
     return unread;
 }
 
 + (NSArray *)myNotifications {
+    EWAssertMainThread
     return [[EWNotificationManager shared] notificationsForPerson:[EWPerson me]];
 }
 
@@ -121,20 +127,24 @@
 }
 
 + (EWAlarm *)myCurrentAlarm {
+    EWAssertMainThread
     EWAlarm *next = [[EWAlarmManager sharedInstance] currentAlarmForPerson:[self me]];
     return next;
 }
 
 
 + (NSArray *)myUnreadMedias{
+    EWAssertMainThread
     return [[EWMediaManager sharedInstance] unreadMediasForPerson:[EWPerson me]];
 }
 
 + (NSArray *)myFriends{
+    EWAssertMainThread
     return [EWPerson me].friends.allObjects;
 }
 
 + (EWSocial *)mySocialGraph{
+    EWAssertMainThread
     return [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
 }
 

@@ -112,7 +112,9 @@
             //request authorization
             [self.addressBook requestAuthorizationWithCompletion:^(bool granted, NSError *error) {
                 if (granted) {
-                    [self findAddressbookUsersFromContactsWithCompletion:completion];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self findAddressbookUsersFromContactsWithCompletion:completion];
+                    });
                 }else{
                     completion(nil, error);
                 }
