@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @class EWPerson;
-@interface EWFriendsViewController : UIViewController
+@interface EWFriendsViewController_old : UIViewController
 
 -(id)initWithPerson:(EWPerson *)person cellSelect:(BOOL)cellSelect;
 -(id)initWithPerson:(EWPerson *)person;

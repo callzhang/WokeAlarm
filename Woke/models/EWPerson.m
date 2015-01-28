@@ -11,6 +11,7 @@
 #import "EWAccountManager.h"
 #import "EWPerson+Woke.h"
 #import "EWCachedInfoManager.h"
+#import "FBKVOController.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
@@ -47,6 +48,23 @@ NSString * const EWPersonDefaultName = @"New User";
 
 - (NSString *)name{
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+}
+
+- (float)distance{
+    if (self.location && !self.isMe) {
+        CLLocation *loc0 = [EWPerson me].location;
+        CLLocation *loc1 = self.location;
+        return [loc0 distanceFromLocation:loc1]/1000;
+    }
+    return 0;
+}
+
+- (NSString *)distanceString{
+    float d = self.distance;
+    if (d > 0) {
+        return [NSString stringWithFormat:@"%.0f km", d];
+    }
+    return @"Unknown location";
 }
 
 #pragma mark - Validation
@@ -105,5 +123,17 @@ NSString * const EWPersonDefaultName = @"New User";
 
 - (EWServerObject *)ownerObject{
     return self;
+}
+
+- (void)awakeFromFetch{
+    if([NSThread isMainThread]){
+        [self.KVOController observe:self keyPath:EWPersonRelationships.socialGraph options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id observer, id object, NSDictionary *change) {
+            EWSocial *oldS = change[NSKeyValueChangeOldKey];
+            EWSocial *newS = change[NSKeyValueChangeNewKey];
+            if (oldS != newS) {
+                DDLogWarn(@"Social just changed from %@ to %@", oldS, newS);
+            }
+        }];
+    }
 }
 @end

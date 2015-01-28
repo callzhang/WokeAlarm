@@ -64,7 +64,7 @@ typedef void (^EWSavingCallback)(void);
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
  */
-@property NSDictionary *changedRecords;
+@property NSMutableDictionary *changedRecords;
 @property NSMutableArray *saveToLocalItems;
 @property BOOL isUploading;
 

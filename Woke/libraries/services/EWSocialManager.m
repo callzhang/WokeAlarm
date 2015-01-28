@@ -13,6 +13,7 @@
 #import "EWSocial.h"
 #import "FBKVOController.h"
 #import <RHAddressBook/AddressBook.h>
+#import "NSString+Extend.h"
 
 @interface EWSocialManager()
 @property (nonatomic, strong) RHAddressBook *addressBook;
@@ -156,12 +157,13 @@
 
 #pragma mark - Search user
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block{
-    if (phrase.length == 0) {
+    phrase = [phrase stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (!phrase || phrase.length == 0) {
         block(nil, nil);
         return;
     }
-    BOOL isEmail = [self validateEmail:phrase];
-    if (isEmail) {
+    
+    if (phrase.isEmail) {
         DDLogDebug(@"search for email");
         [self getUsersWithEmails:@[phrase] completion:^(NSArray *array, NSError *error) {
             block(array, error);
@@ -212,17 +214,15 @@
     }];
 }
 
-- (BOOL)validateEmail: (NSString *) candidate {
-    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
-    
-    return [emailTest evaluateWithObject:candidate];
-}
-
 #pragma mark - Search facebook friends
 - (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block{
     //get list of fb id
-    NSArray *facebookIDs = [EWPerson mySocialGraph].facebookFriends;
+    EWSocial *social = [EWPerson mySocialGraph];
+    NSArray *facebookIDs = social.facebookFriends;
+    if (facebookIDs.count == 0) {
+        block(nil, nil);
+        return;
+    }
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
     [query whereKey:EWSocialAttributes.facebookID containedIn:facebookIDs];
 	NSArray *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
@@ -233,11 +233,11 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
-        for (PFObject *social in objects) {
-			PFUser *owner = social[EWSocialRelationships.owner];
+        for (PFObject *socialPO in objects) {
+			PFUser *owner = socialPO[EWSocialRelationships.owner];
 			if (!owner) {
-				[social fetch:&error];
-				owner = social[EWSocialRelationships.owner];
+				[socialPO fetch:&error];
+				owner = socialPO[EWSocialRelationships.owner];
 			}
 			EWPerson *person = (EWPerson *)[owner managedObjectInContext:mainContext];
             [resultPeople addObject:person];

@@ -545,6 +545,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         graph[userKey] = @{me.objectId: me.updatedAt};
     } else {
 		//Even though there might be pending changes, but the fact that local user missing update time is a sign of bad run from last session, therefore we should resync from server
+        DDLogWarn(@"User %@ has no updatedAt, using current time", me.name);
         graph[userKey] = @{me.objectId: [NSDate dateWithTimeIntervalSince1970:0]};
     }
 	graph[userKey] = @{me.objectId: me.updatedAt?:[NSDate date]};

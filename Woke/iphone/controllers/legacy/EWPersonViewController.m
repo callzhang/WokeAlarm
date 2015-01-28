@@ -472,9 +472,9 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     switch (indexPath.row) {
         case 0:
         {
-            if (self.navigationController.viewControllers.count < kMaxPersonNavigationConnt && [person.friends count]>0) {
-                EWFriendsViewController *tempVc= [[EWFriendsViewController alloc] initWithPerson:person];
-                controller = tempVc;
+            if (self.navigationController.viewControllers.count < kMaxPersonNavigationConnt) {
+                EWFriendsViewController *friendsVC= [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWFriendsViewController class])];
+                controller = friendsVC;
                 
                 [self.navigationController pushViewController:controller animated:YES];
                 return;

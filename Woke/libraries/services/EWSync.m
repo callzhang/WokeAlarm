@@ -27,6 +27,7 @@ NSManagedObjectContext *mainContext;
 
 @implementation EWSync
 @synthesize parseSaveCallbacks;
+@synthesize changedRecords = _changedRecords;
 @synthesize isUploading = _isUploading;
 
 + (EWSync *)sharedInstance{
@@ -130,7 +131,7 @@ NSManagedObjectContext *mainContext;
     }
     
     if ([self workingQueue].count >0 && self.isUploading) {
-        DDLogWarn(@"Data Store is uploading, delay for 10s: %@", self.changedRecords);
+        DDLogWarn(@"Data Store is uploading, delay for 10s: %@", self.updatingClassAndValues);
         static NSTimer *uploadDelay;
         [uploadDelay invalidate];
         uploadDelay = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(uploadToServer) userInfo:nil repeats:NO];
@@ -176,7 +177,7 @@ NSManagedObjectContext *mainContext;
     }
     
     //logging
-    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.changedRecords, deletedServerObjects);
+    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, deletedServerObjects);
     
     //save callbacks
     NSArray *callbacks = [self.saveCallbacks copy];
@@ -434,8 +435,8 @@ NSManagedObjectContext *mainContext;
         }
     }];
     
-    //time stamp for updated date. This is very important, otherwise mo might seems to be outdated
-	//this is for relation, if do not set kUpdateDateKey, means the relation haven't been downloaded yet.
+    //Time stamp for updated date. This is very important, otherwise MO will be outdated
+	//Also if do not set kUpdateDateKey, means the relation haven't been downloaded yet.
 	NSAssert(serverObject.serverID, @"serverID is nil");
 	[serverObject setValue:[NSDate date] forKey:kUpdatedDateKey];
 	[serverObject saveToLocal];
@@ -632,12 +633,18 @@ NSManagedObjectContext *mainContext;
 }
 
 //changed records
-- (NSDictionary *)changedRecords{
-	return [[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] ?: [NSDictionary new];
+- (NSMutableDictionary *)changedRecords{
+    if (_changedRecords) {
+        return _changedRecords;
+    }
+	return [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
 }
 
-- (void)setChangedRecords:(NSDictionary *)changedRecords{
-	[[NSUserDefaults standardUserDefaults] setValue:changedRecords forKey:kChangedRecords];
+- (void)setChangedRecords:(NSMutableDictionary *)changedRecords{
+    _changedRecords = changedRecords;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [[NSUserDefaults standardUserDefaults] setValue:changedRecords.copy forKey:kChangedRecords];
+    });
 }
 
 #pragma mark - Core Data
@@ -855,15 +862,29 @@ NSManagedObjectContext *mainContext;
 
 }
 
+
+#pragma mark - Tools
 - (NSString *)description{
     //print current states and queues
     NSMutableString *string = [NSMutableString stringWithFormat:@"EWSync object with current reachability: %d", [EWSync isReachable]];
-    [string appendFormat:@"\nCurrent updating item: %@", [[EWSync sharedInstance].updateQueue valueForKey:kParseObjectID]];
-    [string appendFormat:@"\nCurrent inserting item: %@", [[EWSync sharedInstance].insertQueue valueForKey:kParseObjectID]];
-    [string appendFormat:@"\nCurrent deleting item: %@", [[EWSync sharedInstance].deleteQueue valueForKey:kParseObjectID]];
+    [string appendFormat:@"\nCurrent updating item: %@", self.updatingClassAndValues];
+    [string appendFormat:@"\nCurrent inserting item: %@", [self.insertQueue valueForKey:kParseObjectID]];
+    [string appendFormat:@"\nCurrent deleting item: %@", [self.deleteQueue valueForKey:kParseObjectID]];
     return string;
 }
 
+
+- (NSDictionary *)updatingClassAndValues{
+    NSMutableDictionary *info = self.changedRecords.mutableCopy;
+    [self.changedRecords enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        PFObject *PO = [self getCachedParseObjectForID:key];
+        if (PO) {
+            [info removeObjectForKey:key];
+            [info setObject:obj forKey:[NSString stringWithFormat:@"%@(%@)", PO.parseClassName, key]];
+        }
+    }];
+    return info.copy;
+}
 @end
 
 

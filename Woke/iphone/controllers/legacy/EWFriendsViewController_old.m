@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 Shens. All rights reserved.
 //
 
-#import "EWFriendsViewController.h"
+#import "EWFriendsViewController_old.h"
 #import "EWPerson.h"
 #import "EWCollectionPersonCell.h"
 #import "EWUIUtil.h"
@@ -16,7 +16,7 @@
 NSString * const tableViewCellId =@"MyFriendsTableViewCellId";
 NSString * const collectViewCellId = @"friendsCollectionViewCellId";
 
-@interface EWFriendsViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@interface EWFriendsViewController_old ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 {
     NSArray *friendIDs;
     NSArray *mutualFriends;
@@ -24,7 +24,7 @@ NSString * const collectViewCellId = @"friendsCollectionViewCellId";
 
 @end
 
-@implementation EWFriendsViewController
+@implementation EWFriendsViewController_old
 
 -(id)initWithPerson:(EWPerson *)person cellSelect:(BOOL)cellSelect
 {

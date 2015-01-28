@@ -281,21 +281,22 @@
 		DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
 	}
 	
-	if (option == EWSyncUpdateRelation) {
-		[SO updateValueAndRelationFromParseObject:self];
-	}else if (option == EWSyncUpdateAttributesOnly){
-		[SO assignValueFromParseObject:self];
-	}else if (option == EWSyncOptionAsync){
-		[context saveWithBlock:^(NSManagedObjectContext *localContext) {
-			EWServerObject *localSO = [SO MR_inContext:localContext];
-			[localSO updateValueAndRelationFromParseObject:self];
-		} completion:^(BOOL contextDidSave, NSError *error) {
-			if (block) {
-				block(SO, error);
-			}
-		}];
-	}
-	
+    if (self.isNewerThanMO) {
+        if (option == EWSyncUpdateRelation) {
+            [SO updateValueAndRelationFromParseObject:self];
+        }else if (option == EWSyncUpdateAttributesOnly){
+            [SO assignValueFromParseObject:self];
+        }else if (option == EWSyncOptionAsync){
+            [context saveWithBlock:^(NSManagedObjectContext *localContext) {
+                EWServerObject *localSO = [SO MR_inContext:localContext];
+                [localSO updateValueAndRelationFromParseObject:self];
+            } completion:^(BOOL contextDidSave, NSError *error) {
+                if (block) {
+                    block(SO, error);
+                }
+            }];
+        }
+    }
 	return SO;
 }
 - (BOOL)isNewerThanMO{

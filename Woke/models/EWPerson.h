@@ -40,4 +40,6 @@ extern NSString * const EWPersonDefaultName;
 
 //helper
 - (NSString *)genderObjectiveCaseString;
+- (float)distance;
+- (NSString *)distanceString;
 @end
