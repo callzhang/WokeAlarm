@@ -165,9 +165,7 @@
     [self setValue:[NSDate date] forKey:kUpdatedDateKey];
     
     //save to local has been applied in assignValueFromParseObject:
-    if (self.hasChanges && ![[EWSync sharedInstance].saveToLocalItems containsObject:self.objectID]) {
-        [self saveToLocal];
-    }
+	[self saveToLocal];
     
 }
 
@@ -551,7 +549,9 @@
     [[EWSync sharedInstance] removeObjectFromUpdateQueue:self];
 	
 	//save
-	[self save];
+	if ([NSThread isMainThread]) {
+		[self save];
+	}
 }
 
 - (void)saveToServer{

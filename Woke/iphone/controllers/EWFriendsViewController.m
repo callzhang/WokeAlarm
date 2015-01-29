@@ -111,7 +111,6 @@
         resultViewController.searchResults = array;
         [resultViewController.tableView reloadData];
     }];
-    
 }
 
 
@@ -119,7 +118,6 @@
 // Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
 - (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
     [self updateSearchResultsForSearchController:self.searchController];
-    NSInteger scope = searchBar.selectedScopeButtonIndex;
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
