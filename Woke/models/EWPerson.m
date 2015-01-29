@@ -50,23 +50,6 @@ NSString * const EWPersonDefaultName = @"New User";
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
-- (float)distance{
-    if (self.location && !self.isMe) {
-        CLLocation *loc0 = [EWPerson me].location;
-        CLLocation *loc1 = self.location;
-        return [loc0 distanceFromLocation:loc1]/1000;
-    }
-    return 0;
-}
-
-- (NSString *)distanceString{
-    float d = self.distance;
-    if (d > 0) {
-        return [NSString stringWithFormat:@"%.0f km", d];
-    }
-    return @"Unknown location";
-}
-
 #pragma mark - Validation
 - (BOOL)validate{
     if (!self.isMe) {
@@ -126,11 +109,11 @@ NSString * const EWPersonDefaultName = @"New User";
 }
 
 - (void)awakeFromFetch{
-    if([NSThread isMainThread]){
+    if([NSThread isMainThread] && self.isMe){
         [self.KVOController observe:self keyPath:EWPersonRelationships.socialGraph options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id observer, id object, NSDictionary *change) {
             EWSocial *oldS = change[NSKeyValueChangeOldKey];
             EWSocial *newS = change[NSKeyValueChangeNewKey];
-            if (oldS != newS) {
+            if (oldS != newS && newS == nil) {
                 DDLogWarn(@"Social just changed from %@ to %@", oldS, newS);
             }
         }];

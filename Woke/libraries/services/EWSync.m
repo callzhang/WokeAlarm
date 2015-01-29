@@ -18,15 +18,16 @@ NSManagedObjectContext *mainContext;
 //=======================================================
 
 @interface EWSync()
-@property NSManagedObjectContext *context; //the main context(private)
-@property NSMutableDictionary *parseSaveCallbacks;
-@property (nonatomic) NSTimer *saveToServerDelayTimer;
-@property AFNetworkReachabilityManager *reachability;
+@property (nonatomic, strong) NSManagedObjectContext *context; //the main context(private)
+@property (strong) NSMutableDictionary *parseSaveCallbacks;
+@property (nonatomic, strong) NSTimer *saveToServerDelayTimer;
+@property (nonatomic, strong) AFNetworkReachabilityManager *reachability;
 @end
 
 
 @implementation EWSync
 @synthesize parseSaveCallbacks;
+@synthesize changedRecords = _changedRecords;
 @synthesize isUploading = _isUploading;
 
 + (EWSync *)sharedInstance{
@@ -174,6 +175,12 @@ NSManagedObjectContext *mainContext;
         [self runCompletionBlocks:self.saveCallbacks];
         return;
     }
+    for (NSString *key in self.changedRecords.allKeys) {
+        if (![[workingObjects valueForKey:kParseObjectID] containsObject:key]) {
+            DDLogError(@"Change for MO %@ not expected: %@", key, self.changedRecords[key]);
+            [self.changedRecords removeObjectForKey:key];
+        }
+    }
     
     //logging
     DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, deletedServerObjects);
@@ -202,7 +209,7 @@ NSManagedObjectContext *mainContext;
             
             //remove changed record
             NSMutableSet *changes = self.changedRecords[localMO.serverID];
-			self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.serverID]];
+			[self.changedRecords removeObjectForKey:localMO.serverID];
             DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
             
             //remove from queue
@@ -321,7 +328,9 @@ NSManagedObjectContext *mainContext;
             if (changedKeys.count > 0) {
                 
                 //add changed keys to record
-				self.changedRecords = [self.changedRecords addValue:changedKeys toImmutableKeyPath:@[SO.objectId]];
+                NSMutableSet *changed = [NSMutableSet setWithArray:self.changedRecords[SO.serverID]] ?: [NSMutableSet new];
+                [changed addObject:changedKeys];
+				self.changedRecords[SO.serverID] = changed.allObjects;
 				
                 //add to queue
                 [self appendUpdateQueue:SO];
@@ -633,10 +642,10 @@ NSManagedObjectContext *mainContext;
 
 //changed records
 - (NSMutableDictionary *)changedRecords{
-    if (_changedRecords) {
-        return _changedRecords;
+    if (!_changedRecords) {
+        _changedRecords = [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
     }
-	return [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
+    return _changedRecords;
 }
 
 - (void)setChangedRecords:(NSMutableDictionary *)changedRecords{
@@ -779,7 +788,7 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Parse helper methods
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error{
++ (NSArray *)findParseObjectWithQuery:(PFQuery *)query error:(NSError **)error{
     //EWAssertMainThread
 	NSArray *result = [query findObjects:error];
 	for (PFObject *PO in result) {
@@ -788,7 +797,7 @@ NSManagedObjectContext *mainContext;
 	return result;
 }
 
-+ (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
++ (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
     EWAssertMainThread
     @try {
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -850,7 +859,7 @@ NSManagedObjectContext *mainContext;
         }];
         
         //find on server
-        object = [[EWSync findServerObjectWithQuery:q error:error] firstObject];
+        object = [[EWSync findParseObjectWithQuery:q error:error] firstObject];
         
         if (!object) {
             DDLogError(@"Cannot find PO: %@(%@)", class, ID);

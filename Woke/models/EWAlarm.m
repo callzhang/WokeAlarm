@@ -183,7 +183,7 @@
     NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
     if (!wkday) return;
-    me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:@[kCachedStatements, wkday]];
+    me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:@[kCachedAlarmTimes, wkday]];
 
     [me save];
     DDLogVerbose(@"Updated cached alarm times: %@ on %@", self.time.nextOccurTime, wkday);

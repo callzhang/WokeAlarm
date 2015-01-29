@@ -44,11 +44,7 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (NSArray *)activitiesForPerson:(EWPerson *)person{
-    if (!context) {
-        context = [NSManagedObjectContext MR_defaultContext];
-    }
-    EWPerson *localMe = [[EWPerson me] MR_inContext:context];
-    NSArray *activities = localMe.activities.allObjects;
+    NSArray *activities = person.activities.allObjects;
     activities = [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.updatedAt ascending:NO]]];
     return activities;
 }

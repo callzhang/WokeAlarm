@@ -161,7 +161,7 @@
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block{
     phrase = [phrase stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (!phrase || phrase.length == 0) {
-        block(nil, nil);
+        block(@[], nil);
         return;
     }
     
@@ -180,7 +180,12 @@
 
 - (void)getUsersWithEmails:(NSArray *)emails completion:(ArrayBlock)completion {
     PFQuery *emailQ = [PFUser query];
-    [emailQ whereKey:EWPersonAttributes.email containedIn:emails];
+    NSMutableArray *emails_ = [NSMutableArray array];
+    for (NSString *email in emails) {
+        [emails_ addObject:[email lowercaseString]];
+    }
+    [emailQ whereKey:EWPersonAttributes.email containedIn:emails_];
+    [emailQ setLimit:50];
     [emailQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSMutableArray *resultPeople = [NSMutableArray new];
         for (PFUser *user in objects) {
@@ -198,8 +203,8 @@
     NSArray *subNames = [name_ componentsSeparatedByString:@" "];
     PFQuery *query;
     for (NSString *str in subNames) {
-        PFQuery *q1 = [[PFUser query] whereKey:EWPersonAttributes.firstName equalTo:str];
-        PFQuery *q2 = [[PFUser query] whereKey:EWPersonAttributes.lastName equalTo:str];
+        PFQuery *q1 = [[PFUser query] whereKey:EWPersonAttributes.firstName containsString:str];
+        PFQuery *q2 = [[PFUser query] whereKey:EWPersonAttributes.lastName containsString:str];
         query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, q2, query, nil]];
     }
     
@@ -220,9 +225,9 @@
 - (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block{
     //get list of fb id
     EWSocial *social = [EWPerson mySocialGraph];
-    NSArray *facebookIDs = social.facebookFriends;
+    NSArray *facebookIDs = social.facebookFriends.allKeys;
     if (facebookIDs.count == 0) {
-        block(nil, nil);
+        block(@[], nil);
         return;
     }
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
@@ -232,6 +237,7 @@
 		[query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs];
 	}
 	[query includeKey:EWSocialRelationships.owner];
+    [query setLimit:50];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
@@ -245,7 +251,7 @@
             [resultPeople addObject:person];
         }
         if (block) {
-            block(resultPeople, error);
+            block(resultPeople.copy, error);
         }
     }];
 }

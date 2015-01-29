@@ -11,6 +11,7 @@
 #import "EWAlarmManager.h"
 #import "NSArray+BlocksKit.h"
 #import "EWSocialManager.h"
+#import "EWUIUtil.h"
 #define searchScopes    @[@"Contacts", @"Facebook", @"Server", @"Search"]
 
 @interface EWFriendsViewController ()<UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
@@ -30,6 +31,7 @@
     
     //data
     self.friends = [EWPerson myFriends];
+    DDLogVerbose(@"Showing friends %@", [_friends valueForKey:EWPersonAttributes.firstName]);
     
     //search
     _resultController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWPersonSearchResultTableViewController class])];
@@ -38,6 +40,17 @@
     self.searchController.searchBar.scopeButtonTitles = searchScopes;
     self.searchController.searchBar.delegate = self;
     self.definesPresentationContext = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    //navigation
+    //[EWUIUtil addTransparantNavigationBarToViewController:self];
+    
+    //bg
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"woke-background"]];
+    bg.frame = [UIWindow mainWindow].frame;
+    [self.view insertSubview:bg atIndex:0];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -62,40 +75,10 @@
     return cell;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    EWPerson *friend = _friends[indexPath.row];
+    DDLogInfo(@"Did seleted %@", friend.name);
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 
 #pragma mark - Navigation
@@ -104,6 +87,11 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+}
+
+#pragma mark - UI
+- (IBAction)addFriends:(id)sender{
+    EWAlert(@"Zitao please add the view here");
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -115,7 +103,7 @@
     NSString *scope = searchScopes[self.searchController.searchBar.selectedScopeButtonIndex];
     
     [self updateFilteredContentForProductName:searchString scope:scope completion:^(NSArray *array, NSError *error) {
-        if (!array) {
+        if (!array || (error && array.count == 0)) {
             DDLogError(@"Failed search with error:%@", error);
             return;
         }
@@ -131,6 +119,18 @@
 // Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
 - (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
     [self updateSearchResultsForSearchController:self.searchController];
+    NSInteger scope = searchBar.selectedScopeButtonIndex;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    [self updateSearchResultsForSearchController:self.searchController];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    NSString *scope = searchScopes[self.searchController.searchBar.selectedScopeButtonIndex];
+    if ([scope isEqualToString:@"Contacts"]) {
+        [self updateSearchResultsForSearchController:self.searchController];
+    }
 }
 
 #pragma mark - Content Filtering
@@ -143,20 +143,19 @@
     switch (index) {
         case 0:{//contacts, local search
             if (strippedString.length == 0 || !searchString) {
-                block(nil, nil);
+                block(@[], nil);
                 return;
             }
+            
             NSArray *searchItems = [strippedString componentsSeparatedByString:@" "];
-            NSArray *result = [_friends bk_select:^BOOL(id obj) {
-                for (EWPerson *person in _friends) {
-                    for (NSString *searchText in searchItems) {
-                        if ([person.firstName isEqualToString:searchString]) {
-                            return YES;
-                        }else if([person.lastName isEqualToString:searchString]){
-                            return YES;
-                        }else if ([person.email isEqualToString:searchString]){
-                            return YES;
-                        }
+            NSArray *result = [_friends bk_select:^BOOL(EWPerson *person) {
+                for (NSString *searchText in searchItems) {
+                    if ([person.firstName rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                        return YES;
+                    }else if([person.lastName rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound){
+                        return YES;
+                    }else if ([person.email isEqualToString:[searchText lowercaseString]]){
+                        return YES;
                     }
                 }
                 return NO;

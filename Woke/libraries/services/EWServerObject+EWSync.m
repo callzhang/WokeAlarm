@@ -312,7 +312,10 @@
         if (block) {
             block(err);
         }
-    }else{
+    }else if ([self.entity.name isEqualToString:kSyncUserClass]) {
+        DDLogError(@"Skip refreshing other user %@", self.serverID);
+        return;
+    }else {
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
             EWServerObject *currentMO = [self MR_inContext:localContext];
             if (!currentMO) {
@@ -350,11 +353,17 @@
         //NSParameterAssert([self isInserted]);
         DDLogWarn(@"!!! The MO %@(%@) trying to refresh doesn't have servreID, skip! %@", self.entity.name, self.serverID, self);
     }else{
+        if ([self.entity.name isEqualToString:kSyncUserClass]) {
+            DDLogError(@"Skip refreshing other user %@", self.serverID);
+            return;
+        }
         if ([self changedKeys]) {
-            DDLogVerbose(@"The MO%@ (%@) you are trying to refresh HAS CHANGES, which makes the process UNSAFE!(%@)", self.entity.name, self.serverID, self.changedKeys);
+            DDLogWarn(@"===>>>> Refreshing MO %@(%@) HAS CHANGES, UNSAFE!(%@)", self.entity.name, self.serverID, self.changedKeys);
+        }else{
+            DDLogVerbose(@"===>>>> Refreshing MO %@(%@)", self.entity.name, self.serverID);
         }
         
-        DDLogInfo(@"===>>>> Refreshing MO %@(%@)", self.entity.name, self.serverID);
+        
         //get the PO
         PFObject *object = self.parseObject;
         //Must update the PO
@@ -530,7 +539,7 @@
 	if (!self.hasChanges) {
 		return;
 	}
-    DDLogVerbose(@"MO %@(%@) save to local with changes: %@", self.entity.name, self.serverID, self.changedValues);
+    DDLogVerbose(@"MO %@(%@) save to local with changes: %@", self.entity.name, self.serverID, self.changedValues.allKeys);
     //mark MO as save to local
     if (self.objectID.isTemporaryID) {
         [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];

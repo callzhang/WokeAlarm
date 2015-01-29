@@ -188,7 +188,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         if (!localMe.lastName) localMe.lastName = user.last_name;
         
         //email
-        if (!localMe.email) localMe.email = user[@"email"];
+        NSString *email = user[@"email"];
+        if (!localMe.email) localMe.email = [email lowercaseString];
         
         //birthday format: "01/21/1984";
         if (!localMe.birthday) {
@@ -222,7 +223,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }
         
     }completion:^(BOOL success, NSError *error) {
-        
+        DDLogInfo(@"Updated user with facebook info");
         //set location
         if (![EWPerson me].location) {
             [self setProxymateLocationForPerson:[EWPerson me]];
@@ -256,24 +257,18 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
         return;
     }else{
-
         //get social graph of current user
         //if not, create one
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [EWPerson meInContext:localContext];
-            EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:localMe];
-            //skip if checked within a week
-            if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
-                DDLogVerbose(@"Facebook friends check skipped.");
-                return;
-            }
+        EWSocial *graph = [EWPerson mySocialGraph];
+        //skip if checked within a week
+        if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
+            DDLogVerbose(@"Facebook friends check skipped.");
+            return;
+        }
 
-            //get the data
-            __block NSMutableDictionary *friends = [NSMutableDictionary new];
-            [self getFacebookFriendsWithPath:@"/me/friends" withReturnData:friends];
-        } completion:^(BOOL success, NSError *error) {
-            //
-        }];
+        //get the data
+        __block NSMutableDictionary *friends = [NSMutableDictionary new];
+        [self getFacebookFriendsWithPath:@"/me/friends" withReturnData:friends];
         
     }
 }
@@ -315,9 +310,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 //NSLog(@"Continue facebook friends request: %@", nextPage);
                 [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder];
             }else{
-                DDLogVerbose(@"Finished loading friends from facebook, transfer to social graph.");
+                DDLogInfo(@"Finished loading %ld friends from facebook, transfer to social graph.", friendsHolder.count);
                 EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
-                graph.facebookFriends = [friendsHolder copy];
+                graph.facebookFriends = friendsHolder;
                 graph.facebookUpdated = [NSDate date];
 
                 //save
@@ -556,8 +551,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     //enumerate
     [me.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *relation, BOOL *stop) {
         if ([relation.destinationEntity.name isEqualToString:kSyncUserClass]) {
-            //skip user class
-            return;
+            //Discuss: we don't need to skip user class
+            //return;
         }
         id objects = [me valueForKey:key];
         if (objects) {
@@ -645,7 +640,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     }];
                     return;
 				}else if ([key isEqualToString:userKey]){
-					//update me
+					//update my attributes only
 					[localMe assignValueFromParseObject:obj];
                     return;
 				}
@@ -663,7 +658,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                             [PO fetch];
                         }
                         EWServerObject *SO = [PO managedObjectInContext:localContext];
-                        [SO updateValueAndRelationFromParseObject:PO];
+                        if (![SO.entity.name isEqualToString:kSyncUserClass]) {
+                            [SO updateValueAndRelationFromParseObject:PO];
+                        }
                         if (![relatedSO containsObject:SO]) {
                             //add relation
                             [relatedSO addObject:SO];
@@ -674,11 +671,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 }else{
                     //to one
                     EWServerObject *SO = [(PFObject *)obj managedObjectInContext:localContext];
-                    [SO updateValueAndRelationFromParseObject:obj];
-                    if (![localMe valueForKey:key]) {
-                        DDLogVerbose(@"+++> Added relation Me->%@(%@)", key, SO.objectId);
+                    if (![SO.entity.name isEqualToString:kSyncUserClass]) {
+                        [SO updateValueAndRelationFromParseObject:obj];
                     }
-                    [localMe setValue:SO forKey:key];
+                    if (![localMe valueForKey:key]) {
+                        DDLogVerbose(@"+++> Set relation Me->%@(%@)", key, SO.objectId);
+                        [localMe setValue:SO forKey:key];
+                    }
                 }
             }];
 			

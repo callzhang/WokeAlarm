@@ -983,7 +983,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ff6-y2-QZh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="personCellIdentifier" textLabel="ZVo-8R-6xW" detailTextLabel="MeC-bh-dok" style="IBUITableViewCellStyleValue1" id="Yjm-CJ-0bC">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -1024,7 +1024,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="fdR-tF-vQM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="friendCellIdentifier" textLabel="Fye-vl-wY1" detailTextLabel="LYN-f9-W9W" style="IBUITableViewCellStyleValue1" id="OVc-9b-3Ip">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -1131,19 +1131,6 @@
                                             <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Unf-1S-sZT" userLabel="picture">
-                                            <rect key="frame" x="110" y="8" width="100" height="100"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="mOL-T3-90i"/>
-                                                <constraint firstAttribute="height" constant="100" id="uck-gb-qJK"/>
-                                            </constraints>
-                                            <state key="normal" title="Button" image="10">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="photos:" destination="T0a-bL-MOd" eventType="touchUpInside" id="bMw-uo-g5k"/>
-                                            </connections>
-                                        </button>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="I want to imbrace the sunshine in the morning.I want to imbrace the sunshine in the morning." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="320" translatesAutoresizingMaskIntoConstraints="NO" id="gLZ-qp-e0x">
                                             <rect key="frame" x="16" y="182" width="288" height="37"/>
                                             <constraints>
@@ -1155,7 +1142,7 @@
                                             <color key="shadowColor" red="0.0" green="0.47817748999999998" blue="0.72598453439999999" alpha="0.28999999999999998" colorSpace="calibratedRGB"/>
                                             <size key="shadowOffset" width="1" height="1"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9p-bJ-mQ5" userLabel="addFriend">
+                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9p-bJ-mQ5" userLabel="addFriend">
                                             <rect key="frame" x="218" y="38" width="40" height="40"/>
                                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -1173,6 +1160,19 @@
                                                 <action selector="addFriend:" destination="T0a-bL-MOd" eventType="touchUpInside" id="lGs-Zo-Jf7"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4wO-HC-SC3" userLabel="profile">
+                                            <rect key="frame" x="110" y="8" width="100" height="100"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="100" id="961-r4-ukp"/>
+                                                <constraint firstAttribute="width" constant="100" id="mMG-su-Cu8"/>
+                                            </constraints>
+                                            <state key="normal" image="1">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="photos:" destination="T0a-bL-MOd" eventType="touchUpInside" id="zy9-nK-iSP"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="gLZ-qp-e0x" firstAttribute="top" secondItem="WWw-11-z9T" secondAttribute="bottom" id="44f-zQ-jzD"/>
@@ -1180,16 +1180,15 @@
                                         <constraint firstAttribute="trailing" secondItem="gLZ-qp-e0x" secondAttribute="trailing" constant="16" id="4xk-hs-l1M"/>
                                         <constraint firstItem="Diy-Sh-ZB5" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="40" id="GSW-Tv-V0E"/>
                                         <constraint firstAttribute="trailing" secondItem="Diy-Sh-ZB5" secondAttribute="trailing" constant="40" id="H0f-fT-VT9"/>
-                                        <constraint firstAttribute="centerX" secondItem="Unf-1S-sZT" secondAttribute="centerX" id="OOF-0W-YgS"/>
+                                        <constraint firstItem="4wO-HC-SC3" firstAttribute="centerY" secondItem="F9p-bJ-mQ5" secondAttribute="centerY" id="JlR-nF-Lke"/>
                                         <constraint firstItem="tDD-T6-Yyg" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="40" id="QaI-ua-eSC"/>
+                                        <constraint firstItem="tDD-T6-Yyg" firstAttribute="top" secondItem="4wO-HC-SC3" secondAttribute="bottom" constant="2" id="Ro0-jI-epB"/>
                                         <constraint firstItem="WWw-11-z9T" firstAttribute="top" secondItem="Diy-Sh-ZB5" secondAttribute="bottom" id="WnE-50-e5e"/>
-                                        <constraint firstItem="Unf-1S-sZT" firstAttribute="top" secondItem="yJy-dQ-Ted" secondAttribute="top" constant="8" id="e9y-7j-BH4"/>
+                                        <constraint firstItem="4wO-HC-SC3" firstAttribute="top" secondItem="yJy-dQ-Ted" secondAttribute="top" constant="8" id="Xcv-pu-OQw"/>
+                                        <constraint firstAttribute="centerX" secondItem="4wO-HC-SC3" secondAttribute="centerX" id="c4c-nV-acs"/>
                                         <constraint firstItem="WWw-11-z9T" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="40" id="fXq-ja-WAU"/>
                                         <constraint firstAttribute="trailing" secondItem="tDD-T6-Yyg" secondAttribute="trailing" constant="40" id="h5M-FY-kiz"/>
-                                        <constraint firstItem="tDD-T6-Yyg" firstAttribute="top" secondItem="Unf-1S-sZT" secondAttribute="bottom" constant="2" id="mbP-00-Ek6"/>
-                                        <constraint firstItem="Unf-1S-sZT" firstAttribute="centerY" secondItem="F9p-bJ-mQ5" secondAttribute="centerY" id="r2a-RE-gcV"/>
                                         <constraint firstItem="gLZ-qp-e0x" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="16" id="v9F-7u-aZY"/>
-                                        <constraint firstItem="F9p-bJ-mQ5" firstAttribute="leading" secondItem="Unf-1S-sZT" secondAttribute="trailing" constant="8" id="wVr-ZZ-GFA"/>
                                         <constraint firstItem="Diy-Sh-ZB5" firstAttribute="top" secondItem="tDD-T6-Yyg" secondAttribute="bottom" constant="1" id="yxB-9w-cvC"/>
                                     </constraints>
                                 </view>
@@ -1232,7 +1231,7 @@
                         <outlet property="location" destination="Diy-Sh-ZB5" id="aUz-wG-q4I"/>
                         <outlet property="name" destination="tDD-T6-Yyg" id="unX-gG-bGI"/>
                         <outlet property="nextAlarm" destination="WWw-11-z9T" id="Z2r-Q0-DRB"/>
-                        <outlet property="picture" destination="Unf-1S-sZT" id="5po-M2-SJX"/>
+                        <outlet property="picture" destination="4wO-HC-SC3" id="6dE-1Z-kfI"/>
                         <outlet property="statement" destination="gLZ-qp-e0x" id="zhH-Ew-K7n"/>
                         <outlet property="tableView" destination="Xwo-Q3-Shc" id="Zfv-aV-bGW"/>
                         <outlet property="wakeBtn" destination="62M-3o-8hg" id="YBV-Wr-OuE"/>
@@ -2481,7 +2480,7 @@ TGFiZWwgERHigKhMYWJlbA
         </scene>
     </scenes>
     <resources>
-        <image name="10" width="128" height="128"/>
+        <image name="1" width="128" height="128"/>
         <image name="alarm-dots" width="6" height="40"/>
         <image name="like-icon" width="30" height="30"/>
         <image name="playing-indicator" width="9" height="11"/>

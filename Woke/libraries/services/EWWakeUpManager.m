@@ -283,7 +283,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
             DDLogInfo(@"Back to sleep again. Last sleep time was %@", activity.sleepTime.date2detailDateString);
         }
         activity.sleepTime = [NSDate date];
-        [EWSync save];
+        [activity save];
         
         //start check sleep timer
         //[self alarmTimerCheck];//No need to check, sleepVC will check alarm time

@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseNavigationController.h"
+#import "EWBaseTableViewController.h"
 
-@interface EWFriendsViewController : UITableViewController
+@interface EWFriendsViewController : EWBaseTableViewController
 
 @end

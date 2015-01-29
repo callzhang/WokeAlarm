@@ -101,7 +101,7 @@
     if (medias.count == 0 && [person isMe]) {
         //query
         PFQuery *q = [[[PFUser currentUser] relationForKey:EWPersonRelationships.sentMedias] query];
-        [EWSync findServerObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
+        [EWSync findParseObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
             [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
                 NSArray *newMedias = [objects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [localMe.sentMedias valueForKey:kParseObjectID]]];
@@ -166,7 +166,7 @@
 	NSSet *receivedMediaIDs = [localMe.receivedMedias valueForKey:kParseObjectID];
     [query whereKey:kParseObjectID notContainedIn:[unreadMediaIDs setByAddingObjectsFromSet:receivedMediaIDs].allObjects];
 	NSError *err;
-    NSArray *mediaPOs = [EWSync findServerObjectWithQuery:query error:&err];
+    NSArray *mediaPOs = [EWSync findParseObjectWithQuery:query error:&err];
 	NSMutableArray *newMedia = [NSMutableArray new];
     for (PFObject *po in mediaPOs) {
         //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];

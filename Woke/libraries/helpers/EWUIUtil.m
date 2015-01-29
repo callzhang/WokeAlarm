@@ -277,15 +277,16 @@ static const float originalSize = 80.0;
         }else{
             leftBtn.frame = CGRectMake(20, 20, 40, 40);
         }
+        
+        CGFloat width = vc.view.width;
         if (!rightBtn) {
-            CGFloat width = vc.view.width;
             rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(width - 60, 20, 40, 40)];
             [rightBtn setImage:[UIImage imageNamed:@"More Button"] forState:UIControlStateNormal];
             if ([vc respondsToSelector:@selector(more:)]) {
                 [rightBtn addTarget:vc action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
             }
         }else{
-            rightBtn.frame = CGRectMake(260, 20, 40, 40);
+            rightBtn.frame = CGRectMake(width - 60, 20, 40, 40);
         }
         [vc.view addSubview:leftBtn];
         [vc.view addSubview:rightBtn];

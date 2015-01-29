@@ -178,7 +178,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     PFQuery *query = [PFUser query];
     [query whereKey:kParseObjectID containedIn:list];
     //[query includeKey:@"friends"];
-    NSArray *users = [EWSync findServerObjectWithQuery:query error:&error];
+    NSArray *users = [EWSync findParseObjectWithQuery:query error:&error];
     
     if (error) {
         NSLog(@"*** Failed to fetch everyone: %@", error);

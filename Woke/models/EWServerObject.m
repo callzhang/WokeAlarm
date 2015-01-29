@@ -32,7 +32,12 @@
     if (self.updated && self.updatedAt) {
         self.updatedAt = [NSDate date];
     }
-	[self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    
+    if ([NSThread isMainThread]) {
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    }else{
+        DDLogVerbose(@"Skip saving %@(%@) on background thread", self.entity.name, self.serverID);
+    }
 }
 
 - (void)saveWithCompletion:(BoolErrorBlock)block{

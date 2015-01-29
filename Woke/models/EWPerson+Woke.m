@@ -194,9 +194,24 @@
     [self save];
 }
 
-//- (void)updateMyCachedFriends{
-//    [[EWCachedInfoManager shared] updateCachedFriends];
-//}
+
+- (float)distance{
+    if (self.location) {
+        CLLocation *loc0 = [EWPerson me].location;
+        CLLocation *loc1 = self.location;
+        return [loc0 distanceFromLocation:loc1]/1000;
+    }
+    return -1;
+}
+
+- (NSString *)distanceString{
+    float d = self.distance;
+    if (d >= 0) {
+        return [NSString stringWithFormat:@"%.0f km", d];
+    }
+    return @"Unknown location";
+}
+
 
 @end
 

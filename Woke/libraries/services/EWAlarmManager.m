@@ -265,7 +265,7 @@
         PFQuery *alarmQuery = [PFQuery queryWithClassName:NSStringFromClass([EWAlarm class])];
         [alarmQuery whereKey:EWAlarmRelationships.owner equalTo:[PFUser currentUser]];
         [alarmQuery whereKey:kParseObjectID notContainedIn:[alarms valueForKey:kParseObjectID]];
-        NSArray *objects = [EWSync findServerObjectWithQuery:alarmQuery error:NULL];
+        NSArray *objects = [EWSync findParseObjectWithQuery:alarmQuery error:NULL];
         
         for (PFObject *a in objects) {
             EWAlarm *alarm = (EWAlarm *)[a managedObjectInContext:mainContext];;

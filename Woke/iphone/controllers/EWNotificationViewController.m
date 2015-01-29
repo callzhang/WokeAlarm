@@ -100,7 +100,7 @@
         [query whereKey:kParseObjectID notContainedIn:[[EWPerson me].notifications valueForKey:kParseObjectID]];
     }
     [query whereKey:EWNotificationRelationships.owner equalTo:[PFUser currentUser]];
-    [EWSync findServerObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
+    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
         for (PFObject *PO in objects) {
             EWNotification *notification = (EWNotification *)[PO managedObjectInContext:mainContext];
             NSLog(@"Found new notification %@(%@)", notification.type, notification.objectId);

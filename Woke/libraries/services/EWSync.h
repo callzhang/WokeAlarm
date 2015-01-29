@@ -161,8 +161,8 @@ typedef void (^EWSavingCallback)(void);
 
 #pragma mark - Parse helper methods
 //PO query
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error;
-+ (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
++ (NSArray *)findParseObjectWithQuery:(PFQuery *)query error:(NSError **)error;
++ (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 //- (PFObject *)getCachedParseObjectForID:(NSString *)parseID;
 - (void)setCachedParseObject:(PFObject *)PO;
 /**
