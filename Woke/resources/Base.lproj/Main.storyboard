@@ -1105,16 +1105,16 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tDD-T6-Yyg">
-                                            <rect key="frame" x="40" y="110" width="240" height="29"/>
+                                            <rect key="frame" x="40" y="122" width="240" height="23"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="29" id="YJ8-G4-lbi"/>
+                                                <constraint firstAttribute="height" constant="23" id="YJ8-G4-lbi"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="City | Distance" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Diy-Sh-ZB5">
-                                            <rect key="frame" x="40" y="140" width="240" height="21"/>
+                                            <rect key="frame" x="40" y="144" width="240" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="vpa-5i-pTf"/>
                                             </constraints>
@@ -1123,7 +1123,7 @@
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Next Alarm" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WWw-11-z9T">
-                                            <rect key="frame" x="40" y="161" width="240" height="21"/>
+                                            <rect key="frame" x="40" y="165" width="240" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="fMM-kr-NgL"/>
                                             </constraints>
@@ -1132,7 +1132,7 @@
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="I want to imbrace the sunshine in the morning.I want to imbrace the sunshine in the morning." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="320" translatesAutoresizingMaskIntoConstraints="NO" id="gLZ-qp-e0x">
-                                            <rect key="frame" x="16" y="182" width="288" height="37"/>
+                                            <rect key="frame" x="16" y="186" width="288" height="37"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="37" id="QKi-6b-XlL"/>
                                             </constraints>
@@ -1142,8 +1142,21 @@
                                             <color key="shadowColor" red="0.0" green="0.47817748999999998" blue="0.72598453439999999" alpha="0.28999999999999998" colorSpace="calibratedRGB"/>
                                             <size key="shadowOffset" width="1" height="1"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9p-bJ-mQ5" userLabel="addFriend">
-                                            <rect key="frame" x="218" y="38" width="40" height="40"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4wO-HC-SC3" userLabel="profile">
+                                            <rect key="frame" x="110" y="22" width="100" height="100"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="100" id="961-r4-ukp"/>
+                                                <constraint firstAttribute="width" constant="100" id="mMG-su-Cu8"/>
+                                            </constraints>
+                                            <state key="normal" image="1">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="photos:" destination="T0a-bL-MOd" eventType="touchUpInside" id="zy9-nK-iSP"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9p-bJ-mQ5" userLabel="addFriend">
+                                            <rect key="frame" x="218" y="52" width="40" height="40"/>
                                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="bVu-Uk-IZ9"/>
@@ -1160,36 +1173,24 @@
                                                 <action selector="addFriend:" destination="T0a-bL-MOd" eventType="touchUpInside" id="lGs-Zo-Jf7"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4wO-HC-SC3" userLabel="profile">
-                                            <rect key="frame" x="110" y="8" width="100" height="100"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="100" id="961-r4-ukp"/>
-                                                <constraint firstAttribute="width" constant="100" id="mMG-su-Cu8"/>
-                                            </constraints>
-                                            <state key="normal" image="1">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="photos:" destination="T0a-bL-MOd" eventType="touchUpInside" id="zy9-nK-iSP"/>
-                                            </connections>
-                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="gLZ-qp-e0x" firstAttribute="top" secondItem="WWw-11-z9T" secondAttribute="bottom" id="44f-zQ-jzD"/>
                                         <constraint firstAttribute="trailing" secondItem="WWw-11-z9T" secondAttribute="trailing" constant="40" id="4lv-jD-45j"/>
                                         <constraint firstAttribute="trailing" secondItem="gLZ-qp-e0x" secondAttribute="trailing" constant="16" id="4xk-hs-l1M"/>
+                                        <constraint firstItem="F9p-bJ-mQ5" firstAttribute="leading" secondItem="4wO-HC-SC3" secondAttribute="trailing" constant="8" id="80w-47-8lU"/>
                                         <constraint firstItem="Diy-Sh-ZB5" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="40" id="GSW-Tv-V0E"/>
                                         <constraint firstAttribute="trailing" secondItem="Diy-Sh-ZB5" secondAttribute="trailing" constant="40" id="H0f-fT-VT9"/>
                                         <constraint firstItem="4wO-HC-SC3" firstAttribute="centerY" secondItem="F9p-bJ-mQ5" secondAttribute="centerY" id="JlR-nF-Lke"/>
                                         <constraint firstItem="tDD-T6-Yyg" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="40" id="QaI-ua-eSC"/>
-                                        <constraint firstItem="tDD-T6-Yyg" firstAttribute="top" secondItem="4wO-HC-SC3" secondAttribute="bottom" constant="2" id="Ro0-jI-epB"/>
+                                        <constraint firstItem="tDD-T6-Yyg" firstAttribute="top" secondItem="4wO-HC-SC3" secondAttribute="bottom" id="Ro0-jI-epB"/>
                                         <constraint firstItem="WWw-11-z9T" firstAttribute="top" secondItem="Diy-Sh-ZB5" secondAttribute="bottom" id="WnE-50-e5e"/>
-                                        <constraint firstItem="4wO-HC-SC3" firstAttribute="top" secondItem="yJy-dQ-Ted" secondAttribute="top" constant="8" id="Xcv-pu-OQw"/>
+                                        <constraint firstItem="4wO-HC-SC3" firstAttribute="top" secondItem="yJy-dQ-Ted" secondAttribute="top" constant="22" id="Xcv-pu-OQw"/>
                                         <constraint firstAttribute="centerX" secondItem="4wO-HC-SC3" secondAttribute="centerX" id="c4c-nV-acs"/>
                                         <constraint firstItem="WWw-11-z9T" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="40" id="fXq-ja-WAU"/>
                                         <constraint firstAttribute="trailing" secondItem="tDD-T6-Yyg" secondAttribute="trailing" constant="40" id="h5M-FY-kiz"/>
                                         <constraint firstItem="gLZ-qp-e0x" firstAttribute="leading" secondItem="yJy-dQ-Ted" secondAttribute="leading" constant="16" id="v9F-7u-aZY"/>
-                                        <constraint firstItem="Diy-Sh-ZB5" firstAttribute="top" secondItem="tDD-T6-Yyg" secondAttribute="bottom" constant="1" id="yxB-9w-cvC"/>
+                                        <constraint firstItem="Diy-Sh-ZB5" firstAttribute="top" secondItem="tDD-T6-Yyg" secondAttribute="bottom" constant="-1" id="yxB-9w-cvC"/>
                                     </constraints>
                                 </view>
                                 <prototypes>
