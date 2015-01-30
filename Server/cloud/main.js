@@ -153,7 +153,7 @@ Parse.Cloud.define("sendFriendRequestNotificationToUser", function(request, resp
 
           //create a notification object
           //TODO: check sender/owner exists or not 
-          var notification = new Parse.Object("EWNotification");
+          var notification = new Parse.Object.extend("EWNotification");
           notification.set("importance", 0);
           notification.set("sender", senderID);
           notification.set("receiver", receiverID);
@@ -245,7 +245,7 @@ Parse.Cloud.define("sendFriendAcceptNotificationToUser", function(request, respo
 
           //create a notification object
           //TODO: check sender/owner exists or not 
-          var notification = new Parse.Object("EWNotification");
+          var notification = new Parse.Object.extend("EWNotification");
           notification.set("importance", 0);
           notification.set("sender", sender);
           notification.set("owner", ownerObject);
@@ -693,9 +693,92 @@ Parse.Cloud.define("handleNewUser", function(request, response) {
   var facebookID = request.params.facebookID;
 
   //query against all EWSocial's stored info, detect existing relation
-  
+  var newUser;
+  var query = new Parse.Query(Parse.User);
+  var relatedUsers;
+  query.get(userID).then( function(user){
+    newUser = user;
+    //query email in addressBook
+    var EWSocial = Parse.Object.extend("EWSocial");
+    var contactsQuery = new Parse.Query(EWSocial);
+    contactsQuery.equalTo("addressBookFriends", email);
+    return contactsQuery.find();
+  }).then(function (users) {
+    console.log("Found "+users.count+" users have email connection");
+    //save users list
+    relatedUsers = users;
+    //query email in facebook
+    var EWSocial = Parse.Object.extend("EWSocial")
+    var facebookQuery = new Parse.Query(EWSocial);
+    facebookQuery.equalTo("facebookFriends", facebookID);
+    return facebookQuery.find();
+  }).then(function (fbUsers) {
+    console.log("Found "+fbUsers.lenth+" users have facebook connection");
+    //add fb users
+    fbUsers.forEach(function (fbUser) {
+      relatedUsers.push(fbUser);
+    });
+    //send notification and EWNotification
+    var notifications = [];
+    relatedUsers.forEach(function (user) {
 
+      var notification = new Parse.Object.extend("EWNotification");
+      notification.set("importance", 0);
+      notification.set("sender", userID);
+      notification.set("receiver", user.id);
+      notification.set("owner", user);
+      notification.set("type", "new_user");
+      notification.set("userInfo",  {User:userID, owner:user.id, type: "notice", sendername: newUser.get("firstName") });
+      notifications.push(notification);
+    });
+    console.log("Saving "+notifications.length+"notifications");
+    return Parse.Object.saveAll(notifications);
+  }).then(function(notifications){
+    var users = [];
+    notifications.forEach(function (notification) {
+      //save users
+      var user = notification.get("owner");
+      var notificationRelation = user.Relation('notifications');
+      notificationRelation.add(notification);
+      users.push(user);
+
+      //send push notifications
+      var pushQuery = new Parse.Query(Parse.Installation);
+      query.equalTo('objectId', user.id);
+      Parse.push.send({
+        where: pushQuery,
+        data: {
+          alert: "Your friend " + newUser.get("firstName") + " " + newUser.get("lastName") + " just joined Woke!",
+          title: "You have new friend joined!",
+          body: "Your friend " + newUser.get("firstName") + " " + newUser.get("lastName") + " just joined Woke!",
+          type: "notice",
+          userInfo: "{User:" + newUser.id + ", type: new_user}",
+          notificationID: notification.id
+        }
+      }, {
+        success: function () {
+          console.log("New user push sent to ", user.id);
+        },
+        error: function (error) {
+          // Handle error
+          console.log("push error: " + error.message);
+          response.error("error: " + error.message);
+        }
+      });
+    });
+    return Parse.Object.saveAll(users);
+  }).then(function (users) {
+    response.success(users);
+  }, function (error) {
+    console.log("failed to save all users")
+    response.error(error);
+  })
 });
+
+
+
+
+
 
 //=================Background Job==================
 Parse.Cloud.job("backgroundJob", function(request, status) {
@@ -714,7 +797,7 @@ Parse.Cloud.job("backgroundJob", function(request, status) {
 
     if (diffDays >= 3) {
 
-      // var notification = new Parse.Object("EWNotification");
+      // var notification = new Parse.Object.extend("EWNotification");
       // notification.set("importance", 0);
       // notification.set("sender", user.id);
       // notification.set("owner", user);

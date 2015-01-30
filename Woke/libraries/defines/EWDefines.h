@@ -109,6 +109,7 @@ extern NSString * const kNewMediaNotification;
 #define kNotificationTypeFriendAccepted @"friendship_accepted"
 #define kNotificationTypeSystemNotice   @"notice"
 #define kNotificationTypeNewMedia       @"new_media"
+#define kNotificationTypeNewUser		@"new_user"
 
 //alarm store
 #define kAlarmNew						@"EWAlarmNew" //key: alarm
