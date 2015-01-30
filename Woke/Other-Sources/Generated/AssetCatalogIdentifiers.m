@@ -21,8 +21,27 @@
 +(UIImage *)7 { return [UIImage imageNamed:@"7"]; }
 +(UIImage *)8 { return [UIImage imageNamed:@"8"]; }
 +(UIImage *)9 { return [UIImage imageNamed:@"9"]; }
++(UIImage *)addFriendButton { return [UIImage imageNamed:@"Add Friend Button"]; }
 +(UIImage *)alarmDots { return [UIImage imageNamed:@"alarm-dots"]; }
++(UIImage *)backButton { return [UIImage imageNamed:@"Back Button"]; }
++(UIImage *)buzzButton { return [UIImage imageNamed:@"Buzz Button"]; }
++(UIImage *)checkmark { return [UIImage imageNamed:@"checkmark"]; }
++(UIImage *)closeButtonMedium { return [UIImage imageNamed:@"Close Button Medium"]; }
++(UIImage *)closeButton { return [UIImage imageNamed:@"Close Button"]; }
++(UIImage *)configureButton { return [UIImage imageNamed:@"Configure Button"]; }
++(UIImage *)confirmButtonMedium { return [UIImage imageNamed:@"Confirm Button Medium"]; }
++(UIImage *)confirmButton { return [UIImage imageNamed:@"Confirm Button"]; }
++(UIImage *)friendedIcon { return [UIImage imageNamed:@"Friended Icon"]; }
++(UIImage *)likeIcon { return [UIImage imageNamed:@"like-icon"]; }
++(UIImage *)moreButton { return [UIImage imageNamed:@"More Button"]; }
++(UIImage *)playButton { return [UIImage imageNamed:@"Play Button"]; }
++(UIImage *)playingIndicator { return [UIImage imageNamed:@"playing-indicator"]; }
++(UIImage *)profileSlice { return [UIImage imageNamed:@"Profile Slice"]; }
++(UIImage *)recordButtonRed { return [UIImage imageNamed:@"Record Button Red "]; }
 +(UIImage *)staryNight { return [UIImage imageNamed:@"stary night"]; }
++(UIImage *)stopButtonRed { return [UIImage imageNamed:@"Stop Button Red "]; }
++(UIImage *)stopButton { return [UIImage imageNamed:@"Stop Button"]; }
++(UIImage *)voiceMessageSlice { return [UIImage imageNamed:@"Voice Message Slice"]; }
 +(UIImage *)wokeAlarmArrowRight { return [UIImage imageNamed:@"woke-alarm-arrow-right"]; }
 +(UIImage *)wokeAlarmsMinusHighlighted { return [UIImage imageNamed:@"woke-alarms-minus-highlighted"]; }
 +(UIImage *)wokeAlarmsMinus { return [UIImage imageNamed:@"woke-alarms-minus"]; }
@@ -30,6 +49,7 @@
 +(UIImage *)wokeAlarmsPlusHighlighted { return [UIImage imageNamed:@"woke-alarms-plus-highlighted"]; }
 +(UIImage *)wokeAlarmsPlus { return [UIImage imageNamed:@"woke-alarms-plus"]; }
 +(UIImage *)wokeBackground { return [UIImage imageNamed:@"woke-background"]; }
++(UIImage *)wokeBlurTmpBackground { return [UIImage imageNamed:@"woke-blur-tmp-background"]; }
 +(UIImage *)wokeCheckMark { return [UIImage imageNamed:@"woke-check-mark"]; }
 +(UIImage *)wokeLoginInfoSelected { return [UIImage imageNamed:@"woke-login-info-selected"]; }
 +(UIImage *)wokeLoginInfo { return [UIImage imageNamed:@"woke-login-info"]; }
@@ -39,6 +59,18 @@
 +(UIImage *)wokeRectangleDisabled { return [UIImage imageNamed:@"woke-rectangle-disabled"]; }
 +(UIImage *)wokeRectangleNormal { return [UIImage imageNamed:@"woke-rectangle-normal"]; }
 +(UIImage *)wokeRectangleSelected { return [UIImage imageNamed:@"woke-rectangle-selected"]; }
++(UIImage *)wokeResponseIconHeartHighlighted { return [UIImage imageNamed:@"woke-response-icon-heart-highlighted"]; }
++(UIImage *)wokeResponseIconHeartNormal { return [UIImage imageNamed:@"woke-response-icon-heart-normal"]; }
++(UIImage *)wokeResponseIconKissHighlighted { return [UIImage imageNamed:@"woke-response-icon-kiss-highlighted"]; }
++(UIImage *)wokeResponseIconKissNormal { return [UIImage imageNamed:@"woke-response-icon-kiss-normal"]; }
++(UIImage *)wokeResponseIconReplyHighlighted { return [UIImage imageNamed:@"woke-response-icon-reply-highlighted"]; }
++(UIImage *)wokeResponseIconReplyNormal { return [UIImage imageNamed:@"woke-response-icon-reply-normal"]; }
++(UIImage *)wokeResponseIconSadHighlighted { return [UIImage imageNamed:@"woke-response-icon-sad-highlighted"]; }
++(UIImage *)wokeResponseIconSadNormal { return [UIImage imageNamed:@"woke-response-icon-sad-normal"]; }
++(UIImage *)wokeResponseIconSmileHighlighted { return [UIImage imageNamed:@"woke-response-icon-smile-highlighted"]; }
++(UIImage *)wokeResponseIconSmileNormal { return [UIImage imageNamed:@"woke-response-icon-smile-normal"]; }
++(UIImage *)wokeResponseIconTearHighlighted { return [UIImage imageNamed:@"woke-response-icon-tear-highlighted"]; }
++(UIImage *)wokeResponseIconTearNormal { return [UIImage imageNamed:@"woke-response-icon-tear-normal"]; }
 +(UIImage *)wokeSplashBottomText { return [UIImage imageNamed:@"woke-splash-bottom-text"]; }
 +(UIImage *)wokeSplashLogo { return [UIImage imageNamed:@"woke-splash-logo"]; }
 +(UIImage *)wokeTextInputFieldClearNormal { return [UIImage imageNamed:@"woke-text-input-field-clear-normal"]; }

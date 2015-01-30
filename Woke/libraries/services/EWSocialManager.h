@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "EWSocial.h"
+#define kAddressBookChecked     @"addressbook_checked"
+
 @class EWPerson;
 @interface EWSocialManager : NSObject
 
@@ -24,6 +26,8 @@
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block;
 
 //facebook friends search
-- (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block;
+- (void)getFacebookFriends;
+//match facebook friends on server to find related users
+- (void)searchForFacebookRelatedUsersWithCompletion:(ArrayBlock)block;
 
 @end

@@ -7,27 +7,48 @@
 
 extern const struct MainStoryboardIDs {
     struct {
-        __unsafe_unretained NSString *menuToHomeReplace;
-        __unsafe_unretained NSString *tempShowMainView;
-        __unsafe_unretained NSString *menuLogoutFadeToLoginGate;
         __unsafe_unretained NSString *menuToAlarmReplace;
+        __unsafe_unretained NSString *toWakeUpView;
+        __unsafe_unretained NSString *wakeUpChildViewController;
+        __unsafe_unretained NSString *menuToProfileReplace;
+        __unsafe_unretained NSString *menuToHomeReplace;
+        __unsafe_unretained NSString *toPreWakeView;
+        __unsafe_unretained NSString *toSetStatusController;
+        __unsafe_unretained NSString *menuToNotificationReplace;
+        __unsafe_unretained NSString *toSleepView;
+        __unsafe_unretained NSString *tempShowMainView;
+        __unsafe_unretained NSString *unwindFromStatusViewController;
+        __unsafe_unretained NSString *menuToVoiceReplace;
+        __unsafe_unretained NSString *toSleepModeView;
+        __unsafe_unretained NSString *smallTimeChildViewController;
+        __unsafe_unretained NSString *menuLogoutFadeToLoginGate;
+        __unsafe_unretained NSString *timeChildViewController;
+        __unsafe_unretained NSString *peopleArrayChildViewController;
     } segues;
 
     struct {
         __unsafe_unretained NSString *EWAlarmTone;
         __unsafe_unretained NSString *EWMain;
         __unsafe_unretained NSString *EWMenu;
+        __unsafe_unretained NSString *EWPersonSearchResultTable;
+        __unsafe_unretained NSString *EWPerson;
         __unsafe_unretained NSString *EWPreWake;
         __unsafe_unretained NSString *EWSleep;
         __unsafe_unretained NSString *EWWakeUp;
+        __unsafe_unretained NSString *EWNotification;
+        __unsafe_unretained NSString *EWFriends;
         __unsafe_unretained NSString *EWLoginGate;
         __unsafe_unretained NSString *EWWake;
     } viewControllers;
 
     struct {
-        __unsafe_unretained NSString *EWAlarmTableViewCell;
-        __unsafe_unretained NSString *EWAlarmToneSelectionCell;
+        __unsafe_unretained NSString *peopleArrayChildView;
         __unsafe_unretained NSString *EWAlarmToneViewCell;
+        __unsafe_unretained NSString *friendCell;
+        __unsafe_unretained NSString *EWAlarmToneSelectionCell;
+        __unsafe_unretained NSString *EWAlarmTableViewCell;
+        __unsafe_unretained NSString *EWWakeUpViewCell;
+        __unsafe_unretained NSString *personCell;
     } reusables;
 
 } MainStoryboardIDs;

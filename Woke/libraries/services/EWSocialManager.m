@@ -106,6 +106,14 @@
 }
 
 - (void)findAddressbookUsersFromContactsWithCompletion:(ArrayBlock)completion {
+    
+    EWSocial *social = [EWPerson mySocialGraph];
+    NSDate *lastChecked = social.addressBookUpdated;
+    if (lastChecked.timeElapsed < 24 * 3600) {
+        return;
+    }
+    
+    
     //request for access
     switch ([RHAddressBook authorizationStatus]) {
         case RHAuthorizationStatusNotDetermined:{
@@ -133,31 +141,34 @@
     }
     
     //get a list of PHPerson
-    EWSocial *social = [EWPerson mySocialGraph];
     NSArray *contacts = [self.addressBook people];
-    NSMutableArray *myContactFriends = social.addressBookFriends ?: [NSMutableArray array];
+    NSMutableDictionary *myContactFriends = social.addressBookFriends ?: [NSMutableArray array];
     for (RHPerson *contact in contacts) {
         for (NSString *email in contact.emails.values) {
-            if (![myContactFriends containsObject:email]) {
-                [myContactFriends addObject:email];
+            if (!myContactFriends[email]) {
+                myContactFriends[email] = contact.name;
             }
         }
-    };
+    }
     social.addressBookFriends = myContactFriends;
-    [social save];
     
     //Update email to EWSocial
     
     [self getUsersWithEmails:myContactFriends completion:^(NSArray *people, NSError *error) {
         if (completion) {
             completion(people, error);
+            
+            social.addressBookRelatedUsers = people;
+            social.addressBookUpdated = [NSDate date];
+            [social save];
+            
         }
     }];
 }
 
 
 
-#pragma mark - Search user
+#pragma mark - Search user with string
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block{
     phrase = [phrase stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (!phrase || phrase.length == 0) {
@@ -222,12 +233,92 @@
 }
 
 #pragma mark - Search facebook friends
-- (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block{
+
+- (void)getFacebookFriends{
+    DDLogVerbose(@"Updating facebook friends");
+    //check facebook id exist
+    if (![EWPerson me].socialGraph.facebookID) {
+        DDLogWarn(@"Current user doesn't have facebook ID, skip checking fb friends");
+        return;
+    }
+    
+    FBSessionState state = [FBSession activeSession].state;
+    if (state != FBSessionStateOpen && state != FBSessionStateOpenTokenExtended) {
+        
+        //session not open, need to open
+        DDLogVerbose(@"facebook session state: %lu", state);
+        [self openFacebookSessionWithCompletion:^{
+            DDLogVerbose(@"Facebook session opened: %lu", [FBSession activeSession].state);
+            
+            [self getFacebookFriends];
+        }];
+        
+        return;
+    }else{
+        //get social graph of current user
+        EWSocial *graph = [EWPerson mySocialGraph];
+        //skip if checked within a week
+        if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
+            DDLogVerbose(@"Facebook friends check skipped.");
+            return;
+        }
+        
+        //get the data
+        __block NSMutableDictionary *friends = [NSMutableDictionary new];
+        [self getFacebookFriendsWithPath:@"/me/friends" withReturnData:friends];
+        
+    }
+}
+
+- (void)getFacebookFriendsWithPath:(NSString *)path withReturnData:(NSMutableDictionary *)friendsHolder{
+    [FBRequestConnection startWithGraphPath:path completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        
+        DDLogVerbose(@"Got facebook friends list, start processing");
+        if (!error){
+            NSArray *friends = (NSArray *)result[@"data"];
+            NSString *nextPage = (NSString *)result[@"paging"][@"next"]	;
+            //parse
+            if (friends) {
+                for (NSDictionary *pair in friends) {
+                    NSString *fb_id = pair[@"id"];
+                    NSString *name = pair[@"name"];
+                    [friendsHolder setObject:name forKey:fb_id];
+                }
+            }
+            
+            //next page
+            if (nextPage) {
+                //continue loading facebook friends
+                //NSLog(@"Continue facebook friends request: %@", nextPage);
+                [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder];
+            }else{
+                DDLogInfo(@"Finished loading %ld friends from facebook, transfer to social graph.", friendsHolder.count);
+                EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
+                graph.facebookFriends = friendsHolder;
+                graph.facebookUpdated = [NSDate date];
+                
+                //save
+                [graph save];
+                
+                //search for facebook related user
+                [self searchForFacebookRelatedUsersWithCompletion:NULL];
+            }
+            
+        } else {
+            // An error occurred, we need to handle the error
+            // See: https://developers.facebook.com/docs/ios/errors
+            [EWErrorManager handleError:error];
+        }
+    }];
+}
+
+#pragma mark - Find related server users
+- (void)searchForFacebookRelatedUsersWithCompletion:(ArrayBlock)block{
     //get list of fb id
     EWSocial *social = [EWPerson mySocialGraph];
     NSArray *facebookIDs = social.facebookFriends.allKeys;
-    if (facebookIDs.count == 0) {
-        block(@[], nil);
+    if (facebookIDs.count == 0 || social.facebookUpdated.timeElapsed < 24 * 3600) {
+        block(social.facebookRelatedUsers?:[NSArray array], nil);
         return;
     }
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
@@ -235,6 +326,7 @@
 	NSArray *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
 	if (friendsFbIDs.count) {
 		[query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs];
+        DDLogInfo(@"Exclude friends's facebookID: %@", facebookIDs);
 	}
 	[query includeKey:EWSocialRelationships.owner];
     [query setLimit:50];
@@ -253,6 +345,14 @@
         if (block) {
             block(resultPeople.copy, error);
         }
+        
+        if (objects.count > 0) {
+            EWSocial *sg = [EWPerson mySocialGraph];
+            sg.facebookRelatedUsers = [objects valueForKey:EWSocialAttributes.facebookID];
+            sg.facebookUpdated = [NSDate date];
+            [sg save];
+        }
+        
     }];
 }
 @end

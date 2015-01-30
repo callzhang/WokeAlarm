@@ -178,7 +178,7 @@ NSManagedObjectContext *mainContext;
     for (NSString *key in self.changedRecords.allKeys) {
         if (![[workingObjects valueForKey:kParseObjectID] containsObject:key]) {
             DDLogError(@"Change for MO %@ not expected: %@", key, self.changedRecords[key]);
-            [self.changedRecords removeObjectForKey:key];
+            self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[key]];
         }
     }
     
@@ -209,7 +209,8 @@ NSManagedObjectContext *mainContext;
             
             //remove changed record
             NSMutableSet *changes = self.changedRecords[localMO.serverID];
-			[self.changedRecords removeObjectForKey:localMO.serverID];
+            self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.serverID]];
+
             DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
             
             //remove from queue
@@ -330,8 +331,7 @@ NSManagedObjectContext *mainContext;
                 //add changed keys to record
                 NSMutableSet *changed = [NSMutableSet setWithArray:self.changedRecords[SO.serverID]] ?: [NSMutableSet new];
                 [changed addObject:changedKeys];
-				self.changedRecords[SO.serverID] = changed.allObjects;
-				
+				self.changedRecords = [self.changedRecords setValue:changed.allObjects forImmutableKeyPath:@[SO.serverID]];
                 //add to queue
                 [self appendUpdateQueue:SO];
                 
@@ -641,18 +641,12 @@ NSManagedObjectContext *mainContext;
 }
 
 //changed records
-- (NSMutableDictionary *)changedRecords{
-    if (!_changedRecords) {
-        _changedRecords = [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
-    }
-    return _changedRecords;
+- (NSDictionary *)changedRecords{
+    _changedRecords = [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
 }
 
-- (void)setChangedRecords:(NSMutableDictionary *)changedRecords{
-    _changedRecords = changedRecords;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [[NSUserDefaults standardUserDefaults] setValue:changedRecords.copy forKey:kChangedRecords];
-    });
+- (void)setChangedRecords:(NSDictionary *)changedRecords{
+    [[NSUserDefaults standardUserDefaults] setValue:changedRecords forKey:kChangedRecords];
 }
 
 #pragma mark - Core Data

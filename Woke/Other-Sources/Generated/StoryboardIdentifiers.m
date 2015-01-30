@@ -7,27 +7,48 @@
 
 const struct MainStoryboardIDs MainStoryboardIDs = {
     .segues = {
-        .menuToHomeReplace = @"MenuToHomeReplace",
-        .tempShowMainView = @"TempShowMainViewSegue",
-        .menuLogoutFadeToLoginGate = @"MenuLogoutFadeToLoginGate",
         .menuToAlarmReplace = @"MenuToAlarmReplace",
+        .toWakeUpView = @"toWakeUpView",
+        .wakeUpChildViewController = @"wakeUpChildViewController",
+        .menuToProfileReplace = @"MenuToProfileReplace",
+        .menuToHomeReplace = @"MenuToHomeReplace",
+        .toPreWakeView = @"toPreWakeView",
+        .toSetStatusController = @"toSetStatusController",
+        .menuToNotificationReplace = @"MenuToNotificationReplace",
+        .toSleepView = @"toSleepView",
+        .tempShowMainView = @"TempShowMainViewSegue",
+        .unwindFromStatusViewController = @"unwindFromStatusViewController",
+        .menuToVoiceReplace = @"MenuToVoiceReplace",
+        .toSleepModeView = @"toSleepModeView",
+        .smallTimeChildViewController = @"smallTimeChildViewController",
+        .menuLogoutFadeToLoginGate = @"MenuLogoutFadeToLoginGate",
+        .timeChildViewController = @"timeChildViewController",
+        .peopleArrayChildViewController = @"peopleArrayChildViewController",
     },
 
     .viewControllers = {
         .EWAlarmTone = @"EWAlarmToneViewController",
         .EWMain = @"EWMainViewController",
         .EWMenu = @"EWMenuViewController",
+        .EWPersonSearchResultTable = @"EWPersonSearchResultTableViewController",
+        .EWPerson = @"EWPersonViewController",
         .EWPreWake = @"EWPreWakeViewController",
         .EWSleep = @"EWSleepViewController",
         .EWWakeUp = @"EWWakeUpViewController",
+        .EWNotification = @"EWNotificationViewController",
+        .EWFriends = @"EWFriendsViewController",
         .EWLoginGate = @"EWLoginGateViewController",
         .EWWake = @"EWWakeViewController",
     },
 
     .reusables = {
-        .EWAlarmTableViewCell = @"EWAlarmTableViewCell",
-        .EWAlarmToneSelectionCell = @"EWAlarmToneSelectionCell",
+        .peopleArrayChildView = @"PeopleArrayChildViewIdentifier",
         .EWAlarmToneViewCell = @"EWAlarmToneViewCell",
+        .friendCell = @"friendCellIdentifier",
+        .EWAlarmToneSelectionCell = @"EWAlarmToneSelectionCell",
+        .EWAlarmTableViewCell = @"EWAlarmTableViewCell",
+        .EWWakeUpViewCell = @"EWWakeUpViewCell",
+        .personCell = @"personCellIdentifier",
     },
 
 };
