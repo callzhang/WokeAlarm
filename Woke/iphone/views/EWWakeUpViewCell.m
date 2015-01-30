@@ -14,7 +14,10 @@
 @property (nonatomic, assign) BOOL open;
 @property (weak, nonatomic) IBOutlet UIView *replyView;
 @property (nonatomic, assign) NSInteger replyWidth;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *emojiButtons;
+@property (weak, nonatomic) IBOutlet UIButton *heartButton;
 
+@property (nonatomic, readonly) NSArray *buttonImageNames;
 @end
 
 @implementation EWWakeUpViewCell
@@ -37,6 +40,16 @@
     self.name.text = media.author.name;
     self.image.image = media.mediaFile.thumbnail?:media.author.profilePic;
     self.progress.progress = 0;
+}
+
+- (NSArray *)buttonImageNames {
+    static dispatch_once_t onceToken;
+    static NSArray *buttonNames;
+    dispatch_once(&onceToken, ^{
+        buttonNames = @[@"woke-response-icon-heart-normal",];
+    });
+    
+    return buttonNames;
 }
 
 - (IBAction)onToggleButton:(id)sender {

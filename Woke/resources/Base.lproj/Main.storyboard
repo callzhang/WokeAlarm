@@ -2121,11 +2121,17 @@ TGFiZWwgERHigKhMYWJlbA
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
+                                            <outlet property="heartButton" destination="UdS-Es-KCL" id="9f6-gM-4sK"/>
                                             <outlet property="image" destination="0DM-CU-Bvv" id="Fcz-m0-sbC"/>
                                             <outlet property="name" destination="qve-St-aan" id="sSv-Fd-8Zo"/>
                                             <outlet property="peopleViewLeadingConstraint" destination="0oe-vU-pHm" id="PTu-oe-znO"/>
                                             <outlet property="playIndicator" destination="72L-VI-QZe" id="rfO-xC-ihq"/>
                                             <outlet property="replyView" destination="ArJ-4v-CbB" id="Gur-rn-7F5"/>
+                                            <outletCollection property="emojiButtons" destination="ilE-aF-iY8" id="CfD-el-idk"/>
+                                            <outletCollection property="emojiButtons" destination="M6W-jH-bZt" id="aIn-gT-fL4"/>
+                                            <outletCollection property="emojiButtons" destination="wGW-p4-2Y1" id="9ku-Qh-URH"/>
+                                            <outletCollection property="emojiButtons" destination="u2b-Vp-Bgm" id="TNB-Ac-lYQ"/>
+                                            <outletCollection property="emojiButtons" destination="xIe-VF-NlH" id="KOF-ce-Dgq"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
