@@ -8,10 +8,12 @@
 
 @implementation EWSocial
 @dynamic addressBookFriends;
+@dynamic addressBookRelatedUsers;
 @dynamic facebookFriends;
+@dynamic facebookRelatedUsers;
 @dynamic friendshipTimeline;
-// Custom logic goes here.
 
+// Custom logic goes here.
 + (instancetype)newSocialForPerson:(EWPerson *)person{
 	EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
 	sg.updatedAt = [NSDate date];

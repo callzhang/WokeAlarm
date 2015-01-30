@@ -687,6 +687,16 @@ Parse.Cloud.define("updateRelation", function(request, response) {
 
 });
 
+Parse.Cloud.define("handleNewUser", function(request, response) {
+  var userID = request.params.userID;
+  var email = request.params.email;
+  var facebookID = request.params.facebookID;
+
+  //query against all EWSocial's stored info, detect existing relation
+  
+
+});
+
 //=================Background Job==================
 Parse.Cloud.job("backgroundJob", function(request, status) {
   // Set up to modify user data

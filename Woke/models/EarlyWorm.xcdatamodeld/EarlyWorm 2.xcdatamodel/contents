@@ -107,15 +107,14 @@
     </entity>
     <entity name="EWSocial" representedClassName="EWSocial" parentEntity="EWServerObject" syncable="YES">
         <attribute name="addressBookFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="addressBookRelatedUsers" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="addressBookUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="facebookFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="facebookID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facebookRelatedUsers" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="facebookToken" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="facebookUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="friendshipTimeline" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="weiboFriends" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="weiboID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="weiboToken" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="weiboUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="socialGraph" inverseEntity="EWPerson" syncable="YES"/>
     </entity>
     <elements>
@@ -128,6 +127,6 @@
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>
         <element name="EWPerson" positionX="0" positionY="0" width="128" height="30"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="EWSocial" positionX="0" positionY="0" width="128" height="210"/>
+        <element name="EWSocial" positionX="0" positionY="0" width="128" height="195"/>
     </elements>
 </model>

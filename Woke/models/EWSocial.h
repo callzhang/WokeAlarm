@@ -3,7 +3,9 @@
 @interface EWSocial : _EWSocial {}
 
 @property (nonatomic, strong) NSMutableDictionary *facebookFriends;
-@property (nonatomic, strong) NSMutableArray *addressBookFriends;
+@property (nonatomic, strong) NSMutableArray *facebookRelatedUsers
+@property (nonatomic, strong) NSMutableDictionary *addressBookFriends;
+@property (nonatomic, strong) NSMutableArray *addressBookRelatedUsers;
 @property (nonatomic, strong) NSMutableDictionary *friendshipTimeline;
 
 + (instancetype)newSocialForPerson:(EWPerson *)person;
