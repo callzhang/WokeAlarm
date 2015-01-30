@@ -10,9 +10,10 @@
 #import "EWPerson.h"
 
 @interface EWServer : NSObject
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWServer)
 
 #pragma mark - Handle Push Notification
-+ (void)handlePushNotification:(NSDictionary *)push;
++ (void)handlePushNotification:(NSDictionary *)payload;
 
 #pragma mark - Handle Local Notification
 + (void)handleLocalNotification:(UILocalNotification *)localNotif;
@@ -24,10 +25,10 @@
  @params users: array of EWPerson
  @params taskId: taskId
  */
-+ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block;
++ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(BoolErrorBlock)block;
 
 #pragma mark - Push methods
-+ (void)broadcastMessage:(NSString *)msg onSuccess:(void (^)(void))block onFailure:(void (^)(void))failureBlock;
++ (void)broadcastMessage:(NSString *)msg onSuccess:(VoidBlock)block onFailure:(VoidBlock)failureBlock;
 
 
 /**
@@ -57,21 +58,21 @@
  Blcok called when failure
  
  */
-+ (void)parsePush:(NSDictionary *)pushPayload toUsers:(NSArray *)users completion:(PFBooleanResultBlock)block;
++ (void)parsePush:(NSDictionary *)pushPayload toUsers:(NSArray *)users completion:(BoolErrorBlock)block;
 
 
 #pragma mark - Push notification
 /**
  Initiate the Push Notification registration to APNS
  */
-+ (void)registerAPNS;
+- (void)requestNotificationPermissions;
 /**
  Handle the returned token for registered device. Register the push service to 3rd party server.
  */
-+ (void)registerPushNotificationWithToken:(NSData *)deviceToken;
+- (void)registerPushNotificationWithToken:(NSData *)deviceToken;
 
 
-+ (void)searchForFriendsOnServer;
+//+ (void)searchForFriendsOnServer;
 
 //+(void)publishOpenGraphUsingAPICallsWithObjectId:(NSString *)objectId andUrlString:(NSString *)url;
 
@@ -84,4 +85,7 @@
 +(void)uploadOGStoryWithPhoto:(UIImage *)image;// use this to update a OG story
 
 +(void)makeRequestToPostStoryWithId:(NSString *)objectId andUrlString:(NSString *)url;
+
+#pragma mark - Util
++ (void)updateRelation:(NSString *)relation for:(PFObject *)target withObject:(PFObject *)related withOperation:(NSString *)operation completion:(ErrorBlock)block;
 @end

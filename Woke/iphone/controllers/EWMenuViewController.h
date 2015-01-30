@@ -15,7 +15,7 @@ typedef void(^MenuBackgroundTapHanlder)(void);
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundView;
 @property (nonatomic, copy) MenuBackgroundTapHanlder tapHandler;
-@property (nonatomic, weak) EWBaseNavigationController *baseNavigationController;
+@property (nonatomic, weak) EWMainNavigationController *mainNavigationController;
 
 - (void)closeMenu;
 

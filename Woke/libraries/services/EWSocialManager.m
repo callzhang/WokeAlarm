@@ -9,15 +9,14 @@
 #import "EWSocialManager.h"
 #import "EWPerson.h"
 #import "EWPersonManager.h"
-
-#import "APAddressBook.h"
-#import "APContact.h"
 #import "NSArray+BlocksKit.h"
 #import "EWSocial.h"
 #import "FBKVOController.h"
+#import <RHAddressBook/AddressBook.h>
+#import "NSString+Extend.h"
 
 @interface EWSocialManager()
-@property (nonatomic, strong) APAddressBook *addressBook;
+@property (nonatomic, strong) RHAddressBook *addressBook;
 @end
 
 @implementation EWSocialManager
@@ -29,11 +28,26 @@
         if (!manager) {
             manager = [[EWSocialManager alloc] init];
             [manager.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) block:^(id observer, id object, NSDictionary *change) {
-                DDLogVerbose(@"Obverved friends added");
-                NSArray *new = change[NSKeyValueChangeNewKey];
-                NSArray *old = change[NSKeyValueChangeOldKey];
-                NSArray *addition = [new filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT SELF IN %@", old]];
-                [manager updateFriendshipTimelineForFrendsIDs:[addition valueForKey:kParseObjectID]];
+                //add new friends to the friendship timeline
+                [manager updateFriendshipTimeline];
+                
+                //test
+                NSIndexSet *indices = [change objectForKey:NSKeyValueChangeIndexesKey];
+                if (indices == nil)
+                    return;
+                DDLogVerbose(@"Obverved friends changed");
+                [indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+                    if ([change[NSKeyValueChangeKindKey] integerValue] == NSKeyValueChangeInsertion) {
+                        //insertion
+                        DDLogVerbose(@"New friends");
+                    }else if ([change[NSKeyValueChangeNewKey] integerValue] == NSKeyValueChangeRemoval){
+                        //removal
+                        DDLogVerbose(@"removed friends");
+                    }else if ([change[NSKeyValueChangeNewKey] integerValue] == NSKeyValueChangeReplacement){
+                        //replacement
+                        DDLogVerbose(@"replaced friends");
+                    }
+                }];
             }];
         }
     });
@@ -42,132 +56,203 @@
 }
 
 
-- (void)updateFriendshipTimelineForFrendsIDs:(NSArray *)friendsIDs{
+- (void)updateFriendshipTimeline{
+    EWAssertMainThread
     EWPerson *me = [EWPerson me];
-    if (!me.socialGraph.friendshipTimeline) {
-        me.socialGraph.friendshipTimeline = [NSMutableDictionary new];
-    }
     
-    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline;
+    NSMutableDictionary *friendsActivityDic = me.socialGraph.friendshipTimeline?:[NSMutableDictionary new];
+    //diff
+    NSMutableSet *existingFriendIDsInTimeline = [NSMutableSet new];
+    NSMutableSet *allFriendIDs = [[me.friends valueForKey:kParseObjectID] mutableCopy];
+    for (NSArray *friends in friendsActivityDic.allValues) {
+        [existingFriendIDsInTimeline addObjectsFromArray:friends];
+    }
+    [allFriendIDs minusSet:existingFriendIDsInTimeline];
+    //get friends for today
     NSString *dateKey = [NSDate date].date2YYMMDDString;
     NSArray *friendedArray = friendsActivityDic[dateKey]?:[NSArray new];
     NSMutableSet *friendedSet = [NSMutableSet setWithArray:friendedArray];;
-    
-    [friendedSet addObjectsFromArray:friendsIDs];
-    
+    //add new friends
+    [friendedSet setByAddingObjectsFromSet:allFriendIDs];
+    if (friendedSet.count == 0) {
+        return;
+    }
+    //save
     friendsActivityDic[dateKey] = [friendedSet allObjects];
-    
-    [EWSync save];
+    me.socialGraph.friendshipTimeline = friendsActivityDic;
+    [me.socialGraph save];
 }
 
-
-- (APAddressBook *)addressBook {
-    if (!_addressBook) {
-        _addressBook = [[APAddressBook alloc] init];
-    }
-    
-    return _addressBook;
-}
-
-- (EWSocial *)mySocialGraph{
-    EWSocial *sg = [EWPerson me].socialGraph;
-    if (!sg) {
-        sg = [self  createSocialGraphForPerson:[EWPerson me]];
-    }
-    return sg;
-}
 
 - (EWSocial *)socialGraphForPerson:(EWPerson *)person{
     if (person.socialGraph) {
         return person.socialGraph;
     }
-    
-    if (person.isMe) {
-        //first check from PFUser
-        PFObject *sg = [PFUser currentUser][EWPersonRelationships.socialGraph];
-        EWSocial *graph;
-        if (sg) {
-            graph = (EWSocial *)[sg managedObjectInContext:mainContext];
-        }else{
-            //need to create one for self
-            graph = [self createSocialGraphForPerson:person];
-        }
-        return graph;
+	
+    EWSocial *graph = [EWSocial newSocialForPerson:person];
+	if (person.isMe) {
+        //TODO: update facebook friends
+	}
+    return graph;
+}
+
+#pragma mark - Addressbook
+
+- (RHAddressBook *)addressBook {
+    if (!_addressBook) {
+        _addressBook = [[RHAddressBook alloc] init];
     }
+    return _addressBook;
+}
 
+- (void)findAddressbookUsersFromContactsWithCompletion:(ArrayBlock)completion {
+    //request for access
+    switch ([RHAddressBook authorizationStatus]) {
+        case RHAuthorizationStatusNotDetermined:{
+            //request authorization
+            [self.addressBook requestAuthorizationWithCompletion:^(bool granted, NSError *error) {
+                if (granted) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self findAddressbookUsersFromContactsWithCompletion:completion];
+                    });
+                }else{
+                    completion(nil, error);
+                }
+            }];
+        }
+            return;
+        case RHAuthorizationStatusDenied:{
+            DDLogError(@"Addressbook authorization denied");
+            NSError *error = [NSError errorWithDomain:@"com.wokealarm.woke" code:-1 userInfo:nil];
+            completion(nil, error);
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }
+            return;
+        default:
+            break;
+    }
     
-    return person.socialGraph;
-}
-
-- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person{
-    EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
-    sg.updatedAt = [NSDate date];
-
-    //data
-    sg.owner = person;
-    //save
-    //[EWSync save];
-    NSLog(@"Created new social graph for user %@", person.name);
-    return sg;
-}
-
-- (BOOL)hasAddressBookAccess {
-    return [APAddressBook access] == APAddressBookAccessGranted;
-}
-
-- (void)testFindWithUsersCompletion:(void (^)(NSArray *users))completion {
-    [self loadAddressBookCompletion:^(NSArray *contacts, NSError *error) {
-        NSArray *emails = [contacts bk_map:^id(APContact *obj) {
-            return obj.emails;
-        }];
-        
-        NSMutableArray *allEmails = [NSMutableArray array];
-        for (NSArray *obj in emails) {
-            [allEmails addObjectsFromArray:obj];
+    //get a list of PHPerson
+    EWSocial *social = [EWPerson mySocialGraph];
+    NSArray *contacts = [self.addressBook people];
+    NSMutableArray *myContactFriends = social.addressBookFriends ?: [NSMutableArray array];
+    for (RHPerson *contact in contacts) {
+        for (NSString *email in contact.emails.values) {
+            if (![myContactFriends containsObject:email]) {
+                [myContactFriends addObject:email];
+            }
         }
-        
-        [self getUsersFromParse:allEmails completion:^(NSArray *contacts2, NSError *error2) {
-            DDLogInfo(@"contacts:%@", contacts);
-            completion(contacts);
-        }];
-    }];
-}
-
-- (void)loadAddressBookCompletion:(void (^)(NSArray *contacts, NSError *error))completion {
-    [self.addressBook loadContactsOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSArray *contacts, NSError *error) {
-        DDLogInfo(@"got contacts: %@", contacts);
-        NSArray *mapContacts = [contacts bk_map:^id(APContact *obj) {
-            NSDictionary *contact = @{
-                                      @"firstName": obj.firstName,
-                                      @"middleName": obj.middleName,
-                                      @"lastName": obj.lastName,
-                                      @"emails": obj.emails,
-                                      @"recordID": obj.recordID,
-                                      @"socialProfiles": obj.socialProfiles,
-                                      @"phones": obj.phones,
-                                      @"phonesWithLabels": obj.phonesWithLabels
-                                      };
-            
-            return contact;
-        }];
-        
-        //FIXME: set address book friends to person object?
-        self.mySocialGraph.addressBookFriends = mapContacts;
-        
-        [EWSync save];
-        
+    };
+    social.addressBookFriends = myContactFriends;
+    [social save];
+    
+    //Update email to EWSocial
+    
+    [self getUsersWithEmails:myContactFriends completion:^(NSArray *people, NSError *error) {
         if (completion) {
-            completion(contacts, error);
+            completion(people, error);
         }
     }];
 }
 
-- (void)getUsersFromParse:(NSArray *)emails completion:(void (^)(NSArray *contacts, NSError *error))completion {
-    [PFCloud callFunctionInBackground:@"findUsersWithEmails" withParameters:@{@"emails": emails} block:^(id object, NSError *error) {
+
+
+#pragma mark - Search user
+- (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block{
+    phrase = [phrase stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (!phrase || phrase.length == 0) {
+        block(@[], nil);
+        return;
+    }
+    
+    if (phrase.isEmail) {
+        DDLogDebug(@"search for email");
+        [self getUsersWithEmails:@[phrase] completion:^(NSArray *array, NSError *error) {
+            block(array, error);
+        }];
+    }else{
+        DDLogDebug(@"search for name");
+        [self getUsersWithName:phrase completion:^(NSArray *array, NSError *error) {
+            block(array, error);
+        }];
+    }
+}
+
+- (void)getUsersWithEmails:(NSArray *)emails completion:(ArrayBlock)completion {
+    PFQuery *emailQ = [PFUser query];
+    NSMutableArray *emails_ = [NSMutableArray array];
+    for (NSString *email in emails) {
+        [emails_ addObject:[email lowercaseString]];
+    }
+    [emailQ whereKey:EWPersonAttributes.email containedIn:emails_];
+    [emailQ setLimit:50];
+    [emailQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableArray *resultPeople = [NSMutableArray new];
+        for (PFUser *user in objects) {
+            EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
+            [resultPeople addObject:person];
+        }
         if (completion) {
-            completion(object, error);
+            completion(resultPeople, error);
         }
     }];
 }
 
+- (void)getUsersWithName:(NSString *)name completion:(ArrayBlock)completion {
+    NSString *name_ = [name stringByReplacingOccurrencesOfString:@"," withString:@" "];
+    NSArray *subNames = [name_ componentsSeparatedByString:@" "];
+    PFQuery *query;
+    for (NSString *str in subNames) {
+        PFQuery *q1 = [[PFUser query] whereKey:EWPersonAttributes.firstName containsString:str];
+        PFQuery *q2 = [[PFUser query] whereKey:EWPersonAttributes.lastName containsString:str];
+        query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, q2, query, nil]];
+    }
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        DDLogDebug(@"===> Search phrase %@ with result of %@", name, [objects valueForKey:EWPersonAttributes.firstName]);
+        NSMutableArray *resultPeople = [NSMutableArray new];
+        for (PFUser *user in objects) {
+            EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
+            [resultPeople addObject:person];
+        }
+        if (completion) {
+            completion(resultPeople, error);
+        }
+    }];
+}
+
+#pragma mark - Search facebook friends
+- (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block{
+    //get list of fb id
+    EWSocial *social = [EWPerson mySocialGraph];
+    NSArray *facebookIDs = social.facebookFriends.allKeys;
+    if (facebookIDs.count == 0) {
+        block(@[], nil);
+        return;
+    }
+    PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
+    [query whereKey:EWSocialAttributes.facebookID containedIn:facebookIDs];
+	NSArray *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
+	if (friendsFbIDs.count) {
+		[query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs];
+	}
+	[query includeKey:EWSocialRelationships.owner];
+    [query setLimit:50];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
+        NSMutableArray *resultPeople = [NSMutableArray new];
+        for (PFObject *socialPO in objects) {
+			PFUser *owner = socialPO[EWSocialRelationships.owner];
+			if (!owner) {
+				[socialPO fetch:&error];
+				owner = socialPO[EWSocialRelationships.owner];
+			}
+			EWPerson *person = (EWPerson *)[owner managedObjectInContext:mainContext];
+            [resultPeople addObject:person];
+        }
+        if (block) {
+            block(resultPeople.copy, error);
+        }
+    }];
+}
 @end

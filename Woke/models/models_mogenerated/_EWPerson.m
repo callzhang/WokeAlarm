@@ -8,19 +8,18 @@ const struct EWPersonAttributes EWPersonAttributes = {
 	.birthday = @"birthday",
 	.cachedInfo = @"cachedInfo",
 	.city = @"city",
+	.country = @"country",
 	.email = @"email",
-	.facebook = @"facebook",
+	.firstName = @"firstName",
 	.gender = @"gender",
 	.history = @"history",
 	.images = @"images",
-	.lastLocation = @"lastLocation",
-	.name = @"name",
+	.lastName = @"lastName",
+	.location = @"location",
 	.preference = @"preference",
 	.profilePic = @"profilePic",
-	.region = @"region",
 	.statement = @"statement",
 	.username = @"username",
-	.weibo = @"weibo",
 };
 
 const struct EWPersonRelationships EWPersonRelationships = {
@@ -28,9 +27,10 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	.activities = @"activities",
 	.alarms = @"alarms",
 	.friends = @"friends",
-	.medias = @"medias",
 	.notifications = @"notifications",
+	.receivedMedias = @"receivedMedias",
 	.receivedMessages = @"receivedMessages",
+	.sentMedias = @"sentMedias",
 	.sentMessages = @"sentMessages",
 	.socialGraph = @"socialGraph",
 	.unreadMedias = @"unreadMedias",
@@ -73,9 +73,11 @@ const struct EWPersonRelationships EWPersonRelationships = {
 
 @dynamic city;
 
+@dynamic country;
+
 @dynamic email;
 
-@dynamic facebook;
+@dynamic firstName;
 
 @dynamic gender;
 
@@ -83,21 +85,17 @@ const struct EWPersonRelationships EWPersonRelationships = {
 
 @dynamic images;
 
-@dynamic lastLocation;
+@dynamic lastName;
 
-@dynamic name;
+@dynamic location;
 
 @dynamic preference;
 
 @dynamic profilePic;
 
-@dynamic region;
-
 @dynamic statement;
 
 @dynamic username;
-
-@dynamic weibo;
 
 @dynamic achievements;
 
@@ -143,17 +141,6 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	return result;
 }
 
-@dynamic medias;
-
-- (NSMutableSet*)mediasSet {
-	[self willAccessValueForKey:@"medias"];
-
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medias"];
-
-	[self didAccessValueForKey:@"medias"];
-	return result;
-}
-
 @dynamic notifications;
 
 - (NSMutableSet*)notificationsSet {
@@ -165,9 +152,49 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	return result;
 }
 
+@dynamic receivedMedias;
+
+- (NSMutableSet*)receivedMediasSet {
+	[self willAccessValueForKey:@"receivedMedias"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"receivedMedias"];
+
+	[self didAccessValueForKey:@"receivedMedias"];
+	return result;
+}
+
 @dynamic receivedMessages;
 
+- (NSMutableSet*)receivedMessagesSet {
+	[self willAccessValueForKey:@"receivedMessages"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"receivedMessages"];
+
+	[self didAccessValueForKey:@"receivedMessages"];
+	return result;
+}
+
+@dynamic sentMedias;
+
+- (NSMutableSet*)sentMediasSet {
+	[self willAccessValueForKey:@"sentMedias"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"sentMedias"];
+
+	[self didAccessValueForKey:@"sentMedias"];
+	return result;
+}
+
 @dynamic sentMessages;
+
+- (NSMutableSet*)sentMessagesSet {
+	[self willAccessValueForKey:@"sentMessages"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"sentMessages"];
+
+	[self didAccessValueForKey:@"sentMessages"];
+	return result;
+}
 
 @dynamic socialGraph;
 

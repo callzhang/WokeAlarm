@@ -6,11 +6,17 @@
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
 //  The statisticsManager managers stats of person, and activity logs. Both of which stores in EWPerson's cachedInfo.
+//  For current user, the manager must be initiated with shared instance, and then call startAutoCacheUpdateForPerson to start update cache automatically
+//  For other user, it is a instance that extract helpful info from Person's cachedInfo. We should use "managerForPerson" to init the manager.
 
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
 
-#define kMaxWakabilityTime      600
+#define kMaxWakabilityTime	600
+
+//alarm
+//#define kCachedAlarmTimes   @"alarm_schedule"
+//#define kCachedStatements   @"statements"
 
 //stats
 #define kStatsCache         @"stats_cache"
@@ -21,7 +27,6 @@
 
 //activity
 #define kActivityCache      @"activity_cache"
-//dictionary keys
 #define kActivityType       @"type"
 #define kActivityTime       @"time"
 #define kWokeTime           @"wake"
@@ -37,20 +42,29 @@
 
 @interface EWCachedInfoManager : NSObject
 
-@property (nonatomic) EWPerson *person;
-@property (nonatomic) NSArray *activities;
+@property (nonatomic) EWPerson *currentPerson;
 @property (nonatomic) NSNumber *aveWakingLength;
 @property (nonatomic) NSString *aveWakingLengthString;
-@property (nonatomic) NSString *aveWakeUpTime;
+@property (nonatomic) NSString *aveWakeUpTime;//TODO: need to change to NSDate
 @property (nonatomic) NSNumber *successRate;
 @property (nonatomic) NSString *successString;
 @property (nonatomic) NSNumber *wakability;
 @property (nonatomic) NSString *wakabilityStr;
 
-+ (EWCachedInfoManager *)managerWithPerson:(EWPerson *)person;
-+ (EWCachedInfoManager *)myManager;
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
++ (instancetype)managerForPerson:(EWPerson *)person;
 
 //cachedInfo management
-- (void)updateActivityCacheWithCompletion:(void (^)(void))block;
+- (void)startAutoCacheUpdateForMe;
+/**
+ * Snapshot activity cache and save to cachedInfo 
+ @attention Currently the cached activities are unused 
+ */
+- (void)updateActivityCacheWithCompletion:(VoidBlock)block;
 - (void)updateCachedFriends;
+- (void)updateCachedAlarmTimes;
+- (void)updateCachedStatements;
+
+//Helper
++ (void)setCachedInfoWithValue:(id)value forKeyPath:(NSArray *)keyPathArray;
 @end

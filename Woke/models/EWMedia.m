@@ -9,10 +9,9 @@
 
 @implementation EWMedia
 
-
 #pragma mark - create media
 + (EWMedia *)newMedia{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     EWMedia *m = [EWMedia MR_createEntity];
     m.updatedAt = [NSDate date];
     m.author = [EWPerson me];
@@ -28,18 +27,19 @@
     }
     
     if (!self.author) {
+        DDLogError(@"Media %@ missing authur.", self.objectId);
         good = NO;
     }
     
     if ([self.type isEqualToString:kMediaTypeVoice]) {
         if(!self.mediaFile){
-            DDLogError(@"Media %@ type voice with no mediaFile.", self.serverID);
+            DDLogError(@"Media %@ type voice with no mediaFile.", self.objectId);
             good = NO;
         }
     }
     
-    if (!self.receiver && !self.activity) {
-        DDLogError(@"Found media %@ with no receiver and no activity.", self.serverID);
+    if (!self.receiver) {
+        DDLogError(@"Media %@ with no receiver.", self.objectId);
         good = NO;
     }
     
@@ -57,19 +57,71 @@
 }
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID{
-    return [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID].firstObject;
+    return [[self class] getMediaByID:mediaID inContext:mainContext];
 }
 
++ (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context{
+    EWMedia *media = [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID inContext:context].firstObject;
+    if (!media || !media.updatedAt) {
+        //need to find it on server
+        NSError *error;
+        media = (EWMedia *)[EWSync findObjectWithClass:NSStringFromClass([EWMedia class]) withID:mediaID inContext:context error:&error];
+        
+        //download media
+        NSLog(@"Downloading media: %@", media.objectId);
+        [media downloadMediaFile];
+        
+        //post notification
+        if ([NSThread isMainThread]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:media];
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EWMedia *m = [media MR_inContext:mainContext];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:m];
+            });
+        }
+    }
+    return media;
+}
+
+
+#pragma mark - Media File
+- (void)downloadMediaFile{
+    EWMediaFile *file = self.mediaFile;
+    if (!file) {
+        [self refresh];
+        file = self.mediaFile;
+    }
+    [file refresh];
+}
+
+- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{
+    EWMediaFile *file = self.mediaFile;
+	BOOL good = self.mediaFile.audio != nil;
+    if (!file) {
+        [self refreshInBackgroundWithCompletion:^(NSError *error){
+            [self.mediaFile refreshInBackgroundWithCompletion:^(NSError *err){
+				BOOL hasFile = self.mediaFile.audio != nil;
+				BOOL changed = good != hasFile;
+                if (block) {
+                    block(changed,err);
+                }
+            }];
+        }];
+    }else if(!file.audio){
+        [file refreshInBackgroundWithCompletion:^(NSError *error){
+            if (block) {
+				BOOL hasFile = self.mediaFile.audio != nil;
+				BOOL changed = good != hasFile;
+                block(changed, error);
+            }
+        }];
+    }
+}
 
 #pragma mark - DELETE
 - (void)remove{
-    [self MR_deleteEntity];
-    [EWSync save];
-}
-
-
-- (void)downloadMediaFile{
-    //TODO;
+    [super remove];
 }
 
 #pragma mark - Underlying data
@@ -81,5 +133,9 @@
 - (NSString *)audioKey{
     //TODO
     return nil;
+}
+
+- (EWServerObject *)ownerObject{
+    return self.author;
 }
 @end

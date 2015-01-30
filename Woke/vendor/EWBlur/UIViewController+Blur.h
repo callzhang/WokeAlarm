@@ -20,10 +20,10 @@ typedef enum{
 @interface UIViewController (Blur)
 
 - (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController;
-- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController completion:(void (^)(void))block;
-- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController option:(EWBlurViewOptions)blurOption completion:(void (^)(void))block;
+- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController completion:(VoidBlock)block;
+- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController option:(EWBlurViewOptions)blurOption completion:(VoidBlock)block;
 - (void)dismissBlurViewControllerWithCompletionHandler:(void(^)(void))completion;
 
 
-- (void)presentWithBlur:(UIViewController *)controller withCompletion:(void (^)(void))completion;
+- (void)presentWithBlur:(UIViewController *)controller withCompletion:(VoidBlock)completion;
 @end

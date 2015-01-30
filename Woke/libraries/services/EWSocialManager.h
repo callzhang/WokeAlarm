@@ -13,16 +13,17 @@
 
 + (EWSocialManager *)sharedInstance;
 
-//Search
-- (EWSocial *)mySocialGraph;
+
 - (EWSocial *)socialGraphForPerson:(EWPerson *)person;
+- (void)updateFriendshipTimeline;
 
-//Create
-- (EWSocial *)createSocialGraphForPerson:(EWPerson *)person;
+//Addressbook Search
+- (void)findAddressbookUsersFromContactsWithCompletion:(ArrayBlock)completion;
 
-//- (void)testFindWithUsersCompletion:(void (^)(NSArray *users))completion;
-//- (BOOL)hasAddressBookAccess;
-- (void)loadAddressBookCompletion:(void (^)(NSArray *contacts, NSError *error))completion;
+//return an array of EWPerson
+- (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block;
 
-- (void)updateFriendshipTimelineForFrendsIDs:(NSArray *)friendsIDs;
+//facebook friends search
+- (void)searchForFacebookFriendsWithCompletion:(ArrayBlock)block;
+
 @end

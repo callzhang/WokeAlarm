@@ -43,7 +43,16 @@ install_resource()
       ;;
   esac
 }
-          install_resource "GPUImage/framework/Resources/lookup.png"
+          install_resource "APTimeZones/APTimeZones/timezonesDB.json"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton@2x.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed.png"
+                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed@2x.png"
+                    install_resource "GPUImage/framework/Resources/lookup.png"
                     install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
                     install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
                     install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"

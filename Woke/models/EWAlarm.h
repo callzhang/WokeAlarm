@@ -13,26 +13,28 @@
 @interface EWAlarm : _EWAlarm
 
 // add
-+ (EWAlarm *)newAlarm;
++ (instancetype)newAlarm;
 
-// delete
-- (void)remove;
+// sarch
++ (instancetype)getAlarmByID:(NSString *)alarmID;
 
 //validate
 - (BOOL)validate;
+
+//cached info
+- (void)updateCachedAlarmTime;
+- (void)updateCachedStatement;
 
 //timer local notification
 /**
  Schedule both timer and sleep notification
  */
 - (void)scheduleLocalNotification;
-- (void)scheduleAlarmTimerLocalNotification;
 - (void)scheduleSleepLocalNotification;
 /**
  cancel both timer and sleep notification
  */
 - (void)cancelLocalNotification;
-- (void)cancelAlarmTimerLocalNotification;
 - (void)cancelSleepLocalNotification;
 - (NSArray *)localNotifications;//both sleep and timer
 

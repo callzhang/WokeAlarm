@@ -9,6 +9,9 @@
 #import "EWNotification.h"
 #import "EWPerson.h"
 #import "EWMedia.h"
+#import "EWActivity.h"
+#import "NSArray+BlocksKit.h"
+#import "NSDictionary+KeyPathAccess.h"
 
 @implementation EWNotification
 @dynamic userInfo;
@@ -16,7 +19,7 @@
 @dynamic importance;
 
 + (EWNotification *)newNotification {
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     EWNotification *notice = [EWNotification MR_createEntity];
     notice.updatedAt = [NSDate date];
     notice.owner = [EWPerson me];
@@ -24,22 +27,74 @@
     return notice;
 }
 
-+ (EWNotification *)newNotificationForMedia:(EWMedia *)media{
-    if (!media) {
-        return nil;
+
+
++ (EWNotification *)getNotificationByID:(NSString *)notificationID{
+    NSError *error;
+    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID error:&error];
+    if (!notification) {
+        DDLogError(@"%s fail to get notification: %@", __FUNCTION__, error.description);
     }
+    return notification;
+}
+
+
++ (EWNotification *)newMediaNotification:(EWMedia *)media{
+    EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
+        if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
+            if (notif.userInfo[@"activity"] == [EWPerson myCurrentAlarmActivity].objectId) {
+                return YES;
+            }
+        }
+        return NO;
+    }];
     
+    if (notification) {
+        notification.userInfo = [notification.userInfo addValue:media.objectId toImmutableKeyPath:@[@"medias"]];
+        [notification save];
+        return notification;
+    }
+
     EWNotification *note = [self newNotification];
-    note.type = kNotificationTypeNextTaskHasMedia;
-    note.userInfo = @{@"media": media.objectId};
+    note.type = kNotificationTypeNewMedia;
     note.sender = media.author.objectId;
-    [EWSync save];
+    note.receiver = [EWPerson me].objectId;
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+    if (!activity.objectId) {
+        [activity updateToServerWithCompletion:^(PFObject *PO, NSError *error) {
+            if (!PO) {
+                DDLogError(@"MO %@ failed to save to server: %@", media.serverClassName, error.description);
+                return;
+            }
+            note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
+            [note save];
+        }];
+    }else{
+        note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
+        [note save];
+    }
     return note;
 }
 
-- (void)remove {
-    DDLogInfo(@"Notification of type %@ deleted", self.type);
-    [self MR_deleteEntity];
-    [EWSync save];
+- (BOOL)validate{
+    BOOL good = YES;
+    if (!self.receiver) {
+        good = NO;
+        DDLogError(@"EWNotification missing receiver");
+    }
+    if (!self.type) {
+        good = NO;
+        DDLogError(@"EWNotification missing type");
+    }
+    if (!self.owner) {
+        good = NO;
+        DDLogError(@"EWNotification missing owner");
+    }
+    
+    return good;
+}
+
+- (EWServerObject *)ownerObject{
+    return self.owner;
 }
 @end

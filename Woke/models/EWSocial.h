@@ -2,7 +2,10 @@
 
 @interface EWSocial : _EWSocial {}
 
-@property (nonatomic, strong) NSArray *facebookFriends;
-@property (nonatomic, strong) NSArray *addressBookFriends;
+@property (nonatomic, strong) NSMutableDictionary *facebookFriends;
+@property (nonatomic, strong) NSMutableArray *addressBookFriends;
 @property (nonatomic, strong) NSMutableDictionary *friendshipTimeline;
+
++ (instancetype)newSocialForPerson:(EWPerson *)person;
++ (instancetype)getSocialByID:(NSString *)socialID;
 @end

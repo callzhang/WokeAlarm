@@ -14,9 +14,15 @@
 #import "FBSession.h"
 #import "EWServer.h"
 #import "ATConnect.h"
+#import "AppDelegate.h"
+#import "EWUIUtil.h"
+#import "NSTimer+BlocksKit.h"
+#import "EWStartUpSequence.h"
+@import CoreLocation;
 
 @interface EWAccountManager()
 @property (nonatomic) BOOL isUpdatingFacebookInfo;
+@property (nonatomic, strong) CLLocationManager *manager;
 @end
 
 @implementation EWAccountManager
@@ -24,32 +30,22 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 //TODO: refactor to EWSession
 + (BOOL)isLoggedIn {
-    return [[NSUserDefaults standardUserDefaults]  boolForKey:@"Loggin"];
+    return [PFUser currentUser] != nil;
 }
 
-+ (void)setLoggedIn:(BOOL)loggedIn {
-    [[NSUserDefaults standardUserDefaults] setBool:loggedIn forKey:@"Loggin"];
-    
-    if (loggedIn) {
-        DDLogInfo(@"[c] Broadcast Person login notification");
-        [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
-    }
-}
-
-- (void)loginFacebookCompletion:(void (^)(BOOL isNewUser, NSError *error))completion {
+- (void)loginFacebookCompletion:(ErrorBlock)completion {
     //login with facebook
     [PFFacebookUtils logInWithPermissions:[[self class] facebookPermissions] block:^(PFUser *user, NSError *error) {
         if (user) {
             //fetch core data and set as current user (me)
             [self fetchCurrentUser:user];
             //refresh me if needed
-            [self refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *err) {
+            [self refreshEverythingIfNecesseryWithCompletion:^(NSError *err){
                 //if new user, link with facebook
                 if([PFUser currentUser].isNew){
                     /**
                      *  Handle external event such as welcoming message and broadcasting new user to the community
                      */
-                    //    [EWAccountManager linkWithFacebook];
                     NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
                     EWAlert(msg);
                     [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
@@ -57,20 +53,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 
                 //logged into the Core Data user
                 if (completion) {
-                    completion(isNewUser, err);
+                    completion(err);
                 }
             }];
         }
         else {
             if (error) {
                 if (completion) {
-                    completion(NO, error);
+                    completion(error);
                 }
             }
             else {
                 NSError *error2 = [NSError errorWithDomain:EWErrorDomain code:-1 userInfo:@{EWErrorInfoDescriptionKey: @"User Cancelled Log"}];
                 if (completion) {
-                    completion(NO, error2);
+                    completion(error2);
                 }
             }
         }
@@ -83,37 +79,32 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 }
 
 //login Core Data User with Server User (PFUser)
-- (void)refreshEverythingIfNecesseryWithCompletion:(void (^)(BOOL isNewUser, NSError *error))completion{
+- (void)refreshEverythingIfNecesseryWithCompletion:(ErrorBlock)completion{
     //here we have three scenarios:
     //1) Old user, everything should be update to date
     //2) New user, everything copied from defaul template and upload to server
     //3) Existing user but first time login on this phone, we need to download user data first and THEN execute login sequence
-    
-    //save me
-    if (![[self class] isLoggedIn]){
-        if ([EWSync sharedInstance].workingQueue.count == 0) {
-            DDLogError(@"Upload queue is not empty when user logging in.");
-        }
-        //TODO: if no pending uploads, refresh self
-        [[EWPerson me] refreshInBackgroundWithCompletion:^{
-            if (completion) {
-                //set login mark
-                [[self class] setLoggedIn:YES];
-                
-                DDLogInfo(@"[d] Run completion block.");
-                completion([PFUser currentUser].isNew, nil);
-                
-                [[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
-            }
-        }];
-    }
-    else {
+    TICK
+    DDLogVerbose(@"Start sync user");
+    //Delta sync
+    [[EWAccountManager shared] syncUserWithCompletion:^(NSError *error){
+        TOCK
+        [[EWSync sharedInstance] resumeUploadToServer];
+        DDLogInfo(@"[c] Broadcast Person login notification");
+        
+        //startup sequence
+        [[EWStartUpSequence sharedInstance] loginDataCheck];
+        
+        //post notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
         if (completion) {
-            //set login mark
-            [[self class] setLoggedIn:YES];
-            completion([PFUser currentUser].isNew, nil);
+            
+            DDLogDebug(@"[d] Run completion block.");
+            completion(error);
         }
-    }
+        
+        [[ATConnect sharedConnection] engage:@"login_success" fromViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    }];
 }
 
 - (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion {
@@ -150,8 +141,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     [FBSession.activeSession closeAndClearTokenInformation];
     
-    [[self class] setLoggedIn:NO];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLogoutNotification object:self userInfo:nil];
 }
 
@@ -160,13 +149,25 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     if (self.isUpdatingFacebookInfo) {
         return;
     }
-    self.isUpdatingFacebookInfo = YES;
-    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+	//outdate
+	BOOL outDated = NO;
+	BOOL needUpdate = NO;
+	BOOL hasFacebook = NO;
+	NSDate *lastUpdated = [[NSUserDefaults standardUserDefaults] valueForKey:kFacebookLastUpdated];
+	if (!lastUpdated || lastUpdated.timeElapsed > 7*24*3600) {
+		outDated = YES;
+	}
+	if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) hasFacebook = YES;
+	if (![EWPerson me].firstName || ![EWPerson mySocialGraph]) {
+		needUpdate = YES;
+	}
+	
+    if ((outDated || needUpdate) && hasFacebook) {
+		self.isUpdatingFacebookInfo = YES;
         [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *data, NSError *error) {
             if (error) {
                 [EWAccountManager handleFacebookException:error];
             }
-            
             //update with facebook info
             [[EWAccountManager shared] updateUserWithFBData:data];
         }];
@@ -175,37 +176,40 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 //after fb login, fetch user managed object
 - (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
+    EWSocial *sg = [EWPerson mySocialGraph];
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        EWPerson *person = [[EWPerson me] MR_inContext:localContext];
+        EWPerson *localMe = [EWPerson meInContext:localContext];
+        EWSocial *localSocial = [sg MR_inContext:localContext];
         
-        NSParameterAssert(person);
+        NSParameterAssert(localMe);
         
         //name
-        if ([person.name isEqualToString:EWPersonDefaultName] || person.name.length == 0) {
-            person.name = user.name;
-        }
+        if (!localMe.firstName) localMe.firstName = user.first_name;
+        if (!localMe.lastName) localMe.lastName = user.last_name;
+        
         //email
-        if (!person.email) person.email = user[@"email"];
+        NSString *email = user[@"email"];
+        if (!localMe.email) localMe.email = [email lowercaseString];
         
         //birthday format: "01/21/1984";
-        if (!person.birthday) {
+        if (!localMe.birthday) {
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateFormat = @"mm/dd/yyyy";
-            person.birthday = [formatter dateFromString:user[@"birthday"]];
+            localMe.birthday = [formatter dateFromString:user[@"birthday"]];
         }
         //facebook link
-        person.facebook = user.objectID;
+        localSocial.facebookID = user.objectID;
         //gender
-        person.gender = user[@"gender"];
+        localMe.gender = user[@"gender"];
         //city
-        person.city = user.location[@"name"];
+        localMe.city = user.location[@"name"];
         //preference
-        if(!person.preference){
+        if(!localMe.preference){
             //new user
-            person.preference = kUserDefaults;
+            localMe.preference = kUserDefaults;
         }
         
-        if (!person.profilePic) {
+        if (!localMe.profilePic) {
             //download profile picture if needed
             //profile pic, async download, need to assign img to person before leave
             NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", user.objectID];
@@ -215,10 +219,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             if (!img) {
                 img = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];
             }
-            person.profilePic = img;
+            localMe.profilePic = img;
         }
         
     }completion:^(BOOL success, NSError *error) {
+        DDLogInfo(@"Updated user with facebook info");
+        //set location
+        if (![EWPerson me].location) {
+            [self setProxymateLocationForPerson:[EWPerson me]];
+        }
+        //save time
+		[[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:@"facebook_last_updated"];
         //update friends
         [self getFacebookFriends];
         self.isUpdatingFacebookInfo = NO;
@@ -228,7 +239,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 - (void)getFacebookFriends{
     DDLogVerbose(@"Updating facebook friends");
     //check facebook id exist
-    if (![EWPerson me].facebook) {
+    if (![EWPerson me].socialGraph.facebookID) {
         DDLogWarn(@"Current user doesn't have facebook ID, skip checking fb friends");
         return;
     }
@@ -246,29 +257,23 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
         return;
     }else{
-
         //get social graph of current user
         //if not, create one
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
-            EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:localMe];
-            //skip if checked within a week
-            if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
-                DDLogVerbose(@"Facebook friends check skipped.");
-                return;
-            }
+        EWSocial *graph = [EWPerson mySocialGraph];
+        //skip if checked within a week
+        if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
+            DDLogVerbose(@"Facebook friends check skipped.");
+            return;
+        }
 
-            //get the data
-            __block NSMutableDictionary *friends = [NSMutableDictionary new];
-            [self getFacebookFriendsWithPath:@"/me/friends" withReturnData:friends];
-        } completion:^(BOOL success, NSError *error) {
-            //
-        }];
+        //get the data
+        __block NSMutableDictionary *friends = [NSMutableDictionary new];
+        [self getFacebookFriendsWithPath:@"/me/friends" withReturnData:friends];
         
     }
 }
 
-- (void)openFacebookSessionWithCompletion:(void (^)(void))block{
+- (void)openFacebookSessionWithCompletion:(VoidBlock)block{
     
     [FBSession openActiveSessionWithReadPermissions:[EWAccountManager facebookPermissions]
                                        allowLoginUI:YES
@@ -305,13 +310,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 //NSLog(@"Continue facebook friends request: %@", nextPage);
                 [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder];
             }else{
-                DDLogVerbose(@"Finished loading friends from facebook, transfer to social graph.");
+                DDLogInfo(@"Finished loading %ld friends from facebook, transfer to social graph.", friendsHolder.count);
                 EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
-                graph.facebookFriends = [friendsHolder copy];
+                graph.facebookFriends = friendsHolder;
                 graph.facebookUpdated = [NSDate date];
 
                 //save
-                [EWSync save];
+                [graph save];
             }
 
         } else {
@@ -406,34 +411,285 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Geolocation
 
 - (void)registerLocation{
-    
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        
-        if (geoPoint.latitude == 0 && geoPoint.longitude == 0) {
-            //NYC coordinate if on simulator
-            geoPoint.latitude = 40.732019;
-            geoPoint.longitude = -73.992684;
+    self.manager = [CLLocationManager new];
+    self.manager.delegate = self;
+    if ([self.manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+            [self.manager requestWhenInUseAuthorization];
+        } else if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] ==kCLAuthorizationStatusRestricted){
+            //need pop alert
+            DDLogError(@"Location service disabled");
+            EWAlert(@"Location service is disabled. To find the best match around your area, please enable location service in settings.")
+            [self setProxymateLocationForPerson:[EWPerson me]];
+        }else{
+            [self.manager startUpdatingLocation];
         }
-        
-        CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
-        
-        DDLogVerbose(@"Get user location with lat: %f, lon: %f", geoPoint.latitude, geoPoint.longitude);
-        
-        //reverse search address
-        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
-        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
+    }else{
+        [self.manager startUpdatingLocation];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    switch (status) {
+        case kCLAuthorizationStatusDenied:
+            DDLogWarn(@"kCLAuthorizationStatusDenied");
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alertView show];
+            [self setProxymateLocationForPerson:[EWPerson me]];
+        }
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+        {
+            DDLogInfo(@"kCLAuthorizationStatusAuthorizedWhenInUse");
+            manager.desiredAccuracy = kCLLocationAccuracyBest;
+            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
+            [manager startUpdatingLocation];
             
-            [EWPerson me].lastLocation = location;
-            
-            if (err == nil && [placemarks count] > 0) {
-                CLPlacemark *placemark = [placemarks lastObject];
-                //get info
-                [EWPerson me].city = placemark.locality;
-                [EWPerson me].region = placemark.country;
-            } else {
-                NSLog(@"%@", err.debugDescription);
+        }
+            break;
+        case kCLAuthorizationStatusAuthorizedAlways:
+        {
+            DDLogInfo(@"kCLAuthorizationStatusAuthorizedAlways");
+            manager.desiredAccuracy = kCLLocationAccuracyBest;
+            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
+            [manager startUpdatingLocation];
+        }
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            DDLogInfo(@"kCLAuthorizationStatusNotDetermined");
+            break;
+        case kCLAuthorizationStatusRestricted:
+            DDLogInfo(@"kCLAuthorizationStatusRestricted");
+            break;
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    static CLLocation *loc;
+    static NSTimer *locationTimeOut;
+    loc = locations.lastObject;
+    
+    if (loc.horizontalAccuracy <100 && loc.verticalAccuracy < 100) {
+        //bingo
+        [manager stopUpdatingLocation];
+        [locationTimeOut invalidate];
+        [self processLocation:loc];
+    } else if (!locationTimeOut) {
+        locationTimeOut = [NSTimer bk_scheduledTimerWithTimeInterval:300 block:^(NSTimer *timer) {
+            DDLogInfo(@"After 300s, we accept location with accuracy of %.0fm", loc.horizontalAccuracy);
+            [manager stopUpdatingLocation];
+            [self processLocation:loc];
+        } repeats:NO];
+    }
+}
+
+- (void)processLocation:(CLLocation *)location{
+    
+    if (location.coordinate.latitude == 0 && location.coordinate.longitude == 0) {
+        EWAlert(@"Using NYC coordinate on simulator");
+        location = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
+    }
+    
+    //DDLogVerbose(@"Get user location with lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    
+    //reverse search address
+    CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+    [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
+        
+        [EWPerson me].location = location;
+        
+        if (!err && [placemarks count] > 0) {
+            CLPlacemark *placemark = [placemarks lastObject];
+            //get info
+            [EWPerson me].city = placemark.locality;
+            [EWPerson me].country = placemark.country;
+        } else {
+            DDLogWarn(@"%@", err.debugDescription);
+        }
+        [[EWPerson me] save];
+    }];
+}
+
+- (void)setProxymateLocationForPerson:(EWPerson *)person{
+    if (person.location) {
+        DDLogWarn(@"Override location for person: %@", person.name);
+    }
+    CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+    [geoloc geocodeAddressString:[NSString stringWithFormat:@"%@, %@", person.city, person.country]  completionHandler:^(NSArray *placemarks, NSError *error) {
+        if (placemarks.count) {
+            CLPlacemark *pm = placemarks.firstObject;
+            CLLocation *loc = pm.location;
+            person.location = loc;
+            DDLogInfo(@"Get proxymate location: %@", loc);
+            [person save];
+        }
+    }];
+}
+
+#pragma mark - Sync user
+- (void)syncUserWithCompletion:(ErrorBlock)block{
+    EWAssertMainThread
+    NSString *userKey = @"user";
+    
+    //generate info dic
+    EWPerson *me = [EWPerson me];
+    NSMutableDictionary *graph = [NSMutableDictionary new];
+    //if no date available for me, it must be up to date.
+    if (me.updatedAt) {
+        graph[userKey] = @{me.objectId: me.updatedAt};
+    } else {
+		//Even though there might be pending changes, but the fact that local user missing update time is a sign of bad run from last session, therefore we should resync from server
+        DDLogWarn(@"User %@ has no updatedAt, using current time", me.name);
+        graph[userKey] = @{me.objectId: [NSDate dateWithTimeIntervalSince1970:0]};
+    }
+	graph[userKey] = @{me.objectId: me.updatedAt?:[NSDate date]};
+    //get the updated objects
+    NSSet *workingObjects = [EWSync sharedInstance].workingQueue;
+    workingObjects = [workingObjects setByAddingObjectsFromSet:[EWSync sharedInstance].insertQueue];
+    
+    //enumerate
+    [me.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *relation, BOOL *stop) {
+        if ([relation.destinationEntity.name isEqualToString:kSyncUserClass]) {
+            //Discuss: we don't need to skip user class
+            //return;
+        }
+        id objects = [me valueForKey:key];
+        if (objects) {
+            if ([relation isToMany]) {
+                NSMutableDictionary *related = [NSMutableDictionary new];
+                for (EWServerObject *SO in objects) {
+                    if (!SO.objectId) {
+                        //skip
+                    }
+                    else if ([workingObjects containsObject:SO]) {
+                        //has change, do not update from server, use current time
+                        //or has not updated to Server, meaning it will uploaded with newer data, use current time
+                        related[SO.objectId] = [NSDate date];
+                    }
+                    else if (SO.updatedAt){
+                        related[SO.objectId] = SO.updatedAt;
+                    }
+                }
+                //add the graph to the info dic
+                graph[key] = related;
             }
-            [EWSync save];
+            else {
+                //to-one relation
+                EWServerObject *SO = (EWServerObject *)objects;
+                if (!SO.objectId) {
+                    //skip
+                }
+                else if ([workingObjects containsObject:SO]) {
+                    //has change, do not update from server, use current time
+                    //or has not updated to Server, meaning it will uploaded with newer data, use current time
+                    graph[key] = @{SO.objectId: [NSDate date]};
+                }
+                else if (SO.updatedAt){
+                    graph[key] = @{SO.objectId: SO.updatedAt};
+                }else{
+                    graph[key] = @{};
+                }
+            }
+        }else{
+            graph[key] = @0;
+        }
+    }];
+    
+    //send to cloud
+    [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *POGraph, NSError *error) {
+        DDLogInfo(@"Server returned sync info keys: %@", POGraph.allKeys);
+        if (error) {
+            block(error);
+            return;
+        }
+        //expecting a dictionary of objects needed to update
+        //return graph level: 1) relation name 2) Array of PFObjects or PFObject
+        [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+            if ([key isEqualToString:userKey]) {
+                [[EWSync sharedInstance] setCachedParseObject:obj];
+            }
+            NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
+            if (!relation || ![obj isKindOfClass:[PFObject class]]) return;
+            //save PO first
+            if (relation.isToMany) {
+                for (PFObject *PO in obj) {
+                    [[EWSync sharedInstance] setCachedParseObject:PO];
+                }
+            }else{
+                [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
+            }
+        }];
+        
+        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+            EWPerson *localMe = [me MR_inContext:localContext];
+            [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+                if ([key isEqualToString:@"delete"]) {
+                    //delete all objects in this Dictionary
+                    [(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
+                        NSRelationshipDescription *relation =  localMe.entity.relationshipsByName[relationName];
+                        NSString *className = relation.destinationEntity.name;
+                        EWServerObject *SO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:localContext];
+						if (relation.isToMany) {
+							NSMutableSet *related = [localMe valueForKey:relationName];
+							[related removeObject:SO];
+							[localMe setValue:related forKey:relationName];
+						} else {
+							[localMe setValue:nil forKey:relationName];
+						}
+                    }];
+                    return;
+				}else if ([key isEqualToString:userKey]){
+					//update my attributes only
+					[localMe assignValueFromParseObject:obj];
+                    return;
+				}
+					
+                NSRelationshipDescription *relation = localMe.entity.relationshipsByName[key];
+                if (!relation) return;
+                
+                //update SO
+                if (relation.isToMany) {
+                    NSArray *objects = (NSArray *)obj;
+                    NSMutableSet *relatedSO = [localMe mutableSetValueForKey:key];
+                    for (PFObject *PO in objects) {
+                        if(!PO.isDataAvailable) {
+                            DDLogError(@"Returned PO without data: %@", PO);
+                            [PO fetch];
+                        }
+                        EWServerObject *SO = [PO managedObjectInContext:localContext];
+                        if (![SO.entity.name isEqualToString:kSyncUserClass]) {
+                            [SO updateValueAndRelationFromParseObject:PO];
+                        }
+                        if (![relatedSO containsObject:SO]) {
+                            //add relation
+                            [relatedSO addObject:SO];
+                            [localMe setValue:relatedSO.copy forKey:key];
+                            DDLogVerbose(@"+++> Added relation Me->%@(%@)", key, PO.objectId);
+                        }
+                    }
+                }else{
+                    //to one
+                    EWServerObject *SO = [(PFObject *)obj managedObjectInContext:localContext];
+                    if (![SO.entity.name isEqualToString:kSyncUserClass]) {
+                        [SO updateValueAndRelationFromParseObject:obj];
+                    }
+                    if (![localMe valueForKey:key]) {
+                        DDLogVerbose(@"+++> Set relation Me->%@(%@)", key, SO.objectId);
+                        [localMe setValue:SO forKey:key];
+                    }
+                }
+            }];
+			
+			localMe.updatedAt = [NSDate date];
+        } completion:^(BOOL contextDidSave, NSError *error2) {
+            if (!error2) {
+                DDLogDebug(@"========> Finished user syncing <=========");
+                block(nil);
+            }else{
+                DDLogError(@"Failed to sync user: %@", error2.description);
+                block(error2);
+            }
             
         }];
         

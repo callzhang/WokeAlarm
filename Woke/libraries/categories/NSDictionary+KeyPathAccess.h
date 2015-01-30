@@ -12,10 +12,11 @@
 /**
  *  Set value to a immutable dictionary's kay path
  *
- *  @param value   value
+ *  @param value   value to add. If nil, delete value.
  *  @param keyPath keyPath divided with "."
  *
  *  @return a new NSDictionary instance
  */
-- (instancetype)setValue:(id)value forImmutableKeyPath:(NSString *)keyPath;
+- (instancetype)setValue:(id)value forImmutableKeyPath:(NSArray *)firstPath;
+- (instancetype)addValue:(id)value toImmutableKeyPath:(NSArray *)firstPath;
 @end

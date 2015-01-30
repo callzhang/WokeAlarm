@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "WokeAlarm": {
+            "applicationId": "QHWs9RBxMxmuzMmOB9QliQVKBqOLhifPKyJIGrXx", 
+            "masterKey": "iEjKEePThBb4KxJVj64o3nbkBGYrGzm6NPiFaFoN"
+        }, 
+        "_default": {
+            "link": "WokeAlarm"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.18"
+    }
+}

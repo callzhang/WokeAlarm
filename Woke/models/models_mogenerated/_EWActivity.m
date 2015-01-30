@@ -7,6 +7,7 @@ const struct EWActivityAttributes EWActivityAttributes = {
 	.completed = @"completed",
 	.friendID = @"friendID",
 	.friended = @"friended",
+	.mediaIDs = @"mediaIDs",
 	.sleepTime = @"sleepTime",
 	.statement = @"statement",
 	.time = @"time",
@@ -14,8 +15,11 @@ const struct EWActivityAttributes EWActivityAttributes = {
 };
 
 const struct EWActivityRelationships EWActivityRelationships = {
-	.medias = @"medias",
 	.owner = @"owner",
+};
+
+const struct EWActivityFetchedProperties EWActivityFetchedProperties = {
+	.medias = @"medias",
 };
 
 @implementation EWActivityID
@@ -77,6 +81,8 @@ const struct EWActivityRelationships EWActivityRelationships = {
 	[self setPrimitiveFriended:@(value_)];
 }
 
+@dynamic mediaIDs;
+
 @dynamic sleepTime;
 
 @dynamic statement;
@@ -85,18 +91,9 @@ const struct EWActivityRelationships EWActivityRelationships = {
 
 @dynamic type;
 
-@dynamic medias;
-
-- (NSMutableSet*)mediasSet {
-	[self willAccessValueForKey:@"medias"];
-
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medias"];
-
-	[self didAccessValueForKey:@"medias"];
-	return result;
-}
-
 @dynamic owner;
+
+@dynamic medias;
 
 @end
 

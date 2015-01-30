@@ -18,13 +18,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.mainNavigationController setNavigationBarTransparent:YES];
 }
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }
+
 - (IBAction)onContinueWithFacebookButton:(id)sender {
-    [[EWAccountManager shared] loginFacebookCompletion:^(BOOL isNewUser, NSError *error) {
+    [[EWAccountManager shared] loginFacebookCompletion:^(NSError *error) {
         if (error) {
             [EWErrorManager handleError:error];
         }

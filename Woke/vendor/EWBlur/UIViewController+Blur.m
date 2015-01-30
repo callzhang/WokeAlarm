@@ -21,12 +21,12 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 	
 }
 
-- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController completion:(void (^)(void))block{
+- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController completion:(VoidBlock)block{
 	[self presentViewControllerWithBlurBackground:viewController option:EWBlurViewOptionBlack completion:block];
 }
 
 
-- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController option:(EWBlurViewOptions)blurOption completion:(void (^)(void))block{
+- (void)presentViewControllerWithBlurBackground:(UIViewController *)viewController option:(EWBlurViewOptions)blurOption completion:(VoidBlock)block{
 	viewController.modalPresentationStyle = UIModalPresentationCustom;
 	if (!delegate) {
 		delegate = [EWBlurNavigationControllerDelegate new];
@@ -38,7 +38,7 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 	}
 	
 	//hide status bar
-	[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+	//[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 
 	[self presentViewController:viewController animated:YES completion:block];
 
@@ -56,7 +56,8 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 
 }
 
-- (void)presentWithBlur:(UIViewController *)controller withCompletion:(void (^)(void))completion{
+//automatic presenting: if already has presented view, dismiss it first
+- (void)presentWithBlur:(UIViewController *)controller withCompletion:(VoidBlock)completion{
 	if (self.presentedViewController) {
 		if ([self.presentedViewController isKindOfClass:[controller class]]) {
 			DDLogWarn(@"The view controller %@ is already presenting, skip blur animation", controller.class);

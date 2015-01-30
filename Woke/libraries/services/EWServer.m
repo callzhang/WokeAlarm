@@ -32,40 +32,59 @@
 #import "FBSession.h"
 
 @implementation EWServer
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 
-+ (EWServer *)sharedInstance{
-    static EWServer *manager;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[EWServer alloc] init];
-    });
-    return manager;
+- (EWServer *)init{
+    self = [super init];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kUserNotificationRegistered object:nil queue:nil usingBlock:^(NSNotification *note) {
+#if !TARGET_IPHONE_SIMULATOR
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+#endif
+    }];
+    
+    return self;
+}
+
+
+#pragma mark - Notification
+- (void)requestNotificationPermissions{
+    //push
+    UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeNone;
+    UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+}
+
+- (void)registerPushNotificationWithToken:(NSData *)deviceToken{
+    DDLogVerbose(@"Push token updated");
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
 }
 
 #pragma mark - Handle Push Notification
-+ (void)handlePushNotification:(NSDictionary *)push{
-	NSString *type = push[kPushType];
++ (void)handlePushNotification:(NSDictionary *)payload{
+	NSString *type = payload[kPushType];
 					  
     if ([type isEqualToString:kPushTypeMedia]) {
-		[[EWWakeUpManager sharedInstance] handlePushMedia:push];
+		[[EWMediaManager sharedInstance] handlePushMedia:payload];
 		
 	}
 	else if([type isEqualToString:kPushTypeAlarmTimer]){
 		// ============== Alarm Timer ================
-		[[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:push];
-		
+        NSString *alarmID = payload[kPushAlarmID];
+        EWAlarm *alarm = [EWAlarm getAlarmByID:alarmID];
+        [[EWWakeUpManager sharedInstance] startToWakeUpWithAlarm:alarm];
 	}
 	else if ([type isEqualToString:kPushTypeNotification]){
-		NSString *notificationID = push[kPushNofiticationID];
-		[EWNotificationManager handleNotification:notificationID];
+		[[EWNotificationManager sharedInstance] handleNotificatoinFromPush:payload];
 	}
     else if ([type isEqualToString:kPushTypeBroadcast]){
-        NSString *message = push[@"alert"];
+        NSString *message = payload[@"alert"];
         EWAlert(message);
     }
 	else{
 		// Other push type not supported
-		NSString *str = [NSString stringWithFormat:@"Unknown push type received: %@", push];
+		NSString *str = [NSString stringWithFormat:@"Unknown push type received: %@", payload];
 		DDLogError(@"Received unknown type of push msg: %@", str);
 #ifdef DEBUG
 		EWAlert(str);
@@ -80,8 +99,15 @@
     DDLogVerbose(@"Received local notification: %@", type);
     
     if ([type isEqualToString:kLocalNotificationTypeAlarmTimer]) {
-        [[EWWakeUpManager sharedInstance] handleAlarmTimerEvent:notification.userInfo];
-		
+        EWAlarm *alarm;
+        NSString *alarmLocalID = notification.userInfo[kLocalAlarmID];
+        NSURL *url = [NSURL URLWithString:alarmLocalID];
+        NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+        if (ID) {
+            alarm = (EWAlarm *)[mainContext existingObjectWithID:ID error:NULL];
+        }
+        [[EWWakeUpManager sharedInstance] startToWakeUpWithAlarm:alarm];
+        
     }else if([type isEqualToString:kLocalNotificationTypeReactivate]){
         DDLogVerbose(@"==================> Reactivated Woke <======================");
         EWAlert(@"You brought me back!");
@@ -89,9 +115,7 @@
     }else if ([type isEqualToString:kLocalNotificationTypeSleepTimer]){
         DDLogVerbose(@"=== Received Sleep timer local notification, broadcasting sleep event, and enter sleep mode... \n%@", notification);
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
-        
-        [[EWWakeUpManager sharedInstance] handleSleepTimerEvent:notification];
+        [[EWWakeUpManager sharedInstance] sleep:notification];
     }
     else{
         DDLogWarn(@"Unexpected Local Notification Type. Detail: %@", notification);
@@ -102,12 +126,12 @@
 
 
 #pragma mark - Send Voice tone
-+ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(void (^)(BOOL success))block{
-    
-    
++ (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(BoolErrorBlock)block{
     
     //save
     [EWSync saveWithCompletion:^{
+        //update Person->medias relation
+        [self updateRelation:@"medias" for:person.parseObject withObject:media.parseObject withOperation:@"add" completion:NULL];
         
         //set ACL
         PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -123,31 +147,19 @@
         
         PFObject *object = media.parseObject;
         [object setACL:acl];
-        //[object saveInBackground];
+        [object saveInBackground];
         
-        NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:person];
+        NSDictionary *pushMessage = @{@"badge": @"Increment",
+                                      @"alert": @"Someone has sent you an voice greeting",
+                                      @"content-available": @1,
+                                      kPushType: kPushTypeMedia,
+                                      kPushMediaType: kPushMediaTypeVoice,
+                                      kPushPersonID: [EWPerson me].objectId,
+                                      kPushMediaID: media.objectId,
+                                      @"sound": @"media.caf",
+                                      @"alert": @"Someone has sent you an voice greeting"
+                                      };
         
-        NSMutableDictionary *pushMessage = [@{@"badge": @"Increment",
-                                              @"alert": @"Someone has sent you an voice greeting",
-                                              @"content-available": @1,
-                                              kPushType: kPushTypeMedia,
-                                              kPushMediaType: kPushMediaTypeVoice,
-                                              kPushPersonID: [EWPerson me].objectId,
-                                              kPushMediaID: media.objectId} mutableCopy];
-        
-        //form push payload
-        if ([[NSDate date] isEarlierThan:time]) {
-            //early, silent message
-            
-        }else if(time.timeElapsed < kMaxWakeTime){
-            //struggle state
-            pushMessage[@"sound"] = @"media.caf";
-            pushMessage[@"alert"] = @"Someone has sent you an voice greeting";
-            
-        }else{
-            //send silent push for next task
-            
-        }
         
         //push
         [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error) {
@@ -155,21 +167,15 @@
                 DDLogError(@"Send push message about media %@ failed. Reason:%@", media.objectId, error.description);
             }
             if (block) {
-                block(succeeded);
+                block(succeeded, error);
             }
         }];
-        
-        //save
-        [EWSync save];
     }];
-    
-    
-    
 }
 
 
 
-+ (void)broadcastMessage:msg onSuccess:(void (^)(void))block onFailure:(void (^)(void))failureBlock{
++ (void)broadcastMessage:msg onSuccess:(VoidBlock)block onFailure:(VoidBlock)failureBlock{
     
     NSDictionary *payload = @{@"alert": msg,
                               @"sound": @"new.caf",
@@ -208,49 +214,7 @@
     }];
 }
 
-
-#pragma mark - PUSH
-
-+ (void)registerAPNS{
-    //push
-    UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeNone;
-    UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
-#if !TARGET_IPHONE_SIMULATOR
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-
-#endif
-}
-
-+ (void)registerPushNotificationWithToken:(NSData *)deviceToken{
-    
-    //Parse: Store the deviceToken in the current Installation and save it to Parse.
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    [currentInstallation saveInBackground];
-}
-
-
-+(void)searchForFriendsOnServer
-{
-    PFQuery *q = [PFQuery queryWithClassName:@"User"];
-    
-    //[q whereKey:@"email" containedIn:[EWUtil readContactsEmailsFromAddressBooks]];
-    
-    [EWSync findServerObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            
-            // push  notification;
-            
-            
-        } else {
-            // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
-        }
-    }];
-    
-}
-
+#pragma mark - Social publish
 +(void)publishOpenGraphUsingAPICallsWithObjectId:(NSString *)objectId andUrlString:(NSString *)url {
     
     // We will post a story on behalf of the user
@@ -443,5 +407,17 @@
    
  }
 
+#pragma mark - Util
++ (void)updateRelation:(NSString *)relation for:(PFObject *)target withObject:(PFObject *)related withOperation:(NSString *)operation completion:(ErrorBlock)block{
+    NSDictionary *dic = @{@"target": target, @"related": related, @"relation": relation, @"operation": operation};
+    
+    [PFCloud callFunctionInBackground:@"updateRelation" withParameters:dic block:^(id object, NSError *error) {
+        if (!object) {
+            DDLogError(@"Failed to update relation: %@ with error:%@", dic, error.description);
+        }else{
+            DDLogVerbose(@"Updated relation: %@(%@) -> %@(%@)", target.parseClassName, target.objectId, relation, related.objectId);
+        }
+    }];
+}
 
 @end

@@ -77,6 +77,7 @@ static NSString * PushSegueIdentifier = @"push segue identifier";
     return self.interactionController;
 }
 
+#pragma mark - UIViewController transitioning
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source{
     self.animator.type = kModelViewPresent;
     return self.animator;

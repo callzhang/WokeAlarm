@@ -42,9 +42,6 @@
 
 + (BOOL)isMultitaskingSupported;
 
-//+ (void)showHUDWithCheckMark:(NSString *)str;
-//+ (void)showHUDWithString:(NSString *)str;
-
 + (NSString *)toString:(NSDictionary *)dic;
 
 + (CGFloat)distanceOfRectMid:(CGRect)rect1 toRectMid:(CGRect)rect2;
@@ -61,17 +58,17 @@
 
 + (void)applyShadow:(UIView *)view;
 
-+ (CGPoint)getCartesianFromPolarCoordinateOfR:(float)r degree:(float)d;
-
 + (void)applyAlphaGradientForView:(UIView *)view withEndPoints:(NSArray *)locations;
 
-+ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc withLeftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem;
++ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc;
 
-//+ (NSString *)getStringFromTime:(float)time;
-
-+ (void)addFirstTimeTutorialInViewController: (UIViewController * )vc;
++ (void)addNavigationButtonsForViewController:(UIViewController *)vc backButton:(UIButton *)leftBtn rightButton:(UIButton *)rightBtn;
 
 + (UIImage *)resizeImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
+//HUD
++ (void)showSuccessHUBWithString:(NSString *)string;
++ (void)showFailureHUBWithString:(NSString *)string;
++ (void)showWarningHUBWithString:(NSString *)string;
 + (void)dismissHUDinView:(UIView *)view;
 @end

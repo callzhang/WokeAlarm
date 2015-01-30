@@ -48,18 +48,36 @@
     [self showMenu];
 }
 
-#pragma mark -
+#pragma mark - Segue actions
+- (IBAction)onHome:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:^{
+        //        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+    }];
+}
+- (IBAction)onNotification:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:NULL];
+}
 - (IBAction)onAlarms:(id)sender {
-    [self.baseNavigationController toogleMenuCompletion:^{
+    [self.mainNavigationController toogleMenuCompletion:^{
 //        [self performSegueWithIdentifier:@"MenuToAlarmReplace" sender:self];
     }];
 }
-
-- (IBAction)onHome:(id)sender {
-    [self.baseNavigationController toogleMenuCompletion:^{
-//        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+- (IBAction)onVoice:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:^{
+//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
+        
     }];
 }
+- (IBAction)onProfile:(id)sender {
+	[self.mainNavigationController toogleMenuCompletion:^{
+//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
+	}];
+}
+- (IBAction)onSetting:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:NULL];
+}
+
+
 #pragma mark -
 - (void)onTap {
     if (self.tapHandler) {

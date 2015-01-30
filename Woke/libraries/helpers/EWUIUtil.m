@@ -10,6 +10,7 @@
 //#import "MYBlurIntroductionView.h"
 //#import "MYIntroductionPanel.h"
 #import "JGProgressHUD.h"
+#import "UIView+Layout.h"
 
 
 static const float originalSize = 80.0;
@@ -249,28 +250,50 @@ static const float originalSize = 80.0;
     
 }
 
-+ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc withLeftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem{
++ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc{
     //first detect if navigation item exists
     if (vc.navigationController) {
         [vc.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         vc.navigationController.navigationBar.shadowImage = [UIImage new];
         vc.navigationController.navigationBar.translucent = YES;
         vc.navigationController.view.backgroundColor = [UIColor clearColor];
-        vc.navigationItem.rightBarButtonItem = rightItem;
-        vc.navigationItem.leftBarButtonItem = leftItem;
+        //vc.navigationItem.rightBarButtonItem = rightItem;
+        //vc.navigationItem.leftBarButtonItem = leftItem;
         vc.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-     
     }else{
+        DDLogError(@"No nav controller found");
+    }
+}
+
++ (void)addNavigationButtonsForViewController:(UIViewController *)vc backButton:(UIButton *)leftBtn rightButton:(UIButton *)rightBtn{
+    if (!vc.navigationController){
         //not in navigation controller
-        UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(260, 20, 40, 40)];
-        [closeBtn setImage:[UIImage imageNamed:@"Close Button"] forState:UIControlStateNormal];
-        if ([vc respondsToSelector:@selector(close:)]) {
-            [closeBtn addTarget:vc action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+        if (!leftBtn) {
+            leftBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 20, 40, 40)];
+            [leftBtn setImage:[UIImage imageNamed:@"Back Button"] forState:UIControlStateNormal];
+            if ([vc respondsToSelector:@selector(close:)]) {
+                [leftBtn addTarget:vc action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }else{
+            leftBtn.frame = CGRectMake(20, 20, 40, 40);
         }
         
-        [vc.view addSubview:closeBtn];
+        CGFloat width = vc.view.width;
+        if (!rightBtn) {
+            rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(width - 60, 20, 40, 40)];
+            [rightBtn setImage:[UIImage imageNamed:@"More Button"] forState:UIControlStateNormal];
+            if ([vc respondsToSelector:@selector(more:)]) {
+                [rightBtn addTarget:vc action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }else{
+            rightBtn.frame = CGRectMake(width - 60, 20, 40, 40);
+        }
+        [vc.view addSubview:leftBtn];
+        [vc.view addSubview:rightBtn];
+        
+    }else{
+        DDLogError(@"nav controller found, use addTransparantNavigationBarToViewController instead.");
     }
-    
 }
 
 
@@ -329,6 +352,33 @@ static const float originalSize = 80.0;
     return newImage;
 }
 
+
+#pragma mark - HUD
++ (void)showSuccessHUBWithString:(NSString *)string{
+	UIView *rootView = [self getTopView];
+	[rootView showSuccessNotification:string];
+}
+
++ (void)showFailureHUBWithString:(NSString *)string{
+	UIView *rootView = [self getTopView];
+	[rootView showFailureNotification:string];
+}
+
++ (void)showWarningHUBWithString:(NSString *)string{
+	UIView *rootView = [self getTopView];
+	[rootView showNotification:string WithStyle:hudStyleWarning audoHide:5];
+}
+
++ (UIView *)getTopView{
+	UIView *rootView;
+	UIViewController *rootController = [UIWindow mainWindow].rootViewController;
+	if ([rootController isKindOfClass:[UINavigationController class]]) {
+		rootView = [(UINavigationController *)rootController topViewController].view;
+	}else{
+		rootView = rootController.view;
+	}
+	return rootView;
+}
 
 + (void)dismissHUDinView:(UIView *)view{
     NSArray *huds = [JGProgressHUD allProgressHUDsInView:view];

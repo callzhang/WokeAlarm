@@ -6,8 +6,7 @@
 //  Copyright (c) 2013年 Shens. All rights reserved.
 //
 
-//#ifndef EarlyWorm_Defines_h
-//#define EarlyWorm_Defines_h
+#import "EWBlockTypes.h"
 
 //System
 #define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
@@ -22,17 +21,6 @@
 #define kColorMediumGray                EWSTR2COLOR(@"7e7e7e")
 #define kCustomLightGray                EWSTR2COLOR(@"#DDDDDD")
 
-//blocks
-typedef void (^DictionaryBlock)(NSDictionary *dictionary);
-typedef void (^BoolBlock)(BOOL success);
-typedef void (^BoolErrorBlock)(BOOL success, NSError *error);
-typedef void (^DictionaryErrorBlock)(NSDictionary *dictioanry, NSError *error);
-typedef void (^ErrorBlock)(NSError *error);
-typedef void (^VoidBlock)(void);
-typedef void (^UIImageBlock)(UIImage *image);
-typedef void (^ArrayBlock)(NSArray *array);
-typedef void (^FloatBlock)(float percent);
-typedef void (^SenderBlock)(id sender);
 
 #define ringtoneNameList                @[@"Autumn Spring.caf", @"Daybreak.caf", @"Drive.caf", @"Parisian Dream.caf", @"Sunny Afternoon.caf", @"Tropical Delight.caf"]
 
@@ -58,9 +46,9 @@ typedef void (^SenderBlock)(id sender);
 #define EWAlert(str)                    [[[UIAlertView alloc] initWithTitle:@"Alert" message:str delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 
 #define UIColorFromHex(rgbValue)        [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-
 #define TICK                            NSDate *startTime = [NSDate date];
 #define TOCK                            NSLog(@"Time: %f", -[startTime timeIntervalSinceNow]);
+#define EWAssertMainThread              NSAssert([NSThread isMainThread], @"%s not in main thread", __FUNCTION__);
 
 //Account Management
 #define EWAccountDidLoginNotification    @"EWAccountDidLoginNotification"
@@ -72,11 +60,11 @@ typedef void (^SenderBlock)(id sender);
 #define kAlarmTimerCheckInterval        90 //10 min
 #define alarmInterval                   600 //10 min
 #define kMaxWakeTime                    3600 // 60min
+#define kMaxEalyWakeInterval            1.5*3600
 #define kMediaPlayInterval              5 //5s
 #define kBackgroundFetchInterval        600.0 //TODO: possible conflict with serverUpdateInterval
 #define kSocialGraphUpdateInterval      3600*24*7
 #define kMaxVoicePerTask                3
-#define kLoopMediaPlayCount             100
 #define kServerUpdateInterval			7200
 
 //DEFAULT DATA
@@ -87,10 +75,6 @@ typedef void (^SenderBlock)(id sender);
 #define kSocialLevelFriendCircle        @"Friend_Circle"
 #define kSocialLevelEveryone            @"Everyone"
 
-//sleep
-#define kSleepDuration                  @"SleepDuration"
-#define kBedTimeNotification            @"BedTimeNotification"
-
 //user defaults key
 #define kPushTokenDicKey                @"push_token_dic" //the key for local defaults to get the array of tokenByUser dict
 #define kUserLoggedInUserKey            @"user"
@@ -100,16 +84,36 @@ typedef void (^SenderBlock)(id sender);
 #define kSavedAlarms                    @"saved_alarms"
 
 #pragma mark - User / External events
-//App wide events
-#define kWokeNotification               @"woke"
-#define kSleepNotification              @"Sleep"
-#define kNewMediaNotification           @"media_event" //key: task & media
-#define kNewTimerNotification           @"alarm_timer"
 
-#pragma mark - Data event
+//============> App wide events <==============
+#define kWakeStartNotification          @"wake_time"//start wake
+#define kWokeNotification               @"woke"//finished wake
+#define kSleepNotification              @"Sleep"
+//#define kNewMediaNotification           @"" //key: task & media
+extern NSString * const kNewMediaNotification;
+
+#define kNewTimerNotification           @"alarm_timer"
+#define kUserNotificationRegistered		@"local_notification_registered"
+
+//sleep
+#define kSleepDuration                  @"SleepDuration"
+#define kBedTimeNotification            @"BedTimeNotification"
+
+//wakeUpManager
+#define kPushAlarmID					@"alarm_server_ID"
+#define kLocalAlarmID					@"alarm_local_ID"
+#define kActivityLocalID                @"activity_object_ID"
+
+//Notification types
+#define kNotificationTypeFriendRequest  @"friendship_request"
+#define kNotificationTypeFriendAccepted @"friendship_accepted"
+#define kNotificationTypeSystemNotice   @"notice"
+#define kNotificationTypeNewMedia       @"new_media"
+
 //alarm store
 #define kAlarmNew						@"EWAlarmNew" //key: alarm
 #define kAlarmStateChanged				@"EWAlarmStateChanged"//key: alarm
+//#define kAlarmTimeWillChange			@"EWAlarmTimeWillChange"//key: alarm, time, used to notify activity time change
 #define kAlarmTimeChanged				@"EWAlarmTimeChanged"//key: alarm
 #define kAlarmDelete					@"EWAlarmDelete" //key: tasks
 #define kAlarmChanged					@"EWAlarmChanged" //key: alarm
@@ -119,14 +123,15 @@ typedef void (^SenderBlock)(id sender);
 //media store
 //#define kMediaNewNotification           @"EWMediaNew"
 
-#define kADIDKey                        @"ADID" //key for ADID
-#define kPushAPNSRegisteredNotification @"APNSRegistered"
+#define kADIDKey                            @"ADID" //key for ADID
+#define kPushAPNSRegisteredNotification     @"APNSRegistered"
 
 //Notification key
-#define kLocalNotificationTypeKey       @"type"
+#define kLocalNotificationTypeKey           @"type"
 #define kLocalNotificationTypeAlarmTimer    @"alarm_timer"
 #define kLocalNotificationTypeReactivate    @"reactivate"
 #define kLocalNotificationTypeSleepTimer    @"sleep_timer"
+
 //push
 #define kPushType						@"type"
 #define kPushTypeAlarmTimer				@"timer"
@@ -139,8 +144,6 @@ typedef void (^SenderBlock)(id sender);
 #define kPushMediaTypeBuzz				@"buzz"
 #define kPushMediaTypeVoice				@"voice"
 #define kPushPersonID					@"person"
-#define kPushAlarmID					@"alarm_server_ID"
-#define kLocalAlarmID					@"alarm_local_ID"
 #define kPushMediaID					@"media"
 //notification
 #define kPushNofiticationID				@"notificationID"
@@ -153,17 +156,13 @@ typedef void (^SenderBlock)(id sender);
 #define kCollectionViewCellWidth        80
 #define kCollectionViewCellHeight       80
 
-//Notification types
-#define kNotificationTypeFriendRequest      @"friendship_request"
-#define kNotificationTypeFriendAccepted     @"friendship_accepted"
-#define kNotificationTypeSystemNotice             @"notice"
-#define kNotificationTypeNextTaskHasMedia   @"task_has_media"
-
 //Navgation Controller
 #define kMaxPersonNavigationConnt       6
 
 //Cached Info
-#define kCachedFriends                      @"friends"
+#define kCachedFriends                   @"friends"
+#define kCachedAlarmTimes                @"alarm_schedule"
+#define kCachedStatements                @"statements"
 
 
 // ATConnect
@@ -171,10 +170,3 @@ typedef void (^SenderBlock)(id sender);
 #define kWakeupSuccess          @"wake_success"
 #define kRecordVoiceSuccess     @"record_success"
 
-#define kCachedAlarmTimes                @"alarm_schedule"
-#define kCachedStatements                @"statements"
-
-//Wake Up
-#define kSleepTimeNotification          @"sleep_time"
-#define kWakeTimeNotification           @"wake_time"
-#define kVoicePlayNotification          @"voice_play"

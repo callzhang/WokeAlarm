@@ -4,11 +4,8 @@
 
 @interface EWMedia : _EWMedia
 
-
 //new
 + (EWMedia *)newMedia;
-//delete
-- (void)remove;
 //search
 + (EWMedia *)getMediaByID:(NSString *)mediaID;
 //validate
@@ -17,6 +14,7 @@
 - (void)createACL;
 //download
 - (void)downloadMediaFile;
+- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block;
 
 //data
 - (NSData *)audio;

@@ -14,7 +14,7 @@
 //  - playSoundFromURL: Lower level control, may called from outside
 //
 */
-
+@import UIKit;
 @import Foundation;
 @import AVFoundation;
 @import AudioToolbox;
@@ -23,17 +23,17 @@
 
 #define kSilentSound                    @"bg.caf"
 #define kMaxRecordTime                  30.0
-#define kAudioPlayerDidFinishPlaying    @"audio_finished_playing"
-#define kAudioPlayerPlayingNewMedia     @"playing_new_media"
-#define kRecorderDidFinish              @"recorder_finished"
-#define kRecorderDidStart               @"recorder_start"
+#define kAVManagerDidStartPlaying       @"avmanager_started_playing"
+#define kAVManagerDidFinishPlaying      @"avmanager_finished_playing"
+#define kAVManagerDidStartRecording     @"avmanager_started_recording"
+#define kAVManagerDidFinishRecording    @"avmanager_finished_recording"
 
 @class EWMediaCell, EWMedia, EWMediaSlider;
 
 @interface EWAVManager : UIResponder <AVAudioPlayerDelegate, AVAudioRecorderDelegate, AVAudioSessionDelegate>
 {
     //CALevelMeter *lvlMeter_in;
-    NSTimer *updateTimer;
+    //NSTimer *updateTimer;
     NSURL *recordingFileUrl;
     AVPlayer *avplayer;
     SystemSoundID soundID;
@@ -41,7 +41,8 @@
 
 @property (retain, nonatomic) AVAudioPlayer *player;
 @property (retain, nonatomic) AVAudioRecorder *recorder;
-@property (weak, nonatomic) EWMedia *media;
+@property (weak, nonatomic) EWMedia *media;//use [EWWakeUpManager sharedManager].currentMedia
+@property (nonatomic) float playingProgress;
 
 + (EWAVManager *)sharedManager;
 
@@ -104,6 +105,6 @@
 //- (void)resignRemoteControlEventsListener;
 
 #pragma mark - Tools
-- (void)volumeFadeWithCompletion:(void (^)(void))block;
+- (void)volumeTo:(float)volume withCompletion:(VoidBlock)block;
 - (void)setDeviceVolume:(float)volume;
 @end

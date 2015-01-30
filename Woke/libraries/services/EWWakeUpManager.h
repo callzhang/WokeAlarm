@@ -1,81 +1,81 @@
 //
 //  EWWakeUpManager.h
-//  EarlyWorm
+//
+//  For detailed process diagram
+//  https://www.lucidchart.com/documents/view/92f751f4-f226-430f-8526-cbb93730f251
 //
 //  Created by Lei on 3/25/14.
 //  Copyright (c) 2014 Shens. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import "EWMedia.h"
 #define kNewNediaPlaying        @"new_media_playing"
+#define kLoopMediaPlayCount             100
+
 @import UIKit;
-@class EWActivity, EWAlarm, EWPerson;
+@class EWActivity, EWAlarm, EWPerson, EWWakeUpManager;
 NSUInteger static maxLoop = 100;
 
+extern NSString * const kAlarmTimerDidFireNotification;
+
+extern NSString * const kEWWakeUpDidPlayNextMediaNotification;
+extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
+
+@protocol EWWakeUpDelegate <NSObject>
+@required
+- (BOOL)wakeupManager:(EWWakeUpManager *)manager shouldWakeUpWithAlarm:(EWAlarm *)alarm;
+
+@optional
+- (void)wakeUpManagerWillWakeUp:(EWWakeUpManager*)wakeUpManager;
+- (void)wakeUpManagerDidWakeUp:(EWWakeUpManager*)wakeUpManager;
+@end
+
 @interface EWWakeUpManager : NSObject
-@property (nonatomic, strong) EWAlarm *alarm;
-@property (nonatomic, strong) EWActivity *currentActivity;
-@property (nonatomic, strong) NSMutableArray *medias;
+@property (nonatomic, copy) NSArray *medias;
 @property (nonatomic) NSUInteger loopCount;
-@property (nonatomic) NSUInteger currentMediaIndex;
-//@property (nonatomic) BOOL isWakingUp;
-@property (nonatomic) BOOL playNext;
+@property (nonatomic, readonly) EWMedia *currentMedia;
+@property (nonatomic, assign) NSUInteger currentMediaIndex;
+@property (nonatomic) BOOL continuePlay;
+@property (nonatomic, weak) NSObject<EWWakeUpDelegate> *delegate;
 
 + (EWWakeUpManager *)sharedInstance;
 
-/**
- *Handles push media in varies mode
- @Discuss
- *1. Buzz
- *   active: sound + wakeupView
- *   suspend: not handle
- *
- *2. Voice
- *   active:
- *       alarm time passed but not woke(struggle): play media
- *       before alarm: download
- *       woke: alert with no name
- *   suspend: background download
- */
-- (void)handlePushMedia:(NSDictionary *)notification;
-
+#pragma mark - Actions
 /**
  Handle alarm time up event
- 1. Get next task
+ 1. Get next activity
  2. Try to download all medias for task
- 3. If there is no media, create a pesudo media
- 4. After download
-    a. cancel local notif
-    b. fire silent alarm
-    c. present wakeupVC and start play in 30s
+ 3. If there is no media, create a woke media
+ 4. After download all medias
+    a. cancel local notification
+    b. fire silent local notification [lock screen]
+    c. present wakeupVC and start play in 15s
  */
-- (void)handleAlarmTimerEvent:(NSDictionary *)pushInfo;
+- (void)startToWakeUp:(NSDictionary *)pushInfo;
+- (void)startToWakeUp;
 
+- (void)startToWakeUpWithAlarm:(EWAlarm *)alarm;
 /**
  *  Handle the sleep timer event
  *
- *  @param notification the notification used to identify which alarm/activity it is going to sleep for.
+ *  @param notification the notification used to identify which alarm/activity it is going to sleep for. Pass nil to sleep for current alarm/activity
  */
-- (void)handleSleepTimerEvent:(UILocalNotification *)notification;
-
-/**
- Detect if root view is presenting EWWakeUpViewController
- */
-+ (BOOL)isRootPresentingWakeUpView;
-
+- (void)sleep:(UILocalNotification *)notification;
 
 /**
  Release the reference to wakeupVC
  Post notification: kWokeNotification
  */
-- (void)wake;
+- (void)wake:(EWActivity *)activity;
 
+#pragma mark - Util
 /**
- *  Handles the sleep action.
- *  When called, the app goes to sleep status
+ Detect if root view is presenting EWWakeUpViewController
  */
-- (void)sleep;
++ (BOOL)isRootPresentingWakeUpView;
 
+#pragma mark - Timer check
 /**
  Timely alarm timer check task
  Will schedule an alarm if the time left is within the service update interval
@@ -85,8 +85,7 @@ NSUInteger static maxLoop = 100;
 
 - (void)sleepTimerCheck;
 
-
-#pragma mark - Play for wakeup view
+#pragma mark - Play control
 /**
  *  The single API exposed for playing sound
  */
@@ -95,15 +94,14 @@ NSUInteger static maxLoop = 100;
  *  Play the n'th voice
  *
  */
-- (void)playVoiceAtIndex:(NSUInteger)n;
+- (void)playVoiceAtIndex:(NSUInteger)index;
 /**
  *  The current waker for the voice that is being played
  *
  *  @return The waker
  */
+- (void)reloadMedias;
 - (void)stopPlayingVoice;
-- (EWPerson *)currentWaker;
 - (NSUInteger)currentMediaIndex;
-- (float)playingProgress;
 
 @end

@@ -7,8 +7,6 @@
 //  Created by Lee on 8/6/14.
 //  Copyright (c) 2014 Woke. All rights reserved.
 //
-#define backgroundingSound                  @"bg.caf"
-#define backgroundingFailureSound           @"new.caf"
 
 #import "EWBackgroundingManager.h"
 #import "EWSession.h"
@@ -40,7 +38,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
     self = [super init];
     if (self) {
         
-        BACKGROUNDING_FROM_START = YES;
+        BACKGROUNDING_FROM_START = NO;
         
         
         //enter background
@@ -52,15 +50,46 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
         //become active
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didbecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         //terminate
-        //terminate
         [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
             NSDate *start = backgroundingtimer.userInfo[@"start"];
             [UIDevice currentDevice].batteryMonitoringEnabled = YES;
             NSString *words = [NSString stringWithFormat:@"Application will terminate after %.1f hours of running. Current battery level is %.1f%%", -start.timeIntervalSinceNow/3600, [UIDevice currentDevice].batteryLevel*100];
-            CLSLog(@"%@",words);
             DDLogError(words);
         }];
+        //AvaudioSession
+        [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioSessionInterruptionNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            static BOOL wasBackgrounding;
+            NSNumber *type = (NSNumber *)note.userInfo[AVAudioSessionInterruptionTypeKey];
+            if (type.integerValue == AVAudioSessionInterruptionTypeEnded) {
+                NSNumber *option = note.userInfo[AVAudioSessionInterruptionOptionKey];
+                NSInteger optionValue = option.integerValue;
+                if (optionValue == AVAudioSessionInterruptionOptionShouldResume) {
+                    if (wasBackgrounding) {
+                        if (self.isBackgrounding || BACKGROUNDING_FROM_START) {
+                            [self startBackgrounding];
+#ifdef DEBUG
+                            UILocalNotification *n = [UILocalNotification new];
+                            n.alertBody = @"Woke is active";
+                            [[UIApplication sharedApplication] scheduleLocalNotification:n];
+#endif
+                        }
+                        
+                    }
+                    
+                }
+            }
+            else if (type.integerValue == AVAudioSessionInterruptionTypeBegan){
+                if (self.isBackgrounding) {
+                    wasBackgrounding = YES;
+                }
+                if (backgroundingFailNotification) {
+                    [[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
+                }
+            }
+
+        }];
 		
+        //set up player
         NSArray *soundArray = [backgroundingSound componentsSeparatedByString:@"."];
 		NSURL *path = [[NSBundle mainBundle] URLForResource:soundArray.firstObject withExtension:soundArray.lastObject];
 		player = [AVPlayer playerWithURL:path];
@@ -90,19 +119,19 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
     return supported;
 }
 
-- (BOOL)isSleeping{
-    return [EWSession sharedSession].isSleeping;
+- (BOOL)isBackgrounding{
+    return backgroundingFailNotification != nil;
 }
 
 #pragma mark - Application state change
 - (void)enterBackground{
-    if (self.isSleeping || BACKGROUNDING_FROM_START) {
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusSleeping || self.isBackgrounding || BACKGROUNDING_FROM_START) {
         [self startBackgrounding];
     }
 }
 
 - (void)enterForeground{
-	if (![EWSession sharedSession].isWakingUp) {
+	if (![EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
 		[self registerBackgroudingAudioSession];
 	}
 	
@@ -145,13 +174,12 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 }
 
 #pragma mark - Backgrounding
-
 - (void)startBackgrounding{
-	if (![EWSession sharedSession].isWakingUp) {
+	if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWakingUp) {
 		[self registerBackgroudingAudioSession];
 	}
     [self backgroundKeepAlive:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kBackgroundingEnterNotice object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kBackgroundingStartNotice object:self];
     DDLogInfo(@"Start Backgrounding");
 }
 
@@ -262,22 +290,6 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 //register the BACKGROUNDING audio session
 - (void)registerBackgroudingAudioSession{
 	[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-	
-	//audio session
-	//[[AVAudioSession sharedInstance] setDelegate: self];
-    
-    
-    //audio session notification
-    [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioSessionInterruptionNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        NSNumber *type = (NSNumber *)note.userInfo[AVAudioSessionInterruptionTypeKey];
-        if (type.integerValue == AVAudioSessionInterruptionTypeEnded) {
-            NSNumber *option = note.userInfo[AVAudioSessionInterruptionOptionKey];
-            NSInteger optionValue = option.integerValue;
-            [self endInterruptionWithFlags:optionValue];
-        }else if (type.integerValue == AVAudioSessionInterruptionTypeBegan){
-            [self beginInterruption];
-        }
-    }];
     
 	NSError *error = nil;
 	//set category
@@ -287,33 +299,5 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
 	[self playSilentSound];
 }
-
-
-#pragma mark - Audio session delegate
-
-- (void)beginInterruption{
-    if (backgroundingFailNotification) {
-        [[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
-    }
-}
-
-- (void)endInterruptionWithFlags:(NSUInteger)flags{
-	if (flags) {
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-			
-			if (self.isSleeping || BACKGROUNDING_FROM_START) {
-				[self startBackgrounding];
-#ifdef DEBUG
-				UILocalNotification *n = [UILocalNotification new];
-				n.alertBody = @"Woke is active";
-				[[UIApplication sharedApplication] scheduleLocalNotification:n];
-#endif
-				
-			}
-		});
-	}
-}
-
-
 
 @end

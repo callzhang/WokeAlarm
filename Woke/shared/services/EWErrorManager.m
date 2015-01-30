@@ -48,7 +48,7 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
             // Handle session closures that happen outside of the app
         } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession){
             alertTitle = @"Session Error";
-            alertText = @"Your current session is no longer valid. Please log in again.";
+            alertText = @"Your current session is no longer valid. Please log  in again.";
             //[self showMessage:alertText withTitle:alertTitle];
             
             // Here we will handle all other errors with a generic error messageaccessToken:.

@@ -14,7 +14,6 @@ const struct EWMediaAttributes EWMediaAttributes = {
 };
 
 const struct EWMediaRelationships EWMediaRelationships = {
-	.activity = @"activity",
 	.author = @"author",
 	.mediaFile = @"mediaFile",
 	.messages = @"messages",
@@ -110,8 +109,6 @@ const struct EWMediaRelationships EWMediaRelationships = {
 @dynamic targetDate;
 
 @dynamic type;
-
-@dynamic activity;
 
 @dynamic author;
 

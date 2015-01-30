@@ -10,14 +10,16 @@
 #import "EWSession.h"
 #import "EWAlarmManager.h"
 #import "NSDictionary+KeyPathAccess.h"
+#import "EWActivityManager.h"
+#import "EWActivity.h"
 
 @implementation EWAlarm
 
 
 #pragma mark - NEW
-//add new alarm, save, add to current user, save user
-+ (EWAlarm *)newAlarm{
-    NSParameterAssert([NSThread isMainThread]);
+//add new alarm, save, add to current user, save  Ouser
++ (instancetype)newAlarm{
+    EWAssertMainThread
     DDLogVerbose(@"Create new Alarm");
     
     //add relationMagicalRecord
@@ -30,11 +32,15 @@
     return a;
 }
 
-#pragma mark - DELETE
-- (void)remove{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmDelete object:self userInfo:nil];
-    [self MR_deleteEntity];
-    [EWSync save];
+#pragma mark - Search
++ (instancetype)getAlarmByID:(NSString *)alarmID{
+    EWAssertMainThread
+    NSError *error;
+    EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:alarmID error:&error];
+    if (error) {
+        DDLogError(error.description);
+    }
+    return alarm;
 }
 
 + (void)deleteAll{
@@ -80,7 +86,7 @@
 - (void)setState:(NSNumber *)state {
     //update cached time in person
     if (self.stateValue == state.boolValue) {
-        DDLogInfo(@"Set same state to alarm: %@", self);
+        //DDLogInfo(@"Set same state to alarm: %@", self);
         return;
     }
     
@@ -109,24 +115,25 @@
 
 - (void)setTime:(NSDate *)time {
     if ([self.time isEqualToDate:time]) {
-        DDLogInfo(@"Set same time to alarm: %@", self);
+        //DDLogInfo(@"Set same time to alarm: %@", self);
         return;
     }
+    
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     
     [self willChangeValueForKey:EWAlarmAttributes.time];
     [self setPrimitiveTime:time];
     [self didChangeValueForKey:EWAlarmAttributes.time];
-    if (![self validate]) {
-        return;
-    }
-    //update saved time in user defaults
-    //[self setSavedAlarmTime];
+    if (![self validate]) return;
     
     //update cached alarm time in currentUser
     [self updateCachedAlarmTime];
     
     //schedule local notification
     [self scheduleLocalNotification];
+    
+    //update activity's time
+    activity.time = time.nextOccurTime;
     
     // schedule on server
     [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
@@ -135,13 +142,12 @@
 
 - (void)setTone:(NSString *)tone {
     if ([self.tone isEqualToString:tone]) {
-        DDLogVerbose(@"Set same tone for alarm: %@", self.objectId);
         return;
     }
     [self willChangeValueForKey:EWAlarmAttributes.tone];
     [self setPrimitiveTone:tone];
     [self didChangeValueForKey:EWAlarmAttributes.tone];
-    
+    if (![self validate]) return;
     [self cancelLocalNotification];
     [self scheduleLocalNotification];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmToneChanged object:self];
@@ -151,8 +157,9 @@
     [self willChangeValueForKey:EWAlarmAttributes.statement];
     [self setPrimitiveStatement:statement];
     [self didChangeValueForKey:EWAlarmAttributes.statement];
+    if (![self validate]) return;
     [self updateCachedStatement];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmToneChanged object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStatementChanged object:self];
 }
 
 
@@ -172,21 +179,22 @@
 #pragma mark - Cached alarm time to user defaults
 //the alarm time stored in person's cached info
 - (void)updateCachedAlarmTime{
-    NSDictionary *cache = [EWPerson me].cachedInfo;
+    EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
+    NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
-    NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedAlarmTimes, wkday];
-    [EWPerson me].cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:path];
+    if (!wkday) return;
+    me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:@[kCachedAlarmTimes, wkday]];
 
-    [EWSync save];
+    [me save];
     DDLogVerbose(@"Updated cached alarm times: %@ on %@", self.time.nextOccurTime, wkday);
 }
 
 - (void)updateCachedStatement{
-    NSDictionary *cache = [EWPerson me].cachedInfo;
+    EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
+    NSDictionary *cache = me.cachedInfo;
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
-    NSString *path = [NSString stringWithFormat:@"%@.%@", kCachedStatements, wkday];
-    [EWPerson me].cachedInfo = [cache setValue:self.statement forImmutableKeyPath:path];
-    [EWSync save];
+    me.cachedInfo = [cache setValue:self.statement forImmutableKeyPath:@[kCachedStatements, wkday]];
+    [me save];
     DDLogVerbose(@"Updated cached statements: %@ on %@", self.statement, wkday);
 }
 
@@ -209,7 +217,7 @@
 	for (unsigned i=0; i<nWeeksToSchedule; i++) {
         for (unsigned j = 0; j<nLocalNotifPerAlarm; j++) {
             //get time
-            NSDate *time_j = [[self.time nextOccurTime:i] dateByAddingTimeInterval: j * 60];
+            NSDate *time_j = [[self.time nextOccurTimeInWeeks:i] dateByAddingTimeInterval: j * 60];
             BOOL foundMatchingLocalNotif = NO;
             for (UILocalNotification *notification in notifications) {
                 if ([time_j isEqualToDate:notification.fireDate]) {
@@ -309,7 +317,7 @@
                 if ([sleep.fireDate isEqualToDate:sleepTime]) {
                     sleepNotificationScheduled = YES;
                 }else{
-                    DDLogError(@"Found sleep notification with incorrect time %@, should be %@. (%@)", sleep.fireDate, sleepTime, sleepTime.mt_stringFromDateWithFullWeekdayTitle);
+                    DDLogError(@"Found sleep notification with incorrect time %@, should be %@.", sleep.fireDate.date2detailDateString, sleepTime.date2detailDateString);
                     [[UIApplication sharedApplication] cancelLocalNotification:sleep];
                 }
                 
@@ -353,5 +361,8 @@
     DDLogInfo(@"Cancelled %ld sleep notification", (long)n);
 }
 
+- (EWServerObject *)ownerObject{
+    return self.owner;
+}
 
 @end

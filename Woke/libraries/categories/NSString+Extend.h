@@ -14,6 +14,8 @@
 - (NSDate *)coredataString2Date;
 - (NSMutableArray *)repeatArray;
 - (NSString *)initial;
+
+- (BOOL)isEmail;
 @end
 
 

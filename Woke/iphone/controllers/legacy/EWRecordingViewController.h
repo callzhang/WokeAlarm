@@ -9,13 +9,12 @@
 //#import "EWViewController.h"
 #import "EWAVManager.h"
 #import "UAProgressView.h"
+#import "EWBaseViewController.h"
 @class SCSiriWaveformView;
 @class EWPerson;
 
-@interface EWRecordingViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
-
-@property (strong,nonatomic)     EWAVManager *manager;
-
+@interface EWRecordingViewController : EWBaseViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@property (nonatomic, strong) NSArray *wakees;
 
 @property (strong, nonatomic) IBOutlet UIButton *playBtn;
 @property (strong, nonatomic) IBOutlet UIButton *recordBtn;
@@ -33,11 +32,8 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *sendLabel;
 
-- (IBAction)play:(id)sender;
+- (IBAction)play:(id)sender;//or stop
 - (IBAction)record:(id)sender;
 - (IBAction)send:(id)sender;
 
-
-- (EWRecordingViewController *)initWithPerson:(EWPerson *)user;
-- (EWRecordingViewController *)initWithPeople:(NSSet *)personSet;
 @end

@@ -20,6 +20,7 @@
 #import "EWBackgroundingManager.h"
 #import "NSPersistentStoreCoordinator+MagicalRecord.h"
 #import "EWAccountManager.h"
+#import "PFFacebookUtils.h"
 
 
 @implementation EWStartUpSequence
@@ -44,8 +45,11 @@
 	//set up server sync
 	[[EWSync sharedInstance] setup];
     
+    //facebook
+    [PFFacebookUtils initializeFacebook];
+    
     //watch for login event
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWAccountDidLoginNotification object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWAccountDidLoginNotification object:nil];
 	
 	return self;
 }
@@ -53,7 +57,7 @@
 
 #pragma mark - Login Check
 - (void)loginDataCheck{
-    DDLogVerbose(@"=== [%s] Logged in, performing login tasks.===", __func__);
+    DDLogVerbose(@"=== %s Logged in, performing login tasks.===", __func__);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (![currentInstallation[kUserID] isEqualToString: [EWPerson me].objectId]){
         currentInstallation[kUserID] = [EWPerson me].objectId;
@@ -71,29 +75,23 @@
 	//init backgrounding manager
 	[EWBackgroundingManager sharedInstance];
 	
-    //continue upload to server if any
-    DDLogVerbose(@"0. Continue uploading to server");
-    [[EWSync sharedInstance] resumeUploadToServer];
-	
 	//fetch everyone
 	DDLogVerbose(@"1. Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
     
     //refresh current user
-    DDLogVerbose(@"2. Register AWS push key");
-    [EWServer registerAPNS];
+    DDLogVerbose(@"2. Register user notification");
+    [[EWServer shared] requestNotificationPermissions];
     
     //check alarm, task, and local notif
     DDLogVerbose(@"3. Check alarm");
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
 	
-    DDLogVerbose(@"4. Check my unread media");//media also will be checked with background fetch
-    [[EWMediaManager sharedInstance] checkMediaAssetsInBackground];
+    DDLogVerbose(@"4. Start cache management");
+    [[EWCachedInfoManager shared] startAutoCacheUpdateForMe];
     
-    //updating facebook friends
     DDLogVerbose(@"5. Updating facebook friends");
-    //TODO: why?
-//    [EWUserManager getFacebookFriends];
+    [[EWAccountManager sharedInstance] updateMyFacebookInfo];
     
     //update facebook info
     //DDLogVerbose(@"6. Updating facebook info");
@@ -103,10 +101,10 @@
 	[[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
 
     DDLogVerbose(@"7. Refresh my media");
-    //[[EWMediaManager sharedInstance] mediaCreatedByPerson:[EWPerson me]];
+    [[EWMediaManager sharedInstance] checkMediasForPerson:[EWPerson me]];
 	
 	//location
-	DDLogVerbose(@"8. Start location recurring update");
+	DDLogVerbose(@"8. Start location update");
 	[[EWAccountManager shared] registerLocation];
 	
     
@@ -134,18 +132,20 @@
     if (![EWPerson me]) {
         return;
     }
-    //this will run at the beginning and every 600s
-    DDLogVerbose(@"Start sync service");
 	
 	//fetch everyone
 	DDLogVerbose(@"[1] Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
-	
+
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
 		DDLogVerbose(@"[2] Start location recurring update");
 		[[EWAccountManager shared] registerLocation];
 	}
+    
+    //unread media
+    DDLogVerbose(@"[3] Check unread medias");
+    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:NULL];
     
 }
 

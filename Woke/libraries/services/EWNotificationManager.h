@@ -9,32 +9,35 @@
 #import <Foundation/Foundation.h>
 
 #define kNotificationCompleted      @"notification_completed"
-
+#define kNotificationNew            @"notification_new"
 
 @class EWNotification, EWMedia, EWPerson;
 
 @interface EWNotificationManager : NSObject <UIAlertViewDelegate>
 
-+ (EWNotificationManager *)sharedInstance;
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWNotificationManager)
+
+/**
+ *  Handle EWNotification from push notifiaction
+ *
+ *  @param payload The Dictionary from push notifiaction
+ */
+- (void)handleNotificatoinFromPush:(NSDictionary *)payload;
+
 
 /**
  When new notification received, handle it
  1. Decide weather to alert user
  2. Check if is in the notification queue
  */
-+ (void)handleNotification:(NSString *)notificationID;
+- (void)handleNotification:(NSString *)notificationID;
 
-/**
- check if store notification is the same state as server
- */
-+ (EWNotification *)getNotificationByID:(NSString *)notificationID;
+//Search
+- (NSArray *)notificationsForPerson:(EWPerson *)person;
 
-/**
- Tells the manager that user clicked the notice and ask for appropreate action
- */
-+ (void)clickedNotification:(EWNotification *)notification;
 
 //Send
-+ (void)sendFriendRequestNotificationToUser:(EWPerson *)person;
-+ (void)sendFriendAcceptNotificationToUser:(EWPerson *)person;
+- (void)sendFriendRequestNotificationToUser:(EWPerson *)person;
+- (void)sendFriendAcceptNotificationToUser:(EWPerson *)person;
+- (void)generateFriendRequestFrom:(EWPerson *)person completion:(void (^)(EWNotification *notice, NSError *error))block;
 @end

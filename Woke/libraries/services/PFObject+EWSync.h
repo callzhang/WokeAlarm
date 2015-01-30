@@ -8,6 +8,14 @@
 
 #import <Parse/Parse.h>
 
+typedef enum : NSUInteger {
+	EWSyncUpdateRelation = 1,
+	EWSyncUpdateAttributesOnly = 1<< 2,
+	EWSyncUpdateNone = 1 << 3,
+	EWSyncOptionAsync = 1 << 4
+} EWSyncOption;
+
+@class EWServerObject;
 @interface PFObject(EWSync)
 /**
  Update parse value and relation to server object. Create if no ParseID on ManagedObject.
@@ -22,7 +30,11 @@
 /**
  The ManagedObject will only update attributes but not relations
  */
-- (NSManagedObject *)managedObjectInContext:(NSManagedObjectContext *)context;
+- (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context;
+- (EWServerObject *)managedObjectUpdatedInContext:(NSManagedObjectContext *)context;
+- (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context option:(EWSyncOption)option completion:(void (^)(EWServerObject *SO, NSError *error))block;
+
+//Helper
 - (BOOL)isNewerThanMO;
 - (NSString *)localClassName;
 @end

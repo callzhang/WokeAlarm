@@ -20,12 +20,10 @@ PODS:
   - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - APAddressBook (0.1.5):
-    - APAddressBook/Core
-  - APAddressBook/Core (0.1.5)
   - apptentive-ios (1.6.1):
     - apptentive-ios/arc-files
   - apptentive-ios/arc-files (1.6.1)
+  - APTimeZones (1.1)
   - BlocksKit (2.2.5):
     - BlocksKit/All
   - BlocksKit/All (2.2.5):
@@ -57,12 +55,13 @@ PODS:
   - Expecta (0.3.1)
   - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
+  - GKImagePicker (0.0.1)
   - GPUImage (0.1.6)
   - IDMPhotoBrowser (1.5.2):
     - AFNetworking
     - DACircularProgress
     - pop
-  - JGProgressHUD (1.2.2)
+  - JGProgressHUD (1.2.3)
   - KVOController (1.0.3)
   - KZAsserts (1.0)
   - KZBootstrap (0.5.3):
@@ -110,34 +109,38 @@ PODS:
   - MTDates (0.14.3)
   - MYBlurIntroductionView (1.0.3)
   - NYXImagesKit (2.3)
-  - OCMock (3.1.1)
-  - Parse (1.6.0):
-    - Bolts (~> 1.1.3)
-  - ParseFacebookUtils (1.6.0):
+  - OCMock (3.1.2)
+  - Parse (1.6.2):
+    - Bolts (~> 1.1)
+  - ParseCrashReporting (1.6.2):
+    - Parse (~> 1.6.2)
+  - ParseFacebookUtils (1.6.2):
     - Facebook-iOS-SDK (~> 3.20)
-    - Parse (~> 1.6.0)
-  - ParseUI (1.0.2):
-    - Parse (~> 1.5)
-    - ParseFacebookUtils (~> 1.5)
+    - Parse (~> 1.6.2)
+  - ParseUI (1.1.0):
+    - Parse (~> 1.6)
+    - ParseFacebookUtils (~> 1.6)
   - pop (1.0.7)
   - Reachability (3.1.1)
-  - ReactiveCocoa (2.3.1):
+  - ReactiveCocoa (2.4.4):
     - ReactiveCocoa/UI
-  - ReactiveCocoa/Core (2.3.1):
+  - ReactiveCocoa/Core (2.4.4):
     - ReactiveCocoa/no-arc
-  - ReactiveCocoa/no-arc (2.3.1)
-  - ReactiveCocoa/UI (2.3.1):
+  - ReactiveCocoa/no-arc (2.4.4)
+  - ReactiveCocoa/UI (2.4.4):
     - ReactiveCocoa/Core
-  - ReactiveViewModel (0.2):
-    - ReactiveCocoa (~> 2.1)
+  - ReactiveViewModel (0.3):
+    - ReactiveCocoa (~> 2.4)
   - RHAddressBook (1.1.1)
-  - VBFPopFlatButton (0.0.5):
+  - Tweaks (1.1.0)
+  - VBFPopFlatButton (0.0.6):
     - pop
+  - WellCached (0.1.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.4.1)
-  - APAddressBook (~> 0.1.4)
   - apptentive-ios (~> 1.6.0)
+  - APTimeZones
   - BlocksKit (~> 2.2.5)
   - CocoaLumberjack (~> 1.9.2)
   - CrashlyticsFramework (~> 2.2.5.1)
@@ -145,6 +148,7 @@ DEPENDENCIES:
   - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.20.0)
+  - GKImagePicker
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
   - JGProgressHUD (~> 1.2.2)
@@ -156,13 +160,17 @@ DEPENDENCIES:
   - MYBlurIntroductionView (~> 1.0)
   - NYXImagesKit (~> 2.3)
   - OCMock (~> 3.1.1)
-  - Parse (~> 1.6.0)
-  - ParseUI (~> 1.0)
+  - Parse
+  - ParseCrashReporting
+  - ParseUI
   - Reachability (~> 3.1.1)
-  - ReactiveCocoa (~> 2.3.1)
-  - ReactiveViewModel (~> 0.2)
+  - ReactiveCocoa (~> 2.4)
+  - ReactiveViewModel (~> 0.3)
   - RHAddressBook (~> 1.1.1)
+  - RHAddressBook (~> 1.2)
+  - Tweaks (~> 1.1.0)
   - VBFPopFlatButton (~> 0.0.5)
+  - WellCached
 
 EXTERNAL SOURCES:
   dyci:
@@ -173,8 +181,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
-  APAddressBook: 38bddd264b0d547021d14c8fb22ad64c73663b96
   apptentive-ios: 930b98bb3d43dc05e8479e854d5cbde51861cf1d
+  APTimeZones: 887a7b5a7abd4a05fcc4de3ff7427d5248becdaf
   BlocksKit: 4439e7f30a9f90743462ca63545a15c1f4304cef
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
@@ -184,9 +192,10 @@ SPEC CHECKSUMS:
   dyci: 63f19224ff515c438e26387546c9301af917953c
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
+  GKImagePicker: 6039f7bf8d517eed0f7583af123c4422784e6c81
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: 9639f7c57bdf942dc4e214ff9d8108e08ebd3f27
-  JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398
+  JGProgressHUD: 733523c80f69b6dfc41b88a0f33883a89a8b4c3b
   KVOController: b1139ef1fc373b6757e4b69493fedd7b56eb1272
   KZAsserts: 008f2f37ba7dcb4ce87bb262a7f91406812a66e5
   KZBootstrap: 353e1e3788dbbf18a173fdc20a744f3c39200b72
@@ -195,15 +204,18 @@ SPEC CHECKSUMS:
   MTDates: 947c49f09b174e38dcefbd2ba3bf8a7aa8419d33
   MYBlurIntroductionView: 6caf60805eaa555538aba9e2615820fd6f07cd23
   NYXImagesKit: 1c9f228ae78fab475d267b3b3a1308e0fba11731
-  OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
-  Parse: f15dfacd941ee8084a5decbef486da8b223c2810
-  ParseFacebookUtils: 8d33da72678c4c03a3b94332179dc04548bbd268
-  ParseUI: 0eed358b238dcd66949ebc22513eba603e110087
+  OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
+  Parse: 60d65108fe39da77ec16c9e51d74b4d296b21424
+  ParseCrashReporting: eb150f792ea987456f9ae4ccca4bbf9236c8ddd0
+  ParseFacebookUtils: 0b86cd67283c60d10e3ddc8427f989f5e60ebbd7
+  ParseUI: 00c4c39aab3944d88758b55416581650caa37f89
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
-  ReactiveCocoa: dca75777b9d18990c8714a3a6f2149f29b4d1462
-  ReactiveViewModel: 78387196df2e7535bb2776c41df15dbb17300f8a
+  ReactiveCocoa: 31119068e3dde866bd257cf74e1f06b4023bf387
+  ReactiveViewModel: 512224f801ea0a603fd394eed0f38bc662b64b9a
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
-  VBFPopFlatButton: 023eb57c9c8e0a77d1cf926621085b0727b70b15
+  Tweaks: 05b197d4a1247288f576587546bc1932189d8c98
+  VBFPopFlatButton: 79ca72185b76c2dff8861263118a8c47ef1c1043
+  WellCached: d139993bce456f14c12af349586cfd50f77c1d5c
 
 COCOAPODS: 0.34.4

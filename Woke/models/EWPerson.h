@@ -12,32 +12,19 @@
 
 @import CoreLocation;
 
-@class EWAlarm;
+@class EWAlarm, EWSocial;
 
 extern NSString * const EWPersonDefaultName;
 
 @interface EWPerson : _EWPerson
-@property (nonatomic, strong) CLLocation* lastLocation;
+@property (nonatomic, strong) CLLocation* location;
 @property (nonatomic, strong) UIImage *profilePic;
 @property (nonatomic, strong) UIImage *bgImage;
 @property (nonatomic, strong) NSDictionary *preference;
 @property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
+@property (nonatomic, readwrite) NSString *name;
 
-//validate
-- (BOOL)validate;
-
-//helper
-- (BOOL)isFriend;
-- (BOOL)friendPending;
-- (BOOL)friendWaiting;
-- (NSString *)genderObjectiveCaseString;
-+ (void)updateMyCachedFriends;
-
-//friend
-+ (void)requestFriend:(EWPerson *)person;
-+ (void)acceptFriend:(EWPerson *)person;
-+ (void)unfriend:(EWPerson *)person;
 /**
  *  Find or create EWPerson from PFUser
  *
@@ -46,22 +33,11 @@ extern NSString * const EWPersonDefaultName;
  *  @return EWPerson
  */
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
-@end
 
 
-@interface EWPerson(Woke)
-+ (EWPerson *)me;
-- (BOOL)isMe;
+//validate
+- (BOOL)validate;
 
-//my stuff
-+ (NSArray *)myActivities;
-+ (NSArray *)myNotifications;
-+ (NSArray *)myUnreadNotifications;
-+ (NSArray *)myAlarms;
-+ (NSArray *)myFriends;
-
-
-+ (EWAlarm *)myCurrentAlarm;
-+ (EWActivity *)myCurrentAlarmActivity;
-
+//helper
+- (NSString *)genderObjectiveCaseString;
 @end

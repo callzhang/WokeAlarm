@@ -42,9 +42,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 #pragma mark - CREATE USER
 -(EWPerson *)getPersonByServerID:(NSString *)ID{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     if(!ID) return nil;
-    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:@"EWPerson" withID:ID];
+    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:NSStringFromClass([EWPerson class]) withID:ID error:nil];
     
     return person;
 }
@@ -66,7 +66,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 - (void)nextWakeeWithCompletion:(void (^)(EWPerson *person))block{
     if (!_wakeeList || _wakeeList.count == 0) {
         //need to fetch everyone first
-        if (self.isFetchingWakees) {
+        if (!self.isFetchingWakees) {
             [self getWakeesInBackgroundWithCompletion:^{
                 //return next
                 if (block) {
@@ -93,7 +93,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 }
 
 //- (NSArray *)getWakeeList{
-//    NSParameterAssert([NSThread isMainThread]);
+//    EWAssertMainThread
 //    //check
 //    if (self.isFetchingWakees) {
 //        return nil;
@@ -106,8 +106,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 //    
 //}
 
-- (void)getWakeesInBackgroundWithCompletion:(void (^)(void))block{
-    NSParameterAssert([NSThread isMainThread]);
+- (void)getWakeesInBackgroundWithCompletion:(VoidBlock)block{
+    EWAssertMainThread
     //add finish block to the queue
     if (block) {
         [_wakeeListChangeBlocks addObject:block];
@@ -115,6 +115,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     
     //check
     if (self.isFetchingWakees) {
+        DDLogWarn(@"Already fetching wakees");
         return;
     }
     
@@ -145,14 +146,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     
     NSMutableArray *allPerson = [NSMutableArray new];
     
-    EWPerson *localMe = [[EWPerson me] MR_inContext:context];
+    EWPerson *localMe = [EWPerson meInContext:context];
     NSError *error;
     
     //check my location
-    if (!localMe.lastLocation) {
+    if (!localMe.location) {
         //get a fake coordinate
         CLLocation *loc = [[CLLocation alloc] initWithLatitude:0 longitude:0];
-        localMe.lastLocation = loc;
+        localMe.location = loc;
         
     }
     
@@ -160,8 +161,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
                            withParameters:@{@"objectId": localMe.objectId,
                                             @"topk" : numberOfRelevantUsers,
                                             @"radius" : radiusOfRelevantUsers,
-                                            @"location": @{@"latitude": @([EWPerson me].lastLocation.coordinate.latitude),
-                                                           @"longitude": @([EWPerson me].lastLocation.coordinate.longitude)}}
+                                            @"location": @{@"latitude": @(localMe.location.coordinate.latitude),
+                                                           @"longitude": @(localMe.location.coordinate.longitude)}}
                                     error:&error];
     
     if (error && list.count == 0) {
@@ -177,7 +178,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     PFQuery *query = [PFUser query];
     [query whereKey:kParseObjectID containedIn:list];
     //[query includeKey:@"friends"];
-    NSArray *users = [EWSync findServerObjectWithQuery:query error:&error];
+    NSArray *users = [EWSync findParseObjectWithQuery:query error:&error];
     
     if (error) {
         NSLog(@"*** Failed to fetch everyone: %@", error);
@@ -189,7 +190,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     for (PFUser *user in users) {
         EWPerson *person = (EWPerson *)[user managedObjectInContext:context];
         
-        //remove skipped user
+        //remove skipped user if marked skip and the statement is the same.
         NSString *skippedStatement = [EWSession sharedSession].skippedWakees[user.objectId];
         if (skippedStatement) {
             if ([skippedStatement isEqualToString:person.statement]) {
@@ -206,7 +207,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     //still need to save me
     //localMe.score = @100;
     
-    NSLog(@"Received everyone list: %@", [allPerson valueForKey:@"name"]);
+    DDLogVerbose(@"Received everyone list: %@", [allPerson valueForKey:@"name"]);
     self.isFetchingWakees = NO;
     
     return allPerson;

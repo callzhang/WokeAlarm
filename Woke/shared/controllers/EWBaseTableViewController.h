@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWViewControllerHelper.h"
+#import "EWMainNavigationController.h"
 
 @interface EWBaseTableViewController : UITableViewController
 

@@ -9,23 +9,29 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <Parse/Parse.h>
-#import "Reachability.h"
-#import "NSManagedObject+EWSync.h"
+#import "EWServerObject+EWSync.h"
 #import "PFObject+EWSync.h"
 #import "EWServerObject.h"
 
 extern NSManagedObjectContext *mainContext;
 typedef void (^EWSavingCallback)(void);
 
+//Diagram:
+//https://drive.draw.io/#G0B8EqrGjPaSeTakN6VzRwZzdFaDA
 
+//Error codes:
+//http://parse.com/docs/dotnet/api/html/T_Parse_ParseException_ErrorCode.htm
+//or https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/NSError_Codes
+#define kEWSyncErrorNoConnection            668 //NO_CONNECTION
+#define kEWSyncErrorNoServerID              113 //NO_MORE_SEARCH_HANDLES: No more internal file identifiers available
+
+@class ELAWellCached;
 
 #pragma mark - Sync parameters
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
 #define kServerTransformClasses             @{@"EWPerson": @"_User"} //localClass: serverClass
-#define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, @"score"]
+#define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey]
 #define kSyncUserClass                      @"EWPerson"
-//#define classSkipped                        @[@"EWPerson"]
-
 
 //Server update time
 #define kStalelessInterval                  30
@@ -46,20 +52,21 @@ typedef void (^EWSavingCallback)(void);
 #define kParseQueueDelete                   @"parse_queue_delete"
 #define kParseQueueWorking                  @"parse_queue_working"
 #define kParseQueueRefresh                  @"parse_queue_refresh"//queue for refresh
+#define kChangedRecords						@"changed_records"
 #define kUserID                             @"userId"
 #define kUsername                           @"username"
 
 
 
 @interface EWSync : NSObject
-@property NSMutableArray *saveCallbacks; //MO save callback
-@property Reachability *reachability;
-@property NSMutableDictionary *serverObjectPool;
-@property NSMutableDictionary *changeRecords;
-@property NSMutableArray *saveToLocalItems;
-@property NSMutableArray *deleteToLocalItems;
+@property (strong) NSMutableArray *saveCallbacks; //MO save callback
+@property (strong) ELAWellCached *serverObjectCache;
+/**
+ * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
+ */
+@property (strong) NSMutableDictionary *changedRecords;
+@property (strong) NSMutableArray *saveToLocalItems;
 @property BOOL isUploading;
-
 
 
 
@@ -73,7 +80,7 @@ typedef void (^EWSavingCallback)(void);
 /**
  The main save function, it save and upload to the server
  */
-+ (void)save;
++ (void)save __deprecated;
 + (void)saveWithCompletion:(EWSavingCallback)block;
 + (void)saveAllToLocal:(NSArray *)MOs;
 /**
@@ -127,37 +134,37 @@ typedef void (^EWSavingCallback)(void);
 #pragma mark - Queue
 //update queue
 - (NSSet *)updateQueue;
-- (void)appendUpdateQueue:(NSManagedObject *)mo;
-- (void)removeObjectFromUpdateQueue:(NSManagedObject *)mo;
+- (void)appendUpdateQueue:(EWServerObject *)mo;
+- (void)removeObjectFromUpdateQueue:(EWServerObject *)mo;
 //insert queue
 - (NSSet *)insertQueue;
-- (void)appendInsertQueue:(NSManagedObject *)mo;
-- (void)removeObjectFromInsertQueue:(NSManagedObject *)mo;
+- (void)appendInsertQueue:(EWServerObject *)mo;
+- (void)removeObjectFromInsertQueue:(EWServerObject *)mo;
 //uploading queue
 - (NSSet *)workingQueue;
-- (void)appendObjectToWorkingQueue:(NSManagedObject *)mo;
-- (void)removeObjectFromWorkingQueue:(NSManagedObject *)mo;
+- (void)appendObjectToWorkingQueue:(EWServerObject *)mo;
+- (void)removeObjectFromWorkingQueue:(EWServerObject *)mo;
 //delete queue
 - (NSSet *) deleteQueue;
 - (void)appendObjectToDeleteQueue:(PFObject *)object;
 - (void)removeObjectFromDeleteQueue:(PFObject *)object;
 //worker
 - (NSSet *)getObjectFromQueue:(NSString *)queue;
-- (void)appendObject:(NSManagedObject *)mo toQueue:(NSString *)queue;
-- (BOOL)contains:(NSManagedObject *)mo inQueue:(NSString *)queue;
+- (void)appendObject:(EWServerObject *)mo toQueue:(NSString *)queue;
+- (BOOL)contains:(EWServerObject *)mo inQueue:(NSString *)queue;
 
 #pragma mark - CoreData
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID;
++ (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;
++ (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
 
 #pragma mark - Parse helper methods
 //PO query
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query;
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error;
-+ (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
++ (NSArray *)findParseObjectWithQuery:(PFQuery *)query error:(NSError **)error;
++ (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 //- (PFObject *)getCachedParseObjectForID:(NSString *)parseID;
-//- (void)setCachedParseObject:(PFObject *)PO;
+- (void)setCachedParseObject:(PFObject *)PO;
 /**
  1. Try to get PO from cache
  2. If not, then request a network call with query cache life of 1 hour

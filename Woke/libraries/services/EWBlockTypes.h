@@ -10,7 +10,6 @@ typedef void (^BoolErrorBlock)(BOOL success, NSError *error);
 typedef void (^DictionaryErrorBlock)(NSDictionary *dictioanry, NSError *error);
 typedef void (^ErrorBlock)(NSError *error);
 typedef void (^VoidBlock)(void);
-typedef void (^UIImageBlock)(UIImage *image);
-typedef void (^ArrayBlock)(NSArray *array);
+typedef void (^ArrayBlock)(NSArray *array, NSError *error);
 typedef void (^FloatBlock)(float percent);
 typedef void (^SenderBlock)(id sender);

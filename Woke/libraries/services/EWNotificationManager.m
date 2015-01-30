@@ -18,6 +18,7 @@
 #import "EWCachedInfoManager.h"
 #import "UIViewController+Blur.h"
 #import "UIView+Extend.h"
+#import "EWUIUtil.h"
 
 #define kNextTaskHasMediaAlert      1011
 #define kFriendRequestAlert         1012
@@ -35,21 +36,25 @@
 @end
 
 @implementation EWNotificationManager
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 
-+ (EWNotificationManager *)sharedInstance{
-    static EWNotificationManager *manager = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[EWNotificationManager alloc] init];
-    });
-    return manager;
+
+#pragma mark - Handle
+- (void)handleNotificatoinFromPush:(NSDictionary *)payload{
+    NSString *notificationID = payload[kPushNofiticationID];
+    EWNotification *notice = [EWNotification getNotificationByID:notificationID];
+    [[EWPerson me] addNotificationsObject:notice];
+	
+	//save
+    [notice saveWithCompletion:^(BOOL success, NSError *error) {
+		//broadcast
+		[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationNew object:notice userInfo:nil];
+	}];
 }
 
 
-
-#pragma mark - CREATE
-+ (void)handleNotification:(NSString *)notificationID{
-    EWNotification *notification = [EWNotificationManager getNotificationByID:notificationID];
+- (void)handleNotification:(NSString *)notificationID{
+    EWNotification *notification = [EWNotification getNotificationByID:notificationID];
     if (!notification) {
         DDLogError(@"@@@ Cannot find notification %@", notificationID);
         return;
@@ -58,7 +63,7 @@
 //    NSDictionary *userInfo = notification.userInfo;
     [EWNotificationManager sharedInstance].notification = notification;
     
-    if ([notification.type isEqualToString:kNotificationTypeNextTaskHasMedia]) {
+    if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
         
         [[[UIAlertView alloc] initWithTitle:@"New Voice"
                                     message:@"You've got a new voice for your next morning!"
@@ -98,9 +103,10 @@
         
         //alert
         if (notification.completed) {
-            EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:person];
-            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-            [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
+            EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+			controller.person = person;
+			
+            [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:controller withCompletion:^{
                 //
             }];
         }else{
@@ -135,15 +141,14 @@
     }
 }
 
-+ (EWNotification *)getNotificationByID:(NSString *)notificationID{
-    
-    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID];
-    return notification;
-}
-
-
-+ (void)clickedNotification:(EWNotification *)notice{
-    [EWNotificationManager handleNotification:notice.objectId];
+#pragma mark - Search
+- (NSArray *)notificationsForPerson:(EWPerson *)person{
+    NSArray *notifications = person.notifications.allObjects;
+    NSSortDescriptor *sortCompelete = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.completed ascending:NO];
+    NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:NO];
+    NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];
+    notifications = [notifications sortedArrayUsingDescriptors:@[sortDate, sortCompelete, sortImportance]];
+    return notifications;
 }
 
 
@@ -160,14 +165,15 @@
             case 1:{ //accepted
                 [[EWPerson me] addFriendsObject:self.person];
                 [self.person addFriendsObject:[EWPerson me]];
-                [EWNotificationManager sendFriendAcceptNotificationToUser:self.person];
-                [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"Accepted"];
+                [self sendFriendAcceptNotificationToUser:self.person];
+				[EWUIUtil showSuccessHUBWithString:@"Accepted"];
                 break;
             }
             case 2:{ //profile
-                EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:self.person];
+				EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+				controller.person = _person;
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-                [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
+                [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:^{
                     //
                 }];
                 break;
@@ -184,9 +190,10 @@
                 break;
             
             case 1:{//view profile
-                EWPersonViewController *controller = [[EWPersonViewController alloc] initWithPerson:self.person];
+				EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+				controller.person = _person;
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-                [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:navController withCompletion:^{
+                [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:^{
                     //
                 }];
             }
@@ -208,17 +215,17 @@
 - (void)finishedNotification:(EWNotification *)notice{
     //archieve
     if (!notice.completed) {
-        
         notice.completed = [NSDate date];
     }
-    [EWSync save];
+    [notice save];
     [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationCompleted object:notice];
     
     self.notification = nil;
     self.person = nil;
 }
-#pragma mark - Push
-+ (void)sendFriendRequestNotificationToUser:(EWPerson *)person{
+
+#pragma mark - Friendship
+- (void)sendFriendRequestNotificationToUser:(EWPerson *)person{
     /*
     call the cloud code
     server create a notification object
@@ -235,19 +242,21 @@
     
     [PFCloud callFunctionInBackground:@"sendFriendRequestNotificationToUser"
                        withParameters:@{@"sender": [EWPerson me].objectId,
-                                        @"owner": person.objectId}
-                                block:^(id object, NSError *error)
+                                        @"receiver": person.objectId}
+                                block:^(EWNotification *object, NSError *error)
      {
          if (error) {
-             NSLog(@"Failed sending friendship request: %@", error.description);
+             DDLogError(@"Failed sending friendship request: %@", error.description);
              EWAlert(@"Network error, please send it later");
          }else{
-             [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
+             DDLogInfo(@"Cloud code sendFriendRequestNotificationToUser successful");
+			 [EWUIUtil showSuccessHUBWithString:@"Sent"];
+			 //[[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
          }
      }];
 }
 
-+ (void)sendFriendAcceptNotificationToUser:(EWPerson *)person{
+- (void)sendFriendAcceptNotificationToUser:(EWPerson *)person{
     /*
      call the cloud code
      server create a notification object
@@ -265,13 +274,33 @@
                                 block:^(id object, NSError *error)
     {
         if (error) {
-            NSLog(@"Failed sending friendship acceptance: %@", error.description);
+            DDLogError(@"Failed sending friendship acceptance: %@", error.description);
             EWAlert(@"Network error, please send it later");
         }else{
-            [[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
+			[EWUIUtil showSuccessHUBWithString:@"Sent"];
+			//[[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
         }
         
     }];
+}
+
+- (void)generateFriendRequestFrom:(EWPerson *)person completion:(void (^)(EWNotification *notice, NSError *error))block{
+    [PFCloud callFunctionInBackground:@"sendFriendRequestNotificationToUser"
+                       withParameters:@{@"sender": person.objectId,
+                                        @"receiver": [EWPerson me].objectId}
+                                block:^(EWNotification *object, NSError *error)
+     {
+         if (error) {
+             DDLogError(@"Failed generating friendship request: %@", error.description);
+             EWAlert(@"Network error, please send it later");
+         }else{
+             DDLogInfo(@"generateFriendRequestFrom %@ successful", person.name);
+			 [EWUIUtil showSuccessHUBWithString:@"Request generated and pushed"];
+         }
+		 if (block) {
+			 block(object, error);
+		 }
+     }];
 }
 
 @end

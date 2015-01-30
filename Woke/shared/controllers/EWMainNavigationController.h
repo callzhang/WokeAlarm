@@ -9,5 +9,12 @@
 #import "EWBaseNavigationController.h"
 
 @interface EWMainNavigationController : EWBaseNavigationController
+- (UIBarButtonItem *)menuBarButtonItem;
+- (void)toogleMenuCompletion:(VoidBlock)completion;
 
+@end
+
+
+@interface UIViewController(EWMainNavigationController)
+@property (nonatomic, readonly) EWMainNavigationController *mainNavigationController;
 @end

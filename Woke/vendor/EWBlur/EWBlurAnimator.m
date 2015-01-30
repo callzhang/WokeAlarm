@@ -86,6 +86,10 @@ static const CGFloat initialDownSampling = 2;
     toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     toViewController.view.backgroundColor = [UIColor clearColor];
+	UIView *img = [toViewController.view viewWithTag:kBackgroundImageTag];
+	if ([img isKindOfClass:[UIImageView class]]) {
+		[img removeFromSuperview];
+	}
     if ([toViewController isKindOfClass:[UINavigationController class]]) {
         UINavigationController *nav = (UINavigationController *)toViewController;
         nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
@@ -129,6 +133,8 @@ static const CGFloat initialDownSampling = 2;
         self.blurImage = [[GPUImagePicture alloc] initWithImage:fromViewImage];
         [self.blurImage addTarget:self.zoomFilter];
 		//[self.zoomFilter addTarget:self.blendFilter];
+		
+		//update first frame so the transition will be smoother
 		[self updateFrame:nil];
         
         //trigger GPU rendering
@@ -198,8 +204,6 @@ static const CGFloat initialDownSampling = 2;
     self.blurFilter.downsampling = initialDownSampling + _progress * 4;
     self.blurFilter.blurRadiusInPixels = 1 + _progress * 9;
     [self triggerRenderOfNextFrame];
-    
-	NSAssert(!self.interactive, @"Interactive transition is not supported");
 	
     if ((self.type == UINavigationControllerOperationPush || self.type == kModelViewPresent)) {
 		if (_progress>0) {
@@ -222,7 +226,9 @@ static const CGFloat initialDownSampling = 2;
         if (self.type == UINavigationControllerOperationPop) {
 			[[self.context containerView] addSubview:toView];
 			self.imageView.alpha = 0;
-        }
+		}else{
+			[self.imageView removeFromSuperview];
+		}
 		
 		//make toView visible
 		toView.alpha = 1;
@@ -293,6 +299,12 @@ static const CGFloat initialDownSampling = 2;
 
 	}
     self.displayLink.paused = YES;
+}
+
+- (void)dealloc{
+	if (self.displayLink) {
+		[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+	}
 }
 
 @end

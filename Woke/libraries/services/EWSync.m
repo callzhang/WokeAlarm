@@ -9,26 +9,25 @@
 #import "EWSync.h"
 #import "EWUIUtil.h"
 #import "EWServerObject.h"
-#import "PFFacebookUtils.h"
-
-#define kPFQueryCacheLife		60*60;
-
+#import "AFNetworkReachabilityManager.h"
+#import <WellCached/ELAWellCached.h>
+#import "NSDictionary+KeyPathAccess.h"
 
 //============ Global shortcut to main context ===========
 NSManagedObjectContext *mainContext;
 //=======================================================
 
-@interface EWSync(){
-	NSMutableDictionary *workingChangedRecords;
-}
-@property NSManagedObjectContext *context; //the main context(private)
-@property NSMutableDictionary *parseSaveCallbacks;
-@property (nonatomic) NSTimer *saveToServerDelayTimer;
+@interface EWSync()
+@property (nonatomic, strong) NSManagedObjectContext *context; //the main context(private)
+@property (strong) NSMutableDictionary *parseSaveCallbacks;
+@property (nonatomic, strong) NSTimer *saveToServerDelayTimer;
+@property (nonatomic, strong) AFNetworkReachabilityManager *reachability;
 @end
 
 
 @implementation EWSync
 @synthesize parseSaveCallbacks;
+@synthesize changedRecords = _changedRecords;
 @synthesize isUploading = _isUploading;
 
 + (EWSync *)sharedInstance{
@@ -61,68 +60,54 @@ NSManagedObjectContext *mainContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preSaveAction:) name:NSManagedObjectContextWillSaveNotification object:_context];
     
     //Observe background context saves so main context can perform upload
-    //We don't need to merge child context change to main context
-    //It will cause errors when main and child context access same MO
     [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification object:_context queue:nil usingBlock:^(NSNotification *note) {
-        
         [_saveToServerDelayTimer invalidate];
         _saveToServerDelayTimer = [NSTimer scheduledTimerWithTimeInterval:kUploadLag target:self selector:@selector(uploadToServer) userInfo:nil repeats:NO];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:EWAccountDidLogoutNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        //TODO: stop all uploads and downloads
-        
-        //remove all queue
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueDelete];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueInsert];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueUpdate];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueWorking];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueRefresh];
 
     }];
     
     //Reachability
-    self.reachability = [Reachability reachabilityForInternetConnection];
-    self.reachability.reachableBlock = ^(Reachability *reachability) {
-        DDLogInfo(@"====== Network is reachable. Start upload. ======");
-        //in background thread
-        [[EWSync sharedInstance] resumeUploadToServer];
-        
-        //resume refresh MO
-        NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh];
-        for (NSManagedObject *MO in MOs) {
-            [MO refreshInBackgroundWithCompletion:^{
-                DDLogInfo(@"%@(%@) refreshed after network resumed.", MO.entity.name, MO.serverID);
-            }];
+    self.reachability = [AFNetworkReachabilityManager sharedManager];
+    [self.reachability startMonitoring];
+    [self.reachability setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        if (status != 0) {
+            DDLogDebug(@"====== Network is reachable. Start upload. ======");
+            //in background thread
+            [[EWSync sharedInstance] resumeUploadToServer];
+            
+            //resume refresh MO
+            NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh];
+            for (EWServerObject *MO in MOs) {
+                [MO refreshInBackgroundWithCompletion:^(NSError *error){
+                    DDLogInfo(@"%@(%@) refreshed after network resumed: %@", MO.entity.name, MO.serverID, error.description);
+                }];
+            }
+        } else {
+            DDLogInfo(@"====== Network is unreachable ======");
         }
-    };
-    self.reachability.unreachableBlock = ^(Reachability * reachability){
-        DDLogInfo(@"====== Network is unreachable ======");
-        //TODO
-        //[EWUIUtil showHUDWithString:@"Offline"];
-    };
-    
-    //facebook
-    [PFFacebookUtils initializeFacebook];
+        
+    }];
     
     //initial property
     self.parseSaveCallbacks = [NSMutableDictionary dictionary];
     self.saveCallbacks = [NSMutableArray new];
     self.saveToLocalItems = [NSMutableArray new];
-    self.deleteToLocalItems = [NSMutableArray new];
-    self.serverObjectPool = [NSMutableDictionary new];
-    self.changeRecords = [NSMutableDictionary new];
-    
+    self.serverObjectCache = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
+	
 }
 
 
 #pragma mark - connectivity
 + (BOOL)isReachable{
-    return [EWSync sharedInstance].reachability.isReachable;
+    return [EWSync sharedInstance].isReachable;
 }
 
 - (BOOL)isReachable{
-    return self.reachability.isReachable;
+    return !self.reachability.networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable;
 }
 
 #pragma mark - ============== Parse Server methods ==============
@@ -138,25 +123,26 @@ NSManagedObjectContext *mainContext;
 
 - (void)uploadToServer{
     //make sure it is called on main thread
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     if([mainContext hasChanges]){
-        NSLog(@"There is still some change, save and do it later");
-        [EWSync save];
+        DDLogDebug(@"There is still some change, save and do it later");
+        [mainContext MR_saveToPersistentStoreAndWait];
         return;
     }
     
-    if ([self workingQueue].count >0) {
-        NSLog(@"Data Store is uploading, delay for 30s");
+    if ([self workingQueue].count >0 && self.isUploading) {
+        DDLogWarn(@"Data Store is uploading, delay for 10s: %@", self.updatingClassAndValues);
         static NSTimer *uploadDelay;
         [uploadDelay invalidate];
-        uploadDelay = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(uploadToServer) userInfo:nil repeats:NO];
+        uploadDelay = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(uploadToServer) userInfo:nil repeats:NO];
         return;
     }
     self.isUploading = YES;
     
     //determin network reachability
     if (!self.isReachable) {
-        NSLog(@"Network not reachable, skip uploading");
+        DDLogDebug(@"Network not reachable, skip uploading");
+        [self runCompletionBlocks:self.saveCallbacks];
         return;
     }
     
@@ -164,16 +150,16 @@ NSManagedObjectContext *mainContext;
     NSSet *insertedManagedObjects = [self insertQueue];
     NSSet *updatedManagedObjects = [self updateQueue];
     NSSet *deletedServerObjects = self.deleteQueue;
-    NSMutableSet *workingObjects = [NSMutableSet new];
     
     //copy the list to working queue
-    [workingObjects unionSet:updatedManagedObjects];
-    [workingObjects unionSet:insertedManagedObjects];
-    for (NSManagedObject *mo in workingObjects) {
-        [self appendObject:mo toQueue:kParseQueueWorking];
-    }
+    for (EWServerObject *mo in insertedManagedObjects) [self appendObject:mo toQueue:kParseQueueWorking];
+    for (EWServerObject *mo in updatedManagedObjects) [self appendObject:mo toQueue:kParseQueueWorking];
+    //clear queues
+    [self clearQueue:kParseQueueInsert];
+    [self clearQueue:kParseQueueUpdate];
     
     //save to local items check
+    NSSet *workingObjects = self.workingQueue.copy;
     NSArray *saveToLocalItemAlreadyInWorkingQueue = [self.saveToLocalItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", [workingObjects valueForKey:@"objectID"]]];
     if (saveToLocalItemAlreadyInWorkingQueue.count) {
         DDLogError(@"There are items in saveToLocal queue but also appeared in working queue, please check the code!%@", saveToLocalItemAlreadyInWorkingQueue);
@@ -182,44 +168,49 @@ NSManagedObjectContext *mainContext;
         }
     }
     
-    //clear save/delete to local items
-    self.saveToLocalItems = [NSMutableArray new];
-    self.deleteToLocalItems = [NSMutableArray new];
-    
-    //clear queues
-    [self clearQueue:kParseQueueInsert];
-    [self clearQueue:kParseQueueUpdate];
-    workingChangedRecords = _changeRecords;
-    _changeRecords = [NSMutableDictionary new];
 	
 	//skip if no changes
-    if (workingObjects.count == 0 && deletedServerObjects.count == 0 && _saveCallbacks.count == 0){
+    if (workingObjects.count == 0 && deletedServerObjects.count == 0){
         DDLogInfo(@"No change detacted, skip uploading");
+        [self runCompletionBlocks:self.saveCallbacks];
         return;
     }
-    //logging
-    NSDictionary *updated = [NSDictionary dictionaryWithObjectsAndKeys:[updatedManagedObjects valueForKeyPath:@"entity.name"], [updatedManagedObjects valueForKey:kParseObjectID], nil];
-    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], updated, deletedServerObjects);
-    DDLogVerbose(@"Change records:\n%@", workingChangedRecords);
+    for (NSString *key in self.changedRecords.allKeys) {
+        if (![[workingObjects valueForKey:kParseObjectID] containsObject:key]) {
+            DDLogError(@"Change for MO %@ not expected: %@", key, self.changedRecords[key]);
+            [self.changedRecords removeObjectForKey:key];
+        }
+    }
     
+    //logging
+    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, deletedServerObjects);
+    
+    //save callbacks
     NSArray *callbacks = [self.saveCallbacks copy];
     [_saveCallbacks removeAllObjects];
     
     //start background update
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        for (NSManagedObject *MO in workingObjects) {
-            NSManagedObject *localMO = [MO MR_inContext:localContext];
+        for (EWServerObject *MO in workingObjects) {
+            EWServerObject *localMO = [MO MR_inContext:localContext];
             if (!localMO) {
                 DDLogVerbose(@"*** MO %@(%@) to upload haven't saved", MO.entity.name, MO.serverID);
                 continue;
             }
 			
+			//validation
+			if (![EWSync validateSO:localMO]) {
+				DDLogWarn(@"!!! Validation failed for %@(%@), skip upload. Detail: \n%@", localMO.entity.name, localMO.serverID, localMO);
+				return;
+			}
+			//=================>> Upload method <<===================
             [self updateParseObjectFromManagedObject:localMO];
+            //=======================================================
             
             //remove changed record
-            NSArray *changes = workingChangedRecords[localMO.objectID];
-            [workingChangedRecords removeObjectForKey:localMO.objectID];
-            DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.serverClassName, localMO.serverID, changes, (unsigned long)workingChangedRecords.allKeys.count);
+            NSMutableSet *changes = self.changedRecords[localMO.serverID];
+			[self.changedRecords removeObjectForKey:localMO.serverID];
+            DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
             
             //remove from queue
             [self removeObjectFromWorkingQueue:localMO];
@@ -231,57 +222,46 @@ NSManagedObjectContext *mainContext;
         
     } completion:^(BOOL success, NSError *error) {
         
-        //completion block
-        if (callbacks.count) {
-            DDLogVerbose(@"=========== Start running completion block (%lu) =============", (unsigned long)callbacks.count);
-            for (EWSavingCallback block in callbacks){
-                block();
-            }
-        }
-        
         DDLogVerbose(@"=========== Finished uploading to saver ===============");
-        NSSet *reminningWorkingObjects = [self getObjectFromQueue:kParseQueueWorking];
-        if (reminningWorkingObjects.count > 0) {
-            DDLogError(@"*** With failures: (ID)%@(Entity)%@", [reminningWorkingObjects valueForKey:@"objectId"], [reminningWorkingObjects valueForKeyPath: @"entity.name"]);
-            
-            [self clearQueue:kParseQueueWorking];
-        }
-        if (workingChangedRecords.count) {
-            DDLogVerbose(@"*** With remaining changed records: %@", workingChangedRecords);
-        }
+        [self runCompletionBlocks:callbacks];
         
-        self.isUploading = NO;
     }];
+}
+
+- (void)runCompletionBlocks:(NSArray *)callbacks{
+    //TODO: use object-specific block as callback block
+    if (callbacks.count) {
+        DDLogVerbose(@"=========== Start running completion block (%lu) =============", (unsigned long)callbacks.count);
+        for (EWSavingCallback block in callbacks){
+            block();
+        }
+    }
     
+    NSSet *remainningWorkingObjects = self.workingQueue;
+    if (remainningWorkingObjects.count > 0) {
+        DDLogInfo(@"*** With remainning working objects: (ID)%@ (Entity)%@", [remainningWorkingObjects valueForKey:@"objectId"], [remainningWorkingObjects valueForKeyPath: @"entity.name"]);
+        [self resumeUploadToServer];
+    }
+    
+    self.isUploading = NO;
 }
 
 - (void)resumeUploadToServer{
-    NSSet *workingMOs = [self workingQueue];
+    NSMutableSet *workingMOs = self.workingQueue.mutableCopy;
+    [workingMOs unionSet:self.updateQueue];
+    [workingMOs unionSet:self.insertQueue];
     NSSet *deletePOs = [self deleteQueue];
     if (workingMOs.count > 0 || deletePOs.count > 0) {
-        NSLog(@"There are %lu MOs need to upload or %lu MOs need to delete", (unsigned long)workingMOs.count, (unsigned long)deletePOs.count);
-        for (NSManagedObject *MO in workingMOs) {
-            if (MO.serverID) {
-                NSLog(@"MO %@(%@) resumed to UPDATE queue", MO.entity.name, MO.serverID);
-                [self appendUpdateQueue:MO];
-            }else{
-                NSLog(@"MO %@(%@) resumed to INSERT queue", MO.entity.name, MO.objectID);
-                [self appendInsertQueue:MO];
-            }
-            
-            [self removeObjectFromWorkingQueue:MO];
-        }
-        NSParameterAssert([self workingQueue].count == 0);
-        
+        DDLogInfo(@"There are %lu MOs need to upload or %lu MOs need to delete, resume uploading!", (unsigned long)workingMOs.count, (unsigned long)deletePOs.count);
         [self uploadToServer];
+    }else{
+        DDLogWarn(@"Nothing to resume uploading");
     }
 }
 
 //observe main context
 - (void)preSaveAction:(NSNotification *)notification{
-    if (![NSThread isMainThread]) {
-        DDLogError(@"Skip pre-save check on background thread");
-    }
+    EWAssertMainThread
     
     NSManagedObjectContext *localContext = (NSManagedObjectContext *)[notification object];
     
@@ -290,47 +270,48 @@ NSManagedObjectContext *mainContext;
 
 - (void)enqueueChangesInContext:(NSManagedObjectContext *)context{
     //BOOL hasChange = NO;
-    
     NSSet *updatedObjects = context.updatedObjects;
     NSSet *insertedObjects = context.insertedObjects;
     NSSet *deletedObjects = context.deletedObjects;
-    NSSet *objects = [updatedObjects setByAddingObjectsFromSet:insertedObjects];
+	NSMutableSet *objects = updatedObjects.mutableCopy;
+	[objects unionSet:insertedObjects];
+	[objects minusSet:deletedObjects];
     
     //for updated mo
-    for (EWServerObject *MO in objects) {
+    for (EWServerObject *SO in objects) {
         //check if it's our guy
-        if (![MO isKindOfClass:[EWServerObject class]]) {
+        if (![SO isKindOfClass:[EWServerObject class]]) {
             continue;
         }
         //First test MO exist
-        if (![context existingObjectWithID:MO.objectID error:NULL]) {
-            DDLogError(@"*** MO you are trying to modify doesn't exist in the sqlite: %@", MO.objectID);
+        if (![context existingObjectWithID:SO.objectID error:NULL]) {
+            DDLogError(@"*** MO you are trying to modify doesn't exist in the sqlite: %@", SO.objectID);
             continue;
         }
         
-        
         //skip if marked save to local
-        if ([self.saveToLocalItems containsObject:MO.objectID]) {
-			NSUInteger index = [self.saveToLocalItems indexOfObject:MO.objectID];
+        if ([self.saveToLocalItems containsObject:SO.objectID]) {
+			NSUInteger index = [self.saveToLocalItems indexOfObject:SO.objectID];
 			[self.saveToLocalItems removeObjectAtIndex:index];
+            [self removeObjectFromInsertQueue:SO];
+            [self removeObjectFromUpdateQueue:SO];
             continue;
         }
 		
 		//Pre-save validate
-		BOOL good = [EWSync validateSO:MO];
-		if (!good) {
+		if (![EWSync validateSO:SO]) {
 			continue;
 		}
 		
-        BOOL mine = [EWSync checkAccess:MO];
-        if (!mine) {
-            DDLogWarn(@"!!! Skip updating other's object %@ with changes %@", MO.serverID, MO.changedKeys);
+        //check ACL
+        if (![EWSync checkAccess:SO]) {
+            DDLogWarn(@"!!! Skip uploading object with no access rights %@ with changes %@", SO.serverID, SO.changedKeys);
             continue;
         }
         
-        if ([insertedObjects containsObject:MO]) {
+        if ([insertedObjects containsObject:SO] || !SO.objectId) {
             //enqueue to insertQueue
-            [self appendInsertQueue:MO];
+            [self appendInsertQueue:SO];
             
             //*** we should not add updatedAt here, as it is the criteria for enqueue. Two Inserts could be possible: downloaded from server or created here. Therefore we need to add createdAt at local creation point.
             //change updatedAt
@@ -339,86 +320,74 @@ NSManagedObjectContext *mainContext;
         }
         
         //additional check for updated object
-        if ([updatedObjects containsObject:MO]) {
-            
+        if ([updatedObjects containsObject:SO]) {
+            NSParameterAssert(SO.objectId);
             //check if updated keys exist
-            NSArray *changedKeys = MO.changedKeys;
+            NSMutableArray *changedKeys = SO.changedKeys.mutableCopy;
+			[changedKeys removeObjectsInArray:attributeUploadSkipped];
             if (changedKeys.count > 0) {
                 
                 //add changed keys to record
-                NSSet *changed = [self.changeRecords objectForKey:MO.serverID] ?:[NSSet new];
-                changed = [changed setByAddingObjectsFromArray:changedKeys];
-                [self.changeRecords setObject:changed forKey:MO.objectID];
-                
+                NSMutableSet *changed = [NSMutableSet setWithArray:self.changedRecords[SO.serverID]] ?: [NSMutableSet new];
+                [changed addObject:changedKeys];
+				self.changedRecords[SO.serverID] = changed.allObjects;
+				
                 //add to queue
-                [self appendUpdateQueue:MO];
+                [self appendUpdateQueue:SO];
                 
                 //change updatedAt: If MO already has updatedAt, then update the timestamp
-                [MO setValue:[NSDate date] forKeyPath:kUpdatedDateKey];
+                [SO setValue:[NSDate date] forKeyPath:kUpdatedDateKey];
             }
         }
-        
-        
     }
     
-    for (NSManagedObject *MO in deletedObjects) {
+    for (EWServerObject *SO in deletedObjects) {
         //check if it's our guy
-        if (![MO isKindOfClass:[EWServerObject class]]) {
-            continue;
-        }
-        if ([self.deleteToLocalItems containsObject:MO.serverID]) {
-            [self removeObjectFromDeleteQueue:[PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:MO.serverID]];
-            continue;
-        }
-        if (MO.serverID) {
-            NSLog(@"~~~> MO %@(%@) is going to be DELETED, enqueue PO to delete queue.", MO.entity.name, [MO valueForKey:kParseObjectID]);
-            
-            PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:MO.serverID];
-            
-            [self.serverObjectPool removeObjectForKey:MO.serverID];
-            
+        if (![SO isKindOfClass:[EWServerObject class]]) continue;
+        
+        if (SO.serverID) {
+            DDLogInfo(@"~~~> MO %@(%@) is going to be DELETED, enqueue PO to delete queue.", SO.entity.name, [SO valueForKey:kParseObjectID]);
+            //get PO reference
+            PFObject *PO = [PFObject objectWithoutDataWithClassName:SO.serverClassName objectId:SO.serverID];
+            //remove PO from cache
+            [self.serverObjectCache removeObjectForKey:SO.serverID];
+            //add PO to delete queue
             [self appendObjectToDeleteQueue:PO];
         }
     }
-    
 }
 
 
 
 #pragma mark - Upload worker
-
-
-- (void)updateParseObjectFromManagedObject:(EWServerObject *)managedObject{
+- (void)updateParseObjectFromManagedObject:(EWServerObject *)serverObject{
     NSError *error;
-    
-    //validation
-    if (![EWSync validateSO:managedObject]) {
-        NSLog(@"!!! Validation failed for %@(%@), skip upload. Detail: \n%@", managedObject.entity.name, managedObject.serverID, managedObject);
-        return;
-    }
     
     //skip if updating other PFUser
     //make sure the value is the latest from store
     //[managedObject.managedObjectContext refreshObject:managedObject mergeChanges:NO];
     
-    NSString *parseObjectId = managedObject.serverID;
+    NSString *parseObjectId = serverObject.serverID;
     PFObject *object;
     if (parseObjectId) {
         //download
-        object =[self getParseObjectWithClass:managedObject.serverClassName ID:parseObjectId error:&error];
-        
+        object =[self getParseObjectWithClass:serverObject.serverClassName ID:parseObjectId error:&error];
+        if ([object isNewerThanMO]) {
+            DDLogWarn(@"The PO %@(%@) being updated from MO is newer than MO", object.parseClassName, object.objectId);
+        }
         if (!object || error) {
             if ([error code] == kPFErrorObjectNotFound) {
-                DDLogError(@"PO %@ couldn't be found!", managedObject.serverClassName);
+                DDLogError(@"PO %@ couldn't be found!", serverObject.serverClassName);
+                serverObject.objectId = nil;
             }
 			else if ([error code] == kPFErrorConnectionFailed) {
                 DDLogError(@"Uh oh, we couldn't even connect to the Parse Cloud!");
-                [managedObject uploadEventually];
+                [serverObject uploadEventually];
                 return;
             }
 			else if (error) {
-                DDLogError(@"*** Error in getting related parse object from MO (%@). \n Error: %@", managedObject.entity.name, [error userInfo][@"error"]);
-                [managedObject uploadEventually];
+                DDLogError(@"*** Error in getting related parse object from MO (%@). \n Error: %@", serverObject.entity.name, [error userInfo][@"error"]);
+                [serverObject uploadEventually];
                 return;
             }
             object = nil;
@@ -429,54 +398,56 @@ NSManagedObjectContext *mainContext;
     
     if (!object) {
         //insert
-        object = [PFObject objectWithClassName:managedObject.serverClassName];
-        
-        [object save:&error];//need to save before working on PFRelation
+		if ([serverObject.entity.name isEqualToString:kSyncUserClass]) {
+			DDLogError(@"Uploading user class, check your code!");
+			return;
+		}
+        object = [PFObject objectWithClassName:serverObject.serverClassName];
+        error = nil;
+		[object save:&error];//need to save before working on PFRelation
+		
         if (!error) {
             DDLogVerbose(@"+++> CREATED PO %@(%@)", object.parseClassName, object.objectId);
-            [managedObject setValue:object.objectId forKey:kParseObjectID];
-            [managedObject setValue:object.updatedAt forKeyPath:kUpdatedDateKey];
+            [serverObject setValue:object.objectId forKey:kParseObjectID];
+			//[managedObject setValue:object.updatedAt forKeyPath:kUpdatedDateKey];
         }
 		else{
-            [managedObject uploadEventually];
+			DDLogError(@"Failed to save new PO %@", object.parseClassName);
+            [serverObject uploadEventually];
             return;
         }
     }
     
     //==========set Parse value/relation and callback block===========
-    [object updateFromManagedObject:managedObject];
+    [object updateFromManagedObject:serverObject];
     //================================================================
     
     [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *err) {
         if (err) {
             if (err.code == kPFErrorObjectNotFound){
-                DDLogError(@"*** PO not found for %@(%@), set to nil.", managedObject.entity.name, managedObject.serverID);
-                NSManagedObject *trueMO = [managedObject.managedObjectContext existingObjectWithID:managedObject.objectID error:NULL];
+                DDLogError(@"*** PO not found for %@(%@), set to nil.", serverObject.entity.name, serverObject.serverID);
+                NSManagedObject *trueMO = [serverObject.managedObjectContext existingObjectWithID:serverObject.objectID error:NULL];
                 if (trueMO) {
                     //need to check if the object is available
-                    [managedObject setValue:nil forKey:kParseObjectID];
+                    [serverObject setValue:nil forKey:kParseObjectID];
                 }
             }
 			else{
                 DDLogError(@"*** Failed to save server object: %@", err.description);
             }
-            [managedObject uploadEventually];
+            [serverObject uploadEventually];
         }
 		else{
             //assign connection between MO and PO
-            [self performSaveCallbacksWithParseObject:object andManagedObjectID:managedObject.objectID];
+            [self performSaveCallbacksWithParseObject:object andManagedObjectID:serverObject.objectID];
         }
     }];
     
-    
-    
-    //time stamp for updated date. This is very important, otherwise mo might seems to be outdated
-	//this is for relation, if do not set kUpdateDateKey, means the relation haven't been downloaded yet.
-	[managedObject setValue:[NSDate date] forKey:kUpdatedDateKey];
-	
-    if (!managedObject.hasChanges) {
-		[managedObject saveToLocal];
-    }
+    //Time stamp for updated date. This is very important, otherwise MO will be outdated
+	//Also if do not set kUpdateDateKey, means the relation haven't been downloaded yet.
+	NSAssert(serverObject.serverID, @"serverID is nil");
+	[serverObject setValue:[NSDate date] forKey:kUpdatedDateKey];
+	[serverObject saveToLocal];
 }
 
 - (void)deleteParseObject:(PFObject *)parseObject{
@@ -496,13 +467,13 @@ NSManagedObjectContext *mainContext;
 			}
 			
 			[self removeObjectFromDeleteQueue:parseObject];
-			[self.serverObjectPool removeObjectForKey:parseObject.objectId];
+			[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 		}];
 	}
 	@catch (NSException *exception) {
 		DDLogError(@"Error in deleting PO: %@, reason: %@", parseObject, exception.description);
 		[self removeObjectFromDeleteQueue:parseObject];
-		[self.serverObjectPool removeObjectForKey:parseObject.objectId];
+		[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 	}
 }
 
@@ -518,7 +489,7 @@ NSManagedObjectContext *mainContext;
 
 
 - (void)performSaveCallbacksWithParseObject:(PFObject *)parseObject andManagedObjectID:(NSManagedObjectID *)managedObjectID{
-    NSArray *saveCallbacks = [[self parseSaveCallbacks] objectForKey:managedObjectID];
+    NSArray *saveCallbacks = [self.parseSaveCallbacks objectForKey:managedObjectID];
     if (saveCallbacks) {
         for (PFObjectResultBlock callback in saveCallbacks) {
             NSError *err;
@@ -535,12 +506,12 @@ NSManagedObjectContext *mainContext;
     return [self getObjectFromQueue:kParseQueueUpdate];
 }
 
-- (void)appendUpdateQueue:(NSManagedObject *)mo{
+- (void)appendUpdateQueue:(EWServerObject *)mo{
     //queue
     [self appendObject:mo toQueue:kParseQueueUpdate];
 }
 
-- (void)removeObjectFromUpdateQueue:(NSManagedObject *)mo{
+- (void)removeObjectFromUpdateQueue:(EWServerObject *)mo{
     [self removeObject:mo fromQueue:kParseQueueUpdate];
 }
 
@@ -549,11 +520,11 @@ NSManagedObjectContext *mainContext;
     return [self getObjectFromQueue:kParseQueueInsert];
 }
 
-- (void)appendInsertQueue:(NSManagedObject *)mo{
+- (void)appendInsertQueue:(EWServerObject *)mo{
     [self appendObject:mo toQueue:kParseQueueInsert];
 }
 
-- (void)removeObjectFromInsertQueue:(NSManagedObject *)mo{
+- (void)removeObjectFromInsertQueue:(EWServerObject *)mo{
     [self removeObject:mo fromQueue:kParseQueueInsert];
 }
 
@@ -562,51 +533,45 @@ NSManagedObjectContext *mainContext;
     return [self getObjectFromQueue:kParseQueueWorking];
 }
 
-- (void)appendObjectToWorkingQueue:(NSManagedObject *)mo{
+- (void)appendObjectToWorkingQueue:(EWServerObject *)mo{
     [self appendObject:mo toQueue:kParseQueueWorking];
 }
 
-- (void)removeObjectFromWorkingQueue:(NSManagedObject *)mo{
+- (void)removeObjectFromWorkingQueue:(EWServerObject *)mo{
     [self removeObject:mo fromQueue:kParseQueueWorking];
 }
 
 //queue functions
 - (NSSet *)getObjectFromQueue:(NSString *)queue{
-    NSParameterAssert([NSThread isMainThread]);
+    EWAssertMainThread
     NSArray *array = [[NSUserDefaults standardUserDefaults] valueForKey:queue];
     NSMutableArray *validMOs = [array mutableCopy];
     NSMutableSet *set = [NSMutableSet new];
-    for (NSString *str in array) {
-        NSURL *url = [NSURL URLWithString:str];
-        NSManagedObjectID *ID = [self.context.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+    for (NSString *url in array) {
+		NSURL *URI = [NSURL URLWithString:url];
+        NSManagedObjectID *ID = [self.context.persistentStoreCoordinator managedObjectIDForURIRepresentation:URI];
         if (!ID) {
-            NSLog(@"@@@ ManagedObjectID not found: %@", url);
+            DDLogError(@"@@@ ManagedObjectID not found: %@", url);
             //remove from queue
-            [validMOs removeObject:str];
+            [validMOs removeObject:url];
             [[NSUserDefaults standardUserDefaults] setObject:[validMOs copy] forKey:queue];
             continue;
         }
         NSError *error;
-        NSManagedObject *MO = [self.context existingObjectWithID:ID error:&error];
-        if (!error && MO) {
+        EWServerObject *MO = (EWServerObject *)[self.context existingObjectWithID:ID error:&error];
+        if (MO) {
             [set addObject:MO];
         }else{
-            NSLog(@"*** Serious error: trying to fetch MO from queue %@ failed. %@", queue, error.description);
+            DDLogError(@"*** Serious error: trying to fetch MO from main context failed. ObjectID:%@ \nError:%@", ID, error.description);
             //remove from the queue
-            MO = [self.context objectWithID:ID];
-            [self removeObject:MO fromQueue:queue];
+			[validMOs removeObject:url];
+			[[NSUserDefaults standardUserDefaults] setObject:[validMOs copy] forKey:queue];
         }
-        
     }
     return [set copy];
 }
 
-- (void)appendObject:(NSManagedObject *)mo toQueue:(NSString *)queue{
-    //	//check owner
-    //	if(![queue isEqualToString:kParseQueueRefresh]/* && ![self checkAccess:mo]*/){
-    //		NSLog(@"*** MO %@(%@) doesn't owned by me, skip adding to %@", mo.entity.name, mo.serverID, queue);
-    //		return;
-    //	}
+- (void)appendObject:(EWServerObject *)mo toQueue:(NSString *)queue{
     
     NSArray *array = [[NSUserDefaults standardUserDefaults] valueForKey:queue];
     NSMutableSet *set = [[NSMutableSet setWithArray:array] mutableCopy]?:[NSMutableSet new];
@@ -615,28 +580,27 @@ NSManagedObjectContext *mainContext;
         [mo.managedObjectContext obtainPermanentIDsForObjects:@[mo] error:NULL];
         objectID = mo.objectID;
     }
-    NSString *str = objectID.URIRepresentation.absoluteString;
-    if (![set containsObject:str]) {
-        [set addObject:str];
-        [[NSUserDefaults standardUserDefaults] setObject:[set allObjects] forKey:queue];
+    NSString *URI = objectID.URIRepresentation.absoluteString;
+    if (![set containsObject:URI]) {
+        [set addObject:URI];
+        [[NSUserDefaults standardUserDefaults] setObject:set.allObjects forKey:queue];
         if ([queue isEqualToString:kParseQueueInsert]) {
-            NSLog(@"+++> MO %@(%@) added to INSERT queue", mo.entity.name, mo.objectID);
+            DDLogDebug(@"+++> MO %@(%@) added to INSERT queue", mo.entity.name, mo.objectID);
         }else if([queue isEqualToString:kParseQueueUpdate]){
-            NSLog(@"===> MO %@(%@) added to UPDATED queue with changes: %@", mo.entity.name, [mo valueForKey:kParseObjectID], mo.changedKeys);
+            DDLogDebug(@"===> MO %@(%@) added to UPDATED queue with changes: %@", mo.entity.name, mo.serverID, mo.changedKeys);
         }
         
     }
     
 }
 
-- (void)removeObject:(NSManagedObject *)mo fromQueue:(NSString *)queue{
+- (void)removeObject:(EWServerObject *)mo fromQueue:(NSString *)queue{
     NSMutableArray *array = [[[NSUserDefaults standardUserDefaults] valueForKey:queue] mutableCopy];
     NSManagedObjectID *objectID = mo.objectID;
     NSString *str = objectID.URIRepresentation.absoluteString;
     if ([array containsObject:str]) {
         [array removeObject:str];
         [[NSUserDefaults standardUserDefaults] setValue:[array copy] forKey:queue];
-        //NSLog(@"Removed object %@ from insert queue", mo.entity.name);
     }
 }
 
@@ -644,7 +608,7 @@ NSManagedObjectContext *mainContext;
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:queue];
 }
 
-- (BOOL)contains:(NSManagedObject *)mo inQueue:(NSString *)queue{
+- (BOOL)contains:(EWServerObject *)mo inQueue:(NSString *)queue{
     NSMutableArray *array = [[[NSUserDefaults standardUserDefaults] valueForKey:queue] mutableCopy];
     NSString *str = mo.objectID.URIRepresentation.absoluteString;
     BOOL contain = [array containsObject:str];
@@ -676,30 +640,48 @@ NSManagedObjectContext *mainContext;
     [[NSUserDefaults standardUserDefaults] setObject:[dic copy] forKey:kParseQueueDelete];
 }
 
+//changed records
+- (NSMutableDictionary *)changedRecords{
+    if (!_changedRecords) {
+        _changedRecords = [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
+    }
+    return _changedRecords;
+}
+
+- (void)setChangedRecords:(NSMutableDictionary *)changedRecords{
+    _changedRecords = changedRecords;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [[NSUserDefaults standardUserDefaults] setValue:changedRecords.copy forKey:kChangedRecords];
+    });
+}
 
 #pragma mark - Core Data
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID{
-	NSParameterAssert([NSThread isMainThread]);
-    if (serverID == nil) {
-        NSLog(@"!!! Passed in nil to get current MO");
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
+	EWAssertMainThread
+    
+    NSManagedObject * MO = [self findObjectWithClass:className withID:serverID inContext:mainContext error:error];
+    return MO;
+}
+
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
+    if (objectID == nil) {
+        DDLogError(@"%s !!! Passed in nil to get current MO", __func__);
         return nil;
     }
-    
-    NSError *error;
-    NSManagedObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:serverID];
+    EWServerObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectID inContext:context];
     if (!MO) {
-		PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:serverID error:NULL];
-		MO = [PO managedObjectInContext:mainContext];
-		[MO refresh];
-		if (!MO) {
-			DDLogError(@"Failed getting exsiting MO(%@): %@", className, error.description);
-		}
+        PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:objectID error:error];
+        MO = [PO managedObjectInContext:context];
+        [MO refresh];
+        if (!MO) {
+            DDLogError(@"Failed getting exsiting MO(%@): %@", className, (*error).description);
+        }
     }
     return MO;
 }
 
 + (void)save{
-	NSAssert([NSThread isMainThread], @"Calling +[self save] on background context is not allowed. Use [context MR_saveToPersistentStoreAndWait] instead");
+	EWAssertMainThread
 	if (mainContext.hasChanges) {
 		[mainContext MR_saveToPersistentStoreAndWait];
 	}
@@ -707,7 +689,8 @@ NSManagedObjectContext *mainContext;
 
 + (void)saveWithCompletion:(EWSavingCallback)block{
     [[EWSync sharedInstance].saveCallbacks addObject:block];
-    [self save];
+    [mainContext MR_saveToPersistentStoreAndWait];
+    [[EWSync sharedInstance] uploadToServer];
 }
 
 + (void)saveAllToLocal:(NSArray *)MOs{
@@ -715,16 +698,16 @@ NSManagedObjectContext *mainContext;
 		return;
 	}
 	
-	NSManagedObject *anyMO = MOs[0];
+	EWServerObject *anyMO = MOs[0];
     [anyMO.managedObjectContext obtainPermanentIDsForObjects:MOs error:NULL];
 	
 	//mark MO as save to local
-	for (NSManagedObject *mo in MOs) {
+	for (EWServerObject *mo in MOs) {
 		[[EWSync sharedInstance].saveToLocalItems addObject:mo.objectID];
 	}
 	
 	//remove from queue
-	for (NSManagedObject *mo in MOs) {
+	for (EWServerObject *mo in MOs) {
 		//remove from the update queue
 		[[EWSync sharedInstance] removeObjectFromInsertQueue:mo];
 		[[EWSync sharedInstance] removeObjectFromUpdateQueue:mo];
@@ -747,7 +730,7 @@ NSManagedObjectContext *mainContext;
     BOOL good = YES;
     
     if (![SO valueForKey:kUpdatedDateKey] && SO.serverID) {
-        NSLog(@"The %@(%@) you are trying to validate haven't been downloaded fully. Skip validating.", SO.entity.name, SO.serverID);
+        DDLogWarn(@"The %@(%@) you are trying to validate haven't been downloaded fully. Skip validating.", SO.entity.name, SO.serverID);
         return NO;
     }
 	
@@ -756,13 +739,13 @@ NSManagedObjectContext *mainContext;
 		if (!tryFix) {
 			return NO;
 		}
+        //TODO: use more granular level fix, or use better way to fix
 		[SO refresh];
 		good = [SO validate];
-		
 	}
 	
     if (!good) {
-        NSLog(@"*** %@(%@) failed in validation after trying to fix", SO.entity.name, SO.serverID);
+        DDLogError(@"*** %@(%@) failed in validation after trying to fix", SO.entity.name, SO.serverID);
     }
     
     return good;
@@ -770,31 +753,33 @@ NSManagedObjectContext *mainContext;
 }
 
 
-
-+ (BOOL)checkAccess:(NSManagedObject *)mo{
-    if (!mo.serverID) {
++ (BOOL)checkAccess:(EWServerObject *)SO{
+    if (!SO.serverID) {
         return YES;
     }
     
     //first see if cached PO exist
-    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectForID:mo.serverID];
+    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectForID:SO.serverID];
     if (po.ACL != nil) {
         BOOL write = [po.ACL getWriteAccessForUser:[PFUser currentUser]] || [po.ACL getPublicWriteAccess];
         return write;
     }
     
     //if no ACL, use MO to determine
-    __block EWPerson *p;
-    if ([mo.entity.name isEqualToString:kSyncUserClass]) {
-        p = (EWPerson *)mo;
-    }else{
-        [mo.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-            if ([obj.destinationEntity.name isEqualToString:kSyncUserClass]) {
-                p = [mo valueForKey:key];
-                *stop = YES;
-            }
-        }];
-    }
+//    __block EWPerson *p;
+//    if ([SO.entity.name isEqualToString:kSyncUserClass]) {
+//        p = (EWPerson *)SO;
+//    }else{
+//        [SO.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+//            if ([obj.destinationEntity.name isEqualToString:kSyncUserClass]) {
+//                if (!obj.isToMany) {
+//                    p = [SO valueForKey:key];
+//                    *stop = YES;
+//                }
+//            }
+//        }];
+//    }
+    EWPerson *p = (EWPerson *)SO.ownerObject;
     if (p.isMe){
         return YES;
     }
@@ -803,12 +788,8 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Parse helper methods
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query{
-	return [EWSync findServerObjectWithQuery:query error:NULL];
-}
-
-+ (NSArray *)findServerObjectWithQuery:(PFQuery *)query error:(NSError **)error{
-
++ (NSArray *)findParseObjectWithQuery:(PFQuery *)query error:(NSError **)error{
+    //EWAssertMainThread
 	NSArray *result = [query findObjects:error];
 	for (PFObject *PO in result) {
 		[[EWSync sharedInstance] setCachedParseObject:PO];
@@ -816,60 +797,102 @@ NSManagedObjectContext *mainContext;
 	return result;
 }
 
-+ (void)findServerObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
-
-	[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-		
-		for (PFObject *PO in objects) {
-			[[EWSync sharedInstance] setCachedParseObject:PO];
-		}
-		if (block) {
-			block(objects, error);
-		}
-	}];
++ (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
+    EWAssertMainThread
+    @try {
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            for (PFObject *PO in objects) {
+                [[EWSync sharedInstance] setCachedParseObject:PO];
+                [PO managedObjectInContext:mainContext];
+            }
+            if (block) {
+                block(objects, error);
+            }
+        }];
+    }
+    @catch (NSException *exception) {
+        if (block) {
+            NSError *error = [NSError errorWithDomain:@"com.wokealarm.woke" code:102 userInfo:@{@"localizedDescription": @"Error code indicating you tried to query with a datatype that doesn't support it, like exact matching an array or object."}];
+            block(nil, error);
+        }
+    }
+	
 }
 
 - (PFObject *)getCachedParseObjectForID:(NSString *)objectId{
-    return [self.serverObjectPool valueForKey:objectId];
+    return [self.serverObjectCache objectForKey:objectId];
 }
 
 - (void)setCachedParseObject:(PFObject *)PO {
-    [self.serverObjectPool setObject:PO forKey:PO.objectId];
+    if (PO.isDataAvailable) {
+        [self.serverObjectCache setObject:PO forKey:PO.objectId];
+    }else{
+        DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
+    }
+    
 }
 
 - (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error{
-    if (ID) {
-        //try to find PO in the pool first
-        PFObject *object = [self getCachedParseObjectForID:ID];
-        
-        NSEntityDescription *entity = [NSEntityDescription entityForName:class inManagedObjectContext:mainContext];
-        
-        //if not found, then download
-        if (!object || !object.isDataAvailable) {
-            //fetch from server if not found
-            //or if PO doesn't have data avaiable
-            //or if PO is older than MO
-            PFQuery *q = [PFQuery queryWithClassName:class.serverClass];
-            [q whereKey:kParseObjectID equalTo:ID];
-            
-            [entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-                if (obj.isToMany && !obj.inverseRelationship) {
-                    [q includeKey:key];
-                }
-            }];
-			
-			//find on server
-			object = [[EWSync findServerObjectWithQuery:q] firstObject];
-
-        }
-        
-        return object;
+    if (!ID) {
+        DDLogError(@"%s Passed in empty ID, upload first!", __func__);
+        return nil;
     }
     
-    DDLogError(@"[%s] Passed in empty ID, upload first!", __func__);
-    return nil;
+    //try to find PO in the pool first
+    PFObject *object = [self getCachedParseObjectForID:ID];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:class inManagedObjectContext:mainContext];
+    
+    //if not found, then download
+    if (!object || !object.isDataAvailable) {
+        //fetch from server if not found
+        //or if PO doesn't have data avaiable
+        //or if PO is older than MO
+        PFQuery *q = [PFQuery queryWithClassName:class.serverClass];
+        [q whereKey:kParseObjectID equalTo:ID];
+        //add other uni-direction relationship as well (to masximize data per call)
+        [entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+            if (obj.isToMany && !obj.inverseRelationship) {
+                [q includeKey:key];
+            }
+        }];
+        
+        //find on server
+        object = [[EWSync findParseObjectWithQuery:q error:error] firstObject];
+        
+        if (!object) {
+            DDLogError(@"Cannot find PO: %@(%@)", class, ID);
+            *error = [NSError errorWithDomain:@"com.wokealarm.woke" code:kPFErrorObjectNotFound userInfo:@{@"Class":class, @"objectId":ID}];
+        }
+    }
+    return object;
+
 }
 
+
+#pragma mark - Tools
+- (NSString *)description{
+    //print current states and queues
+    NSMutableString *string = [NSMutableString stringWithFormat:@"EWSync object with current reachability: %d", [EWSync isReachable]];
+    [string appendFormat:@"\nCurrent updating item: %@", self.updatingClassAndValues];
+    [string appendFormat:@"\nCurrent inserting item: %@", [self.insertQueue valueForKey:kParseObjectID]];
+    [string appendFormat:@"\nCurrent deleting item: %@", [self.deleteQueue valueForKey:kParseObjectID]];
+    return string;
+}
+
+
+- (NSDictionary *)updatingClassAndValues{
+    NSMutableDictionary *info = self.changedRecords.mutableCopy;
+    [self.changedRecords enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        PFObject *PO = [self getCachedParseObjectForID:key];
+        if (PO) {
+            [info removeObjectForKey:key];
+            [info setObject:obj forKey:[NSString stringWithFormat:@"%@(%@)", PO.parseClassName, key]];
+        }
+    }];
+    return info.copy;
+}
 @end
 
 
@@ -877,7 +900,7 @@ NSManagedObjectContext *mainContext;
 
 - (NSString *)serverType{
     NSDictionary *typeDic = kServerTransformTypes;
-    NSString *serverType = typeDic[self];
+	NSString *serverType = typeDic[self];
     return serverType;
 }
 

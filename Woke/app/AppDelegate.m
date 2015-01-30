@@ -7,8 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "EWUtil.h"
-#import "EWSync.h"
 #import "EWStartUpSequence.h"
 #import "FBSession.h"
 #import "FBAppCall.h"
@@ -19,15 +17,21 @@
 #import "EWMainViewController.h"
 
 #import <CrashlyticsLogger.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 #import "DDLog.h"
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
 #import "DDFileLogger.h"
 #import "EWStyleController.h"
+#import "EWServer.h"
+#import "BlocksKit.h"
+#import "BlocksKit+UIKit.h"
+#import "FBTweakViewController.h"
+#import "FBTweakStore.h"
 
 UIViewController *rootViewController;
 
-@interface AppDelegate ()
+@interface AppDelegate ()<FBTweakViewControllerDelegate>
 
 @end
 
@@ -60,7 +64,8 @@ UIViewController *rootViewController;
     //crashlytics logger
     [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
 #endif
-    
+    // Enable Crash Reporting
+    [ParseCrashReporting enable];
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
     //[EWStartUpSequence deleteDatabase];
@@ -69,14 +74,14 @@ UIViewController *rootViewController;
     //watch for login
     [EWStartUpSequence sharedInstance];
     
-#ifdef caoer115
-    EWMainViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMainViewController"];
-    [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
-#else
+    //Login process: https://www.lucidchart.com/documents/edit/47d70f1c-5306-dbab-81ce-6d480a005610
     if ([EWAccountManager isLoggedIn]) {
         [[EWAccountManager sharedInstance] fetchCurrentUser:[PFUser currentUser]];
-        [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(BOOL isNewUser, NSError *error) {
+        [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
+            if (error) {
+                DDLogError(@"With error: %@", error);
+            }
         }];
         
         //show main view controller
@@ -89,8 +94,22 @@ UIViewController *rootViewController;
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
         
     }
-#endif
+    
+    UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
+        viewController.tweaksDelegate = self;
+        [[[UIWindow mainWindow] rootViewController] presentViewController:viewController animated:YES completion:nil];
+    }];
+    longGesture.numberOfTouchesRequired = 2;
+    longGesture.minimumPressDuration = 2;
+    
+    [[UIWindow mainWindow].rootViewController.view addGestureRecognizer:longGesture];
+    
     return YES;
+}
+
+- (void)tweakViewControllerPressedDone:(FBTweakViewController *)tweakViewController {
+    [tweakViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -128,5 +147,27 @@ UIViewController *rootViewController;
                                    withSession:[PFFacebookUtils session]];
     
     return handled_1 && handled_2;
+}
+
+#pragma mark - User notification
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings{
+    UIUserNotificationType type = notificationSettings.types;
+    DDLogVerbose(@"Application registered user notification (%lu)", type);
+	if (notificationSettings.types != UIUserNotificationTypeNone) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:kUserNotificationRegistered object:notificationSettings];
+	}else{
+		DDLogError(@"Failed to register user notification");
+		//TODO: add alert view
+		[application openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+	}
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+	[[EWServer shared] registerPushNotificationWithToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+	//TODO: add alert view
+	DDLogError(@"Failed to register push: %@", error);
 }
 @end

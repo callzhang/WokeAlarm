@@ -16,10 +16,10 @@
 
 @property (nonatomic, retain) NSDictionary *lastLocation;
 @property (nonatomic, retain) NSDictionary *userInfo;
+/**
+ check if store notification is the same state as server
+ */
++ (EWNotification *)getNotificationByID:(NSString *)notificationID;
 + (EWNotification *)newNotification;
-+ (EWNotification *)newNotificationForMedia:(EWMedia *)media;
-
-
-//delete
-- (void)remove;
++ (EWNotification *)newMediaNotification:(EWMedia *)media;
 @end

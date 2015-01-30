@@ -17,10 +17,18 @@
 @class EWMedia;
 @interface EWMediaManager : NSObject //EWStore
 
-/*
- medias that has been played.
- **/
-@property (nonatomic) NSArray *myMedias;
+/**
+ *Handles push media in varies mode
+ @Discuss
+ *   Voice
+ *   active:
+ *       alarm time passed but not woke(struggle): play media
+ *       before alarm: download
+ *       woke: alert with no name
+ *   suspend: background download
+ */
+- (void)handlePushMedia:(NSDictionary *)notification;
+
 
 + (EWMediaManager *)sharedInstance;
 
@@ -31,14 +39,19 @@
 - (NSArray *)mediaCreatedByPerson:(EWPerson *)person;
 
 /**
- Fetch media by receiver
+ Check unread medias
  */
-- (NSArray *)mediasForPerson:(EWPerson *)person;
+- (NSArray *)unreadMediasForPerson:(EWPerson *)person;
+
+/**
+ *Check all my meidas, making sure they have the media file ready.
+ */
+- (void)checkMediasForPerson:(EWPerson *)person;
 
 //Check media assets relationship
-- (BOOL)checkMediaAssets;
-- (void)checkMediaAssetsInBackground;
+- (NSArray *)checkUnreadMedias;
+- (void)checkUnreadMediasWithCompletion:(ArrayBlock)block;
 
 //get ramdom voice
-- (EWMedia *)getWokeVoice;
+- (void)getWokeVoice;
 @end

@@ -7,37 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseViewController.h"
 
 @class EWPerson;
-@class ShinobiChart;
 @class EWCachedInfoManager;
 
-@interface EWPersonViewController : UIViewController<UIAlertViewDelegate, UIActionSheetDelegate> {
-    //NSArray *tasks;
-    EWCachedInfoManager *stats;
-    NSArray *profileItemsArray;
-   
+@interface EWPersonViewController : EWBaseViewController<UIAlertViewDelegate, UIActionSheetDelegate> 
 
-}
-//@property (assign,nonatomic)BOOL canSeeFriendsDetail;
-@property (strong, nonatomic) IBOutlet UIButton *addFriendButton;
-//PersonInfoView
-@property (weak, nonatomic) IBOutlet UIImageView *profilePic;
+
+@property (weak, nonatomic) IBOutlet UIButton *picture;
+
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *location;
 @property (weak, nonatomic) IBOutlet UILabel *statement;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *tabView;
-@property (weak, nonatomic) IBOutlet UITableView *taskTableView;
-
-@property (weak, nonatomic) IBOutlet UIButton *loginBtn;
+@property (weak, nonatomic) IBOutlet UILabel *nextAlarm;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIView *headerView;
 @property (weak, nonatomic) IBOutlet UIButton *addFriend;
+@property (weak, nonatomic) IBOutlet UIButton *wakeBtn;
+- (IBAction)photos:(id)sender;
+- (IBAction)addFriend:(id)sender;
+- (IBAction)wake:(id)sender;
+
 @property (weak, nonatomic) EWPerson *person;
-
-- (IBAction)extProfile:(id)sender;
-- (IBAction)login:(id)sender;
-- (IBAction)tabTapped:(UISegmentedControl *)sender;
-
-- (EWPersonViewController *)initWithPerson:(EWPerson *)person;
-//- (void)refresh;
 
 @end

@@ -103,7 +103,7 @@
 
 
 //login Core Data User with Server User (PFUser)
-+ (void)loginWithServerUser:(PFUser *)user withCompletionBlock:(void (^)(void))completionBlock{
++ (void)loginWithServerUser:(PFUser *)user withCompletionBlock:(VoidBlock)completionBlock{
 
     //fetch or create
     EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
@@ -136,7 +136,7 @@
 
 
 //Depreciated: log in using local machine info
-+ (void)loginWithDeviceIDWithCompletionBlock:(void (^)(void))block{
++ (void)loginWithDeviceIDWithCompletionBlock:(VoidBlock)block{
     //log out fb first
     [FBSession.activeSession closeAndClearTokenInformation];
     //get user default
@@ -297,7 +297,6 @@
 
 #pragma mark - FACEBOOK
 + (void)loginParseWithFacebookWithCompletion:(ErrorBlock)block{
-    
     //login with facebook
     [PFFacebookUtils logInWithPermissions:[EWUserManager facebookPermissions] block:^(PFUser *user, NSError *error) {
         if (error) {
@@ -493,7 +492,7 @@
 
 
 
-+ (void)openFacebookSessionWithCompletion:(void (^)(void))block{
++ (void)openFacebookSessionWithCompletion:(VoidBlock)block{
     
     [FBSession openActiveSessionWithReadPermissions:EWUserManager.facebookPermissions
                                        allowLoginUI:YES

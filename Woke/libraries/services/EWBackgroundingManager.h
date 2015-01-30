@@ -10,11 +10,13 @@
 @import AVFoundation;
 @import AudioToolbox;
 
-#define kBackgroundingEnterNotice	@"enter_backgrounding"
+#define kBackgroundingStartNotice	@"enter_backgrounding"
 #define kBackgroundingEndNotice		@"end_backgrounding"
+#define backgroundingSound          @"bg.caf"
+#define backgroundingFailureSound   @"new.caf"
 
 @interface EWBackgroundingManager : NSObject <AVAudioSessionDelegate>
-- (BOOL)isSleeping;
+@property (nonatomic, getter=isBackgrounding) BOOL backgrounding;
 
 + (EWBackgroundingManager *)sharedInstance;
 - (void)startBackgrounding;
@@ -24,4 +26,5 @@
  @discussion This session starts with option of mix & speaker
  */
 - (void)registerBackgroudingAudioSession;
+
 @end
