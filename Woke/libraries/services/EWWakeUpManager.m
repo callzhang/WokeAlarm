@@ -406,8 +406,18 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidStopPlayMediaNotification object:nil];
 }
 
-- (void)playVoiceAtIndex:(NSUInteger)index {
+- (void)playMediaAtIndex:(NSUInteger)index {
+    self.currentMediaIndex = index;
     [[EWAVManager sharedManager] playMedia:self.currentMedia];
+}
+
+- (void)playMedia:(EWMedia *)media {
+    NSUInteger index = [self.medias indexOfObject:media];
+    if (index == NSNotFound) {
+        DDLogError(@"Media not found");
+        NSAssert(false, @"Media not found");
+    }
+    [self playMediaAtIndex:index];
 }
 
 - (void)reloadMedias{

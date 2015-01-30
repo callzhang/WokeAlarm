@@ -281,7 +281,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    [[EWWakeUpManager sharedInstance] playVoiceAtIndex:indexPath.row];
+    [[EWWakeUpManager sharedInstance] playMediaAtIndex:indexPath.row];
     
     [self highlightCellAtIndex:indexPath.row];
 }

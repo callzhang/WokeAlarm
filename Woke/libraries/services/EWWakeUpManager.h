@@ -94,7 +94,8 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
  *  Play the n'th voice
  *
  */
-- (void)playVoiceAtIndex:(NSUInteger)index;
+- (void)playMediaAtIndex:(NSUInteger)index;
+- (void)playMedia:(EWMedia *)media;
 /**
  *  The current waker for the voice that is being played
  *

@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		090443621A7B191300E6CE79 /* AssetCatalogIdentifiers.m in Sources */ = {isa = PBXBuildFile; fileRef = 0904435F1A7B191300E6CE79 /* AssetCatalogIdentifiers.m */; };
+		090443631A7B191300E6CE79 /* StoryboardIdentifiers.m in Sources */ = {isa = PBXBuildFile; fileRef = 090443611A7B191300E6CE79 /* StoryboardIdentifiers.m */; };
 		090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */; };
 		091C67431A351F060091B8A6 /* EWStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67421A351F060091B8A6 /* EWStyleController.m */; };
 		091C67461A35205F0091B8A6 /* EWBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67451A35205F0091B8A6 /* EWBaseTableViewController.m */; };
@@ -189,6 +191,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0904435E1A7B191300E6CE79 /* AssetCatalogIdentifiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetCatalogIdentifiers.h; sourceTree = "<group>"; };
+		0904435F1A7B191300E6CE79 /* AssetCatalogIdentifiers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetCatalogIdentifiers.m; sourceTree = "<group>"; };
+		090443601A7B191300E6CE79 /* StoryboardIdentifiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoryboardIdentifiers.h; sourceTree = "<group>"; };
+		090443611A7B191300E6CE79 /* StoryboardIdentifiers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoryboardIdentifiers.m; sourceTree = "<group>"; };
 		090665511A3CD40800FF76E6 /* EWAlarmToneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmToneViewController.h; sourceTree = "<group>"; };
 		090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmToneViewController.m; sourceTree = "<group>"; };
 		091C67411A351F060091B8A6 /* EWStyleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStyleController.h; sourceTree = "<group>"; };
@@ -529,6 +535,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0904435D1A7B191300E6CE79 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				0904435E1A7B191300E6CE79 /* AssetCatalogIdentifiers.h */,
+				0904435F1A7B191300E6CE79 /* AssetCatalogIdentifiers.m */,
+				090443601A7B191300E6CE79 /* StoryboardIdentifiers.h */,
+				090443611A7B191300E6CE79 /* StoryboardIdentifiers.m */,
+			);
+			name = Generated;
+			path = "Woke/Other-Sources/Generated";
+			sourceTree = SOURCE_ROOT;
+		};
 		091C67471A3523AF0091B8A6 /* legacy */ = {
 			isa = PBXGroup;
 			children = (
@@ -903,6 +921,7 @@
 		09A7771B1A11E2BD004AF902 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				0904435D1A7B191300E6CE79 /* Generated */,
 				9BF181541A35220900D25DBA /* sounds */,
 				09A777391A11E7A6004AF902 /* fonts */,
 				09A7771C1A11E2BD004AF902 /* LaunchScreen.xib */,
@@ -1481,6 +1500,7 @@
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */,
 				091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */,
+				090443621A7B191300E6CE79 /* AssetCatalogIdentifiers.m in Sources */,
 				093DB77F1A65FC8D0032E7EB /* EWPostWakeUpViewController.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
 				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
@@ -1566,6 +1586,7 @@
 				09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */,
 				09DF4F8B1A1434AF00BEA328 /* _EWPerson.m in Sources */,
 				097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */,
+				090443631A7B191300E6CE79 /* StoryboardIdentifiers.m in Sources */,
 				097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */,
 				091C675D1A3523AF0091B8A6 /* EWMediaCell.m in Sources */,
 				096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */,
@@ -1760,8 +1781,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",

@@ -20,10 +20,13 @@
 
 @import MediaPlayer;
 
+NSString * const kEWAVManagerDidStopPlayNotification = @"kEWAVManagerDidStopPlayNotification";
+NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUpdateProgressNotification";
+
 @interface EWAVManager(){
 	MPVolumeView *volumeView;
 }
-
+@property (nonatomic, strong) NSTimer *progressTimer;
 @end
 
 @implementation EWAVManager
@@ -79,6 +82,10 @@
                 }
             }
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidStartPlaying) name:kAVManagerDidStartPlaying object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidStopPlaying) name:kAVManagerDidFinishPlaying object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidStopPlaying) name:kEWAVManagerDidStopPlayNotification object:nil];
     }
     return self;
 }
@@ -131,6 +138,7 @@
 #pragma mark - PLAY FUNCTIONS
 - (void)playMedia:(EWMedia *)mi{
     EWAssertMainThread
+    
 	//set to max volume
 	[self setDeviceVolume:1.0];
     if (!mi){
@@ -260,6 +268,8 @@
 	[avplayer pause];
 	//[updateTimer invalidate];
 	//remove target action
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kEWAVManagerDidStopPlayNotification object:nil];
 }
 
 #pragma mark - Record
@@ -306,6 +316,32 @@
     return t/T;
 }
 
+- (void)onProgressTimer {
+    CGFloat progress = self.playingProgress;
+    DDLogVerbose(@"on Timer update: %@", @(progress));
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kEWAVManagerDidUpdateProgressNotification object:nil userInfo:@{@"progress": @(progress), @"media" : _media ? :[NSNull null]}];
+}
+
+- (void)startUpdateProgress {
+    [self stopUpdateProgress];
+    DDLogVerbose(@"Timer Start");
+    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(onProgressTimer) userInfo:nil repeats:YES];
+}
+
+- (void)stopUpdateProgress {
+    DDLogVerbose(@"Timer Stop");
+    [self.progressTimer invalidate];
+    self.progressTimer = nil;
+}
+
+- (void)onAVManagerDidStartPlaying {
+    [self startUpdateProgress];
+}
+
+- (void)onAVManagerDidStopPlaying {
+    [self stopUpdateProgress];
+}
 //- (void)updateViewForPlayerState:(AVAudioPlayer *)p
 //{
 //    //set up timer
@@ -364,7 +400,7 @@
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
     DDLogVerbose(@"Recording stopped (%@)", flag?@"Success":@"Failed");
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:recorder];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishRecording object:recorder];
 }
 
 
@@ -506,5 +542,9 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 	} repeats:YES];
 	*/
 	
+}
+
+- (BOOL)isPlaying {
+    return self.player.isPlaying;
 }
 @end

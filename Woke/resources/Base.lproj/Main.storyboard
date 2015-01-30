@@ -1973,7 +1973,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-blur-tmp-background" translatesAutoresizingMaskIntoConstraints="NO" id="kKg-RB-jES">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="70" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="TR1-Zh-boZ">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" delaysContentTouches="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="TR1-Zh-boZ">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1981,11 +1981,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="124"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfA-xK-P1F">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Misty, Jim and Celina sent you wake up messages." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfA-xK-P1F">
                                             <rect key="frame" x="40" y="43" width="240" height="39"/>
-                                            <string key="text" base64-UTF8="YES">
-TGFiZWwgERHigKhMYWJlbA
-</string>
                                             <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="16"/>
                                             <color key="textColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
@@ -1999,7 +1996,7 @@ TGFiZWwgERHigKhMYWJlbA
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWWakeUpViewCell" id="g5p-m3-VTm" customClass="EWWakeUpViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWWakeUpViewCell" id="g5p-m3-VTm" customClass="EWWakeUpViewCell">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="g5p-m3-VTm" id="pOs-ge-FVY">
                                             <autoresizingMask key="autoresizingMask"/>
@@ -2035,60 +2032,87 @@ TGFiZWwgERHigKhMYWJlbA
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" image="playing-indicator" translatesAutoresizingMaskIntoConstraints="NO" id="72L-VI-QZe">
                                                             <rect key="frame" x="261" y="19" width="9" height="11"/>
                                                         </imageView>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2KG-pO-B1d">
-                                                            <rect key="frame" x="85" y="45" width="183" height="1"/>
-                                                            <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
+                                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="P9j-p7-QVZ">
+                                                            <rect key="frame" x="85" y="45" width="175" height="1"/>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="1" id="FXT-aw-rHo"/>
+                                                                <constraint firstAttribute="height" constant="1" id="zZn-hv-rgw"/>
                                                             </constraints>
-                                                        </view>
+                                                        </progressView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="qve-St-aan" firstAttribute="leading" secondItem="0DM-CU-Bvv" secondAttribute="trailing" constant="15" id="A9o-ie-4jl"/>
+                                                        <constraint firstItem="P9j-p7-QVZ" firstAttribute="top" secondItem="qve-St-aan" secondAttribute="bottom" constant="10" id="AC8-Wl-RLX"/>
                                                         <constraint firstAttribute="trailing" secondItem="72L-VI-QZe" secondAttribute="trailing" id="Ijj-a6-5Df"/>
                                                         <constraint firstItem="0DM-CU-Bvv" firstAttribute="centerY" secondItem="qve-St-aan" secondAttribute="centerY" constant="10" id="KAt-a3-AfM"/>
-                                                        <constraint firstAttribute="trailing" secondItem="2KG-pO-B1d" secondAttribute="trailing" constant="2" id="VwP-UZ-y5R"/>
+                                                        <constraint firstItem="P9j-p7-QVZ" firstAttribute="top" secondItem="0DM-CU-Bvv" secondAttribute="bottom" constant="-6" id="azX-hj-YbH"/>
                                                         <constraint firstItem="0DM-CU-Bvv" firstAttribute="leading" secondItem="lkQ-ao-vzC" secondAttribute="leading" constant="20" id="eBD-NZ-Ytj"/>
                                                         <constraint firstAttribute="centerY" secondItem="0DM-CU-Bvv" secondAttribute="centerY" id="h7n-rl-l6S"/>
                                                         <constraint firstItem="72L-VI-QZe" firstAttribute="leading" secondItem="qve-St-aan" secondAttribute="trailing" constant="9" id="lUy-Ku-xLM"/>
-                                                        <constraint firstItem="2KG-pO-B1d" firstAttribute="leading" secondItem="qve-St-aan" secondAttribute="leading" id="ltl-nZ-PIA"/>
+                                                        <constraint firstItem="P9j-p7-QVZ" firstAttribute="leading" secondItem="0DM-CU-Bvv" secondAttribute="trailing" constant="15" id="lf1-ei-NFp"/>
                                                         <constraint firstItem="72L-VI-QZe" firstAttribute="centerY" secondItem="qve-St-aan" secondAttribute="centerY" id="mXm-UO-8AP"/>
-                                                        <constraint firstItem="2KG-pO-B1d" firstAttribute="top" secondItem="qve-St-aan" secondAttribute="bottom" constant="10" id="smv-zz-0Q3"/>
+                                                        <constraint firstItem="P9j-p7-QVZ" firstAttribute="leading" secondItem="qve-St-aan" secondAttribute="leading" id="t4p-0K-K7W"/>
                                                     </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="azX-hj-YbH"/>
+                                                            <exclude reference="lf1-ei-NFp"/>
+                                                        </mask>
+                                                    </variation>
                                                 </view>
                                                 <view clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ArJ-4v-CbB" userLabel="reply view">
-                                                    <rect key="frame" x="0.0" y="0.0" width="270" height="70"/>
+                                                    <rect key="frame" x="250" y="0.0" width="20" height="70"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ilE-aF-iY8" userLabel="heart">
-                                                            <rect key="frame" x="25" y="20" width="30" height="30"/>
-                                                            <state key="normal" image="woke-response-icon-heart-normal">
-                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                            </state>
-                                                        </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M6W-jH-bZt" userLabel="smile">
-                                                            <rect key="frame" x="75" y="20" width="30" height="30"/>
+                                                            <rect key="frame" x="-175" y="20" width="30" height="30"/>
                                                             <state key="normal" image="woke-response-icon-smile-normal">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <state key="highlighted" image="woke-response-icon-smile-highlighted"/>
+                                                            <connections>
+                                                                <action selector="onEmojiButton:" destination="g5p-m3-VTm" eventType="touchUpInside" id="agX-Vn-SZk"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGW-p4-2Y1" userLabel="kiss">
-                                                            <rect key="frame" x="125" y="20" width="30" height="30"/>
+                                                            <rect key="frame" x="-125" y="20" width="30" height="30"/>
                                                             <state key="normal" image="woke-response-icon-kiss-normal">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <state key="highlighted" image="woke-response-icon-kiss-highlighted"/>
+                                                            <connections>
+                                                                <action selector="onEmojiButton:" destination="g5p-m3-VTm" eventType="touchUpInside" id="fxd-Uj-lvE"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xIe-VF-NlH" userLabel="tear">
-                                                            <rect key="frame" x="225" y="20" width="30" height="30"/>
+                                                            <rect key="frame" x="-25" y="20" width="30" height="30"/>
                                                             <state key="normal" image="woke-response-icon-tear-normal">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <state key="highlighted" image="woke-response-icon-tear-highlighted"/>
+                                                            <connections>
+                                                                <action selector="onEmojiButton:" destination="g5p-m3-VTm" eventType="touchUpInside" id="upZ-6m-zjO"/>
+                                                            </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u2b-Vp-Bgm" userLabel="sad">
-                                                            <rect key="frame" x="175" y="20" width="30" height="30"/>
+                                                            <rect key="frame" x="-75" y="20" width="30" height="30"/>
                                                             <state key="normal" image="woke-response-icon-sad-normal">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <state key="highlighted" image="woke-response-icon-sad-highlighted"/>
+                                                            <connections>
+                                                                <action selector="onEmojiButton:" destination="g5p-m3-VTm" eventType="touchUpInside" id="cF0-4z-bdy"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ilE-aF-iY8" userLabel="heart">
+                                                            <rect key="frame" x="-225" y="20" width="30" height="30"/>
+                                                            <state key="normal" image="woke-response-icon-heart-normal">
+                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                            <state key="highlighted" image="woke-response-icon-heart-highlighted"/>
+                                                            <connections>
+                                                                <action selector="onEmojiButton:" destination="g5p-m3-VTm" eventType="touchUpInside" id="MZ4-bs-Spj"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -2107,10 +2131,11 @@ TGFiZWwgERHigKhMYWJlbA
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ArJ-4v-CbB" firstAttribute="leading" secondItem="pOs-ge-FVY" secondAttribute="leading" id="0oe-vU-pHm"/>
+                                                <constraint firstItem="ArJ-4v-CbB" firstAttribute="leading" secondItem="pOs-ge-FVY" secondAttribute="leading" constant="250" id="0oe-vU-pHm"/>
                                                 <constraint firstAttribute="bottom" secondItem="ArJ-4v-CbB" secondAttribute="bottom" id="1lD-4c-s6p"/>
                                                 <constraint firstItem="lkQ-ao-vzC" firstAttribute="top" secondItem="pOs-ge-FVY" secondAttribute="top" id="3hI-pz-OSK"/>
                                                 <constraint firstAttribute="centerY" secondItem="UdS-Es-KCL" secondAttribute="centerY" id="4zR-ZU-UQd"/>
+                                                <constraint firstItem="UdS-Es-KCL" firstAttribute="leading" secondItem="P9j-p7-QVZ" secondAttribute="trailing" constant="15" id="A5A-7r-9LR"/>
                                                 <constraint firstAttribute="trailing" secondItem="UdS-Es-KCL" secondAttribute="trailing" constant="15" id="RrA-Ij-eJ6"/>
                                                 <constraint firstItem="UdS-Es-KCL" firstAttribute="leading" secondItem="ArJ-4v-CbB" secondAttribute="trailing" constant="5" id="fZG-3W-MZC"/>
                                                 <constraint firstAttribute="bottom" secondItem="lkQ-ao-vzC" secondAttribute="bottom" id="i9A-ZP-guu"/>
@@ -2126,6 +2151,7 @@ TGFiZWwgERHigKhMYWJlbA
                                             <outlet property="name" destination="qve-St-aan" id="sSv-Fd-8Zo"/>
                                             <outlet property="peopleViewLeadingConstraint" destination="0oe-vU-pHm" id="PTu-oe-znO"/>
                                             <outlet property="playIndicator" destination="72L-VI-QZe" id="rfO-xC-ihq"/>
+                                            <outlet property="progressView" destination="P9j-p7-QVZ" id="FYQ-x4-mrk"/>
                                             <outlet property="replyView" destination="ArJ-4v-CbB" id="Gur-rn-7F5"/>
                                             <outletCollection property="emojiButtons" destination="ilE-aF-iY8" id="CfD-el-idk"/>
                                             <outletCollection property="emojiButtons" destination="M6W-jH-bZt" id="aIn-gT-fL4"/>
@@ -2171,6 +2197,8 @@ TGFiZWwgERHigKhMYWJlbA
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="tableView" destination="TR1-Zh-boZ" id="awC-0T-VYP"/>
+                        <outlet property="tableViewHeaderLabel" destination="xfA-xK-P1F" id="UCr-Ar-Was"/>
+                        <outlet property="tableviewHeaderView" destination="S69-lD-XnB" id="1EJ-fo-gzH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZfK-nX-Hom" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2585,10 +2613,15 @@ TGFiZWwgERHigKhMYWJlbA
         <image name="woke-rectangle-disabled" width="9" height="9"/>
         <image name="woke-rectangle-normal" width="9" height="9"/>
         <image name="woke-rectangle-selected" width="9" height="9"/>
+        <image name="woke-response-icon-heart-highlighted" width="30" height="30"/>
         <image name="woke-response-icon-heart-normal" width="30" height="30"/>
+        <image name="woke-response-icon-kiss-highlighted" width="30" height="30"/>
         <image name="woke-response-icon-kiss-normal" width="30" height="30"/>
+        <image name="woke-response-icon-sad-highlighted" width="30" height="30"/>
         <image name="woke-response-icon-sad-normal" width="30" height="30"/>
+        <image name="woke-response-icon-smile-highlighted" width="30" height="30"/>
         <image name="woke-response-icon-smile-normal" width="30" height="30"/>
+        <image name="woke-response-icon-tear-highlighted" width="30" height="30"/>
         <image name="woke-response-icon-tear-normal" width="30" height="30"/>
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>

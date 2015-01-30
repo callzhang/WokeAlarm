@@ -1,5 +1,33 @@
 #import "EWMedia.h"
 #import "EWMediaFile.h"
+#import "AssetCatalogIdentifiers.h"
+
+const struct EWMediaEmoji EWMediaEmoji = {
+    .smile = @"[SMILE]",
+    .kiss = @"[KISS]",
+    .sad = @"[SAD]",
+    .heart = @"[HEART]",
+    .tear = @"[TEAR]",
+};
+
+NSString *imageAssetNameFromEmoji(NSString *emoji) {
+    if ([emoji isEqualToString:EWMediaEmoji.smile]) {
+        return [ImagesCatalog wokeResponseIconSmileNormalName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.kiss]) {
+        return [ImagesCatalog wokeResponseIconKissNormalName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.sad]) {
+        return [ImagesCatalog wokeResponseIconSadNormalName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.heart]) {
+        return [ImagesCatalog wokeResponseIconHeartNormalName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.tear]) {
+        return [ImagesCatalog wokeResponseIconTearNormalName];
+    }
+    return @"";
+};
 
 @interface EWMedia ()
 

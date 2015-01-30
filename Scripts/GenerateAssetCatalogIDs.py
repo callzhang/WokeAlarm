@@ -4,7 +4,7 @@
 # classes and methods for UIImages found therein.
 
 # The script tries to make valid and sensible identifiers out of your image names.
-# If it can't do so for your use case, please submit a bug at 
+# If it can't do so for your use case, please submit a bug at
 # https://github.com/crushlovely/Amaro/issues.
 
 # Inspired by https://github.com/square/objc-codegenutils,
@@ -35,8 +35,10 @@ def headerAndImpContentsForCatalog(catalogDir, classPrefix):
 
     for imageName in imageNames:
         identifier = lib.variableNameForString(imageName)
-        hLines.append('+(UIImage *)' + identifier + ';')
-        mLines.append('+(UIImage *)' + identifier + ' { return [UIImage imageNamed:@"' + imageName + '"]; }')
+        hLines.append('+ (UIImage *)' + identifier + ';')
+        hLines.append('+ (NSString *)' + identifier + 'Name;')
+        mLines.append('+ (NSString *)' + identifier + 'Name { return @"' + imageName + '"; }')
+        mLines.append('+ (UIImage *)' + identifier + ' { return [UIImage imageNamed:@"' + imageName + '"]; }')
 
     hLines.append('\n@end')
     mLines.append('\n@end')

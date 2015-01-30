@@ -28,7 +28,11 @@
 #define kAVManagerDidStartRecording     @"avmanager_started_recording"
 #define kAVManagerDidFinishRecording    @"avmanager_finished_recording"
 
-@class EWMediaCell, EWMedia, EWMediaSlider;
+extern NSString * const kEWAVManagerDidStopPlayNotification;
+extern NSString * const kEWAVManagerDidUpdateProgressNotification;
+
+@class EWMediaCell, EWMedia, EWMediaSlider, EWAVManager;
+
 
 @interface EWAVManager : UIResponder <AVAudioPlayerDelegate, AVAudioRecorderDelegate, AVAudioSessionDelegate>
 {
@@ -43,6 +47,7 @@
 @property (retain, nonatomic) AVAudioRecorder *recorder;
 @property (weak, nonatomic) EWMedia *media;//use [EWWakeUpManager sharedManager].currentMedia
 @property (nonatomic) float playingProgress;
+@property (nonatomic, readonly) BOOL isPlaying;
 
 + (EWAVManager *)sharedManager;
 
@@ -108,3 +113,4 @@
 - (void)volumeTo:(float)volume withCompletion:(VoidBlock)block;
 - (void)setDeviceVolume:(float)volume;
 @end
+
