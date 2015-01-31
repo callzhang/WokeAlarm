@@ -41,39 +41,6 @@
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
-//FIXME: took too long, need to optimize, maybe use one server call.
-//check my relation, used for new installation with existing user
-+ (void)updateMe{
-    NSDate *lastCheckedMe = [[NSUserDefaults standardUserDefaults] valueForKey:kLastCheckedMe];
-    BOOL good = [[EWPerson me] validate];
-    if (!good || !lastCheckedMe || lastCheckedMe.timeElapsed > kCheckMeInternal) {
-        if (!good) {
-            DDLogError(@"Failed to validate me, refreshing from server");
-        }else if (!lastCheckedMe) {
-            DDLogError(@"Didn't find lastCheckedMe date, start to refresh my relation in background");
-        }else{
-            DDLogError(@"lastCheckedMe date is %@, which exceed the check interval %d, start to refresh my relation in background", lastCheckedMe.date2detailDateString, kCheckMeInternal);
-        }
-        
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
-            [localMe refreshRelatedWithCompletion:^(NSError *error){
-                
-                [[EWCachedInfoManager shared] updateCachedFriends];
-                [[EWAccountManager shared] updateMyFacebookInfo];
-            }];
-            //TODO: we need a better sync method
-            //1. query for medias
-            
-            
-            //2. check
-        }];
-        
-        [[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:kLastCheckedMe];
-    }
-}
-
-
 - (void)updateStatus:(NSString *)status completion:(void (^)(NSError *))completion {
     [[[self class] myAlarms] enumerateObjectsUsingBlock:^(EWAlarm *obj, NSUInteger idx, BOOL *stop) {
         obj.statement = status;

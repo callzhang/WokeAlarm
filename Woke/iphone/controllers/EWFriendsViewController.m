@@ -94,25 +94,6 @@
     EWAlert(@"Zitao please add the view here");
 }
 
-#pragma mark - UISearchResultsUpdating
-
--(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    
-    NSString *searchString = [self.searchController.searchBar text];
-    
-    NSString *scope = searchScopes[self.searchController.searchBar.selectedScopeButtonIndex];
-    
-    [self updateFilteredContentForProductName:searchString scope:scope completion:^(NSArray *array, NSError *error) {
-        if (!array || (error && array.count == 0)) {
-            DDLogError(@"Failed search with error:%@", error);
-            return;
-        }
-        EWPersonSearchResultTableViewController *resultViewController = (EWPersonSearchResultTableViewController *)self.searchController.searchResultsController;
-        resultViewController.searchResults = array;
-        [resultViewController.tableView reloadData];
-    }];
-}
-
 
 #pragma mark - UISearchBarDelegate
 // Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
@@ -130,6 +111,26 @@
         [self updateSearchResultsForSearchController:self.searchController];
     }
 }
+
+
+#pragma mark - UISearchResultsUpdating
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    NSString *searchString = [self.searchController.searchBar text];
+    
+    NSString *scope = searchScopes[self.searchController.searchBar.selectedScopeButtonIndex];
+    
+    [self updateFilteredContentForProductName:searchString scope:scope completion:^(NSArray *array, NSError *error) {
+        if (!array || (error && array.count == 0)) {
+            DDLogError(@"Failed search with error:%@", error);
+            return;
+        }
+        EWPersonSearchResultTableViewController *resultViewController = (EWPersonSearchResultTableViewController *)self.searchController.searchResultsController;
+        resultViewController.searchResults = array;
+        [resultViewController.tableView reloadData];
+    }];
+}
+
 
 #pragma mark - Content Filtering
 - (void)updateFilteredContentForProductName:(NSString *)searchString scope:(NSString *)scope completion:(ArrayBlock)block {

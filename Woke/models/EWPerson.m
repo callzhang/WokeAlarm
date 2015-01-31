@@ -58,13 +58,15 @@ NSString * const EWPersonDefaultName = @"New User";
     }
     
     BOOL good = YES;
-    BOOL needRefreshFacebook = NO;
+    if (!self.serverID) {
+        good = NO;
+    }
     if(!self.name){
         NSString *name_ = [PFUser currentUser][@"name"];
         if (name_) {
             self.name = name_;
         }else{
-            needRefreshFacebook = YES;
+            good = NO;
         }
     }
     if(!self.profilePic){
@@ -73,7 +75,7 @@ NSString * const EWPersonDefaultName = @"New User";
         if (img) {
             self.profilePic = img;
         }else{
-            needRefreshFacebook = YES;
+            good = NO;
         }
     }
     if(!self.username){
@@ -86,10 +88,6 @@ NSString * const EWPersonDefaultName = @"New User";
     }else{
         good = NO;
         DDLogError(@"The person failed validation: alarms: %ld", (long)self.alarms.count);
-    }
-    
-    if (needRefreshFacebook) {
-        [[EWAccountManager shared] updateMyFacebookInfo];
     }
     
     //preference

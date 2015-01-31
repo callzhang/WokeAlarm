@@ -113,6 +113,7 @@
     EWSocial *social = [EWPerson mySocialGraph];
     NSDate *lastChecked = social.addressBookUpdated;
     if (lastChecked.timeElapsed < 24 * 3600) {
+        completion(social.addressBookRelatedUsers?:[NSArray array], nil);
         return;
     }
     
@@ -156,7 +157,6 @@
     social.addressBookFriends = myContactFriends;
     
     //Update email to EWSocial
-    
     [self getUsersWithEmails:myContactFriends completion:^(NSArray *people, NSError *error) {
         if (completion) {
             completion(people, error);

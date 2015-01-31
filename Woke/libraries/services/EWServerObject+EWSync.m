@@ -551,7 +551,9 @@
 	//save
 	if ([NSThread isMainThread]) {
 		[self save];
-	}
+    } else{
+        self.updatedAt = [NSDate date];
+    }
 }
 
 - (void)saveToServer{
