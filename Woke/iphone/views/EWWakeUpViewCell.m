@@ -21,10 +21,28 @@
 @property (weak, nonatomic) IBOutlet UIButton *heartButton;
 
 @property (nonatomic, readonly) NSArray *buttonImageNames;
+@property (nonatomic, assign) NSInteger selectedButtonIndex;
 
+@property (nonatomic, strong) RACDisposable *selectedButtonIndexDisposable;
+@property (nonatomic, strong) RACDisposable *mediaResponseDisposable;
 @end
 
 @implementation EWWakeUpViewCell
+- (NSArray *)buttonImageNames {
+    static dispatch_once_t onceToken;
+    static NSArray *buttonNames;
+    dispatch_once(&onceToken, ^{
+        buttonNames = @[[ImagesCatalog wokeResponseIconHeartNormalName],
+                        [ImagesCatalog wokeResponseIconSmileNormalName],
+                        [ImagesCatalog wokeResponseIconKissNormalName],
+                        [ImagesCatalog wokeResponseIconSadNormalName],
+                        [ImagesCatalog wokeResponseIconTearNormalName],
+                        ];
+    });
+    
+    return buttonNames;
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -32,7 +50,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
 
-    //delay set constant
+    //delay set constant, during the time it is awake from nib, the width constraint hasn't take effect yet.
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.peopleViewLeadingConstraint.constant = self.replyView.frame.size.width;
     });
@@ -49,6 +67,40 @@
     self.playing = NO;
     
     self.progressView.progress = 0;
+    [self.selectedButtonIndexDisposable dispose];
+    [self.mediaResponseDisposable dispose];
+    
+    @weakify(self);
+    self.selectedButtonIndexDisposable = [RACObserve(self, selectedButtonIndex) subscribeNext:^(NSNumber *index) {
+        @strongify(self);
+        NSInteger indexValue = [index integerValue];
+        NSString *imageName;
+        if (indexValue < 0) {
+            imageName = [ImagesCatalog wokeResponseIconHeartNormalName];
+        }
+        else {
+            if ((NSUInteger)indexValue < self.buttonImageNames.count) {
+                imageName = self.buttonImageNames[indexValue];
+            }
+            else {
+                NSAssert(false, @"Image Name Overflow");
+            }
+        }
+        [self.heartButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    }];
+    
+    self.mediaResponseDisposable = [RACObserve(self, media.response) subscribeNext:^(NSString *response) {
+        @strongify(self);
+        if (!response) {
+            return;
+        }
+        NSString *name = imageAssetNameFromEmoji(response);
+        NSUInteger index = [self.buttonImageNames indexOfObject:name];
+        if (index != NSNotFound) {
+            self.selectedButtonIndex = index;
+        }
+    }];
+    
 }
 
 #pragma mark - 
@@ -62,7 +114,7 @@
     }
 }
 
-#pragma mark - AVManager
+#pragma mark - AVManager Notification
 - (void)onAVManagerDidFinishPlaying {
     self.playing = NO;
     self.progressView.progress = 0;
@@ -91,26 +143,18 @@
     self.progress.progress = 0;
 }
 
-- (NSArray *)buttonImageNames {
-    static dispatch_once_t onceToken;
-    static NSArray *buttonNames;
-    dispatch_once(&onceToken, ^{
-        buttonNames = @[[ImagesCatalog wokeResponseIconHeartNormalName],
-                        [ImagesCatalog wokeResponseIconSmileNormalName],
-                        [ImagesCatalog wokeResponseIconKissNormalName],
-                        [ImagesCatalog wokeResponseIconSadNormalName],
-                        [ImagesCatalog wokeResponseIconTearNormalName],
-                        ];
-    });
-    
-    return buttonNames;
-}
 
 #pragma mark - IBAction
 - (IBAction)onEmojiButton:(UIButton *)sender {
     NSUInteger index = [self.emojiButtons indexOfObject:sender];
     if (index != NSNotFound) {
-        DDLogInfo(@"button: %@ clicked", [self.buttonImageNames objectAtIndex:index]);
+        DDLogInfo(@"button: %@ clicked", @(index));
+        if (self.selectedButtonIndex == (NSInteger)index) {
+            self.selectedButtonIndex = -1;
+        }
+        else {
+            self.selectedButtonIndex = index;
+        }
     }
     else {
         DDLogError(@"Emoji button can't find");
@@ -141,10 +185,5 @@
     [UIView animateWithDuration:0.25f animations:^{
         [self layoutIfNeeded];
     }];
-}
-
-#pragma mark - Views
-- (void)updateConstraints {
-    [super updateConstraints];
 }
 @end
