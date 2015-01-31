@@ -13,8 +13,8 @@
 
 typedef NS_ENUM(NSUInteger, EWWakeUpStatus) {
     EWWakeUpStatusSleeping,
-    EWWakeUpStatusWakingUp,
-    EWWakeUpStatusWoke,
+    EWWakeUpStatusWakingUp, //alarm played but user havsn't click woke
+    EWWakeUpStatusWoke, //user clicked woke.
 };
 
 @interface EWSession : NSObject

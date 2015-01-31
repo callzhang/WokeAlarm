@@ -52,7 +52,6 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
     b. fire silent local notification [lock screen]
     c. present wakeupVC and start play in 15s
  */
-- (void)startToWakeUp:(NSDictionary *)pushInfo;
 - (void)startToWakeUp;
 
 - (void)startToWakeUpWithAlarm:(EWAlarm *)alarm;
