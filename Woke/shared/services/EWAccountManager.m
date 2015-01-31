@@ -485,7 +485,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     BOOL good = [SO validate];
                     
                     if (!SO.serverID) {
-                        //skip
+                        DDLogError(@"Me->%@(%@) doesn't have serverID, add to upload queue.", key, SO.objectID);
+                        [SO uploadEventually];
                     }
                     else if ([workingObjects containsObject:SO]) {
                         //has change, do not update from server, use current time
@@ -501,10 +502,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }
             else {
                 //to-one relation
+                graph[key] = @0;//get the key first
                 EWServerObject *SO = (EWServerObject *)objects;
                 BOOL good = [SO validate];
                 if (!SO.serverID) {
-                    //skip
+                    DDLogError(@"Me->%@(%@) doesn't have serverID, add to upload queue.", key, SO.objectID);
+                    [SO uploadEventually];
                 }
                 else if ([workingObjects containsObject:SO]) {
                     //has change, do not update from server, use current time
@@ -513,8 +516,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 }
                 else if (SO.serverID && good){
                     graph[key] = @{SO.objectId: SO.updatedAt};
-                }else{
-                    graph[key] = @{};
                 }
             }
         }else{

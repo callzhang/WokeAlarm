@@ -423,30 +423,30 @@ NSManagedObjectContext *mainContext;
     //================================================================
     
     [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *err) {
-        if (err) {
+        if (succeeded) {
+            //assign connection between MO and PO
+            [self performSaveCallbacksWithParseObject:object andManagedObjectID:serverObject.objectID];
+        }
+		else{
+            
             if (err.code == kPFErrorObjectNotFound){
                 DDLogError(@"*** PO not found for %@(%@), set to nil.", serverObject.entity.name, serverObject.serverID);
                 NSManagedObject *trueMO = [serverObject.managedObjectContext existingObjectWithID:serverObject.objectID error:NULL];
                 if (trueMO) {
                     //need to check if the object is available
-                    [serverObject setValue:nil forKey:kParseObjectID];
+                    serverObject.objectId = nil;
                 }
             }
-			else{
+            else{
                 DDLogError(@"*** Failed to save server object: %@", err.description);
             }
             [serverObject uploadEventually];
-        }
-		else{
-            //assign connection between MO and PO
-            [self performSaveCallbacksWithParseObject:object andManagedObjectID:serverObject.objectID];
         }
     }];
     
     //Time stamp for updated date. This is very important, otherwise MO will be outdated
 	//Also if do not set kUpdateDateKey, means the relation haven't been downloaded yet.
 	NSAssert(serverObject.serverID, @"serverID is nil");
-	[serverObject setValue:[NSDate date] forKey:kUpdatedDateKey];
 	[serverObject saveToLocal];
 }
 

@@ -208,6 +208,7 @@
     
     if(!self.stateValue) {
         [self cancelLocalNotification];
+        return;
     }
 	
 	//check existing
