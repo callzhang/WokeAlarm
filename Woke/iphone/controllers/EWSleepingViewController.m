@@ -95,8 +95,12 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 }
 
 - (void)onNewMediaNotification {
-    self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] bk_map:^id(EWMedia *obj) {
-        return obj.author;
-    }];
+    //Delay update people
+    //TODO: zhanglei check why when notification arrives, unready medias is not always udpate to date.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] bk_map:^id(EWMedia *obj) {
+            return obj.author;
+        }];
+    });
 }
 @end

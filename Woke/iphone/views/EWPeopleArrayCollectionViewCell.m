@@ -26,5 +26,6 @@
     self.numberLabel.text = text;
     self.imageView.hidden = YES;
     [self applyHexagonSoftMask];
+    [self setNeedsDisplay];
 }
 @end
