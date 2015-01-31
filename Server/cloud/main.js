@@ -688,41 +688,50 @@ Parse.Cloud.define("updateRelation", function(request, response) {
 });
 
 Parse.Cloud.define("handleNewUser", function(request, response) {
+  Parse.Cloud.useMasterKey();
   var userID = request.params.userID;
   var email = request.params.email;
+  console.log("query email" + email);
   var facebookID = request.params.facebookID;
+
+  //types
+  var EWNotification = Parse.Object.extend("EWNotification");
+  var EWSocial = Parse.Object.extend("EWSocial");
 
   //query against all EWSocial's stored info, detect existing relation
   var newUser;
   var query = new Parse.Query(Parse.User);
-  var relatedUsers;
+  var relatedUsers = [];
   query.get(userID).then( function(user){
     newUser = user;
     //query email in addressBook
-    var EWSocial = Parse.Object.extend("EWSocial");
     var contactsQuery = new Parse.Query(EWSocial);
     contactsQuery.equalTo("addressBookFriends", email);
     return contactsQuery.find();
-  }).then(function (users) {
-    console.log("Found "+users.count+" users have email connection");
+  }).then(function (socials) {
+    console.log("Found "+socials.length+" addressbook email connection");
     //save users list
-    relatedUsers = users;
+    socials.forEach(function (social) {
+      var user = social.get("owner");
+      console.log(user.id);
+      relatedUsers.push(user);
+    });
     //query email in facebook
-    var EWSocial = Parse.Object.extend("EWSocial")
     var facebookQuery = new Parse.Query(EWSocial);
     facebookQuery.equalTo("facebookFriends", facebookID);
     return facebookQuery.find();
-  }).then(function (fbUsers) {
-    console.log("Found "+fbUsers.lenth+" users have facebook connection");
+  }).then(function (socials) {
+    console.log("Found "+socials.length+" facebook connection");
     //add fb users
-    fbUsers.forEach(function (fbUser) {
-      relatedUsers.push(fbUser);
+    socials.forEach(function (social) {
+      var user = social.get("owner");
+      console.log(user.id);
+      relatedUsers.push(user);
     });
     //send notification and EWNotification
     var notifications = [];
     relatedUsers.forEach(function (user) {
-
-      var notification = new Parse.Object.extend("EWNotification");
+      var notification = new EWNotification;
       notification.set("importance", 0);
       notification.set("sender", userID);
       notification.set("receiver", user.id);
@@ -731,21 +740,23 @@ Parse.Cloud.define("handleNewUser", function(request, response) {
       notification.set("userInfo",  {User:userID, owner:user.id, type: "notice", sendername: newUser.get("firstName") });
       notifications.push(notification);
     });
-    console.log("Saving "+notifications.length+"notifications");
     return Parse.Object.saveAll(notifications);
   }).then(function(notifications){
+
+    console.log("Saved "+notifications.length+" notifications");
+
     var users = [];
     notifications.forEach(function (notification) {
       //save users
       var user = notification.get("owner");
-      var notificationRelation = user.Relation('notifications');
+      var notificationRelation = user.relation('notifications');
       notificationRelation.add(notification);
       users.push(user);
 
       //send push notifications
       var pushQuery = new Parse.Query(Parse.Installation);
       query.equalTo('objectId', user.id);
-      Parse.push.send({
+      Parse.Push.send({
         where: pushQuery,
         data: {
           alert: "Your friend " + newUser.get("firstName") + " " + newUser.get("lastName") + " just joined Woke!",
@@ -757,7 +768,7 @@ Parse.Cloud.define("handleNewUser", function(request, response) {
         }
       }, {
         success: function () {
-          console.log("New user push sent to ", user.id);
+          console.log("New user push sent to " + user.id);
         },
         error: function (error) {
           // Handle error
@@ -768,6 +779,7 @@ Parse.Cloud.define("handleNewUser", function(request, response) {
     });
     return Parse.Object.saveAll(users);
   }).then(function (users) {
+    console.log("Saved "+users.length+" users");
     response.success(users);
   }, function (error) {
     console.log("failed to save all users")

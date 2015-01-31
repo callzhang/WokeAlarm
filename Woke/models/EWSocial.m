@@ -38,9 +38,10 @@
 
 - (BOOL)validate{
     BOOL good = YES;
-    if (!self.facebookID && !self.weiboID) {
+    if (!self.facebookID) {
         good = NO;
     }
+    
     return good;
 }
 

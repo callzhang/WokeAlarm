@@ -642,7 +642,7 @@ NSManagedObjectContext *mainContext;
 
 //changed records
 - (NSDictionary *)changedRecords{
-    _changedRecords = [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
+    return [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
 }
 
 - (void)setChangedRecords:(NSDictionary *)changedRecords{

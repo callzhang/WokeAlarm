@@ -23,6 +23,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 //tools
 - (void)updateMyFacebookInfo;
 - (void)registerLocation;
+- (void)openFacebookSessionWithCompletion:(VoidBlock)block;
 
 // sync user
 /**

@@ -7,11 +7,11 @@
 //
 
 #import "EWMessage.h"
-
+@class EWPerson;
 
 
 @implementation EWMessage
-- (instancetype)ownerObject{
+- (EWPerson *)ownerObject{
     return self.sender;
 }
 @end

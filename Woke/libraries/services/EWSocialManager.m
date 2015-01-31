@@ -14,6 +14,9 @@
 #import "FBKVOController.h"
 #import <RHAddressBook/AddressBook.h>
 #import "NSString+Extend.h"
+#import "PFFacebookUtils.h"
+#import "EWAccountManager.h"
+#import "EWErrorManager.h"
 
 @interface EWSocialManager()
 @property (nonatomic, strong) RHAddressBook *addressBook;
@@ -142,11 +145,11 @@
     
     //get a list of PHPerson
     NSArray *contacts = [self.addressBook people];
-    NSMutableDictionary *myContactFriends = social.addressBookFriends ?: [NSMutableArray array];
+    NSMutableArray *myContactFriends = social.addressBookFriends ?: [NSMutableArray array];
     for (RHPerson *contact in contacts) {
         for (NSString *email in contact.emails.values) {
-            if (!myContactFriends[email]) {
-                myContactFriends[email] = contact.name;
+            if (![myContactFriends containsObject:email]) {
+                [myContactFriends addObject:email];
             }
         }
     }
@@ -158,10 +161,13 @@
         if (completion) {
             completion(people, error);
             
-            social.addressBookRelatedUsers = people;
+            for (EWPerson *person in people) {
+                if (![social.addressBookRelatedUsers containsObject:person.email]) {
+                    [social.addressBookRelatedUsers addObject:person.email];
+                }
+            }
             social.addressBookUpdated = [NSDate date];
             [social save];
-            
         }
     }];
 }
@@ -247,7 +253,7 @@
         
         //session not open, need to open
         DDLogVerbose(@"facebook session state: %lu", state);
-        [self openFacebookSessionWithCompletion:^{
+        [[EWAccountManager sharedInstance] openFacebookSessionWithCompletion:^{
             DDLogVerbose(@"Facebook session opened: %lu", [FBSession activeSession].state);
             
             [self getFacebookFriends];
@@ -294,7 +300,7 @@
             }else{
                 DDLogInfo(@"Finished loading %ld friends from facebook, transfer to social graph.", friendsHolder.count);
                 EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
-                graph.facebookFriends = friendsHolder;
+                graph.facebookFriends = friendsHolder.allKeys.mutableCopy;
                 graph.facebookUpdated = [NSDate date];
                 
                 //save
@@ -316,7 +322,7 @@
 - (void)searchForFacebookRelatedUsersWithCompletion:(ArrayBlock)block{
     //get list of fb id
     EWSocial *social = [EWPerson mySocialGraph];
-    NSArray *facebookIDs = social.facebookFriends.allKeys;
+    NSArray *facebookIDs = social.facebookFriends.copy;
     if (facebookIDs.count == 0 || social.facebookUpdated.timeElapsed < 24 * 3600) {
         block(social.facebookRelatedUsers?:[NSArray array], nil);
         return;
@@ -333,6 +339,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
+        EWSocial *sg = [EWPerson mySocialGraph];
         for (PFObject *socialPO in objects) {
 			PFUser *owner = socialPO[EWSocialRelationships.owner];
 			if (!owner) {
@@ -341,17 +348,19 @@
 			}
 			EWPerson *person = (EWPerson *)[owner managedObjectInContext:mainContext];
             [resultPeople addObject:person];
+            
+            //add facebook ID to social
+            if (![sg.facebookRelatedUsers containsObject:socialPO[EWSocialAttributes.facebookID]]) {
+                [sg.facebookRelatedUsers addObject:socialPO[EWSocialAttributes.facebookID]];
+            }
         }
         if (block) {
             block(resultPeople.copy, error);
         }
         
-        if (objects.count > 0) {
-            EWSocial *sg = [EWPerson mySocialGraph];
-            sg.facebookRelatedUsers = [objects valueForKey:EWSocialAttributes.facebookID];
-            sg.facebookUpdated = [NSDate date];
-            [sg save];
-        }
+        //save my social
+        sg.facebookUpdated = [NSDate date];
+        [sg save];
         
     }];
 }

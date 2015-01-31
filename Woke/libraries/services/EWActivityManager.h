@@ -15,10 +15,7 @@ extern NSString *const EWActivityTypeAlarm;
 extern NSString *const EWActivityTypeFriendship;
 extern NSString *const EWActivityTypeMedia;
 
-
-@protocol EWWakeUpDelegate;
-
-@interface EWActivityManager : NSObject<EWWakeUpDelegate>
+@interface EWActivityManager : NSObject
 /**
  *  Get the acitivity that is for current alarm
  *  If current activity is completed or mismatch with current alarm, generate a new activity
