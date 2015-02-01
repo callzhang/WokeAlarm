@@ -17,7 +17,9 @@
 - (void)remove{
     NSManagedObjectContext *context = self.managedObjectContext;
     [self MR_deleteEntity];
-    [context MR_saveToPersistentStoreWithCompletion:NULL];
+    if ([NSThread isMainThread]) {
+        [context MR_saveToPersistentStoreAndWait];
+    }
 }
 
 - (NSString *)serverID{

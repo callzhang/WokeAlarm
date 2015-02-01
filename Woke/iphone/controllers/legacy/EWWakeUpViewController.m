@@ -246,7 +246,7 @@
         
         EWMedia *currentMedia = [EWWakeUpManager sharedInstance].medias[indexPath.row];
         
-        [currentMedia MR_deleteEntity];
+        [currentMedia remove];
         
         //stop play if media is being played
         if ([EWWakeUpManager sharedInstance].currentMediaIndex == (NSUInteger)indexPath.row) {
@@ -260,12 +260,7 @@
         //remove from view with animation
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
-        //delete
-        if (currentMedia.author == [EWPerson me]) {
-            [currentMedia remove];
-        }
-        [EWSync save];
-        
+        [currentMedia save];
         
         //update UI
         [self scrollViewDidScroll:self.tableView];

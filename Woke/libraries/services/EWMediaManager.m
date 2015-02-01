@@ -48,7 +48,7 @@
     //Woke state -> assign media to next task, download
     if (![[EWPerson me].unreadMedias containsObject:media]) {
         [[EWPerson me] addUnreadMediasObject:media];
-        [EWSync save];
+        [[EWPerson me] save];
     }
     
     if ([type isEqualToString:kPushMediaTypeVoice]) {
@@ -86,7 +86,7 @@
             DDLogVerbose(@"New media found: %@", newMedia.objectId);
             //make sure the relationship is established
             [[EWPerson me] addUnreadMediasObject:newMedia];
-            [EWSync save];
+            [[EWPerson me] save];
             //notification
             [EWNotification newMediaNotification:newMedia];
         }else{

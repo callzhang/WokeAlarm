@@ -147,11 +147,6 @@ NSString *imageAssetNameFromEmoji(NSString *emoji) {
     }
 }
 
-#pragma mark - DELETE
-- (void)remove{
-    [super remove];
-}
-
 #pragma mark - Underlying data
 - (NSData *)audio{
     //TODO

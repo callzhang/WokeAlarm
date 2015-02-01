@@ -103,6 +103,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     if (_currentPerson.activities.count) {
         NSInteger totalTime = 0;
         NSUInteger wakes = 0;
+        NSInteger aveTime = 0;
         
         for (EWActivity *activity in self.currentPerson.activities) {
             
@@ -116,8 +117,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
             
             totalTime += length;
         }
-        NSInteger aveTime = totalTime / wakes;
-        _aveWakingLength = [NSNumber numberWithInteger:aveTime];
+        if (wakes > 0) {
+            aveTime = totalTime / wakes;
+            _aveWakingLength = [NSNumber numberWithInteger:aveTime];
+        }
+        
         return _aveWakingLength;
     }
     return @kMaxWakeTime;
@@ -193,14 +197,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     if (_currentPerson.activities.count) {
         NSInteger totalTime = 0;
         NSUInteger wakes = 0;
-        
+        NSInteger aveTime = 0;
+        NSDate *time;
         for (EWActivity *activity in self.currentPerson.activities) {
             
             wakes++;
             totalTime += activity.time.minutesFrom5am;
         }
-        NSInteger aveTime = totalTime / wakes;
-        NSDate *time = [[NSDate date] timeByMinutesFrom5am:aveTime];
+        if (wakes > 0) {
+            aveTime = totalTime / wakes;
+            time = [[NSDate date] timeByMinutesFrom5am:aveTime];
+        }
         _aveWakeUpTime = time.date2String;
         return _aveWakeUpTime;
     }

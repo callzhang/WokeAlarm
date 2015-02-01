@@ -27,11 +27,6 @@ const struct EWActivityTypes EWActivityTypes = {
     return (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([self class]) withID:ID error:nil];
 }
 
-- (void)remove{
-    [self MR_deleteEntity];
-    [EWSync save];
-}
-
 - (BOOL)validate{
     BOOL good = YES;
     if (!self.owner) {

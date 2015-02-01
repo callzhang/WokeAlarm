@@ -56,8 +56,8 @@ static const NSArray *pref;
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [EWPerson me].preference = [preference mutableCopy];
-    [EWSync save];
+    [EWPerson me].preference = [preference copy];
+    [[EWPerson me] save];
 }
 - (void)initData {
     //profile
@@ -108,7 +108,7 @@ static const NSArray *pref;
     //set ringtone
     preference[@"DefaultTone"] = tone;
     [EWPerson me].preference = preference;
-    [EWSync save];
+    [[EWPerson me] save];
 }
 
 @end
@@ -291,8 +291,8 @@ static const NSArray *pref;
 
 - (void)OnBedTimeNotificationSwitchChanged:(UISwitch *)sender{
     [preference setObject:@(sender.on) forKey:kBedTimeNotification];
-    [EWPerson me].preference = preference;
-    [EWSync save];
+    [EWPerson me].preference = preference.copy;
+    [[EWPerson me] save];
     
     //schedule sleep notification
     if (sender.on == YES) {

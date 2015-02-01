@@ -173,7 +173,6 @@
     
     //get alarms
     NSMutableArray *alarms = [[EWPerson myAlarms] mutableCopy];
-    BOOL hasChange = NO;
     
     if (alarms.count == 0 && [EWSync isReachable]) {
         [self checkAlarmsFromServer];
@@ -192,13 +191,11 @@
         if (![newAlarms[i] isEqual:@NO]){
             //remove duplicacy
             DDLogWarn(@"@@@ Duplicated alarm found. Delete! %@", a.time.date2detailDateString);
-            [a MR_deleteEntity];
-            hasChange = YES;
+            [a remove];
             continue;
         }else if (![a validate]){
             DDLogError(@"%s Something wrong with alarm(%@) Delete!", __func__, a.objectId);
-            [a MR_deleteEntity];
-            hasChange = YES;
+            [a remove];
             continue;
         }
         //fill that day to the new alarm array
@@ -210,7 +207,6 @@
     for (EWAlarm *a in alarms) {
         DDLogError(@"Corruped or duplicated alarm found and deleted: %@", a.serverID);
         [a remove];
-        hasChange = YES;
     }
     
     //start add alarm if blank
@@ -229,22 +225,7 @@
         a.time = time;
         //add to temp array
         newAlarms[i] = a;
-        hasChange = YES;
-        
-    }
-    
-    //save
-    if (hasChange) {
-        //notification
-        DDLogVerbose(@"Saving new alarms");
-        [EWSync save];
-//        
-//        //notification
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            //delay here to make sure the thread don't compete at the same time
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmChanged object:self userInfo:nil];
-//        });
-        
+        [a save];
     }
     
     [EWSession sharedSession].isSchedulingAlarm = NO;
@@ -253,7 +234,6 @@
 }
 
 - (void)checkAlarmsFromServer{
-    BOOL hasChange = NO;
     //get alarms
     NSMutableArray *alarms = [[EWPerson myAlarms] mutableCopy];
     
