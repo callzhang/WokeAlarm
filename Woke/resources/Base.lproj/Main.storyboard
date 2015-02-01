@@ -473,7 +473,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="odY-hj-5bB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2022" y="2762"/>
+            <point key="canvasLocation" x="1614" y="2542"/>
         </scene>
         <!--Wake View Controller-->
         <scene sceneID="cFx-dN-xs2">
@@ -2176,6 +2176,9 @@
                                     <color key="titleColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="rc8-d2-95P" kind="unwind" unwindAction="unwindToMainViewController:" id="2Ln-hv-LG3"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2202,6 +2205,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZfK-nX-Hom" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="rc8-d2-95P" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2002" y="3681"/>
         </scene>
@@ -2626,7 +2630,7 @@
         <image name="woke-splash-logo" width="207" height="212"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="d4z-tG-E1i"/>
         <segue reference="chJ-Cr-lS2"/>
-        <segue reference="7lF-Wp-60q"/>
     </inferredMetricsTieBreakers>
 </document>
