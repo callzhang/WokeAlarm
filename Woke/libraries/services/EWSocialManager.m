@@ -188,8 +188,8 @@
             block(array, error);
         }];
     }else{
-        DDLogDebug(@"search for name");
-        [self getUsersWithName:phrase completion:^(NSArray *array, NSError *error) {
+        DDLogDebug(@"search for string");
+        [self getUsersWithString:phrase completion:^(NSArray *array, NSError *error) {
             block(array, error);
         }];
     }
@@ -215,14 +215,13 @@
     }];
 }
 
-- (void)getUsersWithName:(NSString *)name completion:(ArrayBlock)completion {
-    NSString *name_ = [name stringByReplacingOccurrencesOfString:@"," withString:@" "];
-    NSArray *subNames = [name_ componentsSeparatedByString:@" "];
+- (void)getUsersWithString:(NSString *)name completion:(ArrayBlock)completion {
+    NSString *string = [name stringByReplacingOccurrencesOfString:@"," withString:@" "];
+    NSArray *subStrings = [string componentsSeparatedByString:@" "];
     PFQuery *query;
-    for (NSString *str in subNames) {
-        PFQuery *q1 = [[PFUser query] whereKey:EWPersonAttributes.firstName containsString:str];
-        PFQuery *q2 = [[PFUser query] whereKey:EWPersonAttributes.lastName containsString:str];
-        query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, q2, query, nil]];
+    for (NSString *str in subStrings) {
+        PFQuery *q1 = [[PFUser query] whereKey:@"searchString" containsString:str.lowercaseString];
+        query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, query, nil]];
     }
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

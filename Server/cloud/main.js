@@ -789,7 +789,19 @@ Parse.Cloud.define("handleNewUser", function(request, response) {
 });
 
 
+//=================Add search string to user==================
+Parse.Cloud.beforeSave("_User", function(request, response) {
+  var user = request.object;
 
+  var searchString;
+  if (user.get("firstName")) searchString = user.get("firstName").toLowerCase();
+  if (user.get("lastName")) searchString = searchString + " " + user.get("lastName").toLowerCase();
+  if (user.get("email")) searchString = searchString + " " + user.get("email").toLowerCase();
+  if (user.get("city")) searchString = searchString + " " + user.get("city").toLowerCase();
+  user.set("searchString", searchString);
+  console.log("saved search string for user "+user.id+" "+searchString);
+  response.success();
+});
 
 
 
