@@ -50,6 +50,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     self.mode = MainViewModeSleep;
     
     self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

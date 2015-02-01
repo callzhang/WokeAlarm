@@ -32,6 +32,8 @@
 #import "extobjc.h"
 #import "EWCategories.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "StoryboardIdentifiers.h"
+#import "AssetCatalogIdentifiers.h"
 
 //static NSUInteger ddLogLevel = DDLogLevelAll;
 static NSUInteger ddLogLevel = LOG_LEVEL_VERBOSE;

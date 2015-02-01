@@ -54,7 +54,7 @@
 
 - (void)testAlarmTimeUp{
     //waking up: test for 30s and expect local notification is fired
-    [[EWWakeUpManager sharedInstance] startToWakeUp:nil];
+    [[EWWakeUpManager sharedInstance] startToWakeUp];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     //expected states

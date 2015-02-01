@@ -24,6 +24,9 @@
 		090443621A7B191300E6CE79 /* AssetCatalogIdentifiers.m in Sources */ = {isa = PBXBuildFile; fileRef = 0904435F1A7B191300E6CE79 /* AssetCatalogIdentifiers.m */; };
 		090443631A7B191300E6CE79 /* StoryboardIdentifiers.m in Sources */ = {isa = PBXBuildFile; fileRef = 090443611A7B191300E6CE79 /* StoryboardIdentifiers.m */; };
 		090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */; };
+		0912BEC31A7EC81B004DA529 /* EWProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0912BEC21A7EC81B004DA529 /* EWProfileViewController.m */; };
+		0912BEC61A7ED38B004DA529 /* EWProfileViewProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0912BEC51A7ED38B004DA529 /* EWProfileViewProfileTableViewCell.m */; };
+		0912BEC91A7ED3A2004DA529 /* EWProfileViewNormalTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0912BEC81A7ED3A2004DA529 /* EWProfileViewNormalTableViewCell.m */; };
 		091C67431A351F060091B8A6 /* EWStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67421A351F060091B8A6 /* EWStyleController.m */; };
 		091C67461A35205F0091B8A6 /* EWBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67451A35205F0091B8A6 /* EWBaseTableViewController.m */; };
 		091C675A1A3523AF0091B8A6 /* EWAlarmEditCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */; };
@@ -197,6 +200,12 @@
 		090443611A7B191300E6CE79 /* StoryboardIdentifiers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoryboardIdentifiers.m; sourceTree = "<group>"; };
 		090665511A3CD40800FF76E6 /* EWAlarmToneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmToneViewController.h; sourceTree = "<group>"; };
 		090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWAlarmToneViewController.m; sourceTree = "<group>"; };
+		0912BEC11A7EC81B004DA529 /* EWProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWProfileViewController.h; sourceTree = "<group>"; };
+		0912BEC21A7EC81B004DA529 /* EWProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWProfileViewController.m; sourceTree = "<group>"; };
+		0912BEC41A7ED38B004DA529 /* EWProfileViewProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWProfileViewProfileTableViewCell.h; sourceTree = "<group>"; };
+		0912BEC51A7ED38B004DA529 /* EWProfileViewProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWProfileViewProfileTableViewCell.m; sourceTree = "<group>"; };
+		0912BEC71A7ED3A2004DA529 /* EWProfileViewNormalTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWProfileViewNormalTableViewCell.h; sourceTree = "<group>"; };
+		0912BEC81A7ED3A2004DA529 /* EWProfileViewNormalTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWProfileViewNormalTableViewCell.m; sourceTree = "<group>"; };
 		091C67411A351F060091B8A6 /* EWStyleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWStyleController.h; sourceTree = "<group>"; };
 		091C67421A351F060091B8A6 /* EWStyleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWStyleController.m; sourceTree = "<group>"; };
 		091C67441A35205F0091B8A6 /* EWBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseTableViewController.h; sourceTree = "<group>"; };
@@ -630,6 +639,8 @@
 				09229C9A1A6318BB008061E5 /* EWSleepingViewController.m */,
 				093DB77D1A65FC8D0032E7EB /* EWPostWakeUpViewController.h */,
 				093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */,
+				0912BEC11A7EC81B004DA529 /* EWProfileViewController.h */,
+				0912BEC21A7EC81B004DA529 /* EWProfileViewController.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -647,6 +658,10 @@
 				09229CA11A6326F1008061E5 /* EWPeopleArrayCollectionViewCell.m */,
 				093DB7801A65FD970032E7EB /* EWPostWakeupTableViewCell.h */,
 				093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */,
+				0912BEC41A7ED38B004DA529 /* EWProfileViewProfileTableViewCell.h */,
+				0912BEC51A7ED38B004DA529 /* EWProfileViewProfileTableViewCell.m */,
+				0912BEC71A7ED3A2004DA529 /* EWProfileViewNormalTableViewCell.h */,
+				0912BEC81A7ED3A2004DA529 /* EWProfileViewNormalTableViewCell.m */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -1500,6 +1515,7 @@
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */,
 				091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */,
+				0912BEC91A7ED3A2004DA529 /* EWProfileViewNormalTableViewCell.m in Sources */,
 				090443621A7B191300E6CE79 /* AssetCatalogIdentifiers.m in Sources */,
 				093DB77F1A65FC8D0032E7EB /* EWPostWakeUpViewController.m in Sources */,
 				09DF4F771A1434AF00BEA328 /* EWAlarm.m in Sources */,
@@ -1573,6 +1589,7 @@
 				09DF4F801A1434AF00BEA328 /* EWServerObject.m in Sources */,
 				090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */,
 				096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */,
+				0912BEC31A7EC81B004DA529 /* EWProfileViewController.m in Sources */,
 				09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */,
 				096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */,
 				096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */,
@@ -1597,6 +1614,7 @@
 				096AAAF41A19666A00B4CBFF /* EWErrorManager.m in Sources */,
 				096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */,
 				09285A3C1A1F0E8100C808C0 /* EWMenuViewController.m in Sources */,
+				0912BEC61A7ED38B004DA529 /* EWProfileViewProfileTableViewCell.m in Sources */,
 				091C67671A3523C40091B8A6 /* EWAlarmTableViewCell.m in Sources */,
 				093DB7821A65FD970032E7EB /* EWPostWakeupTableViewCell.m in Sources */,
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
