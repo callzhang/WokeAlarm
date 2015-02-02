@@ -305,7 +305,11 @@
 #pragma mark - Sleep notification
 
 - (void)scheduleSleepLocalNotification{
-    if (!self.time) {
+    if (!self.validate) {
+        return;
+    }
+    if (!self.stateValue) {
+        DDLogVerbose(@"Skip scheduling sleep notification for %@", self.time.date2detailDateString);
         return;
     }
     NSNumber *duration = [EWPerson me].preference[kSleepDuration];

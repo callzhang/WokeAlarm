@@ -274,8 +274,12 @@ static const NSArray *pref;
 }
 
 @end
+
+
+
+
+#pragma mark - PickDelegate&&DateSource
 @implementation EWSettingsViewController (UIPickView)
-#pragma mark - PickDelegate&&DateSource 
 
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     return 1;
