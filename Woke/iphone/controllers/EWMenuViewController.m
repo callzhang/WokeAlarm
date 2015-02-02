@@ -10,6 +10,7 @@
 #import <pop/pop.h>
 #import "EWAccountManager.h"
 #import "EWAlarmViewController.h"
+#import "EWProfileViewController.h"
 
 #define kTopOriginDefaultConstraint 20
 #define kHomeOriginDefaultConstraint 66
@@ -171,6 +172,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"MenuLogoutFadeToLoginGate"]) {
         [[EWAccountManager shared] logout];
+    }
+    else if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.menuToProfileReplace]) {
+        EWProfileViewController *vc = segue.destinationViewController;
+        vc.person = [EWPerson me];
     }
 }
 @end

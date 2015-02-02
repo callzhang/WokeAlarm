@@ -46,7 +46,9 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *peopleArrayChildView;
         __unsafe_unretained NSString *EWAlarmToneViewCell;
         __unsafe_unretained NSString *friendCell;
+        __unsafe_unretained NSString *friendsTableViewCell;
         __unsafe_unretained NSString *EWAlarmToneSelectionCell;
+        __unsafe_unretained NSString *friendsTableViewCellSectionHeader;
         __unsafe_unretained NSString *profileTableViewCellProfile;
         __unsafe_unretained NSString *profileTableViewCellNormal;
         __unsafe_unretained NSString *EWAlarmTableViewCell;

@@ -12,6 +12,7 @@
 
 @interface EWProfileViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *wakeHerUpButton;
 
 @end
 
@@ -23,12 +24,26 @@
     self.tableView.estimatedRowHeight = 44.0f;
     self.title = @"Profile";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"More" style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
+    
+    @weakify(self);
+    [RACObserve(self, person) subscribeNext:^(EWPerson *person) {
+        @strongify(self);
+        [self.wakeHerUpButton setTitle:[NSString stringWithFormat:@"Wake %@ Up", [person.gender isEqualToString:@"male"] ? @"Him" : @"Her"] forState:UIControlStateNormal];
+        
+        if ([person isEqual:[EWPerson me]]) {
+            //TODO:// DO ME
+        }
+        else {
+            //TODO: Others.
+        }
+    }];
 }
 
 #pragma mark - <UITableViewDataSource>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
         EWProfileViewProfileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.profileTableViewCellProfile];
+        cell.person = self.person;
         return cell;
     }
     else {

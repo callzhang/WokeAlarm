@@ -10,4 +10,5 @@
 
 @interface EWProfileViewController : UIViewController
 
+@property (nonatomic, strong) EWPerson *person;
 @end

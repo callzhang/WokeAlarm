@@ -2,14 +2,12 @@
 //  EWFriendsViewController.h
 //  Woke
 //
-//  Created by Lei Zhang on 1/28/15.
+//  Created by Zitao Xiong on 2/1/15.
 //  Copyright (c) 2015 wokealarm. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseNavigationController.h"
-#import "EWBaseTableViewController.h"
 
-@interface EWFriendsViewController : EWBaseTableViewController
+@interface EWFriendsViewController : UIViewController
 
 @end

@@ -28,7 +28,7 @@
 //view
 #import "EWRecordingViewController.h"
 #import "EWLogInViewController.h"
-#import "EWFriendsViewController.h"
+#import "EWFriendsViewControllerZL.h"
 #import "EWSettingsViewController.h"
 
 //blur
@@ -473,7 +473,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
         case 0:
         {
             if (self.navigationController.viewControllers.count < kMaxPersonNavigationConnt) {
-                EWFriendsViewController *friendsVC= [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWFriendsViewController class])];
+                EWFriendsViewControllerZL *friendsVC= [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWFriendsViewControllerZL class])];
                 controller = friendsVC;
                 
                 [self.navigationController pushViewController:controller animated:YES];

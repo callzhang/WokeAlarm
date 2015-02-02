@@ -18,28 +18,46 @@
 - (void)awakeFromNib {
     self.backgroundColor = [UIColor clearColor];
     self.contentView.backgroundColor = [UIColor clearColor];
+    [self racBind];
 }
 
 - (void)prepareForReuse {
+    [self racBind];
+}
+
+- (void)racBind {
     [self.personDisposable dispose];
     
     @weakify(self);
     self.personDisposable = [RACObserve(self, person) subscribeNext:^(EWPerson *person) {
         @strongify(self);
         [self.profileImageButton setImage:person.profilePic forState:UIControlStateNormal];
+        [self.profileImageButton applyHexagonSoftMask];
         self.nameLabel.text = person.name;
+        //TODO:// change discription
         self.locationLabel.text = [person.location description];
-        self.statementLabel.text = @"personal statement";
+        self.statementLabel.text = person.statement;
     }];
     
     [RACObserve(self, showGlobalTime) subscribeNext:^(NSNumber *showGlobalTime) {
         @strongify(self);
         if (showGlobalTime.boolValue) {
-            [self.nextAlarmButton setTitle:@"show local global time" forState:UIControlStateNormal];
+            //TODO:[ZHANG]
+            [self.nextAlarmButton setTitle:@"show global time" forState:UIControlStateNormal];
         }
         else {
             [self.nextAlarmButton setTitle:@"show local alarm time" forState:UIControlStateNormal];
         }
     }];
+    
+}
+
+- (IBAction)onNextAlarmButton:(id)sender {
+    if (self.showGlobalTime) {
+        self.showGlobalTime = NO;
+    }
+    else {
+        self.showGlobalTime = YES;
+    }
 }
 @end
