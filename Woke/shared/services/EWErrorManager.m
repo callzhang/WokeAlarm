@@ -94,11 +94,17 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
 }
 
 + (NSError *)noInternetConnectError{
-    NSError *err = [[NSError alloc] initWithDomain:self.domain code:kNoInternetReachabilityErrorCode userInfo:nil];
+    NSError *err = [[NSError alloc] initWithDomain:self.domain code:kEWNoInternetReachabilityErrorCode userInfo:nil];
     return err;
 }
 
 + (NSString *)domain{
     return @"com.wokealarm.Woke";
+}
+
++ (NSError *)invalidObjectError:(id)obj{
+    NSString *des = [NSString stringWithFormat:@"The Object is invalide %@", obj];
+    NSError *err = [[NSError alloc] initWithDomain:self.domain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: des}];
+    return err;
 }
 @end

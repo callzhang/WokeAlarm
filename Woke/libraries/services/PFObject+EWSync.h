@@ -25,7 +25,7 @@ typedef enum : NSUInteger {
  -> For each end point in relationship, To-Many or To-One, find corresponding PO and assign value to that relationship. If parseID not exist on that MO, it creates a save callback block, indicating that there is a 'need' to establish relation to that PO once it is created on server.
  @discussion The attributes are updated in sync, the relationship is updated async for new andn deleted related objects.
  */
-- (void)updateFromManagedObject:(NSManagedObject *)managedObject;
+- (BOOL)updateFromManagedObject:(NSManagedObject *)managedObject withError:(NSError **)error;
 
 /**
  The ManagedObject will only update attributes but not relations

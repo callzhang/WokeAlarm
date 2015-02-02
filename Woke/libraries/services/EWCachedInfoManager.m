@@ -97,7 +97,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 - (NSNumber *)aveWakingLength{
     if (_aveWakingLength) {
         return _aveWakingLength;
-    }
+   } 
     
     if (_currentPerson.activities.count) {
         NSInteger totalTime = 0;

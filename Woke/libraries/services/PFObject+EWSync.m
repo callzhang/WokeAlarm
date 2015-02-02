@@ -10,11 +10,11 @@
 #import "EWSync.h"
 
 @implementation PFObject(EWSync)
-- (void)updateFromManagedObject:(EWServerObject *)managedObject{
-    NSError *err;
-    [self fetchIfNeeded:&err];
-    if (err && self.objectId) {
-        if (err.code == kPFErrorObjectNotFound) {
+- (BOOL)updateFromManagedObject:(EWServerObject *)managedObject withError:(NSError *__autoreleasing *)error{
+
+    [self fetchIfNeeded:error];
+    if (*error && self.objectId) {
+        if ([*error code] == kPFErrorObjectNotFound) {
             DDLogError(@"PO %@(%@) not found on server!", self.parseClassName, self.objectId);
             NSManagedObject *trueMO = [managedObject.managedObjectContext existingObjectWithID:managedObject.objectID error:NULL];
             if (trueMO) {
@@ -22,11 +22,11 @@
             }
         }
         else{
-            DDLogError(@"Trying to upload but PO error fetching: %@. Skip!", err.description);
+            DDLogError(@"Trying to upload but PO error fetching: %@. Skip!", [*error localizedDescription]);
         }
         
         [managedObject uploadEventually];
-        return;
+        return NO;
     }
     
     //If PO just created, the PO is newer than MO, this is not reliable. Also, it is against the intention. Therefore, the intention of upload should overload the fact that PO is newer.
@@ -36,7 +36,7 @@
     //    }
     
     
-    NSArray *changeValues = [[EWSync sharedInstance].changedRecords objectForKey:managedObject.objectId];
+    NSArray *changeValues = [[EWSync sharedInstance].changedRecords objectForKey:managedObject.serverID];
     [managedObject.entity.attributesByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
 		BOOL expectChange = [changeValues containsObject:key] ? YES : NO;
 		
@@ -53,12 +53,12 @@
         if ([value isKindOfClass:[NSData class]]) {
             //data
             if (!expectChange && POValue) {
-                DDLogVerbose(@"MO attribute %@(%@)->%@ no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
+                DDLogVerbose(@"MO attribute %@(%@)->%@ expect no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
                 return;
             }
             //TODO: video file
             NSString *fileName = [NSString stringWithFormat:@"%@.m4a", [PFUser currentUser][@"name"]];
-            PFFile *dataFile = [PFFile fileWithName:fileName data:value];
+            PFFile *dataFile = [PFFile fileWithName:fileName data:value contentType:@"audio/mp4"];
             [self setObject:dataFile forKey:key];
         }
         else if ([value isKindOfClass:[UIImage class]]){
@@ -67,7 +67,7 @@
                 DDLogVerbose(@"MO attribute %@(%@)->%@ expect no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
                 return;
             }
-            PFFile *dataFile = [PFFile fileWithName:@"image.png" data:UIImagePNGRepresentation((UIImage *)value)];
+            PFFile *dataFile = [PFFile fileWithName:@"image.png" data:UIImagePNGRepresentation((UIImage *)value) contentType:@"image/png"];
             [self setObject:dataFile forKey:key];
         }
         else if ([value isKindOfClass:[CLLocation class]]){
@@ -132,7 +132,7 @@
                     [parseRelation removeObject:PO];
                     //We don't update the inverse PFRelation as they should be updated from that MO
                     DDLogVerbose(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, managedObject.serverID, key, PO.objectId);
-                    if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                    if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
                 }
             }
             
@@ -145,14 +145,14 @@
                         PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
                         
                         DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
-                        if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                        if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
                         [parseRelation addObject:relatedParseObject];
                     }
                 }
                 else {
                     __block PFObject *blockObject = self;
                     __block PFRelation *blockParseRelation = parseRelation;
-                    if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                    if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
                     //set up a saving block
                     //NSLog(@"Relation %@ -> %@ save block setup", blockObject.parseClassName, relatedManagedObject.entity.serverClassName);
                     PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
@@ -201,14 +201,14 @@
                 else {
                     //MO doesn't have parse id, save to parse
                     __block PFObject *blockObject = self;
-                    if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                    if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
                     //set up a saving block
-                    PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
+                    PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error2) {
                         [blockObject setObject:object forKey:key];
-                        [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *e) {
+                        [blockObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error3) {
                             //relationship can be saved regardless of network condition.
-                            if (e) {
-                                NSLog(@"Failed to save: %@", e.description);
+                            if (error3) {
+                                DDLogError(@"Failed to save: %@", error3.description);
                                 @try {
                                     [blockObject saveEventually];
                                 }
@@ -234,7 +234,7 @@
             }
         }
     }];
-    
+    return YES;
 }
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{

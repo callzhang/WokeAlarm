@@ -37,7 +37,7 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     self.wakeViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWWakeViewController"];
     
     self.modeSegmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Sleep", @"Wake"]];
-    self.modeSegmentedControl.frame = CGRectMake(94, 0, 187, 29); //TODO: switch to autolayout, center H, half super W, top 0
+    self.modeSegmentedControl.frame = CGRectMake(94, 0, 187, 29); //TODO: [Zitao] switch to autolayout, center H, half super W, top 0
     self.modeSegmentedControl.tintColor = [UIColor whiteColor];
     [self.modeSegmentedControl setSelectedSegmentIndex:0];
     [self.modeSegmentedControl addTarget:self action:@selector(onSegmentedValueChanged:) forControlEvents:UIControlEventValueChanged];

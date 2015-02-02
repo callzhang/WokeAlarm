@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#define kNoInternetReachabilityErrorCode    101
+#define kEWNoInternetReachabilityErrorCode      101
+#define kEWInvalidObjectErrorCode               102
 
 extern NSString * const EWErrorDomain;
 extern NSString * const EWErrorInfoDescriptionKey;
@@ -15,4 +16,5 @@ extern NSString * const EWErrorInfoDescriptionKey;
 @interface EWErrorManager : NSObject
 + (void)handleError:(NSError *)error;
 + (NSError *)noInternetConnectError;
++ (NSError *)invalidObjectError:(id)obj;
 @end
