@@ -143,6 +143,7 @@
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */; };
 		9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */; };
+		9B4D29671A7F53F900C8559B /* EWPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -180,7 +181,6 @@
 		9BF7291E1A4DF5FF006C6C51 /* new.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF7291D1A4DF5FF006C6C51 /* new.caf */; };
 		9BF9CC771A78A50100B76D92 /* EWFriendsViewControllerZL.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9CC761A78A50100B76D92 /* EWFriendsViewControllerZL.m */; };
 		9BF9CC7A1A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9CC791A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m */; };
-		9BF9CC7B1A78C4DE00B76D92 /* EWPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */; };
 		9BFCFFDF1A3E74DE002B8A83 /* EWFriendsViewController_old.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFB1A1972B800B4CBFF /* EWFriendsViewController_old.m */; };
 		9BFF57121A4C8FB90067EE9B /* EWPerson+Woke.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BFF57111A4C8FB90067EE9B /* EWPerson+Woke.m */; };
 		9BFFABE81A5B9AB3008E123F /* EWCollectionPersonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */; };
@@ -450,7 +450,6 @@
 		568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
 		6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WokeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B1375DA1A536CD100D5E8F5 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
-		9B1551821A5CBD7B00C2EE41 /* EWPersonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWPersonView.xib; sourceTree = "<group>"; };
 		9B25631D1A1952FA00010B9E /* _EWSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _EWSocial.h; sourceTree = "<group>"; };
 		9B25631E1A1952FA00010B9E /* _EWSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWSocial.m; sourceTree = "<group>"; };
 		9B3895011A4FBA17004D4290 /* EWWakeUpViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWWakeUpViewCell.h; sourceTree = "<group>"; };
@@ -570,7 +569,6 @@
 		091C67471A3523AF0091B8A6 /* legacy */ = {
 			isa = PBXGroup;
 			children = (
-				9B1551821A5CBD7B00C2EE41 /* EWPersonView.xib */,
 				091C67481A3523AF0091B8A6 /* EWAlarmEditCell.h */,
 				091C67491A3523AF0091B8A6 /* EWAlarmEditCell.m */,
 				091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */,
@@ -1576,6 +1574,7 @@
 				09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */,
 				9BF9CC771A78A50100B76D92 /* EWFriendsViewControllerZL.m in Sources */,
 				09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */,
+				9B4D29671A7F53F900C8559B /* EWPersonViewController.m in Sources */,
 				9BF181671A37C1B600D25DBA /* EWPreWakeViewControllerZL.m in Sources */,
 				096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */,
 				096AAAEF1A195A3900B4CBFF /* PFObject+EWSync.m in Sources */,
@@ -1607,7 +1606,6 @@
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
 				9B8D75671A6399550013B011 /* EWNotificationCell.m in Sources */,
 				09DF4F831A1434AF00BEA328 /* _EWActivity.m in Sources */,
-				9BF9CC7B1A78C4DE00B76D92 /* EWPersonViewController.m in Sources */,
 				09DF4F801A1434AF00BEA328 /* EWServerObject.m in Sources */,
 				090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */,
 				096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */,

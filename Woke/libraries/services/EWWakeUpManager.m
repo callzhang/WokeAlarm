@@ -169,7 +169,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     //post notification
     [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     
-    //TODO: something to do in the future
+    //THOUGHTS: something to do in the future
     //notify friends and challengers
     //update history stats
 }

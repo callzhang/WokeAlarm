@@ -56,7 +56,6 @@
                 DDLogVerbose(@"MO attribute %@(%@)->%@ expect no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
                 return;
             }
-            //TODO: video file
             NSString *fileName = [NSString stringWithFormat:@"%@.m4a", [PFUser currentUser][@"name"]];
             PFFile *dataFile = [PFFile fileWithName:fileName data:value contentType:@"audio/mp4"];
             [self setObject:dataFile forKey:key];
@@ -95,7 +94,7 @@
         if ([relation isToMany]) {
             //To-Many relation
             //First detect if has inverse relation, if not, we use Array to represent the relation
-            //TODO: Exceptin: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
+            //THOUGHTS: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser
             if (!relation.inverseRelationship/* && ![key isEqualToString:kUserClass]*/) {
                 //No inverse relation, use array of pointer
                 
@@ -122,7 +121,7 @@
                 NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name.serverClass], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
             }
             
-            //TODO: create a new PFRelation so that we don't need to deal with deletion
+            //THOUGHTS: create a new PFRelation so that we don't need to deal with deletion
             
             //Find related PO to delete async
             NSMutableArray *relatedParseObjects = [[[parseRelation query] findObjects] mutableCopy];

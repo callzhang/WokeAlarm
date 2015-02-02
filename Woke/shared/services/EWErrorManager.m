@@ -16,7 +16,9 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
 @implementation EWErrorManager
 
 + (void)handleError:(NSError *)error {
-    //TODO: implement error alert logic here;
+#ifdef DEBUG
+    EWAlert(error);
+#endif
     DDLogError(@"%@", error);
     
     if ([error.domain isEqualToString:FacebookSDKDomain]) {

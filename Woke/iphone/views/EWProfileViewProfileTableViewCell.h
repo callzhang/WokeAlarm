@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
 @property (weak, nonatomic) IBOutlet UIButton *nextAlarmButton;
 @property (weak, nonatomic) IBOutlet UILabel *statementLabel;
+@property (weak, nonatomic) IBOutlet UIButton *addFriendButton;
 
 @property (nonatomic, strong) EWPerson *person;
 @end

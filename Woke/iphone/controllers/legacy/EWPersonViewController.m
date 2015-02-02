@@ -412,24 +412,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
                 break;
             case 3://last seen, get it async
             {
-                __block NSDate *date = person.updatedAt;
-                if (!date) {
-                    __block UIActivityIndicatorView *loader = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-                    cell.accessoryView = loader;
-                    __block __weak UITableViewCell *blockCell = cell;
-                    [loader startAnimating];
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        date = person.parseObject.updatedAt;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            __strong UITableViewCell *strongCell = blockCell;
-                            strongCell.accessoryView = nil;
-                            [loader stopAnimating];
-                            strongCell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ago", date.timeElapsedString];
-                        });
-                    });
-                }else{
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ago", date.timeElapsedString];
-                }
+                
                 
                 break;
             }

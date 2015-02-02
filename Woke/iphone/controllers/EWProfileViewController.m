@@ -9,11 +9,12 @@
 #import "EWProfileViewController.h"
 #import "EWProfileViewProfileTableViewCell.h"
 #import "EWProfileViewNormalTableViewCell.h"
+#import "EWCachedInfoManager.h"
 
 @interface EWProfileViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *wakeHerUpButton;
-
+@property (nonatomic, strong) EWCachedInfoManager *statsManager;
 @end
 
 @implementation EWProfileViewController
@@ -24,17 +25,16 @@
     self.tableView.estimatedRowHeight = 44.0f;
     self.title = @"Profile";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"More" style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
+    self.statsManager = [EWCachedInfoManager managerForPerson:_person];
     
     @weakify(self);
     [RACObserve(self, person) subscribeNext:^(EWPerson *person) {
         @strongify(self);
-        [self.wakeHerUpButton setTitle:[NSString stringWithFormat:@"Wake %@ Up", [person.gender isEqualToString:@"male"] ? @"Him" : @"Her"] forState:UIControlStateNormal];
         
-        if ([person isEqual:[EWPerson me]]) {
-            //TODO:// DO ME
-        }
-        else {
-            //TODO: Others.
+        if ([person isMe]) {
+            self.wakeHerUpButton.hidden = YES;
+        }else {
+            [self.wakeHerUpButton setTitle:[NSString stringWithFormat:@"Wake %@ Up", person.genderSubjectiveCaseString] forState:UIControlStateNormal];
         }
     }];
 }
@@ -97,27 +97,29 @@
         @weakify(self);
         dataSource = @[
                        @{@"name": @"Friends", @"detail" : ^{
-                          return @"xx";
+                          return [NSString stringWithFormat:@"%ld", (unsigned long)_person.friends.count];
                        }, @"action": ^{
                           @strongify(self);
+                           //TODO: [Zitao] add detail disclosure arrow
                            [self performSegueWithIdentifier:MainStoryboardIDs.segues.profileToFriends sender:self];
                        }},
                        @{@"name": ^{
-                           //TODO: [Z] return correct phrase, like him, same below
-                           return @"People woke her up";
+                           return [NSString stringWithFormat:@"People woke %@ up", _person.genderSubjectiveCaseString];
                        }, @"detail": ^{
-                          return @"xx";
+                        NSArray *receivedMedias = _person.receivedMedias.allObjects;
+                          return [NSString stringWithFormat:@"%ld", (unsigned long)receivedMedias.count];
                        }},
                        @{@"name": ^{
-                           return @"People she woke up";
+                           return [NSString stringWithFormat:@"People %@ woke up", _person.genderObjectiveCaseString];
                        }, @"detail": ^{
-                          return @"xx";
+                           NSArray *medias = _person.sentMedias.allObjects;
+                           return [NSString stringWithFormat:@"%ld", (unsigned long)medias.count];
                        }},
                        @{@"name": @"Last Seen", @"detail": ^{
-                          return @"xx";
+                          return [NSString stringWithFormat:@"%@ ago", _person.updatedAt.timeElapsedString];
                        }},
                        @{@"name": @"Wake-ability Score", @"detail": ^{
-                          return @"xx";
+                          return _statsManager.wakabilityStr;
                        }},
                        ];
     });

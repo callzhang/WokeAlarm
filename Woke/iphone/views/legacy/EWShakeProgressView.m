@@ -64,7 +64,6 @@
 {
     
     if ([self isShakeSupported]) {
-        //TODO: sound
         [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error){
             
             //NSLog(@"%f %f %f",accelerometerData.acceleration.x , accelerometerData.acceleration.y , accelerometerData.acceleration.z);
@@ -95,7 +94,6 @@
                 }
                 
             }else{
-                //TODO: sound
 				[[EWAVManager sharedManager] playSoundFromFileName:@"new.caf"];
 				[viberationTimer invalidate];
                 [self.motionManager stopAccelerometerUpdates];

@@ -749,7 +749,6 @@ NSManagedObjectContext *mainContext;
 		if (!tryFix) {
 			return NO;
 		}
-        //TODO: use more granular level fix, or use better way to fix
 		[SO refresh];
 		good = [SO validate];
 	}

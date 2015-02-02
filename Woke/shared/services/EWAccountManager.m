@@ -28,7 +28,6 @@
 @implementation EWAccountManager
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
-//TODO: refactor to EWSession
 + (BOOL)isLoggedIn {
     return [PFUser currentUser] != nil;
 }

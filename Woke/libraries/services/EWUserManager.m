@@ -9,7 +9,6 @@
 
 #import "EWStartUpSequence.h"
 #import "EWUtil.h"
-//TODO:#import "EWFirstTimeViewController.h"
 @import CoreLocation;
 
 //model

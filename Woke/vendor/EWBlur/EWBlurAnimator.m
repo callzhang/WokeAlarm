@@ -281,7 +281,7 @@ static const CGFloat initialDownSampling = 2;
 
 - (void)cancelInteractiveTransition
 {
-    // TODO
+    // TODO: [Lei]
 }
 
 - (void)animationEnded:(BOOL)transitionCompleted{

@@ -40,4 +40,5 @@ extern NSString * const EWPersonDefaultName;
 
 //helper
 - (NSString *)genderObjectiveCaseString;
+- (NSString *)genderSubjectiveCaseString;
 @end

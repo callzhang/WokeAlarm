@@ -64,7 +64,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             XCTAssert([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp, @"wake up status not expected");
             [expectation fulfill];
-            //TODO: need the base view controller respose to the "kWakeStartNotification" notification and present wake up view
+            //TODO: [Zitao] need the base view controller respose to the "kWakeStartNotification" notification and present wake up view
             //wait for sound playing for 30s
             if ([EWAVManager sharedManager].player.isPlaying) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

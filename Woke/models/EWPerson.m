@@ -43,6 +43,10 @@ NSString * const EWPersonDefaultName = @"New User";
 
 #pragma mark - Helper
 - (NSString *)genderObjectiveCaseString {
+    return [self.gender isEqualToString:@"male"]?@"he":@"she";
+}
+
+- (NSString *)genderSubjectiveCaseString {
     return [self.gender isEqualToString:@"male"]?@"him":@"her";
 }
 

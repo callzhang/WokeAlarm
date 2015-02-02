@@ -144,13 +144,11 @@ NSString *imageAssetNameFromEmoji(NSString *emoji) {
 
 #pragma mark - Underlying data
 - (NSData *)audio{
-    //TODO
-    return nil;
+    return self.mediaFile.audio;
 }
 
 - (NSString *)audioKey{
-    //TODO
-    return nil;
+    return self.mediaFile.audioKey;
 }
 
 - (EWServerObject *)ownerObject{
