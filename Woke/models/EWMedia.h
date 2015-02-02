@@ -18,6 +18,8 @@ NSString *imageAssetNameFromEmoji(NSString *emoji);
 + (EWMedia *)newMedia;
 //search
 + (EWMedia *)getMediaByID:(NSString *)mediaID;
++ (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context;
+
 //validate
 - (BOOL)validate;
 //ACL

@@ -66,7 +66,7 @@
             //download related PO
             NSError *err2;
             NSArray *relatedParseObjects = [[toManyRelation query] findObjects:&err2];
-            //TODO: handle error
+            //handle error
             if ([err2 code] == kPFErrorObjectNotFound) {
                 DDLogWarn(@"*** Uh oh, we couldn't find the related PO!");
                 NSManagedObject *trueSelf = [self.managedObjectContext existingObjectWithID:self.objectID error:NULL];

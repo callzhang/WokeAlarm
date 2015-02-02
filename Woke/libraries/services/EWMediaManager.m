@@ -33,6 +33,7 @@
 
 #pragma mark - Handle media push notification
 - (void)handlePushMedia:(NSDictionary *)notification{
+    EWAssertMainThread
     NSString *pushType = notification[kPushType];
     NSParameterAssert([pushType isEqualToString:kPushTypeMedia]);
     NSString *type = notification[kPushMediaType];
@@ -49,6 +50,7 @@
     if (![[EWPerson me].unreadMedias containsObject:media]) {
         [[EWPerson me] addUnreadMediasObject:media];
         [[EWPerson me] save];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
     }
     
     if ([type isEqualToString:kPushMediaTypeVoice]) {
@@ -73,22 +75,18 @@
 
 - (void)getWokeVoice{
     //call server test function
-    [PFCloud callFunctionInBackground:@"getWokeVoice" withParameters:@{kUserID: [EWPerson me].objectId} block:^(id object, NSError *error) {
-        if (object) {
-            NSParameterAssert([object isKindOfClass:[NSString class]]);
-            DDLogInfo(@"Finished get woke voice request with response: %@", object);
+    [PFCloud callFunctionInBackground:@"getWokeVoice" withParameters:@{kUserID: [EWPerson me].objectId} block:^(PFObject *media, NSError *error) {
+        if (media) {
+            DDLogInfo(@"Finished get woke voice request with response: %@", media);
             //check media
-            EWMedia *newMedia = [EWMedia getMediaByID:(NSString *)object];
-            if (![newMedia validate]) {
-                DDLogError(@"Get new woke voice but not valid: %@", newMedia);
-                return;
-            }
-            DDLogVerbose(@"New media found: %@", newMedia.objectId);
-            //make sure the relationship is established
-            [[EWPerson me] addUnreadMediasObject:newMedia];
-            [[EWPerson me] save];
-            //notification
-            [EWNotification newMediaNotification:newMedia];
+            [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+                EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
+                [[EWPerson meInContext:localContext] addUnreadMediasObject:newMedia];
+            } completion:^(BOOL contextDidSave, NSError *error2) {
+                //notification
+                //[EWNotification newMediaNotification:newMedia];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
+            }];
         }else{
             DDLogError(@"Failed test voice request: %@", error.description);
         }
@@ -171,11 +169,14 @@
     for (PFObject *po in mediaPOs) {
         //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
         EWMedia *mo = [EWMedia getMediaByID:po.objectId];
-        mo.receiver = [EWPerson meInContext:context];
+        if (!mo.receiver) {
+            DDLogError(@"Received media (%@) but no receiver", mo.serverID);
+            mo.receiver = [EWPerson meInContext:context];
+        }
         [[EWPerson me] addUnreadMediasObject:mo];
         //new media
 		DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
-        //notification
+        //EWNotification
         if ([NSThread isMainThread]) {
             [EWNotification newMediaNotification:mo];
         }else{
@@ -192,17 +193,11 @@
         //notify user for the new media
         dispatch_async(dispatch_get_main_queue(), ^{
             EWAlert(@"You got voice for your next wake up");
+            //NSNotification
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
+            });
         });
-    }
-    
-    //check exisitng media
-    NSMutableSet *mediasNeedToRefresh = localMe.unreadMedias.mutableCopy;
-    [mediasNeedToRefresh unionSet:localMe.receivedMedias];
-    [mediasNeedToRefresh unionSet:localMe.sentMedias];
-    [mediasNeedToRefresh filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K == nil", kParseObjectID]];
-    for (EWMedia *media in mediasNeedToRefresh) {
-        DDLogVerbose(@"%s Refresh media: %@",__FUNCTION__, media.objectId);
-        [media refresh];
     }
     
     return newMedia.copy;

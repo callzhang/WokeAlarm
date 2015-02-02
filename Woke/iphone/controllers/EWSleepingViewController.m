@@ -96,7 +96,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 
 - (void)onNewMediaNotification {
     //Delay update people
-    //TODO: zhanglei check why when notification arrives, unready medias is not always udpate to date.
+    //TODO: Zitao fixed new media handling, and chenged "getWokeVoice" to background, check if the unread medias is correct.
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] bk_map:^id(EWMedia *obj) {
             return obj.author;

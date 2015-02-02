@@ -53,28 +53,11 @@
 	}];
 }
 
-- (void)updateToServerWithCompletion:(PFObjectResultBlock)block{
-    if (!self.objectId) {
-        //create save block
-        PFObjectResultBlock resultBlock = ^(PFObject *object, NSError *error) {
-            block(object, error);
-        };
-        //add sync block
-        [[EWSync sharedInstance] addSaveCallback:resultBlock forManagedObjectID:self.objectID];
-        //save
-        [self save];
-    }
-    else if(self.changedKeys.count){
-        [EWSync saveWithCompletion:^{
-            if (block) {
-                block(self.parseObject, nil);
-            }
-        }];
-    }
-    else{
-        if (block) {
-            block(self.parseObject, nil);
-        }
+- (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
+    [[EWSync sharedInstance].MOSaveCallbacks setObject:block forKey:self.objectID.URIRepresentation.absoluteString];
+    [self save];
+    if (!self.hasChanges) {
+        DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
     }
 }
 

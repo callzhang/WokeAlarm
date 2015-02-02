@@ -476,8 +476,6 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
             dict[MPMediaItemPropertyArtwork] = artwork;
         }
         
-        //TODO: media message can be rendered on image
-        
         //set
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = dict;
         

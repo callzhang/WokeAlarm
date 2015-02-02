@@ -61,13 +61,13 @@
     note.receiver = [EWPerson me].objectId;
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     if (!activity.objectId) {
-        [activity updateToServerWithCompletion:^(PFObject *PO, NSError *error) {
-            if (!PO) {
-                DDLogError(@"MO %@ failed to save to server: %@", media.serverClassName, error.description);
-                return;
+        [activity updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+            if (error) {
+                DDLogError(@"Failed to save notification (%@) with error %@", note.serverID, error);
+            }else {
+                note.userInfo = @{@"medias": @[media.serverID], @"activity": MO_on_main_thread.serverID};
+                [note save];
             }
-            note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
-            [note save];
         }];
     }else{
         note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};

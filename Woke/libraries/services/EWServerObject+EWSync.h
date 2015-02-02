@@ -45,7 +45,7 @@
  *
  *This method iterates all objects related to the MO and refresh (updatedDate) to make sure my relevant data is copied locally.
  *
- *TODO: It also checks that if any data on server has duplication.
+ *It also checks that if any data on server has duplication.
  *@discussion it is usually used for current user object (me)
  */
 - (void)refreshRelatedWithCompletion:(ErrorBlock)block;

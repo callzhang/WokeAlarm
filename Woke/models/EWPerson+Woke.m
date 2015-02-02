@@ -41,15 +41,15 @@
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
-- (void)updateStatus:(NSString *)status completion:(void (^)(NSError *))completion {
+- (void)updateStatus:(NSString *)status completion:(ErrorBlock)completion {
     [[[self class] myAlarms] enumerateObjectsUsingBlock:^(EWAlarm *obj, NSUInteger idx, BOOL *stop) {
         obj.statement = status;
     }];
     
     [EWPerson me].statement = status;
     
-    [EWSync saveWithCompletion:^{
-        completion(nil);
+    [[EWPerson me] updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+        completion(error);
     }];
 }
 
@@ -76,7 +76,6 @@
 }
 
 + (NSArray *)myUnreadNotifications {
-    //TODO: move to notification manager
     EWAssertMainThread
     NSArray *notifications = [self myNotifications];
     NSArray *unread = [notifications filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"completed == nil"]];

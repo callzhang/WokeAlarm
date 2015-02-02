@@ -12,6 +12,7 @@
 #import "AFNetworkReachabilityManager.h"
 #import <WellCached/ELAWellCached.h>
 #import "NSDictionary+KeyPathAccess.h"
+#import "EWErrorManager.h"
 
 //============ Global shortcut to main context ===========
 NSManagedObjectContext *mainContext;
@@ -94,7 +95,7 @@ NSManagedObjectContext *mainContext;
     
     //initial property
     self.parseSaveCallbacks = [NSMutableDictionary dictionary];
-    self.saveCallbacks = [NSMutableArray new];
+    self.MOSaveCallbacks = [NSMutableDictionary new];
     self.saveToLocalItems = [NSMutableArray new];
     self.serverObjectCache = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
 	
@@ -142,7 +143,8 @@ NSManagedObjectContext *mainContext;
     //determin network reachability
     if (!self.isReachable) {
         DDLogDebug(@"Network not reachable, skip uploading");
-        [self runCompletionBlocks:self.saveCallbacks];
+        self.isUploading = NO;
+        [self runAllCompletionBlocks:self.MOSaveCallbacks withError:[EWErrorManager noInternetConnectError]];
         return;
     }
     
@@ -172,7 +174,7 @@ NSManagedObjectContext *mainContext;
 	//skip if no changes
     if (workingObjects.count == 0 && deletedServerObjects.count == 0){
         DDLogInfo(@"No change detacted, skip uploading");
-        [self runCompletionBlocks:self.saveCallbacks];
+        [self runAllCompletionBlocks:self.MOSaveCallbacks withError:nil];
         return;
     }
     for (NSString *key in self.changedRecords.allKeys) {
@@ -186,8 +188,8 @@ NSManagedObjectContext *mainContext;
     DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, deletedServerObjects);
     
     //save callbacks
-    NSArray *callbacks = [self.saveCallbacks copy];
-    [_saveCallbacks removeAllObjects];
+    NSMutableDictionary *callbacks = _MOSaveCallbacks;
+    self.MOSaveCallbacks = [NSMutableDictionary new];
     
     //start background update
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -204,8 +206,17 @@ NSManagedObjectContext *mainContext;
 				return;
 			}
 			//=================>> Upload method <<===================
-            [self updateParseObjectFromManagedObject:localMO];
+            NSError *error;
+            BOOL success = [self updateParseObjectFromManagedObject:localMO withError:&error];
             //=======================================================
+            
+            //save callback
+            if (!success) {
+                DDLogError(@"Failed to update MO with error %@", error.localizedDescription);
+            }
+            NSString *key = localMO.objectID.URIRepresentation.absoluteString;
+            EWManagedObjectSaveCallbackBlock block = callbacks[key];
+            [self runCompletionBlockForObjectID:key withBlock:block withError:error];
             
             //remove changed record
             NSMutableSet *changes = self.changedRecords[localMO.serverID];
@@ -224,27 +235,39 @@ NSManagedObjectContext *mainContext;
     } completion:^(BOOL success, NSError *error) {
         
         DDLogVerbose(@"=========== Finished uploading to saver ===============");
-        [self runCompletionBlocks:callbacks];
+        [self runAllCompletionBlocks:callbacks withError:error];
         
     }];
 }
 
-- (void)runCompletionBlocks:(NSArray *)callbacks{
-    //TODO: use object-specific block as callback block
-    if (callbacks.count) {
-        DDLogVerbose(@"=========== Start running completion block (%lu) =============", (unsigned long)callbacks.count);
-        for (EWSavingCallback block in callbacks){
-            block();
+- (void)runAllCompletionBlocks:(NSDictionary *)allMOCallbacks withError:(NSError *)error{
+    if (allMOCallbacks.allKeys.count) {
+        DDLogVerbose(@"=========== Start running completion block (%lu) =============", (unsigned long)allMOCallbacks.count);
+        [allMOCallbacks enumerateKeysAndObjectsUsingBlock:^(NSString *key, EWManagedObjectSaveCallbackBlock block, BOOL *stop) {
+            [self runCompletionBlockForObjectID:key withBlock:block withError:error];
+        }];
+    }
+}
+
+- (void)runCompletionBlockForObjectID:(NSString *)key withBlock:(EWManagedObjectSaveCallbackBlock)block withError:(NSError *)error{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSURL *url = [NSURL URLWithString:key];
+        NSError *newError;
+        NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+        EWServerObject *SO_main = (EWServerObject *)[mainContext existingObjectWithID:ID error:&newError];
+        if (newError) {
+            block(nil, newError);
         }
-    }
+        else {
+            if (SO_main.serverID) {
+                block(SO_main, error);
+            }else{
+                DDLogError(@"Upload completed but SO not having serverID:\n %@", SO_main);
+                [SO_main uploadEventually];
+            }
+        }
+    });
     
-    NSSet *remainningWorkingObjects = self.workingQueue;
-    if (remainningWorkingObjects.count > 0) {
-        DDLogInfo(@"*** With remainning working objects: (ID)%@ (Entity)%@", [remainningWorkingObjects valueForKey:@"objectId"], [remainningWorkingObjects valueForKeyPath: @"entity.name"]);
-        [self resumeUploadToServer];
-    }
-    
-    self.isUploading = NO;
 }
 
 - (void)resumeUploadToServer{
@@ -255,8 +278,6 @@ NSManagedObjectContext *mainContext;
     if (workingMOs.count > 0 || deletePOs.count > 0) {
         DDLogInfo(@"There are %lu MOs need to upload or %lu MOs need to delete, resume uploading!", (unsigned long)workingMOs.count, (unsigned long)deletePOs.count);
         [self uploadToServer];
-    }else{
-        DDLogWarn(@"Nothing to resume uploading");
     }
 }
 
@@ -679,12 +700,6 @@ NSManagedObjectContext *mainContext;
 	if (mainContext.hasChanges) {
 		[mainContext MR_saveToPersistentStoreAndWait];
 	}
-}
-
-+ (void)saveWithCompletion:(EWSavingCallback)block{
-    [[EWSync sharedInstance].saveCallbacks addObject:block];
-    [mainContext MR_saveToPersistentStoreAndWait];
-    [[EWSync sharedInstance] uploadToServer];
 }
 
 + (void)saveAllToLocal:(NSArray *)MOs{

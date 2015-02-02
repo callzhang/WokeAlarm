@@ -88,13 +88,14 @@
 
 
 - (EWSocial *)socialGraphForPerson:(EWPerson *)person{
+    NSParameterAssert(person.isMe);
     if (person.socialGraph) {
         return person.socialGraph;
     }
 	
     EWSocial *graph = [EWSocial newSocialForPerson:person];
 	if (person.isMe) {
-        //TODO: update facebook friends
+        //update facebook friends
 	}
     return graph;
 }
@@ -203,7 +204,8 @@
     }
     [emailQ whereKey:EWPersonAttributes.email containedIn:emails_];
     [emailQ setLimit:50];
-    [emailQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    //[emailQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [EWSync findParseObjectInBackgroundWithQuery:emailQ completion:^(NSArray *objects, NSError *error) {
         NSMutableArray *resultPeople = [NSMutableArray new];
         for (PFUser *user in objects) {
             EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
@@ -224,7 +226,8 @@
         query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, query, nil]];
     }
     
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    //[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Search phrase %@ with result of %@", name, [objects valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
         for (PFUser *user in objects) {
@@ -335,7 +338,7 @@
 	}
 	[query includeKey:EWSocialRelationships.owner];
     [query setLimit:50];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
         EWSocial *sg = [EWPerson mySocialGraph];

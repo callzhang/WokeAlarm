@@ -326,90 +326,64 @@ Parse.Cloud.define("sendFriendAcceptNotificationToUser", function(request, respo
 Parse.Cloud.define("getWokeVoice", function(request, response) {
   var currentUserId = request.params.userId;
   var query = new Parse.Query(Parse.User);
-  query.get(currentUserId, {
-    success: function (user) {
-      console.log("Current user: " + user.get("name"));
-      var query = new Parse.Query(Parse.User);
-      query.equalTo("username", "woke");
-      query.first({
-        success: function (woke) {
-          console.log("Found woke: "+ woke.id);
-          //create a media
-          var EWMedia = Parse.Object.extend("EWMedia");
-          var media = new EWMedia;
-          media.set("receiver", user);
-          media.set("author", woke);
-          media.set("message", "Voice from Woke");
-          media.set("type", "voice");
-          //get voice
-          var voiceFile = Parse.Object.extend("EWMediaFile");
-          var mediaFileQuery = new Parse.Query(voiceFile);
-          mediaFileQuery.equalTo("owner", woke.id);
-          mediaFileQuery.find({
-            success: function (voices) {
-              console.log("Get Woke voices: "+voices.length);
-              var n = Math.floor(Math.random() * voices.length);
-              console.log("Random voice chosen: "+n);
-              voiceFile = voices[n];
-              media.set("mediaFile", voiceFile);
+  var newMedia;
+  query.get(currentUserId).then(function(user){
+    console.log("Current user: " + user.get("name"));
+    var query = new Parse.Query(Parse.User);
+    query.equalTo("username", "woke");
+    return query.find();
+  }, function (error) {
+    console.log("Failed to find current user: ", error.message);
+  }).then(function (woke) {
+    console.log("Found woke: "+ woke.id);
+    //create a media
+    var EWMedia = Parse.Object.extend("EWMedia");
+    var media = new EWMedia;
+    media.set("receiver", user);
+    media.set("author", woke);
+    media.set("message", "Voice from Woke");
+    media.set("type", "voice");
+    //get voice
+    var voiceFile = Parse.Object.extend("EWMediaFile");
+    var mediaFileQuery = new Parse.Query(voiceFile);
+    mediaFileQuery.equalTo("owner", woke.id);
+    return mediaFileQuery.find();
+  }, function (list, error) {
+    console.log("failed to find Woke: " + error.message);
+  }).then(function (voices) {
+    console.log("Get Woke voices: "+voices.length);
+    var n = Math.floor(Math.random() * voices.length);
+    console.log("Random voice chosen: "+n);
+    voiceFile = voices[n];
+    media.set("mediaFile", voiceFile);
+    return media.save();
+  }, function (list, error) {
+    console.log("cannot find woke voices");
+    response.error("Cannot find woke voices: ", + error.message);
+  }).then(function (media) {
+    newMedia = media;
+    //save file->medias relation
+    var mediasRelation = voiceFile.relation("medias");
+    mediasRelation.add(media);
+    voiceFile.save();
+    //add woke->sentMedias relation
+    var sentMedias = woke.relation("sentMedias");
+    sentMedias.add(media);
+    woke.save();
+    //add user->unreadMedia relation
+    user.add("unreadMedias", media);
+    return user.save();
+  }, function(error){
+    console.log("Relation mediaFile->media failed: "+error.message);
+  }).then(function (user) {
+    response.success(newMedia);
+    console.log("Woke voice (" +newMedia.id +") returned");
+  }, function (error) {
+    // Handle error
+    console.error("Failed to send push");
+    console.log("Failed to send push for test media: "+error.message);
+  });
 
-              //save
-              media.save().then(function(media){
-                //save file->medias relation
-                var mediasRelation = voiceFile.relation("medias");
-                mediasRelation.add(media);
-                voiceFile.save();
-                //add woke->sentMedias relation
-                var sentMedias = woke.relation("sentMedias");
-                sentMedias.add(media);
-                woke.save();
-                //add user->unreadMedia relation
-                user.add("unreadMedias", media);
-                user.save();
-              }, function(error){
-                console.log("Relation mediaFile->media failed: "+error.message);
-              });
-
-              //send a push
-              var query = new Parse.Query(Parse.Installation);
-              query.equalTo('userId', currentUserId);
-
-              Parse.Push.send({
-                where: query,
-                data: {
-                  alert: "You got a new media",
-                  title: "You got a new media",
-                  body: "Woke send you a new media.",
-                  type: "media",
-                  media_type: "media",
-                  media: media.id
-                }
-              }, {
-                success: function () {
-                  // Push was successful
-                  response.success(media.id);
-                  console.log("Woke voice (" +media.id +") created and push sent");
-                },
-                error: function (error) {
-                  // Handle error
-                  console.error("Failed to send push");
-                  console.log("Failed to send push for test media: "+error.message);
-                }
-              });
-            }, error: function (list, error) {
-              console.log("cannot find woke voices");
-              response.error("Cannot find woke voices: ", + error.message);
-            }
-          });
-        }, error: function (list, error) {
-          console.log("failed to find Woke: " + error.message);
-        }
-      });
-    },
-    error: function (error) {
-      console.log("Failed to find current user: ", error.message);
-    }
-  })
 });
 
 Parse.Cloud.define("syncUser", function(request, response) {

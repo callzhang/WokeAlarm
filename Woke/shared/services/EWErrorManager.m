@@ -92,4 +92,13 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
     [alertView show];
     
 }
+
++ (NSError *)noInternetConnectError{
+    NSError *err = [[NSError alloc] initWithDomain:self.domain code:kNoInternetReachabilityErrorCode userInfo:nil];
+    return err;
+}
+
++ (NSString *)domain{
+    return @"com.wokealarm.Woke";
+}
 @end

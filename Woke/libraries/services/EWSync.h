@@ -14,7 +14,8 @@
 #import "EWServerObject.h"
 
 extern NSManagedObjectContext *mainContext;
-typedef void (^EWSavingCallback)(void);
+typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thread, NSError *error);
+
 
 //Diagram:
 //https://drive.draw.io/#G0B8EqrGjPaSeTakN6VzRwZzdFaDA
@@ -57,9 +58,12 @@ typedef void (^EWSavingCallback)(void);
 #define kUsername                           @"username"
 
 
-
 @interface EWSync : NSObject
-@property (strong) NSMutableArray *saveCallbacks; //MO save callback
+/**
+ *  Dictionary of {MO_ObjectID_String, EWManagedObjectSaveBlock}
+ *  EWManagedObjectSaveCallbackBlock takes two parameters: MO_main_thread and NSError
+ */
+@property (strong) NSMutableDictionary *MOSaveCallbacks;
 @property (strong) ELAWellCached *serverObjectCache;
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
@@ -81,7 +85,6 @@ typedef void (^EWSavingCallback)(void);
  The main save function, it save and upload to the server
  */
 + (void)save __deprecated;
-+ (void)saveWithCompletion:(EWSavingCallback)block;
 + (void)saveAllToLocal:(NSArray *)MOs;
 /**
  The main method of server update/insert/delete.
@@ -108,7 +111,7 @@ typedef void (^EWSavingCallback)(void);
  *
  *5. Perform save callback block for this PO
  */
-- (void)updateParseObjectFromManagedObject:(NSManagedObject *)managedObject;
+- (BOOL)updateParseObjectFromManagedObject:(NSManagedObject *)managedObject withError:(NSError **)error;
 
 /**
  Find or delete ManagedObject by Entity and by Server Object

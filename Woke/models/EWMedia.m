@@ -85,6 +85,7 @@ NSString *imageAssetNameFromEmoji(NSString *emoji) {
 }
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID{
+    EWAssertMainThread
     return [[self class] getMediaByID:mediaID inContext:mainContext];
 }
 
@@ -98,15 +99,9 @@ NSString *imageAssetNameFromEmoji(NSString *emoji) {
         //download media
         NSLog(@"Downloading media: %@", media.objectId);
         [media downloadMediaFile];
-        
-        //post notification
-        if ([NSThread isMainThread]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:media];
-        }else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                EWMedia *m = [media MR_inContext:mainContext];
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:m];
-            });
+        if (![media validate]) {
+            DDLogError(@"Get new media but not valid: %@", media);
+            return nil;
         }
     }
     return media;

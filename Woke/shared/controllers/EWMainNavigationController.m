@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 //    self.delegate = _blurDelegate;
     // listern for notification
     [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        //TODO
+        EWAlert(@"Main view detected new media");
     }];
 }
 

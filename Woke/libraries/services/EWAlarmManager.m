@@ -378,8 +378,8 @@
             DDLogError(@"*** The Alarm for schedule push doesn't have time: %@", alarm);
             return;
         }else if (!alarm.objectId){
-            [EWSync saveWithCompletion:^{
-                [self scheduleNotificationOnServerForAlarm:alarm];
+            [alarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+                [self scheduleNotificationOnServerForAlarm:(EWAlarm *)MO_on_main_thread];
             }];
             return;
         }

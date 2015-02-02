@@ -31,7 +31,7 @@
 
 UIViewController *rootViewController;
 
-@interface AppDelegate ()<FBTweakViewControllerDelegate>
+@interface AppDelegate ()<FBTweakViewControllerDelegate, UIAlertViewDelegate>
 
 @end
 
@@ -157,8 +157,7 @@ UIViewController *rootViewController;
 		[[NSNotificationCenter defaultCenter] postNotificationName:kUserNotificationRegistered object:notificationSettings];
 	}else{
 		DDLogError(@"Failed to register user notification");
-		//TODO: add alert view
-		[application openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        [[[UIAlertView alloc] initWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." delegate:self cancelButtonTitle:@"Not now" otherButtonTitles:@"OK", nil] show];
 	}
 }
 
@@ -167,7 +166,15 @@ UIViewController *rootViewController;
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-	//TODO: add alert view
+    [[[UIAlertView alloc] initWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." delegate:self cancelButtonTitle:@"Not now" otherButtonTitles:@"OK", nil] show];
 	DDLogError(@"Failed to register push: %@", error);
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    if ([title isEqualToString:@"OK"]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }
 }
 @end

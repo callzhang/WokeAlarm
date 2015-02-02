@@ -18,7 +18,6 @@
 #import "NSDate+MTDates.h"
 
 @implementation EWCachedInfoManager
-//TODO: There is unfinished work
 //The manager should monitor my activities and update the statistics automatically
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
@@ -34,7 +33,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.activities options:0 block:^(id observer, id object, NSDictionary *change) {
 		//If the value of the NSKeyValueChangeKindKey entry is NSKeyValueChangeInsertion, NSKeyValueChangeRemoval, or NSKeyValueChangeReplacement, the value of this key is an NSIndexSet object that contains the indexes of the inserted, removed, or replaced objects.
         if (change[NSKeyValueChangeIndexesKey]) {
-            DDLogVerbose(@"CachedManager detected Activity change, detected and statistics updated: %@", change[NSKeyValueChangeIndexesKey]);
+            DDLogInfo(@"CachedManager detected Activity change, detected and statistics updated: %@", change[NSKeyValueChangeIndexesKey]);
             [self updateStatistics];
             [self updateActivityCacheWithCompletion:nil];
         }
@@ -44,7 +43,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     [self.KVOController observe:[EWPerson me] keyPath:EWPersonRelationships.friends options:0 block:^(id observer, id object, NSDictionary *change) {
 		//If the value of the NSKeyValueChangeKindKey entry is NSKeyValueChangeInsertion, NSKeyValueChangeRemoval, or NSKeyValueChangeReplacement, the value of this key is an NSIndexSet object that contains the indexes of the inserted, removed, or replaced objects.
         if (change[NSKeyValueChangeIndexesKey]) {
-            DDLogVerbose(@"CachedManager detected friends change, updating cachedFriends: %@",change[NSKeyValueChangeIndexesKey]);
+            DDLogInfo(@"CachedManager detected friends change, updating cachedFriends: %@",change[NSKeyValueChangeIndexesKey]);
             [self updateCachedFriends];
         }
     }];
@@ -219,7 +218,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 #pragma mark - Update cache
 //Snapshot activity cache and save to cachedInfo (Unused)
 - (void)updateActivityCacheWithCompletion:(VoidBlock)block{    
-    //NSParameterAssert([_person isMe]);
+    NSParameterAssert([_currentPerson isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWPerson *localMe = [EWPerson meInContext:localContext];
         NSArray *activities = [localMe.activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWActivityAttributes.time ascending:NO]]];//newest on top

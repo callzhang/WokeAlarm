@@ -68,7 +68,7 @@
                 self.profilePic.image = sender.profilePic;
             }];
         }
-        
+        //TODO: add "xxx ago" times
         if([type isEqualToString:kNotificationTypeFriendRequest]){
             self.detail.text = [NSString stringWithFormat:@"%@ has sent you a friend request", sender.name];
         }
@@ -76,7 +76,6 @@
             self.detail.text = [NSString stringWithFormat:@"%@ has accepted your friend request", sender.name];
         }
         else if (kNotificationTypeNewMedia){
-            //TODO: timestamp
             self.detail.text = @"You have received voice(s) for next wake up.";
         }
     }

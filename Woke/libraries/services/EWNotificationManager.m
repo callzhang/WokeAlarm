@@ -80,7 +80,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         EWPerson *person = [[EWPersonManager sharedInstance] getPersonByServerID:personID];
         [EWNotificationManager sharedInstance].person = person;
         
-        //TODO: add image to alert
         //alert
         UIAlertView *alert;
         alert = [[UIAlertView alloc] initWithTitle:@"Friendship request"

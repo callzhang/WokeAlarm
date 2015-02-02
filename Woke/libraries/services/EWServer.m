@@ -18,11 +18,7 @@
 #import "EWNotification.h"
 #import "EWNotificationManager.h"
 #import "EWWakeUpManager.h"
-
-//view
-//TODO: #import "EWWakeUpViewController.h"
 #import "EWAVManager.h"
-//#import "UIAlertView+.h"
 #import "EWSleepViewController.h"
 
 //Tool
@@ -129,9 +125,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 + (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(BoolErrorBlock)block{
     
     //save
-    [EWSync saveWithCompletion:^{
+    [media updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
         //update Person->medias relation
-        [self updateRelation:@"medias" for:person.parseObject withObject:media.parseObject withOperation:@"add" completion:NULL];
+        [self updateRelation:@"medias" for:person.parseObject withObject:MO_on_main_thread.parseObject withOperation:@"add" completion:NULL];
         
         //set ACL
         PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -140,12 +136,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
             [acl setPublicReadAccess:YES];
             [acl setPublicWriteAccess:YES];
         }else{
-            
-            [acl setReadAccess:YES forUserId:person.objectId];
-            [acl setWriteAccess:YES forUserId:person.objectId];
+            [acl setReadAccess:YES forUserId:person.serverID];
+            [acl setWriteAccess:YES forUserId:person.serverID];
         }
         
-        PFObject *object = media.parseObject;
+        PFObject *object = MO_on_main_thread.parseObject;
         [object setACL:acl];
         [object saveInBackground];
         
@@ -154,20 +149,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
                                       @"content-available": @1,
                                       kPushType: kPushTypeMedia,
                                       kPushMediaType: kPushMediaTypeVoice,
-                                      kPushPersonID: [EWPerson me].objectId,
-                                      kPushMediaID: media.objectId,
+                                      kPushPersonID: [EWPerson me].serverID,
+                                      kPushMediaID: MO_on_main_thread.serverID,
                                       @"sound": @"media.caf",
                                       @"alert": @"Someone has sent you an voice greeting"
                                       };
         
         
         //push
-        [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error) {
+        [EWServer parsePush:pushMessage toUsers:@[person] completion:^(BOOL succeeded, NSError *error2) {
             if (!succeeded) {
-                DDLogError(@"Send push message about media %@ failed. Reason:%@", media.objectId, error.description);
+                DDLogError(@"Send push message about media %@ failed. Reason:%@", MO_on_main_thread.objectId, error2.description);
             }
             if (block) {
-                block(succeeded, error);
+                block(succeeded, error2);
             }
         }];
     }];

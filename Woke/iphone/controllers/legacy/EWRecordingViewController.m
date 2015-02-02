@@ -133,7 +133,6 @@
 }
 
 #pragma mark - collection view
-//TODO: remove below methods?
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
     cell.showName = NO;
@@ -312,7 +311,7 @@
         [alert show];
     }
     else{
-        //TODO: check
+        //TODO: Zitao: back to Profile View
 //        [self dismissBlurViewControllerWithCompletionHandler:NULL];
     }
 }

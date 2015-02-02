@@ -27,7 +27,7 @@
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWPersonManager);
 
 /**
- Possible wakees fetched from server(TODO)
+ Possible wakees fetched from server
  */
 @property (nonatomic) NSMutableArray *wakeeList;
 @property BOOL isFetchingWakees;
