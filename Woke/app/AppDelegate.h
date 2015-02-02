@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-//extern UIViewController *rootViewController; //FIXME: remove it
-
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

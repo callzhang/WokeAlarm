@@ -21,7 +21,6 @@
 #import "NSString+Extend.h"
 #import "EWAccountManager.h"
 
-static const NSArray *sleepDurations;
 static const NSArray *socialLevels;
 static const NSArray *pref;
 
@@ -29,11 +28,8 @@ static const NSArray *pref;
     NSString *selectedCellTitle;
     NSArray *ringtoneList;
 }
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableDictionary *preference;
-
-@end
-
-@interface EWSettingsViewController (UITableView) <UITableViewDataSource, UITableViewDelegate>
 @end
 
 @interface RDSelectionViewController()<UIPickerViewDataSource,UIPickerViewDelegate,EWSelectionViewControllerDelegate>
@@ -41,66 +37,40 @@ static const NSArray *pref;
 
 @implementation EWSettingsViewController
 @synthesize preference;
-
+@synthesize tableView = _tableView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    sleepDurations = @[@6, @6.5, @7.5, @8, @8.5, @9, @9.5, @10, @10.5, @11, @11.5, @12];
+    //self.view.backgroundColor = [UIColor clearColor];
+    preference = [[EWPerson me].preference mutableCopy]?:[kUserDefaults mutableCopy];
+    settingGroup = settingGroupPreference;//legacy code
+    ringtoneList = ringtoneNameList;
     socialLevels = @[kSocialLevelFriends, kSocialLevelEveryone];
     pref = @[@"Morning tone", @"Bed time notification", @"Sleep duration", @"Log out", @"About"];
-    
-    self.title = @"Preferences";
-
-    [self initData];
-    [self initView];
 }
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(about:)];
+    self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+    self.title = @"Preferences";
+    self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[ImagesCatalog wokeBackground]];
+    self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.1];
+    if ([[UIDevice currentDevice].systemVersion doubleValue]>=7.0f) {
+        self.tableView.separatorInset = UIEdgeInsetsZero;// 这样修改，那条线就会占满
+    }
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+}
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [EWPerson me].preference = [preference copy];
     [[EWPerson me] save];
 }
-- (void)initData {
-    //profile
-    preference = [[EWPerson me].preference mutableCopy]?:[kUserDefaults mutableCopy];
-    settingGroup = settingGroupPreference;
-    ringtoneList = ringtoneNameList;
-    
-}
-
-- (void)initView {
-    self.view.backgroundColor = [UIColor clearColor];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStyleDone target:self action:@selector(onDone:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"More Button"] style:UIBarButtonItemStylePlain target:self action:@selector(about:)];
-    
-    //TableView
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    _tableView.dataSource = self;
-    _tableView.delegate = self;
-    _tableView.backgroundColor = [UIColor clearColor];
-    _tableView.backgroundView = nil;
-    _tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.1];
-    if ([[UIDevice currentDevice].systemVersion doubleValue]>=7.0f) {
-        _tableView.separatorInset = UIEdgeInsetsZero;// 这样修改，那条线就会占满
-    }
-    
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    [self.view addSubview:_tableView];
-}
-
-//refrash data after edited
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [_tableView reloadData];
-}
 
 #pragma mark - IBAction
-- (IBAction)onDone:(id)sender{
-    [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
-}
-
 - (IBAction)about:(id)sender{
-    //
+    DDLogInfo(@"About tapped");
 }
 
 #pragma mark - RingtongSelectionDelegate
@@ -114,7 +84,7 @@ static const NSArray *pref;
 @end
 
 @implementation EWSettingsViewController (UITableView)
-#pragma mark - Cell Maker
+#pragma mark Cell Maker
 - (UITableViewCell *)makeProfileCellInTableView:(UITableView *)tableView {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"profileCell"];
     if (!cell) {
@@ -131,6 +101,7 @@ static const NSArray *pref;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"settingPreferenceCell"];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.detailTextLabel.textColor = [UIColor colorWithWhite:1 alpha:0.9];
         cell.backgroundColor = kCustomLightGray;
     }
     return cell;
@@ -148,23 +119,6 @@ static const NSArray *pref;
 }
 
 #pragma mark - DataSource
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    switch (settingGroup) {
-        case settingGroupProfile: {
-            return 1;
-        }
-        break;
-        case settingGroupPreference: {
-            return 1;
-        }
-        break;
-        default: {//settingGroupAbout
-            return 1;
-        }
-        break;
-    }
-    return 1;
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (settingGroup) {

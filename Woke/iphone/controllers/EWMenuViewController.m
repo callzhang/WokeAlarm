@@ -75,7 +75,9 @@
 	}];
 }
 - (IBAction)onSetting:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:NULL];
+    [self.mainNavigationController toogleMenuCompletion:^{
+        //
+    }];
 }
 
 

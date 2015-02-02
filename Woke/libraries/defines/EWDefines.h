@@ -68,6 +68,7 @@
 
 //DEFAULT DATA
 #define defaultAlarmTimes               @[@8.00, @8.00, @8.00, @8.00, @8.00, @8.00, @8.00]
+#define sleepDurations					@[@6, @6.5, @7.5, @8, @8.5, @9, @9.5, @10, @10.5, @11, @11.5, @12]
 #define kUserDefaults                   @{@"DefaultTone": @"Autumn Spring.caf", @"SleepDuration":@8.0, kSocialLevel:kSocialLevelEveryone, @"FirstTime":@YES, @"SkipTutorial":@NO, @"buzzSound":@"default", @"BedTimeNotification":@YES}
 #define kSocialLevel                    @"SocialLevel"
 #define kSocialLevelFriends             @"Friends_only"
@@ -88,7 +89,6 @@
 #define kWakeStartNotification          @"wake_time"//start wake
 #define kWokeNotification               @"woke"//finished wake
 #define kSleepNotification              @"Sleep"
-//#define kNewMediaNotification           @"" //key: task & media
 extern NSString * const kNewMediaNotification;
 
 #define kNewTimerNotification           @"alarm_timer"

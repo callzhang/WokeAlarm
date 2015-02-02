@@ -25,7 +25,7 @@
     
     self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
     self.title = @"Alarms";
-    self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"woke-background"]];
+    self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[ImagesCatalog wokeBackground]];
     
     self.alarms = [EWPerson myAlarms];
     self.nextAlarm = [EWPerson myCurrentAlarm];
