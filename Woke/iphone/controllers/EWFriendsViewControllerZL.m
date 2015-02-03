@@ -164,7 +164,7 @@
         }
             break;
         case 1:{//Facebook, saerch for facebook
-            [[EWSocialManager sharedInstance] searchForFacebookRelatedUsersWithCompletion:^(NSArray *array, NSError *error) {
+            [[EWSocialManager sharedInstance] findFacebookRelatedUsersWithCompletion:^(NSArray *array, NSError *error) {
                 block(array, error);
             }];
         }

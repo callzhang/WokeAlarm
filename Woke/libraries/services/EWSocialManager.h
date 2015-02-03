@@ -28,6 +28,6 @@
 //facebook friends search
 - (void)getFacebookFriends;
 //match facebook friends on server to find related users
-- (void)searchForFacebookRelatedUsersWithCompletion:(ArrayBlock)block;
+- (void)findFacebookRelatedUsersWithCompletion:(ArrayBlock)block;
 
 @end

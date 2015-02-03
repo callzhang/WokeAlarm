@@ -28,6 +28,11 @@
     
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.tableView.sectionIndexColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add Friends" style:UIBarButtonItemStylePlain target:self action:@selector(onAddFriendsBarButtonItem:)];
+}
+
+- (void)onAddFriendsBarButtonItem:(UIBarButtonItem *)item {
+    [self performSegueWithIdentifier:MainStoryboardIDs.segues.friendsToAddFriends sender:self];
 }
 
 - (void)setFriends:(NSArray *)friends {

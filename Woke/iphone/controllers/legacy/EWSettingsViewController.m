@@ -28,7 +28,7 @@ static const NSArray *pref;
     NSString *selectedCellTitle;
     NSArray *ringtoneList;
 }
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
+//@property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableDictionary *preference;
 @end
 
@@ -37,7 +37,7 @@ static const NSArray *pref;
 
 @implementation EWSettingsViewController
 @synthesize preference;
-@synthesize tableView = _tableView;
+//@synthesize tableView = _tableView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -183,7 +183,7 @@ static const NSArray *pref;
             NSUInteger row =[vc.picker selectedRowInComponent:0];
             UILabel *titleLabel = (UILabel *)[vc.picker viewForRow:row forComponent:0];
             self.preference[@"DefaultTone"] = titleLabel.text;
-            [_tableView reloadData];
+            [self.tableView reloadData];
             [[EWAVManager sharedManager] stopAllPlaying];
         } andCancelHandler:^(RDSelectionViewController *vc) {
             [[EWAVManager sharedManager] stopAllPlaying];
@@ -197,7 +197,7 @@ static const NSArray *pref;
             NSUInteger row =[vc.picker selectedRowInComponent:0];
             NSString *level = socialLevels[row];
             self.preference[@"SocialLevel"] = level;
-            [_tableView reloadData];
+            [self.tableView reloadData];
             DDLogInfo(@"Successfully selected date: %ld (With block)",(long)[vc.picker selectedRowInComponent:0]);
        } andCancelHandler:^(RDSelectionViewController *vc) {
            DDLogInfo(@"Date selection was canceled (with block)");
@@ -217,7 +217,7 @@ static const NSArray *pref;
                 DDLogInfo(@"Sleep duration changed from %f to %f", d0, d);
                 preference[kSleepDuration] = @(d);
                 [EWPerson me].preference = preference.copy;
-                [_tableView reloadData];
+                [self.tableView reloadData];
                 [[EWAlarmManager sharedInstance] scheduleSleepNotifications];
             }
         } andCancelHandler:^(RDSelectionViewController *vc) {
