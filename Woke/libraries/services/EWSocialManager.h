@@ -15,7 +15,6 @@
 
 + (EWSocialManager *)sharedInstance;
 
-
 - (EWSocial *)socialGraphForPerson:(EWPerson *)person;
 - (void)updateFriendshipTimeline;
 
@@ -29,5 +28,5 @@
 - (void)getFacebookFriends;
 //match facebook friends on server to find related users
 - (void)searchForFacebookRelatedUsersWithCompletion:(ArrayBlock)block;
-
+- (NSURL *)getFacebookProfilePictureURLWithID:(NSString *)fid;
 @end
