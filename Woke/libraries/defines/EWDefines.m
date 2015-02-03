@@ -23,6 +23,7 @@ NSString * const kBedTimeNotification = @"BedTimeNotification";
 
 //notification types
 NSString * const kPushNofiticationID = @"notificationID";
+NSString * const kNotificationTypeFriendRequest = @"friendship_request";
 NSString * const kNotificationTypeFriendAccepted = @"friendship_accepted";
 NSString * const kNotificationTypeSystemNotice = @"notice";
 NSString * const kNotificationTypeNewMedia = @"new_media";

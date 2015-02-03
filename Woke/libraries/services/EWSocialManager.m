@@ -232,8 +232,7 @@
         PFQuery *q1 = [[PFUser query] whereKey:@"searchString" containsString:str.lowercaseString];
         query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, query, nil]];
     }
-    
-    //[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [query setLimit:50];
     [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
         DDLogDebug(@"===> Search phrase %@ with result of %@", name, [objects valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
@@ -333,7 +332,12 @@
     EWSocial *social = [EWPerson mySocialGraph];
     NSArray *facebookIDs = social.facebookFriends.allKeys;
     if (facebookIDs.count == 0 || social.facebookUpdated.timeElapsed < 24 * 3600) {
-        block(social.facebookRelatedUsers?:[NSArray array], nil);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K IN %@", kParseObjectID, social.facebookRelatedUsers];
+            NSArray *users = [EWPerson MR_findAllWithPredicate:predicate inContext:mainContext];
+            block(users, nil);
+        });
+        
         return;
     }
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];

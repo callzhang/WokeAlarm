@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EWBaseViewController.h"
+#define kMaxPersonNavigationConnt   6
 
 @class EWPerson;
 @class EWCachedInfoManager;

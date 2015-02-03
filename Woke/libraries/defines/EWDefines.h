@@ -31,10 +31,6 @@
 #define kParseClientKey                 @"PUCluYbG6LnPOfvJeYrhh2sNYX4ETffuPS4u65fJ"
 #define kParseRestAPIId                 @"ZtAlif0L5UiL1HzXGS71XfI6dxyTJWXgis37t2oo"
 #define kParseMasterKey                 @"iEjKEePThBb4KxJVj64o3nbkBGYrGzm6NPiFaFoN"
-//#define AWS_ACCESS_KEY_ID               @"AKIAIB2BXKRPL3FCWJYA"
-//#define AWS_SECRET_KEY                  @"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"
-//#define AWS_SNS_APP_ARN                 @"arn:aws:sns:us-west-2:260520558889:app/APNS_SANDBOX/Woke_Dev"
-//#define TESTFLIGHT_ACCESS_KEY           @"e1ffe70a-26bf-4db0-91c8-eb2d1d362cb3"
 #define WokeUserID                      @"CvCaWauseD"
 #define KATConnectKey                   @"61c58f4a6f819d0f209606bdf5e9eeadabfc73529dba358cd079df0dc6dd1102"
 
@@ -65,6 +61,7 @@ extern NSString * const EWAccountDidLogoutNotification;
 #define kSocialGraphUpdateInterval      3600*24*7
 #define kMaxVoicePerTask                3
 #define kServerUpdateInterval			7200
+#define kCollectionViewCellWidth		80
 
 //DEFAULT DATA
 #define defaultAlarmTimes               @[@8.00, @8.00, @8.00, @8.00, @8.00, @8.00, @8.00]
@@ -148,14 +145,14 @@ extern NSString * const kPushNofiticationID;
 
 
 //Cached Info
-extern NSString * const kCachedFriends                   @"friends"
-extern NSString * const kCachedAlarmTimes                @"alarm_schedule"
-extern NSString * const kCachedStatements                @"statements"
+extern NSString * const kCachedFriends;
+extern NSString * const kCachedAlarmTimes;
+extern NSString * const kCachedStatements;
 
 
 // ATConnect
-extern NSString * const kLoginSuccess           @"login_success"
-extern NSString * const kWakeupSuccess          @"wake_success"
-extern NSString * const kRecordVoiceSuccess     @"record_success"
+extern NSString * const kLoginSuccess;
+extern NSString * const kWakeupSuccess;
+extern NSString * const kRecordVoiceSuccess;
 
 

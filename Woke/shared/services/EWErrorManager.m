@@ -17,12 +17,15 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
 
 + (void)handleError:(NSError *)error {
 #ifdef DEBUG
-    EWAlert(error);
+    NSString *errStr = [NSString stringWithFormat:@"%@", error];
+    EWAlert(errStr);
 #endif
     DDLogError(@"%@", error);
     
     if ([error.domain isEqualToString:FacebookSDKDomain]) {
         [self handleFacebookException:error];
+    }else {
+        [NSException raise:@"UnhandledError" format:@"Error passed in is not handled: %@", error];
     }
 }
 
