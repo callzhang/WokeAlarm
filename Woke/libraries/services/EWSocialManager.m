@@ -147,8 +147,10 @@
     
     //get a list of PHPerson
     NSArray *contacts = [self.addressBook people];
-    NSMutableArray *myContactFriends = [NSMutableArray array];
+    NSMutableArray *myContactFriends = [NSMutableArray new];
+    NSMutableArray *contactsEmails = [NSMutableArray new];
     for (RHPerson *contact in contacts) {
+        [contactsEmails addObjectsFromArray:contact.emails.values];
         for (NSString *email in contact.emails.values) {
             [myContactFriends addObject:@{@"email": email, @"name": contact.name}];
         }
@@ -156,22 +158,29 @@
     social.addressBookFriends = myContactFriends;
     
     //Update email to EWSocial
-    [self getUsersWithEmails:myContactFriends completion:^(NSArray *people, NSError *error) {
+    [self getUsersWithEmails:contactsEmails completion:^(NSArray *people, NSError *error) {
         if (completion) {
             completion(people, error);
-            
-            for (EWPerson *person in people) {
-                if (![social.addressBookRelatedUsers containsObject:person.email]) {
-                    [social.addressBookRelatedUsers addObject:person.email];
-                }
-            }
-            social.addressBookUpdated = [NSDate date];
-            [social save];
         }
+        
+        for (EWPerson *person in people) {
+            if (![social.addressBookRelatedUsers containsObject:person.email]) {
+                [social.addressBookRelatedUsers addObject:person.email];
+            }
+        }
+        social.addressBookUpdated = [NSDate date];
+        [social save];
     }];
 }
 
-
+- (NSArray *)addressBookRecordIDsWithEmail:(NSString *)email{
+    NSArray *people = [self.addressBook peopleWithEmail:email];
+    NSArray *recordIDs = [people bk_map:^id(RHPerson *person) {
+        NSNumber *ID = @(person.recordID);
+        return ID;
+    }];
+    return recordIDs;
+}
 
 #pragma mark - Search user with string
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block{

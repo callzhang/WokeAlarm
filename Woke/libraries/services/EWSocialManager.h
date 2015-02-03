@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "EWSocial.h"
-#define kAddressBookChecked     @"addressbook_checked"
 
 @class EWPerson;
 @interface EWSocialManager : NSObject
@@ -20,7 +19,7 @@
 
 //Addressbook Search
 - (void)findAddressbookUsersFromContactsWithCompletion:(ArrayBlock)completion;
-
+- (NSArray *)addressBookRecordIDsWithEmail:(NSString *)email;
 //return an array of EWPerson
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block;
 
