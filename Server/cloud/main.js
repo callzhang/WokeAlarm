@@ -777,6 +777,29 @@ Parse.Cloud.beforeSave("_User", function(request, response) {
   response.success();
 });
 
+Parse.Cloud.beforeSave("EWSocial", function(request, response) {
+  var social = request.object;
+  var facebookIDs = [];
+  var friends = social.get("facebookFriends");
+  for (var key in friends) {
+    if (friends.hasOwnProperty(key)) {
+      facebookIDs.push(key);
+    }
+  }
+  social.set("facebookFriendsArray", facebookIDs);
+
+  var emails = [];
+  var addressBookFriends = social.get("addressBookFriends");
+  addressBookFriends.forEach(function (emailNamePair) {
+    var email = emailNamePair.email;
+    emails.push(email);
+  });
+  social.set("addressBookFriendsEmailArray", emails);
+  console.log("saved search string for user "+social.get("owner").id);
+
+  response.success();
+});
+
 
 
 //=================Background Job==================

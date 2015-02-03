@@ -147,12 +147,10 @@
     
     //get a list of PHPerson
     NSArray *contacts = [self.addressBook people];
-    NSMutableArray *myContactFriends = social.addressBookFriends ?: [NSMutableArray array];
+    NSMutableArray *myContactFriends = [NSMutableArray array];
     for (RHPerson *contact in contacts) {
         for (NSString *email in contact.emails.values) {
-            if (![myContactFriends containsObject:email]) {
-                [myContactFriends addObject:email];
-            }
+            [myContactFriends addObject:@{@"email": email, @"name": contact.name}];
         }
     }
     social.addressBookFriends = myContactFriends;
@@ -302,7 +300,7 @@
             }else{
                 DDLogInfo(@"Finished loading %ld friends from facebook, transfer to social graph.", friendsHolder.count);
                 EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
-                graph.facebookFriends = friendsHolder.allKeys.mutableCopy;
+                graph.facebookFriends = friendsHolder.mutableCopy;
                 graph.facebookUpdated = [NSDate date];
                 
                 //save
@@ -324,7 +322,7 @@
 - (void)findFacebookRelatedUsersWithCompletion:(ArrayBlock)block{
     //get list of fb id
     EWSocial *social = [EWPerson mySocialGraph];
-    NSArray *facebookIDs = social.facebookFriends.copy;
+    NSArray *facebookIDs = social.facebookFriends.allKeys;
     if (facebookIDs.count == 0 || social.facebookUpdated.timeElapsed < 24 * 3600) {
         block(social.facebookRelatedUsers?:[NSArray array], nil);
         return;
@@ -363,7 +361,11 @@
         //save my social
         sg.facebookUpdated = [NSDate date];
         [sg save];
-        
     }];
+}
+
+- (NSURL *)getFacebookProfilePictureURLWithID:(NSString *)fid {
+    NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/v2.2/%@/picture?type=large", fid];
+    return [NSURL URLWithString:imageUrl];
 }
 @end
