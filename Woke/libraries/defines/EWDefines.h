@@ -51,8 +51,8 @@
 #define EWAssertMainThread              NSAssert([NSThread isMainThread], @"%s not in main thread", __FUNCTION__);
 
 //Account Management
-#define EWAccountDidLoginNotification    @"EWAccountDidLoginNotification"
-#define EWAccountDidLogoutNotification   @"EWAccountDidLogoutNotification"
+extern NSString * const EWAccountDidLoginNotification;
+extern NSString * const EWAccountDidLogoutNotification;
 
 //Global parameters
 #define nWeeksToSchedule				1
@@ -86,17 +86,17 @@
 #pragma mark - User / External events
 
 //============> App wide events <==============
-#define kWakeStartNotification          @"wake_time"//start wake
-#define kWokeNotification               @"woke"//finished wake
-#define kSleepNotification              @"Sleep"
+extern NSString * const kWakeStartNotification;//start wake
+extern NSString * const kWokeNotification;//finished wake
+extern NSString * const kSleepNotification;
 extern NSString * const kNewMediaNotification;
 
-#define kNewTimerNotification           @"alarm_timer"
-#define kUserNotificationRegistered		@"local_notification_registered"
+extern NSString * const kNewTimerNotification;
+extern NSString * const kUserNotificationRegistered;
 
 //sleep
-#define kSleepDuration                  @"SleepDuration"
-#define kBedTimeNotification            @"BedTimeNotification"
+extern NSString * const kSleepDuration;
+extern NSString * const kBedTimeNotification;
 
 //wakeUpManager
 #define kPushAlarmID					@"alarm_server_ID"
@@ -104,69 +104,58 @@ extern NSString * const kNewMediaNotification;
 #define kActivityLocalID                @"activity_object_ID"
 
 //Notification types
-#define kNotificationTypeFriendRequest  @"friendship_request"
-#define kNotificationTypeFriendAccepted @"friendship_accepted"
-#define kNotificationTypeSystemNotice   @"notice"
-#define kNotificationTypeNewMedia       @"new_media"
-#define kNotificationTypeNewUser		@"new_user"
+extern NSString * const kNotificationTypeFriendRequest;
+extern NSString * const kNotificationTypeFriendAccepted;
+extern NSString * const kNotificationTypeSystemNotice;
+extern NSString * const kNotificationTypeNewMedia;
+extern NSString * const kNotificationTypeNewUser;
 
 //alarm store
-#define kAlarmNew						@"EWAlarmNew" //key: alarm
-#define kAlarmStateChanged				@"EWAlarmStateChanged"//key: alarm
-//#define kAlarmTimeWillChange			@"EWAlarmTimeWillChange"//key: alarm, time, used to notify activity time change
-#define kAlarmTimeChanged				@"EWAlarmTimeChanged"//key: alarm
-#define kAlarmDelete					@"EWAlarmDelete" //key: tasks
-#define kAlarmChanged					@"EWAlarmChanged" //key: alarm
-#define kAlarmToneChanged				@"EWAlarmToneChanged" //key: alarm
-#define kAlarmStatementChanged			@"EWAlarmStatementChanged" //key: alarm
-
-//media store
-//#define kMediaNewNotification           @"EWMediaNew"
-
-#define kADIDKey                            @"ADID" //key for ADID
-#define kPushAPNSRegisteredNotification     @"APNSRegistered"
-
-//Notification key
-#define kLocalNotificationTypeKey           @"type"
-#define kLocalNotificationTypeAlarmTimer    @"alarm_timer"
-#define kLocalNotificationTypeReactivate    @"reactivate"
-#define kLocalNotificationTypeSleepTimer    @"sleep_timer"
+extern NSString * const kAlarmNew;//key: alarm
+extern NSString * const kAlarmStateChanged;//key: alarm
+extern NSString * const kAlarmTimeChanged;//key: alarm
+extern NSString * const kAlarmDelete;//key: tasks
+extern NSString * const kAlarmChanged;//key: alarm
+extern NSString * const kAlarmToneChanged;//key: alarm
+extern NSString * const kAlarmStatementChanged;//key: alarm
 
 //push
-#define kPushType						@"type"
-#define kPushTypeAlarmTimer				@"timer"
-#define kPushTypeBroadcast				@"broadcast"
-#define kPushTypeMedia					@"media"
-#define kPushTypeNotification			@"notice"
+extern NSString * const kADIDKey;//key for ADID
+extern NSString * const kPushAPNSRegisteredNotification;
+
+//Notification key
+extern NSString * const kLocalNotificationTypeKey;
+extern NSString * const kLocalNotificationTypeAlarmTimer;
+extern NSString * const kLocalNotificationTypeReactivate;
+extern NSString * const kLocalNotificationTypeSleepTimer;
+
+//push
+extern NSString * const kPushType;
+extern NSString * const kPushTypeAlarmTimer;
+extern NSString * const kPushTypeBroadcast;
+extern NSString * const kPushTypeMedia;
+extern NSString * const kPushTypeNotification;
 
 //media
-#define kPushMediaType					@"media_type"
-#define kPushMediaTypeBuzz				@"buzz"
-#define kPushMediaTypeVoice				@"voice"
-#define kPushPersonID					@"person"
-#define kPushMediaID					@"media"
+extern NSString * const kPushMediaType;
+extern NSString * const kPushMediaTypeBuzz;
+extern NSString * const kPushMediaTypeVoice;
+extern NSString * const kPushPersonID;
+extern NSString * const kPushMediaID;
+
 //notification
-#define kPushNofiticationID				@"notificationID"
+extern NSString * const kPushNofiticationID;
 
-//Collection View Identifier
-#define kCollectionViewCellPersonIdenfifier  @"CollectionViewIdentifier"
-
-
-//CollectionView Cell
-#define kCollectionViewCellWidth        80
-#define kCollectionViewCellHeight       80
-
-//Navgation Controller
-#define kMaxPersonNavigationConnt       6
 
 //Cached Info
-#define kCachedFriends                   @"friends"
-#define kCachedAlarmTimes                @"alarm_schedule"
-#define kCachedStatements                @"statements"
+extern NSString * const kCachedFriends                   @"friends"
+extern NSString * const kCachedAlarmTimes                @"alarm_schedule"
+extern NSString * const kCachedStatements                @"statements"
 
 
 // ATConnect
-#define kLoginSuccess           @"login_success"
-#define kWakeupSuccess          @"wake_success"
-#define kRecordVoiceSuccess     @"record_success"
+extern NSString * const kLoginSuccess           @"login_success"
+extern NSString * const kWakeupSuccess          @"wake_success"
+extern NSString * const kRecordVoiceSuccess     @"record_success"
+
 
