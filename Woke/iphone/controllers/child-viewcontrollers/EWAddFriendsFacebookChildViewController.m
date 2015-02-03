@@ -7,16 +7,19 @@
 //
 
 #import "EWAddFriendsFacebookChildViewController.h"
+#import "EWSocialManager.h"
 
 @interface EWAddFriendsFacebookChildViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) NSArray *items;
+@property (nonatomic, readonly) NSArray *items;
+@property (nonatomic, strong) NSDictionary *facebookFrineds;
 @end
 
 @implementation EWAddFriendsFacebookChildViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self loadFriendsOnWokeSection];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -24,11 +27,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.items[section][@"rows"] integerValue];
+    return [self.items[section][@"rows"] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    return nil;
 }
 
 - (NSArray *)items {
@@ -39,5 +42,17 @@
                }, @"showRightButton": @(YES)
                },
              ];
+}
+
+- (void)loadFriendsOnWokeSection {
+    [[EWSocialManager sharedInstance] findFacebookRelatedUsersWithCompletion:^(NSArray *array, NSError *error) {
+        
+    NSDictionary *dictionary = @{@"rows": array,
+      @"sectionName": ^{
+          
+      }, @"showRightButton": @(YES)
+                                 };
+        self.facebookFrineds = dictionary;
+    }];
 }
 @end
