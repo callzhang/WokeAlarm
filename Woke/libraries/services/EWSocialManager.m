@@ -316,7 +316,7 @@
                 [graph save];
                 
                 //search for facebook related user
-                [self searchForFacebookRelatedUsersWithCompletion:NULL];
+                [self findFacebookRelatedUsersWithCompletion:NULL];
             }
             
         } else {
@@ -328,7 +328,7 @@
 }
 
 #pragma mark - Find related server users
-- (void)searchForFacebookRelatedUsersWithCompletion:(ArrayBlock)block{
+- (void)findFacebookRelatedUsersWithCompletion:(ArrayBlock)block{
     //get list of fb id
     EWSocial *social = [EWPerson mySocialGraph];
     NSArray *facebookIDs = social.facebookFriends.allKeys;
