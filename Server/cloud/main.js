@@ -801,7 +801,7 @@ Parse.Cloud.beforeSave("EWSocial", function(request, response) {
     social.set("addressBookFriendsEmailArray", emails);
   };
   
-  console.log("saved search string for user "+social.get("owner").id);
+  console.log("saved search string for social "+social.id);
 
   response.success();
 });

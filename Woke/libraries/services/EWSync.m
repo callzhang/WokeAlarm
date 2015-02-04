@@ -432,12 +432,12 @@ NSManagedObjectContext *mainContext;
         object = [PFObject objectWithClassName:serverObject.serverClassName];
 		[object save:error];//need to save before working on PFRelation
 		
-        if (!error) {
+        if (!*error) {
             DDLogVerbose(@"+++> CREATED PO %@(%@)", object.parseClassName, object.objectId);
             [serverObject setValue:object.objectId forKey:kParseObjectID];
         }
 		else{
-			DDLogError(@"Failed to save new PO %@", object.parseClassName);
+			DDLogError(@"Failed to save new PO %@: %@", object.parseClassName, *error);
             [serverObject uploadEventually];
             return NO;
         }

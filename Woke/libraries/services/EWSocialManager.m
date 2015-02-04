@@ -92,11 +92,22 @@
     if (person.socialGraph) {
         return person.socialGraph;
     }
+    if (!person.isMe) {
+        return nil;
+    }
+	//try to find EWSocial from PO
+    PFUser *user = (PFUser *)person.parseObject;
+    PFObject *social = user[EWPersonRelationships.socialGraph];
+    [social fetchIfNeeded];
+    EWSocial *graph;
+    //create
+    if (social) {
+        graph = (EWSocial *)[social managedObjectInContext:person.managedObjectContext];
+    }else {
+        graph = [EWSocial newSocialForPerson:person];
+    }
+    person.socialGraph = graph;
 	
-    EWSocial *graph = [EWSocial newSocialForPerson:person];
-	if (person.isMe) {
-        //update facebook friends
-	}
     return graph;
 }
 
