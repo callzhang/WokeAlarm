@@ -20,9 +20,14 @@
 	
 	//data
 	sg.owner = person;
+    sg.facebookRelatedUsers = [NSMutableArray new];
+    sg.facebookFriends = [NSMutableDictionary new];
+    sg.addressBookFriends = [NSMutableArray new];
+    sg.addressBookRelatedUsers = [NSMutableArray new];
+    
 	//save
 	[sg save];
-	NSLog(@"Created new social graph for user %@", person.name);
+	DDLogVerbose(@"Created new social graph for user %@", person.name);
 	return sg;
 }
 

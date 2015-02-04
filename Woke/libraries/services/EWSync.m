@@ -14,6 +14,8 @@
 #import "NSDictionary+KeyPathAccess.h"
 #import "EWErrorManager.h"
 
+NSString * const kEWSyncUploaded = @"sync_uploaded";
+
 //============ Global shortcut to main context ===========
 NSManagedObjectContext *mainContext;
 //=======================================================
@@ -212,19 +214,25 @@ NSManagedObjectContext *mainContext;
             
             //save callback
             if (!success) {
-                DDLogError(@"Failed to update MO with error %@", error.localizedDescription);
+                DDLogError(@"Failed to update MO: %@", error.localizedDescription);
             }
             NSString *key = localMO.objectID.URIRepresentation.absoluteString;
             EWManagedObjectSaveCallbackBlock block = callbacks[key];
+            [callbacks removeObjectForKey:key];
             if (block) {
                 [self runCompletionBlockForObjectID:key withBlock:block withError:error];
             }
             
             //remove changed record
-            NSMutableSet *changes = self.changedRecords[localMO.serverID];
-            self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.serverID]];
-
-            DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
+            if (localMO.serverID) {
+                NSMutableSet *changes = self.changedRecords[localMO.serverID];
+                self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.serverID]];
+                
+                DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
+            }else {
+                DDLogVerbose(@"===> MO %@(%@) created on server, %lu to go.", localMO.entity.name, localMO.serverID, (unsigned long)self.changedRecords.allKeys.count);
+            }
+            
             
             //remove from queue
             [self removeObjectFromWorkingQueue:localMO];
@@ -238,7 +246,7 @@ NSManagedObjectContext *mainContext;
         
         DDLogVerbose(@"=========== Finished uploading to saver ===============");
         [self runAllCompletionBlocks:callbacks withError:error];
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kEWSyncUploaded object:nil];
     }];
 }
 
@@ -252,10 +260,9 @@ NSManagedObjectContext *mainContext;
 }
 
 - (void)runCompletionBlockForObjectID:(NSString *)key withBlock:(EWManagedObjectSaveCallbackBlock)block withError:(NSError *)error{
+    //FIXME: MO.serverID could be new (in fact the MO hasn't been updated from child context)
+    if (!block) return;
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (!block) {
-            return;
-        }
         NSURL *url = [NSURL URLWithString:key];
         NSError *newError;
         NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
@@ -428,7 +435,6 @@ NSManagedObjectContext *mainContext;
         if (!error) {
             DDLogVerbose(@"+++> CREATED PO %@(%@)", object.parseClassName, object.objectId);
             [serverObject setValue:object.objectId forKey:kParseObjectID];
-			//[managedObject setValue:object.updatedAt forKeyPath:kUpdatedDateKey];
         }
 		else{
 			DDLogError(@"Failed to save new PO %@", object.parseClassName);

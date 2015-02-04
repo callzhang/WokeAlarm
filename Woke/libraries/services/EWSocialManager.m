@@ -329,6 +329,7 @@
 #pragma mark - Find related server users
 - (void)findFacebookRelatedUsersWithCompletion:(ArrayBlock)block{
     //get list of fb id
+    if (!block) return;
     EWSocial *social = [EWPerson mySocialGraph];
     NSArray *facebookIDs = social.facebookFriends.allKeys;
     if (facebookIDs.count == 0 || social.facebookUpdated.timeElapsed < 24 * 3600) {
@@ -363,6 +364,7 @@
             [resultPeople addObject:person];
             
             //add facebook ID to social
+            if (!sg.facebookRelatedUsers) sg.facebookRelatedUsers = [NSMutableArray new];
             if (![sg.facebookRelatedUsers containsObject:socialPO[EWSocialAttributes.facebookID]]) {
                 [sg.facebookRelatedUsers addObject:socialPO[EWSocialAttributes.facebookID]];
             }

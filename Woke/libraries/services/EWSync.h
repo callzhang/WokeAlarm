@@ -56,7 +56,8 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 #define kChangedRecords						@"changed_records"
 #define kUserID                             @"userId"
 #define kUsername                           @"username"
-
+//events
+extern NSString * const kEWSyncUploaded;
 
 @interface EWSync : NSObject
 /**

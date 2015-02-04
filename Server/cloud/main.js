@@ -790,11 +790,17 @@ Parse.Cloud.beforeSave("EWSocial", function(request, response) {
 
   var emails = [];
   var addressBookFriends = social.get("addressBookFriends");
-  addressBookFriends.forEach(function (emailNamePair) {
-    var email = emailNamePair.email;
-    emails.push(email);
-  });
-  social.set("addressBookFriendsEmailArray", emails);
+  if (addressBookFriends) {
+    addressBookFriends.forEach(function (emailNamePair) {
+      var email = emailNamePair.email;
+      if (email != null) {
+        emails.push(email);
+      };
+      
+    });
+    social.set("addressBookFriendsEmailArray", emails);
+  };
+  
   console.log("saved search string for user "+social.get("owner").id);
 
   response.success();
