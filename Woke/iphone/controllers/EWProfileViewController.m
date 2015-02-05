@@ -97,23 +97,22 @@
         @weakify(self);
         dataSource = @[
                        @{@"name": @"Friends", @"detail" : ^{
-                          return [NSString stringWithFormat:@"%ld", (unsigned long)_person.friends.count];
+                          return [NSString stringWithFormat:@"%@", @(_person.friends.count)];
                        }, @"action": ^{
                           @strongify(self);
-                           //TODO: [Zitao] add detail disclosure arrow
                            [self performSegueWithIdentifier:MainStoryboardIDs.segues.profileToFriends sender:self];
                        }},
                        @{@"name": ^{
                            return [NSString stringWithFormat:@"People woke %@ up", _person.genderSubjectiveCaseString];
                        }, @"detail": ^{
                         NSArray *receivedMedias = _person.receivedMedias.allObjects;
-                          return [NSString stringWithFormat:@"%ld", (unsigned long)receivedMedias.count];
+                          return [NSString stringWithFormat:@"%@", @(receivedMedias.count)];
                        }},
                        @{@"name": ^{
                            return [NSString stringWithFormat:@"People %@ woke up", _person.genderObjectiveCaseString];
                        }, @"detail": ^{
                            NSArray *medias = _person.sentMedias.allObjects;
-                           return [NSString stringWithFormat:@"%ld", (unsigned long)medias.count];
+                           return [NSString stringWithFormat:@"%@", @(medias.count)];
                        }},
                        @{@"name": @"Last Seen", @"detail": ^{
                           return [NSString stringWithFormat:@"%@ ago", _person.updatedAt.timeElapsedString];

@@ -27,6 +27,33 @@
     [self racBind];
 }
 
+- (void)setNextAlarmTimeWithMode:(NSNumber *)showGlobalTime {
+    if (!_person) {
+        return;
+    }
+    
+    NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:_person];
+//    NSAssert(time, @"time for person:%@ is nil", _person);
+    
+    if (showGlobalTime.boolValue) {
+        if (_person.location) {
+            NSTimeZone *userTimezone = [[APTimeZones sharedInstance] timeZoneWithLocation:_person.location];
+            NSDate *userTime = [time mt_inTimeZone:userTimezone];
+            NSAssert(time, @"userTime is nil");
+            NSAssert(userTimezone, @"timeZone is nil");
+            NSAssert(userTime.date2detailDateString, @"userTime.date2detailDateString is nil");
+            NSString *timeString = [NSString stringWithFormat:@"Next Alarm: %@ (%@)", userTime.date2detailDateString, userTimezone.abbreviation];
+            [self.nextAlarmButton setTitle:timeString forState:UIControlStateNormal];
+        }
+        else{
+            [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString] forState:UIControlStateNormal];
+        }
+    }
+    else {
+        [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString] forState:UIControlStateNormal];
+    }
+}
+
 - (void)racBind {
     [self.personDisposable dispose];
     
@@ -43,7 +70,8 @@
         //location
         if (person.city) {
             self.locationLabel.text =[NSString stringWithFormat:@"%@ | ",person.city];
-        }else{
+        }
+        else{
             self.locationLabel.text = @"";
         }
         //location
@@ -51,38 +79,30 @@
         
         if (person.isMe) {
             self.addFriendButton.hidden = YES;
-        }else{
+        }
+        else{
             if (person.isFriend) {
                 [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
-            }else if (person.friendWaiting){
+            }
+            else if (person.friendWaiting){
                 [self.addFriendButton setTitle:@"Waiting" forState:UIControlStateNormal];
                 //[self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
-            }else if(person.friendPending){
+            }
+            else if(person.friendPending){
                 [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
                 self.addFriendButton.alpha = 0.2;
-            }else{
+            }
+            else{
                 [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
             }
         }
+        
+        [self setNextAlarmTimeWithMode:@(self.showGlobalTime)];
     }];
     
     [RACObserve(self, showGlobalTime) subscribeNext:^(NSNumber *showGlobalTime) {
         @strongify(self);
-        //TODO: [Zitao] person missing
-        NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:_person];
-        if (showGlobalTime.boolValue) {
-            if (_person.location) {
-                NSTimeZone *userTimezone = [[APTimeZones sharedInstance] timeZoneWithLocation:_person.location];
-                NSDate *userTime = [time mt_inTimeZone:userTimezone];
-                NSString *timeString = [NSString stringWithFormat:@"Next Alarm: %@ (%@)", userTime.date2detailDateString, userTimezone.abbreviation];
-                [self.nextAlarmButton setTitle:timeString forState:UIControlStateNormal];
-            }else{
-                [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString] forState:UIControlStateNormal];
-            }
-        }
-        else {
-            [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString] forState:UIControlStateNormal];
-        }
+        [self setNextAlarmTimeWithMode:showGlobalTime];
     }];
     
 }
