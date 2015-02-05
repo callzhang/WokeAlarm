@@ -93,9 +93,9 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
         NSArray *soundArray = [backgroundingSound componentsSeparatedByString:@"."];
 		NSURL *path = [[NSBundle mainBundle] URLForResource:soundArray.firstObject withExtension:soundArray.lastObject];
 		player = [AVPlayer playerWithURL:path];
-		[player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
-		player.volume = 0.01;
-        
+		[player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
+		player.volume = 0.1;
+        [self registerBackgroudingAudioSession];
     }
     
     return self;
@@ -255,8 +255,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 		NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
 		if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
 		backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
-		DDLogVerbose(@"Scheduled timer %ld", (long)randomInterval);
-		
+		DDLogVerbose(@"Scheduled background timer %ld", (long)randomInterval);
 	});
 	
 	

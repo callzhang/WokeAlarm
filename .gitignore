@@ -24,7 +24,7 @@ build/
 .idea
 
 # KZBootstrap
-KZBootstrapUserMacros.h
+# KZBootstrapUserMacros.h
 
 dyci-main/
 Scripts/AmaroLib.pyc
