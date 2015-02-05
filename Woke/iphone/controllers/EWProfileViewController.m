@@ -24,7 +24,8 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 44.0f;
     self.title = @"Profile";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"More" style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
+    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
     self.statsManager = [EWCachedInfoManager managerForPerson:_person];
     
     @weakify(self);
