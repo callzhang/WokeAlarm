@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "EWDefines.h"
 
-NSString *const kNewMediaNotification = @"media_event";
-NSString *const EWAccountDidLoginNotification = @"EWAccountDidLoginNotification";
-NSString *const EWAccountDidLogoutNotification = @"EWAccountDidLogoutNotification";
-NSString *const kWakeStartNotification = @"wake_time";
+NSString * const kNewMediaNotification = @"media_event";
+NSString * const EWAccountDidLoginNotification = @"EWAccountDidLoginNotification";
+NSString * const EWAccountDidLogoutNotification = @"EWAccountDidLogoutNotification";
+NSString * const kWakeStartNotification = @"wake_time";
 NSString * const kWokeNotification = @"woke";
 NSString * const kSleepNotification = @"Sleep";
 NSString * const kNewTimerNotification = @"alarm_timer";
