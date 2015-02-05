@@ -1,0 +1,3 @@
+language: objective-c
+xcode_workspace: Woke.xcworkspace
+xcode_scheme: WokeTests
