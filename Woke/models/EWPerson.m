@@ -33,8 +33,6 @@ NSString * const EWPersonDefaultName = @"New User";
         person.preference = kUserDefaults;
         person.cachedInfo = [NSDictionary new];
         //person.updatedAt = [NSDate date];
-        
-        [[EWAccountManager shared] updateMyFacebookInfo];
     }
     
     //no need to save here

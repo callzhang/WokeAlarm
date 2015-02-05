@@ -28,6 +28,14 @@
 @implementation EWAccountManager
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        self.manager = [CLLocationManager new];
+    }
+    return self;
+}
+
 + (BOOL)isLoggedIn {
     return [PFUser currentUser] != nil;
 }
@@ -333,7 +341,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Geolocation
 
 - (void)registerLocation{
-    self.manager = [CLLocationManager new];
     self.manager.delegate = self;
     if ([self.manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {

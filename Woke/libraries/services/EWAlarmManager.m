@@ -71,6 +71,7 @@
     NSDictionary *times = person.cachedInfo[kCachedAlarmTimes];
     if (!times && person.isMe) {
         [[EWCachedInfoManager shared] updateCachedAlarmTimes];
+        times = person.cachedInfo[kCachedAlarmTimes];
     }
     
     for (NSDate *time in times.allValues) {

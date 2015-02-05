@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseViewController.h"
 
-@interface EWProfileViewController : UIViewController
+@interface EWProfileViewController : EWBaseViewController
 
 @property (nonatomic, strong) EWPerson *person;
 @end
