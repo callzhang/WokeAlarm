@@ -166,8 +166,10 @@ UIViewController *rootViewController;
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    [[[UIAlertView alloc] initWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." delegate:self cancelButtonTitle:@"Not now" otherButtonTitles:@"OK", nil] show];
-	DDLogError(@"Failed to register push: %@", error);
+    if (error.code != 3000) {
+        [[[UIAlertView alloc] initWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." delegate:self cancelButtonTitle:@"Not now" otherButtonTitles:@"OK", nil] show];
+    }
+    DDLogError(@"Failed to register push: %@", error);
 }
 
 #pragma mark - UIAlertViewDelegate
