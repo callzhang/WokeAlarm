@@ -1547,7 +1547,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${SRCROOT}/Pods/KZBootstrap/Pod/Assets/Scripts/bootstrap.sh";
+			shellScript = "# ${SRCROOT}/Pods/KZBootstrap/Pod/Assets/Scripts/bootstrap.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
