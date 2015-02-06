@@ -8,6 +8,7 @@
 
 #import "EWAddFriendsFacebookChildViewController.h"
 #import "EWSocialManager.h"
+#import "EWAddFriendsTableViewCell.h"
 
 @interface EWAddFriendsFacebookChildViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -31,7 +32,10 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
+    EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.addFriendsCell];
+    EWPerson *person = self.items[indexPath.section][@"rows"][indexPath.row];
+    cell.person = person;
+    return cell;
 }
 
 - (NSArray *)items {

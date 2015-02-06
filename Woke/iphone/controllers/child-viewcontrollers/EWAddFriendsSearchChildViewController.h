@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseViewController.h"
 
-@interface EWAddFriendsSearchChildViewController : UIViewController
+@interface EWAddFriendsSearchChildViewController : EWBaseViewController
 
 @end

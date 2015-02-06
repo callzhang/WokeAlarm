@@ -11,13 +11,20 @@
 @implementation EWAddFriendsTableViewCell
 
 - (void)awakeFromNib {
-    // Initialization code
+    self.backgroundColor = [UIColor clearColor];
+    self.contentView.backgroundColor = [UIColor clearColor];
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+- (void)setPerson:(EWPerson *)person {
+    if (_person != person) {
+        _person = person;
+        self.imageView.image = person.profilePic;
+        self.nameLabel.text = person.name;
+        [self.imageView applyHexagonSoftMask];
+    }
 }
 
+- (IBAction)onAddFriendButton:(id)sender {
+    
+}
 @end

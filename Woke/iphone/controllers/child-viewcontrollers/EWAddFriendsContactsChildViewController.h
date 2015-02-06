@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWBaseViewController.h"
 
-@interface EWAddFriendsContactsChildViewController : UIViewController
+@interface EWAddFriendsContactsChildViewController : EWBaseViewController
 
 @end

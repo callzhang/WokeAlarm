@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EWPerson+Woke.h"
 
 @interface EWAddFriendsTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;
 
+@property (nonatomic, strong) EWPerson *person;
 @end

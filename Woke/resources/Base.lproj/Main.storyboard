@@ -67,6 +67,7 @@
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
+            <string>Lato-Light</string>
         </mutableArray>
         <mutableArray key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
@@ -2975,8 +2976,8 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S1W-tc-9Mt">
-                                                    <rect key="frame" x="253" y="21" width="46" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S1W-tc-9Mt">
+                                                    <rect key="frame" x="253" y="22" width="46" height="30"/>
                                                     <state key="normal" title="Button">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -3168,16 +3169,75 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l4A-jv-iUL">
-                                <rect key="frame" x="100" y="240" width="47" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="dJT-3e-Q6u">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AddFriendsCell" rowHeight="70" id="kLX-AB-nci" customClass="EWAddFriendsTableViewCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kLX-AB-nci" id="XjQ-0P-HMa">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WyM-xu-PZB">
+                                                    <rect key="frame" x="20" y="10" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="AsM-zU-Mbj"/>
+                                                        <constraint firstAttribute="width" constant="50" id="gXF-yg-yjY"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XkO-J6-QPc">
+                                                    <rect key="frame" x="80" y="25" width="37" height="20"/>
+                                                    <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="16"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OTM-PU-vob">
+                                                    <rect key="frame" x="251" y="13" width="48" height="48"/>
+                                                    <state key="normal" image="woke-user-profile-add-friend-button">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="onAddFriendButton:" destination="kLX-AB-nci" eventType="touchUpInside" id="nkt-T0-yLx"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="WyM-xu-PZB" firstAttribute="leading" secondItem="XjQ-0P-HMa" secondAttribute="leading" constant="20" id="1HJ-pv-DlU"/>
+                                                <constraint firstAttribute="centerY" secondItem="WyM-xu-PZB" secondAttribute="centerY" id="5jY-ib-dsJ"/>
+                                                <constraint firstAttribute="trailing" secondItem="OTM-PU-vob" secondAttribute="trailing" constant="21" id="Btm-Fp-cZM"/>
+                                                <constraint firstItem="XkO-J6-QPc" firstAttribute="leading" secondItem="WyM-xu-PZB" secondAttribute="trailing" constant="10" id="Ng1-V4-tZK"/>
+                                                <constraint firstAttribute="centerY" secondItem="OTM-PU-vob" secondAttribute="centerY" constant="-2" id="Zfe-Qq-Dd3"/>
+                                                <constraint firstItem="WyM-xu-PZB" firstAttribute="centerY" secondItem="XkO-J6-QPc" secondAttribute="centerY" id="aBU-0X-nEa"/>
+                                                <constraint firstItem="OTM-PU-vob" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="XkO-J6-QPc" secondAttribute="trailing" constant="10" id="aiR-ay-RIH"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="nameLabel" destination="XkO-J6-QPc" id="TZU-K4-t6g"/>
+                                            <outlet property="profileImageView" destination="WyM-xu-PZB" id="6Gn-ju-AFf"/>
+                                            <outlet property="rightButton" destination="OTM-PU-vob" id="Acp-da-0ih"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="7Wf-9H-chC" id="9x2-yi-8UL"/>
+                                    <outlet property="delegate" destination="7Wf-9H-chC" id="mef-Ke-pXc"/>
+                                </connections>
+                            </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="dJT-3e-Q6u" firstAttribute="top" secondItem="mtX-Cu-IgJ" secondAttribute="bottom" id="TMy-uB-BLP"/>
+                            <constraint firstItem="QuC-dK-oeq" firstAttribute="top" secondItem="dJT-3e-Q6u" secondAttribute="bottom" id="a8R-N3-tF8"/>
+                            <constraint firstItem="dJT-3e-Q6u" firstAttribute="leading" secondItem="ysu-fG-fTq" secondAttribute="leading" id="fs7-2P-7Ly"/>
+                            <constraint firstAttribute="trailing" secondItem="dJT-3e-Q6u" secondAttribute="trailing" id="hKS-Fu-xnW"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
+                    <connections>
+                        <outlet property="tableView" destination="dJT-3e-Q6u" id="8Xb-gn-0K6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rna-kt-7J7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3215,6 +3275,7 @@
         <image name="woke-response-icon-tear-highlighted" width="30" height="30"/>
         <image name="woke-response-icon-tear-normal" width="30" height="30"/>
         <image name="woke-splash-logo" width="207" height="212"/>
+        <image name="woke-user-profile-add-friend-button" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="d4z-tG-E1i"/>

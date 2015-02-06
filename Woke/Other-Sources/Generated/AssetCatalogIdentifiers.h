@@ -143,5 +143,19 @@
 + (NSString *)wokeSplashLogoName;
 + (UIImage *)wokeTextInputFieldClearNormal;
 + (NSString *)wokeTextInputFieldClearNormalName;
++ (UIImage *)wokeUserProfileAddFriendButtonHighlighted;
++ (NSString *)wokeUserProfileAddFriendButtonHighlightedName;
++ (UIImage *)wokeUserProfileAddFriendButton;
++ (NSString *)wokeUserProfileAddFriendButtonName;
++ (UIImage *)wokeUserProfileFriendedButtonHighlighted;
++ (NSString *)wokeUserProfileFriendedButtonHighlightedName;
++ (UIImage *)wokeUserProfileFriendedButton;
++ (NSString *)wokeUserProfileFriendedButtonName;
++ (UIImage *)wokeUserProfileFriendshipPendingButtonHighlighted;
++ (NSString *)wokeUserProfileFriendshipPendingButtonHighlightedName;
++ (UIImage *)wokeUserProfileFriendshipPendingButton;
++ (NSString *)wokeUserProfileFriendshipPendingButtonName;
++ (UIImage *)wokeUserProfileTimezoneIcon;
++ (NSString *)wokeUserProfileTimezoneIconName;
 
 @end
