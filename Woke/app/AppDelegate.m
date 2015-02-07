@@ -64,6 +64,9 @@ UIViewController *rootViewController;
     //crashlytics logger
     [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
 #endif
+    
+    self.window.tintColor = [UIColor whiteColor];
+    
     // Enable Crash Reporting
     [ParseCrashReporting enable];
     [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];

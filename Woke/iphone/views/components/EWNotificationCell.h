@@ -10,12 +10,10 @@
 @class EWNotification;
 
 @interface EWNotificationCell : UITableViewCell
-@property (strong, nonatomic) IBOutlet UIImageView *profilePic;
-@property (strong, nonatomic) IBOutlet UILabel *time;
-@property (strong, nonatomic) IBOutlet UILabel *detail;
+@property (weak, nonatomic) IBOutlet UIImageView *profilePic;
+@property (weak, nonatomic) IBOutlet UILabel *time;
+@property (weak, nonatomic) IBOutlet UILabel *detail;
+@property (weak, nonatomic) IBOutlet UIImageView *unreadDotImageView;
+
 @property (strong, nonatomic) EWNotification *notification;
-@property (nonatomic) NSInteger cellHeight;
-
-- (void)setSize;
-
 @end

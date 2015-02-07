@@ -9,6 +9,9 @@
 #import "EWFriendsViewController.h"
 #import "CGLAlphabetizer.h"
 #import "EWFriendsViewTableViewCell.h"
+#import "EWProfileViewController.h"
+#import "UIStoryboard+Extensions.h"
+#import "UIBarButtonItem+BlocksKit.h"
 
 #define kFriendViewCellSectionLabelID 991
 
@@ -24,7 +27,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.friends = [EWPerson myFriends];
+    if (!self.friends) {
+        self.friends = [EWPerson myFriends];
+    }
     
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.tableView.sectionIndexColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
@@ -77,5 +82,24 @@
     label.text = self.sectionIndexTitles[section];
     
     return sectionCell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    EWPerson *person = [self objectAtIndexPath:indexPath];
+    
+    EWProfileViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:MainStoryboardIDs.viewControllers.EWProfile];
+    vc.person = person;
+    EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:vc];
+    [nav setNavigationBarTransparent:YES];
+    @weakify(vc);
+    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] bk_initWithTitle:@"Close" style:UIBarButtonItemStylePlain handler:^(id sender) {
+       @strongify(vc);
+        [vc dismissViewControllerAnimated:YES completion:nil];
+    }];
+    vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithTitle:@"More" style:UIBarButtonItemStylePlain handler:^(id sender) {
+        
+    }];
+    
+    [self presentViewController:nav animated:YES completion:nil];
 }
 @end

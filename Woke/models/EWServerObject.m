@@ -37,7 +37,8 @@
     
     if ([NSThread isMainThread]) {
         [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    }else{
+    }
+    else{
         DDLogVerbose(@"Skip saving %@(%@) on background thread", self.entity.name, self.serverID);
     }
 }

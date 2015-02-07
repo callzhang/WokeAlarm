@@ -7,29 +7,29 @@
 
 extern const struct MainStoryboardIDs {
     struct {
+        __unsafe_unretained NSString *menuToProfile;
         __unsafe_unretained NSString *wakeUpChildViewController;
         __unsafe_unretained NSString *toSleepView;
         __unsafe_unretained NSString *profileToFriends;
         __unsafe_unretained NSString *toPreWakeView;
-        __unsafe_unretained NSString *menuToAlarmReplace;
-        __unsafe_unretained NSString *toSleepModeView;
-        __unsafe_unretained NSString *searchChildViewController;
+        __unsafe_unretained NSString *toWakeUpView;
+        __unsafe_unretained NSString *menuToHome;
+        __unsafe_unretained NSString *menuToVoice;
         __unsafe_unretained NSString *tempShowMainView;
+        __unsafe_unretained NSString *searchChildViewController;
+        __unsafe_unretained NSString *menuToAlarm;
+        __unsafe_unretained NSString *toSleepModeView;
         __unsafe_unretained NSString *contactsChildViewController;
         __unsafe_unretained NSString *smallTimeChildViewController;
         __unsafe_unretained NSString *menuLogoutFadeToLoginGate;
-        __unsafe_unretained NSString *toWakeUpView;
-        __unsafe_unretained NSString *menuToProfileReplace;
+        __unsafe_unretained NSString *menuToSettings;
         __unsafe_unretained NSString *unwindFromStatusViewController;
-        __unsafe_unretained NSString *menuToNotificationReplace;
         __unsafe_unretained NSString *toSetStatusController;
-        __unsafe_unretained NSString *menuToSettingsReplace;
         __unsafe_unretained NSString *facebookChildViewController;
         __unsafe_unretained NSString *peopleArrayChildViewController;
         __unsafe_unretained NSString *timeChildViewController;
-        __unsafe_unretained NSString *menuToHomeReplace;
+        __unsafe_unretained NSString *menuToNotification;
         __unsafe_unretained NSString *friendsToAddFriends;
-        __unsafe_unretained NSString *menuToVoiceReplace;
     } segues;
 
     struct {
@@ -37,13 +37,12 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *EWMain;
         __unsafe_unretained NSString *EWMenu;
         __unsafe_unretained NSString *EWPersonSearchResultTable;
-        __unsafe_unretained NSString *EWPerson;
         __unsafe_unretained NSString *EWPreWake;
         __unsafe_unretained NSString *EWSettings;
         __unsafe_unretained NSString *EWSleep;
         __unsafe_unretained NSString *EWWakeUp;
         __unsafe_unretained NSString *EWNotification;
-        __unsafe_unretained NSString *EWFriends;
+        __unsafe_unretained NSString *EWProfile;
         __unsafe_unretained NSString *EWLoginGate;
         __unsafe_unretained NSString *EWWake;
     } viewControllers;
@@ -52,7 +51,6 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *peopleArrayChildView;
         __unsafe_unretained NSString *settingsCell;
         __unsafe_unretained NSString *EWAlarmToneViewCell;
-        __unsafe_unretained NSString *friendCell;
         __unsafe_unretained NSString *addFriendsCellSectionHeader;
         __unsafe_unretained NSString *boolCell;
         __unsafe_unretained NSString *addFriendsCell;
@@ -64,6 +62,7 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *EWAlarmTableViewCell;
         __unsafe_unretained NSString *EWWakeUpViewCell;
         __unsafe_unretained NSString *personCell;
+        __unsafe_unretained NSString *EWNotificationTalbeViewCell;
     } reusables;
 
 } MainStoryboardIDs;

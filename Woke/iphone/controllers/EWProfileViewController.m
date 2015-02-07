@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *wakeHerUpButton;
 @property (nonatomic, strong) EWCachedInfoManager *statsManager;
+@property (nonatomic, strong) NSArray *localDataSource;
 @end
 
 @implementation EWProfileViewController
@@ -47,6 +48,7 @@
     }];
 }
 
+<<<<<<< HEAD
 #pragma mark - UI
 - (IBAction)close:(id)sender {
     if (self.presentingViewController){
@@ -77,6 +79,19 @@
 }
 
 
+=======
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (!self.navigationItem.leftBarButtonItem) {
+        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    }
+    if (!self.navigationItem.rightBarButtonItem) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
+    }
+}
+
+>>>>>>> FETCH_HEAD
 #pragma mark - <UITableViewDataSource>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
@@ -125,16 +140,16 @@
 
 #pragma mark -
 - (NSArray *)localDataSource {
-    static dispatch_once_t onceToken;
-    static NSArray *dataSource;
-    dispatch_once(&onceToken, ^{
+    if (!_localDataSource) {
         @weakify(self);
-        dataSource = @[
+        _localDataSource = @[
                        @{@"name": @"Friends", @"detail" : ^{
                           return [NSString stringWithFormat:@"%@", @(_person.friends.count)];
                        }, @"action": ^{
                           @strongify(self);
-                           [self performSegueWithIdentifier:MainStoryboardIDs.segues.profileToFriends sender:self];
+                           if ([self.person isMe]) {
+                               [self performSegueWithIdentifier:MainStoryboardIDs.segues.profileToFriends sender:self];
+                           }
                        }},
                        @{@"name": ^{
                            return [NSString stringWithFormat:@"People woke %@ up", _person.genderSubjectiveCaseString];
@@ -155,7 +170,8 @@
                           return _statsManager.wakabilityStr;
                        }},
                        ];
-    });
-    return dataSource;
+    }
+    
+    return _localDataSource;
 }
 @end
