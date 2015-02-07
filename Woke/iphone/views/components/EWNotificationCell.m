@@ -14,11 +14,16 @@
 #import "UIView+Layout.h"
 
 @interface EWNotificationCell()
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *userLabelLeadingConstraint;
 
 @end
 
 @implementation EWNotificationCell
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.contentView.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = [UIColor clearColor];
+}
+
 - (void)setNotification:(EWNotification *)notification{
     if (_notification == notification) {
         return;
@@ -28,7 +33,8 @@
     //time
     if (notification.createdAt) {
         self.time.text = [notification.createdAt.timeElapsedString stringByAppendingString:@" ago"];
-    }else{
+    }
+    else{
 		__block EWNotification *blockNotification = _notification;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             PFObject *PO = blockNotification.parseObject;
@@ -40,6 +46,7 @@
         
     }
     
+    //type
     NSString *type = notification.type;
     if ([type isEqualToString:kNotificationTypeSystemNotice]) {
         self.profilePic.image = nil;
@@ -81,40 +88,11 @@
     }
     
     if (notification.completed) {
-        self.detail.enabled = NO;
-        self.time.enabled = NO;
+        self.unreadDotImageView.hidden = YES;
     }
     else{
-        self.detail.enabled = YES;
-        self.time.enabled = YES;
+        self.unreadDotImageView.hidden = NO;
     }
     
-    [self setSize];
-}
-
-- (void)setSize{
-    //adjust size
-    if ([_notification.type isEqualToString:kNotificationTypeSystemNotice]) {
-        self.userLabelLeadingConstraint.constant = -40;
-        self.detail.text = [NSString stringWithFormat:@"%@:%@", self.detail.text, kNotificationTypeSystemNotice];
-
-        CGSize fixLabelSize = [self.detail.text sizeWithFont:self.detail.font constrainedToSize:CGSizeMake(self.detail.width+40, 1000)  lineBreakMode:NSLineBreakByWordWrapping];
-        CGFloat deltaH = ceil(fixLabelSize.height - self.detail.height);
-        self.detail.height += deltaH;
-        self.contentView.height = fixLabelSize.height + deltaH;
-        self.height = self.contentView.height;
-    }
-    else {
-        self.userLabelLeadingConstraint.constant = 8;
-    }
-    
-    [self setNeedsDisplay];
-}
-
-- (void)drawRect:(CGRect)rect{
-    [super drawRect:rect];
-    if (self.profilePic.image) {
-        [EWUIUtil applyHexagonSoftMaskForView:self.profilePic];
-    }
 }
 @end

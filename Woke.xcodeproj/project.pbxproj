@@ -115,6 +115,7 @@
 		09A777321A11E2BD004AF902 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 09A777211A11E2BD004AF902 /* Settings.bundle */; };
 		09A777341A11E2BD004AF902 /* KZBEnvironments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 09A777271A11E2BD004AF902 /* KZBEnvironments.plist */; };
 		09A86FD21A1ACDDB0075DFF4 /* EWMainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */; };
+		09A923B01A86DA1D007B2251 /* EWMenuReplaceFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A923AF1A86DA1D007B2251 /* EWMenuReplaceFadeSegue.m */; };
 		09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE17F1A13285400989ECA /* EWBaseViewController.m */; };
 		09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */; };
 		09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B521001A25786C008FF7F6 /* UIView+Mask.m */; };
@@ -404,6 +405,8 @@
 		09A777291A11E2BD004AF902 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		09A86FD01A1ACDDB0075DFF4 /* EWMainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EWMainNavigationController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		09A86FD11A1ACDDB0075DFF4 /* EWMainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWMainNavigationController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		09A923AE1A86DA1D007B2251 /* EWMenuReplaceFadeSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMenuReplaceFadeSegue.h; sourceTree = "<group>"; };
+		09A923AF1A86DA1D007B2251 /* EWMenuReplaceFadeSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWMenuReplaceFadeSegue.m; sourceTree = "<group>"; };
 		09ABE17E1A13285400989ECA /* EWBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseViewController.h; sourceTree = "<group>"; };
 		09ABE17F1A13285400989ECA /* EWBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseViewController.m; sourceTree = "<group>"; };
 		09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseNavigationController.h; sourceTree = "<group>"; };
@@ -878,6 +881,8 @@
 				0990EF771A22C606001AF099 /* MSReplaceFadeSegue.m */,
 				0990EF781A22C606001AF099 /* MSReplaceSegue.h */,
 				0990EF791A22C606001AF099 /* MSReplaceSegue.m */,
+				09A923AE1A86DA1D007B2251 /* EWMenuReplaceFadeSegue.h */,
+				09A923AF1A86DA1D007B2251 /* EWMenuReplaceFadeSegue.m */,
 			);
 			path = segues;
 			sourceTree = "<group>";
@@ -1571,6 +1576,7 @@
 				9B88293F1A317E3900EF572E /* UIViewController+Blur.m in Sources */,
 				096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */,
 				09DF4F821A1434AF00BEA328 /* _EWAchievement.m in Sources */,
+				09A923B01A86DA1D007B2251 /* EWMenuReplaceFadeSegue.m in Sources */,
 				09229C9B1A6318BB008061E5 /* EWSleepingViewController.m in Sources */,
 				096AAAE51A195A3900B4CBFF /* EWServer.m in Sources */,
 				096AAAE71A195A3900B4CBFF /* EWSocialManager.m in Sources */,

@@ -34,25 +34,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //TODO: [ZhangLei] name refactor!!!
     //notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reload) name:kNotificationCompleted object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reload) name:kNotificationNew object:nil];
     
     // Data source
-    notifications = [EWPerson myNotifications];
+    [self reload];
     
     //tableview
-    self.tableView.delegate = self;
-    self.tableView.dataSource =self;
-    self.tableView.contentInset = UIEdgeInsetsMake(2, 0, 200, 0);
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.1];
-    self.tableView.separatorInset = UIEdgeInsetsZero;
-    self.tableView.backgroundColor = [UIColor clearColor];
-    //[EWUIUtil applyAlphaGradientForView:self.tableView withEndPoints:@[@0.13]];
-    UINib *nib = [UINib nibWithNibName:@"EWNotificationCell" bundle:nil];
-    [self.tableView registerNib:nib forCellReuseIdentifier:kNotificationCellIdentifier];
-    
     //toolbar
     loading = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     loading.hidesWhenStopped = YES;
@@ -78,8 +68,21 @@
     [self refresh:nil];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [notifications enumerateObjectsUsingBlock:^(EWNotification *noti, NSUInteger idx, BOOL *stop) {
+        noti.completed = [NSDate date];
+    }];
+    
+    [mainContext MR_saveToPersistentStoreWithCompletion:nil];
+}
+
 - (BOOL)prefersStatusBarHidden{
-    return YES;
+    return NO;
 }
 
 - (void)reload{
@@ -95,19 +98,21 @@
 - (IBAction)refresh:(id)sender{
     [loading startAnimating];
     
+    @weakify(self);
+    //TODO: refactor the following notification related call to it's functinal class. 
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWNotification class])];
     if ([EWPerson me].notifications.count) {
         [query whereKey:kParseObjectID notContainedIn:[[EWPerson me].notifications valueForKey:kParseObjectID]];
     }
     [query whereKey:EWNotificationRelationships.owner equalTo:[PFUser currentUser]];
     [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
+        @strongify(self);
         for (PFObject *PO in objects) {
             EWNotification *notification = (EWNotification *)[PO managedObjectInContext:mainContext];
-            NSLog(@"Found new notification %@(%@)", notification.type, notification.objectId);
+            DDLogVerbose(@"Found new notification %@(%@)", notification.type, notification.objectId);
             notification.owner = [EWPerson me];
         }
-        notifications = [EWPerson myUnreadNotifications];
-        [self.tableView reloadData];
+        [self reload];
         
         //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [loading stopAnimating];
@@ -121,33 +126,26 @@
 
 #pragma mark - TableView
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWNotificationCell *cell = [tableView dequeueReusableCellWithIdentifier:kNotificationCellIdentifier];
+    EWNotificationCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWNotificationTalbeViewCell];
     
     EWNotification *notification = notifications[indexPath.row];
-    if (cell.notification != notification) {
-        cell.notification = notification;
+    cell.notification = notification;
+    
+    if (indexPath.row % 2) {
+        cell.contentView.backgroundColor = [UIColor clearColor];
+    }
+    else {
+        cell.contentView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.04];
     }
     
     return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWNotification *notification = notifications[indexPath.row];
-    NSString *type = notification.type;
-    if ([type isEqualToString:kNotificationTypeSystemNotice]) {
-        EWNotificationCell *cell = (EWNotificationCell*)[self tableView:self.tableView cellForRowAtIndexPath:indexPath];
-        return cell.height;
-    }
-    else {
-        return 70;
-    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     EWNotification *notice = notifications[indexPath.row];
     [[EWNotificationManager shared] handleNotification:notice.objectId];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     });
 }
@@ -159,16 +157,6 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    cell.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0];
-}
-
-//-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-//    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
-//    view.backgroundColor = [UIColor clearColor];
-//    return view;
-//}
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {

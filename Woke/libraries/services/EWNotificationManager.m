@@ -143,10 +143,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 #pragma mark - Search
 - (NSArray *)notificationsForPerson:(EWPerson *)person{
     NSArray *notifications = person.notifications.allObjects;
-    NSSortDescriptor *sortCompelete = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.completed ascending:NO];
+    
+    NSSortDescriptor *sortCompelete = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.completed ascending:YES];
     NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:NO];
     NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];
-    notifications = [notifications sortedArrayUsingDescriptors:@[sortDate, sortCompelete, sortImportance]];
+    
+    notifications = [notifications sortedArrayUsingDescriptors:@[sortImportance, sortCompelete, sortDate]];
+    
     return notifications;
 }
 

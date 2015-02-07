@@ -68,6 +68,8 @@
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
+            <string>Lato-Light</string>
+            <string>Lato-Light</string>
         </mutableArray>
         <mutableArray key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
@@ -210,7 +212,6 @@
                                         </state>
                                         <connections>
                                             <action selector="onSetting:" destination="ztM-CD-1sO" eventType="touchUpInside" id="2Fq-fe-dHI"/>
-                                            <segue destination="111-UZ-mUA" kind="custom" identifier="MenuToSettingsReplace" customClass="MSReplaceFadeSegue" id="YXK-Pl-J02"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
@@ -222,7 +223,6 @@
                                         </state>
                                         <connections>
                                             <action selector="onProfile:" destination="ztM-CD-1sO" eventType="touchUpInside" id="Y6z-ay-5sS"/>
-                                            <segue destination="T0a-bL-MOd" kind="custom" identifier="MenuToProfileReplace" customClass="MSReplaceFadeSegue" id="Xze-aa-Hu3"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -237,7 +237,6 @@
                                 </state>
                                 <connections>
                                     <action selector="onHome:" destination="ztM-CD-1sO" eventType="touchUpInside" id="6aG-tV-5eN"/>
-                                    <segue destination="Prn-GM-2Iw" kind="custom" identifier="MenuToHomeReplace" customClass="MSReplaceFadeSegue" id="chJ-Cr-lS2"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHV-nd-2l3">
@@ -249,7 +248,6 @@
                                 </state>
                                 <connections>
                                     <action selector="onNotification:" destination="ztM-CD-1sO" eventType="touchUpInside" id="n9g-rR-cWy"/>
-                                    <segue destination="Xcq-Wo-KpO" kind="custom" identifier="MenuToNotificationReplace" customClass="MSReplaceFadeSegue" id="rP3-hS-qLM"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4y-rw-jgD">
@@ -261,7 +259,6 @@
                                 </state>
                                 <connections>
                                     <action selector="onAlarms:" destination="ztM-CD-1sO" eventType="touchUpInside" id="2tc-55-NUv"/>
-                                    <segue destination="Qdr-6h-6LT" kind="custom" identifier="MenuToAlarmReplace" customClass="MSReplaceFadeSegue" id="ghk-B2-rme"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Mb-bv-HXk">
@@ -273,7 +270,6 @@
                                 </state>
                                 <connections>
                                     <action selector="onVoice:" destination="ztM-CD-1sO" eventType="touchUpInside" id="iw3-3W-Wb8"/>
-                                    <segue destination="qpL-rI-Npc" kind="custom" identifier="MenuToVoiceReplace" customClass="MSReplaceFadeSegue" id="Mja-j3-wqm"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIq-mw-Cq6">
@@ -319,6 +315,12 @@
                         <outlet property="settings" destination="027-dv-aEP" id="6VF-b0-2it"/>
                         <outlet property="voice" destination="6Mb-bv-HXk" id="HA1-Sb-6eY"/>
                         <outlet property="voiceTopLayoutConstraint" destination="qJi-rd-S1n" id="q4Y-tT-VrY"/>
+                        <segue destination="Xcq-Wo-KpO" kind="custom" identifier="menuToNotification" customClass="EWMenuReplaceFadeSegue" id="0zs-BR-aWc"/>
+                        <segue destination="111-UZ-mUA" kind="custom" identifier="menuToSettings" customClass="EWMenuReplaceFadeSegue" id="zcx-1l-9lA"/>
+                        <segue destination="T0a-bL-MOd" kind="custom" identifier="menuToProfile" customClass="EWMenuReplaceFadeSegue" id="7pm-X4-Cvo"/>
+                        <segue destination="Prn-GM-2Iw" kind="custom" identifier="menuToHome" customClass="EWMenuReplaceFadeSegue" id="RcX-Qc-C0f"/>
+                        <segue destination="Qdr-6h-6LT" kind="custom" identifier="menuToAlarm" customClass="EWMenuReplaceFadeSegue" id="jgh-WO-W9r"/>
+                        <segue destination="qpL-rI-Npc" kind="custom" identifier="menuToVoice" customClass="EWMenuReplaceFadeSegue" id="etN-nT-dmF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VMg-tE-8Qf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2732,7 +2734,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Grv-bH-UnW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1714" y="1704"/>
+            <point key="canvasLocation" x="456" y="1048"/>
         </scene>
         <!--Notification View Controller-->
         <scene sceneID="kGd-rI-gtZ">
@@ -2746,34 +2748,99 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" tag="804" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="NPA-UM-4b2">
-                                <rect key="frame" x="10" y="10" width="320" height="568"/>
-                            </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="XSU-Ry-b1X">
+                            <imageView userInteractionEnabled="NO" tag="804" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="NPA-UM-4b2">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="XSU-Ry-b1X">
+                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="FGy-bq-mzX">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EWNotificationTalbeViewCell" rowHeight="80" id="FGy-bq-mzX" customClass="EWNotificationCell">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FGy-bq-mzX" id="AaU-IR-N5c">
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ern-EA-ktR">
+                                                    <rect key="frame" x="15" y="15" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="U45-aH-fpQ"/>
+                                                        <constraint firstAttribute="width" constant="50" id="oKk-Bj-6Ek"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZlJ-wM-f9I">
+                                                    <rect key="frame" x="80" y="9" width="225" height="62"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Celina Wells sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Qf-cS-A7K" userLabel="textLabel">
+                                                            <rect key="frame" x="0.0" y="0.0" width="225" height="47"/>
+                                                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="13"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMz-77-eS5" userLabel="dateLabel">
+                                                            <rect key="frame" x="0.0" y="47" width="225" height="15"/>
+                                                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="12"/>
+                                                            <color key="textColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstItem="QMz-77-eS5" firstAttribute="leading" secondItem="ZlJ-wM-f9I" secondAttribute="leading" id="9eH-0v-g5b"/>
+                                                        <constraint firstItem="7Qf-cS-A7K" firstAttribute="top" secondItem="ZlJ-wM-f9I" secondAttribute="top" id="Awe-2O-Psg"/>
+                                                        <constraint firstAttribute="bottom" secondItem="QMz-77-eS5" secondAttribute="bottom" id="H83-51-gs7"/>
+                                                        <constraint firstAttribute="trailing" secondItem="QMz-77-eS5" secondAttribute="trailing" id="fXp-kT-Sr2"/>
+                                                        <constraint firstAttribute="trailing" secondItem="7Qf-cS-A7K" secondAttribute="trailing" id="irL-X6-8ND"/>
+                                                        <constraint firstItem="QMz-77-eS5" firstAttribute="top" secondItem="7Qf-cS-A7K" secondAttribute="bottom" id="oas-ei-VRr"/>
+                                                        <constraint firstItem="7Qf-cS-A7K" firstAttribute="leading" secondItem="ZlJ-wM-f9I" secondAttribute="leading" id="yJk-bv-VLa"/>
+                                                    </constraints>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-user-profile-location-dot" translatesAutoresizingMaskIntoConstraints="NO" id="ihC-2C-0Uw">
+                                                    <rect key="frame" x="305" y="39" width="3" height="3"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="ern-EA-ktR" firstAttribute="leading" secondItem="AaU-IR-N5c" secondAttribute="leading" constant="15" id="1w8-Uw-awr"/>
+                                                <constraint firstItem="ern-EA-ktR" firstAttribute="centerY" secondItem="ZlJ-wM-f9I" secondAttribute="centerY" id="2in-YH-fEZ"/>
+                                                <constraint firstItem="ZlJ-wM-f9I" firstAttribute="trailing" secondItem="ihC-2C-0Uw" secondAttribute="leading" id="EzW-yi-DuJ"/>
+                                                <constraint firstAttribute="trailing" secondItem="ZlJ-wM-f9I" secondAttribute="trailing" constant="15" id="XJJ-c2-SFA"/>
+                                                <constraint firstAttribute="centerY" secondItem="ern-EA-ktR" secondAttribute="centerY" id="bhJ-cH-qMK"/>
+                                                <constraint firstItem="ZlJ-wM-f9I" firstAttribute="centerY" secondItem="ihC-2C-0Uw" secondAttribute="centerY" id="oH9-8M-f3o"/>
+                                                <constraint firstItem="ZlJ-wM-f9I" firstAttribute="leading" secondItem="ern-EA-ktR" secondAttribute="trailing" constant="15" id="u6V-eR-TUr"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="detail" destination="7Qf-cS-A7K" id="DMR-B4-ys9"/>
+                                            <outlet property="profilePic" destination="ern-EA-ktR" id="NMb-Ho-iYQ"/>
+                                            <outlet property="time" destination="QMz-77-eS5" id="5By-zx-ay7"/>
+                                            <outlet property="unreadDotImageView" destination="ihC-2C-0Uw" id="mVW-qv-rOZ"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Xcq-Wo-KpO" id="coW-3l-Ztv"/>
+                                    <outlet property="delegate" destination="Xcq-Wo-KpO" id="css-Fq-Qzn"/>
+                                </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="NPA-UM-4b2" secondAttribute="trailing" id="0FH-zx-78m"/>
                             <constraint firstItem="NPA-UM-4b2" firstAttribute="leading" secondItem="MUG-Nf-sCc" secondAttribute="leading" id="C5P-nh-M0X"/>
                             <constraint firstItem="IUa-El-gRL" firstAttribute="top" secondItem="NPA-UM-4b2" secondAttribute="bottom" id="CgU-92-xzT"/>
                             <constraint firstItem="NPA-UM-4b2" firstAttribute="top" secondItem="MUG-Nf-sCc" secondAttribute="top" id="adD-0y-EPL"/>
                             <constraint firstItem="IUa-El-gRL" firstAttribute="top" secondItem="XSU-Ry-b1X" secondAttribute="bottom" id="ajb-DH-EMp"/>
+                            <constraint firstItem="XSU-Ry-b1X" firstAttribute="top" secondItem="DoG-28-9EE" secondAttribute="bottom" id="cxG-Xe-6x8"/>
                             <constraint firstAttribute="trailing" secondItem="XSU-Ry-b1X" secondAttribute="trailing" id="kgZ-pg-Cpw"/>
                             <constraint firstItem="XSU-Ry-b1X" firstAttribute="top" secondItem="MUG-Nf-sCc" secondAttribute="top" id="oZm-0I-u3A"/>
                             <constraint firstItem="XSU-Ry-b1X" firstAttribute="leading" secondItem="MUG-Nf-sCc" secondAttribute="leading" id="ugT-7R-TzF"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="oZm-0I-u3A"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
@@ -2782,7 +2849,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1BP-Uf-e5I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="1048"/>
+            <point key="canvasLocation" x="76" y="1046"/>
         </scene>
         <!--Person Search Result Table View Controller-->
         <scene sceneID="Da2-2v-w8p">
@@ -3262,11 +3329,12 @@
         <image name="woke-response-icon-tear-normal" width="30" height="30"/>
         <image name="woke-splash-logo" width="207" height="212"/>
         <image name="woke-user-profile-add-friend-button" width="48" height="48"/>
+        <image name="woke-user-profile-location-dot" width="3" height="3"/>
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="d4z-tG-E1i"/>
-        <segue reference="chJ-Cr-lS2"/>
+        <segue reference="RcX-Qc-C0f"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

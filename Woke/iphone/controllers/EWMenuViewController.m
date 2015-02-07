@@ -52,31 +52,32 @@
 #pragma mark - Segue actions
 - (IBAction)onHome:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
-        //        [self performSegueWithIdentifier:@"MenuToHomeReplace" sender:self];
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToHome sender:self];
     }];
 }
 - (IBAction)onNotification:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:NULL];
+    [self.mainNavigationController toogleMenuCompletion:^{
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToNotification sender:self];
+    }];
 }
 - (IBAction)onAlarms:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
-//        [self performSegueWithIdentifier:@"MenuToAlarmReplace" sender:self];
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToAlarm sender:self];
     }];
 }
 - (IBAction)onVoice:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
-//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
-        
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToVoice sender:self];
     }];
 }
 - (IBAction)onProfile:(id)sender {
 	[self.mainNavigationController toogleMenuCompletion:^{
-//        [self performSegueWithIdentifier:@"MenuToVoiceReplace" sender:self];
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToProfile sender:self];
 	}];
 }
 - (IBAction)onSetting:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
-        //
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToSettings sender:self];
     }];
 }
 
@@ -175,7 +176,7 @@
     if ([segue.identifier isEqualToString:@"MenuLogoutFadeToLoginGate"]) {
         [[EWAccountManager shared] logout];
     }
-    else if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.menuToProfileReplace]) {
+    else if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.menuToProfile]) {
         EWProfileViewController *vc = segue.destinationViewController;
         vc.person = [EWPerson me];
     }

@@ -36,6 +36,14 @@
     [self.tableView reloadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
 }

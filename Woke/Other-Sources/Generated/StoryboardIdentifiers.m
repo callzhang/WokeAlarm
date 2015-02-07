@@ -7,29 +7,29 @@
 
 const struct MainStoryboardIDs MainStoryboardIDs = {
     .segues = {
+        .menuToProfile = @"menuToProfile",
         .wakeUpChildViewController = @"wakeUpChildViewController",
         .toSleepView = @"toSleepView",
         .profileToFriends = @"profileToFriends",
         .toPreWakeView = @"toPreWakeView",
-        .menuToAlarmReplace = @"MenuToAlarmReplace",
-        .toSleepModeView = @"toSleepModeView",
-        .searchChildViewController = @"searchChildViewController",
+        .toWakeUpView = @"toWakeUpView",
+        .menuToHome = @"menuToHome",
+        .menuToVoice = @"menuToVoice",
         .tempShowMainView = @"TempShowMainViewSegue",
+        .searchChildViewController = @"searchChildViewController",
+        .menuToAlarm = @"menuToAlarm",
+        .toSleepModeView = @"toSleepModeView",
         .contactsChildViewController = @"contactsChildViewController",
         .smallTimeChildViewController = @"smallTimeChildViewController",
         .menuLogoutFadeToLoginGate = @"MenuLogoutFadeToLoginGate",
-        .toWakeUpView = @"toWakeUpView",
-        .menuToProfileReplace = @"MenuToProfileReplace",
+        .menuToSettings = @"menuToSettings",
         .unwindFromStatusViewController = @"unwindFromStatusViewController",
-        .menuToNotificationReplace = @"MenuToNotificationReplace",
         .toSetStatusController = @"toSetStatusController",
-        .menuToSettingsReplace = @"MenuToSettingsReplace",
         .facebookChildViewController = @"facebookChildViewController",
         .peopleArrayChildViewController = @"peopleArrayChildViewController",
         .timeChildViewController = @"timeChildViewController",
-        .menuToHomeReplace = @"MenuToHomeReplace",
+        .menuToNotification = @"menuToNotification",
         .friendsToAddFriends = @"friendsToAddFriends",
-        .menuToVoiceReplace = @"MenuToVoiceReplace",
     },
 
     .viewControllers = {
@@ -62,6 +62,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .EWAlarmTableViewCell = @"EWAlarmTableViewCell",
         .EWWakeUpViewCell = @"EWWakeUpViewCell",
         .personCell = @"personCellIdentifier",
+        .EWNotificationTalbeViewCell = @"EWNotificationTalbeViewCell",
     },
 
 };
