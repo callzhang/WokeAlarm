@@ -27,7 +27,7 @@ target 'Woke' do
   pod 'IDMPhotoBrowser', '~> 1.4'
   pod 'apptentive-ios', '~> 1.6.0'
   pod 'IDMPhotoBrowser', '~> 1.4'
-  pod 'MYBlurIntroductionView', '~> 1.0'
+  #  pod 'MYBlurIntroductionView', '~> 1.0'
   pod 'libextobjc', '~> 0.4.1'
   pod 'KVOController', '~> 1.0.3'
   pod 'ReactiveCocoa', '~> 2.4'
