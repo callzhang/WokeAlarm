@@ -129,6 +129,9 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 //    DDLogInfo(@"%@ : insets: %@", NSStringFromCGPoint(scrollView.contentOffset), NSStringFromUIEdgeInsets(scrollView.scrollIndicatorInsets));
+    if (!self.navigationController) {
+        return;
+    }
     float offset = scrollView.scrollIndicatorInsets.top + scrollView.contentOffset.y;
     if (offset > 0) {
         [self.mainNavigationController setNavigationBarTransparent:NO];

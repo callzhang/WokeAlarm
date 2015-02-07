@@ -88,6 +88,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
         anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         anim.fromValue = @(1.0);
         anim.toValue = @(0.0);
+        anim.duration = 0.2;
         
         @weakify(self)
         anim.completionBlock = ^(POPAnimation *animation, BOOL finished) {
