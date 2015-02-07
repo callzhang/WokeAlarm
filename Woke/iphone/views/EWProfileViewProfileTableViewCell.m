@@ -10,6 +10,7 @@
 #import "EWPerson.h"
 #import "EWAlarmManager.h"
 #import "APTimeZones.h"
+
 @interface EWProfileViewProfileTableViewCell()
 @property (nonatomic, strong) RACDisposable *personDisposable;
 @property (nonatomic, assign) BOOL showGlobalTime;
@@ -54,6 +55,37 @@
     }
 }
 
+- (IBAction)onAddFriendButton:(id)sender {
+    if ([self.person isMe]) {
+        DDLogError(@"do nothing");
+    }
+    else if(self.person.isFriend) {
+       UIAlertController *controller =  [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unfriend" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[EWPerson me] unfriend:self.person];
+        }];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+        
+        [controller addAction:action];
+        [controller addAction:cancel];
+        [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES
+                                                                     completion:nil];
+    }
+    else if (self.person.friendPending) {
+        UIAlertController *controller =  [UIAlertController alertControllerWithTitle:@"Friendship pending" message:@"You have already requested friendship to this person." preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        }];
+        
+        [controller addAction:action];
+        [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES
+                                                                     completion:nil];
+    }
+    else {
+        [[EWPerson me] requestFriend:self.person];
+    }
+}
+
 - (void)racBind {
     [self.personDisposable dispose];
     
@@ -81,19 +113,20 @@
             self.addFriendButton.hidden = YES;
         }
         else{
+            self.addFriendButton.hidden = NO;
+            self.addFriendButton.alpha = 1.0f;
             if (person.isFriend) {
-                [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
+                [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendedButton] forState:UIControlStateNormal];
             }
             else if (person.friendWaiting){
-                [self.addFriendButton setTitle:@"Waiting" forState:UIControlStateNormal];
-                //[self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
+                [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
+                self.addFriendButton.alpha = 0.3f;
             }
             else if(person.friendPending){
-                [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
-                self.addFriendButton.alpha = 0.2;
+                [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendshipPendingButton] forState:UIControlStateNormal];
             }
             else{
-                [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
+                [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileAddFriendButton] forState:UIControlStateNormal];
             }
         }
         
