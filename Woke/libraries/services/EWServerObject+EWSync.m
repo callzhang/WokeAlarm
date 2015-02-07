@@ -537,7 +537,7 @@
 	if (!self.hasChanges) {
 		return;
 	}
-    DDLogVerbose(@"MO %@(%@) save to local with changes: %@", self.entity.name, self.serverID, self.changedValues.allKeys);
+    DDLogVerbose(@"MO %@(%@) save to local with changes", self.entity.name, self.serverID);
     //mark MO as save to local
     if (self.objectID.isTemporaryID) {
         [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
