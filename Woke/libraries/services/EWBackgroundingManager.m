@@ -257,7 +257,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	if (backgroundingFailNotification) {
 		[[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
 	}
-	//if (self.sleeping) {
+#ifdef DEBUG
 		backgroundingFailNotification= [[UILocalNotification alloc] init];
 		backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:200];
 		backgroundingFailNotification.alertBody = @"Woke stopped running. Tap here to reactivate it.";
@@ -265,8 +265,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 		backgroundingFailNotification.userInfo = @{kLocalNotificationTypeKey: kLocalNotificationTypeReactivate};
 		backgroundingFailNotification.soundName = backgroundingFailureSound;
 		[[UIApplication sharedApplication] scheduleLocalNotification:backgroundingFailNotification];
-	//}
-	
+#endif
 }
 
 - (void)playSilentSound{
@@ -296,7 +295,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 													withOptions: AVAudioSessionCategoryOptionMixWithOthers
 														  error:&error];
 	if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
-	[self playSilentSound];
+	//[self playSilentSound];
 }
 
 @end

@@ -21,6 +21,9 @@
 //#import "FBKVOController.h"
 #import <KVOController/FBKVOController.h>
 #import "EWBlockTypes.h"
+#import "EWUIUtil.h"
+#import "EWFriendRequest.h"
+#import "EWErrorManager.h"
 
 @interface EWPersonManager()
 @property (nonatomic, strong) NSMutableArray *wakeeListChangeBlocks;
@@ -223,7 +226,175 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 
 
+#pragma mark - Friendship
 
+- (void)requestFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion{
+    EWAssertMainThread
+    [self sendFriendRequestToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
+        if (request) {
+            [[EWPerson me] addFriendshipRequestSentObject:request];
+            [[EWPerson me] saveToLocal];
+            if (completion) {
+                if([request.status isEqualToString:EWFriendshipRequestPending]) {
+                    completion(EWFriendshipStatusSent, error);
+                } else if ([request.status isEqualToString:EWFriendshipRequestFriended]) {
+                    completion(EWFriendshipStatusFriended, error);
+                } else if ([request.status isEqualToString:EWFriendshipRequestDenied]) {
+                    completion(EWFriendshipStatusDenied, error);
+                }
+            }
+        }
+        else {
+            [EWUIUtil showFailureHUBWithString:@"Failed"];
+        }
+    }];
+}
+
+- (void)acceptFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion{
+    
+    EWAssertMainThread
+    [self sendFriendAcceptToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
+        if (request) {
+            [[EWPerson me] addFriendsObject:person];
+            [[EWPerson me] saveToLocal];
+            if (completion) {
+                if([request.status isEqualToString:EWFriendshipRequestPending]) {
+                    completion(EWFriendshipStatusReceived, error);
+                } else if ([request.status isEqualToString:EWFriendshipRequestFriended]) {
+                    completion(EWFriendshipStatusFriended, error);
+                } else if ([request.status isEqualToString:EWFriendshipRequestDenied]) {
+                    completion(EWFriendshipStatusNone, error);
+                }
+            }
+        }
+        else {
+            [EWUIUtil showFailureHUBWithString:@"Failed"];
+        }
+    }];
+    
+    
+}
+
+- (void)unfriend:(EWPerson *)person completion:(BoolErrorBlock)completion{
+    EWAssertMainThread
+    [self sendUnfriendStatusToPerson:person completion:^(BOOL success, NSError *error) {
+        if (success) {
+            [[EWPerson me] removeFriendsObject:person];
+            [[EWPerson me] saveToLocal];
+        }
+        completion(success, error);
+    }];
+}
+
+- (void)sendFriendRequestToPerson:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *))block {
+    if (![EWSync isReachable]) {
+        NSError *error = [EWErrorManager noInternetConnectError];
+        block(nil, error);
+        return;
+    }
+    /*
+     call the cloud code
+     server create a friendRequest and a notification object
+     request.sender = me
+     request.receiver = person
+     request.status = EWFriendshipStatusPending
+     
+     notification.type = kNotificationTypeFriendRequest
+     notification.sender = me.objectId
+     notification.owner = the recerver AND person.notification add this notification
+     
+     create push:
+     title: Friendship request
+     body: /name/ is requesting your premission to become your friend.
+     userInfo: {User:user.objectId, Type: kNotificationTypeFriendRequest}
+     
+     */
+    [PFCloud callFunctionInBackground:@"sendFriendRequestToUser"
+                       withParameters:@{@"sender": [EWPerson me].serverID, @"receiver": person.serverID}
+                                block:^(PFObject *object, NSError *error)
+     {
+         if (!object) {
+             DDLogError(@"Failed sending friendship request: %@", error.description);
+             if (block) {
+                 block(nil, error);
+             }
+         }else{
+             DDLogInfo(@"Cloud code sendFriendRequestToUser successful");
+             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncUpdateRelation completion:NULL];
+             block(request, error);
+         }
+     }];
+}
+
+- (void)sendFriendAcceptToPerson:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *error))block {
+    if (![EWSync isReachable]) {
+        NSError *error = [EWErrorManager noInternetConnectError];
+        block(nil, error);
+        return;
+    }
+    /*
+     call the cloud code
+     server updates the request status to friended
+     
+     server create a notification object
+     notification.type = kNotificationTypeFriendAccepted
+     notification.sender = me.objectId
+     notification.owner = the recerver AND person.notification add this notification
+     
+     create push:
+     title: Friendship accepted
+     body: /name/ has approved your friendship request. Now send her/him a voice greeting!
+     userInfo: {User:user.objectId, Type: kNotificationTypeFriendAccepted}
+     */
+    [PFCloud callFunctionInBackground:@"sendFriendAcceptToUser"
+                       withParameters:@{@"sender": [EWPerson me].objectId, @"owner": person.objectId}
+                                block:^(PFObject *object, NSError *error)
+     {
+         if (!object) {
+             DDLogError(@"Failed sending friendship acceptance: %@", error.description);
+             if (block) {
+                 block(nil, error);
+             }
+         }else{
+             DDLogInfo(@"Cloud code sendFriendRequestToUser successful");
+             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncUpdateRelation completion:NULL];
+             block(request, error);
+         }
+         
+     }];
+}
+
+- (void)sendUnfriendStatusToPerson:(EWPerson *)person completion:(BoolErrorBlock)block{
+    [PFCloud callFunctionInBackground:@"sendUnfriendStatusToUser"
+                       withParameters:@{@"sender": person.objectId,
+                                        @"receiver": [EWPerson me].objectId}
+                                block:^(NSNumber *success, NSError *error)
+    {
+        block(success.boolValue, error);
+    }];
+}
+
+- (void)testGenerateFriendRequestFrom:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *error))block{
+    [PFCloud callFunctionInBackground:@"sendFriendRequestToUser"
+                       withParameters:@{@"sender": person.objectId,
+                                        @"receiver": [EWPerson me].objectId}
+                                block:^(PFObject *object, NSError *error)
+     {
+         if (!object) {
+             DDLogError(@"Failed generating friendship request: %@", error.description);
+             if (block) {
+                 block(nil, error);
+             }
+         }else{
+             DDLogInfo(@"generateFriendRequestFrom %@ successful", person.name);
+             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncUpdateRelation completion:NULL];
+             if (block) {
+                 block(request, error);
+             }
+             
+         }
+     }];
+}
 
 
 @end

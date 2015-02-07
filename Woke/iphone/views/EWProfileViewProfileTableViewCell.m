@@ -81,19 +81,19 @@
             self.addFriendButton.hidden = YES;
         }
         else{
-            if (person.isFriend) {
-                [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
-            }
-            else if (person.friendWaiting){
-                [self.addFriendButton setTitle:@"Waiting" forState:UIControlStateNormal];
-                //[self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
-            }
-            else if(person.friendPending){
-                [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
-                self.addFriendButton.alpha = 0.2;
-            }
-            else{
-                [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
+            switch (person.friendshipStatus) {
+                case EWFriendshipStatusFriended:
+                    [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
+                    break;
+                case EWFriendshipStatusSent:
+                    [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
+                    break;
+                case EWFriendshipStatusReceived:
+                    [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
+                    break;
+                default:
+                    [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
+                    break;
             }
         }
         

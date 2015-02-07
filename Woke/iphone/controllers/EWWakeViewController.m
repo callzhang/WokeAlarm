@@ -11,7 +11,7 @@
 #import "EWPersonManager.h"
 #import "EWAlarmManager.h"
 #import "EWAlarm.h"
-#import "EWPersonViewController.h"
+#import "EWProfileViewController.h"
 #import "UIViewController+Blur.h"
 
 @interface EWWakeViewController ()
@@ -50,7 +50,7 @@
 }
 
 - (IBAction)profile:(id)sender {
-    EWPersonViewController *vc = (EWPersonViewController *)[[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWPersonViewController class])];
+    EWProfileViewController *vc = (EWProfileViewController *)[[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWProfileViewController class])];
     //vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     vc.person = _nextWakee;
     [self.navigationController presentViewControllerWithBlurBackground:vc];

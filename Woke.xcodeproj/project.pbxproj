@@ -40,7 +40,6 @@
 		091C675A1A3523AF0091B8A6 /* EWAlarmEditCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C674A1A3523AF0091B8A6 /* EWAlarmEditCell.xib */; };
 		091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C674C1A3523AF0091B8A6 /* EWCollectionPersonCell.m */; };
 		091C675C1A3523AF0091B8A6 /* EWLogInView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C674D1A3523AF0091B8A6 /* EWLogInView.xib */; };
-		091C675D1A3523AF0091B8A6 /* EWMediaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C674F1A3523AF0091B8A6 /* EWMediaCell.m */; };
 		091C675E1A3523AF0091B8A6 /* EWMediaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67501A3523AF0091B8A6 /* EWMediaCell.xib */; };
 		091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67521A3523AF0091B8A6 /* EWMediaSlider.m */; };
 		091C67601A3523AF0091B8A6 /* EWPostWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67531A3523AF0091B8A6 /* EWPostWakeUpView.xib */; };
@@ -148,7 +147,6 @@
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */; };
 		9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */; };
-		9B4D29671A7F53F900C8559B /* EWPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */; };
 		9B4D29691A833AD300C8559B /* bg.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9B4D29681A833AD300C8559B /* bg.caf */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
@@ -167,6 +165,9 @@
 		9B8D75611A6397C20013B011 /* EWNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8D75601A6397C20013B011 /* EWNotificationViewController.m */; };
 		9B8D75671A6399550013B011 /* EWNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8D75651A6399550013B011 /* EWNotificationCell.m */; };
 		9B8D75681A6399550013B011 /* EWNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D75661A6399550013B011 /* EWNotificationCell.xib */; };
+		9BB244A91A86AF8F00B0B544 /* _EWFriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244A81A86AF8F00B0B544 /* _EWFriendRequest.m */; };
+		9BB244AC1A86AF9900B0B544 /* EWFriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AB1A86AF9900B0B544 /* EWFriendRequest.m */; };
+		9BB244AF1A86C40700B0B544 /* EWAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AE1A86C40700B0B544 /* EWAlertManager.m */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
 		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
@@ -187,7 +188,6 @@
 		9BF7291E1A4DF5FF006C6C51 /* new.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF7291D1A4DF5FF006C6C51 /* new.caf */; };
 		9BF9CC771A78A50100B76D92 /* EWFriendsViewControllerZL.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9CC761A78A50100B76D92 /* EWFriendsViewControllerZL.m */; };
 		9BF9CC7A1A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9CC791A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m */; };
-		9BFCFFDF1A3E74DE002B8A83 /* EWFriendsViewController_old.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAAFB1A1972B800B4CBFF /* EWFriendsViewController_old.m */; };
 		9BFF57121A4C8FB90067EE9B /* EWPerson+Woke.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BFF57111A4C8FB90067EE9B /* EWPerson+Woke.m */; };
 		9BFFABE81A5B9AB3008E123F /* EWCollectionPersonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */; };
 		A3428B2612EFBC90CE29A819 /* libPods-WokeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */; };
@@ -521,6 +521,12 @@
 		9B8D75641A6399550013B011 /* EWNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWNotificationCell.h; sourceTree = "<group>"; };
 		9B8D75651A6399550013B011 /* EWNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWNotificationCell.m; sourceTree = "<group>"; };
 		9B8D75661A6399550013B011 /* EWNotificationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWNotificationCell.xib; sourceTree = "<group>"; };
+		9BB244A71A86AF8F00B0B544 /* _EWFriendRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _EWFriendRequest.h; sourceTree = "<group>"; };
+		9BB244A81A86AF8F00B0B544 /* _EWFriendRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWFriendRequest.m; sourceTree = "<group>"; };
+		9BB244AA1A86AF9900B0B544 /* EWFriendRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWFriendRequest.h; sourceTree = "<group>"; };
+		9BB244AB1A86AF9900B0B544 /* EWFriendRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWFriendRequest.m; sourceTree = "<group>"; };
+		9BB244AD1A86C40700B0B544 /* EWAlertManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWAlertManager.h; path = Woke/libraries/services/EWAlertManager.h; sourceTree = SOURCE_ROOT; };
+		9BB244AE1A86C40700B0B544 /* EWAlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EWAlertManager.m; path = Woke/libraries/services/EWAlertManager.m; sourceTree = SOURCE_ROOT; };
 		9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpProcessTest.m; sourceTree = "<group>"; };
 		9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpPlayingTest.m; sourceTree = "<group>"; };
 		9BF181551A35222F00D25DBA /* Autumn Spring.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Autumn Spring.caf"; sourceTree = "<group>"; };
@@ -1083,6 +1089,8 @@
 				09DF4F171A1434AF00BEA328 /* EWActivity.m */,
 				09DF4F181A1434AF00BEA328 /* EWAlarm.h */,
 				09DF4F191A1434AF00BEA328 /* EWAlarm.m */,
+				9BB244AA1A86AF9900B0B544 /* EWFriendRequest.h */,
+				9BB244AB1A86AF9900B0B544 /* EWFriendRequest.m */,
 				09DF4F1E1A1434AF00BEA328 /* EWMedia.h */,
 				09DF4F1F1A1434AF00BEA328 /* EWMedia.m */,
 				09DF4F201A1434AF00BEA328 /* EWMediaFile.h */,
@@ -1098,6 +1106,8 @@
 				9B840A1E1A1705CE00D6C2A3 /* EWSocial.h */,
 				9B840A1F1A1705CE00D6C2A3 /* EWSocial.m */,
 				09DF4F2E1A1434AF00BEA328 /* models_mogenerated */,
+				9BB244AD1A86C40700B0B544 /* EWAlertManager.h */,
+				9BB244AE1A86C40700B0B544 /* EWAlertManager.m */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -1105,6 +1115,8 @@
 		09DF4F2E1A1434AF00BEA328 /* models_mogenerated */ = {
 			isa = PBXGroup;
 			children = (
+				9BB244A71A86AF8F00B0B544 /* _EWFriendRequest.h */,
+				9BB244A81A86AF8F00B0B544 /* _EWFriendRequest.m */,
 				09DF4F2F1A1434AF00BEA328 /* _EWAchievement.h */,
 				09DF4F301A1434AF00BEA328 /* _EWAchievement.m */,
 				09DF4F311A1434AF00BEA328 /* _EWActivity.h */,
@@ -1475,7 +1487,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Starting dSYM uploading\"\n\nif [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\nexit 0;\nfi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\nexit 0;\nfi\n\nexport PATH=/usr/local/bin:$PATH\ncd ${SRCROOT}/Server\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\necho \"Skipping simulator build\"\nexit 0;\nfi\n\nexport PATH=/usr/local/bin:$PATH\ncd \"${SRCROOT}/Server\"\nls\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1605,7 +1617,6 @@
 				09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */,
 				9BF9CC771A78A50100B76D92 /* EWFriendsViewControllerZL.m in Sources */,
 				09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */,
-				9B4D29671A7F53F900C8559B /* EWPersonViewController.m in Sources */,
 				9BF181671A37C1B600D25DBA /* EWPreWakeViewControllerZL.m in Sources */,
 				096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */,
 				096AAAEF1A195A3900B4CBFF /* PFObject+EWSync.m in Sources */,
@@ -1623,6 +1634,7 @@
 				090C0BB01A805D470006B01C /* EWAddFriendsViewController.m in Sources */,
 				09DF4F7F1A1434AF00BEA328 /* EWPerson.m in Sources */,
 				09DF4F871A1434AF00BEA328 /* _EWMedia.m in Sources */,
+				9BB244AC1A86AF9900B0B544 /* EWFriendRequest.m in Sources */,
 				0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */,
 				09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */,
 				9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */,
@@ -1638,6 +1650,7 @@
 				096AAB0E1A1972B800B4CBFF /* EWAlarmScheduleViewController.m in Sources */,
 				9B8D75671A6399550013B011 /* EWNotificationCell.m in Sources */,
 				09DF4F831A1434AF00BEA328 /* _EWActivity.m in Sources */,
+				9BB244A91A86AF8F00B0B544 /* _EWFriendRequest.m in Sources */,
 				09DF4F801A1434AF00BEA328 /* EWServerObject.m in Sources */,
 				090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */,
 				096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */,
@@ -1659,7 +1672,6 @@
 				090443631A7B191300E6CE79 /* StoryboardIdentifiers.m in Sources */,
 				090C0BBF1A807AFC0006B01C /* EWAddFriendsTableViewCell.m in Sources */,
 				097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */,
-				091C675D1A3523AF0091B8A6 /* EWMediaCell.m in Sources */,
 				096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */,
 				9BFF57121A4C8FB90067EE9B /* EWPerson+Woke.m in Sources */,
 				09DF4F841A1434AF00BEA328 /* _EWAlarm.m in Sources */,
@@ -1672,13 +1684,13 @@
 				091C67671A3523C40091B8A6 /* EWAlarmTableViewCell.m in Sources */,
 				093DB7821A65FD970032E7EB /* EWPostWakeupTableViewCell.m in Sources */,
 				09DF4F761A1434AF00BEA328 /* EWActivity.m in Sources */,
-				9BFCFFDF1A3E74DE002B8A83 /* EWFriendsViewController_old.m in Sources */,
 				09A7772C1A11E2BD004AF902 /* AppDelegate.m in Sources */,
 				096AAAE61A195A3900B4CBFF /* EWSession.m in Sources */,
 				09229C9F1A631BA6008061E5 /* EWPeopleArrayChildViewController.m in Sources */,
 				9B8D75611A6397C20013B011 /* EWNotificationViewController.m in Sources */,
 				09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */,
 				096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */,
+				9BB244AF1A86C40700B0B544 /* EWAlertManager.m in Sources */,
 				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1852,7 +1864,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",

@@ -6,6 +6,7 @@
 
 extern const struct EWNotificationAttributes {
 	__unsafe_unretained NSString *completed;
+	__unsafe_unretained NSString *friendshipRequestID;
 	__unsafe_unretained NSString *importance;
 	__unsafe_unretained NSString *receiver;
 	__unsafe_unretained NSString *sender;
@@ -16,6 +17,10 @@ extern const struct EWNotificationAttributes {
 extern const struct EWNotificationRelationships {
 	__unsafe_unretained NSString *owner;
 } EWNotificationRelationships;
+
+extern const struct EWNotificationFetchedProperties {
+	__unsafe_unretained NSString *friendshipRequest;
+} EWNotificationFetchedProperties;
 
 @class EWPerson;
 
@@ -33,6 +38,10 @@ extern const struct EWNotificationRelationships {
 @property (nonatomic, strong) NSDate* completed;
 
 //- (BOOL)validateCompleted:(id*)value_ error:(NSError**)error_;
+
+@property (nonatomic, strong) NSString* friendshipRequestID;
+
+//- (BOOL)validateFriendshipRequestID:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) NSNumber* importance;
 
@@ -62,12 +71,17 @@ extern const struct EWNotificationRelationships {
 
 //- (BOOL)validateOwner:(id*)value_ error:(NSError**)error_;
 
+@property (nonatomic, readonly) NSArray *friendshipRequest;
+
 @end
 
 @interface _EWNotification (CoreDataGeneratedPrimitiveAccessors)
 
 - (NSDate*)primitiveCompleted;
 - (void)setPrimitiveCompleted:(NSDate*)value;
+
+- (NSString*)primitiveFriendshipRequestID;
+- (void)setPrimitiveFriendshipRequestID:(NSString*)value;
 
 - (NSNumber*)primitiveImportance;
 - (void)setPrimitiveImportance:(NSNumber*)value;

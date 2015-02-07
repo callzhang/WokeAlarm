@@ -36,8 +36,4 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWNotificationManager)
 - (NSArray *)notificationsForPerson:(EWPerson *)person;
 
 
-//Send
-- (void)sendFriendRequestNotificationToUser:(EWPerson *)person;
-- (void)sendFriendAcceptNotificationToUser:(EWPerson *)person;
-- (void)generateFriendRequestFrom:(EWPerson *)person completion:(void (^)(EWNotification *notice, NSError *error))block;
 @end

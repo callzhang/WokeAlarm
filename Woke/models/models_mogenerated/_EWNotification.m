@@ -5,6 +5,7 @@
 
 const struct EWNotificationAttributes EWNotificationAttributes = {
 	.completed = @"completed",
+	.friendshipRequestID = @"friendshipRequestID",
 	.importance = @"importance",
 	.receiver = @"receiver",
 	.sender = @"sender",
@@ -14,6 +15,10 @@ const struct EWNotificationAttributes EWNotificationAttributes = {
 
 const struct EWNotificationRelationships EWNotificationRelationships = {
 	.owner = @"owner",
+};
+
+const struct EWNotificationFetchedProperties EWNotificationFetchedProperties = {
+	.friendshipRequest = @"friendshipRequest",
 };
 
 @implementation EWNotificationID
@@ -53,6 +58,8 @@ const struct EWNotificationRelationships EWNotificationRelationships = {
 
 @dynamic completed;
 
+@dynamic friendshipRequestID;
+
 @dynamic importance;
 
 - (int64_t)importanceValue {
@@ -82,6 +89,8 @@ const struct EWNotificationRelationships EWNotificationRelationships = {
 @dynamic userInfo;
 
 @dynamic owner;
+
+@dynamic friendshipRequest;
 
 @end
 

@@ -8,6 +8,17 @@
 
 #import "EWPerson.h"
 
+typedef NS_ENUM(NSInteger, EWFriendshipStatus){
+    EWFriendshipStatusNone,
+    EWFriendshipStatusDenied,
+    EWFriendshipStatusSent,
+    EWFriendshipStatusReceived,
+    EWFriendshipStatusFriended,
+    EWFriendshipStatusUnknown
+};
+
+extern NSString * const kFriendshipStatusChanged;
+
 @interface EWPerson(Woke)
 + (EWPerson *)me;
 + (EWPerson *)meInContext:(NSManagedObjectContext *)context;
@@ -29,9 +40,7 @@
 + (NSArray *)myUnreadMedias;
 
 //social
-- (BOOL)isFriend;
-- (BOOL)friendPending;
-- (BOOL)friendWaiting;
+- (EWFriendshipStatus)friendshipStatus;
 - (void)requestFriend:(EWPerson *)person;
 - (void)acceptFriend:(EWPerson *)person;
 - (void)unfriend:(EWPerson *)person;

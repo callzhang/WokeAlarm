@@ -10,8 +10,10 @@
 #import "EWProfileViewProfileTableViewCell.h"
 #import "EWProfileViewNormalTableViewCell.h"
 #import "EWCachedInfoManager.h"
+#import "EWUIUtil.h"
+#import "UIViewController+Blur.h"
 
-@interface EWProfileViewController ()<UITableViewDataSource, UITableViewDelegate>
+@interface EWProfileViewController ()<UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *wakeHerUpButton;
 @property (nonatomic, strong) EWCachedInfoManager *statsManager;
@@ -23,9 +25,14 @@
     [super viewDidLoad];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 44.0f;
-    self.title = @"Profile";
-    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
+    if (self.navigationItem) {
+        self.title = @"Profile";
+        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
+    } else {
+        [EWUIUtil addTransparantNavigationBarToViewController:self];
+    }
+    
     self.statsManager = [EWCachedInfoManager managerForPerson:_person];
     
     @weakify(self);
@@ -39,6 +46,36 @@
         }
     }];
 }
+
+#pragma mark - UI
+- (IBAction)close:(id)sender {
+    if (self.presentingViewController){
+        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+    }
+}
+
+- (IBAction)more:(id)sender {
+    UIActionSheet *sheet;
+    if (_person.isMe) {
+        
+        sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Close" destructiveButtonTitle:nil otherButtonTitles:@"Preference",@"Log out", nil];
+#ifdef DEBUG
+        [sheet addButtonWithTitle:@"Add friend"];
+        [sheet addButtonWithTitle:@"Send Voice Greeting"];
+#endif
+    }else{
+        //sheet.destructiveButtonIndex = 0;
+        if (_person.friendshipStatus == EWFriendshipStatusFriended) {
+            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Close" destructiveButtonTitle:nil otherButtonTitles:@"Flag", @"Unfriend", @"Send Voice Greeting", @"Friend history", @"Block", nil];
+        }else{
+            
+            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Close" destructiveButtonTitle:nil otherButtonTitles:@"Add friend", @"Block", nil];
+        }
+    }
+    
+    [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+}
+
 
 #pragma mark - <UITableViewDataSource>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -84,10 +121,6 @@
             ((void (^)(void))action)();
         }
     }
-}
-
-- (void)onMoreButton:(id)sender {
-    
 }
 
 #pragma mark -

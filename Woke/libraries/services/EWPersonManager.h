@@ -59,4 +59,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWPersonManager);
  */
 //+ (void)updateMe;
 
+//Friendship
+- (void)requestFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion;
+- (void)acceptFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion;
+- (void)unfriend:(EWPerson *)person completion:(BoolErrorBlock)completion;
+
+//- (void)sendFriendRequestToPerson:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *error))block;
+//- (void)sendFriendAcceptToPerson:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *error))block;
+//- (void)sendUnfriendStatusToPerson:(EWPerson *)person completion:(BoolErrorBlock)block;
+- (void)testGenerateFriendRequestFrom:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *error))block;
+
 @end

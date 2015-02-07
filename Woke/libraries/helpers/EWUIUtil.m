@@ -262,6 +262,7 @@ static const float originalSize = 80.0;
         vc.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     }else{
         DDLogError(@"No nav controller found");
+        [self addTransparantNavigationBarToViewController:vc];
     }
 }
 

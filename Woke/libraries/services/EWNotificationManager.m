@@ -12,7 +12,7 @@
 #import "EWPersonManager.h"
 #import "EWMedia.h"
 #import "EWMediaManager.h"
-#import "EWPersonViewController.h"
+#import "EWProfileViewController.h"
 #import "EWWakeUpManager.h"
 #import "EWServer.h"
 #import "EWCachedInfoManager.h"
@@ -102,7 +102,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         
         //alert
         if (notification.completed) {
-            EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+            EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
 			controller.person = person;
 			
             [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:controller withCompletion:^{
@@ -164,12 +164,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
             case 1:{ //accepted
                 [[EWPerson me] addFriendsObject:self.person];
                 [self.person addFriendsObject:[EWPerson me]];
-                [self sendFriendAcceptNotificationToUser:self.person];
-				[EWUIUtil showSuccessHUBWithString:@"Accepted"];
+                [[EWPersonManager shared] acceptFriend:_person completion:^(EWFriendshipStatus status, NSError *error) {
+                    if (status == EWFriendshipStatusFriended) {
+                        [EWUIUtil showSuccessHUBWithString:@"Accepted"];
+                    }
+                }];
                 break;
             }
             case 2:{ //profile
-				EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+				EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
 				controller.person = _person;
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
                 [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:^{
@@ -189,7 +192,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
                 break;
             
             case 1:{//view profile
-				EWPersonViewController *controller = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
+				EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
 				controller.person = _person;
                 UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
                 [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:^{
@@ -221,85 +224,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     
     self.notification = nil;
     self.person = nil;
-}
-
-#pragma mark - Friendship
-- (void)sendFriendRequestNotificationToUser:(EWPerson *)person{
-    /*
-    call the cloud code
-    server create a notification object
-    notification.type = kNotificationTypeFriendRequest
-    notification.sender = me.objectId
-    notification.owner = the recerver AND person.notification add this notification
-     
-     create push:
-     title: Friendship request
-     body: /name/ is requesting your premission to become your friend.
-     userInfo: {User:user.objectId, Type: kNotificationTypeFriendRequest}
-     
-     */
-    
-    [PFCloud callFunctionInBackground:@"sendFriendRequestNotificationToUser"
-                       withParameters:@{@"sender": [EWPerson me].objectId,
-                                        @"receiver": person.objectId}
-                                block:^(EWNotification *object, NSError *error)
-     {
-         if (error) {
-             DDLogError(@"Failed sending friendship request: %@", error.description);
-             EWAlert(@"Network error, please send it later");
-         }else{
-             DDLogInfo(@"Cloud code sendFriendRequestNotificationToUser successful");
-			 [EWUIUtil showSuccessHUBWithString:@"Sent"];
-			 //[[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
-         }
-     }];
-}
-
-- (void)sendFriendAcceptNotificationToUser:(EWPerson *)person{
-    /*
-     call the cloud code
-     server create a notification object
-     notification.type = kNotificationTypeFriendAccepted
-     notification.sender = me.objectId
-     notification.owner = the recerver AND person.notification add this notification
-     
-     create push:
-     title: Friendship accepted
-     body: /name/ has approved your friendship request. Now send her/him a voice greeting!
-     userInfo: {User:user.objectId, Type: kNotificationTypeFriendAccepted}
-     */
-    [PFCloud callFunctionInBackground:@"sendFriendAcceptNotificationToUser"
-                       withParameters:@{@"sender": [EWPerson me].objectId, @"owner": person.objectId}
-                                block:^(id object, NSError *error)
-    {
-        if (error) {
-            DDLogError(@"Failed sending friendship acceptance: %@", error.description);
-            EWAlert(@"Network error, please send it later");
-        }else{
-			[EWUIUtil showSuccessHUBWithString:@"Sent"];
-			//[[UIApplication sharedApplication].delegate.window.rootViewController.view showSuccessNotification:@"sent"];
-        }
-        
-    }];
-}
-
-- (void)generateFriendRequestFrom:(EWPerson *)person completion:(void (^)(EWNotification *notice, NSError *error))block{
-    [PFCloud callFunctionInBackground:@"sendFriendRequestNotificationToUser"
-                       withParameters:@{@"sender": person.objectId,
-                                        @"receiver": [EWPerson me].objectId}
-                                block:^(EWNotification *object, NSError *error)
-     {
-         if (error) {
-             DDLogError(@"Failed generating friendship request: %@", error.description);
-             EWAlert(@"Network error, please send it later");
-         }else{
-             DDLogInfo(@"generateFriendRequestFrom %@ successful", person.name);
-			 [EWUIUtil showSuccessHUBWithString:@"Request generated and pushed"];
-         }
-		 if (block) {
-			 block(object, error);
-		 }
-     }];
 }
 
 @end
