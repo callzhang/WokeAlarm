@@ -119,11 +119,10 @@
                 [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendedButton] forState:UIControlStateNormal];
             }
             else if (person.friendWaiting){
-                [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
-                self.addFriendButton.alpha = 0.3f;
+                [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestReceivedButton] forState:UIControlStateNormal];
             }
             else if(person.friendPending){
-                [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendshipPendingButton] forState:UIControlStateNormal];
+                [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestSentButton] forState:UIControlStateNormal];
             }
             else{
                 [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileAddFriendButton] forState:UIControlStateNormal];

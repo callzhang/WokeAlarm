@@ -37,13 +37,12 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *EWMain;
         __unsafe_unretained NSString *EWMenu;
         __unsafe_unretained NSString *EWPersonSearchResultTable;
-        __unsafe_unretained NSString *EWPerson;
         __unsafe_unretained NSString *EWPreWake;
         __unsafe_unretained NSString *EWSettings;
         __unsafe_unretained NSString *EWSleep;
         __unsafe_unretained NSString *EWWakeUp;
         __unsafe_unretained NSString *EWNotification;
-        __unsafe_unretained NSString *EWFriends;
+        __unsafe_unretained NSString *EWProfile;
         __unsafe_unretained NSString *EWLoginGate;
         __unsafe_unretained NSString *EWWake;
     } viewControllers;
@@ -52,7 +51,6 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *peopleArrayChildView;
         __unsafe_unretained NSString *settingsCell;
         __unsafe_unretained NSString *EWAlarmToneViewCell;
-        __unsafe_unretained NSString *friendCell;
         __unsafe_unretained NSString *addFriendsCellSectionHeader;
         __unsafe_unretained NSString *boolCell;
         __unsafe_unretained NSString *addFriendsCell;

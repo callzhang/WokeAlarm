@@ -79,6 +79,26 @@
 + (UIImage *)stopButton { return [UIImage imageNamed:@"Stop Button"]; }
 + (NSString *)voiceMessageSliceName { return @"Voice Message Slice"; }
 + (UIImage *)voiceMessageSlice { return [UIImage imageNamed:@"Voice Message Slice"]; }
++ (NSString *)wokeAddFriendsAddAllButtonHighlightedName { return @"woke-add-friends-add-all-button-highlighted"; }
++ (UIImage *)wokeAddFriendsAddAllButtonHighlighted { return [UIImage imageNamed:@"woke-add-friends-add-all-button-highlighted"]; }
++ (NSString *)wokeAddFriendsAddAllButtonName { return @"woke-add-friends-add-all-button"; }
++ (UIImage *)wokeAddFriendsAddAllButton { return [UIImage imageNamed:@"woke-add-friends-add-all-button"]; }
++ (NSString *)wokeAddFriendsAddFriendButtonSmallHighlightedName { return @"woke-add-friends-add-friend-button-small-highlighted"; }
++ (UIImage *)wokeAddFriendsAddFriendButtonSmallHighlighted { return [UIImage imageNamed:@"woke-add-friends-add-friend-button-small-highlighted"]; }
++ (NSString *)wokeAddFriendsAddFriendButtonSmallName { return @"woke-add-friends-add-friend-button-small"; }
++ (UIImage *)wokeAddFriendsAddFriendButtonSmall { return [UIImage imageNamed:@"woke-add-friends-add-friend-button-small"]; }
++ (NSString *)wokeAddFriendsFriendRequestReceivedButtonSmallHighlightedName { return @"woke-add-friends-friend-request-received-button-small-highlighted"; }
++ (UIImage *)wokeAddFriendsFriendRequestReceivedButtonSmallHighlighted { return [UIImage imageNamed:@"woke-add-friends-friend-request-received-button-small-highlighted"]; }
++ (NSString *)wokeAddFriendsFriendRequestReceivedButtonSmallName { return @"woke-add-friends-friend-request-received-button-small"; }
++ (UIImage *)wokeAddFriendsFriendRequestReceivedButtonSmall { return [UIImage imageNamed:@"woke-add-friends-friend-request-received-button-small"]; }
++ (NSString *)wokeAddFriendsFriendRequestSentButtonSmallHighlightedName { return @"woke-add-friends-friend-request-sent-button-small-highlighted"; }
++ (UIImage *)wokeAddFriendsFriendRequestSentButtonSmallHighlighted { return [UIImage imageNamed:@"woke-add-friends-friend-request-sent-button-small-highlighted"]; }
++ (NSString *)wokeAddFriendsFriendRequestSentButtonSmallName { return @"woke-add-friends-friend-request-sent-button-small"; }
++ (UIImage *)wokeAddFriendsFriendRequestSentButtonSmall { return [UIImage imageNamed:@"woke-add-friends-friend-request-sent-button-small"]; }
++ (NSString *)wokeAddFriendsInviteButtonHighlightedName { return @"woke-add-friends-invite-button-highlighted"; }
++ (UIImage *)wokeAddFriendsInviteButtonHighlighted { return [UIImage imageNamed:@"woke-add-friends-invite-button-highlighted"]; }
++ (NSString *)wokeAddFriendsInviteButtonName { return @"woke-add-friends-invite-button"; }
++ (UIImage *)wokeAddFriendsInviteButton { return [UIImage imageNamed:@"woke-add-friends-invite-button"]; }
 + (NSString *)wokeAlarmArrowRightName { return @"woke-alarm-arrow-right"; }
 + (UIImage *)wokeAlarmArrowRight { return [UIImage imageNamed:@"woke-alarm-arrow-right"]; }
 + (NSString *)wokeAlarmsMinusHighlightedName { return @"woke-alarms-minus-highlighted"; }
@@ -147,15 +167,19 @@
 + (UIImage *)wokeUserProfileAddFriendButtonHighlighted { return [UIImage imageNamed:@"woke-user-profile-add-friend-button-highlighted"]; }
 + (NSString *)wokeUserProfileAddFriendButtonName { return @"woke-user-profile-add-friend-button"; }
 + (UIImage *)wokeUserProfileAddFriendButton { return [UIImage imageNamed:@"woke-user-profile-add-friend-button"]; }
++ (NSString *)wokeUserProfileFriendRequestReceivedButtonHighlightedName { return @"woke-user-profile-friend-request-received-button-highlighted"; }
++ (UIImage *)wokeUserProfileFriendRequestReceivedButtonHighlighted { return [UIImage imageNamed:@"woke-user-profile-friend-request-received-button-highlighted"]; }
++ (NSString *)wokeUserProfileFriendRequestReceivedButtonName { return @"woke-user-profile-friend-request-received-button"; }
++ (UIImage *)wokeUserProfileFriendRequestReceivedButton { return [UIImage imageNamed:@"woke-user-profile-friend-request-received-button"]; }
++ (NSString *)wokeUserProfileFriendRequestSentButtonName { return @"woke-user-profile-friend-request-sent-button"; }
++ (UIImage *)wokeUserProfileFriendRequestSentButton { return [UIImage imageNamed:@"woke-user-profile-friend-request-sent-button"]; }
++ (NSString *)wokeUserProfileFriendRequestSentHighlightedName { return @"woke-user-profile-friend-request-sent-highlighted"; }
++ (UIImage *)wokeUserProfileFriendRequestSentHighlighted { return [UIImage imageNamed:@"woke-user-profile-friend-request-sent-highlighted"]; }
 + (NSString *)wokeUserProfileFriendedButtonHighlightedName { return @"woke-user-profile-friended-button-highlighted"; }
 + (UIImage *)wokeUserProfileFriendedButtonHighlighted { return [UIImage imageNamed:@"woke-user-profile-friended-button-highlighted"]; }
 + (NSString *)wokeUserProfileFriendedButtonName { return @"woke-user-profile-friended-button"; }
 + (UIImage *)wokeUserProfileFriendedButton { return [UIImage imageNamed:@"woke-user-profile-friended-button"]; }
-+ (NSString *)wokeUserProfileFriendshipPendingButtonHighlightedName { return @"woke-user-profile-friendship-pending-button-highlighted"; }
-+ (UIImage *)wokeUserProfileFriendshipPendingButtonHighlighted { return [UIImage imageNamed:@"woke-user-profile-friendship-pending-button-highlighted"]; }
-+ (NSString *)wokeUserProfileFriendshipPendingButtonName { return @"woke-user-profile-friendship-pending-button"; }
-+ (UIImage *)wokeUserProfileFriendshipPendingButton { return [UIImage imageNamed:@"woke-user-profile-friendship-pending-button"]; }
-+ (NSString *)wokeUserProfileTimezoneIconName { return @"woke-user-profile-timezone-icon"; }
-+ (UIImage *)wokeUserProfileTimezoneIcon { return [UIImage imageNamed:@"woke-user-profile-timezone-icon"]; }
++ (NSString *)wokeUserProfileLocationDotName { return @"woke-user-profile-location-dot"; }
++ (UIImage *)wokeUserProfileLocationDot { return [UIImage imageNamed:@"woke-user-profile-location-dot"]; }
 
 @end

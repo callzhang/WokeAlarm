@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *wakeHerUpButton;
 @property (nonatomic, strong) EWCachedInfoManager *statsManager;
+@property (nonatomic, strong) NSArray *localDataSource;
 @end
 
 @implementation EWProfileViewController
@@ -24,8 +25,6 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 44.0f;
     self.title = @"Profile";
-    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
     self.statsManager = [EWCachedInfoManager managerForPerson:_person];
     
     @weakify(self);
@@ -38,6 +37,17 @@
             [self.wakeHerUpButton setTitle:[NSString stringWithFormat:@"Wake %@ Up", person.genderSubjectiveCaseString] forState:UIControlStateNormal];
         }
     }];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (!self.navigationItem.leftBarButtonItem) {
+        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    }
+    if (!self.navigationItem.rightBarButtonItem) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(onMoreButton:)];
+    }
 }
 
 #pragma mark - <UITableViewDataSource>
@@ -92,16 +102,16 @@
 
 #pragma mark -
 - (NSArray *)localDataSource {
-    static dispatch_once_t onceToken;
-    static NSArray *dataSource;
-    dispatch_once(&onceToken, ^{
+    if (!_localDataSource) {
         @weakify(self);
-        dataSource = @[
+        _localDataSource = @[
                        @{@"name": @"Friends", @"detail" : ^{
                           return [NSString stringWithFormat:@"%@", @(_person.friends.count)];
                        }, @"action": ^{
                           @strongify(self);
-                           [self performSegueWithIdentifier:MainStoryboardIDs.segues.profileToFriends sender:self];
+                           if ([self.person isMe]) {
+                               [self performSegueWithIdentifier:MainStoryboardIDs.segues.profileToFriends sender:self];
+                           }
                        }},
                        @{@"name": ^{
                            return [NSString stringWithFormat:@"People woke %@ up", _person.genderSubjectiveCaseString];
@@ -122,7 +132,8 @@
                           return _statsManager.wakabilityStr;
                        }},
                        ];
-    });
-    return dataSource;
+    }
+    
+    return _localDataSource;
 }
 @end
