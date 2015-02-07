@@ -118,15 +118,15 @@
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="socialGraph" inverseEntity="EWPerson" syncable="YES"/>
     </entity>
     <elements>
-        <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="EWActivity" positionX="0" positionY="0" width="128" height="206"/>
-        <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="EWMedia" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="EWMessage" positionX="0" positionY="0" width="128" height="30"/>
-        <element name="EWNotification" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="128" height="30"/>
-        <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="EWSocial" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="EWAchievement" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWActivity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWAlarm" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWMedia" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWMediaFile" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWMessage" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWNotification" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWServerObject" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWSocial" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

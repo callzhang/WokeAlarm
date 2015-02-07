@@ -9,11 +9,13 @@
 #import "EWAddFriendsFacebookChildViewController.h"
 #import "EWSocialManager.h"
 #import "EWAddFriendsTableViewCell.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface EWAddFriendsFacebookChildViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, readonly) NSArray *items;
-@property (nonatomic, strong) NSDictionary *facebookFrineds;
+@property (nonatomic, strong) NSDictionary *facebookFrinedsOnWoke;
+@property (nonatomic, strong) NSDictionary *facebookFriends;
 @end
 
 @implementation EWAddFriendsFacebookChildViewController
@@ -21,6 +23,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self loadFriendsOnWokeSection];
+    self.tableView.rowHeight = 70;
+    self.tableView.sectionHeaderHeight = 44;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -33,30 +37,117 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.addFriendsCell];
-    EWPerson *person = self.items[indexPath.section][@"rows"][indexPath.row];
-    cell.person = person;
+    
+    NSDictionary *section = self.items[indexPath.section];
+    if ([section[@"type"] isEqualToString:@"woke"]) {
+        EWPerson *person = section[@"rows"][indexPath.row];
+        cell.person = person;
+    }
+    else if ([section[@"type"] isEqualToString:@"facebook"]) {
+        NSDictionary *item = section[@"rows"][indexPath.row];
+        cell.nameLabel.text = item[@"name"];
+        [cell.profileImageView setImageWithURL:item[@"imageURL"]];
+        cell.profileImageView.contentMode = UIViewContentModeScaleAspectFill;
+        [cell.profileImageView applyHexagonSoftMask];
+//        [cell.rightButton setImage:<#(UIImage *)#> forState:<#(UIControlState)#>]; //set invite button
+    }
+    
     return cell;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendsCellSectionHeader"];
+    cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = [UIColor clearColor];
+    
+    if (cell) {
+        BOOL isFriendsSection = [self.items[section][@"type"] isEqualToString:@"woke"];
+        
+        UILabel *sectionLabel = (UILabel *)[cell.contentView viewWithTag:101];
+        NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
+        UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
+        NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
+        if (isFriendsSection) {
+            sectionLabel.text = ((NSString* (^)(void))self.facebookFrinedsOnWoke[@"sectionName"])();
+            addAllButton.hidden = NO;
+        }
+        else {
+            sectionLabel.text = ((NSString* (^)(void))self.facebookFriends[@"sectionName"])();
+            addAllButton.hidden = YES;
+        }
+    }
+
+    
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 44;
+}
+
 - (NSArray *)items {
-    return @[
-             @{@"rows": @[],
-               @"sectionName": ^{
-                   
-               }, @"showRightButton": @(YES)
-               },
-             ];
+    if (self.facebookFriends && self.facebookFrinedsOnWoke) {
+        return @[self.facebookFrinedsOnWoke, self.facebookFriends];
+    }
+    else if (self.facebookFriends) {
+        return @[self.facebookFriends];
+    }
+    
+    
+    return nil;
 }
 
 - (void)loadFriendsOnWokeSection {
     [[EWSocialManager sharedInstance] findFacebookRelatedUsersWithCompletion:^(NSArray *array, NSError *error) {
+        if (array.count == 0) {
+            return ;
+        }
         
-    NSDictionary *dictionary = @{@"rows": array,
+    NSDictionary *dictionary = @{@"type": @"woke", @"rows": array,
       @"sectionName": ^{
-          
+          //TODO, 单复数
+          return [NSString stringWithFormat:@"%@ friends on Woke", @(array.count)];
       }, @"showRightButton": @(YES)
                                  };
-        self.facebookFrineds = dictionary;
+        self.facebookFrinedsOnWoke = dictionary;
+        
+        [self.tableView reloadData];
     }];
+    
+    NSMutableDictionary *facebookFriendsDictioanry = [EWPerson mySocialGraph].facebookFriends;
+    
+    NSMutableArray *facebookFriends = [NSMutableArray array];
+    
+    [facebookFriendsDictioanry enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [facebookFriends addObject:@{
+                                    @"id": key,
+                                    @"name": obj,
+                                    @"imageURL": [[EWSocialManager sharedInstance] getFacebookProfilePictureURLWithID:key]
+                                     }];
+    }];
+    
+    [facebookFriends sortUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES]]];
+    
+    NSMutableArray *friendsToRemove = [NSMutableArray array];
+    
+    NSArray *facebookFriendIDs = [facebookFriends valueForKeyPath:@"name"];
+    [self.facebookFrinedsOnWoke[@"rows"] enumerateObjectsUsingBlock:^(EWPerson *person, NSUInteger idx, BOOL *stop) {
+        NSString *facebookID = person.socialGraph.facebookID;//TODO: change facebook ID retrive
+        if ([facebookFriendIDs containsObject:facebookID]) {
+            [friendsToRemove addObject:person];
+        }
+    }];
+    
+    
+    self.facebookFriends = @{
+                             @"type": @"facebook",
+                             @"rows": facebookFriends,
+                             @"sectionName": ^{
+                                 //TODO, 单复数
+                                 return [NSString stringWithFormat:@"invite other %@ friends?", @(facebookFriends.count)];
+                             }, @"showRightButton": @(NO)
+                             };
+    
+    [self.tableView reloadData];
 }
 @end
