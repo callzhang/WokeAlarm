@@ -48,7 +48,7 @@
     }];
 }
 
-<<<<<<< HEAD
+
 #pragma mark - UI
 - (IBAction)close:(id)sender {
     if (self.presentingViewController){
@@ -79,7 +79,6 @@
 }
 
 
-=======
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -91,7 +90,6 @@
     }
 }
 
->>>>>>> FETCH_HEAD
 #pragma mark - <UITableViewDataSource>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {

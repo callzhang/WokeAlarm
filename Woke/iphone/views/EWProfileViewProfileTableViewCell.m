@@ -56,10 +56,11 @@
 }
 
 - (IBAction)onAddFriendButton:(id)sender {
+    EWFriendshipStatus status = _person.friendshipStatus;
     if ([self.person isMe]) {
         DDLogError(@"do nothing");
     }
-    else if(self.person.isFriend) {
+    else if(status == EWFriendshipStatusFriended) {
        UIAlertController *controller =  [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unfriend" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [[EWPerson me] unfriend:self.person];
@@ -72,14 +73,13 @@
         [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES
                                                                      completion:nil];
     }
-    else if (self.person.friendPending) {
+    else if (status == EWFriendshipStatusSent) {
         UIAlertController *controller =  [UIAlertController alertControllerWithTitle:@"Friendship pending" message:@"You have already requested friendship to this person." preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         }];
         
         [controller addAction:action];
-        [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES
-                                                                     completion:nil];
+        [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES completion:nil];
     }
     else {
         [[EWPerson me] requestFriend:self.person];

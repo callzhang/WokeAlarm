@@ -174,6 +174,5 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
     return @"Unknown location";
 }
 
-
 @end
 
