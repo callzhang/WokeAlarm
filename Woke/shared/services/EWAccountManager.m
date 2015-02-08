@@ -20,6 +20,8 @@
 #import "EWStartUpSequence.h"
 @import CoreLocation;
 
+NSString * const kUserSyncCompleted = @"user_sync_completed";
+
 @interface EWAccountManager()
 @property (nonatomic) BOOL isUpdatingFacebookInfo;
 @property (nonatomic, strong) CLLocationManager *manager;
@@ -630,6 +632,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         } completion:^(BOOL contextDidSave, NSError *error2) {
             if (!error2) {
                 DDLogDebug(@"========> Finished user syncing <=========");
+                [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
                 block(nil);
             }else{
                 DDLogError(@"Failed to sync user: %@", error2.description);
