@@ -98,6 +98,7 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
 + (EWAlarm *)myCurrentAlarm {
     EWAssertMainThread
     EWAlarm *next = [[EWAlarmManager sharedInstance] currentAlarmForPerson:[self me]];
+//    NSAssert(next, @"current alarm can't be nil");
     return next;
 }
 

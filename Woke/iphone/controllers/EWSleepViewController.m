@@ -10,6 +10,7 @@
 #import "EWSetStatusViewController.h"
 #import "EWWakeUpManager.h"
 #import "EWTimeChildViewController.h"
+#import "EWAccountManager.h"
 
 @interface EWSleepViewController ()
 
@@ -25,15 +26,25 @@
     [super viewDidLoad];
     
     self.sleepViewModel = [[EWSleepViewModel alloc] init];
-    self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
-   
-    [self bindViewModel];
+    
+    [self setViewModelAlarm];
     
     //remove background color set in interface builder[used for layouting].
     self.view.backgroundColor = [UIColor clearColor];
     
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPersonSyncCompleted:) name:kUserSyncCompleted object:nil];
+    [self bindViewModel];
+}
+
+- (void)onPersonSyncCompleted:(NSNotification *)noti {
+    [self setViewModelAlarm];
+}
+
+- (void)setViewModelAlarm {
+    self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
