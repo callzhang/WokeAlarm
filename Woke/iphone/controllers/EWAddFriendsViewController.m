@@ -18,6 +18,9 @@
 @property (nonatomic, strong) EWAddFriendsFacebookChildViewController *facebookChildViewController;
 @property (nonatomic, strong) EWAddFriendsSearchChildViewController *searchChildViewController;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
+@property (weak, nonatomic) IBOutlet UIView *containerViewFacebook;
+@property (weak, nonatomic) IBOutlet UIView *containerViewContacts;
+@property (weak, nonatomic) IBOutlet UIView *containerViewSearch;
 @end
 
 @implementation EWAddFriendsViewController
@@ -32,24 +35,41 @@
         @strongify(self);
         NSInteger index = sender.selectedSegmentIndex;
         if (index == 0) {
-            self.facebookChildViewController.view.hidden = NO;
-            self.contactsChildViewController.view.hidden = YES;
-            self.searchChildViewController.view.hidden = YES;
+            [self showFacebook];
         }
         else if (index == 1) {
-            self.facebookChildViewController.view.hidden = YES;
-            self.contactsChildViewController.view.hidden = NO;
-            self.searchChildViewController.view.hidden = YES;
+            [self showContacts];
         }
         else if (index == 2) {
-            self.facebookChildViewController.view.hidden = YES;
-            self.contactsChildViewController.view.hidden = YES;
-            self.searchChildViewController.view.hidden = NO;
+            [self showSearch];
         }
     }];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.segmentedControl.selectedSegmentIndex = 0;
-    });
+    [self showFacebook];
+}
+
+- (void)showFacebook {
+    self.facebookChildViewController.view.hidden = NO;
+    self.contactsChildViewController.view.hidden = YES;
+    self.searchChildViewController.view.hidden = YES;
+    
+    [self.view bringSubviewToFront:self.containerViewFacebook];
+}
+
+- (void)showContacts {
+    self.facebookChildViewController.view.hidden = YES;
+    self.contactsChildViewController.view.hidden = NO;
+    self.searchChildViewController.view.hidden = YES;
+    
+    [self.view bringSubviewToFront:self.containerViewContacts];
+}
+
+- (void)showSearch {
+    self.facebookChildViewController.view.hidden = YES;
+    self.contactsChildViewController.view.hidden = YES;
+    self.searchChildViewController.view.hidden = NO;
+    
+    [self.view bringSubviewToFront:self.containerViewSearch];
+    
 }
 @end

@@ -15,6 +15,8 @@
 @property (nonatomic, strong) EWReceivedVoiceChildViewController *receivedVoiceChildViewController;
 @property (nonatomic, strong) EWSentVoiceChildViewController *sentVoiceChildViewController;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
+@property (weak, nonatomic) IBOutlet UIView *sentView;
+@property (weak, nonatomic) IBOutlet UIView *receivedView;
 @end
 
 @implementation EWVoiceViewController
@@ -32,15 +34,18 @@
         if (index == 0) {
             self.receivedVoiceChildViewController.view.hidden = NO;
             self.sentVoiceChildViewController.view.hidden = YES;
+            [self.view bringSubviewToFront:self.receivedView];
         }
         else {
             self.receivedVoiceChildViewController.view.hidden = YES;
             self.sentVoiceChildViewController.view.hidden = NO;
+            [self.view bringSubviewToFront:self.sentView];
         }
     }];
     
     self.receivedVoiceChildViewController.view.hidden = NO;
     self.sentVoiceChildViewController.view.hidden = YES;
+    [self.view bringSubviewToFront:self.receivedView];
 }
 
 

@@ -69,6 +69,8 @@
     self.progressView.progress = 0;
     [self.selectedButtonIndexDisposable dispose];
     [self.mediaResponseDisposable dispose];
+    self.selectedButtonIndex = -1;
+    self.media = nil;
     
     @weakify(self);
     self.selectedButtonIndexDisposable = [RACObserve(self, selectedButtonIndex) subscribeNext:^(NSNumber *index) {
@@ -76,7 +78,7 @@
         NSInteger indexValue = [index integerValue];
         NSString *imageName;
         if (indexValue < 0) {
-            imageName = [ImagesCatalog wokeResponseIconHeartNormalName];
+            imageName = [ImagesCatalog wokeResponseIconReplyNormalName];
         }
         else {
             if ((NSUInteger)indexValue < self.buttonImageNames.count) {
