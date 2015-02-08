@@ -320,7 +320,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
              }
          }else{
              DDLogInfo(@"Cloud code sendFriendRequestToUser successful");
-             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncUpdateRelation completion:NULL];
+             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncOptionUpdateRelation completion:NULL];
+             NSAssert([[EWPerson me].friendshipRequestSent containsObject:request], @"Request not in my relation");
              block(request, error);
          }
      }];
@@ -357,7 +358,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
              }
          }else{
              DDLogInfo(@"Cloud code sendFriendRequestToUser successful");
-             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncUpdateRelation completion:NULL];
+             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncOptionUpdateRelation completion:NULL];
              block(request, error);
          }
      }];
@@ -386,7 +387,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
              }
          }else{
              DDLogInfo(@"generateFriendRequestFrom %@ successful", person.name);
-             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncUpdateRelation completion:NULL];
+             EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncOptionUpdateRelation completion:NULL];
              if (block) {
                  block(request, error);
              }

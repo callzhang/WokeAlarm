@@ -9,10 +9,10 @@
 #import <Parse/Parse.h>
 
 typedef enum : NSUInteger {
-	EWSyncUpdateRelation = 1,
-	EWSyncUpdateAttributesOnly = 1<< 2,
-	EWSyncUpdateNone = 1 << 3,
-	EWSyncOptionAsync = 1 << 4
+	EWSyncOptionUpdateRelation = 1,
+	EWSyncOptionUpdateAttributesOnly = 1<< 2,
+	EWSyncOptionUpdateNone = 1 << 3,
+	EWSyncOptionUpdateAsync = 1 << 4
 } EWSyncOption;
 
 @class EWServerObject;
@@ -38,4 +38,7 @@ typedef enum : NSUInteger {
 - (BOOL)isNewerThanMO;
 - (BOOL)isNewerThanMOInContext:(NSManagedObjectContext *)context;
 - (NSString *)localClassName;
+
+//cache
+- (void)fetchIfNeededAndSaveToCache:(NSError **)error;
 @end

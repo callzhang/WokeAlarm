@@ -98,7 +98,7 @@
 	//try to find EWSocial from PO
     PFUser *user = (PFUser *)person.parseObject;
     PFObject *social = user[EWPersonRelationships.socialGraph];
-    [social fetchIfNeeded];
+    [social fetchIfNeededAndSaveToCache:nil];
     EWSocial *graph;
     //create
     if (social) {
