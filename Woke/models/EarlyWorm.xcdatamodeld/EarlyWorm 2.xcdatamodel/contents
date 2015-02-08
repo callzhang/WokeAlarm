@@ -69,7 +69,7 @@
     </entity>
     <entity name="EWNotification" representedClassName="EWNotification" parentEntity="EWServerObject" syncable="YES">
         <attribute name="completed" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="friendshipRequestID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="friendRequestID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="importance" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="receiver" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sender" optional="YES" attributeType="String" syncable="YES"/>
@@ -132,13 +132,13 @@
         <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
         <element name="EWActivity" positionX="0" positionY="0" width="128" height="206"/>
         <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="EWFriendRequest" positionX="9" positionY="153" width="128" height="28"/>
         <element name="EWMedia" positionX="0" positionY="0" width="128" height="210"/>
         <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
         <element name="EWMessage" positionX="0" positionY="0" width="128" height="30"/>
-        <element name="EWNotification" positionX="0" positionY="0" width="128" height="44"/>
+        <element name="EWNotification" positionX="0" positionY="0" width="128" height="191"/>
         <element name="EWPerson" positionX="0" positionY="0" width="128" height="478"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
         <element name="EWSocial" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="EWFriendRequest" positionX="9" positionY="153" width="128" height="28"/>
     </elements>
 </model>

@@ -257,7 +257,6 @@
 	[self fetchIfNeeded];
 	
 	NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
-	//NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId MR_inContext:context];
 	while (SOs.count > 1) {
 		DDLogError(@"Find duplicated MO for ID %@(%@)", self.localClassName, self.objectId);
 		EWServerObject *mo_ = SOs.lastObject;

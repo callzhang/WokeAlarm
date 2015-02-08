@@ -309,7 +309,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
      userInfo: {User:user.objectId, Type: kNotificationTypeFriendRequest}
      
      */
-    [PFCloud callFunctionInBackground:@"sendFriendRequestToUser"
+    [PFCloud callFunctionInBackground:@"sendFriendshipRequestToUser"
                        withParameters:@{@"sender": [EWPerson me].serverID, @"receiver": person.serverID}
                                 block:^(PFObject *object, NSError *error)
      {
@@ -346,8 +346,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
      body: /name/ has approved your friendship request. Now send her/him a voice greeting!
      userInfo: {User:user.objectId, Type: kNotificationTypeFriendAccepted}
      */
-    [PFCloud callFunctionInBackground:@"sendFriendAcceptToUser"
-                       withParameters:@{@"sender": [EWPerson me].objectId, @"owner": person.objectId}
+    [PFCloud callFunctionInBackground:@"sendFriendshipAcceptanceToUser"
+                       withParameters:@{@"sender": [EWPerson me].objectId, @"receiver": person.objectId}
                                 block:^(PFObject *object, NSError *error)
      {
          if (!object) {
@@ -360,7 +360,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
              EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncUpdateRelation completion:NULL];
              block(request, error);
          }
-         
      }];
 }
 

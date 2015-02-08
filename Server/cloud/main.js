@@ -134,191 +134,186 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
 //parameters:
 //  senderID: objectId for sender
 //  receiverID: objectId for receiver
-Parse.Cloud.define("sendFriendRequestNotificationToUser", function(request, response) {
+Parse.Cloud.define("sendFriendshipRequestToUser", function(request, response) {
   Parse.Cloud.useMasterKey();
   var senderID = request.params.sender;
   var receiverID = request.params.receiver;
+  var sender;
+  var receiver;
+  var request;
+  var notification;
 
   var querySender = new Parse.Query(Parse.User);
-  querySender.equalTo("objectId", senderID);
-  querySender.first({
-    success: function(sender) {
+  query.get(receiverID).then(function (object) {
+    receiver = object;
+    console.log(sender.get("name")  + " requesting friendship" + receiver.get("name"));
+    var querySender = new Parse.Query(Parse.User);
+    return querySender.get(senderID);
+  }).then(function (object) {
+    sender = object;
+    //create EWFriendRequest
+    request = new Parse.Object.extend("EWFriendRequest");
+    request.set("receiver", receiver);
+    request.set("sender", sender);
+    request.set("status", "friend_request_pending");
+    return request.save();
 
-    var query = new Parse.Query(Parse.User);
-    query.equalTo("objectId", receiverID);
-    var user = null;
-    query.first({
-      success: function(receiver) {
-          console.log(sender.get("name")  + " requesting friendship" + receiver.get("name"));
+  }).then(function (request) {
+    console.log("request saved");
+    //create notification
+    notification = new Parse.Object.extend("EWNotification");
+    notification.set("importance", 0);
+    notification.set("sender", senderID);
+    notification.set("receiver", receiverID);
+    notification.set("owner", receiver);
+    notification.set("type", "friendship_request");
+    notification.set("friendRequestID", request.id);
+    notification.set("userInfo",  {User:senderID, owner:receiverID, type: "notice", sendername: sender.get("firstName") });
+    return notification.save();
 
-          //create a notification object
-          //TODO: check sender/owner exists or not 
-          var notification = new Parse.Object.extend("EWNotification");
-          notification.set("importance", 0);
-          notification.set("sender", senderID);
-          notification.set("receiver", receiverID);
-          notification.set("owner", receiver);
-          notification.set("type", "friendship_request");
-          notification.set("userInfo",  {User:senderID, owner:receiverID, type: "notice", sendername: sender.get("firstName") });
+  }).then(function (notification) {
+    console.log("notification saved");
 
-          //console.log(notification);
-          //save notification
-          notification.save(null, {
-            success: function(notification) {
-              console.log(notification.id + " saved");
-              var relation = receiver.relation("notifications");
-              relation.add(notification);
-              receiver.save(null, {
-                success: function(receiver) {
+    //set request to users
+    var promises = [];
+    var friendshipRequestReceivedRelation = sender.relation("friendshipRequestReceived");
+    friendshipRequestReceivedRelation.add(request);
+    promises.push(friendshipRequestReceivedRelation.save());
 
-                  //push message to the owner. 
-                  var query = new Parse.Query(Parse.Installation);
-                  query.equalTo('userId', receiver.id);
+    var friendshipRequestSentRelation = receiver.relation("friendshipRequestSent");
+    friendshipRequestSentRelation.add(request);
+    promises.push(friendshipRequestSentRelation.save());
 
-                    Parse.Push.send({
-                      where: query, // Set our Installation query
-                      data: {
-                        alert: "Friendship request",
-                        title: "Friendship request",
-                        body: sender.get("name") + " is requesting your premission to become your friend.",
-                        userInfo: "{User:" + senderID + ", type:friendship_request}",
-                        type: "notice",
-                        notificationID: notification.id
-                      }
-                      }, {
-                      success: function() {
-                        // Push was successful
-                        notification.fetch().then(function(){
-                          response.success(notification);
-                        })
-                      },
-                      error: function(error) {
-                        // Handle error
-                        response.error("error: " + error.message);
-                      }
-                    });
-                },
-                error: function(receiver, error) {
-                  response.error("failed to save receiver: " + error.message);
-                }
-              });
+    //add notification
+    var notificationRelation = receiver.relation("notifications");
+    notificationRelation.add(notification);
+    promises.push(notificationRelation.save());
 
-              
-            },
-            error: function(notification, error) {
-              console.log("save notification object failed");
-              console.log(error.message);
-              response.error("create Notification object failed");
-            }
-          });
+    return Parse.Promise.when(promises);
+  }).then(function () {
+    console.log("all objects saved");
+    //push message to the owner.
+    var query = new Parse.Query(Parse.Installation);
+    query.equalTo('userId', receiver.id);
+    Parse.Push.send({
+      where: query, // Set our Installation query
+      data: {
+        alert: "Friendship request",
+        title: "Friendship request",
+        body: sender.get("name") + " is requesting your permission to become your friend.",
+        userInfo: "{User:" + senderID + ", type:friendship_request}",
+        requestID: request.id,
+        type: "notice",
+        notificationID: notification.id
+      }
+    }, {
+      success: function() {
+        // Push was successful
+        request.fetch().then(function(){
+          response.success(request);
+        })
       },
-      error: function() {
-        console.log("cannot find owner");
-        response.error("cannot find owner");
+      error: function(error) {
+        // Handle error
+        response.error("error: " + error.message);
       }
     });
-
-    },
-    error: function() {
-      console.log("cannot find owner");
-      response.error("cannot find owner");
-    }
   });
 });
 
-Parse.Cloud.define("sendFriendAcceptNotificationToUser", function(request, response) {
+Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response) {
   Parse.Cloud.useMasterKey();
-  var sender = request.params.sender;
+  var senderID = request.params.sender;
+  var receiverID = request.params.receiver;
+  var sender;
+  var receiver;
+  var request;
+  var notification;
 
   var querySender = new Parse.Query(Parse.User);
-  querySender.equalTo("objectId", sender);
-  querySender.first({
-    success: function(senderObject) {
+  querySender.get(senderID).then(function () {
+    var queryReceiver = new Parse.Query(Parse.User);
+    return queryReceiver.get(receiverID);
+  }).then(function (object) {
+    receiver = object;
+    var EWFriendRequest = Parse.Object.extend("EWFriendRequest");
+    var queryRequest = new Parse.Query(EWFriendRequest);
+    queryRequest.equalTo("receiver", receiver);
+    queryRequest.equalTo("sender", sender);
+    return queryRequest.find();
+  }).then(function (list) {
+    if (list.length > 0) {
+      request = list[0];
+      request.set("status", "friend_request_friended");
+      return request.save();
+    } else {
+      console.log("Didn't find request");
+      response.error("Request not found");
+    }
+  }).then(function (object) {
 
-    var owner = request.params.owner;
-    var query = new Parse.Query(Parse.User);
-    query.equalTo("objectId", owner);
-    var user = null;
-    query.first({
-      success: function(ownerObject) {
-          console.log(senderObject.get("name") + " " + ownerObject.get("name"));
+    console.log("saved request");
+    //create notification
+    notification = new Parse.Object.extend("EWNotification");
+    notification.set("importance", 0);
+    notification.set("sender", senderID);
+    notification.set("receiver", receiverID);
+    notification.set("owner", receiver);
+    notification.set("type", "friendship_accepted");
+    notification.set("userInfo",  {User:senderID, owner:owner, type: "notice", sendername: sender.get("name") });
+    if(request) notification.set("friendRequestID", request.id);
 
-          //create a notification object
-          //TODO: check sender/owner exists or not 
-          var notification = new Parse.Object.extend("EWNotification");
-          notification.set("importance", 0);
-          notification.set("sender", sender);
-          notification.set("owner", ownerObject);
-          notification.set("type", "friendship_accepted");
-          notification.set("userInfo",  {User:sender, owner:owner, type: "notice", sendername: senderObject.get("name") });
+    return notification.save();
+  }).then(function (notification) {
 
-          //console.log(notification);
-          //save notification
-          notification.save(null, {
-            success: function(notification) {
-              console.log(notification.id + " saved");
-              var relation = ownerObject.relation("notifications");
-              relation.add(notification);
-              ownerObject.save(null, {
-                success: function(ownerObject) {
+    console.log("saved notification");
+    var promises = [];
+    //add relation
+    var notificationsRelation = receiver.relation("notifications");
+    notificationsRelation.add(notification);
+    promises.push(notificationsRelation.save());
 
-                  //push message to the owner. 
-                  var query = new Parse.Query(Parse.Installation);
-                  //query.equalTo('username', ownerObject.get("username"));
-                  query.equalTo('userId', ownerObject.id);
+    //friends relation
+    var friendsRelation = sender.relation("friends");
+    friendsRelation.add(receiver);
+    promises.push(friendsRelation.save());
 
-                  var gender = "this person";
-                  if (senderObject.get("gender") === "male") gender = "him";
-                  if (senderObject.get("gender") === "female") gender = "her";
+    var friendedRelation = receiver.relation("friends");
+    friendedRelation.add(sender);
+    promises.push(friendedRelation.save());
 
-                  Parse.Push.send({
-                    where: query, // Set our Installation query
-                    data: {
-                      alert: "Friendship accepted",
-                      title: "Friendship accepted",
-                      body: senderObject.get("name") + " has approved your friendship request. Now send " + gender + " a voice greeting!",
-                      type: "notice",
-                      userInfo: "{User:" + sender + ", type:friendship_accepted}",
-                      notificationID: notification.id
+    return Parse.Promise.when(promises);
 
-                    }
-                    }, {
-                    success: function() {
-                      // Push was successful
-                      response.success("done");
-                    },
-                    error: function(error) {
-                      // Handle error
-                      console.log("push error: " + error.message);
-                      response.error("error: " + error.message);
-                    }
-                  });
-
-                },
-                error: function(ownerObject, error) {
-                  response.error("failed to save ownerObject: " + error.message);
-                }
-              });
-
-              
-            },
-            error: function(notification, error) {
-              console.log("save notification object failed");
-              response.error("create Notification object failed");
-            }
-          });
+  }).then(function () {
+    console.log("saved all objects");
+    //push message to the owner.
+    var query = new Parse.Query(Parse.Installation);
+    //query.equalTo('username', ownerObject.get("username"));
+    query.equalTo('userId', receiver.id);
+    Parse.Push.send({
+      where: query, // Set our Installation query
+      data: {
+        alert: "Friendship accepted",
+        title: "Friendship accepted",
+        body: sender.get("name") + " has approved your friendship request.",
+        type: "notice",
+        userInfo: "{User:" + senderID + ", type:friendship_accepted}",
+        notificationID: notification.id
+      }
+    }, {
+      success: function() {
+        // Push was successful
+        if (request) {
+          response.success(request);
+        }
+        response.success(true);
       },
-      error: function() {
-        console.log("cannot find owner");
-        response.error("cannot find owner");
+      error: function(error) {
+        // Handle error
+        console.log("push error: " + error.message);
+        response.error("error: " + error.message);
       }
     });
-
-    },
-    error: function() {
-      console.log("cannot find owner");
-      response.error("cannot find owner");
-    }
   });
 });
 
