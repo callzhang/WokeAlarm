@@ -60,10 +60,6 @@
 
 + (void)applyAlphaGradientForView:(UIView *)view withEndPoints:(NSArray *)locations;
 
-+ (void)addTransparantNavigationBarToViewController:(UIViewController *)vc;
-
-+ (void)addNavigationButtonsForViewController:(UIViewController *)vc backButton:(UIButton *)leftBtn rightButton:(UIButton *)rightBtn;
-
 + (UIImage *)resizeImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
 //HUD

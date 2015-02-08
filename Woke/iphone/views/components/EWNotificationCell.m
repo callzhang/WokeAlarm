@@ -35,15 +35,11 @@
         self.time.text = [notification.createdAt.timeElapsedString stringByAppendingString:@" ago"];
     }
     else{
-		__block EWNotification *blockNotification = _notification;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            PFObject *PO = blockNotification.parseObject;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                blockNotification.createdAt = PO.createdAt;
-                self.time.text = [blockNotification.createdAt.timeElapsedString stringByAppendingString:@" ago"];
-            });
-        });
-        
+        [_notification getParseObjectInBackgroundWithCompletion:^(PFObject *object, NSError *error) {
+            self.time.text = [object.createdAt.timeElapsedString stringByAppendingString:@" ago"];
+            _notification.createdAt = object.createdAt;
+            [_notification saveToLocal];
+        }];
     }
     
     //type

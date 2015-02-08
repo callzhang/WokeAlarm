@@ -857,10 +857,9 @@ NSManagedObjectContext *mainContext;
     //try to find PO in the pool first
     PFObject *object = [self getCachedParseObjectForID:ID];
     
-    NSEntityDescription *entity = [NSEntityDescription entityForName:class inManagedObjectContext:mainContext];
-    
     //if not found, then download
     if (!object || !object.isDataAvailable) {
+        NSEntityDescription *entity = [NSEntityDescription entityForName:class inManagedObjectContext:mainContext];
         //fetch from server if not found
         //or if PO doesn't have data avaiable
         //or if PO is older than MO
