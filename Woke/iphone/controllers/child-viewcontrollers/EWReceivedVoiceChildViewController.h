@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWBaseTableViewController.h"
 
-@interface EWReceivedVoiceChildViewController : EWBaseViewController
+@interface EWReceivedVoiceChildViewController : EWBaseTableViewController
 
 @end

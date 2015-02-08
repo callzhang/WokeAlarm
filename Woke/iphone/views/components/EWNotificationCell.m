@@ -90,5 +90,6 @@
         self.unreadDotImageView.hidden = NO;
     }
     
+    [self.profilePic applyHexagonSoftMask];
 }
 @end
