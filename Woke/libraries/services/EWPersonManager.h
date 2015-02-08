@@ -10,6 +10,7 @@
 #import "EWStartUpSequence.h"
 #import "EWPerson.h"
 #import "GCDSingleton.h"
+#import "EWPerson+Woke.h"
 
 #define everyoneCheckTimeOut            600 //10min
 #define numberOfRelevantUsers           @10 //number of relevant users returned

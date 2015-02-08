@@ -630,7 +630,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 			
             [localMe saveToLocal];
         } completion:^(BOOL contextDidSave, NSError *error2) {
-            if (!error2) {
+            if (contextDidSave) {
                 DDLogDebug(@"========> Finished user syncing <=========");
                 [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
                 block(nil);
