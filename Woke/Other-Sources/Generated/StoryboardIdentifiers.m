@@ -7,6 +7,7 @@
 
 const struct MainStoryboardIDs MainStoryboardIDs = {
     .segues = {
+        .receivedVoiceChildViewController = @"receivedVoiceChildViewController",
         .menuToProfile = @"menuToProfile",
         .wakeUpChildViewController = @"wakeUpChildViewController",
         .toSleepView = @"toSleepView",
@@ -19,6 +20,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .searchChildViewController = @"searchChildViewController",
         .menuToAlarm = @"menuToAlarm",
         .toSleepModeView = @"toSleepModeView",
+        .sentVoiceChildViewController = @"sentVoiceChildViewController",
         .contactsChildViewController = @"contactsChildViewController",
         .smallTimeChildViewController = @"smallTimeChildViewController",
         .menuLogoutFadeToLoginGate = @"MenuLogoutFadeToLoginGate",
@@ -60,6 +62,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .profileTableViewCellProfile = @"ProfileTableViewCellProfile",
         .profileTableViewCellNormal = @"ProfileTableViewCellNormal",
         .EWAlarmTableViewCell = @"EWAlarmTableViewCell",
+        .EWWakeUpViewCellSectionHeader = @"EWWakeUpViewCellSectionHeader",
         .EWWakeUpViewCell = @"EWWakeUpViewCell",
         .personCell = @"personCellIdentifier",
         .EWNotificationTalbeViewCell = @"EWNotificationTalbeViewCell",
