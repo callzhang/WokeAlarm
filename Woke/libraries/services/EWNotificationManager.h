@@ -34,6 +34,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWNotificationManager)
 
 //Search
 - (NSArray *)notificationsForPerson:(EWPerson *)person;
-
+- (void)findAllNotificationInBackgroundwithCompletion:(ArrayBlock)block;
 
 @end
