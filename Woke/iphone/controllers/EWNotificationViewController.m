@@ -98,29 +98,11 @@
 - (IBAction)refresh:(id)sender{
     [loading startAnimating];
     
-    @weakify(self);
-    //TODO: refactor the following notification related call to it's functinal class. 
-    PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWNotification class])];
-    if ([EWPerson me].notifications.count) {
-        [query whereKey:kParseObjectID notContainedIn:[[EWPerson me].notifications valueForKey:kParseObjectID]];
-    }
-    [query whereKey:EWNotificationRelationships.owner equalTo:[PFUser currentUser]];
-    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
-        @strongify(self);
-        for (PFObject *PO in objects) {
-            EWNotification *notification = (EWNotification *)[PO managedObjectInContext:mainContext];
-            DDLogVerbose(@"Found new notification %@(%@)", notification.type, notification.objectId);
-            notification.owner = [EWPerson me];
-        }
-        [self reload];
+    [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
         
-        //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        notifications = array;
         [loading stopAnimating];
-		
-		if (notifications.count != 0){
-			self.title = [NSString stringWithFormat:@"Notifications (%ld)",(unsigned long)notifications.count];
-            [[EWPerson me] save];
-		}
+        [self reload];
     }];
 }
 
