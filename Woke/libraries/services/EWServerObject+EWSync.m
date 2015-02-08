@@ -272,7 +272,7 @@
     
     NSError *err;
     PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:self.serverClassName ID:self.serverID error:&err];
-    if (err){
+    if (!object){
         DDLogError(@"Failed to find PO for MO(%@) with error: %@", self.serverID, err.description);
         return nil;
     }
@@ -285,6 +285,24 @@
     return object;
 }
 
+- (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block{
+    __block PFObject *object;
+    __block NSError *err;
+    [self.managedObjectContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+        EWServerObject *localMO = (EWServerObject *)[self MR_inContext:localContext];
+        
+        object = [[EWSync sharedInstance] getParseObjectWithClass:localMO.serverClassName ID:localMO.serverID error:&err];
+        //update value
+        if ([object isNewerThanMOInContext:localContext]) {
+            DDLogWarn(@"Getting PO(%@) newer than SO %@(%@)", object.objectId, localMO.entity.name, localMO.serverID);
+            [localMO updateValueAndRelationFromParseObject:object];
+        }
+    } completion:^(BOOL contextDidSave, NSError *error) {
+        if (block) {
+            block(object, err);
+        }
+    }];
+}
 
 #pragma mark - Download methods
 

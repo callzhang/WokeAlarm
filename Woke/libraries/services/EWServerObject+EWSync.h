@@ -29,6 +29,13 @@
 - (PFObject *)parseObject;
 
 /**
+ *  get server(parse) object in background
+ *
+ *  @param block returns a PFObject and a NSError
+ */
+- (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block;
+
+/**
  Refresh ManagedObject value from server in background
  @discussion If the ParseID is not found on this ManagedObject, an insert action will performed.
  */

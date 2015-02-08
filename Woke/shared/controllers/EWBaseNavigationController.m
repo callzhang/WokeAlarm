@@ -51,6 +51,7 @@
         [self.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         self.navigationBar.shadowImage = [UIImage new];
         self.navigationBar.translucent = YES;
+        self.navigationBar.tintColor = [UIColor whiteColor];
     }
     else {
         UIImage *image = [UIImage imageWithColor:[UIColor colorWithHue:0.555f saturation:1.f brightness:0.855f alpha:1.f]];
@@ -84,6 +85,22 @@
     
     return UIStatusBarStyleLightContent;
 }
+
+
+- (void)addNavigationButtons{
+    UIViewController *vc = self.viewControllers.lastObject;
+    if (![vc conformsToProtocol:@protocol(EWBaseViewNavigationBarButtonsDelegate)]) {
+        DDLogError(@"ViewController %@ doesn't not confirm to EWBaseViewNavigationBarButtonsDelegate", NSStringFromClass([vc class]));
+    }
+    EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *controller = (EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *)vc;
+        //not in navigation controller
+    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog backButton] style:UIBarButtonItemStyleDone target:controller action:@selector(close:)];
+    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:controller action:@selector(close:)];
+
+    controller.navigationItem.leftBarButtonItem = leftBtn;
+    controller.navigationItem.rightBarButtonItem = rightBtn;
+}
+
 
 #pragma mark - view presentation for events
 - (void)presentWakeUpViewWithActivity:(NSNotification *)note{

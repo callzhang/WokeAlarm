@@ -10,7 +10,7 @@
 #import "EWAVManager.h"
 #import "EWMediaSlider.h"
 #import "EWStartUpSequence.h"
-#import "EWPersonViewController.h"
+#import "EWProfileViewController.h"
 #import "EWUIUtil.h"
 #import "UIView+Layout.h"
 #import "UIViewController+Blur.h"
@@ -98,9 +98,9 @@
     if (!media.author) {
         return;
     }
-	EWPersonViewController *profileVC = [[EWPersonViewController alloc] initWithNibName:nil bundle:nil];
-	profileVC.person = media.author;
-    [self.controller presentViewControllerWithBlurBackground:profileVC completion:NULL];
+	EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
+	controller.person = media.author;
+    [self.controller presentViewControllerWithBlurBackground:controller completion:NULL];
 
 }
 

@@ -298,9 +298,14 @@
     }
 	return SO;
 }
+
 - (BOOL)isNewerThanMO{
+    return [self isNewerThanMOInContext:mainContext];
+}
+
+- (BOOL)isNewerThanMOInContext:(NSManagedObjectContext *)context{
     NSDate *updatedPO = [self valueForKey:kUpdatedDateKey];
-    NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId];
+    NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId inContext:context];
     NSDate *updatedMO = [mo valueForKey:kUpdatedDateKey];
     if (updatedPO && updatedMO) {
         if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {

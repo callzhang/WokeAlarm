@@ -36,5 +36,6 @@ typedef enum : NSUInteger {
 
 //Helper
 - (BOOL)isNewerThanMO;
+- (BOOL)isNewerThanMOInContext:(NSManagedObjectContext *)context;
 - (NSString *)localClassName;
 @end

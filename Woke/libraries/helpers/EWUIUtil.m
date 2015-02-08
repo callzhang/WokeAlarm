@@ -262,37 +262,7 @@ static const float originalSize = 80.0;
         vc.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     }else{
         DDLogError(@"No nav controller found");
-    }
-}
-
-+ (void)addNavigationButtonsForViewController:(UIViewController *)vc backButton:(UIButton *)leftBtn rightButton:(UIButton *)rightBtn{
-    if (!vc.navigationController){
-        //not in navigation controller
-        if (!leftBtn) {
-            leftBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 20, 40, 40)];
-            [leftBtn setImage:[UIImage imageNamed:@"Back Button"] forState:UIControlStateNormal];
-            if ([vc respondsToSelector:@selector(close:)]) {
-                [leftBtn addTarget:vc action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
-            }
-        }else{
-            leftBtn.frame = CGRectMake(20, 20, 40, 40);
-        }
-        
-        CGFloat width = vc.view.width;
-        if (!rightBtn) {
-            rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(width - 60, 20, 40, 40)];
-            [rightBtn setImage:[UIImage imageNamed:@"More Button"] forState:UIControlStateNormal];
-            if ([vc respondsToSelector:@selector(more:)]) {
-                [rightBtn addTarget:vc action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
-            }
-        }else{
-            rightBtn.frame = CGRectMake(width - 60, 20, 40, 40);
-        }
-        [vc.view addSubview:leftBtn];
-        [vc.view addSubview:rightBtn];
-        
-    }else{
-        DDLogError(@"nav controller found, use addTransparantNavigationBarToViewController instead.");
+        [self addTransparantNavigationBarToViewController:vc];
     }
 }
 

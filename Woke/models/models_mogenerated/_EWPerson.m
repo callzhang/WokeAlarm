@@ -27,6 +27,8 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	.activities = @"activities",
 	.alarms = @"alarms",
 	.friends = @"friends",
+	.friendshipRequestReceived = @"friendshipRequestReceived",
+	.friendshipRequestSent = @"friendshipRequestSent",
 	.notifications = @"notifications",
 	.receivedMedias = @"receivedMedias",
 	.receivedMessages = @"receivedMessages",
@@ -138,6 +140,28 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"friends"];
 
 	[self didAccessValueForKey:@"friends"];
+	return result;
+}
+
+@dynamic friendshipRequestReceived;
+
+- (NSMutableSet*)friendshipRequestReceivedSet {
+	[self willAccessValueForKey:@"friendshipRequestReceived"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"friendshipRequestReceived"];
+
+	[self didAccessValueForKey:@"friendshipRequestReceived"];
+	return result;
+}
+
+@dynamic friendshipRequestSent;
+
+- (NSMutableSet*)friendshipRequestSentSet {
+	[self willAccessValueForKey:@"friendshipRequestSent"];
+
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"friendshipRequestSent"];
+
+	[self didAccessValueForKey:@"friendshipRequestSent"];
 	return result;
 }
 

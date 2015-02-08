@@ -28,6 +28,8 @@ extern const struct EWPersonRelationships {
 	__unsafe_unretained NSString *activities;
 	__unsafe_unretained NSString *alarms;
 	__unsafe_unretained NSString *friends;
+	__unsafe_unretained NSString *friendshipRequestReceived;
+	__unsafe_unretained NSString *friendshipRequestSent;
 	__unsafe_unretained NSString *notifications;
 	__unsafe_unretained NSString *receivedMedias;
 	__unsafe_unretained NSString *receivedMessages;
@@ -41,6 +43,8 @@ extern const struct EWPersonRelationships {
 @class EWActivity;
 @class EWAlarm;
 @class EWPerson;
+@class EWFriendRequest;
+@class EWFriendRequest;
 @class EWNotification;
 @class EWMedia;
 @class EWMessage;
@@ -152,6 +156,14 @@ extern const struct EWPersonRelationships {
 
 - (NSMutableSet*)friendsSet;
 
+@property (nonatomic, strong) NSSet *friendshipRequestReceived;
+
+- (NSMutableSet*)friendshipRequestReceivedSet;
+
+@property (nonatomic, strong) NSSet *friendshipRequestSent;
+
+- (NSMutableSet*)friendshipRequestSentSet;
+
 @property (nonatomic, strong) NSSet *notifications;
 
 - (NSMutableSet*)notificationsSet;
@@ -211,6 +223,22 @@ extern const struct EWPersonRelationships {
 - (void)removeFriends:(NSSet*)value_;
 - (void)addFriendsObject:(EWPerson*)value_;
 - (void)removeFriendsObject:(EWPerson*)value_;
+
+@end
+
+@interface _EWPerson (FriendshipRequestReceivedCoreDataGeneratedAccessors)
+- (void)addFriendshipRequestReceived:(NSSet*)value_;
+- (void)removeFriendshipRequestReceived:(NSSet*)value_;
+- (void)addFriendshipRequestReceivedObject:(EWFriendRequest*)value_;
+- (void)removeFriendshipRequestReceivedObject:(EWFriendRequest*)value_;
+
+@end
+
+@interface _EWPerson (FriendshipRequestSentCoreDataGeneratedAccessors)
+- (void)addFriendshipRequestSent:(NSSet*)value_;
+- (void)removeFriendshipRequestSent:(NSSet*)value_;
+- (void)addFriendshipRequestSentObject:(EWFriendRequest*)value_;
+- (void)removeFriendshipRequestSentObject:(EWFriendRequest*)value_;
 
 @end
 
@@ -323,6 +351,12 @@ extern const struct EWPersonRelationships {
 
 - (NSMutableSet*)primitiveFriends;
 - (void)setPrimitiveFriends:(NSMutableSet*)value;
+
+- (NSMutableSet*)primitiveFriendshipRequestReceived;
+- (void)setPrimitiveFriendshipRequestReceived:(NSMutableSet*)value;
+
+- (NSMutableSet*)primitiveFriendshipRequestSent;
+- (void)setPrimitiveFriendshipRequestSent:(NSMutableSet*)value;
 
 - (NSMutableSet*)primitiveNotifications;
 - (void)setPrimitiveNotifications:(NSMutableSet*)value;

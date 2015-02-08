@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C109" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="EWAchievement" representedClassName="EWAchievement" parentEntity="EWServerObject" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Transformable" syncable="YES"/>
@@ -30,6 +30,11 @@
         <attribute name="todo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tone" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="owner" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="alarms" inverseEntity="EWPerson" syncable="YES"/>
+    </entity>
+    <entity name="EWFriendRequest" representedClassName="EWFriendRequest" parentEntity="EWServerObject" syncable="YES">
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="receiver" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="friendshipRequestReceived" inverseEntity="EWPerson" syncable="YES"/>
+        <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="friendshipRequestSent" inverseEntity="EWPerson" syncable="YES"/>
     </entity>
     <entity name="EWMedia" representedClassName="EWMedia" parentEntity="EWServerObject" syncable="YES">
         <attribute name="liked" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -64,12 +69,16 @@
     </entity>
     <entity name="EWNotification" representedClassName="EWNotification" parentEntity="EWServerObject" syncable="YES">
         <attribute name="completed" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="friendshipRequestID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="importance" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="receiver" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userInfo" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="notifications" inverseEntity="EWPerson" syncable="YES"/>
+        <fetchedProperty name="friendshipRequest" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="EWFriendRequest" predicateString="SELF.objectId = $FETCG_SOURCE.friendshipRequestID"/>
+        </fetchedProperty>
     </entity>
     <entity name="EWPerson" representedClassName="EWPerson" parentEntity="EWServerObject" syncable="YES">
         <attribute name="bgImage" optional="YES" attributeType="Transformable" storedInTruthFile="YES" syncable="YES"/>
@@ -92,6 +101,8 @@
         <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWActivity" inverseName="owner" inverseEntity="EWActivity" syncable="YES"/>
         <relationship name="alarms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWAlarm" inverseName="owner" inverseEntity="EWAlarm" syncable="YES"/>
         <relationship name="friends" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="friends" inverseEntity="EWPerson" syncable="YES"/>
+        <relationship name="friendshipRequestReceived" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWFriendRequest" inverseName="receiver" inverseEntity="EWFriendRequest" syncable="YES"/>
+        <relationship name="friendshipRequestSent" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWFriendRequest" inverseName="sender" inverseEntity="EWFriendRequest" syncable="YES"/>
         <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWNotification" inverseName="owner" inverseEntity="EWNotification" syncable="YES"/>
         <relationship name="receivedMedias" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMedia" inverseName="receiver" inverseEntity="EWMedia" syncable="YES"/>
         <relationship name="receivedMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMessage" inverseName="recipient" inverseEntity="EWMessage" syncable="YES"/>
@@ -118,15 +129,16 @@
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="socialGraph" inverseEntity="EWPerson" syncable="YES"/>
     </entity>
     <elements>
-        <element name="EWAchievement" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWActivity" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWAlarm" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWMedia" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWMediaFile" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWMessage" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWNotification" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWServerObject" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWSocial" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="EWActivity" positionX="0" positionY="0" width="128" height="206"/>
+        <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="EWMedia" positionX="0" positionY="0" width="128" height="210"/>
+        <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="EWMessage" positionX="0" positionY="0" width="128" height="30"/>
+        <element name="EWNotification" positionX="0" positionY="0" width="128" height="44"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="128" height="478"/>
+        <element name="EWServerObject" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="EWSocial" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="EWFriendRequest" positionX="9" positionY="153" width="128" height="28"/>
     </elements>
 </model>

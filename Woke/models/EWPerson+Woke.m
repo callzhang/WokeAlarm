@@ -18,6 +18,9 @@
 #import "EWNotification.h"
 #import "NSArray+BlocksKit.h"
 #import "EWActivity.h"
+#import "EWFriendRequest.h"
+
+NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
 
 @implementation EWPerson(Woke)
 
@@ -115,49 +118,42 @@
 }
 
 #pragma mark - Helper methods
-
-
--(BOOL)isFriend {
-    BOOL myFriend = self.friendPending;
-    BOOL friended = self.friendWaiting;
-    
-    if (myFriend && friended) {
-        return YES;
+- (EWFriendshipStatus)friendshipStatus{
+    NSManagedObjectContext *context = self.managedObjectContext;
+    EWPerson *me = [EWPerson meInContext:context];
+    if ([me.friends containsObject:self]) {
+        return EWFriendshipStatusFriended;
     }
-    return NO;
-}
-
-//request pending
-- (BOOL)friendPending {
-    return [[EWPerson me].cachedInfo[kCachedFriends] containsObject:self.objectId];
-}
-
-//wait for friend acceptance
-- (BOOL)friendWaiting {
-    return [self.cachedInfo[kCachedFriends] containsObject:[EWPerson me].objectId];
-}
-
-
-- (void)requestFriend:(EWPerson *)person{
-    //[self addFriendsObject:person];
-    //[self updateMyCachedFriends];
-    [[EWNotificationManager shared] sendFriendRequestNotificationToUser:person];
-    
-    [self save];
-}
-
-- (void)acceptFriend:(EWPerson *)person{
-    [self addFriendsObject:person];
-    //[self updateMyCachedFriends];
-    [[EWNotificationManager shared] sendFriendAcceptNotificationToUser:person];
-    
-    [self save];
-}
-
-- (void)unfriend:(EWPerson *)person{
-    [self removeFriendsObject:person];
-    //[self updateMyCachedFriends];
-    [self save];
+    else{
+        EWFriendRequest *requestSent = [EWFriendRequest MR_findFirstByAttribute:EWFriendRequestRelationships.sender withValue:me inContext:context];
+        if (requestSent) {
+            if ([requestSent.status isEqualToString:EWFriendshipRequestPending]) {
+                return EWFriendshipStatusSent;
+            }else if ([requestSent.status isEqualToString:EWFriendshipRequestDenied]){
+                return EWFriendshipStatusDenied;
+            }else if ([requestSent.status isEqualToString:EWFriendshipRequestFriended]) {
+                DDLogError(@"Friended on request but not in my friends relation");
+                [me addFriendsObject:self];
+                [me save];
+                return EWFriendshipStatusFriended;
+            }
+        }
+        
+        EWFriendRequest *requestReceived = [EWFriendRequest MR_findFirstByAttribute:EWFriendRequestRelationships.receiver withValue:me inContext:context];
+        if (requestReceived) {
+            if ([requestReceived.status isEqualToString:EWFriendshipRequestPending]) {
+                return EWFriendshipStatusReceived;
+            }else if ([requestReceived.status isEqualToString:EWFriendshipRequestDenied]){
+                return EWFriendshipStatusNone;
+            }else if ([requestReceived.status isEqualToString:EWFriendshipRequestFriended]) {
+                DDLogError(@"Friended on request but not in my friends relation");
+                [me addFriendsObject:self];
+                [me save];
+                return EWFriendshipStatusFriended;
+            }
+        }
+    }
+    return EWFriendshipStatusNone;
 }
 
 
@@ -177,7 +173,6 @@
     }
     return @"Unknown location";
 }
-
 
 @end
 
