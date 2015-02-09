@@ -85,6 +85,7 @@ static const CGFloat initialDownSampling = 2;
     self.context = transitionContext;
     toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+	//remove background
     toViewController.view.backgroundColor = [UIColor clearColor];
 	UIView *img = [toViewController.view viewWithTag:kBackgroundImageTag];
 	if ([img isKindOfClass:[UIImageView class]]) {

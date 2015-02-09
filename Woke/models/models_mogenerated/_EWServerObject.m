@@ -6,6 +6,7 @@
 const struct EWServerObjectAttributes EWServerObjectAttributes = {
 	.createdAt = @"createdAt",
 	.objectId = @"objectId",
+	.syncInfo = @"syncInfo",
 	.updatedAt = @"updatedAt",
 };
 
@@ -41,6 +42,8 @@ const struct EWServerObjectAttributes EWServerObjectAttributes = {
 @dynamic createdAt;
 
 @dynamic objectId;
+
+@dynamic syncInfo;
 
 @dynamic updatedAt;
 

@@ -156,20 +156,25 @@
     //add or delete some attributes here
     [managedObjectAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
         id parseValue = [object objectForKey:key];
+        
         //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
             //update only it is outdated
             BOOL hasData = [self valueForKey:key];
-            BOOL upToDate = self.updatedAt.timeElapsed < kServerUpdateInterval;
+            NSDate *time = self.syncInfo[key];
+            BOOL upToDate = [time timeElapsed] < kServerUpdateInterval;
             if (hasData && upToDate) {
-                DDLogVerbose(@"Skipped downloading PFFile for %@(%@)->%@", object.parseClassName, object.objectId, key);
+                DDLogVerbose(@"Skip downloading PFFile for %@(%@)->%@, last updated on %@", object.parseClassName, object.objectId, key, time);
                 return;
             }
+            //no data => sync
+            //hasData => async
+            //outDated => async
             
             //PFFile
             PFFile *file = (PFFile *)parseValue;
             NSString *className = [self getPropertyClassByName:key];
-            if ([NSThread isMainThread]) { //download in background
+            if (hasData) { //download in background
                 [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                     if (!data) {
                         [self refreshEventually];
@@ -182,12 +187,13 @@
                     }else{
                         [self setValue:data forKey:key];
                     }
+                    //update sync info
+                    self.syncInfo[key] = [NSDate date];
                 }];
             }
-            else{//download directly if already in background
+            else{//download directly if no data
                 NSError *error;
                 NSData *data = [file getData:&error];
-                //[file getDataWithBlock:^(NSData *data, NSError *error) {
                 if (!data) {
                     DDLogError(@"Failed to download PFFile: %@", error.description);
                     [self refreshEventually];
@@ -199,6 +205,8 @@
                 }else{
                     [self setValue:data forKey:key];
                 }
+                //update sync info
+                self.syncInfo[key] = [NSDate date];
             }
             
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
@@ -234,7 +242,8 @@
             }
         }
     }];
-    //assigned value from PO should not be considered complete, therefore we don't timestamp on this SO
+    //assigned value from PO should not be considered complete, therefore we don't timestamp updatedAt on this SO
+    self.syncInfo[kAttributeUpdatedTime] = [NSDate date];
 	[self saveToLocal];
 }
 
