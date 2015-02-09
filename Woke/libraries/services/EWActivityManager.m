@@ -106,13 +106,19 @@ NSString *const EWActivityTypeMedia = @"media";
     }else{
         //add unread medias to current media
         for (EWMedia *media in [EWPerson myUnreadMedias]) {
-            [activity addMediaID:media.objectId];
+			if (media.played) {
+				[activity addMediaID:media.objectId];
+			}
         }
-        [[EWPerson me] removeUnreadMedias:[NSSet setWithArray:[EWPerson myUnreadMedias]]];
+        [[EWPerson me] removeUnreadMedias:[NSSet setWithArray:activity.medias]];
+		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:activity.medias]];
+		DDLogInfo(@"Removed %ld medias from my unread medias", activity.medias.count);
     }
     
     activity.completed = [NSDate date];
     self.currentAlarmActivity = nil;
+	[EWPerson me].updatedAt = [NSDate date];
+	[activity save];
 }
 
 #pragma mark - Delegate

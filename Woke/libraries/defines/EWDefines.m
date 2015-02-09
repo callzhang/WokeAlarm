@@ -17,6 +17,7 @@ NSString * const kWokeNotification = @"woke";
 NSString * const kSleepNotification = @"Sleep";
 NSString * const kNewTimerNotification = @"alarm_timer";
 NSString * const kUserNotificationRegistered = @"local_notification_registered";
+NSString * const kUserLocationUpdated = @"user_notification_updated";
 
 NSString * const kSleepDuration = @"SleepDuration";
 NSString * const kBedTimeNotification = @"BedTimeNotification";
