@@ -52,7 +52,7 @@
     
     EWPerson *person = self.items[indexPath.row];
     
-    cell.nameLabel.text = person.name;
+    cell.person = person;
     
     return cell;
 }
