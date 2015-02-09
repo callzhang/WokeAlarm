@@ -16,8 +16,8 @@
 #import "EWLoginGateViewController.h"
 #import "EWMainViewController.h"
 
-#import <CrashlyticsLogger.h>
-#import <ParseCrashReporting/ParseCrashReporting.h>
+
+//#import <ParseCrashReporting/ParseCrashReporting.h>
 #import "DDLog.h"
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
@@ -29,6 +29,9 @@
 #import "FBTweakViewController.h"
 #import "FBTweakStore.h"
 
+#import "Crashlytics.h"
+#import <CrashlyticsLogger.h>
+
 UIViewController *rootViewController;
 
 @interface AppDelegate ()<FBTweakViewControllerDelegate, UIAlertViewDelegate>
@@ -39,9 +42,9 @@ UIViewController *rootViewController;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	[Crashlytics startWithAPIKey:@"6ec9eab6ca26fcd18d51d0322752b861c63bc348"];
 #ifdef DEBUG
     [DDLog addLogger:[DDASLLogger sharedInstance]];
-    
     DDTTYLogger *log = [DDTTYLogger sharedInstance];
     [DDLog addLogger:log];
     
@@ -68,8 +71,8 @@ UIViewController *rootViewController;
     self.window.tintColor = [UIColor whiteColor];
     
     // Enable Crash Reporting
-    [ParseCrashReporting enable];
-    [Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
+	//[ParseCrashReporting enable];
+	[Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
     
     //[EWStartUpSequence deleteDatabase];
     

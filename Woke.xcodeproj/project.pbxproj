@@ -177,6 +177,7 @@
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
 		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
+		9BD800C81A8967350056B3FB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD800C71A8967350056B3FB /* Crashlytics.framework */; };
 		9BF1815D1A35222F00D25DBA /* Autumn Spring.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181551A35222F00D25DBA /* Autumn Spring.caf */; };
 		9BF1815E1A35222F00D25DBA /* Daybreak.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181561A35222F00D25DBA /* Daybreak.caf */; };
 		9BF1815F1A35222F00D25DBA /* Drive.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181571A35222F00D25DBA /* Drive.caf */; };
@@ -546,6 +547,7 @@
 		9BB244B01A87205600B0B544 /* FriendshipTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendshipTest.m; sourceTree = "<group>"; };
 		9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpProcessTest.m; sourceTree = "<group>"; };
 		9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpPlayingTest.m; sourceTree = "<group>"; };
+		9BD800C71A8967350056B3FB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		9BF181551A35222F00D25DBA /* Autumn Spring.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Autumn Spring.caf"; sourceTree = "<group>"; };
 		9BF181561A35222F00D25DBA /* Daybreak.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Daybreak.caf; sourceTree = "<group>"; };
 		9BF181571A35222F00D25DBA /* Drive.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Drive.caf; sourceTree = "<group>"; };
@@ -577,6 +579,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */,
+				9BD800C81A8967350056B3FB /* Crashlytics.framework in Frameworks */,
 				9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */,
 				9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */,
 				8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */,
@@ -1292,6 +1295,7 @@
 		AA1A75AA2E60E49CC73E6319 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9BD800C71A8967350056B3FB /* Crashlytics.framework */,
 				9B38950E1A514072004D4290 /* MobileCoreServices.framework */,
 				9B38950C1A51405A004D4290 /* SystemConfiguration.framework */,
 				9B38950A1A51404B004D4290 /* libstdc++.6.dylib */,
@@ -1515,8 +1519,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\necho \"Skipping simulator build\"\nexit 0;\nfi\n\nexport PATH=/usr/local/bin:$PATH\ncd \"${SRCROOT}/Server\"\nls\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
-			shellScript = "echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\necho \"Skipping simulator build\"\nexit 0;\nfi\n\nexport PATH=/usr/local/bin:$PATH\ncd ${SRCROOT}/Server\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "./Crashlytics.framework/run 6ec9eab6ca26fcd18d51d0322752b861c63bc348 62daabb6809cba6858b14be1c7271e7ecad241fda41e4bf70463be17fc210744\n#echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\n#if [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\n#exit 0;\n#fi\n\n#export PATH=/usr/local/bin:$PATH\n#cd ${SRCROOT}/Server\n#parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1899,6 +1902,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1920,6 +1927,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -2218,6 +2229,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -2296,6 +2311,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
