@@ -61,7 +61,7 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 	if (self.presentedViewController) {
 		if ([self.presentedViewController isKindOfClass:[controller class]]) {
 			DDLogWarn(@"The view controller %@ is already presenting, skip blur animation", controller.class);
-		}
+		} 
 		//need to dismiss first
 		[self dismissBlurViewControllerWithCompletionHandler:^{
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

@@ -835,6 +835,7 @@ NSManagedObjectContext *mainContext;
 	
 }
 
+//cache
 - (PFObject *)getCachedParseObjectForID:(NSString *)objectId{
     return [self.serverObjectCache objectForKey:objectId];
 }
@@ -845,7 +846,6 @@ NSManagedObjectContext *mainContext;
     }else{
         DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
     }
-    
 }
 
 - (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error{

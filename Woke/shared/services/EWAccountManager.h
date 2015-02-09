@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "GCDSingleton.h"
-#define kFacebookLastUpdated	@"facebook_last_updated"
+#define kFacebookLastUpdated        @"facebook_last_updated"
+#define kUserRelationSyncRequired   @[@"alarms", @"friends", @"socialGraph"]//list of relations that must be synced before the rest of the application execution
 extern NSString * const kUserSyncCompleted;
 
 @interface EWAccountManager : NSObject <CLLocationManagerDelegate>

@@ -585,6 +585,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 NSRelationshipDescription *relation = localMe.entity.relationshipsByName[key];
                 if (!relation) return;
                 
+                //decide whether to update the MO async
+                BOOL sync = [kUserRelationSyncRequired containsObject:relation.name];
+                
                 //update SO
                 if (relation.isToMany) {
                     NSArray *objects = (NSArray *)obj;
@@ -594,15 +597,23 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                             DDLogError(@"Returned PO without data: %@", PO);
                             [PO fetch];
                         }
-                        EWServerObject *SO = [PO managedObjectInContext:localContext];
-                        if (![SO.entity.name isEqualToString:kSyncUserClass]) {
-                            [SO updateValueAndRelationFromParseObject:PO];
+                        EWServerObject *MO;
+                        if ([relation.name isEqualToString:kSyncUserClass]) {
+                            MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAttributesOnly completion:^(EWServerObject *SO, NSError *error) {
+                                DDLogInfo(@"Synced attributes of %@(%@)", relation.name, SO.serverID);
+                            }];
+                        }else if (sync){
+                            MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:^(EWServerObject *SO, NSError *error) {
+                                DDLogInfo(@"Synced attributes and relation of %@(%@)", relation.name, SO.serverID);
+                            }];
                         }else {
-                            [SO assignValueFromParseObject:PO];
+                            MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
+                                DDLogInfo(@"Synced in background %@(%@)", relation.name, SO.serverID);
+                            }];
                         }
-                        if (![relatedSO containsObject:SO]) {
+                        if (![relatedSO containsObject:MO]) {
                             //add relation
-                            [relatedSO addObject:SO];
+                            [relatedSO addObject:MO];
                             [localMe setValue:relatedSO.copy forKey:key];
                             DDLogVerbose(@"+++> Added relation Me->%@(%@)", key, PO.objectId);
                         }
@@ -610,27 +621,35 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 }else{
                     //to one
                     PFObject *PO = (PFObject *)obj;
-                    EWServerObject *SO = [PO managedObjectInContext:localContext];
+                    EWServerObject *MO;
 
                     if(!PO.isDataAvailable) {
                         DDLogError(@"Returned PO without data: %@", PO);
                         [PO fetch];
                     }
-                    if (![SO.entity.name isEqualToString:kSyncUserClass]) {
-                        [SO updateValueAndRelationFromParseObject:PO];
+                    if ([relation.name isEqualToString:kSyncUserClass]) {
+                        MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAttributesOnly completion:^(EWServerObject *SO, NSError *error) {
+                            DDLogInfo(@"Synced attributes of %@(%@)", relation.name, SO.serverID);
+                        }];
+                    }else if (sync){
+                        MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:^(EWServerObject *SO, NSError *error) {
+                            DDLogInfo(@"Synced attributes and relation of %@(%@)", relation.name, SO.serverID);
+                        }];
                     }else {
-                        [SO assignValueFromParseObject:PO];
+                        MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
+                            DDLogInfo(@"Synced in background %@(%@)", relation.name, SO.serverID);
+                        }];
                     }
-                    if ([localMe valueForKey:key] != SO) {
-                        DDLogVerbose(@"+++> Set relation Me->%@(%@)", key, SO.objectId);
-                        [localMe setValue:SO forKey:key];
+                    if ([localMe valueForKey:key] != MO) {
+                        DDLogVerbose(@"+++> Set relation Me->%@(%@)", key, MO.objectId);
+                        [localMe setValue:MO forKey:key];
                     }
                 }
             }];
 			
             [localMe saveToLocal];
         } completion:^(BOOL contextDidSave, NSError *error2) {
-            if (!error2) {
+            if (contextDidSave) {
                 DDLogDebug(@"========> Finished user syncing <=========");
                 [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
                 block(nil);

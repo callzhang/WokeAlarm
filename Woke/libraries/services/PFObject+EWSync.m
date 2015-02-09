@@ -12,7 +12,7 @@
 @implementation PFObject(EWSync)
 - (BOOL)updateFromManagedObject:(EWServerObject *)managedObject withError:(NSError *__autoreleasing *)error{
 
-    [self fetchIfNeeded:error];
+    [self fetchIfNeededAndSaveToCache:error];
     if (*error && self.objectId) {
         if ([*error code] == kPFErrorObjectNotFound) {
             DDLogError(@"PO %@(%@) not found on server!", self.parseClassName, self.objectId);
@@ -237,11 +237,11 @@
 }
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{
-	return [self managedObjectInContext:context option:EWSyncUpdateAttributesOnly completion:NULL];
+	return [self managedObjectInContext:context option:EWSyncOptionUpdateAttributesOnly completion:NULL];
 }
 
 - (EWServerObject *)managedObjectUpdatedInContext:(NSManagedObjectContext *)context{
-	return [self managedObjectInContext:context option:EWSyncUpdateRelation completion:NULL];
+	return [self managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:NULL];
 }
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context option:(EWSyncOption)option completion:(void (^)(EWServerObject *, NSError *))block{
@@ -253,8 +253,9 @@
 		EWAssertMainThread
 		context = mainContext;
 	}
-	
-	[self fetchIfNeeded];
+    
+    NSError *error;
+	[self fetchIfNeededAndSaveToCache:&error];
 	
 	NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
 	while (SOs.count > 1) {
@@ -275,16 +276,26 @@
 		//if managedObject not exist, create it locally by assigning value from PO (quick)
 		//and assign relation in child context
 		SO = [NSClassFromString(self.localClassName) MR_createInContext:context];
-		[SO assignValueFromParseObject:self];
+        if (option == EWSyncOptionUpdateNone) {
+            [SO assignValueFromParseObject:self];
+        }else {
+            SO.createdAt = self.updatedAt;
+            SO.objectId = self.objectId;
+        }
+		
 		DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
 	}
-	
-    if (self.isNewerThanMO) {
-        if (option == EWSyncUpdateRelation) {
+    
+    BOOL attrbutesNeedUpdate = [self needToUpdateMOAttributesInContext:context];
+    BOOL relationNeedUpdate = [self isNewerThanMOInContext:context];
+    if (attrbutesNeedUpdate && option == EWSyncOptionUpdateAttributesOnly) {
+        [SO assignValueFromParseObject:self];
+    }
+    else if (relationNeedUpdate) {
+        if (option == EWSyncOptionUpdateRelation) {
             [SO updateValueAndRelationFromParseObject:self];
-        }else if (option == EWSyncUpdateAttributesOnly){
-            [SO assignValueFromParseObject:self];
-        }else if (option == EWSyncOptionAsync){
+        }
+        else if (option == EWSyncOptionUpdateAsync){
             [context saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWServerObject *localSO = [SO MR_inContext:localContext];
                 [localSO updateValueAndRelationFromParseObject:self];
@@ -293,6 +304,8 @@
                     block(SO, error);
                 }
             }];
+        }else {
+            DDLogInfo(@"PO %@(%@) is newer than MO, but MO not updated!", self.parseClassName, self.objectId);
         }
     }
 	return SO;
@@ -304,11 +317,29 @@
 
 - (BOOL)isNewerThanMOInContext:(NSManagedObjectContext *)context{
     NSDate *updatedPO = [self valueForKey:kUpdatedDateKey];
-    NSManagedObject *mo = [NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId inContext:context];
-    NSDate *updatedMO = [mo valueForKey:kUpdatedDateKey];
+    EWServerObject *mo = (EWServerObject *)[NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId inContext:context];
+    NSDate *updatedMO = mo.updatedAt;
     if (updatedPO && updatedMO) {
         if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {
             //DDLogVerbose(@"PO is newer than MO: %@ > %@", updatedPO, updatedMO);
+            return YES;
+        }else{
+            return NO;
+        }
+    }else if (updatedMO){
+        return NO;
+    }else if (updatedPO){
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)needToUpdateMOAttributesInContext:(NSManagedObjectContext *)context {
+    NSDate *updatedPO = self.updatedAt;
+    EWServerObject *mo = (EWServerObject *)[NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId inContext:context];
+    NSDate *updatedMO = mo.syncInfo[kAttributeUpdatedTime];
+    if (updatedPO && updatedMO) {
+        if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {
             return YES;
         }else{
             return NO;
@@ -325,5 +356,35 @@
     NSDictionary *map = kServerTransformClasses;
     NSString *localClass = [[map allKeysForObject:self.parseClassName] firstObject];
     return localClass ?: self.parseClassName;
+}
+
+#pragma mark - Cache
+- (void)fetchIfNeededAndSaveToCache:(NSError *__autoreleasing *)error{
+    if (!self.isDataAvailable) {
+        [self fetch:error];
+        if (*error) {
+            if ([*error code] == kPFErrorObjectNotFound) {
+                DDLogError(@"PO %@(%@) not found on server!", self.parseClassName, self.objectId);
+                [self delete];
+            }
+            else{
+                DDLogError(@"Trying to upload but PO error fetching: %@. Skip!", [*error localizedDescription]);
+            }
+            return;
+        }
+        
+    }
+    NSDate *updated = self.updatedAt;
+    PFObject *cachedObject = [[EWSync sharedInstance] getCachedParseObjectForID:self.objectId];
+    NSDate *cacheUpdated = cachedObject.updatedAt;
+    float interval = [updated timeIntervalSinceDate:cacheUpdated];
+    if (!cacheUpdated || interval >= 0) {
+        //self newer
+        [[EWSync sharedInstance] setCachedParseObject:self];
+        DDLogVerbose(@"Cached PO %@(%@)", self.parseClassName, self.objectId);
+    } else {
+        //cache newer
+        DDLogWarn(@"Cache is newer than current PO: %@(%@)", self.parseClassName, self.objectId);
+    }
 }
 @end

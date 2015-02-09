@@ -6,8 +6,11 @@
 extern const struct EWServerObjectAttributes {
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *objectId;
+	__unsafe_unretained NSString *syncInfo;
 	__unsafe_unretained NSString *updatedAt;
 } EWServerObjectAttributes;
+
+@class NSObject;
 
 @interface EWServerObjectID : NSManagedObjectID {}
 @end
@@ -26,6 +29,10 @@ extern const struct EWServerObjectAttributes {
 
 //- (BOOL)validateObjectId:(id*)value_ error:(NSError**)error_;
 
+@property (nonatomic, strong) id syncInfo;
+
+//- (BOOL)validateSyncInfo:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) NSDate* updatedAt;
 
 //- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
@@ -39,6 +46,9 @@ extern const struct EWServerObjectAttributes {
 
 - (NSString*)primitiveObjectId;
 - (void)setPrimitiveObjectId:(NSString*)value;
+
+- (id)primitiveSyncInfo;
+- (void)setPrimitiveSyncInfo:(id)value;
 
 - (NSDate*)primitiveUpdatedAt;
 - (void)setPrimitiveUpdatedAt:(NSDate*)value;

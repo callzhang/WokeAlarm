@@ -51,9 +51,11 @@
 
 - (IBAction)profile:(id)sender {
     EWProfileViewController *vc = (EWProfileViewController *)[[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWProfileViewController class])];
-    //vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:vc];
+    [nav addNavigationButtons];
+    [nav setNavigationBarTransparent:YES];
     vc.person = _nextWakee;
-    [self.navigationController presentViewControllerWithBlurBackground:vc];
+    [self.navigationController presentViewControllerWithBlurBackground:nav];
 }
 
 - (void)setNextWakee:(EWPerson *)nextWakee {

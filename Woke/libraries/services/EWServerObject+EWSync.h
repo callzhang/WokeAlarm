@@ -9,6 +9,7 @@
 #import <CoreData/CoreData.h>
 #import <Parse/Parse.h>
 #import "EWServerObject.h"
+#define kAttributeUpdatedTime   @"attribute_update_time"
 
 @interface EWServerObject(EWSync)
 /**

@@ -9,6 +9,14 @@
 
 
 @implementation EWServerObject
+- (void)awakeFromInsert{
+    if (!self.syncInfo) {
+        self.syncInfo = [NSMutableDictionary new];
+        self.createdAt = [NSDate date];
+    }
+}
+
+
 - (BOOL)validate{
     [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
     return NO;

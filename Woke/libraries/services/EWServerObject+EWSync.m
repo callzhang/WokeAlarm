@@ -18,8 +18,9 @@
         DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
         return;
     }
+    //download data: the fetch here is just a prevention or default state that data is only refreshed when absolutely necessary. If we need check new data, we should refresh PO before passed in here. For example, we fetch PO at app launch for current user update purpose.
 	NSError *err;
-	[parseObject fetchIfNeeded:&err];
+	[parseObject fetchIfNeededAndSaveToCache:&err];
 	if (!parseObject.isDataAvailable) {
 		if (err.code == kPFErrorObjectNotFound) {
 			DDLogError(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", parseObject.parseClassName, parseObject.objectId);
@@ -33,8 +34,6 @@
 	
     NSManagedObjectContext *localContext = self.managedObjectContext;
     
-    //download data: the fetch here is just a prevention or default state that data is only refreshed when absolutely necessary. If we need check new data, we should refresh PO before passed in here. For example, we fetch PO at app launch for current user update purpose.
-    [parseObject fetchIfNeeded];
     
     //Assign attributes
     [self assignValueFromParseObject:parseObject];
@@ -111,7 +110,7 @@
             }
             if (relatedParseObject) {
                 //find corresponding MO
-                EWServerObject *relatedManagedObject = [relatedParseObject managedObjectInContext:localContext];
+                EWServerObject *relatedManagedObject = [relatedParseObject managedObjectInContext:localContext option:EWSyncOptionUpdateNone completion:NULL];
                 [self setValue:relatedManagedObject forKey:key];
             }else{
 				//related PO is nil
@@ -119,44 +118,6 @@
 					DDLogVerbose(@"~~~> Deleted to-one relation %@(%@)->%@(%@)", parseObject.parseClassName, parseObject.objectId, key, relatedParseObject.objectId);
 					[self setValue:nil forKey:key];
 				}
-				
-//                //Handle no related PO, I doubt that we need to check the inverse related PO
-//                BOOL inverseRelatedPOExists;
-//                EWServerObject *relatedMO;
-//                PFObject *relatedPO;//related PO get from relatedMO
-//                
-//                if (!relation.inverseRelationship) {
-//                    //no inverse relation, skip check
-//                    [self setValue:nil forKey:key];
-//                    return;
-//                }else{
-//                    //relation empty, check inverse relation first
-//                    relatedMO = [self valueForKey:key];
-//                    if (!relatedMO) return;//no need to do anything
-//                    relatedPO = relatedMO.parseObject;//find relatedPO
-//                    //check if relatedPO's inverse relation contains PO
-//                    if (relation.inverseRelationship.isToMany) {
-//                        PFRelation *reflectRelation = [relatedPO valueForKey:relation.inverseRelationship.name];
-//                        NSArray *reflectPOs = [[reflectRelation query] findObjects];
-//                        inverseRelatedPOExists = [reflectPOs containsObject:parseObject];
-//                    }else{
-//                        PFObject *reflectPO = [relatedPO valueForKey:relation.inverseRelationship.name];
-//                        inverseRelatedPOExists = [reflectPO.objectId isEqualToString:parseObject.objectId];
-//                        //it could be that the inversePO is not our PO, in this case, the relation at server side is wrong, but we don't care?
-//                    }
-//                }
-//                
-//                if (!inverseRelatedPOExists) {
-//                    //both side of PO doesn't have
-//                    [self setValue:nil forKey:key];
-//                    DDLogInfo(@"~~~> Delete to-one relation on MO %@(%@)->%@(%@)", self.entity.name, parseObject.objectId, relation.name, [relatedMO valueForKey:kParseObjectID]);
-//                }else{
-//                    DDLogError(@"*** Something wrong, the inverse relation %@(%@) <-> %@(%@) deoesn't agree", self.entity.name, [self valueForKey:kParseObjectID], relatedMO.entity.name, [relatedMO valueForKey:kParseObjectID]);
-//                    if (relatedPO.isNewerThanMO) {
-//                        //PO wins
-//                        [self setValue:nil forKey:key];
-//                    }
-//                }
             }
         }
     }];
@@ -173,7 +134,7 @@
 
 - (void)assignValueFromParseObject:(PFObject *)object{
     NSError *err;
-    [object fetchIfNeeded:&err];
+    [object fetchIfNeededAndSaveToCache:&err];
     if (!object.isDataAvailable) {
         if (err.code == kPFErrorObjectNotFound) {
 			DDLogError(@"*** The PO %@(%@) you passed in doesn't have any data. Deleted from server?", object.parseClassName, object.objectId);
@@ -187,22 +148,36 @@
     if (self.serverID) {
         NSParameterAssert([[self valueForKey:kParseObjectID] isEqualToString:object.objectId]);
     }else{
-        [self setValue:object.objectId forKey:kParseObjectID];
+        self.objectId = object.objectId;
+        self.createdAt = object.createdAt;
     }
     //attributes
     NSDictionary *managedObjectAttributes = self.entity.attributesByName;
-    //NSArray *allKeys = object.allKeys;
     //add or delete some attributes here
     [managedObjectAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
         id parseValue = [object objectForKey:key];
+        
         //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
+            //update only it is outdated
+            BOOL hasData = [self valueForKey:key];
+            NSDate *time = self.syncInfo[key];
+            BOOL upToDate = [time timeElapsed] < kServerUpdateInterval;
+            if (hasData && upToDate) {
+                DDLogVerbose(@"Skip downloading PFFile for %@(%@)->%@, last updated on %@", object.parseClassName, object.objectId, key, time);
+                return;
+            }
+            //no data => sync
+            //hasData => async
+            //outDated => async
+            
             //PFFile
             PFFile *file = (PFFile *)parseValue;
             NSString *className = [self getPropertyClassByName:key];
-            if ([NSThread isMainThread]) { //download in background
+            if (hasData) { //download in background
                 [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                     if (!data) {
+                        [self refreshEventually];
                         DDLogError(@"Failed to download PFFile: %@", error.description);
                         return;
                     }
@@ -212,14 +187,16 @@
                     }else{
                         [self setValue:data forKey:key];
                     }
+                    //update sync info
+                    self.syncInfo[key] = [NSDate date];
                 }];
             }
-            else{//download directly if already in background
+            else{//download directly if no data
                 NSError *error;
                 NSData *data = [file getData:&error];
-                //[file getDataWithBlock:^(NSData *data, NSError *error) {
                 if (!data) {
                     DDLogError(@"Failed to download PFFile: %@", error.description);
+                    [self refreshEventually];
                     return;
                 }
                 if ([className isEqualToString:@"UIImage"]) {
@@ -228,6 +205,8 @@
                 }else{
                     [self setValue:data forKey:key];
                 }
+                //update sync info
+                self.syncInfo[key] = [NSDate date];
             }
             
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
@@ -263,7 +242,8 @@
             }
         }
     }];
-    //assigned value from PO should not be considered complete, therefore we don't timestamp on this SO
+    //assigned value from PO should not be considered complete, therefore we don't timestamp updatedAt on this SO
+    self.syncInfo[kAttributeUpdatedTime] = [NSDate date];
 	[self saveToLocal];
 }
 
@@ -599,11 +579,8 @@
 }
 
 - (BOOL)isOutDated{
-    NSDate *date = (NSDate *)[self valueForKey:kUpdatedDateKey];
-    if (!date) {
-        return YES;
-    }
-    BOOL outdated = !date.isUpToDated;
+    NSDate *date = self.updatedAt;
+    BOOL outdated = !date.timeElapsed < kServerUpdateInterval;
     return outdated;
 }
 

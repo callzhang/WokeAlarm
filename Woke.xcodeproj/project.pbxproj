@@ -173,6 +173,7 @@
 		9BB244A91A86AF8F00B0B544 /* _EWFriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244A81A86AF8F00B0B544 /* _EWFriendRequest.m */; };
 		9BB244AC1A86AF9900B0B544 /* EWFriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AB1A86AF9900B0B544 /* EWFriendRequest.m */; };
 		9BB244AF1A86C40700B0B544 /* EWAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AE1A86C40700B0B544 /* EWAlertManager.m */; };
+		9BB244B11A87205600B0B544 /* FriendshipTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244B01A87205600B0B544 /* FriendshipTest.m */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
 		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
@@ -542,6 +543,7 @@
 		9BB244AB1A86AF9900B0B544 /* EWFriendRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWFriendRequest.m; sourceTree = "<group>"; };
 		9BB244AD1A86C40700B0B544 /* EWAlertManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWAlertManager.h; path = Woke/libraries/services/EWAlertManager.h; sourceTree = SOURCE_ROOT; };
 		9BB244AE1A86C40700B0B544 /* EWAlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EWAlertManager.m; path = Woke/libraries/services/EWAlertManager.m; sourceTree = SOURCE_ROOT; };
+		9BB244B01A87205600B0B544 /* FriendshipTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendshipTest.m; sourceTree = "<group>"; };
 		9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpProcessTest.m; sourceTree = "<group>"; };
 		9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpPlayingTest.m; sourceTree = "<group>"; };
 		9BF181551A35222F00D25DBA /* Autumn Spring.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Autumn Spring.caf"; sourceTree = "<group>"; };
@@ -952,6 +954,7 @@
 		09A776FB1A11D8D9004AF902 /* WokeTests */ = {
 			isa = PBXGroup;
 			children = (
+				9BB244B01A87205600B0B544 /* FriendshipTest.m */,
 				9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */,
 				9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */,
 				9B71AC741A22927C00E300CE /* AlarmTest.m */,
@@ -1513,6 +1516,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\necho \"Skipping simulator build\"\nexit 0;\nfi\n\nexport PATH=/usr/local/bin:$PATH\ncd \"${SRCROOT}/Server\"\nls\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\nif [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\necho \"Skipping simulator build\"\nexit 0;\nfi\n\nexport PATH=/usr/local/bin:$PATH\ncd ${SRCROOT}/Server\nparse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1643,7 +1647,6 @@
 				09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */,
 				9BF9CC771A78A50100B76D92 /* EWFriendsViewControllerZL.m in Sources */,
 				09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */,
-				9B4D29671A7F53F900C8559B /* EWPersonViewController.m in Sources */,
 				09A923B31A86DD82007B2251 /* EWVoiceViewController.m in Sources */,
 				9BF181671A37C1B600D25DBA /* EWPreWakeViewControllerZL.m in Sources */,
 				096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */,
@@ -1731,6 +1734,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */,
+				9BB244B11A87205600B0B544 /* FriendshipTest.m in Sources */,
 				9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */,
 				09A776FF1A11D8D9004AF902 /* WokeTests.m in Sources */,
 				9B71AC751A22927C00E300CE /* AlarmTest.m in Sources */,

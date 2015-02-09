@@ -60,7 +60,7 @@ extern NSString * const EWAccountDidLogoutNotification;
 #define kMediaPlayInterval              5
 #define kSocialGraphUpdateInterval      3600*24*7
 #define kMaxVoicePerTask                3
-#define kServerUpdateInterval			7200
+#define kServerUpdateInterval			3600//2 hours
 #define kCollectionViewCellWidth		80
 
 //DEFAULT DATA
