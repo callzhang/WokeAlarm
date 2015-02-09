@@ -439,6 +439,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             DDLogWarn(@"%@", err.debugDescription);
         }
         [[EWPerson me] save];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:kUserLocationUpdated object:[EWPerson me]];
     }];
 }
 

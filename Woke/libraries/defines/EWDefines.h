@@ -87,9 +87,9 @@ extern NSString * const kWakeStartNotification;//start wake
 extern NSString * const kWokeNotification;//finished wake
 extern NSString * const kSleepNotification;
 extern NSString * const kNewMediaNotification;
-
 extern NSString * const kNewTimerNotification;
 extern NSString * const kUserNotificationRegistered;
+extern NSString * const kUserLocationUpdated;
 
 //sleep
 extern NSString * const kSleepDuration;

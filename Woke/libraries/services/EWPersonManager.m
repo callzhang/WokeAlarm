@@ -24,6 +24,7 @@
 #import "EWUIUtil.h"
 #import "EWFriendRequest.h"
 #import "EWErrorManager.h"
+#import "FBKVOController.h"
 
 @interface EWPersonManager()
 @property (nonatomic, strong) NSMutableArray *wakeeListChangeBlocks;
@@ -116,16 +117,28 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
         [_wakeeListChangeBlocks addObject:block];
     }
     
-    //check
-    if (self.isFetchingWakees) {
-        DDLogWarn(@"Already fetching wakees");
-        return;
-    }
-    
+	//check my location
+	if (![EWPerson me].location) {
+		//get a fake coordinate
+		DDLogWarn(@"Location unknown, waiting for location!");
+		[[NSNotificationCenter defaultCenter] addObserverForName:kUserLocationUpdated object:nil queue:nil usingBlock:^(NSNotification *note) {
+			if ([EWPerson me].location) {
+				[[NSNotificationCenter defaultCenter] removeObserver:self name:kUserLocationUpdated object:nil];
+				[self getWakeesInBackgroundWithCompletion:block];
+			}
+		}];
+		return;
+	}
+	
     __block NSArray *wakees;
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        wakees = [self getWakeesInContext:localContext];
+		NSError *error;
+        wakees = [self getWakeesInContext:localContext error:&error];
+		if (error) DDLogError(@"Failed to get wakees: %@", error);
+		
     } completion:^(BOOL success, NSError *error) {
+		
+		if (!success) DDLogError(@"Failed to save wakees: %@", error);
         for (EWPerson *localWakee in wakees) {
             EWPerson *person = (EWPerson *)[localWakee MR_inContext:mainContext];
             if (person) {
@@ -141,23 +154,24 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }];
 }
 
-- (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context{
-    
+- (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
+	//check
+	if (self.isFetchingWakees) {
+		DDLogWarn(@"Already fetching wakees");
+		return nil;
+	}
+	
     self.isFetchingWakees = YES;
     //_timeEveryoneChecked = [NSDate date];
     
-    
     NSMutableArray *allPerson = [NSMutableArray new];
-    
     EWPerson *localMe = [EWPerson meInContext:context];
-    NSError *error;
     
     //check my location
     if (!localMe.location) {
         //get a fake coordinate
-        CLLocation *loc = [[CLLocation alloc] initWithLatitude:0 longitude:0];
-        localMe.location = loc;
-        
+		DDLogWarn(@"Location unknown, abord getting wakees!");
+		return nil;
     }
     
     NSArray *list = [PFCloud callFunction:@"getRelevantUsers"
@@ -166,10 +180,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
                                             @"radius" : radiusOfRelevantUsers,
                                             @"location": @{@"latitude": @(localMe.location.coordinate.latitude),
                                                            @"longitude": @(localMe.location.coordinate.longitude)}}
-                                    error:&error];
+                                    error:error];
     
     if (error && list.count == 0) {
-        DDLogError(@"*** Failed to get relavent user list: %@", error.description);
+        DDLogError(@"*** Failed to get relavent user list: %@", [*error description]);
         //get cached person
         error = nil;
         self.isFetchingWakees = NO;
@@ -177,19 +191,18 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }
     
     //fetch
-    error = nil;
+    *error = nil;
     PFQuery *query = [PFUser query];
     [query whereKey:kParseObjectID containedIn:list];
     //[query includeKey:@"friends"];
-    NSArray *users = [EWSync findParseObjectWithQuery:query error:&error];
+    NSArray *users = [EWSync findParseObjectWithQuery:query error:error];
     
-    if (error) {
-        NSLog(@"*** Failed to fetch everyone: %@", error);
+    if (*error) {
+        NSLog(@"*** Failed to fetch wakees: %@", *error);
         self.isFetchingWakees = NO;
         return nil;
     }
-    
-    //change the returned people's score;
+	
     for (PFUser *user in users) {
         EWPerson *person = (EWPerson *)[user managedObjectInContext:context];
         
