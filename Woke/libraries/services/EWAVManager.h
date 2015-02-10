@@ -45,7 +45,6 @@ extern NSString * const kEWAVManagerDidUpdateProgressNotification;
 
 @property (retain, nonatomic) AVAudioPlayer *player;
 @property (retain, nonatomic) AVAudioRecorder *recorder;
-@property (weak, nonatomic) EWMedia *media;//use [EWWakeUpManager sharedManager].currentMedia
 @property (nonatomic) float playingProgress;
 @property (nonatomic, readonly) BOOL isPlaying;
 

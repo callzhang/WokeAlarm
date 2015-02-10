@@ -259,9 +259,10 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 
 #pragma mark - Play for wake up view
 - (void)playNextVoiceWithDelay {
+    EWMedia *currentMediaBackup = self.currentMedia;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kMediaPlayInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //check if playing media is changed
-        if (self.currentMedia != [EWAVManager sharedManager].media) {
+        if (self.currentMedia != currentMediaBackup && [EWAVManager sharedManager].player.isPlaying) {
             DDLogInfo(@"Media has changed since during the delay. Skip!");
             return;
         }

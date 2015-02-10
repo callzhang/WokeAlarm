@@ -401,7 +401,7 @@
             case UIEventSubtypeRemoteControlPlay:{
                 DDLogVerbose(@"Received remote control: play");
                 if (![manager.player play]) {
-                    [manager playMedia:manager.media];
+                    [manager playMedia:[EWWakeUpManager sharedInstance].currentMedia];
                 }
             }
                 
@@ -425,10 +425,10 @@
             case UIEventSubtypeRemoteControlPause:{
                 DDLogVerbose(@"Received remote control pause");
                 if (manager.player.isPlaying) {
-                    EWMedia *m0 = manager.media;
+                    EWMedia *m0 = [EWWakeUpManager sharedInstance].currentMedia;
                     [manager.player pause];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        if (m0 == manager.media && !manager.player.isPlaying) {
+                        if (m0 == [EWWakeUpManager sharedInstance].currentMedia && !manager.player.isPlaying) {
                             //continue play
                             [manager.player play];
                         }

@@ -26,6 +26,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 @interface EWAVManager(){
 	MPVolumeView *volumeView;
 }
+@property (nonatomic, weak) EWMedia *media;
 @property (nonatomic, strong) NSTimer *progressTimer;
 @end
 
