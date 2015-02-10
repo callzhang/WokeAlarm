@@ -59,9 +59,9 @@ static NSString * PushSegueIdentifier = @"push segue identifier";
 //    }
 //}
 
+#pragma mark - UINavigationViewControllerDelegate
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
 {
-    
     if (operation == UINavigationControllerOperationPush) {
         self.animator.type = UINavigationControllerOperationPush;
         return self.animator;

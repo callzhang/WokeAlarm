@@ -496,7 +496,7 @@
                         <outlet property="labelDateString" destination="zoZ-04-ZHl" id="H1L-37-cF0"/>
                         <outlet property="labelTimeLeft" destination="Z2K-SO-fYc" id="oQV-dD-Bsv"/>
                         <outlet property="labelWakeupText" destination="1LV-hZ-wFF" id="FeS-gH-CAe"/>
-                        <segue destination="Yrm-EZ-Ieu" kind="showDetail" identifier="toSetStatusController" id="xB7-pL-mVs"/>
+                        <segue destination="Yrm-EZ-Ieu" kind="custom" identifier="toSetStatusController" customClass="EWMenuReplaceFadeSegue" id="xB7-pL-mVs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="odY-hj-5bB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -848,7 +848,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KJ6-XR-Sql" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2185" y="1434"/>
+            <point key="canvasLocation" x="2401" y="1509"/>
         </scene>
         <!--Pre Wake View ControllerZL-->
         <scene sceneID="6cz-Rb-LEO">
