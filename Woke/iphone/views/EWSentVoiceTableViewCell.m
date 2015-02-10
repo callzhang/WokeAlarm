@@ -57,7 +57,12 @@
         self.progressView.progress = 0;
         
         NSString *imageName = borderlessImageAssetNameFromEmoji(self.media.response);
-        self.repliedImageView.image = [UIImage imageNamed:imageName];
+        if (imageName) {
+            self.repliedImageView.image = [UIImage imageNamed:imageName];
+        }
+        else {
+            self.repliedImageView.image = [UIImage new];
+        }
     }
 }
 

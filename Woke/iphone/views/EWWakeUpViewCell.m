@@ -144,6 +144,12 @@
     self.name.text = media.author.name;
     self.image.image = media.mediaFile.thumbnail?:media.author.profilePic;
     self.progress.progress = 0;
+    
+    NSString *name = imageAssetNameFromEmoji(media.response);
+    NSUInteger index = [self.buttonImageNames indexOfObject:name];
+    if (index != NSNotFound) {
+        self.selectedButtonIndex = index;
+    }
 }
 
 
