@@ -12,6 +12,7 @@
 #import "AssetCatalogIdentifiers.h"
 #import "EWWakeUpManager.h"
 #import "EWAVManager.h"
+
 @interface EWWakeUpViewCell()
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *peopleViewLeadingConstraint;
 @property (nonatomic, assign) BOOL open;
@@ -88,21 +89,21 @@
                 NSAssert(false, @"Image Name Overflow");
             }
         }
+        
         [self.heartButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+        self.media.response = emojiNameFromImageAssetName(imageName);
     }];
+    
     
     self.mediaResponseDisposable = [RACObserve(self, media.response) subscribeNext:^(NSString *response) {
         @strongify(self);
-        if (!response) {
-            return;
-        }
         NSString *name = imageAssetNameFromEmoji(response);
         NSUInteger index = [self.buttonImageNames indexOfObject:name];
         if (index != NSNotFound) {
-            self.selectedButtonIndex = index;
+            _selectedButtonIndex = index;
         }
     }];
-    
+
 }
 
 #pragma mark - 

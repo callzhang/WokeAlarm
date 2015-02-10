@@ -10,10 +10,14 @@
 #import "BlocksKit.h"
 #import "EWMedia.h"
 #import "EWWakeUpViewCell.h"
+#import "EWSentVoiceTableViewCell.h"
+#import "EWWakeUpManager.h"
+#import "EWAVManager.h"
 
 @interface EWSentVoiceChildViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray* items;
+@property (nonatomic, weak) EWMedia *playingMedia;
 
 @end
 
@@ -29,9 +33,9 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWWakeUpViewCell *cell = (EWWakeUpViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCell];
+    EWSentVoiceTableViewCell *cell = (EWSentVoiceTableViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWSentVoiceTableViewCell];
     
-    cell.media = [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row][@"media"];
+    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
     
     return cell;
 }
@@ -57,6 +61,19 @@
     rightLabel.text = @"TBD";
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath][@"media"];
+    if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
+        [[EWAVManager sharedManager] stopAllPlaying];
+        self.playingMedia = nil;
+    }
+    else {
+        [[EWAVManager sharedManager] playMedia:targetMedia];
+        self.playingMedia = targetMedia;
+        [EWWakeUpManager sharedInstance].currentMediaIndex = indexPath.row;
+    }
 }
 
 - (NSArray *)items {
@@ -92,5 +109,9 @@
     }
     
     return _items;
+}
+
+- (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
 }
 @end

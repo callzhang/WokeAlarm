@@ -40,7 +40,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     EWMedia *targetMedia = [self medias][indexPath.row];
-    if (targetMedia == [EWWakeUpManager sharedInstance].currentMedia && [EWAVManager sharedManager].isPlaying) {
+    if ([targetMedia isEqual:[EWWakeUpManager sharedInstance].currentMedia] && [EWAVManager sharedManager].isPlaying) {
         [[EWAVManager sharedManager] stopAllPlaying];
     }
     else {

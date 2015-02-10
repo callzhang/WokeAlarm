@@ -10,7 +10,9 @@ extern const struct EWMediaEmoji {
     __unsafe_unretained NSString *kiss;
 } EWMediaEmoji;
 
-NSString *imageAssetNameFromEmoji(NSString *emoji);
+extern NSString *imageAssetNameFromEmoji(NSString *emoji);
+extern NSString *borderlessImageAssetNameFromEmoji(NSString *emoji);
+extern NSString *emojiNameFromImageAssetName(NSString *name);
 
 @interface EWMedia : _EWMedia
 

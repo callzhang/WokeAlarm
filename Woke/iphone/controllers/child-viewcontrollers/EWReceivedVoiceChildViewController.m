@@ -10,10 +10,13 @@
 #import "BlocksKit.h"
 #import "EWMedia.h"
 #import "EWWakeUpViewCell.h"
+#import "EWAVManager.h"
+#import "EWWakeUpManager.h"
 
 @interface EWReceivedVoiceChildViewController ()<UITableViewDelegate, UITableViewDataSource>
 //@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray* items;
+@property (nonatomic, weak) EWMedia *playingMedia;
 
 @end
 
@@ -33,10 +36,11 @@
     [self.tableView reloadData];
 }
 
+#pragma mark - <TableView>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWWakeUpViewCell *cell = (EWWakeUpViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCell];
     
-    cell.media = [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row][@"media"];
+    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
     
     return cell;
 }
@@ -64,6 +68,20 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath][@"media"];
+    if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
+        [[EWAVManager sharedManager] stopAllPlaying];
+        self.playingMedia = nil;
+    }
+    else {
+        [[EWAVManager sharedManager] playMedia:targetMedia];
+        self.playingMedia = targetMedia;
+        [EWWakeUpManager sharedInstance].currentMediaIndex = indexPath.row;
+    }
+}
+
+#pragma mark -
 - (NSArray *)items {
     if (!_items) {
         NSSet *medias = [[EWPerson me] receivedMedias];
@@ -96,5 +114,9 @@
     }
     
     return _items;
+}
+
+- (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
 }
 @end

@@ -133,10 +133,14 @@
 + (UIImage *)wokeRectangleNormal { return [UIImage imageNamed:@"woke-rectangle-normal"]; }
 + (NSString *)wokeRectangleSelectedName { return @"woke-rectangle-selected"; }
 + (UIImage *)wokeRectangleSelected { return [UIImage imageNamed:@"woke-rectangle-selected"]; }
++ (NSString *)wokeResponseIconHeartBorderlessName { return @"woke-response-icon-heart-borderless"; }
++ (UIImage *)wokeResponseIconHeartBorderless { return [UIImage imageNamed:@"woke-response-icon-heart-borderless"]; }
 + (NSString *)wokeResponseIconHeartHighlightedName { return @"woke-response-icon-heart-highlighted"; }
 + (UIImage *)wokeResponseIconHeartHighlighted { return [UIImage imageNamed:@"woke-response-icon-heart-highlighted"]; }
 + (NSString *)wokeResponseIconHeartNormalName { return @"woke-response-icon-heart-normal"; }
 + (UIImage *)wokeResponseIconHeartNormal { return [UIImage imageNamed:@"woke-response-icon-heart-normal"]; }
++ (NSString *)wokeResponseIconKissBorderlessName { return @"woke-response-icon-kiss-borderless"; }
++ (UIImage *)wokeResponseIconKissBorderless { return [UIImage imageNamed:@"woke-response-icon-kiss-borderless"]; }
 + (NSString *)wokeResponseIconKissHighlightedName { return @"woke-response-icon-kiss-highlighted"; }
 + (UIImage *)wokeResponseIconKissHighlighted { return [UIImage imageNamed:@"woke-response-icon-kiss-highlighted"]; }
 + (NSString *)wokeResponseIconKissNormalName { return @"woke-response-icon-kiss-normal"; }
@@ -145,14 +149,20 @@
 + (UIImage *)wokeResponseIconReplyHighlighted { return [UIImage imageNamed:@"woke-response-icon-reply-highlighted"]; }
 + (NSString *)wokeResponseIconReplyNormalName { return @"woke-response-icon-reply-normal"; }
 + (UIImage *)wokeResponseIconReplyNormal { return [UIImage imageNamed:@"woke-response-icon-reply-normal"]; }
++ (NSString *)wokeResponseIconSadBorderlessName { return @"woke-response-icon-sad-borderless"; }
++ (UIImage *)wokeResponseIconSadBorderless { return [UIImage imageNamed:@"woke-response-icon-sad-borderless"]; }
 + (NSString *)wokeResponseIconSadHighlightedName { return @"woke-response-icon-sad-highlighted"; }
 + (UIImage *)wokeResponseIconSadHighlighted { return [UIImage imageNamed:@"woke-response-icon-sad-highlighted"]; }
 + (NSString *)wokeResponseIconSadNormalName { return @"woke-response-icon-sad-normal"; }
 + (UIImage *)wokeResponseIconSadNormal { return [UIImage imageNamed:@"woke-response-icon-sad-normal"]; }
++ (NSString *)wokeResponseIconSmileBorderlessName { return @"woke-response-icon-smile-borderless"; }
++ (UIImage *)wokeResponseIconSmileBorderless { return [UIImage imageNamed:@"woke-response-icon-smile-borderless"]; }
 + (NSString *)wokeResponseIconSmileHighlightedName { return @"woke-response-icon-smile-highlighted"; }
 + (UIImage *)wokeResponseIconSmileHighlighted { return [UIImage imageNamed:@"woke-response-icon-smile-highlighted"]; }
 + (NSString *)wokeResponseIconSmileNormalName { return @"woke-response-icon-smile-normal"; }
 + (UIImage *)wokeResponseIconSmileNormal { return [UIImage imageNamed:@"woke-response-icon-smile-normal"]; }
++ (NSString *)wokeResponseIconTearBorderlessName { return @"woke-response-icon-tear-borderless"; }
++ (UIImage *)wokeResponseIconTearBorderless { return [UIImage imageNamed:@"woke-response-icon-tear-borderless"]; }
 + (NSString *)wokeResponseIconTearHighlightedName { return @"woke-response-icon-tear-highlighted"; }
 + (UIImage *)wokeResponseIconTearHighlighted { return [UIImage imageNamed:@"woke-response-icon-tear-highlighted"]; }
 + (NSString *)wokeResponseIconTearNormalName { return @"woke-response-icon-tear-normal"; }

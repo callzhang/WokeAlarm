@@ -26,8 +26,64 @@ NSString *imageAssetNameFromEmoji(NSString *emoji) {
     if ([emoji isEqualToString:EWMediaEmoji.tear]) {
         return [ImagesCatalog wokeResponseIconTearNormalName];
     }
-    return @"";
+    return nil;
 };
+
+NSString *borderlessImageAssetNameFromEmoji(NSString *emoji) {
+    if ([emoji isEqualToString:EWMediaEmoji.smile]) {
+        return [ImagesCatalog wokeResponseIconSmileBorderlessName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.kiss]) {
+        return [ImagesCatalog wokeResponseIconKissBorderlessName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.sad]) {
+        return [ImagesCatalog wokeResponseIconSadBorderlessName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.heart]) {
+        return [ImagesCatalog wokeResponseIconHeartBorderlessName];
+    }
+    if ([emoji isEqualToString:EWMediaEmoji.tear]) {
+        return [ImagesCatalog wokeResponseIconTearBorderlessName];
+    }
+    return nil;
+};
+
+NSString *emojiNameFromImageAssetName(NSString *name) {
+    if ([name isEqualToString:[ImagesCatalog wokeResponseIconSmileNormalName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconSmileHighlightedName]] ||
+         [name isEqualToString:[ImagesCatalog wokeResponseIconSmileBorderlessName]] ) {
+        return EWMediaEmoji.smile;
+    }
+    
+    if ([name isEqualToString:[ImagesCatalog wokeResponseIconKissNormalName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconKissHighlightedName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconKissBorderlessName]] ) {
+        return EWMediaEmoji.kiss;
+    }
+    
+    if ([name isEqualToString:[ImagesCatalog wokeResponseIconSadNormalName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconSadHighlightedName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconSadBorderlessName]] ) {
+        return EWMediaEmoji.sad;
+    }
+    
+    if ([name isEqualToString:[ImagesCatalog wokeResponseIconHeartNormalName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconHeartHighlightedName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconHeartBorderlessName]] ) {
+        return EWMediaEmoji.heart;
+    }
+    
+    if ([name isEqualToString:[ImagesCatalog wokeResponseIconTearNormalName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconTearHighlightedName]] ||
+        [name isEqualToString:[ImagesCatalog wokeResponseIconTearBorderlessName]] ) {
+        return EWMediaEmoji.tear;
+    }
+
+//    if ([name isEqualToString:[ImagesCatalog wokeResponseIconReplyNormalName]] ||
+//        [name isEqualToString:[ImagesCatalog wokeResponseIconReplyHighlightedName]]) {
+//    }
+    return nil;
+}
 
 @interface EWMedia ()
 

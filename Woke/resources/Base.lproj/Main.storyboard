@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -1950,7 +1950,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWWakeUpViewCell" rowHeight="70" id="hQa-ya-KbN" customClass="EWWakeUpViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWSentVoiceTableViewCell" rowHeight="70" id="hQa-ya-KbN" customClass="EWSentVoiceTableViewCell">
                                         <rect key="frame" x="0.0" y="249" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hQa-ya-KbN" id="VmO-a1-nd1">
@@ -1983,7 +1983,7 @@
                                                             </constraints>
                                                         </progressView>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tjy-gJ-Sci" userLabel="repliedImageView">
-                                                            <rect key="frame" x="55" y="45" width="20" height="20"/>
+                                                            <rect key="frame" x="53" y="43" width="20" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="D6b-yL-WRw"/>
                                                                 <constraint firstAttribute="width" constant="20" id="uQY-w3-SkX"/>
@@ -1992,11 +1992,11 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstItem="tjy-gJ-Sci" firstAttribute="leading" secondItem="GOk-Fu-sIW" secondAttribute="trailing" constant="-15" id="5Zo-jp-Pmk"/>
+                                                        <constraint firstItem="tjy-gJ-Sci" firstAttribute="leading" secondItem="GOk-Fu-sIW" secondAttribute="leading" constant="33" id="5Zo-jp-Pmk"/>
                                                         <constraint firstItem="GOk-Fu-sIW" firstAttribute="leading" secondItem="5u6-03-rDY" secondAttribute="leading" constant="20" id="B1r-Ue-YBl"/>
                                                         <constraint firstItem="2dH-Yi-YHC" firstAttribute="trailing" secondItem="1FC-f2-3m4" secondAttribute="trailing" id="BaK-kl-CcR"/>
                                                         <constraint firstAttribute="centerY" secondItem="GOk-Fu-sIW" secondAttribute="centerY" id="Bd0-mD-nZZ"/>
-                                                        <constraint firstItem="tjy-gJ-Sci" firstAttribute="top" secondItem="GOk-Fu-sIW" secondAttribute="bottom" constant="-15" id="GtB-2C-NUd"/>
+                                                        <constraint firstItem="tjy-gJ-Sci" firstAttribute="top" secondItem="GOk-Fu-sIW" secondAttribute="top" constant="33" id="GtB-2C-NUd"/>
                                                         <constraint firstItem="zPd-Lf-mkv" firstAttribute="centerY" secondItem="2dH-Yi-YHC" secondAttribute="centerY" id="PJ8-Jq-YgQ"/>
                                                         <constraint firstItem="1FC-f2-3m4" firstAttribute="top" secondItem="2dH-Yi-YHC" secondAttribute="bottom" constant="10" id="YMY-AK-kh7"/>
                                                         <constraint firstItem="zPd-Lf-mkv" firstAttribute="leading" secondItem="2dH-Yi-YHC" secondAttribute="trailing" constant="9" id="Zkb-lI-i59"/>
@@ -2024,10 +2024,11 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
-                                            <outlet property="image" destination="GOk-Fu-sIW" id="pC5-2q-8Sv"/>
-                                            <outlet property="name" destination="2dH-Yi-YHC" id="4xR-Te-Ax7"/>
-                                            <outlet property="playIndicator" destination="zPd-Lf-mkv" id="GfC-HZ-3cy"/>
-                                            <outlet property="progressView" destination="1FC-f2-3m4" id="c1p-xB-Wm4"/>
+                                            <outlet property="nameLabel" destination="2dH-Yi-YHC" id="hXz-Uw-qDn"/>
+                                            <outlet property="playingIndicator" destination="zPd-Lf-mkv" id="vgk-T8-rpL"/>
+                                            <outlet property="profileImageView" destination="GOk-Fu-sIW" id="lzi-eJ-ed2"/>
+                                            <outlet property="progressView" destination="1FC-f2-3m4" id="Riz-fF-4lw"/>
+                                            <outlet property="repliedImageView" destination="tjy-gJ-Sci" id="qkx-I8-jUG"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWWakeUpViewCellSectionHeader" rowHeight="30" id="EFc-OB-Vbw">
