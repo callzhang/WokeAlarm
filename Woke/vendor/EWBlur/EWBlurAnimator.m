@@ -86,15 +86,20 @@ static const CGFloat initialDownSampling = 2;
     toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
 	//remove background
-    toViewController.view.backgroundColor = [UIColor clearColor];
-	UIView *img = [toViewController.view viewWithTag:kBackgroundImageTag];
+	toViewController.view.backgroundColor = [UIColor clearColor];
+	UIViewController *vc;
+	if ([toViewController isKindOfClass:[UINavigationController class]]) {
+		UINavigationController *nav = (UINavigationController *)toViewController;
+		nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
+		vc = nav.visibleViewController;
+	}else{
+		vc = toViewController;
+	}
+	UIView *img = [vc.view viewWithTag:kBackgroundImageTag];
 	if ([img isKindOfClass:[UIImageView class]]) {
 		[img removeFromSuperview];
 	}
-    if ([toViewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *nav = (UINavigationController *)toViewController;
-        nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
-    }
+	
     container = [transitionContext containerView];
     fromView = fromViewController.view;
     toView = toViewController.view;

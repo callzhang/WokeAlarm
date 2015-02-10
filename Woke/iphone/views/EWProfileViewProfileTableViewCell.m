@@ -10,6 +10,7 @@
 #import "EWPerson.h"
 #import "EWAlarmManager.h"
 #import "APTimeZones.h"
+#import "EWPersonManager.h"
 
 @interface EWProfileViewProfileTableViewCell()
 @property (nonatomic, strong) RACDisposable *personDisposable;
@@ -82,7 +83,16 @@
         [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES completion:nil];
     }
     else {
-        [[EWPerson me] requestFriend:self.person];
+        [[EWPersonManager shared] requestFriend:self.person completion:^(EWFriendshipStatus status, NSError *error) {
+            if (status == EWFriendshipStatusSent) {
+                [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestSentButton] forState:UIControlStateDisabled];
+                self.addFriendButton.enabled = NO;
+            }else if (status == EWFriendshipStatusFriended) {
+                [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
+            }else {
+                DDLogError(@"Unexpected state");
+            }
+        }];
     }
 }
 
@@ -121,10 +131,10 @@
                     [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
                     break;
                 case EWFriendshipStatusSent:
-                    [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
+                    [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestSentButton] forState:UIControlStateNormal];
                     break;
                 case EWFriendshipStatusReceived:
-                    [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
+                    [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestReceivedButton] forState:UIControlStateNormal];
                     break;
                 default:
                     [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];

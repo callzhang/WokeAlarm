@@ -372,17 +372,17 @@
             }
             return;
         }
-        
     }
     NSDate *updated = self.updatedAt;
     PFObject *cachedObject = [[EWSync sharedInstance] getCachedParseObjectForID:self.objectId];
     NSDate *cacheUpdated = cachedObject.updatedAt;
     float interval = [updated timeIntervalSinceDate:cacheUpdated];
-    if (!cacheUpdated || interval >= 0) {
+    if (!cacheUpdated || interval > 0) {
         //self newer
         [[EWSync sharedInstance] setCachedParseObject:self];
         DDLogVerbose(@"Cached PO %@(%@)", self.parseClassName, self.objectId);
-    } else {
+    }
+    else if (interval < 0) {
         //cache newer
         DDLogWarn(@"Cache is newer than current PO: %@(%@)", self.parseClassName, self.objectId);
     }

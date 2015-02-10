@@ -7,6 +7,7 @@
 //
 
 #import "MSPushFadeSegue.h"
+#import "UIViewController+Blur.h"
 
 @implementation MSPushFadeSegue
 - (void)perform {

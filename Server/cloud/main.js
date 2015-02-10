@@ -143,25 +143,82 @@ Parse.Cloud.define("sendFriendshipRequestToUser", function(request, response) {
   var request;
   var notification;
 
+  var EWFriendRequest = Parse.Object.extend("EWFriendRequest");
+
   var querySender = new Parse.Query(Parse.User);
-  query.get(receiverID).then(function (object) {
+  querySender.get(receiverID).then(function (object) {
     receiver = object;
-    console.log(sender.get("name")  + " requesting friendship" + receiver.get("name"));
     var querySender = new Parse.Query(Parse.User);
     return querySender.get(senderID);
   }).then(function (object) {
     sender = object;
+    console.log(sender.get("firstName")  + " requesting friendship " + receiver.get("firstName"));
+    //find request first
+    var queryRequest = new Parse.Query(EWFriendRequest);
+    queryRequest.equalTo("receiver", receiver);
+    queryRequest.equalTo("sender", sender);
+    return queryRequest.find();
+  }).then(function (array) {
+    if (array.length>0) {
+      request = array[0];
+      console.log("existing request find: "+request.id);
+      var status = request.get("status");
+      if (status == "friend_request_pending") {
+        //finished
+        console.log("request from "+senderID+" to "+receiverID+" already sent");
+        response.success(request);
+      } else if (status == "friend_request_friended") {
+        //already friended
+        console.log("request from "+senderID+" to "+receiverID+" already friended");
+        response.success(request);
+      } else {
+        console.log("request from "+senderID+" to "+receiverID+" already denied");
+        response.success(request);
+      }
+    }
+
+    //find the opposite request
+    var queryRequest = new Parse.Query(EWFriendRequest);
+    queryRequest.equalTo("receiver", sender);
+    queryRequest.equalTo("sender", receiver);
+    return queryRequest.find();
+
+  }).then(function (array) {
+    if (array.length > 0) {
+      request = array[0];
+      console.log("existing opposite request from receiver find: "+request.id);
+      var status = request.get("status");
+      if (status == "friend_request_pending") {
+        //finished
+        console.log("request from "+receiverID+" to "+senderID+" already pending, accept now!");
+        request.set("status", "friend_request_friended");
+        request.save().then(function () {
+          response.success(request)
+        });
+      } else if (status == "friend_request_friended") {
+        //already friended
+        console.log("request from "+receiverID+" to "+senderID+" already friended");
+        response.success(request);
+      } else {
+        console.log("request from "+receiverID+" to "+senderID+" already denied");
+        response.success(request);
+      }
+    }
+
     //create EWFriendRequest
-    request = new Parse.Object.extend("EWFriendRequest");
+    var EWFriendRequest = Parse.Object.extend("EWFriendRequest");
+    request = new EWFriendRequest();
     request.set("receiver", receiver);
     request.set("sender", sender);
     request.set("status", "friend_request_pending");
     return request.save();
 
-  }).then(function (request) {
+  }).then(function (object) {
+    request = object;
     console.log("request saved");
     //create notification
-    notification = new Parse.Object.extend("EWNotification");
+    var EWNotification = Parse.Object.extend("EWNotification");
+    notification = new EWNotification();
     notification.set("importance", 0);
     notification.set("sender", senderID);
     notification.set("receiver", receiverID);
@@ -178,16 +235,15 @@ Parse.Cloud.define("sendFriendshipRequestToUser", function(request, response) {
     var promises = [];
     var friendshipRequestReceivedRelation = sender.relation("friendshipRequestReceived");
     friendshipRequestReceivedRelation.add(request);
-    promises.push(friendshipRequestReceivedRelation.save());
+    promises.push(sender.save());
 
     var friendshipRequestSentRelation = receiver.relation("friendshipRequestSent");
     friendshipRequestSentRelation.add(request);
-    promises.push(friendshipRequestSentRelation.save());
 
     //add notification
     var notificationRelation = receiver.relation("notifications");
     notificationRelation.add(notification);
-    promises.push(notificationRelation.save());
+    promises.push(receiver.save());
 
     return Parse.Promise.when(promises);
   }).then(function () {
@@ -198,8 +254,10 @@ Parse.Cloud.define("sendFriendshipRequestToUser", function(request, response) {
     Parse.Push.send({
       where: query, // Set our Installation query
       data: {
-        alert: "Friendship request",
-        title: "Friendship request",
+        alert: sender.get("firstName")+" wants to be friend of you",
+        title: sender.get("firstName")+" wants to be friend of you",
+        badge: "Increment",
+        sound: "new.caf",
         body: sender.get("name") + " is requesting your permission to become your friend.",
         userInfo: "{User:" + senderID + ", type:friendship_request}",
         requestID: request.id,
@@ -209,9 +267,12 @@ Parse.Cloud.define("sendFriendshipRequestToUser", function(request, response) {
     }, {
       success: function() {
         // Push was successful
-        request.fetch().then(function(){
+        var requestQuery = new Parse.Query(EWFriendRequest);
+        requestQuery.include("receiver");
+        requestQuery.include("sender");
+        requestQuery.get(request.id).then(function(request){
           response.success(request);
-        })
+        });
       },
       error: function(error) {
         // Handle error
@@ -229,17 +290,18 @@ Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response)
   var receiver;
   var request;
   var notification;
+  var EWFriendRequest = Parse.Object.extend("EWFriendRequest");
 
   var querySender = new Parse.Query(Parse.User);
-  querySender.get(senderID).then(function () {
+  querySender.get(senderID).then(function (object) {
+    sender = object;
     var queryReceiver = new Parse.Query(Parse.User);
     return queryReceiver.get(receiverID);
   }).then(function (object) {
     receiver = object;
-    var EWFriendRequest = Parse.Object.extend("EWFriendRequest");
     var queryRequest = new Parse.Query(EWFriendRequest);
-    queryRequest.equalTo("receiver", receiver);
-    queryRequest.equalTo("sender", sender);
+    queryRequest.equalTo("receiver", sender);
+    queryRequest.equalTo("sender", receiver);
     return queryRequest.find();
   }).then(function (list) {
     if (list.length > 0) {
@@ -248,19 +310,20 @@ Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response)
       return request.save();
     } else {
       console.log("Didn't find request");
-      response.error("Request not found");
+      response.error("Friend request not found");
     }
   }).then(function (object) {
 
     console.log("saved request");
     //create notification
-    notification = new Parse.Object.extend("EWNotification");
+    var EWNotification = Parse.Object.extend("EWNotification");
+    notification = new EWNotification();
     notification.set("importance", 0);
     notification.set("sender", senderID);
     notification.set("receiver", receiverID);
     notification.set("owner", receiver);
     notification.set("type", "friendship_accepted");
-    notification.set("userInfo",  {User:senderID, owner:owner, type: "notice", sendername: sender.get("name") });
+    notification.set("userInfo",  {User:senderID, owner:receiverID, type: "notice", sendername: sender.get("name") });
     if(request) notification.set("friendRequestID", request.id);
 
     return notification.save();
@@ -271,16 +334,15 @@ Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response)
     //add relation
     var notificationsRelation = receiver.relation("notifications");
     notificationsRelation.add(notification);
-    promises.push(notificationsRelation.save());
 
     //friends relation
     var friendsRelation = sender.relation("friends");
     friendsRelation.add(receiver);
-    promises.push(friendsRelation.save());
+    promises.push(sender.save());
 
     var friendedRelation = receiver.relation("friends");
     friendedRelation.add(sender);
-    promises.push(friendedRelation.save());
+    promises.push(receiver.save());
 
     return Parse.Promise.when(promises);
 
@@ -293,8 +355,10 @@ Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response)
     Parse.Push.send({
       where: query, // Set our Installation query
       data: {
-        alert: "Friendship accepted",
-        title: "Friendship accepted",
+        alert: sender.get("firstName")+" accepted your friendship request!",
+        title: sender.get("firstName")+" accepted your friendship request!",
+        badge: "Increment",
+        sound: "new.caf",
         body: sender.get("name") + " has approved your friendship request.",
         type: "notice",
         userInfo: "{User:" + senderID + ", type:friendship_accepted}",
@@ -303,10 +367,12 @@ Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response)
     }, {
       success: function() {
         // Push was successful
-        if (request) {
+        var requestQuery = new Parse.Query(EWFriendRequest);
+        requestQuery.include("receiver");
+        requestQuery.include("sender");
+        requestQuery.get(request.id).then(function(request){
           response.success(request);
-        }
-        response.success(true);
+        });
       },
       error: function(error) {
         // Handle error

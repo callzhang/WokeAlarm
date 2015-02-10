@@ -174,6 +174,7 @@
 		9BB244AC1A86AF9900B0B544 /* EWFriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AB1A86AF9900B0B544 /* EWFriendRequest.m */; };
 		9BB244AF1A86C40700B0B544 /* EWAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AE1A86C40700B0B544 /* EWAlertManager.m */; };
 		9BB244B11A87205600B0B544 /* FriendshipTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244B01A87205600B0B544 /* FriendshipTest.m */; };
+		9BB244B41A87347700B0B544 /* EWPresentModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244B31A87347700B0B544 /* EWPresentModal.m */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
 		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
@@ -545,6 +546,8 @@
 		9BB244AD1A86C40700B0B544 /* EWAlertManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWAlertManager.h; path = Woke/libraries/services/EWAlertManager.h; sourceTree = SOURCE_ROOT; };
 		9BB244AE1A86C40700B0B544 /* EWAlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EWAlertManager.m; path = Woke/libraries/services/EWAlertManager.m; sourceTree = SOURCE_ROOT; };
 		9BB244B01A87205600B0B544 /* FriendshipTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendshipTest.m; sourceTree = "<group>"; };
+		9BB244B21A87347700B0B544 /* EWPresentModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPresentModal.h; sourceTree = "<group>"; };
+		9BB244B31A87347700B0B544 /* EWPresentModal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPresentModal.m; sourceTree = "<group>"; };
 		9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpProcessTest.m; sourceTree = "<group>"; };
 		9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpPlayingTest.m; sourceTree = "<group>"; };
 		9BD800C71A8967350056B3FB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -906,6 +909,8 @@
 		0990EF731A22C606001AF099 /* segues */ = {
 			isa = PBXGroup;
 			children = (
+				9BB244B21A87347700B0B544 /* EWPresentModal.h */,
+				9BB244B31A87347700B0B544 /* EWPresentModal.m */,
 				0990EF741A22C606001AF099 /* MSPushFadeSegue.h */,
 				0990EF751A22C606001AF099 /* MSPushFadeSegue.m */,
 				0990EF761A22C606001AF099 /* MSReplaceFadeSegue.h */,
@@ -1519,7 +1524,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Crashlytics.framework/run 6ec9eab6ca26fcd18d51d0322752b861c63bc348 62daabb6809cba6858b14be1c7271e7ecad241fda41e4bf70463be17fc210744\n#echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\n#if [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\n#exit 0;\n#fi\n\n#export PATH=/usr/local/bin:$PATH\n#cd ${SRCROOT}/Server\n#parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "# Crashlytics\n./Crashlytics.framework/run 6ec9eab6ca26fcd18d51d0322752b861c63bc348 62daabb6809cba6858b14be1c7271e7ecad241fda41e4bf70463be17fc210744\n\n#Parse crash reporting\n#echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\n#if [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\n#exit 0;\n#fi\n\n#export PATH=/usr/local/bin:$PATH\n#cd ${SRCROOT}/Server\n#parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1679,6 +1684,7 @@
 				09A923B91A86DDA5007B2251 /* EWReceivedVoiceChildViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */,
+				9BB244B41A87347700B0B544 /* EWPresentModal.m in Sources */,
 				0971F73F1A71EA5B005A7709 /* EWDefines.m in Sources */,
 				099A6C751A6367B8000B9686 /* EWTimeChildViewController.m in Sources */,
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
