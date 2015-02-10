@@ -54,7 +54,7 @@
             
         } else {
             NSLog(@"Failed to request friend: %d", status);
-            XCTAssert(NO, @"Failed");
+			[expectation fulfill];
         }
     }];
     

@@ -345,9 +345,9 @@
     }
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
     [query whereKey:EWSocialAttributes.facebookID containedIn:facebookIDs];
-	NSArray *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
+	NSSet *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
 	if (friendsFbIDs.count) {
-		[query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs];
+		[query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs.allObjects];
         DDLogInfo(@"Exclude friends's facebookID: %@", facebookIDs);
 	}
 	[query includeKey:EWSocialRelationships.owner];

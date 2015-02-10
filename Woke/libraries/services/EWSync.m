@@ -903,7 +903,8 @@ NSManagedObjectContext *mainContext;
         }];
         
         //find on server
-        object = [[EWSync findParseObjectWithQuery:q error:error] firstObject];
+		object = [q findObjects].firstObject;
+		[self setCachedParseObject:object];
     }
     return object;
 
