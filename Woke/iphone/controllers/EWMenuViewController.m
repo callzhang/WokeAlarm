@@ -173,7 +173,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"MenuLogoutFadeToLoginGate"]) {
+    if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.menuLogoutFadeToLoginGate]) {
         [[EWAccountManager shared] logout];
     }
     else if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.menuToProfile]) {
