@@ -41,9 +41,6 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 	//[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 
 	[self presentViewController:viewController animated:YES completion:block];
-
-	
-	return;
 }
 
 

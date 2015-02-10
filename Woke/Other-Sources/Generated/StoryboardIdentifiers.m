@@ -16,10 +16,10 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .toWakeUpView = @"toWakeUpView",
         .menuToHome = @"menuToHome",
         .menuToVoice = @"menuToVoice",
-        .tempShowMainView = @"TempShowMainViewSegue",
+        .friendsToAddFriends = @"friendsToAddFriends",
         .searchChildViewController = @"searchChildViewController",
         .menuToAlarm = @"menuToAlarm",
-        .toSleepModeView = @"toSleepModeView",
+        .tempShowMainView = @"TempShowMainViewSegue",
         .sentVoiceChildViewController = @"sentVoiceChildViewController",
         .contactsChildViewController = @"contactsChildViewController",
         .smallTimeChildViewController = @"smallTimeChildViewController",
@@ -31,14 +31,13 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .peopleArrayChildViewController = @"peopleArrayChildViewController",
         .timeChildViewController = @"timeChildViewController",
         .menuToNotification = @"menuToNotification",
-        .friendsToAddFriends = @"friendsToAddFriends",
     },
 
     .viewControllers = {
         .EWAlarmTone = @"EWAlarmToneViewController",
         .EWMain = @"EWMainViewController",
         .EWMenu = @"EWMenuViewController",
-        .EWPersonSearchResultTable = @"EWPersonSearchResultTableViewController",
+        .EWSleeping = @"EWSleepingViewController",
         .EWPreWake = @"EWPreWakeViewController",
         .EWSettings = @"EWSettingsViewController",
         .EWSleep = @"EWSleepViewController",
@@ -47,6 +46,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .EWProfile = @"EWProfileViewController",
         .EWLoginGate = @"EWLoginGateViewController",
         .EWWake = @"EWWakeViewController",
+        .EWPersonSearchResultTable = @"EWPersonSearchResultTableViewController",
     },
 
     .reusables = {

@@ -10,6 +10,7 @@
 #import "EWWakeUpManager.h"
 #import "EWWakeUpViewCell.h"
 #import "EWAVManager.h"
+#import "UIViewController+Blur.h"
 @interface EWPostWakeUpViewController()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *tableviewHeaderView;
@@ -52,5 +53,12 @@
 #pragma mark - properties
 - (NSArray *)medias {
     return [EWWakeUpManager sharedInstance].medias;
+}
+- (IBAction)done:(id)sender {
+    if (self.presentingViewController) {
+        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:^{
+            //
+        }];
+    }
 }
 @end

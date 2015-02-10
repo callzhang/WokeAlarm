@@ -18,6 +18,7 @@
 #import "FBTweakInline.h"
 #import "EWWakeUpChildViewController.h"
 #import "EWMediaManager.h"
+#import "UIViewController+Blur.h"
 
 NSString *kShowWakeUpChildVCNotification = @"kShowWakeUpChildVCNotification";
 NSString *kHideWakeUpChildVCNotification = @"kHideWakeUpChildVCNotification";
@@ -41,7 +42,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     DDLogCInfo(@"Add Woke Voice");
     [[EWMediaManager sharedInstance] getWokeVoice];
 });
-@interface EWSleepingViewController ()
+@interface EWSleepingViewController ()<EWBaseViewNavigationBarButtonsDelegate>
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
 @property (nonatomic, strong) EWPeopleArrayChildViewController *peopleArrayChildViewController;
 @property (nonatomic, strong) EWAlarm *nextAlarm;
@@ -102,5 +103,19 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
             return obj.author;
         }];
     });
+}
+
+#pragma mark - UI
+- (IBAction)close:(id)sender{
+    if (self.presentingViewController){
+        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+    }
+    else if(self.navigationController){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (IBAction)more:(id)sender{
+    //
 }
 @end

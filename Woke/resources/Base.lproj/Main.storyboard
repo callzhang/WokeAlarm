@@ -407,6 +407,32 @@
                                     <constraint firstAttribute="width" id="fvY-kC-LlX"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSN-dE-35g">
+                                <rect key="frame" x="16" y="505" width="288" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="iDX-qh-NDn"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="19"/>
+                                <state key="normal" title="Start Sleeping" backgroundImage="woke-rectangle-normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
+                                <state key="selected" backgroundImage="woke-rectangle-selected"/>
+                                <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
+                                <connections>
+                                    <action selector="startSleeping:" destination="aF8-hD-EeQ" eventType="touchUpInside" id="YWs-3y-6vj"/>
+                                </connections>
+                            </button>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r3V-V2-HC0">
+                                <rect key="frame" x="0.0" y="100" width="320" height="130"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="130" id="lGb-PQ-rmR"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="FOH-VM-Mox" kind="embed" identifier="timeChildViewController" id="d4z-tG-E1i"/>
+                                </connections>
+                            </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uaE-PD-T4Y" userLabel="bottom 290x100 container">
                                 <rect key="frame" x="15" y="350" width="290" height="100"/>
                                 <subviews>
@@ -442,32 +468,6 @@
                                     <constraint firstAttribute="trailing" secondItem="1LV-hZ-wFF" secondAttribute="trailing" constant="25" id="kpC-4f-33c"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSN-dE-35g">
-                                <rect key="frame" x="16" y="505" width="288" height="48"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="iDX-qh-NDn"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="19"/>
-                                <state key="normal" title="Start Sleeping" backgroundImage="woke-rectangle-normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
-                                <state key="selected" backgroundImage="woke-rectangle-selected"/>
-                                <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
-                                <connections>
-                                    <segue destination="EjM-Uw-AXO" kind="custom" identifier="toSleepModeView" customClass="MSPushFadeSegue" id="MOo-ww-R5G"/>
-                                </connections>
-                            </button>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r3V-V2-HC0">
-                                <rect key="frame" x="0.0" y="100" width="320" height="130"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="130" id="lGb-PQ-rmR"/>
-                                </constraints>
-                                <connections>
-                                    <segue destination="FOH-VM-Mox" kind="embed" identifier="timeChildViewController" id="d4z-tG-E1i"/>
-                                </connections>
-                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -501,7 +501,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="odY-hj-5bB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1614" y="2542"/>
+            <point key="canvasLocation" x="1579" y="2470"/>
         </scene>
         <!--Add Friends View Controller-->
         <scene sceneID="lp8-e8-6LZ">
@@ -1559,7 +1559,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bkN-NF-fA4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-305" y="3402"/>
+            <point key="canvasLocation" x="-306" y="3350"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="VSb-1W-Sgu">
@@ -2208,7 +2208,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNK-8p-ka1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="506" y="3360"/>
+            <point key="canvasLocation" x="1024" y="3350"/>
         </scene>
         <!--Time Child View Controller-->
         <scene sceneID="ZFl-Xt-KVU">
@@ -2331,12 +2331,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HQf-cn-lKn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="619" y="3191"/>
+            <point key="canvasLocation" x="1024" y="2969"/>
         </scene>
         <!--Sleeping View Controller-->
         <scene sceneID="vh0-Lo-1sz">
             <objects>
-                <viewController id="EjM-Uw-AXO" customClass="EWSleepingViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EWSleepingViewController" id="EjM-Uw-AXO" customClass="EWSleepingViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kIz-E8-wEa"/>
                         <viewControllerLayoutGuide type="bottom" id="1Dm-ca-lF9"/>
@@ -2345,7 +2345,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-blur-tmp-background" translatesAutoresizingMaskIntoConstraints="NO" id="kOZ-k9-xaA">
+                            <imageView userInteractionEnabled="NO" tag="804" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-blur-tmp-background" translatesAutoresizingMaskIntoConstraints="NO" id="kOZ-k9-xaA">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nRz-xm-bzj">
@@ -2459,7 +2459,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y1j-H2-zNk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1626" y="3360"/>
+            <point key="canvasLocation" x="1579" y="3288"/>
         </scene>
         <!--Wake Up Child View Controller-->
         <scene sceneID="1u4-jG-AFL">
@@ -2548,7 +2548,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gML-II-VY3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1106" y="4345.5"/>
+            <point key="canvasLocation" x="1024" y="4070.5"/>
         </scene>
         <!--Small Time Child View Controller-->
         <scene sceneID="cTg-Vu-GNo">
@@ -2683,7 +2683,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-blur-tmp-background" translatesAutoresizingMaskIntoConstraints="NO" id="kKg-RB-jES">
+                            <imageView userInteractionEnabled="NO" tag="804" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-blur-tmp-background" translatesAutoresizingMaskIntoConstraints="NO" id="kKg-RB-jES">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" delaysContentTouches="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="TR1-Zh-boZ">
@@ -2890,6 +2890,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
+                                    <action selector="done:" destination="Lp5-7U-6rj" eventType="touchUpInside" id="yXc-V5-OEG"/>
                                     <segue destination="rc8-d2-95P" kind="unwind" unwindAction="unwindToMainViewController:" id="2Ln-hv-LG3"/>
                                 </connections>
                             </button>
@@ -3774,8 +3775,8 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="RcX-Qc-C0f"/>
         <segue reference="d4z-tG-E1i"/>
+        <segue reference="RcX-Qc-C0f"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

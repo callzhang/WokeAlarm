@@ -11,6 +11,8 @@
 #import "EWWakeUpManager.h"
 #import "EWTimeChildViewController.h"
 #import "EWAccountManager.h"
+#import "EWSleepingViewController.h"
+#import "UIViewController+Blur.h"
 
 @interface EWSleepViewController ()
 
@@ -78,5 +80,13 @@
     if ([sender.identifier isEqualToString:@"unwindFromStatusViewController"]) {
         
     }
+}
+- (IBAction)startSleeping:(id)sender {
+    [[EWWakeUpManager sharedInstance] sleep:nil];
+    EWSleepingViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWSleepingViewController class])];
+    EWBaseNavigationController *nav = [(EWBaseNavigationController *)[EWBaseNavigationController alloc] initWithRootViewController:vc];
+    [nav addNavigationButtons];
+    [nav setNavigationBarTransparent:YES];
+    [self.navigationController presentViewControllerWithBlurBackground:nav];
 }
 @end

@@ -153,6 +153,7 @@
 		9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */; };
 		9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */; };
 		9B4D29691A833AD300C8559B /* bg.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9B4D29681A833AD300C8559B /* bg.caf */; };
+		9B62A9E51A89E02100AA0D95 /* EWBlurPushSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B62A9E41A89E02100AA0D95 /* EWBlurPushSegue.m */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -174,7 +175,6 @@
 		9BB244AC1A86AF9900B0B544 /* EWFriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AB1A86AF9900B0B544 /* EWFriendRequest.m */; };
 		9BB244AF1A86C40700B0B544 /* EWAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244AE1A86C40700B0B544 /* EWAlertManager.m */; };
 		9BB244B11A87205600B0B544 /* FriendshipTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244B01A87205600B0B544 /* FriendshipTest.m */; };
-		9BB244B41A87347700B0B544 /* EWPresentModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244B31A87347700B0B544 /* EWPresentModal.m */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
 		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
@@ -495,6 +495,8 @@
 		9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudFunctionTest.m; sourceTree = "<group>"; };
 		9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchUserTest.m; sourceTree = "<group>"; };
 		9B4D29681A833AD300C8559B /* bg.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = bg.caf; sourceTree = "<group>"; };
+		9B62A9E31A89E02100AA0D95 /* EWBlurPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlurPushSegue.h; sourceTree = "<group>"; };
+		9B62A9E41A89E02100AA0D95 /* EWBlurPushSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBlurPushSegue.m; sourceTree = "<group>"; };
 		9B6797041A3E34ED007B8188 /* NSDictionary+KeyPathAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KeyPathAccess.h"; sourceTree = "<group>"; };
 		9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+KeyPathAccess.m"; sourceTree = "<group>"; };
 		9B6AB8171A16F1F6003372A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -546,8 +548,6 @@
 		9BB244AD1A86C40700B0B544 /* EWAlertManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWAlertManager.h; path = Woke/libraries/services/EWAlertManager.h; sourceTree = SOURCE_ROOT; };
 		9BB244AE1A86C40700B0B544 /* EWAlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EWAlertManager.m; path = Woke/libraries/services/EWAlertManager.m; sourceTree = SOURCE_ROOT; };
 		9BB244B01A87205600B0B544 /* FriendshipTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendshipTest.m; sourceTree = "<group>"; };
-		9BB244B21A87347700B0B544 /* EWPresentModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPresentModal.h; sourceTree = "<group>"; };
-		9BB244B31A87347700B0B544 /* EWPresentModal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPresentModal.m; sourceTree = "<group>"; };
 		9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpProcessTest.m; sourceTree = "<group>"; };
 		9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WakeUpPlayingTest.m; sourceTree = "<group>"; };
 		9BD800C71A8967350056B3FB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -909,8 +909,8 @@
 		0990EF731A22C606001AF099 /* segues */ = {
 			isa = PBXGroup;
 			children = (
-				9BB244B21A87347700B0B544 /* EWPresentModal.h */,
-				9BB244B31A87347700B0B544 /* EWPresentModal.m */,
+				9B62A9E31A89E02100AA0D95 /* EWBlurPushSegue.h */,
+				9B62A9E41A89E02100AA0D95 /* EWBlurPushSegue.m */,
 				0990EF741A22C606001AF099 /* MSPushFadeSegue.h */,
 				0990EF751A22C606001AF099 /* MSPushFadeSegue.m */,
 				0990EF761A22C606001AF099 /* MSReplaceFadeSegue.h */,
@@ -1684,7 +1684,6 @@
 				09A923B91A86DDA5007B2251 /* EWReceivedVoiceChildViewController.m in Sources */,
 				096AAAE31A195A3900B4CBFF /* EWNotificationManager.m in Sources */,
 				096AAAE91A195A3900B4CBFF /* EWSync.m in Sources */,
-				9BB244B41A87347700B0B544 /* EWPresentModal.m in Sources */,
 				0971F73F1A71EA5B005A7709 /* EWDefines.m in Sources */,
 				099A6C751A6367B8000B9686 /* EWTimeChildViewController.m in Sources */,
 				09A7772D1A11E2BD004AF902 /* main.m in Sources */,
@@ -1733,6 +1732,7 @@
 				9B8D75611A6397C20013B011 /* EWNotificationViewController.m in Sources */,
 				09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */,
 				096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */,
+				9B62A9E51A89E02100AA0D95 /* EWBlurPushSegue.m in Sources */,
 				9BB244AF1A86C40700B0B544 /* EWAlertManager.m in Sources */,
 				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,
 			);
