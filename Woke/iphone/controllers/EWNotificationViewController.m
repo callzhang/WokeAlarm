@@ -75,7 +75,9 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [notifications enumerateObjectsUsingBlock:^(EWNotification *noti, NSUInteger idx, BOOL *stop) {
-        noti.completed = [NSDate date];
+		if (!noti.completed) {
+			noti.completed = [NSDate date];
+		}
     }];
     
     [mainContext MR_saveToPersistentStoreWithCompletion:nil];
@@ -145,6 +147,7 @@
         EWNotification *notice = notifications[indexPath.row];
         //remove from view with animation
         [notice remove];
+		[mainContext MR_saveToPersistentStoreAndWait];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }

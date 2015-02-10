@@ -195,7 +195,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     PFQuery *query = [PFUser query];
     [query whereKey:kParseObjectID containedIn:list];
     //[query includeKey:@"friends"];
-    NSArray *users = [EWSync findParseObjectWithQuery:query error:error];
+    NSArray *people = [EWSync findParseObjectWithQuery:query inContext:context error:error];
     
     if (*error) {
         NSLog(@"*** Failed to fetch wakees: %@", *error);
@@ -203,11 +203,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
         return nil;
     }
 	
-    for (PFUser *user in users) {
-        EWPerson *person = (EWPerson *)[user managedObjectInContext:context];
+    for (EWPerson *person in people) {
         
         //remove skipped user if marked skip and the statement is the same.
-        NSString *skippedStatement = [EWSession sharedSession].skippedWakees[user.objectId];
+        NSString *skippedStatement = [EWSession sharedSession].skippedWakees[person.serverID];
         if (skippedStatement) {
             if ([skippedStatement isEqualToString:person.statement]) {
                 DDLogInfo(@"Same statement for person %@ (%@) skipped", person.name, person.statement);
@@ -216,9 +215,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
         }
         [allPerson addObject:person];
     }
-    
-    //batch save to local
-    [EWSync saveAllToLocal:allPerson];
     
     //still need to save me
     //localMe.score = @100;

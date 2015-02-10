@@ -9,29 +9,32 @@
 #import "EWBlurPushSegue.h"
 #import "EWBaseNavigationController.h"
 
-@interface EWBlurPushSegue()
-@property (nonatomic, strong) EWBlurNavigationControllerDelegate *delegate;
-@end
+//it must stay static otherwise it will dealloc prematurely
+static EWBlurNavigationControllerDelegate *delegate;
+
 @implementation EWBlurPushSegue
 - (void)perform {
     UIViewController *vc = self.sourceViewController;
-    self.delegate = [EWBlurNavigationControllerDelegate new];
+	if (!delegate) {
+		delegate = [EWBlurNavigationControllerDelegate new];
+	}
+	
     if ([vc isKindOfClass:[UINavigationController class]]) {
         EWBaseNavigationController *nav = (EWBaseNavigationController *)vc;
-        [nav setDelegate:self.delegate];
+        [nav setDelegate:delegate];
         [nav pushViewController:self.destinationViewController animated:YES];
         [nav addNavigationButtons];
     }
     else if (vc.navigationController){
         EWBaseNavigationController *nav = (EWBaseNavigationController *)vc.navigationController;
-        [nav setDelegate:self.delegate];
+        [nav setDelegate:delegate];
         [nav pushViewController:self.destinationViewController animated:YES];
         [nav addNavigationButtons];
     }
     else{
-        vc.transitioningDelegate = self.delegate;
+        vc.transitioningDelegate = delegate;
         if (vc.navigationController) {
-            vc.navigationController.delegate = self.delegate;
+            vc.navigationController.delegate = delegate;
         }
         vc.modalPresentationStyle = UIModalPresentationCustom;
         EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:self.destinationViewController];

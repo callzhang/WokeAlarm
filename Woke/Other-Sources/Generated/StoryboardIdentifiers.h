@@ -31,6 +31,7 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *peopleArrayChildViewController;
         __unsafe_unretained NSString *timeChildViewController;
         __unsafe_unretained NSString *menuToNotification;
+        __unsafe_unretained NSString *toSleepingView;
     } segues;
 
     struct {

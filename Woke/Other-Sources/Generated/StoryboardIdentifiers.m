@@ -31,6 +31,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .peopleArrayChildViewController = @"peopleArrayChildViewController",
         .timeChildViewController = @"timeChildViewController",
         .menuToNotification = @"menuToNotification",
+        .toSleepingView = @"toSleepingView",
     },
 
     .viewControllers = {

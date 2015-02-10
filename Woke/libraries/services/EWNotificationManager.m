@@ -156,15 +156,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 - (void)findAllNotificationInBackgroundwithCompletion:(ArrayBlock)block{
 
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWNotification class])];
-    if ([EWPerson me].notifications.count) {
-        [query whereKey:kParseObjectID notContainedIn:[[EWPerson me].notifications valueForKey:kParseObjectID]];
+    if ([EWPerson me].notifications.count > 0) {
+		NSSet *existingNotes = [[EWPerson me].notifications valueForKey:kParseObjectID];
+        [query whereKey:kParseObjectID notContainedIn:existingNotes.allObjects];
     }
-    [query whereKey:EWNotificationRelationships.owner equalTo:[PFUser currentUser]];
+	[query whereKey:EWNotificationRelationships.owner equalTo:[PFUser objectWithoutDataWithObjectId:[PFUser currentUser].objectId]];
     [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
         for (PFObject *PO in objects) {
-            EWNotification *notification = (EWNotification *)[PO managedObjectInContext:mainContext];
-            DDLogVerbose(@"Found new notification %@(%@)", notification.type, notification.objectId);
-            notification.owner = [EWPerson me];
+            EWNotification *notification = (EWNotification *)[PO managedObjectInContext:mainContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
+				NSAssert(SO.ownerObject == [EWPerson me], @"owner missing: %@", SO.ownerObject.serverID);
+				DDLogVerbose(@"Found new notification %@(%@)", notification.type, notification.objectId);
+			}];
             
         }
         if (block) {

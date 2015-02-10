@@ -40,6 +40,7 @@
 
 
 + (EWNotification *)newMediaNotification:(EWMedia *)media{
+	//make only unique media notification per day
     EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
         if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
             if (notif.userInfo[@"activity"] == [EWPerson myCurrentAlarmActivity].objectId) {

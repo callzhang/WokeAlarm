@@ -162,7 +162,7 @@
             //update only it is outdated
             BOOL hasData = [self valueForKey:key];
             NSDate *time = self.syncInfo[key];
-            BOOL upToDate = [time timeElapsed] < kServerUpdateInterval;
+            BOOL upToDate = time && [time timeElapsed] < kServerUpdateInterval;
             if (hasData && upToDate) {
                 DDLogVerbose(@"Skip downloading PFFile for %@(%@)->%@, last updated on %@", object.parseClassName, object.objectId, key, time);
                 return;

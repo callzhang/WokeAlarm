@@ -223,14 +223,9 @@
     [emailQ whereKey:EWPersonAttributes.email containedIn:emails_];
     [emailQ setLimit:50];
     //[emailQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    [EWSync findParseObjectInBackgroundWithQuery:emailQ completion:^(NSArray *objects, NSError *error) {
-        NSMutableArray *resultPeople = [NSMutableArray new];
-        for (PFUser *user in objects) {
-            EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
-            [resultPeople addObject:person];
-        }
+    [EWSync findParseObjectInBackgroundWithQuery:emailQ completion:^(NSArray *peopleInEmail, NSError *error) {
         if (completion) {
-            completion(resultPeople, error);
+            completion(peopleInEmail, error);
         }
     }];
 }
@@ -244,15 +239,11 @@
         query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, query, nil]];
     }
     [query setLimit:50];
-    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
-        DDLogDebug(@"===> Search phrase %@ with result of %@", name, [objects valueForKey:EWPersonAttributes.firstName]);
-        NSMutableArray *resultPeople = [NSMutableArray new];
-        for (PFUser *user in objects) {
-            EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
-            [resultPeople addObject:person];
-        }
+    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *people, NSError *error) {
+        DDLogDebug(@"===> Search phrase %@ with result of %@", name, [people valueForKey:EWPersonAttributes.firstName]);
+
         if (completion) {
-            completion(resultPeople, error);
+            completion(people, error);
         }
     }];
 }
@@ -361,23 +352,19 @@
 	}
 	[query includeKey:EWSocialRelationships.owner];
     [query setLimit:50];
-    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *objects, NSError *error) {
-        DDLogDebug(@"===> Found %ld new facebook friends%@", objects.count, [objects valueForKey:EWPersonAttributes.firstName]);
+    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *socials, NSError *error) {
+        DDLogDebug(@"===> Found %ld new facebook friends%@", socials.count, [socials valueForKey:EWPersonAttributes.firstName]);
         NSMutableArray *resultPeople = [NSMutableArray new];
         EWSocial *sg = [EWPerson mySocialGraph];
-        for (PFObject *socialPO in objects) {
-			PFUser *owner = socialPO[EWSocialRelationships.owner];
-			if (!owner) {
-				[socialPO fetch:&error];
-				owner = socialPO[EWSocialRelationships.owner];
-			}
-			EWPerson *person = (EWPerson *)[owner managedObjectInContext:mainContext];
+        for (EWSocial *social in socials) {
+			EWPerson *person = social.owner;
+			NSParameterAssert(person);
             [resultPeople addObject:person];
             
             //add facebook ID to social
             if (!sg.facebookRelatedUsers) sg.facebookRelatedUsers = [NSMutableArray new];
-            if (![sg.facebookRelatedUsers containsObject:socialPO[EWSocialAttributes.facebookID]]) {
-                [sg.facebookRelatedUsers addObject:socialPO[EWSocialAttributes.facebookID]];
+            if (![sg.facebookRelatedUsers containsObject:social.facebookID]) {
+                [sg.facebookRelatedUsers addObject:social.facebookID];
             }
         }
         if (block) {

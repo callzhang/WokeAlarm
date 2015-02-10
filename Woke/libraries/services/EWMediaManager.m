@@ -99,20 +99,12 @@
     if (medias.count == 0 && [person isMe]) {
         //query
         PFQuery *q = [[[PFUser currentUser] relationForKey:EWPersonRelationships.sentMedias] query];
-        [EWSync findParseObjectInBackgroundWithQuery:q completion:^(NSArray *objects, NSError *error) {
-            [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-                EWPerson *localMe = [[EWPerson me] MR_inContext:localContext];
-                NSArray *newMedias = [objects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [localMe.sentMedias valueForKey:kParseObjectID]]];
-                for (PFObject *m in newMedias) {
-                    EWMedia *media = (EWMedia *)[m managedObjectInContext:localContext];
-                    [media refresh];
-                    [localMe addSentMediasObject:media];
-                    [media saveToLocal];
-                }
-                [localMe saveToLocal];
-                DDLogInfo(@"My media updated with %lu new medias", (unsigned long)newMedias.count);
-            }];
-        }];
+		[q whereKey:kParseObjectID notContainedIn:[EWPerson me].sentMedias.allObjects];
+		NSArray *MOs = [EWSync findParseObjectWithQuery:q inContext:person.managedObjectContext error:nil];
+		for (EWMedia *m in MOs) {
+			NSAssert(m.author == [EWPerson me], @"EWMedia's author missing: %@", m.serverID);
+		}
+		DDLogInfo(@"My media updated with %lu new medias", (unsigned long)MOs.count);
     }
     return medias;
 }
@@ -164,29 +156,22 @@
 	NSSet *receivedMediaIDs = [localMe.receivedMedias valueForKey:kParseObjectID];
     [query whereKey:kParseObjectID notContainedIn:[unreadMediaIDs setByAddingObjectsFromSet:receivedMediaIDs].allObjects];
 	NSError *err;
-    NSArray *mediaPOs = [EWSync findParseObjectWithQuery:query error:&err];
-	NSMutableArray *newMedia = [NSMutableArray new];
-    for (PFObject *po in mediaPOs) {
-        //EWMedia *mo = (EWMedia *)[po managedObjectInContext:context];
-        EWMedia *mo = [EWMedia getMediaByID:po.objectId];
-        if (!mo.receiver) {
-            DDLogError(@"Received media (%@) but no receiver", mo.serverID);
-            mo.receiver = [EWPerson meInContext:context];
-        }
-        [[EWPerson me] addUnreadMediasObject:mo];
+    NSArray *newMedia = [EWSync findParseObjectWithQuery:query inContext:context error:&err];
+
+    for (EWMedia *media in newMedia) {
+		[media downloadMediaFile];
+        [[EWPerson me] addUnreadMediasObject:media];
         //new media
-		DDLogInfo(@"Received media(%@) from %@", mo.objectId, mo.author.name);
+		DDLogInfo(@"Received media(%@) from %@", media.objectId, media.author.name);
         //EWNotification
         if ([NSThread isMainThread]) {
-            [EWNotification newMediaNotification:mo];
+            [EWNotification newMediaNotification:media];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
-                EWMedia *media = (EWMedia *)[mo MR_inContext:mainContext];
-                [EWNotification newMediaNotification:media];
+                EWMedia *m = (EWMedia *)[media MR_inContext:mainContext];
+                [EWNotification newMediaNotification:m];
             });
         }
-        
-        [newMedia addObject:mo];
     }
 	
     if (newMedia.count) {

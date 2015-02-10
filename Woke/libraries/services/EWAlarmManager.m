@@ -246,18 +246,15 @@
         PFQuery *alarmQuery = [PFQuery queryWithClassName:NSStringFromClass([EWAlarm class])];
         [alarmQuery whereKey:EWAlarmRelationships.owner equalTo:[PFUser currentUser]];
         [alarmQuery whereKey:kParseObjectID notContainedIn:[alarms valueForKey:kParseObjectID]];
-        NSArray *objects = [EWSync findParseObjectWithQuery:alarmQuery error:NULL];
+		NSArray *newAlarms = [EWSync findParseObjectWithQuery:alarmQuery inContext:mainContext error:NULL];
         
-        for (PFObject *a in objects) {
-            EWAlarm *alarm = (EWAlarm *)[a managedObjectInContext:mainContext];;
-            [alarm refresh];
-            alarm.owner = [EWPerson me];
+        for (EWAlarm *alarm in newAlarms) {
             if (![alarm validate]) {
                 [alarm remove];
-            }else if (![alarms containsObject:alarm]) {
+            }else{
                 [alarms addObject:alarm];
 				[alarm save];
-                DDLogVerbose(@"Alarm found from server %@", alarm);
+                DDLogVerbose(@"Alarm found from server %@", alarm.serverID);
             }
         }
     }

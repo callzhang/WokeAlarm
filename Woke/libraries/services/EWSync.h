@@ -165,7 +165,7 @@ extern NSString * const kEWSyncUploaded;
 
 #pragma mark - Parse helper methods
 //PO query
-+ (NSArray *)findParseObjectWithQuery:(PFQuery *)query error:(NSError **)error;
++ (NSArray *)findParseObjectWithQuery:(PFQuery *)query inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 - (PFObject *)getCachedParseObjectForID:(NSString *)parseID;
 - (void)setCachedParseObject:(PFObject *)PO;
