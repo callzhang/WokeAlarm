@@ -19,4 +19,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *addFriendButton;
 
 @property (nonatomic, strong) EWPerson *person;
+
+@property (nonatomic, weak) UIViewController *presentingViewController;
 @end

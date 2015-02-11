@@ -76,7 +76,9 @@
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
         [controller addAction:action];
         [controller addAction:cancel];
-        [[EWUIUtil topViewController] presentViewController:controller animated:YES completion:nil];
+        
+        NSAssert(self.presentingViewController, @"no presenting view controller");
+        [self.presentingViewController presentViewController:controller animated:YES completion:nil];
     }
     else if (status == EWFriendshipStatusSent) {
         [EWUIUtil showWarningHUBWithString:@"Already requested"];
