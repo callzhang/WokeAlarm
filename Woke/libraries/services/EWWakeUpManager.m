@@ -37,6 +37,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[EWWakeUpManager alloc] init];
+        manager.delegate = [EWActivityManager sharedManager];
     });
     return manager;
 }

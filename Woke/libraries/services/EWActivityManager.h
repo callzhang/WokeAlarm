@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "EWPerson.h"
+#import "EWWakeUpManager.h"
 
 //#define kNotificationTypeActivityHasNewMedia    @"activity_new_media"
 
@@ -15,7 +16,7 @@ extern NSString *const EWActivityTypeAlarm;
 extern NSString *const EWActivityTypeFriendship;
 extern NSString *const EWActivityTypeMedia;
 
-@interface EWActivityManager : NSObject
+@interface EWActivityManager : NSObject <EWWakeUpDelegate>
 /**
  *  Get the acitivity that is for current alarm
  *  If current activity is completed or mismatch with current alarm, generate a new activity
