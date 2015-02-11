@@ -465,7 +465,7 @@
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
                                 <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
                                 <connections>
-                                    <segue destination="EjM-Uw-AXO" kind="custom" identifier="toSleepingView" customClass="EWBlurPushSegue" id="Ifa-XG-tXM"/>
+                                    <segue destination="EjM-Uw-AXO" kind="custom" identifier="toSleepingView" customClass="EWBlurPresentSegue" id="Ifa-XG-tXM"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -702,7 +702,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="profile:" destination="ZmP-te-75G" eventType="touchUpInside" id="YMk-Tp-ecK"/>
+                                    <segue destination="T0a-bL-MOd" kind="custom" customClass="EWBlurPresentSegue" id="pRr-UO-GET"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -3777,6 +3777,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="tfZ-IS-2Ts"/>
         <segue reference="d4z-tG-E1i"/>
+        <segue reference="pRr-UO-GET"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

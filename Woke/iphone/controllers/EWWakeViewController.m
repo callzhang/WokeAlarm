@@ -49,15 +49,6 @@
 - (IBAction)onWakeHerButton:(id)sender {
 }
 
-- (IBAction)profile:(id)sender {
-    EWProfileViewController *vc = (EWProfileViewController *)[[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWProfileViewController class])];
-    EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:vc];
-    [nav addNavigationButtons];
-    [nav setNavigationBarTransparent:YES];
-    vc.person = _nextWakee;
-    [self.navigationController presentViewControllerWithBlurBackground:nav];
-}
-
 - (void)setNextWakee:(EWPerson *)nextWakee {
     _nextWakee = nextWakee;
     
@@ -66,5 +57,12 @@
     NSDate *nextTime = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:nextWakee];
     self.wantsToWakeUpAtLabel.text = [NSString stringWithFormat:@"wants to wake up at %@", [nextTime mt_stringFromDateWithHourAndMinuteFormat:MTDateHourFormat12Hour]];
     self.statusLabel.text = [[EWAlarmManager sharedInstance] nextStatementForPerson:nextWakee];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.destinationViewController isKindOfClass:[EWProfileViewController class]]) {
+        EWProfileViewController *vc = segue.destinationViewController;
+        vc.person = _nextWakee;
+    }
 }
 @end

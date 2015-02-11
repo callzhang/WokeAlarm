@@ -154,6 +154,7 @@
 		9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */; };
 		9B4D29691A833AD300C8559B /* bg.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9B4D29681A833AD300C8559B /* bg.caf */; };
 		9B62A9E51A89E02100AA0D95 /* EWBlurPushSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B62A9E41A89E02100AA0D95 /* EWBlurPushSegue.m */; };
+		9B62A9E81A8B15E200AA0D95 /* EWBlurPresentSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B62A9E71A8B15E200AA0D95 /* EWBlurPresentSegue.m */; };
 		9B6797061A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */; };
 		9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8171A16F1F6003372A8 /* UIKit.framework */; };
 		9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6AB8191A16F201003372A8 /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -497,6 +498,8 @@
 		9B4D29681A833AD300C8559B /* bg.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = bg.caf; sourceTree = "<group>"; };
 		9B62A9E31A89E02100AA0D95 /* EWBlurPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlurPushSegue.h; sourceTree = "<group>"; };
 		9B62A9E41A89E02100AA0D95 /* EWBlurPushSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBlurPushSegue.m; sourceTree = "<group>"; };
+		9B62A9E61A8B15E200AA0D95 /* EWBlurPresentSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBlurPresentSegue.h; sourceTree = "<group>"; };
+		9B62A9E71A8B15E200AA0D95 /* EWBlurPresentSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBlurPresentSegue.m; sourceTree = "<group>"; };
 		9B6797041A3E34ED007B8188 /* NSDictionary+KeyPathAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KeyPathAccess.h"; sourceTree = "<group>"; };
 		9B6797051A3E34ED007B8188 /* NSDictionary+KeyPathAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+KeyPathAccess.m"; sourceTree = "<group>"; };
 		9B6AB8171A16F1F6003372A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -909,6 +912,8 @@
 		0990EF731A22C606001AF099 /* segues */ = {
 			isa = PBXGroup;
 			children = (
+				9B62A9E61A8B15E200AA0D95 /* EWBlurPresentSegue.h */,
+				9B62A9E71A8B15E200AA0D95 /* EWBlurPresentSegue.m */,
 				9B62A9E31A89E02100AA0D95 /* EWBlurPushSegue.h */,
 				9B62A9E41A89E02100AA0D95 /* EWBlurPushSegue.m */,
 				0990EF741A22C606001AF099 /* MSPushFadeSegue.h */,
@@ -1733,6 +1738,7 @@
 				09D7370E1A328F4400E8C9ED /* SevenSwitch.m in Sources */,
 				096AAAE81A195A3900B4CBFF /* EWCachedInfoManager.m in Sources */,
 				9B62A9E51A89E02100AA0D95 /* EWBlurPushSegue.m in Sources */,
+				9B62A9E81A8B15E200AA0D95 /* EWBlurPresentSegue.m in Sources */,
 				9BB244AF1A86C40700B0B544 /* EWAlertManager.m in Sources */,
 				096AAAE01A195A3900B4CBFF /* EWStartUpSequence.m in Sources */,
 			);

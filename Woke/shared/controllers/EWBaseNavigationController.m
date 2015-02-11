@@ -91,6 +91,7 @@
     UIViewController *vc = self.viewControllers.lastObject;
     if (![vc conformsToProtocol:@protocol(EWBaseViewNavigationBarButtonsDelegate)]) {
         DDLogError(@"ViewController %@ doesn't not confirm to EWBaseViewNavigationBarButtonsDelegate", NSStringFromClass([vc class]));
+        return;
     }
     EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *controller = (EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *)vc;
         //not in navigation controller

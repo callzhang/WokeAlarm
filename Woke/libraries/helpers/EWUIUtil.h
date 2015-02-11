@@ -68,4 +68,6 @@
 + (void)showFailureHUBWithString:(NSString *)string;
 + (void)showWarningHUBWithString:(NSString *)string;
 + (void)dismissHUDinView:(UIView *)view;
++ (UIView *)getTopView;
++ (UIViewController *)topViewController;
 @end

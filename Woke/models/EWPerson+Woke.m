@@ -126,7 +126,7 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
         return EWFriendshipStatusFriended;
     }
     else{
-        EWFriendRequest *requestSent = [EWFriendRequest MR_findFirstByAttribute:EWFriendRequestRelationships.sender withValue:me inContext:context];
+        EWFriendRequest *requestSent = [EWFriendRequest MR_findFirstByAttribute:EWFriendRequestRelationships.receiver withValue:self inContext:context];
         if (requestSent) {
             if ([requestSent.status isEqualToString:EWFriendshipRequestPending]) {
                 return EWFriendshipStatusSent;
@@ -140,7 +140,7 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
             }
         }
         
-        EWFriendRequest *requestReceived = [EWFriendRequest MR_findFirstByAttribute:EWFriendRequestRelationships.receiver withValue:me inContext:context];
+        EWFriendRequest *requestReceived = [EWFriendRequest MR_findFirstByAttribute:EWFriendRequestRelationships.sender withValue:self inContext:context];
         if (requestReceived) {
             if ([requestReceived.status isEqualToString:EWFriendshipRequestPending]) {
                 return EWFriendshipStatusReceived;

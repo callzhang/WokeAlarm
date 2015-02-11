@@ -347,12 +347,28 @@ static const float originalSize = 80.0;
 + (UIView *)getTopView{
 	UIView *rootView;
 	UIViewController *rootController = [UIWindow mainWindow].rootViewController;
+    if (rootController.presentedViewController) {
+        rootController = rootController.presentedViewController;
+    }
 	if ([rootController isKindOfClass:[UINavigationController class]]) {
 		rootView = [(UINavigationController *)rootController topViewController].view;
 	}else{
 		rootView = rootController.view;
 	}
 	return rootView;
+}
+
++ (UIViewController *)topViewController{
+    UIViewController *rootController = [UIWindow mainWindow].rootViewController;
+    if (rootController.presentedViewController) {
+        rootController = rootController.presentedViewController;
+    }
+    if ([rootController isKindOfClass:[UINavigationController class]]) {
+        return [(UINavigationController *)rootController topViewController];
+    }else{
+        return  rootController;
+    }
+    return nil;
 }
 
 + (void)dismissHUDinView:(UIView *)view{

@@ -11,6 +11,7 @@
 #import "EWAlarmManager.h"
 #import "APTimeZones.h"
 #import "EWPersonManager.h"
+#import "EWUIUtil.h"
 
 @interface EWProfileViewProfileTableViewCell()
 @property (nonatomic, strong) RACDisposable *personDisposable;
@@ -64,29 +65,27 @@
     else if(status == EWFriendshipStatusFriended) {
        UIAlertController *controller =  [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unfriend" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [[EWPerson me] unfriend:self.person];
+            [[EWPersonManager shared] unfriend:self.person completion:^(BOOL success, NSError *error) {
+                if (success) {
+                    DDLogInfo(@"Unfriended!");
+                } else {
+                    DDLogError(@"Failed to unfriend: %@", error.localizedDescription);
+                }
+            }];
         }];
-        
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-        
         [controller addAction:action];
         [controller addAction:cancel];
-        [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES
-                                                                     completion:nil];
+        [[EWUIUtil topViewController] presentViewController:controller animated:YES completion:nil];
     }
     else if (status == EWFriendshipStatusSent) {
-        UIAlertController *controller =  [UIAlertController alertControllerWithTitle:@"Friendship pending" message:@"You have already requested friendship to this person." preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        }];
-        
-        [controller addAction:action];
-        [[[UIWindow mainWindow] rootNavigationController] presentViewController:controller animated:YES completion:nil];
+        [EWUIUtil showWarningHUBWithString:@"Already requested"];
     }
     else {
         [[EWPersonManager shared] requestFriend:self.person completion:^(EWFriendshipStatus status, NSError *error) {
             if (status == EWFriendshipStatusSent) {
+                [EWUIUtil showSuccessHUBWithString:nil];
                 [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestSentButton] forState:UIControlStateDisabled];
-                self.addFriendButton.enabled = NO;
             }else if (status == EWFriendshipStatusFriended) {
                 [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
             }else {
