@@ -830,21 +830,21 @@ NSManagedObjectContext *mainContext;
     @try {
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
 			//convert to MO
-			__block NSMutableArray *resultMOs = [NSMutableArray array];
+			__block NSMutableArray *localMOs = [NSMutableArray array];
 			[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
 				for (PFObject *PO in objects) {
 					[[EWSync sharedInstance] setCachedParseObject:PO];
 					EWServerObject *MO;
 					if ([PO.localClassName isEqualToString:kSyncUserClass] && PO.objectId != [PFUser currentUser].objectId) {
 						MO = [PO managedObjectInContext:localContext];
-						[resultMOs addObject:MO];
+						[localMOs addObject:MO];
 					}
 					else {
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:NULL];
-						[resultMOs addObject:MO];
+						[localMOs addObject:MO];
 					}
 					if ([MO validate]) {
-						[resultMOs addObject:MO];
+						[localMOs addObject:MO];
 					} else {
 						DDLogError(@"The MO downloaded from query %@(%@) is not valide", MO.entity.name, MO.serverID);
 						[MO remove];
@@ -852,7 +852,11 @@ NSManagedObjectContext *mainContext;
 				}
 			} completion:^(BOOL contextDidSave, NSError *error) {
 				if (block) {
-					block(resultMOs, error);
+					NSMutableArray *results = [NSMutableArray array];
+					for (EWServerObject *MO in localMOs) {
+						[results addObject:[MO MR_inContext:mainContext]];
+					}
+					block(results, error);
 				}
 			}];
         }];

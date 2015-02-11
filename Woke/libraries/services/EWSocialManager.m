@@ -353,7 +353,7 @@
 	[query includeKey:EWSocialRelationships.owner];
     [query setLimit:50];
     [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *socials, NSError *error) {
-        DDLogDebug(@"===> Found %ld new facebook friends%@", socials.count, [socials valueForKey:EWPersonAttributes.firstName]);
+        DDLogDebug(@"===> Found %ld new facebook friends%@", socials.count, [socials valueForKeyPath:@"owner.name"]);
         NSMutableArray *resultPeople = [NSMutableArray new];
         EWSocial *sg = [EWPerson mySocialGraph];
         for (EWSocial *social in socials) {

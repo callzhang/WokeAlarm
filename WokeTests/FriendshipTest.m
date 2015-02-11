@@ -35,7 +35,7 @@
     // This is an example of a functional test case.
     XCTAssert(YES, @"Pass");
 }
-≥
+
 - (void)testSendFriendshipRequest {
     XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     NSMutableArray *people = [EWPerson MR_findAll].mutableCopy;
@@ -49,8 +49,8 @@
         [people removeObject:receiver];
     }
     EWPerson *person = people[arc4random_uniform(people.count)];
-    [[EWPersonManager shared] requestFriend:person completion:^(EWFriendshipStatus status, NSError *error) {
-        if (status == EWFriendshipStatusSent) {
+	[[EWPersonManager shared] testGenerateFriendRequestFrom:person completion:^(EWFriendRequest *request, NSError *error) {
+        if ([request.status isEqualToString:EWFriendshipRequestPending]) {
             NSLog(@"Friend request sent");
             
             //accept request
@@ -61,17 +61,18 @@
                     [expectation fulfill];
                 }
                 else {
-                    NSLog(@"Failed to accept friend %@", error);
+                    NSLog(@"Failed to accept friend %@", error2);
+					XCTAssert(NO, @"Failed to accept friend %@", error2);
                 }
             }];
             
         } else {
-            NSLog(@"Failed to request friend: %ld", status);
+            NSLog(@"Failed to request friend %@: %@", error.localizedDescription, request);
             XCTAssert(NO, @"friend request not successful");
         }
     }];
     
-    [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timed out test: %s", __FUNCTION__);
         }

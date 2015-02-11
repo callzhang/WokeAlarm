@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import "EWSocialManager.h"
 #import "EWDefines.h"
+#import "EWPerson.h"
 
 @interface SearchUserTest : XCTestCase
 
@@ -58,8 +59,13 @@
 - (void)testSearchFullName {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Expect search result"];
     [[EWSocialManager sharedInstance] searchUserWithPhrase:@"Lee Zen" completion:^(NSArray *array, NSError *error){
-        NSLog(@"found user: %@", array.firstObject);
-        XCTAssert(array.count);
+		BOOL containsLZ = NO;
+		for (EWPerson *p in array) {
+			if ([p.name isEqualToString:@"Lee Zen"]) {
+				containsLZ = YES;
+			}
+		}
+        XCTAssert(containsLZ);
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {

@@ -387,7 +387,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 }
 
 - (void)testGenerateFriendRequestFrom:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *error))block{
-    [PFCloud callFunctionInBackground:@"sendFriendRequestToUser"
+    [PFCloud callFunctionInBackground:@"sendFriendshipRequestToUser"
                        withParameters:@{@"sender": person.objectId,
                                         @"receiver": [EWPerson me].objectId}
                                 block:^(PFObject *object, NSError *error)
