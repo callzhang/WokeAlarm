@@ -339,6 +339,11 @@ static const float originalSize = 80.0;
 	[rootView showNotification:string WithStyle:hudStyleWarning audoHide:5];
 }
 
++ (void)showWatingHUB{
+    UIView *rootView = [self getTopView];
+    [rootView showLoopingWithTimeout:0];
+}
+
 + (UIView *)getTopView{
 	UIView *rootView;
 	UIViewController *rootController = [UIWindow mainWindow].rootViewController;

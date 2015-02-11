@@ -20,8 +20,8 @@ extern NSString * const EWPersonDefaultName;
 @property (nonatomic, strong) CLLocation* location;
 @property (nonatomic, strong) UIImage *profilePic;
 @property (nonatomic, strong) UIImage *bgImage;
-@property (nonatomic, strong) NSMutableDictionary *preference;
-@property (nonatomic, strong) NSMutableDictionary *cachedInfo;
+@property (nonatomic, strong) NSDictionary *preference;
+@property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
 @property (nonatomic, readwrite) NSString *name;
 

@@ -63,6 +63,7 @@
 + (UIImage *)resizeImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
 //HUD
++ (void)showWatingHUB;
 + (void)showSuccessHUBWithString:(NSString *)string;
 + (void)showFailureHUBWithString:(NSString *)string;
 + (void)showWarningHUBWithString:(NSString *)string;

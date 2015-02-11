@@ -28,8 +28,8 @@ NSString * const EWPersonDefaultName = @"New User";
 - (void)awakeFromFetch{
     [super awakeFromFetch];
     [self setPrimitiveValue:[NSMutableDictionary new] forKey:EWPersonAttributes.preference];
-    [self setPrimitiveValue:[ImagesCatalog profileSlice] forKey:EWPersonAttributes.profilePic];
-    [self setPrimitiveValue:[[CLLocation alloc] initWithLatitude:0 longitude:0] forKey:EWPersonAttributes.location];
+    //[self setPrimitiveValue:[ImagesCatalog profileSlice] forKey:EWPersonAttributes.profilePic];
+    //[self setPrimitiveValue:[[CLLocation alloc] initWithLatitude:0 longitude:0] forKey:EWPersonAttributes.location];
 }
 
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{

@@ -319,7 +319,6 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 
 - (void)onProgressTimer {
     CGFloat progress = self.playingProgress;
-    DDLogVerbose(@"on Timer update: %@", @(progress));
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kEWAVManagerDidUpdateProgressNotification object:nil userInfo:@{@"progress": @(progress), @"media" : _media ? :[NSNull null]}];
 }

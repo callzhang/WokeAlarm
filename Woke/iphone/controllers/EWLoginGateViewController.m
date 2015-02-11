@@ -9,6 +9,7 @@
 #import "EWLoginGateViewController.h"
 #import "EWAccountManager.h"
 #import "EWErrorManager.h"
+#import "EWUIUtil.h"
 
 @interface EWLoginGateViewController ()
 
@@ -27,14 +28,20 @@
 }
 
 - (IBAction)onContinueWithFacebookButton:(id)sender {
+    [self.view showLoopingWithTimeout:0];
     [[EWAccountManager shared] loginFacebookCompletion:^(NSError *error) {
         if (error) {
             [EWErrorManager handleError:error];
+            [self.view showFailureNotification:[NSString stringWithFormat:@"Failed to log in: %@", error.localizedDescription]];
         }
         else {
             [[EWAccountManager shared] updateFromFacebookCompletion:^(NSError *error2) {
                 if (error2) {
+                    [self.view showFailureNotification:[NSString stringWithFormat:@"Failed to log in: %@", error2.localizedDescription]];
                     [EWErrorManager handleError:error2];
+                } else {
+                    //show success view on top view
+                    [EWUIUtil showSuccessHUBWithString:@"Logged in"];
                 }
             }];
             
@@ -46,6 +53,13 @@
 - (IBAction)unwindToLoginGateViewController:(UIStoryboardSegue *)segue {
     if ([segue.identifier isEqualToString:@"unwindFromMenuLogout"]) {
         [[EWAccountManager shared] logout];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    UIViewController *toViewController = segue.destinationViewController;
+    if (!EWAccountManager.isLoggedIn) {
+        [toViewController.view showLoopingWithTimeout:0];
     }
 }
 @end

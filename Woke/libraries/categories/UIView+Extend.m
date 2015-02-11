@@ -15,6 +15,9 @@
 @implementation UIView(HUD)
 
 - (JGProgressHUD *)showNotification:(NSString *)alert WithStyle:(HUDStyle)style audoHide:(float)timeout{
+    for (JGProgressHUD *hud in [JGProgressHUD allProgressHUDsInView:self]) {
+        [hud dismiss];
+    }
     JGProgressHUD *hud = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
     
     dispatch_async(dispatch_get_main_queue(), ^{
