@@ -132,6 +132,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 	
     __block NSArray *wakees;
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+        
 		NSError *error;
         wakees = [self getWakeesInContext:localContext error:&error];
 		if (error) DDLogError(@"Failed to get wakees: %@", error);
@@ -154,6 +155,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }];
 }
 
+//worker
 - (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
 	//check
 	if (self.isFetchingWakees) {
@@ -170,7 +172,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     //check my location
     if (!localMe.location) {
         //get a fake coordinate
-		DDLogWarn(@"Location unknown, abord getting wakees!");
+		DDLogError(@"Location unknown, abord getting wakees!");
 		return nil;
     }
     
@@ -278,6 +280,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
         }
         else {
             [EWUIUtil showFailureHUBWithString:@"Failed"];
+            completion(EWFriendshipStatusUnknown, error);
         }
     }];
     

@@ -14,16 +14,22 @@
 @dynamic friendshipTimeline;
 
 // Custom logic goes here.
+
+- (void)awakeFromInsert{
+    [super awakeFromInsert];
+    self.facebookRelatedUsers = [NSMutableArray new];
+    self.facebookFriends = [NSMutableDictionary new];
+    self.addressBookFriends = [NSMutableArray new];
+    self.addressBookRelatedUsers = [NSMutableArray new];
+}
+
+
 + (instancetype)newSocialForPerson:(EWPerson *)person{
 	EWSocial *sg = [EWSocial MR_createEntityInContext:person.managedObjectContext];
 	sg.updatedAt = [NSDate date];
 	
 	//data
 	sg.owner = person;
-    sg.facebookRelatedUsers = [NSMutableArray new];
-    sg.facebookFriends = [NSMutableDictionary new];
-    sg.addressBookFriends = [NSMutableArray new];
-    sg.addressBookRelatedUsers = [NSMutableArray new];
     
 	//save
 	[sg save];

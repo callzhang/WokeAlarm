@@ -25,6 +25,13 @@ NSString * const EWPersonDefaultName = @"New User";
 @synthesize name;
 
 #pragma mark - Create
+- (void)awakeFromFetch{
+    [super awakeFromFetch];
+    [self setPrimitiveValue:[NSMutableDictionary new] forKey:EWPersonAttributes.preference];
+    [self setPrimitiveValue:[ImagesCatalog profileSlice] forKey:EWPersonAttributes.profilePic];
+    [self setPrimitiveValue:[[CLLocation alloc] initWithLatitude:0 longitude:0] forKey:EWPersonAttributes.location];
+}
+
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{
     EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
     if (user.isNew || !user[@"name"]) {
@@ -108,15 +115,4 @@ NSString * const EWPersonDefaultName = @"New User";
     return self;
 }
 
-- (void)awakeFromFetch{
-    if([NSThread isMainThread] && self.isMe){
-        [self.KVOController observe:self keyPath:EWPersonRelationships.socialGraph options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id observer, id object, NSDictionary *change) {
-            EWSocial *oldS = change[NSKeyValueChangeOldKey];
-            EWSocial *newS = change[NSKeyValueChangeNewKey];
-            if (oldS != newS && newS == nil) {
-                DDLogWarn(@"Social just changed from %@ to %@", oldS, newS);
-            }
-        }];
-    }
-}
 @end

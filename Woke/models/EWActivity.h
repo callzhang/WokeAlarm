@@ -8,7 +8,7 @@ extern const struct EWActivityTypes {
 } EWActivityTypes;
 
 @interface EWActivity : _EWActivity {}
-@property (nonatomic, strong) NSArray *mediaIDs;
+@property (nonatomic, strong) NSMutableArray *mediaIDs;
 
 // add
 + (EWActivity *)newActivity;

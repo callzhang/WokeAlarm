@@ -36,7 +36,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWPersonManager);
 //- (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
 - (EWPerson *)getPersonByServerID:(NSString *)ID;
 - (void)getWakeesInBackgroundWithCompletion:(VoidBlock)block;
-
+- (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context error:(NSError **)error;
 /**
  *  The main method to get next person to wake up
  *

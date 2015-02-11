@@ -12,6 +12,8 @@
 #import "NSManagedObject+MagicalFinders.h"
 #import "EWDefines.h"
 #import "EWPerson+Woke.h"
+#import "EWSocial.h"
+#import "EWFriendRequest.h"
 
 @interface FriendshipTest : XCTestCase
 
@@ -33,11 +35,19 @@
     // This is an example of a functional test case.
     XCTAssert(YES, @"Pass");
 }
-
+≥
 - (void)testSendFriendshipRequest {
     XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     NSMutableArray *people = [EWPerson MR_findAll].mutableCopy;
+    if (!people.count) {
+        [EWPerson me].location = [[CLLocation alloc] initWithLatitude:42 longitude:-71];
+        people = [[EWPersonManager shared] getWakeesInContext:mainContext error:NULL].copy;
+    }
     [people removeObject:[EWPerson me]];
+    for (EWFriendRequest *request in [EWPerson me].friendshipRequestReceived) {
+        EWPerson *receiver = request.sender;
+        [people removeObject:receiver];
+    }
     EWPerson *person = people[arc4random_uniform(people.count)];
     [[EWPersonManager shared] requestFriend:person completion:^(EWFriendshipStatus status, NSError *error) {
         if (status == EWFriendshipStatusSent) {
@@ -50,11 +60,14 @@
                     XCTAssert([[EWPerson myFriends] containsObject:person], @"Person not in my friends");
                     [expectation fulfill];
                 }
+                else {
+                    NSLog(@"Failed to accept friend %@", error);
+                }
             }];
             
         } else {
-            NSLog(@"Failed to request friend: %d", status);
-			[expectation fulfill];
+            NSLog(@"Failed to request friend: %ld", status);
+            XCTAssert(NO, @"friend request not successful");
         }
     }];
     

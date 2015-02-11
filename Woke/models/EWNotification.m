@@ -18,12 +18,17 @@
 @dynamic lastLocation;
 @dynamic importance;
 
+- (void)awakeFromInsert{
+    [super awakeFromInsert];
+    self.updatedAt = [NSDate date];
+    self.importance = 0;
+}
+
 + (EWNotification *)newNotification {
     EWAssertMainThread
     EWNotification *notice = [EWNotification MR_createEntity];
-    notice.updatedAt = [NSDate date];
+    
     notice.owner = [EWPerson me];
-    notice.importance = 0;
     return notice;
 }
 

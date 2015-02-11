@@ -10,10 +10,9 @@
 
 @implementation EWServerObject
 - (void)awakeFromInsert{
-    if (!self.syncInfo) {
-        self.syncInfo = [NSMutableDictionary new];
-        self.createdAt = [NSDate date];
-    }
+    [self setPrimitiveValue:[NSMutableDictionary new] forKey:EWServerObjectAttributes.syncInfo];
+    [self setPrimitiveValue:[NSDate date] forKey:EWServerObjectAttributes.createdAt];
+    //[self setPrimitiveValue:[NSDate date] forKey:EWServerObjectAttributes.updatedAt];
 }
 
 

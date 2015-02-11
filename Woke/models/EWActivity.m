@@ -16,6 +16,11 @@ const struct EWActivityTypes EWActivityTypes = {
 @implementation EWActivity
 @dynamic mediaIDs;
 
+- (void)awakeFromInsert{
+    [super awakeFromInsert];
+    [self setPrimitiveValue:[NSMutableArray array] forKey:EWActivityAttributes.mediaIDs];
+}
+
 + (EWActivity *)newActivity{
     EWActivity *activity = [EWActivity MR_createEntity];
     activity.owner = [EWPerson me];
