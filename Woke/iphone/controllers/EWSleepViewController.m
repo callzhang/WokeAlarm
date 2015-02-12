@@ -67,8 +67,7 @@
         EWSetStatusViewController *viewController = [[segue.destinationViewController viewControllers] firstObject];
         viewController.person = [EWPerson me];
     }
-    else if ([segue.identifier isEqualToString:@"toSleepModeView"]){
-        //[[EWWakeUpManager sharedInstance] handleSleepTimerEvent:nil];
+    else if ([segue.destinationViewController isKindOfClass:[EWSleepingViewController class]]){
         [[EWWakeUpManager sharedInstance] sleep:nil];
     }
 }
@@ -77,13 +76,5 @@
     if ([sender.identifier isEqualToString:@"unwindFromStatusViewController"]) {
         
     }
-}
-- (IBAction)startSleeping:(id)sender {
-    [[EWWakeUpManager sharedInstance] sleep:nil];
-    EWSleepingViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWSleepingViewController class])];
-    EWBaseNavigationController *nav = [(EWBaseNavigationController *)[EWBaseNavigationController alloc] initWithRootViewController:vc];
-    [nav addNavigationButtons];
-    [nav setNavigationBarTransparent:YES];
-    [self.navigationController presentViewControllerWithBlurBackground:nav];
 }
 @end

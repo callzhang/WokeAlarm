@@ -253,14 +253,19 @@
     NSError *err;
     PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:self.serverClassName ID:self.serverID error:&err];
     if (!object){
-        DDLogError(@"Failed to find PO for MO(%@) with error: %@", self.serverID, err.description);
+        DDLogError(@"Failed to find PO for MO %@(%@) with error: %@", self.entity.name, self.serverID, err.description);
         return nil;
     }
     
     //update value
     if ([object isNewerThanMOInContext:self.managedObjectContext]) {
-		DDLogWarn(@"Getting PO(%@) newer than SO %@(%@)", object.objectId, self.entity.name, self.serverID);
-		//[object updateFromManagedObject:self];
+
+        //if MO is dirty, we can't simply assign values to it
+        if (!self.hasChanges) {
+            [self assignValueFromParseObject:object];
+        }else {
+            DDLogWarn(@"%s PO(%@) newer than SO %@(%@)", __func__, object.objectId, self.entity.name, self.serverID);
+        }
     }
     return object;
 }

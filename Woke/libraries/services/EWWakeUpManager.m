@@ -66,8 +66,13 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 }
 
 #pragma mark - Handle events
+- (void)startToWakeUp {
+    [self startToWakeUpWithAlarm:[EWPerson myCurrentAlarm]];
+}
+
 - (void)startToWakeUpWithAlarm:(EWAlarm *)alarm {
     EWAssertMainThread
+    NSParameterAssert(self.delegate);
     if (![self.delegate wakeupManager:self shouldWakeUpWithAlarm:alarm]) {
         return;
     }
@@ -105,10 +110,6 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:nil];
 }
 
-- (void)startToWakeUp {
-    [self startToWakeUpWithAlarm:[EWPerson myCurrentAlarm]];
-}
-
 - (void)sleep:(UILocalNotification *)notification{
     //we use local alarm ID because when scheduling sleep notification, alarm could be be available
     NSString *alarmID = notification.userInfo[kLocalAlarmID];
@@ -144,6 +145,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
         [activity save];
         
         //start check sleep timer
+        //FIXME: [Zitao] why don't we have alarm timer
         //[self alarmTimerCheck];//No need to check, sleepVC will check alarm time
     }
 }
@@ -179,7 +181,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 #pragma mark - Utility
 + (BOOL)isRootPresentingWakeUpView{
     //determin if WakeUpViewController is presenting
-    UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController.presentedViewController;
+    UIViewController *vc = [UIWindow mainWindow].rootViewController.presentedViewController;
     if ([NSStringFromClass([vc class]) isEqualToString:@"EWWakeUpViewController"]) {
         return YES;
     }else if ([NSStringFromClass([vc class]) isEqualToString:@"EWPreWakeViewController"]){

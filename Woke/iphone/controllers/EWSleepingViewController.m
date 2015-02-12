@@ -19,6 +19,8 @@
 #import "EWWakeUpChildViewController.h"
 #import "EWMediaManager.h"
 #import "UIViewController+Blur.h"
+#import "EWPostWakeUpViewController.h"
+#import "EWWakeUpManager.h"
 
 NSString *kShowWakeUpChildVCNotification = @"kShowWakeUpChildVCNotification";
 NSString *kHideWakeUpChildVCNotification = @"kHideWakeUpChildVCNotification";
@@ -67,6 +69,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     }];
     
     @weakify(self);
+    self.timeChildViewController.topLabelLine1.text = [NSString stringWithFormat:@"It is now %@.", [[NSDate date] mt_stringFromDateWithFormat:@"hh:mma" localized:YES]];
     self.timerDisposable = [[RACSignal interval:1 onScheduler:[RACScheduler mainThreadScheduler]] subscribeNext:^(NSDate *date) {
         @strongify(self);
         self.timeChildViewController.topLabelLine1.text = [NSString stringWithFormat:@"It is now %@.", [date mt_stringFromDateWithFormat:@"hh:mma" localized:YES]];
@@ -117,5 +120,11 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 
 - (IBAction)more:(id)sender{
     //
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.destinationViewController isKindOfClass:[EWPostWakeUpViewController class]]) {
+        [[EWWakeUpManager sharedInstance] startToWakeUp];
+    }
 }
 @end

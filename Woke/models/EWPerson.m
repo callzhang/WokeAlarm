@@ -115,4 +115,10 @@ NSString * const EWPersonDefaultName = @"New User";
     return self;
 }
 
+- (NSString *)facebookID{
+    PFObject *user = self.parseObject;
+    NSString *ID = [user valueForKeyPath:@"authData.facebook.id"];
+    return ID;
+}
+
 @end

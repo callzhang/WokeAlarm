@@ -45,7 +45,6 @@
 		091C67601A3523AF0091B8A6 /* EWPostWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67531A3523AF0091B8A6 /* EWPostWakeUpView.xib */; };
 		091C67621A3523AF0091B8A6 /* EWShakeProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67561A3523AF0091B8A6 /* EWShakeProgressView.m */; };
 		091C67631A3523AF0091B8A6 /* EWSleepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67571A3523AF0091B8A6 /* EWSleepViewController.xib */; };
-		091C67641A3523AF0091B8A6 /* EWWakeUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091C67581A3523AF0091B8A6 /* EWWakeUpView.xib */; };
 		091C67671A3523C40091B8A6 /* EWAlarmTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C67661A3523C40091B8A6 /* EWAlarmTableViewCell.m */; };
 		09229C981A6317F8008061E5 /* EWPreWakeupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09229C971A6317F8008061E5 /* EWPreWakeupViewController.m */; };
 		09229C9B1A6318BB008061E5 /* EWSleepingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09229C9A1A6318BB008061E5 /* EWSleepingViewController.m */; };
@@ -90,7 +89,6 @@
 		096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB031A1972B800B4CBFF /* EWRecordingViewController.m */; };
 		096AAB151A1972B800B4CBFF /* EWRingtoneSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB051A1972B800B4CBFF /* EWRingtoneSelectionViewController.m */; };
 		096AAB161A1972B800B4CBFF /* EWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB071A1972B800B4CBFF /* EWSettingsViewController.m */; };
-		096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0B1A1972B800B4CBFF /* EWWakeUpViewController.m */; };
 		096AAB191A1972B800B4CBFF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB0D1A1972B800B4CBFF /* ViewController.m */; };
 		096EEFC41A75AF5100A010CA /* EWWakeupChildViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 096EEFC31A75AF5100A010CA /* EWWakeupChildViewModel.m */; };
 		0971F73F1A71EA5B005A7709 /* EWDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0971F73E1A71EA5B005A7709 /* EWDefines.m */; };
@@ -1457,7 +1455,6 @@
 				9B81397B1A15D65900F1A56C /* PLCameraSheetDoneButton@2x.png in Resources */,
 				9BF1815D1A35222F00D25DBA /* Autumn Spring.caf in Resources */,
 				9B81397C1A15D65900F1A56C /* PLCameraSheetDoneButtonPressed.png in Resources */,
-				091C67641A3523AF0091B8A6 /* EWWakeUpView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1700,7 +1697,6 @@
 				0912BEC31A7EC81B004DA529 /* EWProfileViewController.m in Sources */,
 				09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */,
 				096AAADD1A195A3900B4CBFF /* EWAlarmManager.m in Sources */,
-				096AAB181A1972B800B4CBFF /* EWWakeUpViewController.m in Sources */,
 				090C0BB31A80649C0006B01C /* EWAddFriendsFacebookChildViewController.m in Sources */,
 				091C67431A351F060091B8A6 /* EWStyleController.m in Sources */,
 				091C67621A3523AF0091B8A6 /* EWShakeProgressView.m in Sources */,

@@ -105,7 +105,7 @@
         NSDictionary *dictionary = @{@"type": @"woke", @"rows": array,
                                      @"sectionName": ^{
                                          //TODO, 单复数
-                                         return [NSString stringWithFormat:@"%@ friends on Woke", @(array.count)];
+                                         return [NSString stringWithFormat:@"%@ friend%@ on Woke", @(array.count), array.count>1?@"s":@""];
                                      }, @"showRightButton": @(YES)
                                      };
         self.contactFrinedsOnWoke = dictionary;
