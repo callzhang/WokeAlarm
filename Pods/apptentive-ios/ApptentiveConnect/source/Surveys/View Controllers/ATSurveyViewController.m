@@ -25,7 +25,6 @@
 #define DEBUG_CELL_HEIGHT_PROBLEM 0
 #define kAssociatedQuestionKey ("associated_question")
 
-NSString *const ATInteractionSurveyEventLabelSend = @"send";
 NSString *const ATInteractionSurveyEventLabelCancel = @"cancel";
 
 enum {
@@ -185,12 +184,13 @@ enum {
 		[hud autorelease];
 	}
 	
-	NSDictionary *metricsInfo = [[NSDictionary alloc] initWithObjectsAndKeys:survey.identifier, ATSurveyMetricsSurveyIDKey, [NSNumber numberWithInt:ATSurveyWindowTypeSurvey], ATSurveyWindowTypeKey, [NSNumber numberWithInt:ATSurveyEventTappedSend], ATSurveyMetricsEventKey, nil];
-	
-	[[ATEngagementBackend sharedBackend] engageApptentiveEvent:ATInteractionSurveyEventLabelSend fromInteraction:self.interaction fromViewController:self userInfo:metricsInfo];
+	NSDictionary *metricsInfo = @{ATSurveyMetricsSurveyIDKey: survey.identifier ?: [NSNull null],
+								  ATSurveyWindowTypeKey: @(ATSurveyWindowTypeSurvey),
+								  ATSurveyMetricsEventKey: @(ATSurveyEventTappedSend),
+								  @"interaction_id": self.interaction.identifier ?: [NSNull null],
+								  };
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:ATSurveyDidHideWindowNotification object:nil userInfo:metricsInfo];
-	[metricsInfo release], metricsInfo = nil;
 	
 	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 	
@@ -591,9 +591,14 @@ enum {
 				}
 				
 				// Send notification.
-				NSDictionary *metricsInfo = [[NSDictionary alloc] initWithObjectsAndKeys:survey.identifier, ATSurveyMetricsSurveyIDKey, question.identifier, ATSurveyMetricsSurveyQuestionIDKey, [NSNumber numberWithInt:ATSurveyEventAnsweredQuestion], ATSurveyMetricsEventKey, nil];
+				NSDictionary *metricsInfo = @{ATSurveyMetricsSurveyIDKey:survey.identifier ?: [NSNull null],
+											  ATSurveyMetricsSurveyQuestionIDKey: question.identifier ?: [NSNull null],
+											  ATSurveyMetricsEventKey: @(ATSurveyEventAnsweredQuestion),
+											  @"interaction_id": self.interaction.identifier ?: [NSNull null],
+											  };
+				
 				[[NSNotificationCenter defaultCenter] postNotificationName:ATSurveyDidAnswerQuestionNotification object:nil userInfo:metricsInfo];
-				[metricsInfo release], metricsInfo = nil;
+
 			} else if (question.type == ATSurveyQuestionTypeSingeLine) {
 				ATCellTextView *textView = (ATCellTextView *)[cell viewWithTag:kTextViewTag];
 				[textView becomeFirstResponder];
@@ -705,9 +710,13 @@ enum {
 	
 	// Send notification.
 	if (![sentNotificationsAboutQuestionIDs containsObject:question.identifier]) {
-		NSDictionary *metricsInfo = [[NSDictionary alloc] initWithObjectsAndKeys:survey.identifier, ATSurveyMetricsSurveyIDKey, question.identifier, ATSurveyMetricsSurveyQuestionIDKey, [NSNumber numberWithInt:ATSurveyEventAnsweredQuestion], ATSurveyMetricsEventKey, nil];
+		NSDictionary *metricsInfo = @{ATSurveyMetricsSurveyIDKey: survey.identifier ?: [NSNull null],
+									  ATSurveyMetricsSurveyQuestionIDKey: question.identifier ?: [NSNull null],
+									  ATSurveyMetricsEventKey: @(ATSurveyEventAnsweredQuestion),
+									  @"interaction_id": self.interaction.identifier ?: [NSNull null],
+									  };
+		
 		[[NSNotificationCenter defaultCenter] postNotificationName:ATSurveyDidAnswerQuestionNotification object:nil userInfo:metricsInfo];
-		[metricsInfo release], metricsInfo = nil;
 		
 		[sentNotificationsAboutQuestionIDs addObject:question.identifier];
 	}
@@ -789,12 +798,13 @@ enum {
 }
 
 - (void)cancel:(id)sender {
-	NSDictionary *metricsInfo = [[NSDictionary alloc] initWithObjectsAndKeys:survey.identifier, ATSurveyMetricsSurveyIDKey, [NSNumber numberWithInt:ATSurveyWindowTypeSurvey], ATSurveyWindowTypeKey, [NSNumber numberWithInt:ATSurveyEventTappedCancel], ATSurveyMetricsEventKey, nil];
-	
-	[[ATEngagementBackend sharedBackend] engageApptentiveEvent:ATInteractionSurveyEventLabelCancel fromInteraction:self.interaction fromViewController:self userInfo:metricsInfo];
+	NSDictionary *metricsInfo = @{ATSurveyMetricsSurveyIDKey: survey.identifier ?: [NSNull null],
+								  ATSurveyWindowTypeKey: @(ATSurveyWindowTypeSurvey),
+								  ATSurveyMetricsEventKey: @(ATSurveyEventTappedCancel),
+								  @"interaction_id": self.interaction.identifier ?: [NSNull null],
+								  };
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ATSurveyDidHideWindowNotification object:nil userInfo:metricsInfo];
-	[metricsInfo release], metricsInfo = nil;
 	
 	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }

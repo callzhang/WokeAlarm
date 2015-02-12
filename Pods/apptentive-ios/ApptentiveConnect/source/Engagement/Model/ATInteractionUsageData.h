@@ -11,7 +11,6 @@
 
 @interface ATInteractionUsageData : NSObject
 
-@property (nonatomic, retain) ATInteraction *interaction;
 @property (nonatomic, retain) NSNumber *timeSinceInstallTotal;
 @property (nonatomic, retain) NSNumber *timeSinceInstallVersion;
 @property (nonatomic, retain) NSNumber *timeSinceInstallBuild;
@@ -32,8 +31,7 @@
 @property (nonatomic, retain) NSDictionary *interactionInvokesBuild;
 @property (nonatomic, retain) NSDictionary *interactionInvokesTimeAgo;
 
-- (id)initWithInteraction:(ATInteraction *)interaction;
-+ (ATInteractionUsageData *)usageDataForInteraction:(ATInteraction *)interaction;
++ (ATInteractionUsageData *)usageData;
 
 - (NSDictionary *)predicateEvaluationDictionary;
 

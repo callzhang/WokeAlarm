@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class ATInteractionUsageData;
 
@@ -18,7 +19,9 @@ typedef NS_ENUM(NSInteger, ATInteractionType){
 	ATInteractionTypeFeedbackDialog,
 	ATInteractionTypeMessageCenter,
 	ATInteractionTypeAppStoreRating,
-	ATInteractionTypeSurvey
+	ATInteractionTypeSurvey,
+	ATInteractionTypeTextModal,
+	ATInteractionTypeNavigateToLink,
 };
 
 @interface ATInteraction : NSObject <NSCoding, NSCopying>
@@ -26,19 +29,20 @@ typedef NS_ENUM(NSInteger, ATInteractionType){
 @property (nonatomic, assign) NSInteger priority;
 @property (nonatomic, copy) NSString *type;
 @property (nonatomic, retain) NSDictionary *configuration;
-@property (nonatomic, retain) NSDictionary *criteria;
 @property (nonatomic, copy) NSString *version;
+@property (nonatomic, copy) NSString *vendor;
 
 + (ATInteraction *)interactionWithJSONDictionary:(NSDictionary *)jsonDictionary;
 
+// Used to engage local and app events
++ (ATInteraction *)localAppInteraction;
++ (ATInteraction *)apptentiveAppInteraction;
+
 - (ATInteractionType)interactionType;
 
-- (BOOL)isValid;
+- (NSString *)codePointForEvent:(NSString *)event;
 
-- (ATInteractionUsageData *)usageData;
-- (BOOL)criteriaAreMet;
-- (BOOL)criteriaAreMetForUsageData:(ATInteractionUsageData *)usageData;
+- (BOOL)engage:(NSString *)event fromViewController:(UIViewController *)viewController;
+- (BOOL)engage:(NSString *)event fromViewController:(UIViewController *)viewController userInfo:(NSDictionary *)userInfo;
 
-- (NSPredicate *)criteriaPredicate;
-+ (NSPredicate *)predicateForInteractionCriteria:(NSDictionary *)interactionCriteria hasError:(BOOL *)hasError;
 @end

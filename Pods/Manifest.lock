@@ -1,31 +1,31 @@
 PODS:
-  - AFNetworking (2.4.1):
+  - AFNetworking (2.5.1):
+    - AFNetworking/NSURLConnection (= 2.5.1)
+    - AFNetworking/NSURLSession (= 2.5.1)
+    - AFNetworking/Reachability (= 2.5.1)
+    - AFNetworking/Security (= 2.5.1)
+    - AFNetworking/Serialization (= 2.5.1)
+    - AFNetworking/UIKit (= 2.5.1)
+  - AFNetworking/NSURLConnection (2.5.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.1)
+  - AFNetworking/Security (2.5.1)
+  - AFNetworking/Serialization (2.5.1)
+  - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.4.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.4.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.4.1)
-  - AFNetworking/Security (2.4.1)
-  - AFNetworking/Serialization (2.4.1)
-  - AFNetworking/UIKit (2.4.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-  - apptentive-ios (1.6.1):
-    - apptentive-ios/arc-files
-  - apptentive-ios/arc-files (1.6.1)
+  - apptentive-ios (1.7.1):
+    - apptentive-ios/arc-files (= 1.7.1)
+  - apptentive-ios/arc-files (1.7.1)
   - APTimeZones (1.1)
   - BlocksKit (2.2.5):
-    - BlocksKit/All
+    - BlocksKit/All (= 2.2.5)
   - BlocksKit/All (2.2.5):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
@@ -40,20 +40,23 @@ PODS:
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
   - Bolts (1.1.3)
-  - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (1.9.2)
-  - CocoaLumberjack/Extensions (1.9.2):
+  - CocoaLumberjack (2.0.0-rc):
+    - CocoaLumberjack/Default (= 2.0.0-rc)
+    - CocoaLumberjack/Extensions (= 2.0.0-rc)
+  - CocoaLumberjack/Core (2.0.0-rc)
+  - CocoaLumberjack/Default (2.0.0-rc):
     - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.0.0-rc):
+    - CocoaLumberjack/Default
   - CrashlyticsFramework (2.2.5.2)
-  - CrashlyticsLumberjack (1.0.2):
-    - CocoaLumberjack/Core (~> 1.9)
+  - CrashlyticsLumberjack (2.0.0-rc2):
+    - CocoaLumberjack/Default (>= 2.0.0-rc)
   - DACircularProgress (2.2.0)
   - dyci (0.1.5.6):
-    - dyci/Injections
+    - dyci/Injections (= 0.1.5.6)
   - dyci/Injections (0.1.5.6)
   - Expecta (0.3.1)
-  - Facebook-iOS-SDK (3.20.0):
+  - Facebook-iOS-SDK (3.23.0):
     - Bolts (~> 1.0)
   - GKImagePicker (0.0.1)
   - GPUImage (0.1.6)
@@ -65,22 +68,22 @@ PODS:
   - KVOController (1.0.3)
   - KZAsserts (1.0)
   - KZBootstrap (0.5.3):
-    - KZBootstrap/Core
+    - KZBootstrap/Core (= 0.5.3)
   - KZBootstrap/Core (0.5.3):
     - KZAsserts (~> 1.0)
   - libextobjc (0.4.1):
-    - libextobjc/EXTADT
-    - libextobjc/EXTConcreteProtocol
-    - libextobjc/EXTKeyPathCoding
-    - libextobjc/EXTNil
-    - libextobjc/EXTSafeCategory
-    - libextobjc/EXTScope
-    - libextobjc/EXTSelectorChecking
-    - libextobjc/EXTSynthesize
-    - libextobjc/NSInvocation+EXT
-    - libextobjc/NSMethodSignature+EXT
-    - libextobjc/RuntimeExtensions
-    - libextobjc/UmbrellaHeader
+    - libextobjc/EXTADT (= 0.4.1)
+    - libextobjc/EXTConcreteProtocol (= 0.4.1)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1)
+    - libextobjc/EXTNil (= 0.4.1)
+    - libextobjc/EXTSafeCategory (= 0.4.1)
+    - libextobjc/EXTScope (= 0.4.1)
+    - libextobjc/EXTSelectorChecking (= 0.4.1)
+    - libextobjc/EXTSynthesize (= 0.4.1)
+    - libextobjc/NSInvocation+EXT (= 0.4.1)
+    - libextobjc/NSMethodSignature+EXT (= 0.4.1)
+    - libextobjc/RuntimeExtensions (= 0.4.1)
+    - libextobjc/UmbrellaHeader (= 0.4.1)
   - libextobjc/EXTADT (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/EXTConcreteProtocol (0.4.1):
@@ -104,16 +107,13 @@ PODS:
   - libextobjc/RuntimeExtensions (0.4.1)
   - libextobjc/UmbrellaHeader (0.4.1)
   - MagicalRecord (2.3.0-beta.5):
-    - MagicalRecord/Core
+    - MagicalRecord/Core (= 2.3.0-beta.5)
   - MagicalRecord/Core (2.3.0-beta.5)
-  - MTDates (0.14.3)
-  - MYBlurIntroductionView (1.0.3)
+  - MTDates (1.0.0)
   - NYXImagesKit (2.3)
   - OCMock (3.1.2)
   - Parse (1.6.2):
     - Bolts (~> 1.1)
-  - ParseCrashReporting (1.6.2):
-    - Parse (~> 1.6.2)
   - ParseFacebookUtils (1.6.2):
     - Facebook-iOS-SDK (~> 3.20)
     - Parse (~> 1.6.2)
@@ -121,9 +121,8 @@ PODS:
     - Parse (~> 1.6)
     - ParseFacebookUtils (~> 1.6)
   - pop (1.0.7)
-  - Reachability (3.1.1)
   - ReactiveCocoa (2.4.4):
-    - ReactiveCocoa/UI
+    - ReactiveCocoa/UI (= 2.4.4)
   - ReactiveCocoa/Core (2.4.4):
     - ReactiveCocoa/no-arc
   - ReactiveCocoa/no-arc (2.4.4)
@@ -138,39 +137,35 @@ PODS:
   - WellCached (0.1.1)
 
 DEPENDENCIES:
-  - AFNetworking (~> 2.4.1)
-  - apptentive-ios (~> 1.6.0)
-  - APTimeZones
+  - AFNetworking (~> 2.5.1)
+  - apptentive-ios (~> 1.7)
+  - APTimeZones (~> 1.1)
   - BlocksKit (~> 2.2.5)
-  - CocoaLumberjack (~> 1.9.2)
-  - CrashlyticsFramework (~> 2.2.5.1)
-  - CrashlyticsLumberjack (~> 1.0.2)
+  - CocoaLumberjack (= 2.0.0-rc)
+  - CrashlyticsFramework (~> 2.2.5.2)
+  - CrashlyticsLumberjack (= 2.0.0-rc2)
   - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
-  - Facebook-iOS-SDK (~> 3.20.0)
-  - GKImagePicker
+  - Facebook-iOS-SDK (~> 3.23)
+  - GKImagePicker (~> 0.0)
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
-  - JGProgressHUD (~> 1.2.2)
+  - JGProgressHUD (~> 1.2)
   - KVOController (~> 1.0.3)
   - KZBootstrap (~> 0.5.2)
   - libextobjc (~> 0.4.1)
   - MagicalRecord (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
-  - MTDates (~> 0.14.3)
-  - MYBlurIntroductionView (~> 1.0)
+  - MTDates (~> 1.0)
   - NYXImagesKit (~> 2.3)
   - OCMock (~> 3.1.1)
   - Parse
-  - ParseCrashReporting
   - ParseUI
-  - Reachability (~> 3.1.1)
   - ReactiveCocoa (~> 2.4)
   - ReactiveViewModel (~> 0.3)
-  - RHAddressBook (~> 1.1.1)
-  - RHAddressBook (~> 1.2)
+  - RHAddressBook (~> 1.1)
   - Tweaks (~> 1.1.0)
   - VBFPopFlatButton (~> 0.0.5)
-  - WellCached
+  - WellCached (~> 0.1)
 
 EXTERNAL SOURCES:
   dyci:
@@ -179,19 +174,27 @@ EXTERNAL SOURCES:
     :git: https://github.com/magicalpanda/MagicalRecord
     :tag: v2.3.0-beta.5
 
+CHECKOUT OPTIONS:
+  dyci:
+    :commit: c92ddfb809518fef1f4555fc8f9ab623e9a95b98
+    :git: https://github.com/DyCI/dyci-main.git
+  MagicalRecord:
+    :git: https://github.com/magicalpanda/MagicalRecord
+    :tag: v2.3.0-beta.5
+
 SPEC CHECKSUMS:
-  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
-  apptentive-ios: 930b98bb3d43dc05e8479e854d5cbde51861cf1d
+  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
+  apptentive-ios: 0b24c0246e195f3dfd20659c87216ae0c874030a
   APTimeZones: 887a7b5a7abd4a05fcc4de3ff7427d5248becdaf
   BlocksKit: 4439e7f30a9f90743462ca63545a15c1f4304cef
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
-  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
+  CocoaLumberjack: 6186e27827fc574b50b16c10102fcc591437f06c
   CrashlyticsFramework: 4e91082f3019bea7e718e1b67b0a3b56729dbc5d
-  CrashlyticsLumberjack: 192a08e07648e4e09d44052356b53ab839cc8a1b
+  CrashlyticsLumberjack: d41d1043ceee3312f546242e8bd3ee0ec22e39b1
   DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
   dyci: 63f19224ff515c438e26387546c9301af917953c
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
-  Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
+  Facebook-iOS-SDK: 3d65f685348b789e46a9aacf92bfa85b60b63755
   GKImagePicker: 6039f7bf8d517eed0f7583af123c4422784e6c81
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: 9639f7c57bdf942dc4e214ff9d8108e08ebd3f27
@@ -201,16 +204,13 @@ SPEC CHECKSUMS:
   KZBootstrap: 353e1e3788dbbf18a173fdc20a744f3c39200b72
   libextobjc: d6146fce3ebea986b7f75fcb4c967639200b88b0
   MagicalRecord: edcc27277d4c15874cc565fb5d91576c146cb2f1
-  MTDates: 947c49f09b174e38dcefbd2ba3bf8a7aa8419d33
-  MYBlurIntroductionView: 6caf60805eaa555538aba9e2615820fd6f07cd23
+  MTDates: e04c9433bf5f1d5cb55a1862ec018a01b5da75c3
   NYXImagesKit: 1c9f228ae78fab475d267b3b3a1308e0fba11731
   OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
   Parse: 60d65108fe39da77ec16c9e51d74b4d296b21424
-  ParseCrashReporting: eb150f792ea987456f9ae4ccca4bbf9236c8ddd0
   ParseFacebookUtils: 0b86cd67283c60d10e3ddc8427f989f5e60ebbd7
   ParseUI: 00c4c39aab3944d88758b55416581650caa37f89
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
-  Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
   ReactiveCocoa: 31119068e3dde866bd257cf74e1f06b4023bf387
   ReactiveViewModel: 512224f801ea0a603fd394eed0f38bc662b64b9a
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
@@ -218,4 +218,4 @@ SPEC CHECKSUMS:
   VBFPopFlatButton: 79ca72185b76c2dff8861263118a8c47ef1c1043
   WellCached: d139993bce456f14c12af349586cfd50f77c1d5c
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0

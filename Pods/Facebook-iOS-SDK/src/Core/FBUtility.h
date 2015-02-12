@@ -19,6 +19,7 @@
 
 #import "FBFetchedAppSettings.h"
 #import "FBLogger.h"
+#import "FBSDKMacros.h"
 
 @class FBRequest;
 @class FBSession;
@@ -40,6 +41,17 @@ typedef NS_ENUM(NSInteger, FBIOSVersion) {
 
   FBIOSVersionCount
 };
+
+typedef NS_ENUM(NSUInteger, FBTriStateBOOL) {
+    FBTriStateBOOLValueNO = 0,
+    FBTriStateBOOLValueYES,
+    FBTriStateBOOLValueUnknown
+};
+
+FBSDK_EXTERN FBTriStateBOOL FBTriStateBOOLFromBOOL(BOOL value);
+FBSDK_EXTERN BOOL BOOLFromFBTriStateBOOL(FBTriStateBOOL value, BOOL defaultValue);
+
+FBSDK_EXTERN BOOL FBCheckObjectIsEqual(NSObject *a, NSObject *b);
 
 @interface FBUtility : NSObject
 
@@ -84,18 +96,17 @@ typedef NS_ENUM(NSInteger, FBIOSVersion) {
 
 + (void)fetchAppSettings:(NSString *)appID
                 callback:(void (^)(FBFetchedAppSettings *, NSError *))callback;
-// Only returns nil if no settings have been fetched; otherwise it returns the last fetched settings.
-// If the settings are stale, an async request will be issued to fetch them.
-+ (FBFetchedAppSettings *)fetchedAppSettings;
+// Returns fetched settings if they have been fetched and are not stale; otherwise returns nil.
++ (FBFetchedAppSettings *)fetchedAppSettingsIfCurrent;
 
 #pragma mark - IDs / Attribution
 
 + (NSString *)newUUIDString;
 + (NSString *)attributionID;
-+ (NSString *)advertiserOrAnonymousID:(BOOL)accessAdvertisingID;
++ (NSString *)advertiserID;
++ (NSString *)anonymousID;
 + (FBAdvertisingTrackingStatus)advertisingTrackingStatus;
 + (NSMutableDictionary<FBGraphObject> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                        includeAttributionID:(BOOL)includeAttributionID
                                                           implicitEventsOnly:(BOOL)implicitEventsOnly
                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
 

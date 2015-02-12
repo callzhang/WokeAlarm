@@ -32,7 +32,6 @@ static NSString *ATMetricNameFeedbackDialogLaunch = @"feedback_dialog.launch";
 static NSString *ATMetricNameFeedbackDialogCancel = @"feedback_dialog.cancel";
 static NSString *ATMetricNameFeedbackDialogSubmit = @"feedback_dialog.submit";
 
-static NSString *ATMetricNameSurveyLaunch = @"survey.launch";
 static NSString *ATMetricNameSurveyCancel = @"survey.cancel";
 static NSString *ATMetricNameSurveySubmit = @"survey.submit";
 static NSString *ATMetricNameSurveyAnswerQuestion = @"survey.question_response";
@@ -57,7 +56,6 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 - (void)feedbackDidHideWindow:(NSNotification *)notification;
 
 - (ATSurveyEvent)surveyEventTypeFromNotification:(NSNotification *)notification;
-- (void)surveyDidShow:(NSNotification *)notification;
 - (void)surveyDidHide:(NSNotification *)notification;
 - (void)surveyDidAnswerQuestion:(NSNotification *)notification;
 
@@ -103,12 +101,15 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 	[defaults registerDefaults:defaultPreferences];
 }
 
-
 - (void)addMetricWithName:(NSString *)name info:(NSDictionary *)userInfo {
 	[self addMetricWithName:name info:userInfo customData:nil extendedData:nil];
 }
 
 - (void)addMetricWithName:(NSString *)name info:(NSDictionary *)userInfo customData:(NSDictionary *)customData extendedData:(NSArray *)extendedData {
+	[self addMetricWithName:name fromInteraction:nil info:userInfo customData:customData extendedData:extendedData];
+}
+
+- (void)addMetricWithName:(NSString *)name fromInteraction:(ATInteraction *)fromInteraction info:(NSDictionary *)userInfo customData:(NSDictionary *)customData extendedData:(NSArray *)extendedData {
 	if (metricsEnabled == NO) {
 		return;
 	}
@@ -116,9 +117,30 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 	[event setup];
 	event.label = name;
 	
-	if (userInfo) {
-		[event addEntriesFromDictionary:@{@"data": userInfo}];
+	if (fromInteraction) {
+		NSString *interactionID = fromInteraction.identifier;
+		if (interactionID) {
+			[event addEntriesFromDictionary:@{@"interaction_id": interactionID}];
+		}
 	}
+	
+	if (userInfo) {
+		// Surveys and other legacy metrics may pass `interaction_id` as a key in userInfo.
+		// We should pull it out and add it to the top level event, rather than as a child of `data`.
+		// TODO: Surveys should call `engage:` rather than `addMetric...` so this is not needed.
+		NSString *interactionIDFromUserInfo = userInfo[@"interaction_id"];
+		if (interactionIDFromUserInfo) {
+			[event addEntriesFromDictionary:@{@"interaction_id": interactionIDFromUserInfo}];
+			
+			NSMutableDictionary *userInfoMinusInteractionID = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+			[userInfoMinusInteractionID removeObjectForKey:@"interaction_id"];
+
+			[event addEntriesFromDictionary:@{@"data": userInfoMinusInteractionID}];
+		} else {
+			[event addEntriesFromDictionary:@{@"data": userInfo}];
+		}
+	}
+	
 	if (customData) {
 		NSDictionary *customDataDictionary = @{@"custom_data": customData};
 		if ([NSJSONSerialization isValidJSONObject:customDataDictionary]) {
@@ -163,7 +185,6 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedbackDidShowWindow:) name:ATFeedbackDidShowWindowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedbackDidHideWindow:) name:ATFeedbackDidHideWindowNotification object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyDidShow:) name:ATSurveyDidShowWindowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyDidHide:) name:ATSurveyDidHideWindowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyDidAnswerQuestion:) name:ATSurveyDidAnswerQuestionNotification object:nil];
 		
@@ -239,7 +260,7 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 @implementation ApptentiveMetrics (Private)
 - (void)addLaunchMetric {
 	@autoreleasepool {
-		[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelLaunch userInfo:nil];
+		[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelLaunch];
 	}
 }
 
@@ -299,22 +320,19 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 	return event;
 }
 
-- (void)surveyDidShow:(NSNotification *)notification {
-	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
-	NSString *surveyID = [[notification userInfo] objectForKey:ATSurveyMetricsSurveyIDKey];
-	if (surveyID != nil) {
-		[info setObject:surveyID forKey:@"id"];
-	}
-	[self addMetricWithName:ATMetricNameSurveyLaunch info:info];
-	[info release], info = nil;
-}
-
 - (void)surveyDidHide:(NSNotification *)notification {
 	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+	
 	NSString *surveyID = [[notification userInfo] objectForKey:ATSurveyMetricsSurveyIDKey];
 	if (surveyID != nil) {
 		[info setObject:surveyID forKey:@"id"];
 	}
+	
+	NSString *surveyInteractionID = [[notification userInfo] objectForKey:@"interaction_id"];
+	if (surveyInteractionID) {
+		info[@"interaction_id"] = surveyInteractionID;
+	}
+	
 	ATSurveyEvent eventType = [self surveyEventTypeFromNotification:notification];
 	
 	if (eventType == ATSurveyEventTappedSend) {
@@ -328,14 +346,22 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 
 - (void)surveyDidAnswerQuestion:(NSNotification *)notification {
 	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+	
 	NSString *surveyID = [[notification userInfo] objectForKey:ATSurveyMetricsSurveyIDKey];
-	NSString *questionID = [[notification userInfo] objectForKey:ATSurveyMetricsSurveyQuestionIDKey];
 	if (surveyID != nil) {
 		[info setObject:surveyID forKey:@"survey_id"];
 	}
+	
+	NSString *questionID = [[notification userInfo] objectForKey:ATSurveyMetricsSurveyQuestionIDKey];
 	if (questionID != nil) {
 		[info setObject:questionID forKey:@"id"];
 	}
+	
+	NSString *surveyInteractionID = [[notification userInfo] objectForKey:@"interaction_id"];
+	if (surveyInteractionID) {
+		info[@"interaction_id"] = surveyInteractionID;
+	}
+	
 	ATSurveyEvent eventType = [self surveyEventTypeFromNotification:notification];
 	if (eventType == ATSurveyEventAnsweredQuestion) {
 		[self addMetricWithName:ATMetricNameSurveyAnswerQuestion info:info];
@@ -345,15 +371,15 @@ static NSString *ATMetricNameMessageCenterThankYouClose = @"message_center.thank
 }
 
 - (void)appWillTerminate:(NSNotification *)notification {
-	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelExit userInfo:nil];
+	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelExit];
 }
 
 - (void)appDidEnterBackground:(NSNotification *)notification {
-	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelExit userInfo:nil];
+	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelExit];
 }
 
 - (void)appWillEnterForeground:(NSNotification *)notification {
-	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelLaunch userInfo:nil];
+	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:ATInteractionAppEventLabelLaunch];
 }
 
 - (void)messageCenterDidLaunch:(NSNotification *)notification {

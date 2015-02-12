@@ -242,18 +242,17 @@ NSString *const ATConnectCustomDeviceDataChangedNotification = @"ATConnectCustom
 
 - (void)openAppStore {
 	if (!self.appID) {
-		ATLogError(@"Cannot open App Store because `[ATConnect sharedConnection.appID` is not set to your app's iTunes App ID.");
+		ATLogError(@"Cannot open App Store because `[ATConnect sharedConnection].appID` is not set to your app's iTunes App ID.");
 		return;
 	}
 	
-	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:@"open_app_store_manually" userInfo:nil];
+	[[ATEngagementBackend sharedBackend] engageApptentiveAppEvent:@"open_app_store_manually"];
 	
 	ATInteraction *appStoreInteraction = [[[ATInteraction alloc] init] autorelease];
 	appStoreInteraction.type = @"AppStoreRating";
 	appStoreInteraction.priority = 1;
 	appStoreInteraction.version = @"1.0.0";
 	appStoreInteraction.identifier = @"OpenAppStore";
-	appStoreInteraction.criteria = @{};
 	appStoreInteraction.configuration = @{@"store_id": self.appID,
 										  @"method": @"app_store"};
 	
@@ -313,11 +312,11 @@ NSString *const ATConnectCustomDeviceDataChangedNotification = @"ATConnectCustom
 }
 
 - (BOOL)engage:(NSString *)event fromViewController:(UIViewController *)viewController {
-	return [[ATEngagementBackend sharedBackend] engageLocalEvent:event fromViewController:viewController];
+	return [self engage:event withCustomData:nil fromViewController:viewController];
 }
 
 - (BOOL)engage:(NSString *)event withCustomData:(NSDictionary *)customData fromViewController:(UIViewController *)viewController {
-	return [[ATEngagementBackend sharedBackend] engageLocalEvent:event userInfo:nil customData:customData extendedData:nil fromViewController:viewController];
+	return [self engage:event withCustomData:customData withExtendedData:nil fromViewController:viewController];
 }
 
 - (BOOL)engage:(NSString *)event withCustomData:(NSDictionary *)customData withExtendedData:(NSArray *)extendedData fromViewController:(UIViewController *)viewController {
@@ -453,17 +452,6 @@ NSString *const ATConnectCustomDeviceDataChangedNotification = @"ATConnectCustom
 	NSString *body = [NSString stringWithFormat:ATLocalizedString(@"Please let us know how to make %@ better for you!", @"Feedback screen body. Parameter is the app name."), [[ATBackend sharedBackend] appName]];
 	NSString *placeholder = ATLocalizedString(@"How can we help? (required)", @"First feedback placeholder text.");
 	[[ATBackend sharedBackend] presentIntroDialogFromViewController:viewController withTitle:title prompt:body placeholderText:placeholder];
-}
-
-
-- (void)presentUpgradeDialogFromViewControllerIfAvailable:(UIViewController *)viewController {
-	NSArray *interactions = [[ATEngagementBackend sharedBackend] interactionsForCodePoint:@"local#app#init"];
-	for (ATInteraction *interaction in interactions) {
-		if ([interaction.type isEqualToString:@"UpgradeMessage"]) {
-			[[ATEngagementBackend sharedBackend] presentUpgradeMessageInteraction:interaction fromViewController:viewController];
-			break;
-		}
-	}
 }
 
 - (void)resetUpgradeData {
