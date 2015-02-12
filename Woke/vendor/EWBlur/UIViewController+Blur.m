@@ -46,7 +46,7 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 
 - (void)dismissBlurViewControllerWithCompletionHandler:(void(^)(void))completion{
 	
-	[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+	//[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 	
 
 	[self dismissViewControllerAnimated:YES completion:completion];

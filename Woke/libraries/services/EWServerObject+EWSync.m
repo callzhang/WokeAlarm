@@ -258,7 +258,7 @@
     }
     
     //update value
-    if ([object isNewerThanMO]) {
+    if ([object isNewerThanMOInContext:self.managedObjectContext]) {
 		DDLogWarn(@"Getting PO(%@) newer than SO %@(%@)", object.objectId, self.entity.name, self.serverID);
 		//[object updateFromManagedObject:self];
     }

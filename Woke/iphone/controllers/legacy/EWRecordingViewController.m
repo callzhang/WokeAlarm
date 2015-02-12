@@ -27,9 +27,10 @@
 #import "EWBackgroundingManager.h"
 #import "EWServer.h"
 #import "EWCollectionPersonCell.h"
+#import "UIViewController+Blur.h"
 #define BUTTONCENTER  CGPointMake(470, EWScreenWidth/2)
 
-@interface EWRecordingViewController (){
+@interface EWRecordingViewController ()<EWBaseViewNavigationBarButtonsDelegate>{
     NSURL *recordingFileUrl;
     CADisplayLink *displayLink;
 }
@@ -69,9 +70,9 @@
     }
 
     //NavigationController
-    //[EWUIUtil addTransparantNavigationBarToViewController:self withLeftItem:nil rightItem:nil];
-    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"BackButton"] style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
-    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    if (!self.navigationItem.leftBarButtonItem) {
+        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    }
 
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
@@ -305,14 +306,13 @@
     }
 }
 
+//delegate
 - (IBAction)close:(id)sender {
     if ([[EWAVManager sharedManager].recorder isRecording]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stop Record Before Close" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        [alert show];
+        [EWUIUtil showWarningHUBWithString:@"Woke is recording"];
     }
     else{
-        //TODO: Zitao: back to Profile View
-//        [self dismissBlurViewControllerWithCompletionHandler:NULL];
+        [self dismissBlurViewControllerWithCompletionHandler:NULL];
     }
 }
 

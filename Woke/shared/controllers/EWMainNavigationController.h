@@ -11,7 +11,6 @@
 @interface EWMainNavigationController : EWBaseNavigationController
 - (UIBarButtonItem *)menuBarButtonItem;
 - (void)toogleMenuCompletion:(VoidBlock)completion;
-
 @end
 
 

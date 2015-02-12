@@ -10,10 +10,9 @@
 #import "EWMainNavigationController.h"
 
 @protocol EWBaseViewNavigationBarButtonsDelegate
-
 - (IBAction)close:(id)sender;
+@optional
 - (IBAction)more:(id)sender;
-
 @end
 
 @interface EWBaseViewController : UIViewController

@@ -9,8 +9,9 @@
 #import "EWSetStatusViewController.h"
 #import "EWPerson.h"
 #import "JGProgressHUD.h"
+#import "UIViewController+Blur.h"
 
-@interface EWSetStatusViewController ()<UITextFieldDelegate>
+@interface EWSetStatusViewController ()<UITextFieldDelegate, EWBaseViewNavigationBarButtonsDelegate>
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *buttonBottomLayoutConstraint;
 @property (weak, nonatomic) IBOutlet UITextField *statusTextField;
 
@@ -42,8 +43,8 @@
     self.buttonBottomLayoutConstraint.constant = keyboardBounds.size.height + 15;
 }
 
-- (IBAction)onCancelBarbuttonItem:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (IBAction)close:(id)sender {
+    [self dismissBlurViewControllerWithCompletionHandler:nil];
 }
 
 - (IBAction)onDoneButton:(id)sender {

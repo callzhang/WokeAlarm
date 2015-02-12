@@ -46,7 +46,6 @@
         if (timeout > 0) {
             [hud dismissAfterDelay:timeout];
         }
-        
 
     });
     return hud;

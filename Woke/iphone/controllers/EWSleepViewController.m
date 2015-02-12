@@ -59,9 +59,6 @@
     RAC(self, timeChildViewController.date) = [RACObserve(self.sleepViewModel, date) distinctUntilChanged];
 }
 
-- (IBAction)onStatusOverlayButton:(id)sender {
-    [self performSegueWithIdentifier:@"toSetStatusController" sender:self];
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     [super prepareForSegue:segue sender:sender];
