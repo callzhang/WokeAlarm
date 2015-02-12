@@ -270,24 +270,26 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 - (void)playSilentSound{
 #if !TARGET_IPHONE_SIMULATOR
-    DDLogVerbose(@"Play silent sound");
     //set up player
     NSArray *soundArray = [backgroundingSound componentsSeparatedByString:@"."];
     NSURL *path = [[NSBundle mainBundle] URLForResource:soundArray.firstObject withExtension:soundArray.lastObject];
     player = [AVPlayer playerWithURL:path];
     [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
     player.volume = 0.1;
-	if (player.status == AVPlayerStatusFailed) {
-		DDLogVerbose(@"!!! AV player not ready to play.");
-	}
 	[player play];
+    
+    if (player.status == AVPlayerStatusFailed) {
+        DDLogVerbose(@"!!! AV player not ready to play.");
+    }else{
+        DDLogVerbose(@"Play silent sound");
+    }
 #endif
 }
 
 
 //register the BACKGROUNDING audio session
 - (void)registerBackgroudingAudioSession{
-	[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+	//[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     
 	NSError *error = nil;
 	//set category
@@ -295,7 +297,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 													withOptions: AVAudioSessionCategoryOptionMixWithOthers
 														  error:&error];
 	if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
-	//[self playSilentSound];
+	[self playSilentSound];
 }
 
 @end

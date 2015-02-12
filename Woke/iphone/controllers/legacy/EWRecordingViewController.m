@@ -43,12 +43,16 @@
     [super viewDidLoad];
     [self initProgressView];
     
-#ifdef  DEBUG
-    [[EWPersonManager shared] nextWakeeWithCompletion:^(EWPerson *person) {
-        self.wakees = @[person];
-        [self.peopleView reloadData];
-    }];
-#endif
+    if (!_wakees || _wakees.count == 0) {
+        DDLogWarn(@"Wakees not set, use random person!");
+        [[EWPersonManager shared] nextWakeeWithCompletion:^(EWPerson *person) {
+            self.wakees = @[person];
+            [self.peopleView reloadData];
+        }];
+    }
+
+    
+
     
     //texts
     self.title = @"Recording";

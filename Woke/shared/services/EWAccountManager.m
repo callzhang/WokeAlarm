@@ -178,6 +178,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             //update with facebook info
             [[EWAccountManager shared] updateUserWithFBData:data];
         }];
+    } else {
+        DDLogInfo(@"Skipped updateing facebook info (last checked: %@)", lastUpdated.date2detailDateString);
     }
 }
 
@@ -651,12 +653,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 			
             [localMe saveToLocal];
         } completion:^(BOOL contextDidSave, NSError *error2) {
-            if (contextDidSave) {
+            if (!error2) {
                 DDLogDebug(@"========> Finished user syncing <=========");
                 [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
                 block(nil);
             }else{
-                DDLogError(@"Failed to sync user: %@", error2.description);
+                DDLogError(@"Failed to save synced user: %@", error2.description);
                 block(error2);
             }
             

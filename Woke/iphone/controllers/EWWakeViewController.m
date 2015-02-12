@@ -13,6 +13,7 @@
 #import "EWAlarm.h"
 #import "EWProfileViewController.h"
 #import "UIViewController+Blur.h"
+#import "EWRecordingViewController.h"
 
 @interface EWWakeViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
@@ -63,6 +64,9 @@
     if ([segue.destinationViewController isKindOfClass:[EWProfileViewController class]]) {
         EWProfileViewController *vc = segue.destinationViewController;
         vc.person = _nextWakee;
+    } else if ([segue.destinationViewController isKindOfClass:[EWRecordingViewController class]]){
+        EWRecordingViewController *vc = segue.destinationViewController;
+        vc.wakees = @[_nextWakee];
     }
 }
 @end

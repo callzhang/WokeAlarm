@@ -83,7 +83,8 @@ NSManagedObjectContext *mainContext;
             [[EWSync sharedInstance] resumeUploadToServer];
             
             //resume refresh MO
-            NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh];
+            NSSet *MOs = [[EWSync sharedInstance] getObjectFromQueue:kParseQueueRefresh].copy;
+            [[EWSync sharedInstance] clearQueue:kParseQueueRefresh];
             for (EWServerObject *MO in MOs) {
                 [MO refreshInBackgroundWithCompletion:^(NSError *error){
                     DDLogInfo(@"%@(%@) refreshed after network resumed: %@", MO.entity.name, MO.serverID, error.description);

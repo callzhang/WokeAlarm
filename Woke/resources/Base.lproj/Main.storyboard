@@ -2699,7 +2699,7 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pka-It-sOi">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="pka-It-sOi">
                                 <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="ZBE-Wm-kaq"/>
@@ -3402,7 +3402,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="pRr-UO-GET"/>
-        <segue reference="d4z-tG-E1i"/>
+        <segue reference="7lF-Wp-60q"/>
         <segue reference="RcX-Qc-C0f"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

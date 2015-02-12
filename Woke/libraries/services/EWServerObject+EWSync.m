@@ -532,10 +532,14 @@
 }
 
 - (void)saveToLocal{
-	if (!self.hasChanges) {
+	if (self.changedKeys.count == 0) {
 		return;
 	}
-    DDLogVerbose(@"MO %@(%@) save to local with changes", self.entity.name, self.serverID);
+    NSMutableString *changedKeys = [NSMutableString stringWithString:@""];
+    for (NSString *key in self.changedKeys) {
+        [changedKeys appendFormat:@"%@ ", key];
+    }
+    DDLogVerbose(@"MO %@(%@) save to local with changes %@", self.entity.name, self.serverID, changedKeys);
     //mark MO as save to local
     if (self.objectID.isTemporaryID) {
         [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
