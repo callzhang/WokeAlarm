@@ -38,7 +38,6 @@ NSString * const EWPersonDefaultName = @"New User";
         DDLogInfo(@"New user signed up, assign default value");
         person.name = kDefaultUsername;
         person.preference = kUserDefaults;
-        person.cachedInfo = [NSDictionary new];
         //person.updatedAt = [NSDate date];
     }
     

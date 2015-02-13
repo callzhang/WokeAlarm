@@ -127,6 +127,12 @@
 + (NSString *)wokeNavMenuName;
 + (UIImage *)wokeNotificationDotRed;
 + (NSString *)wokeNotificationDotRedName;
++ (UIImage *)wokePlaceholderUserProfileImageFemale;
++ (NSString *)wokePlaceholderUserProfileImageFemaleName;
++ (UIImage *)wokePlaceholderUserProfileImageMale;
++ (NSString *)wokePlaceholderUserProfileImageMaleName;
++ (UIImage *)wokePlaceholderUserProfileImageOther;
++ (NSString *)wokePlaceholderUserProfileImageOtherName;
 + (UIImage *)wokeRectangleDisabled;
 + (NSString *)wokeRectangleDisabledName;
 + (UIImage *)wokeRectangleNormal;

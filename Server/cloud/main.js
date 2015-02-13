@@ -551,8 +551,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
       promises.push(saveMe());
     }else{
       //client user is newer, return
-      console.log("User is up to date");
-      response.success({});
+      console.log("User is up to date, skip user");
     }
 
     //enumerate through keys

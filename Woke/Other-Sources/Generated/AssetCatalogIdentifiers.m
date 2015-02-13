@@ -127,6 +127,12 @@
 + (UIImage *)wokeNavMenu { return [UIImage imageNamed:@"woke-nav-menu"]; }
 + (NSString *)wokeNotificationDotRedName { return @"woke-notification-dot-red"; }
 + (UIImage *)wokeNotificationDotRed { return [UIImage imageNamed:@"woke-notification-dot-red"]; }
++ (NSString *)wokePlaceholderUserProfileImageFemaleName { return @"woke-placeholder-user-profile-image-female"; }
++ (UIImage *)wokePlaceholderUserProfileImageFemale { return [UIImage imageNamed:@"woke-placeholder-user-profile-image-female"]; }
++ (NSString *)wokePlaceholderUserProfileImageMaleName { return @"woke-placeholder-user-profile-image-male"; }
++ (UIImage *)wokePlaceholderUserProfileImageMale { return [UIImage imageNamed:@"woke-placeholder-user-profile-image-male"]; }
++ (NSString *)wokePlaceholderUserProfileImageOtherName { return @"woke-placeholder-user-profile-image-other"; }
++ (UIImage *)wokePlaceholderUserProfileImageOther { return [UIImage imageNamed:@"woke-placeholder-user-profile-image-other"]; }
 + (NSString *)wokeRectangleDisabledName { return @"woke-rectangle-disabled"; }
 + (UIImage *)wokeRectangleDisabled { return [UIImage imageNamed:@"woke-rectangle-disabled"]; }
 + (NSString *)wokeRectangleNormalName { return @"woke-rectangle-normal"; }
