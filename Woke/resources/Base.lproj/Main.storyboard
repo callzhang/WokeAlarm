@@ -1748,7 +1748,7 @@
                                     <constraint firstAttribute="height" constant="40" id="dof-Xj-tcu"/>
                                     <constraint firstAttribute="width" constant="175" id="jnG-0L-hwJ"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="MXE-xu-eNy">
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="5" minimumInteritemSpacing="5" id="MXE-xu-eNy">
                                     <size key="itemSize" width="40" height="40"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -2167,7 +2167,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gML-II-VY3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="990" y="3668.5"/>
+            <point key="canvasLocation" x="990" y="3657.5"/>
         </scene>
         <!--Small Time Child View Controller-->
         <scene sceneID="cTg-Vu-GNo">
@@ -2288,7 +2288,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wbZ-le-xzD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="532" y="2941"/>
+            <point key="canvasLocation" x="990" y="4148"/>
         </scene>
         <!--Post Wake Up View Controller-->
         <scene sceneID="kYt-Fn-TMC">
@@ -2649,19 +2649,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" tag="804" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-background" translatesAutoresizingMaskIntoConstraints="NO" id="FES-2y-3LP">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bnE-dN-Jfk" customClass="UAProgressView">
-                                <rect key="frame" x="128" y="312" width="64" height="64"/>
+                                <rect key="frame" x="128" y="302" width="64" height="64"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="64" id="Up5-dK-h8I"/>
                                     <constraint firstAttribute="height" constant="64" id="jzd-Zv-r8q"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4YG-wt-UWi">
-                                <rect key="frame" x="143" y="290" width="35" height="48"/>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4YG-wt-UWi">
+                                <rect key="frame" x="148" y="310" width="24" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="chm-kg-Zdo"/>
                                 </constraints>
@@ -2722,48 +2719,44 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="asu-OW-Gbm"/>
                                 </items>
                             </toolbar>
-                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sps-2J-W7b" customClass="SCSiriWaveformView">
-                                <rect key="frame" x="0.0" y="164" width="320" height="100"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="KVt-UM-q0d"/>
-                                </constraints>
-                            </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PUK-qr-7Bs">
-                                <rect key="frame" x="0.0" y="33" width="320" height="140"/>
+                                <rect key="frame" x="0.0" y="33" width="320" height="200"/>
                                 <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="0.35999999999999999" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="140" id="rfM-yg-lsB"/>
+                                    <constraint firstAttribute="height" constant="200" id="rfM-yg-lsB"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="20" minimumInteritemSpacing="10" id="nGB-xQ-9T7">
-                                    <size key="itemSize" width="80" height="80"/>
+                                    <size key="itemSize" width="200" height="80"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="50" minY="0.0" maxX="50" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sps-2J-W7b" customClass="SCSiriWaveformView">
+                                <rect key="frame" x="0.0" y="204" width="320" height="100"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="KVt-UM-q0d"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="2vU-KR-SZ0" firstAttribute="top" secondItem="FES-2y-3LP" secondAttribute="bottom" id="0fj-v9-cN3"/>
                             <constraint firstAttribute="trailing" secondItem="sps-2J-W7b" secondAttribute="trailing" id="1kb-NP-Jhc"/>
                             <constraint firstItem="sps-2J-W7b" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="1s4-Fa-CtF"/>
                             <constraint firstAttribute="trailing" secondItem="pka-It-sOi" secondAttribute="trailing" id="Bfy-m2-s1x"/>
                             <constraint firstItem="pka-It-sOi" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="CY6-he-Of2"/>
                             <constraint firstAttribute="centerX" secondItem="sps-2J-W7b" secondAttribute="centerX" id="Hdl-5T-Zos"/>
-                            <constraint firstItem="FES-2y-3LP" firstAttribute="top" secondItem="niG-8q-xiY" secondAttribute="top" id="JdN-g7-bOV"/>
-                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="bnE-dN-Jfk" secondAttribute="centerX" constant="0.5" id="Mxo-LE-LCz"/>
+                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="bnE-dN-Jfk" secondAttribute="centerX" id="Mxo-LE-LCz"/>
                             <constraint firstAttribute="trailing" secondItem="PUK-qr-7Bs" secondAttribute="trailing" id="Qhs-pj-REe"/>
-                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="niG-8q-xiY" secondAttribute="centerY" constant="30" id="cdi-Zk-Idj"/>
+                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="niG-8q-xiY" secondAttribute="centerY" constant="50" id="cdi-Zk-Idj"/>
                             <constraint firstItem="PUK-qr-7Bs" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="eM2-2f-75U"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="niG-8q-xiY" secondAttribute="centerX" id="gFY-zP-sU1"/>
                             <constraint firstItem="PUK-qr-7Bs" firstAttribute="top" secondItem="dTa-yP-AOc" secondAttribute="bottom" constant="13" id="h1F-KW-ixG"/>
-                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="bnE-dN-Jfk" secondAttribute="centerY" constant="-30" id="hUj-oE-UmV"/>
+                            <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="bnE-dN-Jfk" secondAttribute="centerY" id="hUj-oE-UmV"/>
                             <constraint firstItem="2vU-KR-SZ0" firstAttribute="top" secondItem="pka-It-sOi" secondAttribute="bottom" id="jv1-o1-u9M"/>
-                            <constraint firstItem="FES-2y-3LP" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="mzO-mk-Urv"/>
-                            <constraint firstAttribute="trailing" secondItem="FES-2y-3LP" secondAttribute="trailing" id="oZN-L7-p3D"/>
-                            <constraint firstAttribute="centerY" secondItem="sps-2J-W7b" secondAttribute="centerY" constant="70" id="vAI-ow-n6v"/>
+                            <constraint firstAttribute="centerY" secondItem="sps-2J-W7b" secondAttribute="centerY" constant="30" id="vAI-ow-n6v"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -3376,8 +3369,8 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="tfZ-IS-2Ts"/>
         <segue reference="pRr-UO-GET"/>
+        <segue reference="tfZ-IS-2Ts"/>
         <segue reference="7lF-Wp-60q"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

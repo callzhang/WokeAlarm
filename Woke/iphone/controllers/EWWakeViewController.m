@@ -14,6 +14,7 @@
 #import "EWProfileViewController.h"
 #import "UIViewController+Blur.h"
 #import "EWRecordingViewController.h"
+#import "FBKVOController.h"
 
 @interface EWWakeViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
@@ -33,6 +34,10 @@
     
     [[EWPersonManager shared] nextWakeeWithCompletion:^(EWPerson *person) {
         self.nextWakee = person;
+    }];
+    
+    [self.KVOController observe:self.profileImageView keyPath:@"backgroundColor" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        DDLogInfo(@"profile pic background changed to %@", _profileImageView.backgroundColor);
     }];
 }
 

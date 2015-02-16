@@ -288,7 +288,7 @@
     
     BOOL attrbutesNeedUpdate = [self needToUpdateMOAttributesInContext:context];
     BOOL relationNeedUpdate = [self isNewerThanMOInContext:context];
-    if (attrbutesNeedUpdate && option == EWSyncOptionUpdateAttributesOnly) {
+    if (attrbutesNeedUpdate && !relationNeedUpdate && option != EWSyncOptionUpdateNone) {
         [SO assignValueFromParseObject:self];
     }
     else if (relationNeedUpdate) {

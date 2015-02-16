@@ -243,6 +243,7 @@
         }
     }];
     //assigned value from PO should not be considered complete, therefore we don't timestamp updatedAt on this SO
+    if (!self.syncInfo) self.syncInfo = [NSMutableDictionary new];
     self.syncInfo[kAttributeUpdatedTime] = [NSDate date];
 	[self saveToLocal];
 }

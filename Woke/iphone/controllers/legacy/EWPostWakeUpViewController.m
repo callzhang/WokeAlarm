@@ -18,6 +18,7 @@
 #import "EWUIUtil.h"
 #import "EWAlarmManager.h"
 #import "UIViewController+Blur.h"
+#import "EWWakeUpManager.h"
 NSString * const selectAllCellId = @"selectAllCellId";
 @interface EWPostWakeUpViewController ()
 {
@@ -64,6 +65,9 @@ NSString * const selectAllCellId = @"selectAllCellId";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    //start to wake up
+    [[EWWakeUpManager sharedInstance] startToWakeUp];
     
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];

@@ -117,10 +117,4 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([segue.destinationViewController isKindOfClass:[EWPostWakeUpViewController class]]) {
-        [[EWWakeUpManager sharedInstance] startToWakeUp];
-    }
-}
 @end

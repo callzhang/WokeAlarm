@@ -828,7 +828,7 @@ NSManagedObjectContext *mainContext;
 
 + (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
     EWAssertMainThread
-    @try {
+    //@try {
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
 			//convert to MO
 			__block NSMutableArray *localMOs = [NSMutableArray array];
@@ -838,11 +838,9 @@ NSManagedObjectContext *mainContext;
 					EWServerObject *MO;
 					if ([PO.localClassName isEqualToString:kSyncUserClass] && PO.objectId != [PFUser currentUser].objectId) {
 						MO = [PO managedObjectInContext:localContext];
-						[localMOs addObject:MO];
 					}
 					else {
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:NULL];
-						[localMOs addObject:MO];
 					}
 					if ([MO validate]) {
 						[localMOs addObject:MO];
@@ -861,13 +859,13 @@ NSManagedObjectContext *mainContext;
 				}
 			}];
         }];
-    }
-    @catch (NSException *exception) {
-        if (block) {
-            NSError *error = [NSError errorWithDomain:@"com.wokealarm.woke" code:102 userInfo:@{@"localizedDescription": @"Error code indicating you tried to query with a datatype that doesn't support it, like exact matching an array or object."}];
-            block(nil, error);
-        }
-    }
+//    }
+//    @catch (NSException *exception) {
+//        if (block) {
+//            NSError *error = [NSError errorWithDomain:@"com.wokealarm.woke" code:102 userInfo:@{@"localizedDescription": @"Error code indicating you tried to query with a datatype that doesn't support it, like exact matching an array or object."}];
+//            block(nil, error);
+//        }
+//    }
 }
 
 //cache

@@ -31,6 +31,7 @@
 
 #import "Crashlytics.h"
 #import <CrashlyticsLogger.h>
+#import "EWUIUtil.h"
 
 UIViewController *rootViewController;
 
@@ -104,12 +105,12 @@ UIViewController *rootViewController;
     UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
         FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
         viewController.tweaksDelegate = self;
-        [[[UIWindow mainWindow] rootViewController] presentViewController:viewController animated:YES completion:nil];
+        [[EWUIUtil topViewController] presentViewController:viewController animated:YES completion:nil];
     }];
     longGesture.numberOfTouchesRequired = 2;
     longGesture.minimumPressDuration = 2;
     
-    [[UIWindow mainWindow].rootViewController.view addGestureRecognizer:longGesture];
+    [[UIWindow mainWindow] addGestureRecognizer:longGesture];
     
     return YES;
 }

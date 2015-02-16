@@ -20,7 +20,6 @@
 
 - (void)awakeFromInsert{
     [super awakeFromInsert];
-    self.updatedAt = [NSDate date];
     self.importance = 0;
 }
 
