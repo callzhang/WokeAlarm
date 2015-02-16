@@ -82,11 +82,8 @@
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
     
     //collection view
-    self.peopleView.delegate = self;
-    self.peopleView.dataSource = self;
-    UINib *nib = [UINib nibWithNibName:@"EWCollectionPersonCell" bundle:nil];
-    [self.peopleView registerNib:nib forCellWithReuseIdentifier:@"cellIdentifier"];
     self.peopleView.backgroundColor = [UIColor clearColor];
+    self.peopleView.hidden = YES;
 }
 
 -(void)initProgressView{
@@ -105,11 +102,11 @@
 //        self.progressView.tintColor = [UIColor clearColor];
         
         if ([EWAVManager sharedManager].recorder.isRecording) {
-            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f", [EWAVManager sharedManager].recorder.currentTime]];
+            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%.0f", [EWAVManager sharedManager].recorder.currentTime]];
             
         }
         if ([EWAVManager sharedManager].player.isPlaying) {
-            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f", [EWAVManager sharedManager].player.currentTime]];
+            [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%.0f", [EWAVManager sharedManager].player.currentTime]];
         }
 	};
 	
@@ -139,30 +136,32 @@
 
 #pragma mark - collection view
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
-    cell.showName = NO;
+    EWCollectionPersonCell *cell = (EWCollectionPersonCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"recordingViewPersonCell" forIndexPath:indexPath];
+    cell.showName = YES;
+    cell.showTime = YES;
     EWPerson *receiver = _wakees[indexPath.row];
     cell.person = receiver;
     return cell;
 }
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
-}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return _wakees.count;
 }
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake(80, 100);
-}
+
+//center the wakee
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
     
     NSInteger numberOfCells = _wakees.count;
-    NSInteger edgeInsets = (self.peopleView.frame.size.width - (numberOfCells * kCollectionViewCellWidth) - numberOfCells * 10) / 2;
-    edgeInsets = MAX(edgeInsets, 20);
-    return UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets);
-    //return UIEdgeInsetsZero;
+    if (numberOfCells == 1) {
+        UICollectionViewLayoutAttributes *attributes = [collectionViewLayout layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        CGFloat width = attributes.frame.size.width;
+        NSInteger edgeInsets = (self.peopleView.frame.size.width - (numberOfCells * width) - numberOfCells * 10) / 2;
+        edgeInsets = MAX(edgeInsets, 20);
+        return UIEdgeInsetsMake(0, edgeInsets, 0, edgeInsets);
+    }
+    
+    return UIEdgeInsetsZero;
 }
 
 #pragma mark- Actions

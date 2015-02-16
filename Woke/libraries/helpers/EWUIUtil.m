@@ -93,7 +93,7 @@ static const float originalSize = 80.0;
 }
 
 + (void)applyHexagonSoftMaskForView:(UIView *)view{
-    if (view.tag == kHexEdgeTag) {
+    if (view.tag == kHexEdgeTag || !view) {
         return;
     }
     CAShapeLayer *hexagonMask = [[CAShapeLayer alloc] initWithLayer:view.layer];

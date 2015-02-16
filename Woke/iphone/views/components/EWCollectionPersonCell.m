@@ -79,7 +79,12 @@
 
 
 - (void)drawRect:(CGRect)rect{
-    [EWUIUtil applyHexagonSoftMaskForView:self.image];
+    if (self.image) {
+        [EWUIUtil applyHexagonSoftMaskForView:self.image];
+    } else {
+        [EWUIUtil applyHexagonSoftMaskForView:self.profile];
+    }
+    
 	//[EWUIUtil applyShadow:self.contentView];//hex takes too much GPU
 }
 
@@ -93,7 +98,13 @@
         if (_person.profilePic) {
             self.profile.image = _person.profilePic;
         }else{
-            self.profile.image = [UIImage imageNamed:@"profile"];
+            if ([_person.gender isEqualToString:@"male"]) {
+                self.profile.image = [ImagesCatalog wokePlaceholderUserProfileImageMale];
+            } else if ([_person.gender isEqualToString:@"fmale"]) {
+                self.profile.image = [ImagesCatalog wokePlaceholderUserProfileImageFemale];
+            } else {
+                self.profile.image = [ImagesCatalog wokePlaceholderUserProfileImageOther];
+            }
         }
         
         

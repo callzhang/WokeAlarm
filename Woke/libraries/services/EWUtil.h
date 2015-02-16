@@ -12,7 +12,7 @@
 @interface EWUtil : NSObject
 
 + (NSString *)UUID;
-+ (NSString *)ADID;
+//+ (NSString *)ADID;
 + (void)clearMemory;
 /**
  Parse number into dictionary.
@@ -27,7 +27,8 @@
 + (NSString *) uploadImageToParseREST:(UIImage *)uploadImage;
 + (void)deleteFileFromParseRESTwithURL:(NSURL *)url;
 
-void EWLogInit();
+//logging
++ (void)initLogging;
 //void EWLog(NSString *format,...);
 
 @end

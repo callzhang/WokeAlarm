@@ -53,6 +53,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .addFriendsCell = @"AddFriendsCell",
         .EWSentVoiceTableViewCell = @"EWSentVoiceTableViewCell",
         .friendsTableViewCell = @"FriendsTableViewCellID",
+        .recordingViewPersonCell = @"recordingViewPersonCell",
         .EWAlarmToneSelectionCell = @"EWAlarmToneSelectionCell",
         .friendsTableViewCellSectionHeader = @"FriendsTableViewCellSectionHeader",
         .profileTableViewCellProfile = @"ProfileTableViewCellProfile",
