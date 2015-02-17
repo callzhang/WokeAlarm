@@ -39,6 +39,9 @@ NSString * const EWPersonDefaultName = @"New User";
         person.name = kDefaultUsername;
         person.preference = kUserDefaults;
         //person.updatedAt = [NSDate date];
+        [person.KVOController observe:person keyPath:EWPersonAttributes.preference options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+            DDLogInfo(@"Preference changed to %@", person.preference);
+        }];
     }
     
     //no need to save here
@@ -69,31 +72,21 @@ NSString * const EWPersonDefaultName = @"New User";
     if (!self.serverID) {
         good = NO;
     }
-    if(!self.name){
-        NSString *name_ = [PFUser currentUser][@"name"];
-        if (name_) {
-            self.name = name_;
-        }else{
-            good = NO;
-        }
+    if(!self.firstName){
+        DDLogError(@"name is missing for user %@", self);
+        good = NO;
     }
     if(!self.profilePic){
-        PFFile *pic = [PFUser currentUser][@"profilePic"];
-        UIImage *img = [UIImage imageWithData:pic.getData];
-        if (img) {
-            self.profilePic = img;
-        }else{
-            good = NO;
-        }
+        DDLogError(@"Missing profile pic for user %@", self);
+        good = NO;
     }
     if(!self.username){
-        self.username = [PFUser currentUser].username;
-        DDLogError(@"Username is missing!");
+        good = NO;
+        //self.username = [PFUser currentUser].username;
+        DDLogError(@"Username is missing for user %@", self);
     }
     
-    if (self.alarms.count == 7) {
-        good = YES;
-    }else{
+    if (self.alarms.count != 7 && self.isMe) {
         good = NO;
         DDLogError(@"The person failed validation: alarms: %ld", (long)self.alarms.count);
     }

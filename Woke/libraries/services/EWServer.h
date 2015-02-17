@@ -88,4 +88,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWServer)
 
 #pragma mark - Util
 + (void)updateRelation:(NSString *)relation for:(PFObject *)target withObject:(PFObject *)related withOperation:(NSString *)operation completion:(ErrorBlock)block;
+
+#pragma mark - REST
++ (NSString *) uploadImageToParseREST:(UIImage *)uploadImage;
++ (void)deleteFileFromParseRESTwithURL:(NSURL *)url;
 @end

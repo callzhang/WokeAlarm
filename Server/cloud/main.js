@@ -834,6 +834,13 @@ Parse.Cloud.beforeSave("_User", function(request, response) {
   if (user.get("city")) searchString = searchString + " " + user.get("city").toLowerCase();
   user.set("searchString", searchString);
   console.log("saved search string for user "+user.id+" "+searchString);
+
+  var pref = user.get("preference");
+  if (!pref || Object.keys(pref).length === 0) {
+    //need to set default preference
+    console.log("User "+user.id+"missing preference, set to default");
+    user.set("preference", {"BedTimeNotification":true,"DefaultTone":"Autumn Spring.caf","FirstTime":true,"SkipTutorial":false,"SleepDuration":8,"SocialLevel":"Everyone","buzzSound":"default"});
+  }
   response.success();
 });
 

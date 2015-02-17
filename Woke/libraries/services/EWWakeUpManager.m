@@ -23,6 +23,15 @@
 #import "EWAlarmManager.h"
 #import "NSTimer+BlocksKit.h"
 
+#import "FBTweak.h"
+#import "FBTweakInline.h"
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
+    //DDLogInfo(@"Add Woke Voice");
+    [EWActivityManager sharedManager].testForceWakeUp = YES;
+    [[EWWakeUpManager sharedInstance] startToWakeUp];
+});
+
 NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotification";
 NSString * const kEWWakeUpDidPlayNextMediaNotification = @"kEWWakeUpDidPlayNextMediaNotification";
 NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayMediaNotification";
@@ -122,15 +131,17 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
             alarm = [EWAlarm getAlarmByID:alarmID];
             BOOL nextAlarmMatched = [activity.time isEqualToDate:alarm.time.nextOccurTime];
             if (!nextAlarmMatched) {
-                DDLogError(@"The sleep notification sent is not the same as the next alarm");
+                DDLogError(@"The sleep notification sent is not the same as the next alarm, skip sleep");
                 return;
             }
         }
         
         NSInteger sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
+        //max sleep 5 hours early
         BOOL needSleep = sleepTimeLeft < duration.floatValue+5 && sleepTimeLeft > 0;
         if (!needSleep) {
-            DDLogWarn(@"Start sleep with %ld hours left", sleepTimeLeft);
+            DDLogWarn(@"Skip sleep with %ld hours left", sleepTimeLeft);
+            return;
         }
         
         //state change
@@ -150,9 +161,29 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     }
 }
 
+- (void)unsleep{
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+    if (activity.completed) {
+        DDLogWarn(@"Already completed wake up, nothing to unsleep");
+        return;
+    }
+    if (!activity.sleepTime) {
+        DDLogError(@"No sleep time recorded, handing in the sleep view too long?");
+        return;
+    }
+    
+    activity.sleepTime = nil;
+    [activity save];
+    
+    [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWoke;
+}
+
 
 //indicate that the user has woke
 - (void)wake:(EWActivity *)activity{
+    if (!activity) {
+        activity = [[EWActivityManager sharedManager] currentAlarmActivity];
+    }
     if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWakingUp) {
         DDLogError(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
         return;

@@ -10,6 +10,7 @@
 #import "EWSync.h"
 #import "EWPerson.h"
 #import <objc/runtime.h>
+#import "EWUtil.h"
 
 @implementation EWServerObject(EWSync)
 #pragma mark - Server sync
@@ -541,11 +542,7 @@
 	if (self.changedKeys.count == 0) {
 		return;
 	}
-    NSMutableString *changedKeys = [NSMutableString stringWithString:@""];
-    for (NSString *key in self.changedKeys) {
-        [changedKeys appendFormat:@"%@ ", key];
-    }
-    DDLogVerbose(@"MO %@(%@) save to local with changes %@", self.entity.name, self.serverID, changedKeys);
+    DDLogVerbose(@"MO %@(%@) save to local with changes %@", self.entity.name, self.serverID, self.changedKeys.string);
     //mark MO as save to local
     if (self.objectID.isTemporaryID) {
         [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];

@@ -146,6 +146,11 @@ NSString *const EWActivityTypeMedia = @"media";
     }
     else if (activity.time.timeIntervalSinceNow > kMaxEalyWakeInterval) {
         // too early to wake
+        if (_testForceWakeUp) {
+            DDLogInfo(@"Time left %@ but forced wakeup", activity.time.timeLeft);
+            _testForceWakeUp = NO;
+            return YES;
+        }
         DDLogWarn(@"Wake %.1f hours early, skip.", activity.time.timeIntervalSinceNow/3600.0);
         // add unread media albeit too early to wake
         return NO;

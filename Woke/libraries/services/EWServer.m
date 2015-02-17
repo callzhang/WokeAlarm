@@ -124,10 +124,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 #pragma mark - Send Voice tone
 + (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(BoolErrorBlock)block{
     
-    //save
+    //TODO: use a server call
     [media updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
         //update Person->medias relation
-        [self updateRelation:@"medias" for:person.parseObject withObject:MO_on_main_thread.parseObject withOperation:@"add" completion:NULL];
+        [self updateRelation:@"medias" for:person.parseObject withObject:MO_on_main_thread.parseObject withOperation:@"add" completion:^(NSError *error) {
+            if (error) {
+                DDLogError(@"Failed to update relation for new media: %@", media);
+            }
+            [media refresh];
+        }];
         
         //set ACL
         PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -415,4 +420,51 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
     }];
 }
 
+
+#pragma mark - REST files
++(NSString *)uploadImageToParseREST:(UIImage *)uploadImage
+{
+    
+    NSMutableString *urlString = [NSMutableString string];
+    [urlString appendString:kParseUploadUrl];
+    [urlString appendFormat:@"files/imagefile.jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request addValue:kParseApplicationId forHTTPHeaderField:@"X-Parse-Application-Id"];
+    [request addValue:kParseRestAPIId forHTTPHeaderField:@"X-Parse-REST-API-Key"];
+    [request addValue:@"image/jpeg" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:UIImagePNGRepresentation(uploadImage)];
+    
+    NSURLResponse *response = nil;
+    NSError *error = nil;
+    
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+    NSString *fileUrl = [httpResponse allHeaderFields][@"Location"];
+    
+    return fileUrl;
+    
+}
+
++ (void)deleteFileFromParseRESTwithURL:(NSURL *)url{
+    //If you still want to delete a file, you can do so through the REST API. You will need to provide the master key in order to be allowed to delete a file. Note that the name of the file must be the name in the response of the upload operation, rather than the original filename.
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"DELETE"];
+    [request addValue:kParseApplicationId forHTTPHeaderField:@"X-Parse-Application-Id"];
+    [request addValue:kParseRestAPIId forHTTPHeaderField:@"X-Parse-REST-API-Key"];
+    [request addValue:@"X-Parse-Master-Key" forHTTPHeaderField:kParseMasterKey];
+    [request addValue:@"image/jpeg" forHTTPHeaderField:@"Content-Type"];
+    request.URL = url;
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:nil completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        if (connectionError) {
+            DDLogError(@"Failed to delete photo: %@", connectionError);
+        }
+    }];
+    
+}
 @end

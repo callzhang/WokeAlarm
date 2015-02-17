@@ -21,6 +21,7 @@
 #import "UIViewController+Blur.h"
 #import "EWPostWakeUpViewController.h"
 #import "EWWakeUpManager.h"
+#import "EWSleepViewController.h"
 
 NSString *kShowWakeUpChildVCNotification = @"kShowWakeUpChildVCNotification";
 NSString *kHideWakeUpChildVCNotification = @"kHideWakeUpChildVCNotification";
@@ -117,4 +118,22 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    [super prepareForSegue:segue sender:sender];
+    
+    if ([segue.destinationViewController isKindOfClass:[EWSleepViewController class]]) {
+        //back to mormal
+        [[EWWakeUpManager sharedInstance] unsleep];
+    }
+    else if ([segue.destinationViewController isKindOfClass:[EWPostWakeUpViewController class]]) {
+        //wake up
+        [[EWWakeUpManager sharedInstance] wake:nil];
+    }
+}
+
+- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
+    return YES;
+}
+
 @end

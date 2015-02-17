@@ -95,6 +95,26 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_WITH_ACCESSOR(EWSession, sharedSession);
     return [EWSession sharedSession].context;
 }
 
+
+
++(BOOL) isFirstTimeLogin{
+    
+    NSDictionary *option = @{@"firstTime": @"YES"};
+    [[NSUserDefaults standardUserDefaults] registerDefaults:option];
+    NSString *isString = [[NSUserDefaults standardUserDefaults] valueForKey:@"firstTime"];
+    if ([isString isEqualToString:@"YES"]) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+    
+}
+
++(void)pastFirstTimeLogin{
+    [[NSUserDefaults standardUserDefaults] setValue:@"NO" forKey:@"firstTime"];
+}
+
 //#pragma mark - Persistancy
 //
 //- (void)encodeWithCoder:(NSCoder *)encoder {

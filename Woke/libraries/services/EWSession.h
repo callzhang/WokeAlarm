@@ -37,4 +37,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER_WITH_ACCESSOR(EWSession, sharedSession
 + (NSManagedObjectContext *)mainContext;
 //- (void)save;
 
++ (BOOL) isFirstTimeLogin;
++ (void) pastFirstTimeLogin;
 @end

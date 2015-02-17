@@ -68,16 +68,11 @@
     //check tone
     if (!self.tone) {
         DDLogError(@"Tone not set!");
-        //self.tone = [EWPerson me].preference[@"DefaultTone"];
         good = NO;
     }
     
     if (!self.state) {
         DDLogError(@"State not set for alarm: %@", self.objectId);
-    }
-    
-    if (!good) {
-        DDLogError(@"Alarm failed validation: %@", self);
     }
     return good;
 }

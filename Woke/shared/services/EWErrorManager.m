@@ -108,7 +108,7 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
 }
 
 + (NSError *)invalidObjectError:(id)obj{
-    NSString *des = [NSString stringWithFormat:@"The Object is invalide %@", obj];
+    NSString *des = [NSString stringWithFormat:@"The Object is invalid %@", obj];
     NSError *err = [[NSError alloc] initWithDomain:self.domain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: des}];
     return err;
 }

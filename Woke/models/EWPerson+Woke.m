@@ -37,6 +37,10 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
 }
 
 - (BOOL)isMe {
+    if (!self.serverID) {
+        DDLogError(@"Person missing server ID");
+        return NO;
+    }
     return [self.objectId isEqualToString:[PFUser currentUser].objectId];
 }
 

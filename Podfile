@@ -8,7 +8,6 @@ target 'Woke' do
   pod 'GPUImage', '~> 0.1.6'
   pod 'Parse'
   pod 'ParseUI'
-  #pod 'ParseCrashReporting'
   pod 'AFNetworking', '~> 2.5.1'
   pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
   pod 'BlocksKit', '~> 2.2.5'
@@ -35,7 +34,6 @@ target 'Woke' do
   pod 'APTimeZones', '~> 1.1'
   pod 'Tweaks', '~> 1.1.0'
   pod 'RHAddressBook', '~> 1.1'
-  #pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 end
 
 target 'WokeTests' do

@@ -22,13 +22,13 @@
 + (NSDictionary *)timeFromNumber:(double)number;
 + (double)numberFromTime:(NSDictionary *)dic;
 + (BOOL) isMultitaskingSupported;
-+ (BOOL) isFirstTimeLogin;
-+ (void) setFirstTimeLoginOver;
-+ (NSString *) uploadImageToParseREST:(UIImage *)uploadImage;
-+ (void)deleteFileFromParseRESTwithURL:(NSURL *)url;
 
 //logging
 + (void)initLogging;
 //void EWLog(NSString *format,...);
 
+@end
+
+@interface NSArray(Extend)
+- (NSString *)string;
 @end

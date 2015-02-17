@@ -23,6 +23,7 @@ extern NSString *const EWActivityTypeMedia;
  *  The returned activity is the next valid alarm activity that is neither completed or 
  */
 @property (nonatomic, strong) EWActivity *currentAlarmActivity;
+@property (nonatomic) BOOL testForceWakeUp;
 + (EWActivityManager *)sharedManager;
 
 //methods

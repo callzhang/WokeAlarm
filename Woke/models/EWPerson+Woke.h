@@ -41,9 +41,6 @@ extern NSString * const kFriendshipStatusChanged;
 
 //social
 - (EWFriendshipStatus)friendshipStatus;
-- (void)requestFriend:(EWPerson *)person __deprecated;//use - (void)requestFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion;
-- (void)acceptFriend:(EWPerson *)person __deprecated;//use - (void)acceptFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion;
-- (void)unfriend:(EWPerson *)person __deprecated;//use - (void)unfriend:(EWPerson *)person completion:(BoolErrorBlock)completion;
 - (float)distance;
 - (NSString *)distanceString;
 

@@ -98,7 +98,7 @@ NSManagedObjectContext *mainContext;
     
     //initial property
     self.parseSaveCallbacks = [NSMutableDictionary dictionary];
-    self.MOSaveCallbacks = [NSMutableDictionary new];
+    self.uploadCompletionCallbacks = [NSMutableDictionary new];
     self.saveToLocalItems = [NSMutableArray new];
     self.serverObjectCache = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
 	
@@ -147,7 +147,7 @@ NSManagedObjectContext *mainContext;
     if (!self.isReachable) {
         DDLogDebug(@"Network not reachable, skip uploading");
         self.isUploading = NO;
-        [self runAllCompletionBlocks:self.MOSaveCallbacks withError:[EWErrorManager noInternetConnectError]];
+        [self runAllCompletionBlocks:self.uploadCompletionCallbacks withError:[EWErrorManager noInternetConnectError]];
         return;
     }
     
@@ -162,22 +162,12 @@ NSManagedObjectContext *mainContext;
     //clear queues
     [self clearQueue:kParseQueueInsert];
     [self clearQueue:kParseQueueUpdate];
-    
-    //save to local items check
-    NSSet *workingObjects = self.workingQueue.copy;
-    NSArray *saveToLocalItemAlreadyInWorkingQueue = [self.saveToLocalItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", [workingObjects valueForKey:@"objectID"]]];
-    if (saveToLocalItemAlreadyInWorkingQueue.count) {
-        DDLogError(@"There are items in saveToLocal queue but also appeared in working queue, please check the code!%@", saveToLocalItemAlreadyInWorkingQueue);
-        for (NSManagedObjectID *ID in saveToLocalItemAlreadyInWorkingQueue) {
-            [self.saveToLocalItems removeObject:ID];
-        }
-    }
-    
 	
-	//skip if no changes
+    //skip if no changes
+    NSSet *workingObjects = self.workingQueue.copy;
     if (workingObjects.count == 0 && deletedServerObjects.count == 0){
         DDLogInfo(@"No change detacted, skip uploading");
-        [self runAllCompletionBlocks:self.MOSaveCallbacks withError:nil];
+        [self runAllCompletionBlocks:self.uploadCompletionCallbacks withError:nil];
         return;
     }
     for (NSString *key in self.changedRecords.allKeys) {
@@ -191,8 +181,8 @@ NSManagedObjectContext *mainContext;
     DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, deletedServerObjects);
     
     //save callbacks
-    NSMutableDictionary *callbacks = _MOSaveCallbacks;
-    self.MOSaveCallbacks = [NSMutableDictionary new];
+    NSMutableDictionary *callbacks = _uploadCompletionCallbacks;
+    self.uploadCompletionCallbacks = [NSMutableDictionary new];
     
     //start background update
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -203,11 +193,7 @@ NSManagedObjectContext *mainContext;
                 continue;
             }
 			
-			//validation
-			if (![EWSync validateSO:localMO]) {
-				DDLogWarn(@"!!! Validation failed for %@(%@), skip upload. Detail: \n%@", localMO.entity.name, localMO.serverID, localMO);
-				return;
-			}
+			
 			//=================>> Upload method <<===================
             NSError *error;
             BOOL success = [self updateParseObjectFromManagedObject:localMO withError:&error];
@@ -321,8 +307,8 @@ NSManagedObjectContext *mainContext;
         
         //skip if marked save to local
         if ([self.saveToLocalItems containsObject:SO.objectID]) {
-			NSUInteger index = [self.saveToLocalItems indexOfObject:SO.objectID];
-			[self.saveToLocalItems removeObjectAtIndex:index];
+            DDLogVerbose(@"On saving, removed save to local item: %@", SO.objectID);
+			[self.saveToLocalItems removeObject:SO.objectID];
             [self removeObjectFromInsertQueue:SO];
             [self removeObjectFromUpdateQueue:SO];
             continue;
@@ -390,10 +376,13 @@ NSManagedObjectContext *mainContext;
 
 #pragma mark - Upload worker
 - (BOOL)updateParseObjectFromManagedObject:(EWServerObject *)serverObject withError:(NSError *__autoreleasing *)error{
-    
+    //validation
+    if (![serverObject validate]) {
+        DDLogWarn(@"!!! Validation failed for %@(%@), skip upload.", serverObject.entity.name, serverObject.serverID);
+        *error = [EWErrorManager invalidObjectError:serverObject];
+        return NO;
+    }
     //skip if updating other PFUser
-    //make sure the value is the latest from store
-    
     if ([serverObject.entity.name isEqualToString:kSyncUserClass] && ![(EWPerson *)serverObject isMe]) {
         DDLogError(@"Uploading user class, check your code!");
         *error = [EWErrorManager invalidObjectError:serverObject];
@@ -694,8 +683,7 @@ NSManagedObjectContext *mainContext;
     EWServerObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectID inContext:context];
     if (!MO) {
         PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:objectID error:error];
-        MO = [PO managedObjectInContext:context];
-        [MO refresh];
+        MO = [PO managedObjectUpdatedInContext:context];
         if (!MO) {
             DDLogError(@"Failed getting exsiting MO(%@): %@", className, (*error).description);
         }

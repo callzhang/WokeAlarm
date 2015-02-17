@@ -131,7 +131,7 @@
                     [parseRelation removeObject:PO];
                     //We don't update the inverse PFRelation as they should be updated from that MO
                     DDLogVerbose(@"~~~> To-many relation on PO %@(%@)->%@(%@) deleted when updating from MO", managedObject.entity.name, managedObject.serverID, key, PO.objectId);
-                    if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
+                    if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
                 }
             }
             
@@ -144,14 +144,14 @@
                         PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
                         
                         DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
-                        if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
+                        if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
                         [parseRelation addObject:relatedParseObject];
                     }
                 }
                 else {
                     __block PFObject *blockObject = self;
                     __block PFRelation *blockParseRelation = parseRelation;
-                    if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
+                    if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
                     //set up a saving block
                     //NSLog(@"Relation %@ -> %@ save block setup", blockObject.parseClassName, relatedManagedObject.entity.serverClassName);
                     PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error) {
@@ -194,13 +194,13 @@
                         relatedPO = [PFObject objectWithoutDataWithClassName:relatedMO.serverClassName objectId:parseID];
                         [self setObject:relatedPO forKey:key];
                         DDLogVerbose(@"+++> To-one relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], relation.name, relatedPO.objectId);
-                        if (!expectChange) DDLogError(@"Relation %@ doesn't expect to change!", key);
+                        if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
                     }
                 }
                 else {
                     //MO doesn't have parse id, save to parse
                     __block PFObject *blockObject = self;
-                    if (!expectChange) DDLogWarn(@"Relation %@ doesn't expect to change!", key);
+                    if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
                     //set up a saving block
                     PFObjectResultBlock connectRelationship = ^(PFObject *object, NSError *error2) {
                         [blockObject setObject:object forKey:key];
@@ -270,17 +270,17 @@
 		//remove from the update queue
 		[[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
 	}
-	EWServerObject *SO = SOs.firstObject;
+	EWServerObject *MO = SOs.firstObject;
 	
-	if (!SO) {
+	if (!MO) {
 		//if managedObject not exist, create it locally by assigning value from PO (quick)
 		//and assign relation in child context
-		SO = [NSClassFromString(self.localClassName) MR_createInContext:context];
+		MO = [NSClassFromString(self.localClassName) MR_createInContext:context];
         if (option == EWSyncOptionUpdateNone) {
-            [SO assignValueFromParseObject:self];
+            [MO assignValueFromParseObject:self];
         }else {
-            SO.createdAt = self.updatedAt;
-            SO.objectId = self.objectId;
+            MO.createdAt = self.updatedAt;
+            MO.objectId = self.objectId;
         }
 		
 		DDLogInfo(@"+++> MO created: %@ (%@)", self.localClassName, self.objectId);
@@ -288,27 +288,40 @@
     
     BOOL attrbutesNeedUpdate = [self needToUpdateMOAttributesInContext:context];
     BOOL relationNeedUpdate = [self isNewerThanMOInContext:context];
-    if (attrbutesNeedUpdate && !relationNeedUpdate && option != EWSyncOptionUpdateNone) {
-        [SO assignValueFromParseObject:self];
-    }
-    else if (relationNeedUpdate) {
+    BOOL isUserClass = [MO.entity.name isEqualToString:kSyncUserClass];
+    //try to sync relation
+    if (relationNeedUpdate) {
         if (option == EWSyncOptionUpdateRelation) {
-            [SO updateValueAndRelationFromParseObject:self];
+            [MO updateValueAndRelationFromParseObject:self];
+            if (block) {
+                block(MO, error);
+            }
+            return MO;
         }
         else if (option == EWSyncOptionUpdateAsync){
+            [MO assignValueFromParseObject:self];
             [context saveWithBlock:^(NSManagedObjectContext *localContext) {
-                EWServerObject *localSO = [SO MR_inContext:localContext];
+                EWServerObject *localSO = [MO MR_inContext:localContext];
                 [localSO updateValueAndRelationFromParseObject:self];
             } completion:^(BOOL contextDidSave, NSError *error) {
                 if (block) {
-                    block(SO, error);
+                    block(MO, error);
                 }
             }];
-        }else {
-            DDLogInfo(@"PO %@(%@) is newer than MO, but MO not updated!", self.parseClassName, self.objectId);
+            return MO;
+        }else if (!isUserClass) {
+            DDLogInfo(@"PO %@(%@) is newer than MO, but MO relation not updated with sync option %lu!", self.parseClassName, self.objectId, option);
         }
     }
-	return SO;
+    //try to assign value only
+    if (attrbutesNeedUpdate && option != EWSyncOptionUpdateNone) {
+        [MO assignValueFromParseObject:self];
+    }
+    
+    if (block) {
+        block(MO, error);
+    }
+	return MO;
 }
 
 - (BOOL)isNewerThanMO{

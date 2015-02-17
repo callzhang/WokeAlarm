@@ -61,7 +61,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
  *  @param notification the notification used to identify which alarm/activity it is going to sleep for. Pass nil to sleep for current alarm/activity
  */
 - (void)sleep:(UILocalNotification *)notification;
-
+- (void)unsleep;
 /**
  Release the reference to wakeupVC
  Post notification: kWokeNotification

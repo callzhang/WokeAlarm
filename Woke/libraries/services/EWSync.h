@@ -64,13 +64,13 @@ extern NSString * const kEWSyncUploaded;
  *  Dictionary of {MO_ObjectID_String, EWManagedObjectSaveBlock}
  *  EWManagedObjectSaveCallbackBlock takes two parameters: MO_main_thread and NSError
  */
-@property (strong) NSMutableDictionary *MOSaveCallbacks;
+@property (strong) NSMutableDictionary *uploadCompletionCallbacks;
 @property (strong) ELAWellCached *serverObjectCache;
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
  */
 @property (strong) NSDictionary *changedRecords;
-@property (strong) NSMutableArray *saveToLocalItems;
+@property (strong) NSMutableSet *saveToLocalItems;
 @property BOOL isUploading;
 
 

@@ -278,6 +278,7 @@
         
         EWMediaFile *mediaFile = [EWMediaFile newMediaFile];
         mediaFile.audio = recordData;
+        mediaFile.owner = [EWPerson me].serverID;
         
         for (EWPerson *receiver in _wakees) {
             EWMedia *media = [EWMedia newMedia];

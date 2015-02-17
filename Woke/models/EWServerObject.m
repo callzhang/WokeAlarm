@@ -65,7 +65,7 @@
 }
 
 - (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
-    [[EWSync sharedInstance].MOSaveCallbacks setObject:block forKey:self.objectID.URIRepresentation.absoluteString];
+    [[EWSync sharedInstance].uploadCompletionCallbacks setObject:block forKey:self.objectID.URIRepresentation.absoluteString];
     [self save];
     if (!self.hasChanges) {
         DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);

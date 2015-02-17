@@ -107,23 +107,24 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 - (BOOL)validate{
     BOOL good = YES;
     if(!self.type){
+        DDLogError(@"Media %@ missing type.", self.serverID);
         good = NO;
     }
     
     if (!self.author) {
-        DDLogError(@"Media %@ missing authur.", self.objectId);
+        DDLogError(@"Media %@ missing authur.", self.serverID);
         good = NO;
     }
     
     if ([self.type isEqualToString:kMediaTypeVoice]) {
         if(!self.mediaFile){
-            DDLogError(@"Media %@ type voice with no mediaFile.", self.objectId);
+            DDLogError(@"Media %@ type voice with no mediaFile.", self.serverID);
             good = NO;
         }
     }
     
     if (!self.receiver) {
-        DDLogError(@"Media %@ with no receiver.", self.objectId);
+        DDLogError(@"Media %@ with no receiver.", self.serverID);
         good = NO;
     }
     
