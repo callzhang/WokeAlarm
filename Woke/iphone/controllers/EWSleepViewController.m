@@ -80,9 +80,6 @@
     else if ([segue.destinationViewController isKindOfClass:[EWSleepViewController class]]) {
         [[EWWakeUpManager sharedInstance] unsleep];
     }
-}
-
-- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
-    return YES;
+    DDLogVerbose(@"Segue on SleepView: %@", segue.identifier);
 }
 @end

@@ -60,7 +60,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    //add unwind action
+    [self.navigationItem.leftBarButtonItem setAction:@selector(close:)];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNewMediaNotification) name:kNewMediaNotification object:nil];
     
@@ -113,6 +115,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 - (IBAction)close:(id)sender{
     if (self.presentingViewController){
         [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+        [[EWWakeUpManager sharedInstance] unsleep];
     }
     else if(self.navigationController){
         [self.navigationController popViewControllerAnimated:YES];
@@ -130,10 +133,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
         //wake up
         [[EWWakeUpManager sharedInstance] wake:nil];
     }
+    
+    DDLogVerbose(@"Segue on SleepView: %@", segue.identifier);
 }
 
-- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
-    return YES;
-}
 
 @end

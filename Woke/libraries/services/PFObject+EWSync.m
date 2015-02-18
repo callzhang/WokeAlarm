@@ -80,7 +80,7 @@
         else{
             //value is nil, delete PO value
             if ([self.allKeys containsObject:key]) {
-                DDLogWarn(@"!!! Data %@ empty on MO %@(%@), please check!", key, managedObject.entity.name, managedObject.serverID);
+                DDLogWarn(@"~~~> Delete %@ on PO %@(%@) when updating from MO, please check!", key, managedObject.entity.name, managedObject.serverID);
                 [self removeObjectForKey:key];
             }
         }
