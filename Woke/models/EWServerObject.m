@@ -12,6 +12,7 @@
 @dynamic syncInfo;
 
 - (void)awakeFromInsert{
+	[super awakeFromInsert];
     [self setPrimitiveValue:[NSMutableDictionary new] forKey:EWServerObjectAttributes.syncInfo];
     [self setPrimitiveValue:[NSDate date] forKey:EWServerObjectAttributes.createdAt];
     //Do not set updatedAt as this value is used to determine if object is updated properly

@@ -2805,10 +2805,10 @@
                                         <size key="customSize" width="120" height="120"/>
                                         <variation key="default">
                                             <mask key="constraints">
-                                                <exclude reference="nME-R7-lHq"/>
                                                 <exclude reference="N4U-0E-J14"/>
                                                 <exclude reference="WTx-xH-75c"/>
                                                 <exclude reference="erv-o7-EpX"/>
+                                                <exclude reference="nME-R7-lHq"/>
                                             </mask>
                                         </variation>
                                         <connections>

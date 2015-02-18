@@ -10,7 +10,8 @@
 #import "GCDSingleton.h"
 #define kFacebookLastUpdated        @"facebook_last_updated"
 #define kUserRelationSyncRequired   @[@"alarms", @"socialGraph", @"activities"]//list of relations that must be synced before the rest of the application execution
-extern NSString * const kUserSyncCompleted;
+#define kUserSyncStarted			@"user_sync_started"
+#define kUserSyncCompleted			@"user_sync_completed"
 
 @interface EWAccountManager : NSObject <CLLocationManagerDelegate>
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);

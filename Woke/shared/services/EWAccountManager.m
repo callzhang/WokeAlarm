@@ -20,8 +20,6 @@
 #import "EWStartUpSequence.h"
 @import CoreLocation;
 
-NSString * const kUserSyncCompleted = @"user_sync_completed";
-
 @interface EWAccountManager()
 @property (nonatomic) BOOL isUpdatingFacebookInfo;
 @property (nonatomic, strong) CLLocationManager *manager;
@@ -464,6 +462,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Sync user
 - (void)syncUserWithCompletion:(ErrorBlock)block{
     EWAssertMainThread
+	[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncStarted object:nil];
     NSString *userKey = @"user";
     
     //generate info dic
@@ -546,8 +545,24 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
             if ([key isEqualToString:userKey]) {
                 [[EWSync sharedInstance] setCachedParseObject:obj];
+				[me assignValueFromParseObject:obj];
                 return;
             } else if ([key isEqualToString:@"delete"]) {
+				//delete all objects in this Dictionary
+				DDLogInfo(@"Deleting objects %@", obj);
+				[(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
+					NSRelationshipDescription *relation =  me.entity.relationshipsByName[relationName];
+					NSString *className = relation.destinationEntity.name;
+					EWServerObject *MO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:mainContext];
+					if (relation.isToMany) {
+						NSMutableSet *related = [me valueForKey:relationName];
+						[related removeObject:MO];
+						[me setValue:related forKey:relationName];
+					} else {
+						[me setValue:nil forKey:relationName];
+					}
+				}];
+
                 return;
             }
             NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
@@ -564,33 +579,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
             }
         }];
+		
+		//save me first so the sql has the me object for other threads
+		[me saveToLocal];
         
         [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
             EWPerson *localMe = [me MR_inContext:localContext];
             [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-                //special keys
-                if ([key isEqualToString:@"delete"]) {//delete key
-                    //delete all objects in this Dictionary
-                    DDLogInfo(@"Deleting object %@", obj);
-                    [(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
-                        NSRelationshipDescription *relation =  localMe.entity.relationshipsByName[relationName];
-                        NSString *className = relation.destinationEntity.name;
-                        EWServerObject *MO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:localContext];
-						if (relation.isToMany) {
-							NSMutableSet *related = [localMe valueForKey:relationName];
-							[related removeObject:MO];
-							[localMe setValue:related forKey:relationName];
-						} else {
-							[localMe setValue:nil forKey:relationName];
-						}
-                    }];
-                    return;
-				}
-                else if ([key isEqualToString:userKey]){//user key
-					//update my attributes only
-					[localMe assignValueFromParseObject:obj];
-                    return;
-				}
 					
                 NSRelationshipDescription *relation = localMe.entity.relationshipsByName[key];
                 if (!relation) return;
@@ -656,9 +651,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }];
             
         } completion:^(BOOL contextDidSave, NSError *error2) {
+			
+			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
             if (!error2) {
                 DDLogDebug(@"========> Finished user syncing <=========");
-                [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
                 block(nil);
             }else{
                 DDLogError(@"Failed to save synced user with error: %@", error2.description);

@@ -25,9 +25,10 @@ NSString * const EWPersonDefaultName = @"New User";
 @synthesize name;
 
 #pragma mark - Create
-- (void)awakeFromFetch{
-    [super awakeFromFetch];
+- (void)awakeFromInsert{
+    [super awakeFromInsert];
     [self setPrimitiveValue:[NSMutableDictionary new] forKey:EWPersonAttributes.preference];
+	//we should not set default value for those who would be synced as PFFile, as they will be regarded as downloaded
     //[self setPrimitiveValue:[ImagesCatalog profileSlice] forKey:EWPersonAttributes.profilePic];
     //[self setPrimitiveValue:[[CLLocation alloc] initWithLatitude:0 longitude:0] forKey:EWPersonAttributes.location];
 }
@@ -39,9 +40,6 @@ NSString * const EWPersonDefaultName = @"New User";
         person.name = kDefaultUsername;
         person.preference = kUserDefaults;
         //person.updatedAt = [NSDate date];
-        [person.KVOController observe:person keyPath:EWPersonAttributes.preference options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-            DDLogInfo(@"Preference changed to %@", person.preference);
-        }];
     }
     
     //no need to save here

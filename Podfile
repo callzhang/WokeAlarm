@@ -11,15 +11,10 @@ target 'Woke' do
   pod 'AFNetworking', '~> 2.5.1'
   pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
   pod 'BlocksKit', '~> 2.2.5'
-  pod 'CrashlyticsFramework', '~> 2.2.5.2'
-  pod 'KZBootstrap', '~> 0.5.2' 
-  #pod 'KZBootstrap/Logging', '~> 0.5.2'
-  #pod 'KZBootstrap/Debug','~> 0.5.2'
+  pod 'KZBootstrap', '~> 0.5.2'
   pod 'VBFPopFlatButton', '~> 0.0.5'
   pod 'MTDates', '~> 1.0'
   pod 'JGProgressHUD', '~> 1.2'
-  pod 'CocoaLumberjack', '2.0.0-rc'
-  pod 'CrashlyticsLumberjack', '2.0.0-rc2'
   pod 'IDMPhotoBrowser', '~> 1.4'
   pod 'apptentive-ios', '~> 1.7'
   pod 'IDMPhotoBrowser', '~> 1.4'
@@ -34,6 +29,9 @@ target 'Woke' do
   pod 'APTimeZones', '~> 1.1'
   pod 'Tweaks', '~> 1.1.0'
   pod 'RHAddressBook', '~> 1.1'
+  pod 'CrashlyticsFramework'
+  pod 'CocoaLumberjack', '2.0.0-rc'
+  pod 'CrashlyticsLumberjack', '2.0.0-rc2'
 end
 
 target 'WokeTests' do

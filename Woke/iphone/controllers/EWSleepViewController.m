@@ -13,6 +13,7 @@
 #import "EWAccountManager.h"
 #import "EWSleepingViewController.h"
 #import "UIViewController+Blur.h"
+#import "EWUIUtil.h"
 
 @interface EWSleepViewController ()
 
@@ -36,13 +37,19 @@
     
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPersonSyncCompleted:) name:kUserSyncCompleted object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
+		[EWUIUtil showWatingHUB];
+	}];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncCompleted object:nil queue:nil usingBlock:^(NSNotification *note) {
+		[EWUIUtil dismissHUDinView:self.view];
+		[self setViewModelAlarm];
+	}];
     [self bindViewModel];
 }
 
 - (void)onPersonSyncCompleted:(NSNotification *)noti {
-    [self setViewModelAlarm];
+	
 }
 
 - (void)setViewModelAlarm {
