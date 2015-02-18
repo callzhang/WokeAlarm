@@ -80,7 +80,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
             if ([keyPath isEqualToString:@"isSchedulingAlarm"]) {
                 if (![EWSession sharedSession].isSchedulingAlarm) {
                     DDLogInfo(@"Schedule view detected alarm finished scheduling");
-                    [EWUIUtil dismissHUDinView:self.view];
+                    [EWUIUtil dismissHUD];
                     [self initData];
                     
                 }else{
@@ -91,7 +91,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
         });
         
     }else if (object == [EWPerson me]){
-        [EWUIUtil dismissHUDinView:self.view];
+        [EWUIUtil dismissHUD];
         [self initData];
         [self.view showLoopingWithTimeout:0];
     }
@@ -156,7 +156,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
 		//save
     }
     
-    [EWUIUtil dismissHUDinView:self.view];
+    [EWUIUtil dismissHUD];
 }
 
 #pragma mark - UI events

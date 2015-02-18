@@ -21,6 +21,7 @@ typedef enum{
 - (JGProgressHUD *)showSuccessNotification:(NSString *)alert;
 - (JGProgressHUD *)showFailureNotification:(NSString *)alert;
 - (JGProgressHUD *)showLoopingWithTimeout:(float)timeout;
+- (void)dismissHUD;
 @end
 
 @interface UIView (Sreenshot)

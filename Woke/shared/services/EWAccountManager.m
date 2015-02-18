@@ -463,6 +463,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 - (void)syncUserWithCompletion:(ErrorBlock)block{
     EWAssertMainThread
 	[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncStarted object:nil];
+    [EWSession sharedSession].isSyncingUser = YES;
     NSString *userKey = @"user";
     
     //generate info dic
@@ -535,7 +536,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     //send to cloud
     [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *POGraph, NSError *error) {
-        DDLogInfo(@"Server returned sync info keys: %@", POGraph.allKeys);
+        NSMutableDictionary *POGraphInfo = [NSMutableDictionary new];
         if (error) {
             block(error);
             return;
@@ -544,10 +545,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //return graph level: 1) relation name 2) Array of PFObjects or PFObject
         [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
             if ([key isEqualToString:userKey]) {
+                POGraphInfo[key] = @"me";
                 [[EWSync sharedInstance] setCachedParseObject:obj];
 				[me assignValueFromParseObject:obj];
                 return;
             } else if ([key isEqualToString:@"delete"]) {
+                POGraphInfo[key] = obj;
 				//delete all objects in this Dictionary
 				DDLogInfo(@"Deleting objects %@", obj);
 				[(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
@@ -572,13 +575,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }
             //save PO first
             if (relation.isToMany) {
+                POGraphInfo[key] = [obj valueForKey:kParseObjectID];
                 for (PFObject *PO in obj) {
                     [[EWSync sharedInstance] setCachedParseObject:PO];
                 }
             }else{
+                POGraphInfo[key] = [(PFObject *)obj valueForKey:kParseObjectID];
                 [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
             }
         }];
+        
+        DDLogInfo(@"Server returned sync info: %@", POGraphInfo);
 		
 		//save me first so the sql has the me object for other threads
 		[me saveToLocal];
@@ -591,7 +598,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 if (!relation) return;
                 
                 //decide whether to update the MO async
-                BOOL sync = [kUserRelationSyncRequired containsObject:relation.name];
+                //Note: download async at beginning is proved to b
+                BOOL sync = YES;//[kUserRelationSyncRequired containsObject:key];
                 
                 //update SO
                 if (relation.isToMany) {
@@ -650,8 +658,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 }
             }];
             
+            //save to local so the updatedAt is assigned
+            [localMe saveToLocal];
+            
         } completion:^(BOOL contextDidSave, NSError *error2) {
-			
+			[EWSession sharedSession].isSyncingUser = NO;
 			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
             if (!error2) {
                 DDLogDebug(@"========> Finished user syncing <=========");

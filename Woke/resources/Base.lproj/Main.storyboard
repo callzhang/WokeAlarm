@@ -960,6 +960,9 @@
                                 <state key="disabled" backgroundImage="woke-rectangle-disabled"/>
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
                                 <state key="highlighted" backgroundImage="woke-rectangle-selected"/>
+                                <connections>
+                                    <action selector="wake:" destination="T0a-bL-MOd" eventType="touchUpInside" id="4MD-ex-hen"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -3461,8 +3464,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="pRr-UO-GET"/>
-        <segue reference="tfZ-IS-2Ts"/>
-        <segue reference="7lF-Wp-60q"/>
+        <segue reference="d4z-tG-E1i"/>
+        <segue reference="RcX-Qc-C0f"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

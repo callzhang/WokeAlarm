@@ -139,7 +139,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 		
     } completion:^(BOOL success, NSError *error) {
 		
-		if (!success) DDLogError(@"Failed to save wakees: %@", error);
+		if (error) DDLogError(@"Failed to save wakees: %@", error);
         for (EWPerson *localWakee in wakees) {
             EWPerson *person = (EWPerson *)[localWakee MR_inContext:mainContext];
             if (person) {

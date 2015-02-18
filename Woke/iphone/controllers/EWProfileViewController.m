@@ -12,6 +12,7 @@
 #import "EWCachedInfoManager.h"
 #import "EWUIUtil.h"
 #import "UIViewController+Blur.h"
+#import "EWRecordingViewController.h"
 
 @interface EWProfileViewController ()<UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -79,6 +80,11 @@
         }
     }
     [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+}
+
+- (IBAction)wake:(id)sender {
+    EWRecordingViewController *controlelr = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWRecordingViewController class])];
+    [self.navigationController pushViewController:controlelr animated:YES];
 }
 
 #pragma mark - <UITableViewDataSource>

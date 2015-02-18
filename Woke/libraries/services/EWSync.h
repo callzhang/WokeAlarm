@@ -31,7 +31,7 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 #pragma mark - Sync parameters
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
 #define kServerTransformClasses             @{@"EWPerson": @"_User"} //localClass: serverClass
-#define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey]
+#define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey, @"syncInfo"]
 #define kSyncUserClass                      @"EWPerson"
 
 //Server update time
@@ -69,7 +69,7 @@ extern NSString * const kEWSyncUploaded;
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
  */
-@property (strong) NSDictionary *changedRecords;
+@property (strong) NSDictionary *changedRecords; //{string of objectID: array of changed keys}
 @property (strong) NSMutableSet *saveToLocalItems;
 @property BOOL isUploading;
 

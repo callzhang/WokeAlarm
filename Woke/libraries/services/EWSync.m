@@ -200,9 +200,6 @@ NSManagedObjectContext *mainContext;
             //=======================================================
             
             //save callback
-            if (!success) {
-                DDLogError(@"Failed to update MO: %@", error.localizedDescription);
-            }
             NSString *key = localMO.objectID.URIRepresentation.absoluteString;
             EWManagedObjectSaveCallbackBlock block = callbacks[key];
             [callbacks removeObjectForKey:key];
@@ -211,15 +208,18 @@ NSManagedObjectContext *mainContext;
             }
             
             //remove changed record
-            if (localMO.serverID) {
-                NSMutableSet *changes = self.changedRecords[localMO.serverID];
+            
+            if (!success) {
+                DDLogError(@"---> Failed to update MO: %@", error.localizedDescription);
+            }
+            else if (localMO.serverID) {
+                NSString *changes = [(NSSet *)self.changedRecords[localMO.serverID] allObjects].string;
                 self.changedRecords = [self.changedRecords setValue:nil forImmutableKeyPath:@[localMO.serverID]];
                 
                 DDLogVerbose(@"===> MO %@(%@) uploaded to server with changes applied: %@. %lu to go.", localMO.entity.name, localMO.serverID, changes, (unsigned long)self.changedRecords.allKeys.count);
             }else {
-                DDLogVerbose(@"===> MO %@(%@) created on server, %lu to go.", localMO.entity.name, localMO.serverID, (unsigned long)self.changedRecords.allKeys.count);
+                DDLogVerbose(@"+++> MO %@(%@) created on server, %lu to go.", localMO.entity.name, localMO.serverID, (unsigned long)self.changedRecords.allKeys.count);
             }
-            
             
             //remove from queue
             [self removeObjectFromWorkingQueue:localMO];
@@ -345,7 +345,7 @@ NSManagedObjectContext *mainContext;
                 
                 //add changed keys to record
                 NSMutableSet *changed = [NSMutableSet setWithArray:self.changedRecords[SO.serverID]] ?: [NSMutableSet new];
-                [changed addObject:changedKeys];
+                [changed addObjectsFromArray:changedKeys];
 				self.changedRecords = [self.changedRecords setValue:changed.allObjects forImmutableKeyPath:@[SO.serverID]];
                 //add to queue
                 [self appendUpdateQueue:SO];
@@ -395,7 +395,7 @@ NSManagedObjectContext *mainContext;
         //download
         object =[self getParseObjectWithClass:serverObject.serverClassName ID:parseObjectId error:error];
         if ([object isNewerThanMO]) {
-            DDLogWarn(@"The PO %@(%@) being updated from MO is newer than MO", object.parseClassName, object.objectId);
+            DDLogWarn(@"The PO %@(%@) being updated from MO is newer", object.parseClassName, object.objectId);
         }
         if (!object) {
             if ([*error code] == kPFErrorObjectNotFound) {
@@ -691,13 +691,6 @@ NSManagedObjectContext *mainContext;
     return MO;
 }
 
-+ (void)save{
-	EWAssertMainThread
-	if (mainContext.hasChanges) {
-		[mainContext MR_saveToPersistentStoreAndWait];
-	}
-}
-
 + (void)saveAllToLocal:(NSArray *)MOs{
 	if (MOs.count == 0) {
 		return;
@@ -915,11 +908,13 @@ NSManagedObjectContext *mainContext;
 
 - (NSDictionary *)updatingClassAndValues{
     NSMutableDictionary *info = self.changedRecords.mutableCopy;
-    [self.changedRecords enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+    [self.changedRecords enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *changedKeys, BOOL *stop) {
         PFObject *PO = [self getCachedParseObjectForID:key];
         if (PO) {
             [info removeObjectForKey:key];
-            [info setObject:obj forKey:[NSString stringWithFormat:@"%@(%@)", PO.parseClassName, key]];
+            info[[NSString stringWithFormat:@"%@(%@)", PO.parseClassName, key]] = changedKeys.string;
+        } else {
+            info[key] = changedKeys.string;
         }
     }];
     return info.copy;

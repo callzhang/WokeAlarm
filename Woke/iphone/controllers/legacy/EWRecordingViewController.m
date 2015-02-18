@@ -297,7 +297,7 @@
                     [self.view showFailureNotification:@"Failed to send media"];
                 }else{
                     //dismiss hud
-                    [EWUIUtil dismissHUDinView:self.view];
+                    [EWUIUtil dismissHUD];
                     
                     //dismiss blur view
                     //[self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];

@@ -16,7 +16,7 @@
 static const float originalSize = 80.0;
 
 @implementation EWUIUtil
-
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
 + (CGFloat)screenWidth {
     return [[UIScreen mainScreen] bounds].size.width;
 }
@@ -324,6 +324,14 @@ static const float originalSize = 80.0;
 
 
 #pragma mark - HUD
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        self.HUDs = [NSMutableArray new];
+    }
+    return self;
+}
+
 + (void)showSuccessHUBWithString:(NSString *)string{
 	UIView *rootView = [self topView];
 	[rootView showSuccessNotification:string];
@@ -331,17 +339,20 @@ static const float originalSize = 80.0;
 
 + (void)showFailureHUBWithString:(NSString *)string{
 	UIView *rootView = [self topView];
-	[rootView showFailureNotification:string];
+	JGProgressHUD *hud = [rootView showFailureNotification:string];
+    [[EWUIUtil shared].HUDs addObject:hud];
 }
 
 + (void)showWarningHUBWithString:(NSString *)string{
 	UIView *rootView = [self topView];
-	[rootView showNotification:string WithStyle:hudStyleWarning audoHide:5];
+	JGProgressHUD *hud = [rootView showNotification:string WithStyle:hudStyleWarning audoHide:4];
+    [[EWUIUtil shared].HUDs addObject:hud];
 }
 
 + (void)showWatingHUB{
     UIView *rootView = [self topView];
-    [rootView showLoopingWithTimeout:0];
+    JGProgressHUD *hud = [rootView showLoopingWithTimeout:0];
+    [[EWUIUtil shared].HUDs addObject:hud];
 }
 
 + (UIView *)topView{
@@ -361,9 +372,8 @@ static const float originalSize = 80.0;
     return nil;
 }
 
-+ (void)dismissHUDinView:(UIView *)view{
-    NSArray *huds = [JGProgressHUD allProgressHUDsInView:view];
-    for (JGProgressHUD *hud in huds) {
++ (void)dismissHUD{
+    for (JGProgressHUD *hud in [EWUIUtil shared].HUDs) {
         [hud dismiss];
     }
 }

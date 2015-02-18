@@ -14,6 +14,7 @@
 
 @implementation EWServerObject(EWSync)
 #pragma mark - Server sync
+//TODO: use advanced thread manageement to dispatch all background downloading task(updateValueAndRelationFromParseObject) to a single queue, so that the downloading tasks won't interfere each other and have unexpected result, such as duplicated object and missing property (due to deletion of duplications)
 - (void)updateValueAndRelationFromParseObject:(PFObject *)parseObject{
     if (!parseObject) {
         DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
@@ -66,6 +67,7 @@
             //download related PO
             NSError *err2;
             NSArray *relatedParseObjects = [[toManyRelation query] findObjects:&err2];
+            
             //handle error
             if ([err2 code] == kPFErrorObjectNotFound) {
                 DDLogWarn(@"*** Uh oh, we couldn't find the related PO!");
@@ -232,9 +234,7 @@
                 }
             }
         }else{
-			if ([attributeUploadSkipped containsObject:key]) {
-				return;
-			}
+			if (key.skipUpload) return;
             //parse value empty, delete
 			id MOValue = [self valueForKey:key];
             if (MOValue) {

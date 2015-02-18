@@ -179,23 +179,25 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
     EWMediaFile *file = self.mediaFile;
 	BOOL good = self.mediaFile.audio != nil;
     if (!file) {
-        [self refreshInBackgroundWithCompletion:^(NSError *error){
-            [self.mediaFile refreshInBackgroundWithCompletion:^(NSError *err){
-				BOOL hasFile = self.mediaFile.audio != nil;
-				BOOL changed = good != hasFile;
-                if (block) {
-                    block(changed,err);
-                }
-            }];
+        PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
+        [filePO fetchIfNeeded];
+        [filePO managedObjectInContext:mainContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
+            BOOL hasFile = self.mediaFile.audio != nil;
+            if (block) {
+                block(hasFile,error);
+            }
         }];
     }else if(!file.audio){
         [file refreshInBackgroundWithCompletion:^(NSError *error){
             if (block) {
 				BOOL hasFile = self.mediaFile.audio != nil;
-				BOOL changed = good != hasFile;
-                block(changed, error);
+                block(hasFile, error);
             }
         }];
+    }else{
+        if (block) {
+            block(good, nil);
+        }
     }
 }
 

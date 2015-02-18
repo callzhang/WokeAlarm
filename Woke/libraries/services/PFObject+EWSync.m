@@ -257,20 +257,24 @@
     NSError *error;
 	[self fetchIfNeededAndSaveToCache:&error];
 	
-	NSMutableArray *SOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
-	while (SOs.count > 1) {
-		DDLogError(@"Find duplicated MO for ID %@(%@)", self.localClassName, self.objectId);
-		EWServerObject *mo_ = SOs.lastObject;
-		[SOs removeLastObject];
-		mo_.objectId = nil;
-		[mo_ saveWithCompletion:^(BOOL success, NSError *error) {
-			[mo_ MR_deleteEntityInContext:context];
-		}];
-		
-		//remove from the update queue
-		[[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
+	NSMutableArray *MOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
+    if (MOs.count > 1) {
+		DDLogError(@"Find %ld duplicated MO for ID %@(%@)", MOs.count, self.localClassName, self.objectId);
+        for (EWServerObject *mo_ in MOs){
+            if (![mo_ validate]) {
+                [mo_ remove];
+                //remove from the update queue
+                [[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
+            }
+        }
+        while (MOs.count > 1) {
+            EWServerObject *mo_ = MOs.firstObject;
+            [mo_ remove];
+            //remove from the update queue
+            [[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
+        }
 	}
-	EWServerObject *MO = SOs.firstObject;
+	EWServerObject *MO = MOs.firstObject;
 	
 	if (!MO) {
 		//if managedObject not exist, create it locally by assigning value from PO (quick)

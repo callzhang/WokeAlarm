@@ -52,11 +52,11 @@
 }
 
 - (JGProgressHUD *)showSuccessNotification:(NSString *)alert{
-    return [self showNotification:alert WithStyle:hudStyleSuccess audoHide:4];
+    return [self showNotification:alert WithStyle:hudStyleSuccess audoHide:2];
 }
 
 - (JGProgressHUD *)showFailureNotification:(NSString *)alert{
-    return [self showNotification:alert WithStyle:hudStyleFailed audoHide:4];
+    return [self showNotification:alert WithStyle:hudStyleFailed audoHide:2];
 }
 
 - ( JGProgressHUD*)showLoopingWithTimeout:(float)timeout{
@@ -70,6 +70,13 @@
     });
     
     return hud;
+}
+
+- (void)dismissHUD{
+    NSArray *huds = [JGProgressHUD allProgressHUDsInView:self];
+    for (JGProgressHUD *hud in huds) {
+        [hud dismiss];
+    }
 }
 
 @end

@@ -30,7 +30,7 @@
 #define kAlarmCellHeight     80
 
 @interface EWUIUtil : NSObject
-
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWUIUtil)
 + (CGFloat)screenWidth;
 + (CGFloat)screenHeight;
 
@@ -63,11 +63,12 @@
 + (UIImage *)resizeImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
 //HUD
+@property (nonatomic, strong) NSMutableArray *HUDs;
 + (void)showWatingHUB;
 + (void)showSuccessHUBWithString:(NSString *)string;
 + (void)showFailureHUBWithString:(NSString *)string;
 + (void)showWarningHUBWithString:(NSString *)string;
-+ (void)dismissHUDinView:(UIView *)view;
++ (void)dismissHUD;
 + (UIView *)topView;
 + (UIViewController *)topViewController;
 @end

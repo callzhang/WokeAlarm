@@ -42,14 +42,14 @@
 		[EWUIUtil showWatingHUB];
 	}];
     [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncCompleted object:nil queue:nil usingBlock:^(NSNotification *note) {
-		[EWUIUtil dismissHUDinView:self.view];
+		[EWUIUtil dismissHUD];
 		[self setViewModelAlarm];
 	}];
+    
+    if ([EWSession sharedSession].isSyncingUser == YES) {
+        [EWUIUtil showWatingHUB];
+    }
     [self bindViewModel];
-}
-
-- (void)onPersonSyncCompleted:(NSNotification *)noti {
-	
 }
 
 - (void)setViewModelAlarm {
@@ -77,11 +77,8 @@
     else if ([segue.destinationViewController isKindOfClass:[EWSleepingViewController class]]){
         [[EWWakeUpManager sharedInstance] sleep:nil];
     }
-}
-
-- (IBAction)unwindToSleepViewController:(UIStoryboardSegue *)sender {
-    if ([sender.identifier isEqualToString:@"unwindFromStatusViewController"]) {
-        
+    else if ([segue.destinationViewController isKindOfClass:[EWSleepViewController class]]) {
+        [[EWWakeUpManager sharedInstance] unsleep];
     }
 }
 
