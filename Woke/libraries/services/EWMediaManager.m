@@ -207,7 +207,7 @@
         });
     }
 
-    return [EWPerson myUnreadMedias];
+    return [[EWMediaManager sharedInstance] unreadMediasForPerson:[EWPerson meInContext:context]];
 }
 
 - (NSArray *)unreadMediasForPerson:(EWPerson *)person{

@@ -295,7 +295,6 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 		return;
 	}
 	
-	
     [[AVAudioSession sharedInstance] setDelegate: self];
 	NSError *error = nil;
 	//set category

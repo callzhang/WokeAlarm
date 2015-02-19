@@ -385,18 +385,41 @@ Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response)
 
 
 Parse.Cloud.define("getWokeVoice", function(request, response) {
+  Parse.Cloud.useMasterKey();
   var currentUserId = request.params.userId;
-  var query = new Parse.Query(Parse.User);
   var newMedia;
-  query.get(currentUserId).then(function(user){
+  var user;
+  var voice;
+  var woke;
+
+
+  var query = new Parse.Query(Parse.User);
+  query.get(currentUserId).then(function(obj){
+    user = obj;
     console.log("Current user: " + user.get("name"));
     var query = new Parse.Query(Parse.User);
     query.equalTo("username", "woke");
     return query.find();
   }, function (error) {
-    console.log("Failed to find current user: ", error.message);
-  }).then(function (woke) {
+    console.log("Failed to find current user: "+ error.message);
+    response.error("Failed to find current user: "+ error.message);
+  }).then(function (obj) {
+    woke = obj[0];
     console.log("Found woke: "+ woke.id);
+    //get voice file
+    var voiceFile = Parse.Object.extend("EWMediaFile");
+    var mediaFileQuery = new Parse.Query(voiceFile);
+    mediaFileQuery.equalTo("owner", woke.id);
+    return mediaFileQuery.find();
+  }, function (list, error) {
+    console.log("failed to find Woke: " + error.message);
+    response.error("failed to find Woke: " + error.message);
+  }).then(function (voices) {
+    console.log("Get Woke voices: "+voices.length);
+    var n = Math.floor(Math.random() * voices.length);
+    console.log("Random voice chosen: "+n);
+    voice = voices[n];
+
     //create a media
     var EWMedia = Parse.Object.extend("EWMedia");
     var media = new EWMedia;
@@ -404,19 +427,7 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
     media.set("author", woke);
     media.set("message", "Voice from Woke");
     media.set("type", "voice");
-    //get voice
-    var voiceFile = Parse.Object.extend("EWMediaFile");
-    var mediaFileQuery = new Parse.Query(voiceFile);
-    mediaFileQuery.equalTo("owner", woke.id);
-    return mediaFileQuery.find();
-  }, function (list, error) {
-    console.log("failed to find Woke: " + error.message);
-  }).then(function (voices) {
-    console.log("Get Woke voices: "+voices.length);
-    var n = Math.floor(Math.random() * voices.length);
-    console.log("Random voice chosen: "+n);
-    voiceFile = voices[n];
-    media.set("mediaFile", voiceFile);
+    media.set("mediaFile", voice);
     return media.save();
   }, function (list, error) {
     console.log("cannot find woke voices");
@@ -424,9 +435,9 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
   }).then(function (media) {
     newMedia = media;
     //save file->medias relation
-    var mediasRelation = voiceFile.relation("medias");
+    var mediasRelation = voice.relation("medias");
     mediasRelation.add(media);
-    voiceFile.save();
+    voice.save();
     //add woke->sentMedias relation
     var sentMedias = woke.relation("sentMedias");
     sentMedias.add(media);
@@ -435,16 +446,85 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
     user.add("unreadMedias", media);
     return user.save();
   }, function(error){
-    console.log("Relation mediaFile->media failed: "+error.message);
+    console.log("Relation save failed: "+error.message);
+    response.error("failed to save user: " + error.message);
   }).then(function (user) {
     response.success(newMedia);
     console.log("Woke voice (" +newMedia.id +") returned");
   }, function (error) {
     // Handle error
-    console.error("Failed to send push");
-    console.log("Failed to send push for test media: "+error.message);
+    response.error("Failed to get Woke voice"+error.message);
   });
+});
 
+Parse.Cloud.define("testGetRandomVoice", function(request, response) {
+  Parse.Cloud.useMasterKey();
+  var currentUserId = request.params.userId;
+  var newMedia;
+  var user;
+  var voice;
+  var sender;
+
+  var query = new Parse.Query(Parse.User);
+  query.get(currentUserId).then(function(obj){
+    user = obj;
+    console.log("Current user: " + user.get("name"));
+    //get voice
+    var voiceFile = Parse.Object.extend("EWMediaFile");
+    var mediaFileQuery = new Parse.Query(voiceFile);
+    query.descending("createdAt");
+    mediaFileQuery.limit(10);
+    return mediaFileQuery.find();
+  }, function (error) {
+    response.error("failed to find user: " + error.message);
+  }).then(function (voices) {
+    console.log("Get random voices: "+voices.length);
+    var n = Math.floor(Math.random() * voices.length);
+    console.log("Random voice chosen: "+n);
+    voice = voices[n];
+    var senderQuery = new Parse.Query(Parse.User);
+    return senderQuery.get(voice.get("owner"));
+  }, function (error) {
+    response.error("failed to find voice: " + error.message);
+  }).then(function (obj){
+    console.log("get sender "+obj.get("firstName"));
+    sender = obj;
+    //create a media
+    var EWMedia = Parse.Object.extend("EWMedia");
+    var media = new EWMedia;
+    media.set("receiver", user);
+    media.set("author", sender);
+    media.set("message", "Voice from "+sender.get("firstName"));
+    media.set("type", "voice");
+    media.set("mediaFile", voice);
+    return media.save();
+  }, function (error) {
+    response.error("Failed to get voices owner: " + error.message);
+  }).then(function (media) {
+    console.log("Saved media: "+media.id)
+    newMedia = media;
+    //save file->medias relation
+    var mediasRelation = voice.relation("medias");
+    mediasRelation.add(media);
+    voice.save();
+    console.log("Saved voice->media");
+    //add woke->sentMedias relation
+    var sentMedias = sender.relation("sentMedias");
+    sentMedias.add(media);
+    sender.save();
+    console.log("Saved sender->sentMedias");
+    //add user->unreadMedia relation
+    user.add("unreadMedias", media);
+    return user.save();
+  }, function (error){
+    response.error("Relation mediaFile->media failed: " + error.message);
+  }).then(function (user) {
+    console.log("Random voice (" +newMedia.id +") returned");
+    response.success(newMedia);
+  }, function (error) {
+    // Handle error
+    response.error("Failed to request random voice: " + error.message);
+  });
 });
 
 Parse.Cloud.define("syncUser", function(request, response) {

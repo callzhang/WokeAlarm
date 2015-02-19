@@ -12,7 +12,7 @@
 
 #define kBackgroundingStartNotice	@"enter_backgrounding"
 #define kBackgroundingEndNotice		@"end_backgrounding"
-#define backgroundingSound          @"tock.caf" //@"bg.caf"
+#define backgroundingSound          @"bg.caf"
 #define backgroundingFailureSound   @"new.caf"
 
 @interface EWBackgroundingManager : NSObject <AVAudioSessionDelegate>
