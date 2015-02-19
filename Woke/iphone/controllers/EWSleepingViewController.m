@@ -22,6 +22,7 @@
 #import "EWPostWakeUpViewController.h"
 #import "EWWakeUpManager.h"
 #import "EWSleepViewController.h"
+#import "EWUIUtil.h"
 
 NSString *kShowWakeUpChildVCNotification = @"kShowWakeUpChildVCNotification";
 NSString *kHideWakeUpChildVCNotification = @"kHideWakeUpChildVCNotification";
@@ -131,11 +132,23 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     }
     else if ([segue.destinationViewController isKindOfClass:[EWPostWakeUpViewController class]]) {
         //wake up
-        [[EWWakeUpManager sharedInstance] wake:nil];
+        [[EWWakeUpManager sharedInstance] startToWakeUp];
     }
     
     DDLogVerbose(@"Segue on SleepView: %@", segue.identifier);
 }
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
+    if ([identifier isEqualToString:@"toPostWakeUpView"]) {
+        //test delegate
+        BOOL shouldWakeUp = [[EWWakeUpManager sharedInstance].delegate wakeupManager:[EWWakeUpManager sharedInstance] shouldWakeUpWithAlarm:[EWPerson myCurrentAlarm]];
+        if (!shouldWakeUp) {
+            [EWUIUtil showWarningHUBWithString:@"It's too early to wake up"];
+        }
+        
+        return shouldWakeUp;
+    }
+    return YES;
+}
 
 @end

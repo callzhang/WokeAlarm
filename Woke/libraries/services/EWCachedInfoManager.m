@@ -21,7 +21,7 @@
 //The manager should monitor my activities and update the statistics automatically
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
-//for me
+//Update stats automatically for me
 - (void)startAutoCacheUpdateForMe{
     NSAssert(self == [EWCachedInfoManager shared], @"Self is not the shared instance!");
     EWAssertMainThread
@@ -35,7 +35,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
         if (change[NSKeyValueChangeIndexesKey]) {
             DDLogInfo(@"CachedManager detected Activity change, detected and statistics updated: %@", change[NSKeyValueChangeIndexesKey]);
             [self updateStatistics];
-            [self updateActivityCacheWithCompletion:nil];
+            //[self updateActivityCacheWithCompletion:nil];
         }
     }];
     
@@ -49,9 +49,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     }];
     
     //update stats then update stats
-    [self updateActivityCacheWithCompletion:^{
-        [self updateStatistics];
-    }];
+//    [self updateActivityCacheWithCompletion:^{
+//        [self updateStatistics];
+//    }];
 }
 
 //for others
@@ -217,7 +217,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
 
 #pragma mark - Update cache
 //Snapshot activity cache and save to cachedInfo (Unused)
-- (void)updateActivityCacheWithCompletion:(VoidBlock)block{    
+- (void)updateActivityCacheWithCompletion:(VoidBlock)block{
+    NSAssert(YES, @"Activity should not be updated to cache anymore");
     NSParameterAssert([_currentPerson isMe]);
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWPerson *localMe = [EWPerson meInContext:localContext];

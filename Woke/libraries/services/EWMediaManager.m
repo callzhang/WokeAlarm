@@ -178,14 +178,11 @@
         //notify user for the new media
         dispatch_async(dispatch_get_main_queue(), ^{
             EWAlert(@"You got voice for your next wake up");
-            //NSNotification
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
-            });
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
         });
     }
-    
-    return newMedia.copy;
+
+    return [EWPerson myUnreadMedias];
 }
 
 - (NSArray *)unreadMediasForPerson:(EWPerson *)person{

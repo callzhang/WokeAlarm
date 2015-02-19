@@ -29,7 +29,7 @@
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
     //DDLogInfo(@"Add Woke Voice");
     [EWActivityManager sharedManager].testForceWakeUp = YES;
-    [[EWWakeUpManager sharedInstance] startToWakeUp];
+    //[[EWWakeUpManager sharedInstance] startToWakeUp];
 });
 
 NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotification";
@@ -95,10 +95,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
     
     //update media
-    [[EWMediaManager sharedInstance] checkUnreadMedias];
-    self.medias = [EWPerson myUnreadMedias];
-    
-    //fill media from mediaAssets, if no media for task, create a pseudo media
+    self.medias = [[EWMediaManager sharedInstance] checkUnreadMedias];
     
     //add Woke media is needed
     if (self.medias.count == 0) {
@@ -115,6 +112,9 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     if ([self.delegate respondsToSelector:@selector(wakeUpManagerDidWakeUp:)]) {
         [self.delegate wakeUpManagerDidWakeUp:self];
     }
+    
+    //start to play
+    [self startToPlayVoice];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:nil];
 }
@@ -292,6 +292,13 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 }
 
 #pragma mark - Play for wake up view
+- (void)startToPlayVoice{
+    [EWAVManager sharedManager].player.volume = 0;
+    [[EWAVManager sharedManager] volumeTo:1 withCompletion:^{
+        [self playNextVoice];
+    }];
+}
+
 - (void)playNextVoiceWithDelay {
     EWMedia *currentMediaBackup = self.currentMedia;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kMediaPlayInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -349,7 +356,9 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 }
 
 - (void)stopPlayingVoice {
-    [[EWAVManager sharedManager] stopAllPlaying];
+    [[EWAVManager sharedManager] volumeTo:0 withCompletion:^{
+        [[EWAVManager sharedManager] stopAllPlaying];
+    }];
     [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidStopPlayMediaNotification object:nil];
 }
 

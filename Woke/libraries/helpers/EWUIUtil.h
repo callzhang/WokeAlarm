@@ -64,10 +64,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWUIUtil)
 
 //HUD
 @property (nonatomic, strong) NSMutableArray *HUDs;
-+ (void)showWatingHUB;
-+ (void)showSuccessHUBWithString:(NSString *)string;
-+ (void)showFailureHUBWithString:(NSString *)string;
-+ (void)showWarningHUBWithString:(NSString *)string;
++ (JGProgressHUD *)showWatingHUB;
++ (JGProgressHUD *)showSuccessHUBWithString:(NSString *)string;
++ (JGProgressHUD *)showFailureHUBWithString:(NSString *)string;
++ (JGProgressHUD *)showWarningHUBWithString:(NSString *)string;
 + (void)dismissHUD;
 + (UIView *)topView;
 + (UIViewController *)topViewController;

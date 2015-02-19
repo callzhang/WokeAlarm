@@ -23,7 +23,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.KVOController observe:self.collectionView keyPath:@"contentInset" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        DDLogInfo(@"Collection view insert changed to %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset));
         if (_collectionView.contentInset.top != 0) {
             UIEdgeInsets insert = self.collectionView.contentInset;
             insert.top = 0;

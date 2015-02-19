@@ -35,9 +35,11 @@ NSString *const EWActivityTypeMedia = @"media";
 - (instancetype)init{
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
-            //change current activity time according to alarm
-            //currently it is done in EWAlarm
+        //change current activity time according to alarm
+        //currently it is done in EWAlarm
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:kWakeStartNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            self.testForceWakeUp = NO;
         }];
     }
     return self;
@@ -148,7 +150,6 @@ NSString *const EWActivityTypeMedia = @"media";
         // too early to wake
         if (_testForceWakeUp) {
             DDLogInfo(@"Time left %@ but forced wakeup", activity.time.timeLeft);
-            _testForceWakeUp = NO;
             return YES;
         }
         DDLogWarn(@"Wake %.1f hours early, skip.", activity.time.timeIntervalSinceNow/3600.0);

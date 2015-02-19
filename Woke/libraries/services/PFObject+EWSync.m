@@ -92,6 +92,7 @@
         id relatedManagedObjects = [managedObject valueForKey:key];
         
         if ([relation isToMany]) {
+            
             //To-Many relation
             //First detect if has inverse relation, if not, we use Array to represent the relation
             //THOUGHTS: if the relation is linked to a user, we still use PFRelation as the size of PFObject will be too large for Array to store PFUser

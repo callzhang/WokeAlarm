@@ -79,6 +79,8 @@
 + (UIImage *)stopButton { return [UIImage imageNamed:@"Stop Button"]; }
 + (NSString *)voiceMessageSliceName { return @"Voice Message Slice"; }
 + (UIImage *)voiceMessageSlice { return [UIImage imageNamed:@"Voice Message Slice"]; }
++ (NSString *)warningName { return @"warning"; }
++ (UIImage *)warning { return [UIImage imageNamed:@"warning"]; }
 + (NSString *)wokeAddFriendsAddAllButtonHighlightedName { return @"woke-add-friends-add-all-button-highlighted"; }
 + (UIImage *)wokeAddFriendsAddAllButtonHighlighted { return [UIImage imageNamed:@"woke-add-friends-add-all-button-highlighted"]; }
 + (NSString *)wokeAddFriendsAddAllButtonName { return @"woke-add-friends-add-all-button"; }

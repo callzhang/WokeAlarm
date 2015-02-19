@@ -76,7 +76,10 @@ UIViewController *rootViewController;
     UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
         FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
         viewController.tweaksDelegate = self;
-        [[EWUIUtil topViewController] presentViewController:viewController animated:YES completion:nil];
+        UIViewController *topController = [EWUIUtil topViewController];
+        if (![topController isKindOfClass:NSClassFromString(@"_FBTweakCategoryViewController")]) {
+            [topController presentViewController:viewController animated:YES completion:nil];
+        }
     }];
     longGesture.numberOfTouchesRequired = 2;
     longGesture.minimumPressDuration = 2;

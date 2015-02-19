@@ -11,6 +11,7 @@
 #import "EWWakeUpViewCell.h"
 #import "EWAVManager.h"
 #import "UIViewController+Blur.h"
+#import "EWUIUtil.h"
 @interface EWPostWakeUpViewController()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *tableviewHeaderView;
@@ -24,11 +25,12 @@
     self.tableviewHeaderView.backgroundColor = [UIColor clearColor];
 }
 
-#pragma mark - <UITableViewDataSource>
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.8]];
 }
 
+#pragma mark - <UITableViewDataSource>
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self medias].count;
 }
@@ -54,10 +56,13 @@
 - (NSArray *)medias {
     return [EWWakeUpManager sharedInstance].medias;
 }
+
+#pragma mark - UI Actions
 - (IBAction)done:(id)sender {
     if (self.presentingViewController) {
         [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:^{
-            //
+            [[EWWakeUpManager sharedInstance] stopPlayingVoice];
+            [[EWWakeUpManager sharedInstance] wake:nil];
         }];
     }
 }

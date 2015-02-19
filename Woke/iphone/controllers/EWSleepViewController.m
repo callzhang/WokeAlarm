@@ -14,6 +14,7 @@
 #import "EWSleepingViewController.h"
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
+#import "JGProgressHUD.h"
 
 @interface EWSleepViewController ()
 
@@ -39,7 +40,8 @@
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
-		[EWUIUtil showWatingHUB];
+		JGProgressHUD *hud = [EWUIUtil showWatingHUB];
+        hud.textLabel.text = @"Syncing data";
 	}];
     [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncCompleted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[EWUIUtil dismissHUD];
@@ -47,7 +49,8 @@
 	}];
     
     if ([EWSession sharedSession].isSyncingUser == YES) {
-        [EWUIUtil showWatingHUB];
+        JGProgressHUD *hud = [EWUIUtil showWatingHUB];
+        hud.textLabel.text = @"Syncing data";
     }
     [self bindViewModel];
 }
@@ -80,6 +83,5 @@
     else if ([segue.destinationViewController isKindOfClass:[EWSleepViewController class]]) {
         [[EWWakeUpManager sharedInstance] unsleep];
     }
-    DDLogVerbose(@"Segue on SleepView: %@", segue.identifier);
 }
 @end

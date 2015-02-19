@@ -2036,7 +2036,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="Lp5-7U-6rj" kind="show" id="WL2-so-Aal"/>
+                                    <segue destination="Lp5-7U-6rj" kind="show" identifier="toPostWakeUpView" id="WL2-so-Aal"/>
                                 </connections>
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9a1-dQ-5rY" userLabel="wakeup child view controller">

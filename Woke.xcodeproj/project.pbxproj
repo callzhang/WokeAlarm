@@ -176,7 +176,6 @@
 		9BB244B11A87205600B0B544 /* FriendshipTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244B01A87205600B0B544 /* FriendshipTest.m */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
-		9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAB091A1972B800B4CBFF /* EWSleepModeViewController.m */; };
 		9BF1815D1A35222F00D25DBA /* Autumn Spring.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181551A35222F00D25DBA /* Autumn Spring.caf */; };
 		9BF1815E1A35222F00D25DBA /* Daybreak.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181561A35222F00D25DBA /* Daybreak.caf */; };
 		9BF1815F1A35222F00D25DBA /* Drive.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181571A35222F00D25DBA /* Drive.caf */; };
@@ -185,7 +184,6 @@
 		9BF181621A35222F00D25DBA /* Sunny Afternoon.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF1815A1A35222F00D25DBA /* Sunny Afternoon.caf */; };
 		9BF181631A35222F00D25DBA /* tock.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF1815B1A35222F00D25DBA /* tock.caf */; };
 		9BF181641A35222F00D25DBA /* Tropical Delight.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF1815C1A35222F00D25DBA /* Tropical Delight.caf */; };
-		9BF181671A37C1B600D25DBA /* EWPreWakeViewControllerZL.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF181661A37C1B600D25DBA /* EWPreWakeViewControllerZL.m */; };
 		9BF1816A1A37FF0800D25DBA /* EWWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF181691A37FF0800D25DBA /* EWWaveformView.m */; };
 		9BF729191A4CFCFD006C6C51 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09269DDF1A1316580048DC44 /* Lato-Regular.ttf */; };
 		9BF7291A1A4CFCFD006C6C51 /* PLCameraSheetButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B81396A1A15D65900F1A56C /* PLCameraSheetButtonPressed.png */; };
@@ -1604,7 +1602,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				09DF4F8A1A1434AF00BEA328 /* _EWNotification.m in Sources */,
-				9BBCB95F1A3A97CC009CAD42 /* EWSleepModeViewController.m in Sources */,
 				09285A3F1A1F115000C808C0 /* UIStoryboard+Extensions.m in Sources */,
 				098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */,
 				091C675B1A3523AF0091B8A6 /* EWCollectionPersonCell.m in Sources */,
@@ -1654,7 +1651,6 @@
 				9BF9CC771A78A50100B76D92 /* EWFriendsViewControllerZL.m in Sources */,
 				09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */,
 				09A923B31A86DD82007B2251 /* EWVoiceViewController.m in Sources */,
-				9BF181671A37C1B600D25DBA /* EWPreWakeViewControllerZL.m in Sources */,
 				096AAB141A1972B800B4CBFF /* EWRecordingViewController.m in Sources */,
 				096AAAEF1A195A3900B4CBFF /* PFObject+EWSync.m in Sources */,
 				096AAAD81A195A3900B4CBFF /* UIView+Layout.m in Sources */,

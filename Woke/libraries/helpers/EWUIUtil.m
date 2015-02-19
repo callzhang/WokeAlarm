@@ -332,27 +332,32 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
     return self;
 }
 
-+ (void)showSuccessHUBWithString:(NSString *)string{
++ (JGProgressHUD *)showSuccessHUBWithString:(NSString *)string{
 	UIView *rootView = [self topView];
-	[rootView showSuccessNotification:string];
+	JGProgressHUD *hud = [rootView showSuccessNotification:string];
+    [[EWUIUtil shared].HUDs addObject:hud];
+    return hud;
 }
 
-+ (void)showFailureHUBWithString:(NSString *)string{
++ (JGProgressHUD *)showFailureHUBWithString:(NSString *)string{
 	UIView *rootView = [self topView];
 	JGProgressHUD *hud = [rootView showFailureNotification:string];
     [[EWUIUtil shared].HUDs addObject:hud];
+    return hud;
 }
 
-+ (void)showWarningHUBWithString:(NSString *)string{
++ (JGProgressHUD *)showWarningHUBWithString:(NSString *)string{
 	UIView *rootView = [self topView];
 	JGProgressHUD *hud = [rootView showNotification:string WithStyle:hudStyleWarning audoHide:4];
     [[EWUIUtil shared].HUDs addObject:hud];
+    return hud;
 }
 
-+ (void)showWatingHUB{
++ (JGProgressHUD *)showWatingHUB{
     UIView *rootView = [self topView];
     JGProgressHUD *hud = [rootView showLoopingWithTimeout:0];
     [[EWUIUtil shared].HUDs addObject:hud];
+    return hud;
 }
 
 + (UIView *)topView{

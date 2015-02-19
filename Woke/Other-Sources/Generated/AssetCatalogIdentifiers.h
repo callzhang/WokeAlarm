@@ -79,6 +79,8 @@
 + (NSString *)stopButtonName;
 + (UIImage *)voiceMessageSlice;
 + (NSString *)voiceMessageSliceName;
++ (UIImage *)warning;
++ (NSString *)warningName;
 + (UIImage *)wokeAddFriendsAddAllButtonHighlighted;
 + (NSString *)wokeAddFriendsAddAllButtonHighlightedName;
 + (UIImage *)wokeAddFriendsAddAllButton;

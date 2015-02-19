@@ -54,7 +54,7 @@
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
 + (instancetype)managerForPerson:(EWPerson *)person;
 
-//cachedInfo management
+//Start automatic cachedInfo management for me
 - (void)startAutoCacheUpdateForMe;
 /**
  * Snapshot activity cache and save to cachedInfo 

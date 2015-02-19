@@ -36,7 +36,7 @@
                 break;
                 
             case hudStyleWarning:
-                hud.indicatorView = [[JGProgressHUDIndicatorView alloc] initWithContentView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning_37x"]]];
+                hud.indicatorView = [[JGProgressHUDIndicatorView alloc] initWithContentView:[[UIImageView alloc] initWithImage:[ImagesCatalog warning]]];
                 break;
                 
             default:
