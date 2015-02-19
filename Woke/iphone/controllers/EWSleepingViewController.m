@@ -38,13 +38,13 @@ FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^{
 FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up[With Delay 5]", ^{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //DDLogInfo(@"Add Woke Voice");
-        [[EWMediaManager sharedInstance] getWokeVoice];
+        [[EWMediaManager sharedInstance] testGetRandomVoiceWithCompletion:nil];
     });
 });
 
 FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     //DDLogInfo(@"Add Woke Voice");
-    [[EWMediaManager sharedInstance] getWokeVoice];
+	[[EWMediaManager sharedInstance] testGetRandomVoiceWithCompletion:nil];
 });
 @interface EWSleepingViewController ()<EWBaseViewNavigationBarButtonsDelegate>
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;

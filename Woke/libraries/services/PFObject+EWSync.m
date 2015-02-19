@@ -378,6 +378,10 @@
 
 #pragma mark - Cache
 - (void)fetchIfNeededAndSaveToCache:(NSError *__autoreleasing *)error{
+	if (!error) {
+		NSError *__autoreleasing err;
+		error = &err;
+	}
     if (!self.isDataAvailable) {
         [self fetch:error];
         if (*error) {

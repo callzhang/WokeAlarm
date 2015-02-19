@@ -147,32 +147,32 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 }
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context{
-    EWMedia *media = [EWMedia MR_findByAttribute:kParseObjectID withValue:mediaID inContext:context].firstObject;
-    if (!media || !media.updatedAt) {
-        //need to find it on server
-        NSError *error;
-        media = (EWMedia *)[EWSync findObjectWithClass:NSStringFromClass([EWMedia class]) withID:mediaID inContext:context error:&error];
-        
-        //download media
-        NSLog(@"Downloading media: %@", media.objectId);
-        [media downloadMediaFile];
-        if (![media validate]) {
-            DDLogError(@"Get new media but not valid: %@", media);
-            return nil;
-        }
-    }
+	PFObject *mediaPO = [[EWSync sharedInstance] getParseObjectWithClass:NSStringFromClass([EWMedia class]) ID:mediaID error:nil];
+    EWMedia *media = (EWMedia *)[mediaPO managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:nil];
+	[media downloadMediaFile];
+
+	if (![media validate]) {
+		DDLogError(@"Get new media but not valid: %@", media);
+		return nil;
+	}
     return media;
 }
 
 
 #pragma mark - Media File
 - (void)downloadMediaFile{
-    EWMediaFile *file = self.mediaFile;
-    if (!file) {
-        [self refresh];
-        file = self.mediaFile;
-    }
-    [file refresh];
+	EWMediaFile *file = self.mediaFile;
+	BOOL good = self.mediaFile.audio != nil;
+	if (!file) {
+		PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
+		[filePO fetchIfNeeded];
+		file = (EWMediaFile *)[filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateRelation completion:nil];
+		if (![file validate]) {
+			DDLogError(@"Failed to download media file: %@", file);
+		}
+	}else if(!file.audio){
+		[file refresh];
+	}
 }
 
 - (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{
@@ -181,7 +181,7 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
     if (!file) {
         PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
         [filePO fetchIfNeeded];
-        [filePO managedObjectInContext:mainContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
+        [filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
             BOOL hasFile = self.mediaFile.audio != nil;
             if (block) {
                 block(hasFile,error);

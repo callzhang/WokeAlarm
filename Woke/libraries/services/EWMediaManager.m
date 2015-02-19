@@ -77,20 +77,45 @@
     //call server test function
     [PFCloud callFunctionInBackground:@"getWokeVoice" withParameters:@{kUserID: [EWPerson me].objectId} block:^(PFObject *media, NSError *error) {
         if (media) {
-            DDLogInfo(@"Finished get woke voice request with response: %@", media);
+            DDLogInfo(@"Finished get woke voice request with media: %@", media);
             //check media
             [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
                 [[EWPerson meInContext:localContext] addUnreadMediasObject:newMedia];
             } completion:^(BOOL contextDidSave, NSError *error2) {
-                //notification
-                //[EWNotification newMediaNotification:newMedia];
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
+				if (contextDidSave) {
+					[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
+				}else {
+					DDLogError(@"Failed to save new media: %@", error2);
+				}
             }];
         }else{
-            DDLogError(@"Failed test voice request: %@", error.description);
+            DDLogError(@"Failed Woke voice request: %@", error.description);
         }
     }];
+}
+
+- (void)testGetRandomVoiceWithCompletion:(void (^)(EWMedia *media, NSError *error))block{
+	//call server test function
+	[PFCloud callFunctionInBackground:@"testGetRandomVoice" withParameters:@{kUserID: [EWPerson me].objectId} block:^(PFObject *media, NSError *error) {
+		if (media) {
+			DDLogInfo(@"Got random voice request with media: %@", media);
+			//check media
+			[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+				EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
+				[[EWPerson meInContext:localContext] addUnreadMediasObject:newMedia];
+			} completion:^(BOOL contextDidSave, NSError *error2) {
+				//notification
+				if (contextDidSave) {
+					[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
+				}else {
+					DDLogError(@"Failed to save new media: %@", error2);
+				}
+			}];
+		}else{
+			DDLogError(@"Failed random voice request: %@", error.description);
+		}
+	}];
 }
 
 //possible redundant API, my media should be ready on start

@@ -857,6 +857,17 @@ NSManagedObjectContext *mainContext;
 - (void)setCachedParseObject:(PFObject *)PO {
     if (PO.isDataAvailable) {
         [self.serverObjectCache setObject:PO forKey:PO.objectId];
+		//also find related PO that might be checked in
+		NSEntityDescription *entity = [NSEntityDescription entityForName:PO.localClassName inManagedObjectContext:mainContext];
+		[entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+			if (obj.isToMany && !obj.inverseRelationship) {
+				//key to array of pointers
+				NSArray *array = PO[key];
+				for (PFObject *obj in array) {
+					[self setCachedParseObject:obj];
+				}
+			}
+		}];
     }else{
         DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
     }
@@ -870,9 +881,11 @@ NSManagedObjectContext *mainContext;
     
     //try to find PO in the pool first
     PFObject *object = [self getCachedParseObjectForID:ID];
-    
+	if (!object) {
+		object = [PFObject objectWithoutDataWithClassName:class objectId:ID];
+	}
     //if not found, then download
-    if (!object || !object.isDataAvailable) {
+    if (!object.isDataAvailable) {
         NSEntityDescription *entity = [NSEntityDescription entityForName:class inManagedObjectContext:mainContext];
         //fetch from server if not found
         //or if PO doesn't have data avaiable

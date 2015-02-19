@@ -61,13 +61,10 @@ NSString * const EWPersonDefaultName = @"New User";
 
 #pragma mark - Validation
 - (BOOL)validate{
-    if (!self.isMe) {
-        //skip check other user
-        return YES;
-    }
     
     BOOL good = YES;
     if (!self.serverID) {
+		DDLogError(@"EWPerson %@ missing server ID", self.name);
         good = NO;
     }
     if(!self.firstName){
@@ -83,17 +80,24 @@ NSString * const EWPersonDefaultName = @"New User";
         //self.username = [PFUser currentUser].username;
         DDLogError(@"Username is missing for user %@", self);
     }
-    
-    if (self.alarms.count != 7 && self.isMe) {
-        good = NO;
-        DDLogError(@"The person failed validation: alarms: %ld", (long)self.alarms.count);
-    }
-    
-    //preference
-    if (!self.preference) {
-        self.preference = kUserDefaults;
-    }
-    
+	
+	//check me
+	if (self.isMe) {
+		if (self.alarms.count != 7) {
+			good = NO;
+			DDLogError(@"The person failed validation: alarms: %ld", (long)self.alarms.count);
+		}
+		if (!self.updatedAt) {
+			DDLogError(@"Missing updatedAt key for me");
+			good = NO;
+		}
+		//preference
+		if (!self.preference) {
+			DDLogError(@"Missing preference for me");
+			self.preference = kUserDefaults;
+		}
+	}
+	
     return good;
 }
 

@@ -54,4 +54,5 @@
 
 //get ramdom voice
 - (void)getWokeVoice;
+- (void)testGetRandomVoiceWithCompletion:(void (^)(EWMedia *media, NSError *error))block;
 @end

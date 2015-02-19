@@ -126,7 +126,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 - (void)enterForeground{
 	if (![EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
-		[self registerBackgroudingAudioSession];
+		//[self registerBackgroudingAudioSession];
 	}
 	
     [backgroundingtimer invalidate];
@@ -213,9 +213,10 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	
 	UIApplication *application = [UIApplication sharedApplication];
 	NSMutableDictionary *userInfo;
+	NSDate *start;
 	if (timer) {
 		NSInteger count;
-		NSDate *start = timer.userInfo[@"start_date"];
+		start = timer.userInfo[@"start_date"];
 		count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
 		DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceNow]/3600);
 		count++;
@@ -232,7 +233,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	UIBackgroundTaskIdentifier tempID = backgroundTaskIdentifier;
 	//begin a new background task
 	backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
-		DDLogError(@"The backgound task ended!");
+		DDLogError(@"The backgound task ended after %@ of running", start.timeElapsedString);
 	}];
 	//end old bg task
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -269,13 +270,12 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 }
 
 - (void)playSilentSound{
-#if !TARGET_IPHONE_SIMULATOR
     //set up player
     NSArray *soundArray = [backgroundingSound componentsSeparatedByString:@"."];
     NSURL *path = [[NSBundle mainBundle] URLForResource:soundArray.firstObject withExtension:soundArray.lastObject];
     player = [AVPlayer playerWithURL:path];
     [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
-    player.volume = 0.1;
+	//player.volume = 0.1;
 	[player play];
     
     if (player.status == AVPlayerStatusFailed) {
@@ -283,20 +283,26 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
     }else{
         DDLogVerbose(@"Play silent sound");
     }
-#endif
 }
 
 
 //register the BACKGROUNDING audio session
 - (void)registerBackgroudingAudioSession{
 	//[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-    
+	if ([AVAudioSession sharedInstance].category == AVAudioSessionCategoryPlayback &&
+		[AVAudioSession sharedInstance].categoryOptions == AVAudioSessionCategoryOptionMixWithOthers) {
+		DDLogVerbose(@"AVAudioSession already set to backgrounding mode");
+		return;
+	}
+	
+	
+    [[AVAudioSession sharedInstance] setDelegate: self];
 	NSError *error = nil;
 	//set category
 	BOOL success = [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback
 													withOptions: AVAudioSessionCategoryOptionMixWithOthers
 														  error:&error];
-	if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
+	if (!success) DDLogError(@"AVAudioSession error setting category:%@",error);
 	[self playSilentSound];
 }
 

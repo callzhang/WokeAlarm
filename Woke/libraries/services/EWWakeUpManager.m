@@ -135,12 +135,10 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
                 return;
             }
         }
-        
-        NSInteger sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
+		
         //max sleep 5 hours early
-        BOOL needSleep = sleepTimeLeft < duration.floatValue+5 && sleepTimeLeft > 0;
-        if (!needSleep) {
-            DDLogWarn(@"Skip sleep with %ld hours left", sleepTimeLeft);
+		BOOL canSleep = [self shouldSleep];
+        if (!canSleep) {
             return;
         }
         
@@ -178,6 +176,18 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWoke;
 }
 
+- (BOOL)shouldSleep{
+	EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+	NSNumber *duration = [EWPerson me].preference[kSleepDuration];
+	NSInteger sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
+	//max sleep 5 hours early
+	BOOL canSleep = sleepTimeLeft < duration.floatValue+5 && sleepTimeLeft > 0;
+	if (!canSleep) {
+		DDLogWarn(@"Should not sleep with %ld hours left", sleepTimeLeft);
+	}
+	return canSleep;
+}
+
 
 //indicate that the user has woke
 - (void)wake:(EWActivity *)activity{
@@ -208,18 +218,6 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     //update history stats
 }
 
-
-#pragma mark - Utility
-+ (BOOL)isRootPresentingWakeUpView{
-    //determin if WakeUpViewController is presenting
-    UIViewController *vc = [UIWindow mainWindow].rootViewController.presentedViewController;
-    if ([NSStringFromClass([vc class]) isEqualToString:@"EWWakeUpViewController"]) {
-        return YES;
-    }else if ([NSStringFromClass([vc class]) isEqualToString:@"EWPreWakeViewController"]){
-        return YES;
-    }
-    return NO;
-}
 
 #pragma mark - CHECK TIMER
 - (void)scheduleAlarmTimer {

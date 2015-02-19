@@ -1384,6 +1384,11 @@
 					09A776DE1A11D8D9004AF902 = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = SDR7T9YB58;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					09A776F71A11D8D9004AF902 = {
 						CreatedOnToolsVersion = 6.1;

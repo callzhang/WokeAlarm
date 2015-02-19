@@ -41,7 +41,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 
 + (EWWakeUpManager *)sharedInstance;
 
-#pragma mark - Actions
+#pragma mark - Start to wake up
 /**
  Handle alarm time up event
  1. Get next activity
@@ -55,6 +55,8 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 - (void)startToWakeUp;
 
 - (void)startToWakeUpWithAlarm:(EWAlarm *)alarm;
+
+#pragma mark - Sleep
 /**
  *  Handle the sleep timer event
  *
@@ -62,17 +64,14 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
  */
 - (void)sleep:(UILocalNotification *)notification;
 - (void)unsleep;
+- (BOOL)shouldSleep;
+
+#pragma mark - Wake
 /**
  Release the reference to wakeupVC
  Post notification: kWokeNotification
  */
 - (void)wake:(EWActivity *)activity;
-
-#pragma mark - Util
-/**
- Detect if root view is presenting EWWakeUpViewController
- */
-+ (BOOL)isRootPresentingWakeUpView;
 
 #pragma mark - Timer check
 /**

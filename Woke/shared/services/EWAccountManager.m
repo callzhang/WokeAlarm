@@ -407,7 +407,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         [self processLocation:loc];
     } else if (!locationTimeOut) {
         locationTimeOut = [NSTimer bk_scheduledTimerWithTimeInterval:300 block:^(NSTimer *timer) {
-            DDLogInfo(@"After 300s, we accept location with accuracy of %.0fm", loc.horizontalAccuracy);
+            DDLogInfo(@"After 300s, we accept location %@ with accuracy of %.0fm", loc, loc.horizontalAccuracy);
             [manager stopUpdatingLocation];
             [self processLocation:loc];
         } repeats:NO];
@@ -504,7 +504,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                         //or has not updated to Server, meaning it will uploaded with newer data, use current time
                         related[SO.serverID] = [NSDate date];
                     }
-                    else if (SO.updatedAt && good){
+                    else if (SO.updatedAt && SO.updatedAt && good){
                         related[SO.serverID] = SO.updatedAt;
                     }
                 }
@@ -525,7 +525,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                     //or has not updated to Server, meaning it will uploaded with newer data, use current time
                     graph[key] = @{SO.serverID: [NSDate date]};
                 }
-                else if (SO.serverID && good){
+                else if (SO.serverID && SO.updatedAt && good){
                     graph[key] = @{SO.objectId: SO.updatedAt};
                 }
             }
@@ -668,9 +668,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 DDLogDebug(@"========> Finished user syncing <=========");
                 block(nil);
             }else{
-                DDLogError(@"Failed to save synced user with error: %@", error2.description);
+				NSString *str = [NSString stringWithFormat:@"========> Failed to save synced user <========= \n This is a very serious error: %@", error2.description];
+                DDLogError(str);
+				EWAlert(str);
                 block(error2);
             }
+			if (!me.updatedAt) {
+				DDLogError(@"Me is missing updatedAt after syncing data");
+			}
         }];
         
         

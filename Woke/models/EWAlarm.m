@@ -63,16 +63,32 @@
     }
     if (!self.time) {
         DDLogError(@"Alarm（%@）missing time", self.serverID);
-        good = NO;
+		if (self.owner == [EWPerson me]) {
+			self.time = [[NSDate date] dateByAddingTimeInterval:8*3600];
+			DDLogInfo(@"Fixed to %@", self.time.date2String);
+		}else {
+			good = NO;
+		}
     }
     //check tone
     if (!self.tone) {
         DDLogError(@"Tone not set!");
-        good = NO;
+		if (self.owner == [EWPerson me]) {
+			self.tone = [EWPerson me].preference[@"DefaultTone"];
+			DDLogInfo(@"Fixed to %@", self.tone);
+		}else {
+			good = NO;
+		}
     }
     
     if (!self.state) {
         DDLogError(@"State not set for alarm: %@", self.objectId);
+		if (self.owner == [EWPerson me]) {
+			self.state = @YES;
+			DDLogInfo(@"Fixed to %@", self.state);
+		}else {
+			good = NO;
+		}
     }
     return good;
 }

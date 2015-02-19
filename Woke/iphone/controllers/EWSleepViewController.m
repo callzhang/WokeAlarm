@@ -78,10 +78,20 @@
         viewController.person = [EWPerson me];
     }
     else if ([segue.destinationViewController isKindOfClass:[EWSleepingViewController class]]){
-        [[EWWakeUpManager sharedInstance] sleep:nil];
+		[[EWWakeUpManager sharedInstance] sleep:nil];
     }
     else if ([segue.destinationViewController isKindOfClass:[EWSleepViewController class]]) {
         [[EWWakeUpManager sharedInstance] unsleep];
     }
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
+	if ([identifier isEqualToString:@"toSleepingView"]){
+		if (![EWWakeUpManager sharedInstance].shouldSleep) {
+			[EWUIUtil showWarningHUBWithString:@"Too early"];
+			return NO;
+		}
+	}
+	return YES;
 }
 @end
