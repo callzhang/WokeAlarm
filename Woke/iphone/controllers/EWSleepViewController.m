@@ -19,7 +19,7 @@
 #import "FBTweakInline.h"
 
 
-FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
+FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
 	//DDLogInfo(@"Add Woke Voice");
 	[EWWakeUpManager sharedInstance].forceSleep = YES;
 });
