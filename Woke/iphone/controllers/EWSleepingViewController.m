@@ -23,16 +23,17 @@
 #import "EWWakeUpManager.h"
 #import "EWSleepViewController.h"
 #import "EWUIUtil.h"
+#import "FBKVOController.h"
 
-NSString *kShowWakeUpChildVCNotification = @"kShowWakeUpChildVCNotification";
-NSString *kHideWakeUpChildVCNotification = @"kHideWakeUpChildVCNotification";
 
 FBTweakAction(@"Sleeping VC", @"UI", @"Show Wake Up VC", ^{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kShowWakeUpChildVCNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:kShowWakeUpChildVCNotification object:nil];
+    [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
 });
 
 FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kHideWakeUpChildVCNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:kHideWakeUpChildVCNotification object:nil];
+    [EWSession sharedSession].wakeupStatus = EWWakeUpStatusSleeping;
 });
 
 FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up[With Delay 5]", ^{
@@ -46,6 +47,15 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     //DDLogInfo(@"Add Woke Voice");
 	[[EWMediaManager sharedInstance] testGetRandomVoiceWithCompletion:nil];
 });
+
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        //DDLogInfo(@"Add Woke Voice");
+        [EWWakeUpManager sharedInstance].forceSnooze = YES;
+    });
+});
+
 @interface EWSleepingViewController ()<EWBaseViewNavigationBarButtonsDelegate>
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
 @property (nonatomic, strong) EWPeopleArrayChildViewController *peopleArrayChildViewController;
@@ -82,10 +92,14 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     RAC(self, timeChildViewController.date) = [RACObserve(self, nextAlarm.time) distinctUntilChanged];
     
     
-    self.wakeUpChildViewController.view.hidden = YES;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showWakeUpVC) name:kShowWakeUpChildVCNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideWakeUpVC) name:kHideWakeUpChildVCNotification object:nil];
+    [self hideWakeUpVC];
+    [self.KVOController observe:[EWSession sharedSession] keyPath:@"wakeStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
+            [self showWakeUpVC];
+        }else{
+            [self hideWakeUpVC];
+        }
+    }];
 }
 
 - (void)showWakeUpVC {
@@ -128,6 +142,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     
     if ([segue.destinationViewController isKindOfClass:[EWSleepViewController class]]) {
         //back to mormal
+        DDLogInfo(@"===> Unsleep");
         [[EWWakeUpManager sharedInstance] unsleep];
     }
     else if ([segue.destinationViewController isKindOfClass:[EWPostWakeUpViewController class]]) {
@@ -150,5 +165,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     }
     return YES;
 }
+
+//- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
+//    return NO;
+//}
 
 @end

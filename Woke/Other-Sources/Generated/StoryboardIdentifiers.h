@@ -7,28 +7,24 @@
 
 extern const struct MainStoryboardIDs {
     struct {
-        __unsafe_unretained NSString *receivedVoiceChildViewController;
-        __unsafe_unretained NSString *menuToProfile;
-        __unsafe_unretained NSString *wakeUpChildViewController;
-        __unsafe_unretained NSString *profileToFriends;
-        __unsafe_unretained NSString *menuToHome;
-        __unsafe_unretained NSString *menuToVoice;
+        __unsafe_unretained NSString *menuLogoutFadeToLoginGate;
+        __unsafe_unretained NSString *contactsChildViewController;
         __unsafe_unretained NSString *toPostWakeUpView;
+        __unsafe_unretained NSString *receivedVoiceChildViewController;
         __unsafe_unretained NSString *friendsToAddFriends;
+        __unsafe_unretained NSString *menuToProfile;
+        __unsafe_unretained NSString *toSleepingView;
         __unsafe_unretained NSString *searchChildViewController;
         __unsafe_unretained NSString *menuToAlarm;
+        __unsafe_unretained NSString *profileToFriends;
         __unsafe_unretained NSString *tempShowMainView;
-        __unsafe_unretained NSString *sentVoiceChildViewController;
-        __unsafe_unretained NSString *contactsChildViewController;
-        __unsafe_unretained NSString *smallTimeChildViewController;
-        __unsafe_unretained NSString *menuLogoutFadeToLoginGate;
-        __unsafe_unretained NSString *menuToSettings;
         __unsafe_unretained NSString *unwindFromStatusViewController;
+        __unsafe_unretained NSString *sentVoiceChildViewController;
         __unsafe_unretained NSString *facebookChildViewController;
-        __unsafe_unretained NSString *peopleArrayChildViewController;
+        __unsafe_unretained NSString *wakeUpChildViewController;
+        __unsafe_unretained NSString *smallTimeChildViewController;
         __unsafe_unretained NSString *timeChildViewController;
-        __unsafe_unretained NSString *menuToNotification;
-        __unsafe_unretained NSString *toSleepingView;
+        __unsafe_unretained NSString *peopleArrayChildViewController;
     } segues;
 
     struct {

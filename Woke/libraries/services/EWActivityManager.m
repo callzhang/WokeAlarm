@@ -32,19 +32,6 @@ NSString *const EWActivityTypeMedia = @"media";
     return manager;
 }
 
-- (instancetype)init{
-    self = [super init];
-    if (self) {
-        //change current activity time according to alarm
-        //currently it is done in EWAlarm
-        
-        [[NSNotificationCenter defaultCenter] addObserverForName:kWakeStartNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            self.testForceWakeUp = NO;
-        }];
-    }
-    return self;
-}
-
 - (NSArray *)activitiesForPerson:(EWPerson *)person{
     NSArray *activities = person.activities.allObjects;
     activities = [activities sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.updatedAt ascending:NO]]];
@@ -148,7 +135,7 @@ NSString *const EWActivityTypeMedia = @"media";
     }
     else if (activity.time.timeIntervalSinceNow > kMaxEalyWakeInterval) {
         // too early to wake
-        if (_testForceWakeUp) {
+        if ([EWWakeUpManager sharedInstance].forceWakeUp) {
             DDLogInfo(@"Time left %@ but forced wakeup", activity.time.timeLeft);
             return YES;
         }

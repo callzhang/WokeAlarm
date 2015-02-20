@@ -10,5 +10,4 @@
 #import "EWBaseViewController.h"
 
 @interface EWPostWakeUpViewController : EWBaseViewController
-
 @end

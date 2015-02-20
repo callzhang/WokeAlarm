@@ -24,7 +24,13 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
     
     if ([error.domain isEqualToString:FacebookSDKDomain]) {
         [self handleFacebookException:error];
-    }else {
+    }
+    else if ([error.domain isEqualToString:PFParseErrorDomain]) {
+        NSString *str = [NSString stringWithFormat:@"Got Parse error: %@", error.localizedDescription];
+        DDLogError(str);
+        EWAlert(str);
+    }
+    else {
         [NSException raise:@"UnhandledError" format:@"Error passed in is not handled: %@", error];
     }
 }

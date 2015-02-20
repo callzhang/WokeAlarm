@@ -22,7 +22,6 @@
 @implementation EWMediaManager
 
 +(EWMediaManager *)sharedInstance{
-    EWAssertMainThread
     static EWMediaManager *sharedStore_ = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

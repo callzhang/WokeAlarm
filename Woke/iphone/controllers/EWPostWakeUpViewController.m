@@ -12,6 +12,9 @@
 #import "EWAVManager.h"
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
+#import "EWSleepingViewController.h"
+
+
 @interface EWPostWakeUpViewController()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *tableviewHeaderView;
@@ -23,6 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableviewHeaderView.backgroundColor = [UIColor clearColor];
+    [self.navigationItem.leftBarButtonItem setAction:@selector(snooze:)];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -66,4 +70,20 @@
         }];
     }
 }
+
+
+- (IBAction)snooze:(id)sender{
+    BOOL canSnooze = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp && ![EWWakeUpManager sharedInstance].forceSnooze;
+    if (!canSnooze) {
+        [EWUIUtil showWarningHUBWithString:@"No snooze!"];
+    }else {
+        DDLogInfo(@"===> Snooze");
+        [[EWWakeUpManager sharedInstance] sleep:nil];
+    }
+}
+
+//- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
+//    return NO;
+//}
+
 @end

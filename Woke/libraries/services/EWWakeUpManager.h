@@ -37,11 +37,16 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 @property (nonatomic) NSUInteger loopCount;
 @property (nonatomic, readonly) EWMedia *currentMedia;
 @property (nonatomic, assign) NSUInteger currentMediaIndex;
-@property (nonatomic) BOOL continuePlay;
-@property (nonatomic) BOOL forceSleep;
+@property (nonatomic, assign) BOOL continuePlay;
 @property (nonatomic, weak) NSObject<EWWakeUpDelegate> *delegate;
 
-+ (EWWakeUpManager *)sharedInstance;
+//for testing
+@property (nonatomic, assign) BOOL forceSleep;
+@property (nonatomic, assign) BOOL forceSnooze;
+@property (nonatomic, assign) BOOL forceWakeUp;
+
+
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWWakeUpManager)
 
 #pragma mark - Start to wake up
 /**
@@ -67,6 +72,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 - (void)sleep:(UILocalNotification *)notification;
 - (void)unsleep;
 - (BOOL)shouldSleep;
+- (BOOL)canSnooze;
 
 #pragma mark - Wake
 /**

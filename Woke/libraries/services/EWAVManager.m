@@ -488,7 +488,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 #pragma mark - Volume control
 - (void)volumeTo:(float)volume withCompletion:(VoidBlock)block{
 	float step = (volume-self.player.volume)>0 ? 0.1 : -0.1;
-    if (ABS(self.player.volume - volume) > 0.1) {
+    if (ABS(self.player.volume - volume) > 0.1 && self.player) {
         self.player.volume = (float)self.player.volume + step;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 			[self volumeTo:volume withCompletion:block];

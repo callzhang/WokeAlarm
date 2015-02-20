@@ -28,7 +28,7 @@
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
     //DDLogInfo(@"Add Woke Voice");
-    [EWActivityManager sharedManager].testForceWakeUp = YES;
+    [EWWakeUpManager sharedInstance].forceWakeUp = YES;
     //[[EWWakeUpManager sharedInstance] startToWakeUp];
 });
 
@@ -41,18 +41,12 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 @end
 @implementation EWWakeUpManager
 
-+ (EWWakeUpManager *)sharedInstance{
-    static EWWakeUpManager *manager;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[EWWakeUpManager alloc] init];
-        manager.delegate = [EWActivityManager sharedManager];
-    });
-    return manager;
-}
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 
 - (id)init{
 	self = [super init];
+    self.delegate = [EWActivityManager sharedManager];
+    
     [self reloadMedias];
     
     self.continuePlay = YES;
@@ -117,6 +111,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
     [self startToPlayVoice];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:nil];
+    self.forceWakeUp = NO;
 }
 
 - (void)sleep:(UILocalNotification *)notification{
@@ -152,8 +147,9 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
         activity.sleepTime = [NSDate date];
         [activity save];
         
-        //reset the force sleep
-		self.forceSleep = NO;
+        //reset the test status
+		self.forceSnooze = NO;
+        self.forceWakeUp = NO;
     }
 }
 
@@ -191,6 +187,9 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 	return canSleep;
 }
 
+- (BOOL)canSnooze{
+    return self.forceSnooze;
+}
 
 //indicate that the user has woke
 - (void)wake:(EWActivity *)activity{
@@ -201,10 +200,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
         DDLogError(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
         return;
     }
-    else if (activity.time.timeIntervalSinceNow > kMaxEalyWakeInterval){
-        DDLogWarn(@"Wake too early. Skip ");
-        return;
-    }
+    
     [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWoke;
     
     //handle wakeup signel

@@ -627,8 +627,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                                 DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
                             }];
                         }
-                        
-                        if (![relatedSO containsObject:MO]) {
+                        if (![MO validate]) {
+                            DDLogError(@"MO %@(%@) is not valid after download, discard", MO.entity.name, MO.serverID);
+                            [MO remove];
+                        }
+                        else if (![relatedSO containsObject:MO]) {
                             //add relation
                             [relatedSO addObject:MO];
                             [localMe setValue:relatedSO.copy forKey:key];
@@ -656,7 +659,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                         }];
                     }
 
-                    if ([localMe valueForKey:key] != MO) {
+                    if (![MO validate]) {
+                        DDLogError(@"MO %@(%@) is not valid after download, discard", MO.entity.name, MO.serverID);
+                        [MO remove];
+                    }
+                    else if ([localMe valueForKey:key] != MO) {
                         DDLogVerbose(@"+++> Set relation Me->%@(%@)", key, MO.objectId);
                         [localMe setValue:MO forKey:key];
                     }

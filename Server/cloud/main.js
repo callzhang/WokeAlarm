@@ -576,12 +576,12 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
         }else{
           //do not exists, add
-          console.log("+New object: "+PO.id+ " for relation "+relationName);
+          //console.log("+New object: "+PO.id+ " for relation "+relationName);
           objectsNeedUpdate.push(PO);
         }
       });
       for (var objectId in dict){
-        console.log("-Delete objects: "+ ID  + " for relation: "+relationName);
+        console.log("-Delete objects: "+ objectId  + " for relation: "+relationName);
         objectsToDelete[objectId] = relationName;
       }
 
@@ -613,7 +613,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
         }else {
           //object do not exist, add PO to response and add objectID to delete dic
           info[relationName] = PO;
-          console.log("+New object: "+PO.id+ " for relation "+relationName);
+          //console.log("+New object: "+PO.id+ " for relation "+relationName);
         }
       }
 
@@ -674,7 +674,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
             objects.forEach(function(object) {
               fetchAllPromise = fetchAllPromise.then(function () {
                 return object.fetch({
-                  success: {},
+                  success: function () {},
                   error: function (error) {
                     objectsToDelete[object.id] = relationName;
                     console.log("***Failed to fetch " + relationName + "(" + object.id + "). Add to deleted object. error: " + error.message);

@@ -213,7 +213,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onSetting:" destination="ztM-CD-1sO" eventType="touchUpInside" id="2Fq-fe-dHI"/>
+                                            <segue destination="111-UZ-mUA" kind="custom" customClass="EWMenuReplaceFadeSegue" id="0aI-gK-Qh0"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
@@ -224,7 +224,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onProfile:" destination="ztM-CD-1sO" eventType="touchUpInside" id="Y6z-ay-5sS"/>
+                                            <segue destination="T0a-bL-MOd" kind="custom" identifier="menuToProfile" customClass="EWMenuReplaceFadeSegue" id="kOJ-F3-SkY"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -238,7 +238,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="onHome:" destination="ztM-CD-1sO" eventType="touchUpInside" id="6aG-tV-5eN"/>
+                                    <segue destination="Prn-GM-2Iw" kind="custom" customClass="EWMenuReplaceFadeSegue" id="exy-ZS-OTh"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHV-nd-2l3">
@@ -249,7 +249,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="onNotification:" destination="ztM-CD-1sO" eventType="touchUpInside" id="n9g-rR-cWy"/>
+                                    <segue destination="Xcq-Wo-KpO" kind="custom" customClass="EWMenuReplaceFadeSegue" id="q3S-8b-iaG"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4y-rw-jgD">
@@ -260,7 +260,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="onAlarms:" destination="ztM-CD-1sO" eventType="touchUpInside" id="2tc-55-NUv"/>
+                                    <segue destination="Qdr-6h-6LT" kind="custom" identifier="menuToAlarm" customClass="EWMenuReplaceFadeSegue" id="ubL-eS-25p"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Mb-bv-HXk">
@@ -271,7 +271,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="onVoice:" destination="ztM-CD-1sO" eventType="touchUpInside" id="iw3-3W-Wb8"/>
+                                    <segue destination="pwL-8b-GtW" kind="custom" customClass="EWMenuReplaceFadeSegue" id="a98-ty-LYx"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIq-mw-Cq6">
@@ -317,12 +317,6 @@
                         <outlet property="settings" destination="027-dv-aEP" id="6VF-b0-2it"/>
                         <outlet property="voice" destination="6Mb-bv-HXk" id="HA1-Sb-6eY"/>
                         <outlet property="voiceTopLayoutConstraint" destination="qJi-rd-S1n" id="q4Y-tT-VrY"/>
-                        <segue destination="Xcq-Wo-KpO" kind="custom" identifier="menuToNotification" customClass="EWMenuReplaceFadeSegue" id="0zs-BR-aWc"/>
-                        <segue destination="111-UZ-mUA" kind="custom" identifier="menuToSettings" customClass="EWMenuReplaceFadeSegue" id="zcx-1l-9lA"/>
-                        <segue destination="T0a-bL-MOd" kind="custom" identifier="menuToProfile" customClass="EWMenuReplaceFadeSegue" id="7pm-X4-Cvo"/>
-                        <segue destination="Prn-GM-2Iw" kind="custom" identifier="menuToHome" customClass="EWMenuReplaceFadeSegue" id="RcX-Qc-C0f"/>
-                        <segue destination="Qdr-6h-6LT" kind="custom" identifier="menuToAlarm" customClass="EWMenuReplaceFadeSegue" id="jgh-WO-W9r"/>
-                        <segue destination="pwL-8b-GtW" kind="custom" identifier="menuToVoice" customClass="EWMenuReplaceFadeSegue" id="pZv-rX-GVD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VMg-tE-8Qf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3463,8 +3457,8 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="RcX-Qc-C0f"/>
-        <segue reference="pRr-UO-GET"/>
+        <segue reference="kOJ-F3-SkY"/>
+        <segue reference="exy-ZS-OTh"/>
         <segue reference="7lF-Wp-60q"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
