@@ -126,7 +126,6 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
         //logged in enter sleep mode
         EWAlarm *alarm;
         EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-        NSNumber *duration = [EWPerson me].preference[kSleepDuration];
         if (alarmID) {
             alarm = [EWAlarm getAlarmByID:alarmID];
             BOOL nextAlarmMatched = [activity.time isEqualToDate:alarm.time.nextOccurTime];
@@ -153,9 +152,8 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
         activity.sleepTime = [NSDate date];
         [activity save];
         
-        //start check sleep timer
-        //FIXME: [Zitao] why don't we have alarm timer
-        //[self alarmTimerCheck];//No need to check, sleepVC will check alarm time
+        //reset the force sleep
+		self.forceSleep = NO;
     }
 }
 
@@ -179,11 +177,16 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 - (BOOL)shouldSleep{
 	EWActivity *activity = [EWPerson myCurrentAlarmActivity];
 	NSNumber *duration = [EWPerson me].preference[kSleepDuration];
-	NSInteger sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
+	float sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
 	//max sleep 5 hours early
-	BOOL canSleep = sleepTimeLeft < duration.floatValue+5 && sleepTimeLeft > 0;
+	BOOL canSleep = sleepTimeLeft < duration.floatValue+kMaxEarlySleepHours && sleepTimeLeft > 0;
 	if (!canSleep) {
-		DDLogWarn(@"Should not sleep with %ld hours left", sleepTimeLeft);
+		if (self.forceSleep) {
+			canSleep = YES;
+			DDLogInfo(@"Forced enable sleep with %.1f hours advance", sleepTimeLeft - duration.floatValue);
+		} else {
+			DDLogWarn(@"Should not sleep with %.1f hours advance", sleepTimeLeft - duration.floatValue);
+		}
 	}
 	return canSleep;
 }

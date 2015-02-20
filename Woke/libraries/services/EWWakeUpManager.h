@@ -11,7 +11,8 @@
 #import <Foundation/Foundation.h>
 #import "EWMedia.h"
 #define kNewNediaPlaying        @"new_media_playing"
-#define kLoopMediaPlayCount             100
+#define kLoopMediaPlayCount     100
+#define kMaxEarlySleepHours		3
 
 @import UIKit;
 @class EWActivity, EWAlarm, EWPerson, EWWakeUpManager;
@@ -37,6 +38,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 @property (nonatomic, readonly) EWMedia *currentMedia;
 @property (nonatomic, assign) NSUInteger currentMediaIndex;
 @property (nonatomic) BOOL continuePlay;
+@property (nonatomic) BOOL forceSleep;
 @property (nonatomic, weak) NSObject<EWWakeUpDelegate> *delegate;
 
 + (EWWakeUpManager *)sharedInstance;

@@ -15,7 +15,14 @@
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
 #import "JGProgressHUD.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
 
+
+FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
+	//DDLogInfo(@"Add Woke Voice");
+	[EWWakeUpManager sharedInstance].forceSleep = YES;
+});
 @interface EWSleepViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
