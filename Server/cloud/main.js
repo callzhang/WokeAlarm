@@ -559,16 +559,16 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
       var objectsNeedUpdate = [];
       list.forEach(function(PO){
-
-        if (dict.hasOwnProperty(PO.id)) {
+        if (!PO.updatedAt) {
+          objectsToDelete[PO.id] = relationName;
+          console.log("-Delete object: "+PO.id+ " for relation "+relationName + " due to no data");
+        }
+        else if (dict.hasOwnProperty(PO.id)) {
           //exists, compare date
           var clientUpdatedAt = dict[PO.id];
-          var updated = PO.updatedAt;
-          if (updated) {
-            if (updated - clientUpdatedAt > 5000){
-              objectsNeedUpdate.push(PO);
-              console.log("~Update object "+PO.id+" in relation "+relationName);
-            }
+          if (PO.updatedAt - clientUpdatedAt > 5000){
+            objectsNeedUpdate.push(PO);
+            console.log("~Update object "+PO.id+" in relation "+relationName);
           }
 
           //delete after compare
@@ -576,14 +576,12 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
         }else{
           //do not exists, add
-          if (PO.updatedAt) {
-            objectsNeedUpdate.push(PO);
-            console.log("+New object "+PO.id+" in relation "+relationName);
-          }
+          console.log("+New object: "+PO.id+ " for relation "+relationName);
+          objectsNeedUpdate.push(PO);
         }
       });
       for (var objectId in dict){
-        console.log("-Delete objects: "+ objectId  + " for relation: "+relationName);
+        console.log("-Delete objects: "+ ID  + " for relation: "+relationName);
         objectsToDelete[objectId] = relationName;
       }
 
@@ -596,7 +594,11 @@ Parse.Cloud.define("syncUser", function(request, response) {
     //process single PO function
     var updatePOForRelation = function(PO, relationName){
       console.log("===>Parsing too-one relation "+relationName);
-
+      if (!PO.updatedAt) {
+        objectsToDelete[PO.id] = relationName;
+        console.log("-Delete object: "+PO.id+ " for relation "+relationName + " due to no data");
+        return;
+      }
       //dict is {ID: updatedAt} pair
       var dict = request.params[relationName];
       if (PO){
@@ -669,15 +671,13 @@ Parse.Cloud.define("syncUser", function(request, response) {
         var arrayPromise = function (objects, relationName) {
           var fetchAllPromise = Parse.Promise.as();
           if (objects) {
-            objects.forEach(function(object){
+            objects.forEach(function(object) {
               fetchAllPromise = fetchAllPromise.then(function () {
                 return object.fetch({
-                  success: function () {
-                    //
-                  },
+                  success: {},
                   error: function (error) {
                     objectsToDelete[object.id] = relationName;
-                    console.log("***Failed to fetch " + relationName + " " + object.id + ". Add to deleted object. error: " + error.message);
+                    console.log("***Failed to fetch " + relationName + "(" + object.id + "). Add to deleted object. error: " + error.message);
                   }
                 });
               }, function (error) {
