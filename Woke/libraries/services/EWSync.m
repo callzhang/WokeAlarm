@@ -307,7 +307,7 @@ NSManagedObjectContext *mainContext;
         
         //skip if marked save to local
         if ([self.saveToLocalItems containsObject:SO.objectID]) {
-            DDLogVerbose(@"On saving, removed save to local item: %@", SO.objectID);
+            //DDLogVerbose(@"On saving, removed save to local item: %@", SO.objectID);
 			[self.saveToLocalItems removeObject:SO.objectID];
             [self removeObjectFromInsertQueue:SO];
             [self removeObjectFromUpdateQueue:SO];
@@ -864,7 +864,9 @@ NSManagedObjectContext *mainContext;
 				//key to array of pointers
 				NSArray *array = PO[key];
 				for (PFObject *obj in array) {
-					[self setCachedParseObject:obj];
+                    if (obj.isDataAvailable) {
+                        [self setCachedParseObject:obj];
+                    }
 				}
 			}
 		}];

@@ -563,17 +563,23 @@ Parse.Cloud.define("syncUser", function(request, response) {
         if (dict.hasOwnProperty(PO.id)) {
           //exists, compare date
           var clientUpdatedAt = dict[PO.id];
-          if (PO.updatedAt - clientUpdatedAt > 5000){
-            objectsNeedUpdate.push(PO);
-            console.log("~Update object "+PO.id+" in relation "+relationName);
+          var updated = PO.updatedAt;
+          if (updated) {
+            if (updated - clientUpdatedAt > 5000){
+              objectsNeedUpdate.push(PO);
+              console.log("~Update object "+PO.id+" in relation "+relationName);
+            }
           }
+
           //delete after compare
           delete dict[PO.id];
 
         }else{
           //do not exists, add
-          objectsNeedUpdate.push(PO);
-          console.log("+New object "+PO.id+" in relation "+relationName);
+          if (PO.updatedAt) {
+            objectsNeedUpdate.push(PO);
+            console.log("+New object "+PO.id+" in relation "+relationName);
+          }
         }
       });
       for (var objectId in dict){
@@ -639,7 +645,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
       if (key == "user") continue;
 
       //socialGraph is the only to-one relation
-      //we currently don't have a way to distinguish PFRelation or
+      //we currently don't have a way to distinguish PFRelation or Array
       if (key == "socialGraph"){
         //toOne relation
         var PO = user.get(key);
@@ -654,7 +660,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
               updatePOForRelation(PO, relationName);
             });
           }
-        }
+        };
         promises.push(toOnePromise(PO, key));
 
       }else if(key == "unreadMedias") {
@@ -665,6 +671,16 @@ Parse.Cloud.define("syncUser", function(request, response) {
           if (objects) {
             objects.forEach(function(object){
               fetchAllPromise = fetchAllPromise.then(function () {
+                return object.fetch({
+                  success: function () {
+                    //
+                  },
+                  error: function (error) {
+                    objectsToDelete[object.id] = relationName;
+                    console.log("***Failed to fetch " + relationName + " " + object.id + ". Add to deleted object. error: " + error.message);
+                  }
+                });
+              }, function (error) {
                 return object.fetch();
               });
             });
@@ -673,11 +689,11 @@ Parse.Cloud.define("syncUser", function(request, response) {
           fetchAllPromise = fetchAllPromise.then(function () {
             processPOListForRelation(objects, relationName);
           }, function(error){
-            console.log("***Failed to fetch array for relation "+relationName+" with error: "+error.message);
+            console.log("***Failed to fetch array for relation "+relationName+" with error: "+error);
           });
 
           return fetchAllPromise;
-        }
+        };
         promises.push(arrayPromise(objects, key));
 
 
@@ -702,12 +718,12 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
   }).then(function(){
     //add the delete queue to response
-    console.log("Object to delete: "+ objectsToDelete.length);
+    console.log("Object to delete: "+ objectsToDelete);
     info["delete"] = objectsToDelete;
     //return
     response.success(info);
   }, function(error){
-    console.log("Failed to run parallel inspection. "+error.message);
+    response.error("Failed to run parallel inspection. Error: "+error.message);
   });
 
 });

@@ -58,7 +58,7 @@ UIViewController *rootViewController;
         [[EWAccountManager sharedInstance] refreshEverythingIfNecesseryWithCompletion:^(NSError *error) {
             DDLogInfo(@"Logged in Core Data user: %@", [EWPerson me].name);
             if (error) {
-                DDLogError(@"With error: %@", error);
+                DDLogError(@"Logged in Core Data user With error: %@", error);
             }
         }];
         

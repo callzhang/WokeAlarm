@@ -87,22 +87,26 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 //login Core Data User with Server User (PFUser)
 - (void)refreshEverythingIfNecesseryWithCompletion:(ErrorBlock)completion{
-    //here we have three scenarios:
-    //1) Old user, everything should be update to date
-    //2) New user, everything copied from defaul template and upload to server
-    //3) Existing user but first time login on this phone, we need to download user data first and THEN execute login sequence
+
+    //1) Sync user data
+    //2) resume upload
+    //3) login data check
+    //4) post login notification
+
     TICK
     DDLogVerbose(@"Start sync user");
     //Delta sync
-    [[EWAccountManager shared] syncUserWithCompletion:^(NSError *error){
+    [self syncUserWithCompletion:^(NSError *error){
         TOCK
+        DDLogInfo(@"[a] Resume upload to server");
         [[EWSync sharedInstance] resumeUploadToServer];
-        DDLogInfo(@"[c] Broadcast Person login notification");
         
         //startup sequence
+        DDLogInfo(@"[b] Login data check");
         [[EWStartUpSequence sharedInstance] loginDataCheck];
         
         //post notification
+        DDLogInfo(@"[c] Broadcast Person login notification");
         [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
         if (completion) {
             
@@ -464,7 +468,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     EWAssertMainThread
 	[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncStarted object:nil];
     [EWSession sharedSession].isSyncingUser = YES;
-    NSString *userKey = @"user";
+    NSString *const userKey = @"user";
+    NSString *const deleteKey = @"delete";
     
     //generate info dic
     EWPerson *me = [EWPerson me];
@@ -549,7 +554,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 [[EWSync sharedInstance] setCachedParseObject:obj];
 				[me assignValueFromParseObject:obj];
                 return;
-            } else if ([key isEqualToString:@"delete"]) {
+            } else if ([key isEqualToString:deleteKey]) {
                 POGraphInfo[key] = obj;
 				//delete all objects in this Dictionary
 				DDLogInfo(@"Deleting objects %@", obj);
@@ -668,7 +673,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 DDLogDebug(@"========> Finished user syncing <=========");
                 block(nil);
             }else{
-				NSString *str = [NSString stringWithFormat:@"========> Failed to save synced user <========= \n This is a very serious error: %@", error2.description];
+				NSString *str = [NSString stringWithFormat:@"========> Failed to save synced user \n This is a very serious error: %@", error2.description];
                 DDLogError(str);
 				EWAlert(str);
                 block(error2);
