@@ -125,21 +125,23 @@
 }
 
 - (EWAlarm *)currentAlarmForPerson:(EWPerson *)person {
-    NSInteger n = 0;
+    NSUInteger n = 0;
     EWAlarm *currentAlarm;
     EWActivity *activity;
+    BOOL skipCheckActivityCompleted = [EWWakeUpManager shared].skipCheckActivityCompleted;
     
     do {
         currentAlarm = [self next:n thAlarmForPerson:person];
         activity = [[EWActivityManager sharedManager] activityForAlarm:currentAlarm];
         n++;
-    } while (activity.completed);
+        //if current acivity is completed, we should use next activity
+    } while (activity.completed && !skipCheckActivityCompleted && n < person.alarms.count);
     
     return currentAlarm;
 }
 
 - (EWAlarm *)next:(NSInteger)n thAlarmForPerson:(EWPerson *)person{
-    NSParameterAssert(n<7);
+    if (n>=7) return nil;
     if (!person.isMe) DDLogError(@"%s person passed in is not me!", __FUNCTION__);
     
     NSArray *sortedAlarms = [person.alarms.allObjects sortedArrayUsingComparator:^NSComparisonResult(EWAlarm *obj1, EWAlarm *obj2) {

@@ -9,11 +9,12 @@
 #import "EWBlurPresentSegue.h"
 #import "EWBlurNavigationControllerDelegate.h"
 #import "UIViewController+Blur.h"
+#import "EWBaseViewController.h"
 
 @implementation EWBlurPresentSegue
 - (void)perform {
     EWBaseNavigationController *nav;
-    UIViewController *vc = self.sourceViewController;
+    UIViewController *fromVC = self.sourceViewController;
     UIViewController *toVC = self.destinationViewController;
     if ([toVC isKindOfClass:[UINavigationController class]]) {
         nav = (EWBaseNavigationController *)toVC;
@@ -23,11 +24,12 @@
     }
     else{
         nav = [[EWBaseNavigationController alloc] initWithRootViewController:toVC];
-        //nav.delegate = delegate;
-        [nav addNavigationButtons];
         [nav setNavigationBarTransparent:YES];
+        if ([toVC isKindOfClass:[EWBaseViewController class]]) {
+            [(EWBaseViewController *)toVC addNavigationBarButtons];
+        }
     }
         
-    [vc presentViewControllerWithBlurBackground:nav];
+    [fromVC presentViewControllerWithBlurBackground:nav];
 }
 @end

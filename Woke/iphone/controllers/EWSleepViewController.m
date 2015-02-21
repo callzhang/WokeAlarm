@@ -17,12 +17,8 @@
 #import "JGProgressHUD.h"
 #import "FBTweak.h"
 #import "FBTweakInline.h"
+#import "NSTimer+BlocksKit.h"
 
-
-FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
-	//DDLogInfo(@"Add Woke Voice");
-	[EWWakeUpManager sharedInstance].forceSleep = YES;
-});
 @interface EWSleepViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
@@ -45,6 +41,10 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
     
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
+    
+    [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+        self.labelTimeLeft.text = [EWPerson myCurrentAlarm].time.timeLeft;
+    } repeats:YES];
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		JGProgressHUD *hud = [EWUIUtil showWatingHUB];

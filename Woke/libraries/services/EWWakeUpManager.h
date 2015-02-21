@@ -44,6 +44,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 @property (nonatomic, assign) BOOL forceSleep;
 @property (nonatomic, assign) BOOL forceSnooze;
 @property (nonatomic, assign) BOOL forceWakeUp;
+@property (nonatomic, assign) BOOL skipCheckActivityCompleted;
 
 
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWWakeUpManager)

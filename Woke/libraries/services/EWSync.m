@@ -605,11 +605,9 @@ NSManagedObjectContext *mainContext;
         if ([queue isEqualToString:kParseQueueInsert]) {
             DDLogDebug(@"+++> MO %@(%@) added to INSERT queue", mo.entity.name, mo.objectID);
         }else if([queue isEqualToString:kParseQueueUpdate]){
-            DDLogDebug(@"===> MO %@(%@) added to UPDATED queue with changes: %@", mo.entity.name, mo.serverID, mo.changedKeys);
+            DDLogDebug(@"===> MO %@(%@) added to UPDATED queue with changes: %@", mo.entity.name, mo.serverID, mo.changedKeys.string);
         }
-        
     }
-    
 }
 
 - (void)removeObject:(EWServerObject *)mo fromQueue:(NSString *)queue{

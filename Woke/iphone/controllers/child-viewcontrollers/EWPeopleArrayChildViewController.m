@@ -47,7 +47,7 @@
         
         [self.collectionView reloadData];
         
-        DDLogVerbose(@"reload collection view data: people: %@", [self.people valueForKey:@"name"]);
+        //DDLogVerbose(@"reload collection view data: people: %@", [self.people valueForKey:@"name"]);
     }];
     
     self.view.backgroundColor = [UIColor clearColor];

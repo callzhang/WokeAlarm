@@ -39,7 +39,7 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person{
-    EWAssertMainThread
+    //EWAssertMainThread
     EWAlarm *alarm = [[EWAlarmManager sharedInstance] currentAlarmForPerson:person];
     
     //try to find current activity if nil
@@ -49,9 +49,10 @@ NSString *const EWActivityTypeMedia = @"media";
     
     //validate: current activity if exists
     NSInteger n = 1;
-    while (_currentAlarmActivity &&
-           (_currentAlarmActivity.completed || ![_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime])) {
-        DDLogVerbose(@"%s activity completed or mismatch: %@", __FUNCTION__, _currentAlarmActivity);
+    BOOL completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
+    BOOL timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
+    while (_currentAlarmActivity && (completed || !timeMatched)) {
+        DDLogWarn(@"%s Current activity completed or mismatch: %@", __FUNCTION__, _currentAlarmActivity);
         //invalid activity, try next
         _currentAlarmActivity = nil;
         alarm = [[EWAlarmManager sharedInstance] next:n thAlarmForPerson:person];
@@ -62,7 +63,16 @@ NSString *const EWActivityTypeMedia = @"media";
     //generate if needed
     if (!_currentAlarmActivity) {
         //create new activity
-        _currentAlarmActivity = [EWActivity newActivity];
+        if ([NSThread isMainThread]) {
+            _currentAlarmActivity = [EWActivity newActivity];
+        } else {
+            __block EWActivity *activity;
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                activity = [EWActivity newActivity];
+            });
+            _currentAlarmActivity = [activity MR_inContext:person.managedObjectContext];
+        }
+        
         _currentAlarmActivity.owner = person;
         _currentAlarmActivity.type = EWActivityTypeAlarm;
         _currentAlarmActivity.time = alarm.time.nextOccurTime;
@@ -88,7 +98,6 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (void)completeAlarmActivity:(EWActivity *)activity{
-    if (!activity) DDLogError(@"%s passed in empty activity", __FUNCTION__);
     NSParameterAssert([activity.type isEqualToString:EWActivityTypeAlarm]);
     if (activity != self.currentAlarmActivity) {
         DDLogError(@"%s The activity passed in is not the current activity", __FUNCTION__);
@@ -99,9 +108,10 @@ NSString *const EWActivityTypeMedia = @"media";
 				[activity addMediaID:media.objectId];
 			}
         }
-        [[EWPerson me] removeUnreadMedias:[NSSet setWithArray:activity.medias]];
-		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:activity.medias]];
-		DDLogInfo(@"Removed %ld medias from my unread medias", activity.medias.count);
+        NSArray *played = activity.medias;
+        [[EWPerson me] removeUnreadMedias:[NSSet setWithArray:played]];
+		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:played]];
+        DDLogInfo(@"Removed %ld medias from my unread medias", played.count);
     }
     
     activity.completed = [NSDate date];
@@ -124,7 +134,7 @@ NSString *const EWActivityTypeMedia = @"media";
         return NO;
     }
     //check activity
-    if (activity.completed) {
+    if (activity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted) {
         DDLogError(@"Activity is completed at %@, skip today's alarm. Please check the code", activity.completed.date2detailDateString);
         return NO;
     }

@@ -8,13 +8,14 @@ extern const struct EWActivityTypes {
 } EWActivityTypes;
 
 @interface EWActivity : _EWActivity {}
-@property (nonatomic, strong) NSMutableArray *mediaIDs;
+@property (nonatomic, strong) NSArray *mediaIDs;
 
 // add
 + (EWActivity *)newActivity;
 
 // search
 + (EWActivity *)getActivityWithID:(NSString *)ID;
+- (NSArray *)medias;
 // valid
 - (BOOL)validate;
 

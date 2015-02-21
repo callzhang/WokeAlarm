@@ -79,26 +79,22 @@
 }
 
 
-- (void)addNavigationButtons{
-    UIViewController *vc = self.viewControllers.lastObject;
-    if (![vc conformsToProtocol:@protocol(EWBaseViewNavigationBarButtonsDelegate)]) {
-        DDLogInfo(@"ViewController %@ doesn't not confirm to EWBaseViewNavigationBarButtonsDelegate", NSStringFromClass([vc class]));
-        return;
-    }
-    EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *controller = (EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *)vc;
-        //not in navigation controller
-    if ([controller respondsToSelector:@selector(close:)]) {
-        UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog backButton] style:UIBarButtonItemStyleDone target:controller action:@selector(close:)];
-        controller.navigationItem.leftBarButtonItem = leftBtn;
-    }
-    
-    if ([controller respondsToSelector:@selector(more:)]) {
-        UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:controller action:@selector(more:)];
-        controller.navigationItem.rightBarButtonItem = rightBtn;
-    }
-    
-
-}
+//- (void)addNavigationButtons{
+//    UIViewController *vc = self.viewControllers.lastObject;
+//    if ([vc conformsToProtocol:@protocol(EWBaseViewNavigationBarButtonsDelegate)]) {
+//        EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *controller = (EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate> *)vc;
+//        //not in navigation controller
+//        if ([controller respondsToSelector:@selector(close:)]) {
+//            UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog backButton] style:UIBarButtonItemStyleDone target:controller action:@selector(close:)];
+//            controller.navigationItem.leftBarButtonItem = leftBtn;
+//        }
+//        
+//        if ([controller respondsToSelector:@selector(more:)]) {
+//            UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:controller action:@selector(more:)];
+//            controller.navigationItem.rightBarButtonItem = rightBtn;
+//        }
+//    }
+//}
 
 
 #pragma mark - view presentation for events

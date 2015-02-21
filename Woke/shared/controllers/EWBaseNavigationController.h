@@ -17,7 +17,7 @@
 //- (void)presentWakeUpViewWithActivity:(NSNotification *)activity;
 
 - (void)setNavigationBarTransparent:(BOOL)transparent;
-- (void)addNavigationButtons;
+//- (void)addNavigationButtons;
 @end
 
 @interface UIViewController (EWBaseNavigationController)

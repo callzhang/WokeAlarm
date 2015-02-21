@@ -18,8 +18,8 @@
         <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="type" attributeType="String" syncable="YES"/>
         <relationship name="owner" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="activities" inverseEntity="EWPerson" syncable="YES"/>
-        <fetchedProperty name="medias" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="EWMedia" predicateString="SELF.objectId IN $FETCG_SOURCE.mediaIDs"/>
+        <fetchedProperty name="myMedias" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="EWActivity" predicateString="objectId IN $FETCH_SOURCE.mediaIDs"/>
         </fetchedProperty>
     </entity>
     <entity name="EWAlarm" representedClassName="EWAlarm" parentEntity="EWServerObject" syncable="YES">
@@ -131,7 +131,7 @@
     </entity>
     <elements>
         <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="EWActivity" positionX="0" positionY="0" width="128" height="206"/>
+        <element name="EWActivity" positionX="0" positionY="0" width="128" height="209"/>
         <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
         <element name="EWFriendRequest" positionX="9" positionY="153" width="128" height="28"/>
         <element name="EWMedia" positionX="0" positionY="0" width="128" height="208"/>

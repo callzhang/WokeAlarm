@@ -211,6 +211,9 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 }
 
 - (EWServerObject *)ownerObject{
+    if (self.receiver.isMe) {
+        return self.receiver;
+    }
     return self.author;
 }
 @end

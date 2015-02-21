@@ -27,10 +27,26 @@
 #import "FBTweakInline.h"
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
-    //DDLogInfo(@"Add Woke Voice");
+    DDLogInfo(@"Forced enable wake up");
     [EWWakeUpManager sharedInstance].forceWakeUp = YES;
     //[[EWWakeUpManager sharedInstance] startToWakeUp];
 });
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
+    DDLogInfo(@"Add Woke Voice");
+    [EWWakeUpManager sharedInstance].forceSnooze = YES;
+});
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
+    DDLogInfo(@"Force sleep enabled");
+    [EWWakeUpManager sharedInstance].forceSleep = YES;
+});
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
+    DDLogInfo(@"Skipped checking activity completed");
+    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
+});
+
 
 NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotification";
 NSString * const kEWWakeUpDidPlayNextMediaNotification = @"kEWWakeUpDidPlayNextMediaNotification";
@@ -57,6 +73,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithDelay) name:kAVManagerDidFinishPlaying object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
+        if ([note.object isKindOfClass:[EWMedia class]]) {
+            EWMedia *m = (EWMedia *)note.object;
+            if (!m.played) {
+                //prevent exccessive saving and uploading
+                m.played = [NSDate date];
+                [m save];
+                DDLogVerbose(@"EWMedia %@ set played time to %@", m.serverID, m.played.date2String);
+            }
+        }
+    }];
     
     //first time loop
     self.loopCount = kLoopMediaPlayCount;
@@ -111,46 +138,45 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self startToPlayVoice];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:nil];
-    self.forceWakeUp = NO;
+    //self.forceWakeUp = NO;
 }
 
 - (void)sleep:(UILocalNotification *)notification{
     //we use local alarm ID because when scheduling sleep notification, alarm could be be available
+    if (![EWPerson me]) return;
     NSString *alarmID = notification.userInfo[kLocalAlarmID];
-    if ([EWPerson me]) {
-        //logged in enter sleep mode
-        EWAlarm *alarm;
-        EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-        if (alarmID) {
-            alarm = [EWAlarm getAlarmByID:alarmID];
-            BOOL nextAlarmMatched = [activity.time isEqualToDate:alarm.time.nextOccurTime];
-            if (!nextAlarmMatched) {
-                DDLogError(@"The sleep notification sent is not the same as the next alarm, skip sleep");
-                return;
-            }
-        }
-		
-        //max sleep 5 hours early
-		BOOL canSleep = [self shouldSleep];
-        if (!canSleep) {
+    //logged in enter sleep mode
+    EWAlarm *alarm;
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+    if (alarmID) {
+        alarm = [EWAlarm getAlarmByID:alarmID];
+        BOOL nextAlarmMatched = [activity.time isEqualToDate:alarm.time.nextOccurTime];
+        if (!nextAlarmMatched) {
+            DDLogError(@"The sleep notification sent is not the same as the next alarm, skip sleep");
             return;
         }
-        
-        //state change
-        [EWSession sharedSession].wakeupStatus = EWWakeUpStatusSleeping;
-        //send notification so baseNavigationView can present the sleepView
-        [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
-        //mark sleep time on activity
-        if (activity.sleepTime) {
-            DDLogInfo(@"Back to sleep again. Last sleep time was %@", activity.sleepTime.date2detailDateString);
-        }
-        activity.sleepTime = [NSDate date];
-        [activity save];
-        
-        //reset the test status
-		self.forceSnooze = NO;
-        self.forceWakeUp = NO;
     }
+    
+    //max sleep 5 hours early
+    BOOL canSleep = [self shouldSleep];
+    if (!canSleep) {
+        return;
+    }
+    
+    //state change
+    [EWSession sharedSession].wakeupStatus = EWWakeUpStatusSleeping;
+    //send notification so baseNavigationView can present the sleepView
+    [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
+    //mark sleep time on activity
+    if (activity.sleepTime) {
+        DDLogInfo(@"Back to sleep again. Last sleep time was %@", activity.sleepTime.date2detailDateString);
+    }
+    activity.sleepTime = [NSDate date];
+    [activity save];
+    
+    //reset the test status
+    //self.forceSnooze = NO;
+    //self.forceWakeUp = NO;
 }
 
 - (void)unsleep{
@@ -188,7 +214,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (BOOL)canSnooze{
-    return self.forceSnooze;
+    BOOL can = [EWSession sharedSession].wakeupStatus != EWWakeUpStatusSleeping || _forceSnooze;
+    return can;
 }
 
 //indicate that the user has woke

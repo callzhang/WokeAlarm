@@ -15,7 +15,7 @@
 #import "EWSleepingViewController.h"
 
 
-@interface EWPostWakeUpViewController()<UITableViewDataSource, UITableViewDelegate>
+@interface EWPostWakeUpViewController()<UITableViewDataSource, UITableViewDelegate, EWBaseViewNavigationBarButtonsDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *tableviewHeaderView;
 @property (weak, nonatomic) IBOutlet UILabel *tableViewHeaderLabel;
@@ -26,7 +26,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableviewHeaderView.backgroundColor = [UIColor clearColor];
-    [self.navigationItem.leftBarButtonItem setAction:@selector(snooze:)];
+    if (![EWWakeUpManager shared].canSnooze) {
+        DDLogInfo(@"Snooze disabled, hide back button");
+        self.navigationItem.leftBarButtonItem = nil;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -73,7 +76,7 @@
 
 
 - (IBAction)snooze:(id)sender{
-    BOOL canSnooze = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp && ![EWWakeUpManager sharedInstance].forceSnooze;
+    BOOL canSnooze = [EWWakeUpManager shared].canSnooze;
     if (!canSnooze) {
         [EWUIUtil showWarningHUBWithString:@"No snooze!"];
     }else {
@@ -85,5 +88,10 @@
 //- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
 //    return NO;
 //}
+
+#pragma mark - Delegate
+- (IBAction)close:(id)sender{
+    [self snooze:sender];
+}
 
 @end

@@ -55,7 +55,9 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.8]];
+    if (!_person.isMe) {
+        [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.9]];
+    }
 }
 
 

@@ -49,12 +49,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 });
 
 
-FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        //DDLogInfo(@"Add Woke Voice");
-        [EWWakeUpManager sharedInstance].forceSnooze = YES;
-    });
-});
+
 
 @interface EWSleepingViewController ()<EWBaseViewNavigationBarButtonsDelegate>
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;

@@ -1,5 +1,6 @@
 #import "EWActivity.h"
 #import "EWSession.h"
+#import "EWMedia.h"
 
 const struct EWActivityTypes EWActivityTypes = {
     .media = @"media",
@@ -32,6 +33,12 @@ const struct EWActivityTypes EWActivityTypes = {
     return (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([self class]) withID:ID error:nil];
 }
 
+- (NSArray *)medias{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"objectId IN %@", self.mediaIDs];
+    NSArray *medias = [EWMedia MR_findAllWithPredicate:predicate inContext:self.managedObjectContext];
+    return medias;
+}
+
 - (BOOL)validate{
     BOOL good = YES;
     if (!self.owner) {
@@ -51,9 +58,9 @@ const struct EWActivityTypes EWActivityTypes = {
 }
 
 - (void)addMediaID:(NSString *)serverID{
-    NSMutableArray *mediaArray = self.mediaIDs.mutableCopy ?: [NSMutableArray new];
+    NSMutableSet *mediaArray = [NSMutableSet setWithArray:self.mediaIDs] ?: [NSMutableSet new];
     [mediaArray addObject:serverID];
-    self.mediaIDs = mediaArray.copy;
+    self.mediaIDs = mediaArray.allObjects;
     [self save];
 }
 
