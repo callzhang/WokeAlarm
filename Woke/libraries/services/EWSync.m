@@ -439,21 +439,22 @@ NSManagedObjectContext *mainContext;
     //================================================================
     
     [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *err) {
+        EWServerObject *MO_main = [serverObject MR_inContext:mainContext];
         if (succeeded) {
             //assign connection between MO and PO
-            [self performSaveCallbacksWithParseObject:object andManagedObjectID:serverObject.objectID];
+            [self performSaveCallbacksWithParseObject:object andManagedObjectID:MO_main.objectID];
             //set updated time
             NSDate *updated = object.updatedAt;
-            serverObject.updatedAt = updated;
+            MO_main.updatedAt = updated;
         }
 		else{
             *error = err;
             if (err.code == kPFErrorObjectNotFound){
-                DDLogError(@"*** PO not found for %@(%@), set to nil.", serverObject.entity.name, serverObject.serverID);
-                NSManagedObject *trueMO = [serverObject.managedObjectContext existingObjectWithID:serverObject.objectID error:NULL];
+                DDLogError(@"*** PO not found for %@(%@), set to nil.", MO_main.entity.name, MO_main.serverID);
+                NSManagedObject *trueMO = [MO_main.managedObjectContext existingObjectWithID:MO_main.objectID error:NULL];
                 if (trueMO) {
                     //need to check if the object is available
-                    serverObject.objectId = nil;
+                    MO_main.objectId = nil;
                 }
             }
             else{

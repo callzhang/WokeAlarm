@@ -25,6 +25,7 @@
 
 #import "FBTweak.h"
 #import "FBTweakInline.h"
+#import "EWUIUtil.h"
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
     DDLogInfo(@"Forced enable wake up");
@@ -45,6 +46,24 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
 FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
     DDLogInfo(@"Skipped checking activity completed");
     [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
+});
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
+    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
+    EWAlarm *testingAlarm;
+    for (EWAlarm *alarm in [EWPerson myAlarms].copy) {
+        if (alarm.time.mt_weekdayOfWeek == [NSDate date].mt_weekdayOfWeek) {
+            testingAlarm = alarm;
+            DDLogInfo(@"Changed alarm time from %@ to %@", alarm.time.date2detailDateString, [NSDate date].date2detailDateString);
+        }
+    }
+    testingAlarm.time = [[NSDate date] timeByAddingSeconds:30];
+    
+    [[EWWakeUpManager shared] scheduleAlarmTimer];
+    
+    [testingAlarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+        [EWUIUtil showSuccessHUBWithString:@"Alarm will show in 30s"];
+    }];
 });
 
 
@@ -68,7 +87,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     self.continuePlay = YES;
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingStartNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
         [self scheduleAlarmTimer];
-		[self sleepTimerCheck];
+		//[self sleepTimerCheck];
 	}];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithDelay) name:kAVManagerDidFinishPlaying object:nil];
@@ -261,11 +280,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     
     [self.alarmTimer invalidate];
     
+    DDLogInfo(@"Scheduled alarm timer in %@", [NSDate getStringFromTime:timeLeft]);
     self.alarmTimer = [NSTimer bk_timerWithTimeInterval:timeLeft block:^(NSTimer *timer) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimerDidFireNotification object:nil];
+        [[EWWakeUpManager sharedInstance] startToWakeUp];
     } repeats:NO];
 }
 
+/*
 - (void)alarmTimerCheck{
     //check time
     if (![EWPerson me]) return;
@@ -318,7 +340,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         [NSTimer scheduledTimerWithTimeInterval:timeLeft/2 target:self selector:@selector(sleepTimerCheck) userInfo:nil repeats:NO];
         DDLogVerbose(@"Next alarm timer check in %.1fs", timeLeft);
     }
-}
+}*/
 
 #pragma mark - Play for wake up view
 - (void)startToPlayVoice{

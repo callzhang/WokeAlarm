@@ -93,9 +93,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWWakeUpManager)
  Will schedule an alarm if the time left is within the service update interval
  Call handle alarm timer method when time is up
  */
-- (void)alarmTimerCheck;
+- (void)scheduleAlarmTimer;
+//- (void)alarmTimerCheck;
 
-- (void)sleepTimerCheck;
+//- (void)sleepTimerCheck;
 
 #pragma mark - Play control
 /**

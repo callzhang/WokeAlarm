@@ -29,7 +29,7 @@ extern NSString *const EWActivityTypeMedia;
 - (NSArray *)activitiesForPerson:(EWPerson *)person;
 
 /**
- *  Find activity by alarm. The activity is matched with type == alarm, time == alarm.time and owner == alarm.owner
+ *  Find activity by alarm. The activity is matched with type == alarm, time == alarm.time.nextOccurTime AND owner == alarm.owner
  *
  *  @param alarm The alarm in interest
  *

@@ -17,10 +17,6 @@
 #import "EWMainViewController.h"
 #import "EWStyleController.h"
 #import "EWServer.h"
-#import "BlocksKit.h"
-#import "BlocksKit+UIKit.h"
-#import "FBTweakViewController.h"
-#import "FBTweakStore.h"
 
 #import "Crashlytics.h"
 #import "EWUIUtil.h"
@@ -28,7 +24,7 @@
 
 UIViewController *rootViewController;
 
-@interface AppDelegate ()<FBTweakViewControllerDelegate, UIAlertViewDelegate>
+@interface AppDelegate ()<UIAlertViewDelegate>
 
 @end
 
@@ -74,25 +70,13 @@ UIViewController *rootViewController;
         
     }
     
-    UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
-        viewController.tweaksDelegate = self;
-        UIViewController *topController = [EWUIUtil topViewController];
-        if (![topController isKindOfClass:NSClassFromString(@"_FBTweakCategoryViewController")]) {
-            [topController presentViewController:viewController animated:YES completion:nil];
-        }
-    }];
-    longGesture.numberOfTouchesRequired = 2;
-    longGesture.minimumPressDuration = 2;
+    //add testing panel callout gesture
+    [EWUtil addTestGesture];
     
-    [[UIWindow mainWindow] addGestureRecognizer:longGesture];
-    
+    //finish launching
     return YES;
 }
 
-- (void)tweakViewControllerPressedDone:(FBTweakViewController *)tweakViewController {
-    [tweakViewController dismissViewControllerAnimated:YES completion:nil];
-}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -152,6 +136,15 @@ UIViewController *rootViewController;
         [[[UIAlertView alloc] initWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." delegate:self cancelButtonTitle:@"Not now" otherButtonTitles:@"OK", nil] show];
     }
     DDLogError(@"Failed to register push: %@", error);
+}
+
+#pragma mark - Handle notification
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    [EWServer handleLocalNotification:notification];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+    [EWServer handlePushNotification:userInfo];
 }
 
 #pragma mark - UIAlertViewDelegate

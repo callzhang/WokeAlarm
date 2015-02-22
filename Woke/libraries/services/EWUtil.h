@@ -10,7 +10,7 @@
 #define logLevelSymbols         @[@"***", @"!!!", @"@@@", @"==="]
 
 @interface EWUtil : NSObject
-
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWUtil)
 + (NSString *)UUID;
 //+ (NSString *)ADID;
 + (void)clearMemory;
@@ -25,8 +25,10 @@
 
 //logging
 + (void)initLogging;
-//void EWLog(NSString *format,...);
 
+//testing
++ (void)addTestGesture;
++ (void)showTweakPanel;
 @end
 
 @interface NSArray(Extend)

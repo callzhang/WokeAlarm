@@ -13,9 +13,22 @@
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
 #import "DDFileLogger.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
+#import "FBTweakViewController.h"
+#import "EWUIUtil.h"
+#import "BlocksKit.h"
+#import "BlocksKit+UIKit.h"
+#import "UIGestureRecognizer+BlocksKit.h"
+#import "UIViewController+Blur.h"
 //#import <AdSupport/ASIdentifierManager.h>
-@implementation EWUtil
 
+@interface EWUtil()<FBTweakViewControllerDelegate>
+
+@end
+
+@implementation EWUtil
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
 + (NSString *)UUID{
     NSString *uuid = [[NSUUID UUID] UUIDString];
     return uuid;
@@ -81,6 +94,30 @@
 	
 	//crashlytics logger
 	[DDLog addLogger:[CrashlyticsLogger sharedInstance]];
+}
+
++ (void)addTestGesture{
+    UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        [EWUtil showTweakPanel];
+    }];
+    longGesture.numberOfTouchesRequired = 2;
+    longGesture.minimumPressDuration = 2;
+    [[UIWindow mainWindow] addGestureRecognizer:longGesture];
+}
+
++ (void)showTweakPanel{
+    FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
+    viewController.tweaksDelegate = [EWUtil shared];
+    UIViewController *topController = [EWUIUtil topViewController];
+    if (![topController isKindOfClass:NSClassFromString(@"_FBTweakCategoryViewController")]) {
+        [topController presentViewController:viewController animated:YES completion:nil];
+        //[topController presentViewControllerWithBlurBackground:viewController];
+    }
+}
+
+
+- (void)tweakViewControllerPressedDone:(FBTweakViewController *)tweakViewController {
+    [tweakViewController dismissViewControllerAnimated:YES completion:nil];
 }
 @end
 
