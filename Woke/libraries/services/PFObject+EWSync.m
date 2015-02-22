@@ -378,10 +378,13 @@
 
 #pragma mark - Cache
 - (void)fetchIfNeededAndSaveToCache:(NSError *__autoreleasing *)error{
-	if (!error) {
-		NSError *__autoreleasing err;
-		error = &err;
-	}
+    if (!error) {
+        NSError *__autoreleasing err;
+        error = &err;
+    }
+    if (!self.isDataAvailable)
+        [self fetch:error];
+    /*
     if (!self.isDataAvailable) {
         [self fetch:error];
         if (*error) {
@@ -396,7 +399,7 @@
         }
     }
     NSDate *updated = self.updatedAt;
-    PFObject *cachedObject = [[EWSync sharedInstance] getCachedParseObjectForID:self.objectId];
+    PFObject *cachedObject = [[EWSync sharedInstance] getCachedParseObjectWithClass:self.parseClassName ID:self.objectId];
     NSDate *cacheUpdated = cachedObject.updatedAt;
     float interval = [updated timeIntervalSinceDate:cacheUpdated];
     if (!cacheUpdated || interval > 0) {
@@ -407,6 +410,6 @@
     else if (interval < 0) {
         //cache newer
         DDLogWarn(@"Cache is newer than current PO: %@(%@)", self.parseClassName, self.objectId);
-    }
+    }*/
 }
 @end

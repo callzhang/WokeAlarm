@@ -167,7 +167,7 @@ extern NSString * const kEWSyncUploaded;
 //PO query
 + (NSArray *)findParseObjectWithQuery:(PFQuery *)query inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
-- (PFObject *)getCachedParseObjectForID:(NSString *)parseID;
+- (PFObject *)getCachedParseObjectWithClass:(NSString *)className ID:(NSString *)objectId;
 - (void)setCachedParseObject:(PFObject *)PO;
 /**
  1. Try to get PO from cache

@@ -145,6 +145,7 @@
 		09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F441A1434AF00BEA328 /* _EWServerObject.m */; };
 		09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E17AFF1A15C01800317F8D /* SCSiriWaveformView.m */; };
 		8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B95C7310A02172389FEF1951 /* libPods-Woke.a */; };
+		9B10F7871A999C8D004A7492 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B10F7861A999C8D004A7492 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B25631E1A1952FA00010B9E /* _EWSocial.m */; };
 		9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */; };
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
@@ -479,6 +480,7 @@
 		3F10CE727EA990DC609D7F05 /* Pods-WokeTests.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.adhoc.xcconfig"; sourceTree = "<group>"; };
 		568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
 		6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WokeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B10F7861A999C8D004A7492 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		9B1375DA1A536CD100D5E8F5 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		9B25631D1A1952FA00010B9E /* _EWSocial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _EWSocial.h; sourceTree = "<group>"; };
 		9B25631E1A1952FA00010B9E /* _EWSocial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWSocial.m; sourceTree = "<group>"; };
@@ -578,6 +580,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B10F7871A999C8D004A7492 /* libsqlite3.dylib in Frameworks */,
 				9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */,
 				9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */,
 				9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */,
@@ -1298,6 +1301,7 @@
 		AA1A75AA2E60E49CC73E6319 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9B10F7861A999C8D004A7492 /* libsqlite3.dylib */,
 				9B38950E1A514072004D4290 /* MobileCoreServices.framework */,
 				9B38950C1A51405A004D4290 /* SystemConfiguration.framework */,
 				9B38950A1A51404B004D4290 /* libstdc++.6.dylib */,

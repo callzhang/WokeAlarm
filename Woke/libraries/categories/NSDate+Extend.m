@@ -246,8 +246,8 @@
 	
 	if (days >=2) {
 		timeStr = [NSString stringWithFormat:@"%ld days", (long)days];
-		//    }else if (days >=1) {
-		//        timeStr = [NSString stringWithFormat:@"1 day %d hours", (NSInteger)hours];
+    }else if (days >=1) {
+        timeStr = [NSString stringWithFormat:@"1 day %ld hours", (long)hours];
 	}else if (hours > 10) {
 		timeStr = [NSString stringWithFormat:@"%ld hours", (long)(hours + days*24)];
 	}else if (hours >= 1){

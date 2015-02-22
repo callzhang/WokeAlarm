@@ -83,6 +83,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 - (void)fetchCurrentUser:(PFUser *)user {
     EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
     [EWSession sharedSession].currentUser = person;
+    [[EWSync sharedInstance] setCachedParseObject:user];
 }
 
 //login Core Data User with Server User (PFUser)
@@ -406,6 +407,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     if (loc.horizontalAccuracy <100 && loc.verticalAccuracy < 100) {
         //bingo
+        DDLogInfo(@"Updated location %@ with accuracy of %.0fm", loc, loc.horizontalAccuracy);
         [manager stopUpdatingLocation];
         [locationTimeOut invalidate];
         [self processLocation:loc];

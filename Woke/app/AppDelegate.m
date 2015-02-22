@@ -43,6 +43,7 @@ UIViewController *rootViewController;
 	[EWUtil initLogging];
 	
 	// Parse
+    [Parse enableLocalDatastore];
 	[Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
 	
 	//UI

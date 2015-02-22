@@ -420,8 +420,9 @@ NSManagedObjectContext *mainContext;
     if (!object) {
         //insert
         object = [PFObject objectWithClassName:serverObject.serverClassName];
+        [object pin:error];
+        //TODO: need to test if we can skip saving first
 		[object save:error];//need to save before working on PFRelation
-		
         if (!*error) {
             DDLogVerbose(@"+++> CREATED PO %@(%@)", object.parseClassName, object.objectId);
             [serverObject setValue:object.objectId forKey:kParseObjectID];
@@ -442,7 +443,8 @@ NSManagedObjectContext *mainContext;
             //assign connection between MO and PO
             [self performSaveCallbacksWithParseObject:object andManagedObjectID:serverObject.objectID];
             //set updated time
-            serverObject.updatedAt = object.updatedAt;
+            NSDate *updated = object.updatedAt;
+            serverObject.updatedAt = updated;
         }
 		else{
             *error = err;
@@ -756,26 +758,15 @@ NSManagedObjectContext *mainContext;
     }
     
     //first see if cached PO exist
-    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectForID:SO.serverID];
+    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectWithClass:SO.serverClassName ID:SO.serverID];
+    if (po.ACL == nil) [po fetchIfNeededAndSaveToCache:nil];
     if (po.ACL != nil) {
-        BOOL write = [po.ACL getWriteAccessForUser:[PFUser currentUser]] || [po.ACL getPublicWriteAccess];
+        BOOL write = [po.ACL getPublicWriteAccess] || [po.ACL getWriteAccessForUser:[PFUser currentUser]];
         return write;
     }
     
     //if no ACL, use MO to determine
-//    __block EWPerson *p;
-//    if ([SO.entity.name isEqualToString:kSyncUserClass]) {
-//        p = (EWPerson *)SO;
-//    }else{
-//        [SO.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-//            if ([obj.destinationEntity.name isEqualToString:kSyncUserClass]) {
-//                if (!obj.isToMany) {
-//                    p = [SO valueForKey:key];
-//                    *stop = YES;
-//                }
-//            }
-//        }];
-//    }
+    DDLogWarn(@"PO %@(%@) has NO ACL!", po.parseClassName, po.objectId);
     EWPerson *p = (EWPerson *)SO.ownerObject;
     if (p.isMe){
         return YES;
@@ -850,14 +841,35 @@ NSManagedObjectContext *mainContext;
 }
 
 //cache
-- (PFObject *)getCachedParseObjectForID:(NSString *)objectId{
-    return [self.serverObjectCache objectForKey:objectId];
+- (PFObject *)getCachedParseObjectWithClass:(NSString *)className ID:(NSString *)objectId{
+    //When an object is pinned, every time you update it by fetching or saving new data, the copy in the local datastore will be updated automatically. You don't need to worry about it at all.
+    NSError *err;
+    PFObject *object = [PFObject objectWithoutDataWithClassName:className objectId:objectId];
+    if (!object.isDataAvailable) {
+        [object fetchFromLocalDatastore:&err];
+    }
+//    PFQuery *query = [PFQuery queryWithClassName:className];
+//    [query fromLocalDatastore];
+//    PFObject *PO = [query getObjectWithId:className error:&err];
+    if (!object && err) {
+        DDLogError(@"Failed to get cached PO %@(%@):%@", className, objectId, err.localizedDescription);
+    }
+    if (object.isDataAvailable) {
+        return object;
+    }
+    return nil;
 }
 
 - (void)setCachedParseObject:(PFObject *)PO {
     if (PO.isDataAvailable) {
-        [self.serverObjectCache setObject:PO forKey:PO.objectId];
-		//also find related PO that might be checked in
+        NSError *err;
+        [PO pin:&err];
+        if (err) {
+            DDLogError(@"Failed to set cached PO %@(%@):%@", PO.parseClassName, PO.objectId, err.localizedDescription);
+        }
+        //[self.serverObjectCache setObject:PO forKey:PO.objectId];
+        
+		//You can store a PFObject in the local datastore by pinning it. Pinning a PFObject is recursive, just like saving, so any objects that are pointed to by the one you are pinning will also be pinned.
 		NSEntityDescription *entity = [NSEntityDescription entityForName:PO.localClassName inManagedObjectContext:mainContext];
 		[entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
 			if (obj.isToMany && !obj.inverseRelationship) {
@@ -882,7 +894,7 @@ NSManagedObjectContext *mainContext;
     }
     
     //try to find PO in the pool first
-    PFObject *object = [self getCachedParseObjectForID:ID];
+    PFObject *object = [self getCachedParseObjectWithClass:class ID:ID];
 	if (!object) {
 		object = [PFObject objectWithoutDataWithClassName:class objectId:ID];
 	}
@@ -924,7 +936,7 @@ NSManagedObjectContext *mainContext;
 - (NSDictionary *)updatingClassAndValues{
     NSMutableDictionary *info = self.changedRecords.mutableCopy;
     [self.changedRecords enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *changedKeys, BOOL *stop) {
-        PFObject *PO = [self getCachedParseObjectForID:key];
+        PFObject *PO;// = [self getCachedParseObjectWithClass:?? ID:key];
         if (PO) {
             [info removeObjectForKey:key];
             info[[NSString stringWithFormat:@"%@(%@)", PO.parseClassName, key]] = changedKeys.string;
