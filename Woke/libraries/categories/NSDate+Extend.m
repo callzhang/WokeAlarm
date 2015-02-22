@@ -231,7 +231,7 @@
 		return @"";
 	}
 	
-	return [NSDate getStringFromTime:left];
+	return [[NSDate getStringFromTime:left] stringByAppendingString:@" left"];
 }
 
 + (NSString *)getStringFromTime:(NSTimeInterval)time{

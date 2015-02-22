@@ -27,7 +27,16 @@ extern NSString *const EWActivityTypeMedia;
 
 //methods
 - (NSArray *)activitiesForPerson:(EWPerson *)person;
+
+/**
+ *  Find activity by alarm. The activity is matched with type == alarm, time == alarm.time and owner == alarm.owner
+ *
+ *  @param alarm The alarm in interest
+ *
+ *  @return Activity matched with given criteria
+ */
 - (EWActivity *)activityForAlarm:(EWAlarm *)alarm;
+
 /**
  *  Current activity for current alarm. If the current activity is completed, or not matched with current alarm, this function will generate a new activity
  *

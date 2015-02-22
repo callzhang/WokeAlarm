@@ -18,11 +18,12 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *menuToAlarm;
         __unsafe_unretained NSString *profileToFriends;
         __unsafe_unretained NSString *tempShowMainView;
-        __unsafe_unretained NSString *unwindFromStatusViewController;
+        __unsafe_unretained NSString *toRecordingView;
         __unsafe_unretained NSString *sentVoiceChildViewController;
         __unsafe_unretained NSString *facebookChildViewController;
         __unsafe_unretained NSString *wakeUpChildViewController;
         __unsafe_unretained NSString *smallTimeChildViewController;
+        __unsafe_unretained NSString *unwindFromStatusViewController;
         __unsafe_unretained NSString *timeChildViewController;
         __unsafe_unretained NSString *peopleArrayChildViewController;
     } segues;

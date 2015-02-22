@@ -77,7 +77,7 @@
     else {
         [[EWAVManager sharedManager] playMedia:targetMedia];
         self.playingMedia = targetMedia;
-        [EWWakeUpManager sharedInstance].currentMediaIndex = indexPath.row;
+        [EWWakeUpManager sharedInstance].currentMediaIndex = @(indexPath.row);
     }
 }
 

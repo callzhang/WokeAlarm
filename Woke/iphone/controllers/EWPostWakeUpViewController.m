@@ -55,7 +55,7 @@
     }
     else {
         [[EWAVManager sharedManager] playMedia:targetMedia];
-        [EWWakeUpManager sharedInstance].currentMediaIndex = indexPath.row;
+        [EWWakeUpManager sharedInstance].currentMediaIndex = @(indexPath.row);
     }
 }
 

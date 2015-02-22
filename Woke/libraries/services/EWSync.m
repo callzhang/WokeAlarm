@@ -441,6 +441,8 @@ NSManagedObjectContext *mainContext;
         if (succeeded) {
             //assign connection between MO and PO
             [self performSaveCallbacksWithParseObject:object andManagedObjectID:serverObject.objectID];
+            //set updated time
+            serverObject.updatedAt = object.updatedAt;
         }
 		else{
             *error = err;

@@ -138,7 +138,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self startToPlayVoice];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kWakeStartNotification object:nil];
-    //self.forceWakeUp = NO;
+    
+    self.continuePlay = YES;
 }
 
 - (void)sleep:(UILocalNotification *)notification{
@@ -239,6 +240,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //post notification
     [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     
+    //playing states
+    self.continuePlay = NO;
+    self.medias = nil;
+    self.currentMediaIndex = nil;
+    
     //THOUGHTS: something to do in the future
     //notify friends and challengers
     //update history stats
@@ -290,7 +296,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //check time
     if (![EWPerson me]) return;
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    
     //alarm time up
     NSNumber *sleepDuration = [EWPerson me].preference[kSleepDuration];
     NSInteger durationInSeconds = sleepDuration.integerValue * 3600;
@@ -324,6 +329,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (void)playNextVoiceWithDelay {
+    //no continue to play if status is not waking up
+    if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWakingUp) {
+        DDLogVerbose(@"Continueus playing disabled for state other than waking up≥≥≥");
+        return;
+    }
     EWMedia *currentMediaBackup = self.currentMedia;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kMediaPlayInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //check if playing media is changed
@@ -350,14 +360,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         return;
     }
     
-    if (self.currentMediaIndex < _medias.count - 1){
+    if (self.currentMediaIndex.unsignedIntegerValue < _medias.count - 1){
         //get next cell
-        DDLogInfo(@"Play next song (%@)", @(self.currentMediaIndex));
+        DDLogInfo(@"Play next song (%@)", self.currentMediaIndex);
         [[EWAVManager sharedManager] playMedia:self.currentMedia];
-        self.currentMediaIndex++;
+        self.currentMediaIndex = @(_currentMediaIndex.integerValue+1);
         [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
     }
-    else if (self.currentMediaIndex == _medias.count - 1) {
+    else if (self.currentMediaIndex.unsignedIntegerValue == _medias.count - 1) {
         [[EWAVManager sharedManager] playMedia:self.currentMedia];
         [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
     }
@@ -387,7 +397,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (void)playMediaAtIndex:(NSUInteger)index {
-    self.currentMediaIndex = index;
+    self.currentMediaIndex = @(index);
     [[EWAVManager sharedManager] playMedia:self.currentMedia];
 }
 
@@ -414,10 +424,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (EWMedia *)currentMedia {
-    if (_currentMediaIndex >= self.medias.count) {
+    if (_currentMediaIndex.unsignedIntegerValue >= self.medias.count) {
         DDLogError(@"currentMedia index overflow");
         return nil;
     }
-    return self.medias[_currentMediaIndex];
+    return self.medias[_currentMediaIndex.unsignedIntegerValue];
 }
 @end

@@ -663,7 +663,7 @@
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
                                 <connections>
                                     <action selector="onWakeHerButton:" destination="ZmP-te-75G" eventType="touchUpInside" id="HIf-hC-uMG"/>
-                                    <segue destination="qpL-rI-Npc" kind="custom" customClass="EWBlurPresentSegue" id="jc1-Xb-1kl"/>
+                                    <segue destination="qpL-rI-Npc" kind="custom" identifier="toRecordingView" customClass="EWBlurPresentSegue" id="jc1-Xb-1kl"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEo-IB-dbM">
@@ -733,6 +733,7 @@
                         <outlet property="nameLabel" destination="FYb-xQ-Ifp" id="1I3-CW-WMV"/>
                         <outlet property="profileImageView" destination="eiI-YG-cDg" id="T5U-6T-rtt"/>
                         <outlet property="statusLabel" destination="ZNX-QY-fw8" id="KTz-9c-7h2"/>
+                        <outlet property="wakeButton" destination="vCK-ky-v90" id="nYs-wi-kFh"/>
                         <outlet property="wantsToWakeUpAtLabel" destination="Fp5-iC-Irk" id="pJQ-n5-AR1"/>
                     </connections>
                 </viewController>
@@ -3457,9 +3458,9 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kOJ-F3-SkY"/>
         <segue reference="exy-ZS-OTh"/>
         <segue reference="d4z-tG-E1i"/>
+        <segue reference="pRr-UO-GET"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

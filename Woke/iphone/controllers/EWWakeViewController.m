@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *wantsToWakeUpAtLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) IBOutlet UIButton *wakeButton;
 
 @end
 
@@ -55,6 +56,8 @@
 - (IBAction)onNextButton:(id)sender {
     [[EWPersonManager shared] nextWakeeWithCompletion:^(EWPerson *person) {
         self.nextWakee = person;
+        NSString *title = [NSString stringWithFormat:@"Wake %@", person.genderSubjectiveCaseString];
+        [self.wakeButton setTitle:title forState:UIControlStateNormal];
     }];
 }
 

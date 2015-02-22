@@ -19,7 +19,9 @@
 #import "FBTweakInline.h"
 #import "NSTimer+BlocksKit.h"
 
-@interface EWSleepViewController ()
+@interface EWSleepViewController (){
+    EWAlarm *currentAlarm;
+}
 
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
@@ -43,7 +45,8 @@
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
     
     [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        self.labelTimeLeft.text = [EWPerson myCurrentAlarm].time.timeLeft;
+        self.labelDateString.text = currentAlarm.time.nextOccurTime.date2dayString;
+        self.labelTimeLeft.text = currentAlarm.time.nextOccurTime.timeLeft;
     } repeats:YES];
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -63,7 +66,8 @@
 }
 
 - (void)setViewModelAlarm {
-    self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
+    currentAlarm = [EWPerson myCurrentAlarm];
+    self.sleepViewModel.alarm = currentAlarm;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

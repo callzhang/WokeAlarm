@@ -48,15 +48,17 @@ NSString *const EWActivityTypeMedia = @"media";
     }
     
     //validate: current activity if exists
-    NSInteger n = 1;
+    NSInteger n = 0;
     BOOL completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
     BOOL timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
     while (_currentAlarmActivity && (completed || !timeMatched)) {
-        DDLogWarn(@"%s Current activity completed or mismatch: %@", __FUNCTION__, _currentAlarmActivity);
+        DDLogWarn(@"%s Current activity completed or mismatch: %@", __FUNCTION__, _currentAlarmActivity.time.date2detailDateString);
         //invalid activity, try next
         _currentAlarmActivity = nil;
         alarm = [[EWAlarmManager sharedInstance] next:n thAlarmForPerson:person];
         _currentAlarmActivity = [self activityForAlarm:alarm];
+        completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
+        timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
         n++;
     }
     
