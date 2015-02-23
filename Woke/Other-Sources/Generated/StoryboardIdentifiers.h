@@ -33,6 +33,7 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *EWMain;
         __unsafe_unretained NSString *EWMenu;
         __unsafe_unretained NSString *EWSleeping;
+        __unsafe_unretained NSString *EWPostWakeUp;
         __unsafe_unretained NSString *EWSettings;
         __unsafe_unretained NSString *EWSleep;
         __unsafe_unretained NSString *EWNotification;

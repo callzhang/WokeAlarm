@@ -60,16 +60,18 @@
 /**
  Returns a future time in n weeks from now that has the same weekday and time of the input date.
  @param n Weeks in the future from this time
- @param seconds the time adjustments for with Extra Seconds. Nagetive value means move the split point to the past. For searching alarm purpose, use -kMaxWakeTime as the extra time.
+ @param seconds the time adjustments for with Extra Seconds. value means move the split point to the past. For searching alarm purpose, use -kMaxWakeTime as the extra time.
  @discussion The time originally used for deviding future and past is the time of now. 
  *
  * If use 0 extra time to schedule a task it causes a bug, when a task just passed and scheduleTasks is called, that task will be moved to past, which is undesireable.
  *
- * Therefore, I used current-kMaxWakeTime instead, to be consistant with all other places that determine if the task has pasted.
+ * To solve this dilemma, we added extraSeconds to determine the cut-off time, and to be consistant with all other places that determine if the activity has pasted.
  *
- * However, this method is flawed. Just after we finished the most recent task, that task will be moved to past. But a new task with identical time will created becuase it is still not considered past time.
+ * However, this method is flawed if used alone. Just after we finished the most recent activity, that activity will be moved to past. When current activity is called, a new activity with identical time will created becuase it is still not considered past time.
+ *
+ * Therefore, we need to combine history information to determine the current activity/alarm, i.e. use past activity AND current wakeup status together. See [EWAlarmManager next:alarmForPerson:] for detail.
  */
-- (NSDate *)nextOccurTimeInWeeks:(NSInteger)n withExtraSeconds:(NSInteger)seconds;
+- (NSDate *)nextOccurTimeInWeeks:(NSInteger)n withExtraSeconds:(float)seconds;
 - (NSDate *)nextOccurTimeInWeeks:(NSInteger)n;
 - (NSDate *)nextOccurTime;
 

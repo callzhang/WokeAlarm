@@ -12,9 +12,9 @@
 #import "GCDSingleton.h"
 
 typedef NS_ENUM(NSUInteger, EWWakeUpStatus) {
+    EWWakeUpStatusWoke,//default state
     EWWakeUpStatusSleeping,
     EWWakeUpStatusWakingUp, //alarm played but user havsn't click woke
-    EWWakeUpStatusWoke, //user clicked woke.
 };
 
 @interface EWSession : NSObject

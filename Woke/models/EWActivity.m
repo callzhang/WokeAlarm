@@ -25,7 +25,7 @@ const struct EWActivityTypes EWActivityTypes = {
 + (EWActivity *)newActivity{
     EWActivity *activity = [EWActivity MR_createEntity];
     activity.owner = [EWPerson me];
-    activity.updatedAt = [NSDate date];
+    activity.createdAt = [NSDate date];
     return activity;
 }
 

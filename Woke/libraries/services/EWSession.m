@@ -8,20 +8,12 @@
 
 #import "EWSession.h"
 #import "EWPerson.h"
+#import "FBKVOController.h"
 
 
 
 @implementation EWSession
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_WITH_ACCESSOR(EWSession, sharedSession);
-- (EWSession *)init {
-    self = [super init];
-    if (self) {
-//        NSString *cachedDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
-//        self.cachePath = [cachedDir stringByAppendingString:@"/sessionCache.arch"];
-//        [self load];
-    }
-    return self;
-}
 
 + (void)initialize {
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{

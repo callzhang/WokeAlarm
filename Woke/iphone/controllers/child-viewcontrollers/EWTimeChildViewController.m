@@ -7,6 +7,7 @@
 //
 
 #import "EWTimeChildViewController.h"
+#import "EWWakeUpManager.h"
 
 @interface EWTimeChildViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *labelTime1;
@@ -22,6 +23,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimerDidFireNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        self.topLabelLine2.text = @"Current Alarm";
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kWakeupSuccess object:nil queue:nil usingBlock:^(NSNotification *note) {
+        self.topLabelLine2.text = @"Next Alarm";
+    }];
     
     @weakify(self);
     [RACObserve(self, date) subscribeNext:^(NSDate *date) {

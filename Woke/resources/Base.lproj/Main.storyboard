@@ -2294,7 +2294,7 @@
         <!--Post Wake Up View Controller-->
         <scene sceneID="kYt-Fn-TMC">
             <objects>
-                <viewController id="Lp5-7U-6rj" customClass="EWPostWakeUpViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EWPostWakeUpViewController" id="Lp5-7U-6rj" customClass="EWPostWakeUpViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="BEl-Oo-IRE"/>
                         <viewControllerLayoutGuide type="bottom" id="Gxs-Zw-k5U"/>

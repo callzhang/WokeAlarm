@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "EWActivity.h"
 
-@interface EWPostWakeUpViewController : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface EWPostWakeUpViewController : EWBaseViewController<UICollectionViewDelegate,UICollectionViewDataSource>
 {
     __weak IBOutlet UICollectionView *collectionView;
     IBOutlet UIButton *buzzButton;

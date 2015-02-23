@@ -17,7 +17,7 @@
         <attribute name="statement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="type" attributeType="String" syncable="YES"/>
-        <relationship name="owner" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="activities" inverseEntity="EWPerson" syncable="YES"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="activities" inverseEntity="EWPerson" syncable="YES"/>
         <fetchedProperty name="myMedias" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="EWActivity" predicateString="objectId IN $FETCH_SOURCE.mediaIDs"/>
         </fetchedProperty>

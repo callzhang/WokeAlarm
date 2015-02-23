@@ -29,23 +29,23 @@
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
     DDLogInfo(@"Forced enable wake up");
-    [EWWakeUpManager sharedInstance].forceWakeUp = YES;
+    [EWWakeUpManager sharedInstance].forceWakeUp = ![EWWakeUpManager sharedInstance].forceWakeUp;
     //[[EWWakeUpManager sharedInstance] startToWakeUp];
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
     DDLogInfo(@"Add Woke Voice");
-    [EWWakeUpManager sharedInstance].forceSnooze = YES;
+    [EWWakeUpManager sharedInstance].forceSnooze = ![EWWakeUpManager sharedInstance].forceSnooze;
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
     DDLogInfo(@"Force sleep enabled");
-    [EWWakeUpManager sharedInstance].forceSleep = YES;
+    [EWWakeUpManager sharedInstance].forceSleep = ![EWWakeUpManager sharedInstance].forceSleep;
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
     DDLogInfo(@"Skipped checking activity completed");
-    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
+    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = ![EWWakeUpManager sharedInstance].skipCheckActivityCompleted;
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
@@ -263,6 +263,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     self.continuePlay = NO;
     self.medias = nil;
     self.currentMediaIndex = nil;
+    self.skipCheckActivityCompleted = NO;
     
     //THOUGHTS: something to do in the future
     //notify friends and challengers
@@ -282,6 +283,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     
     DDLogInfo(@"Scheduled alarm timer in %@", [NSDate getStringFromTime:timeLeft]);
     self.alarmTimer = [NSTimer bk_timerWithTimeInterval:timeLeft block:^(NSTimer *timer) {
+        DDLogInfo(@"Alarm timer up! start to wake up!");
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimerDidFireNotification object:nil];
         [[EWWakeUpManager sharedInstance] startToWakeUp];
     } repeats:NO];

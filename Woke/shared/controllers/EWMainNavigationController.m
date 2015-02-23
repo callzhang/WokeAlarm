@@ -10,6 +10,8 @@
 #import "EWMenuViewController.h"
 #import "EWBlurNavigationControllerDelegate.h"
 #import <pop/pop.h>
+#import "EWPostWakeUpViewController.h"
+#import "UIViewController+Blur.h"
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -27,6 +29,14 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kWakeStartNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        //push post wakeup view in
+        DDLogInfo(@"Main navigation controller received start wake notification. Presenting post wake view!");
+        EWPostWakeUpViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWPostWakeUpViewController class])];
+        [self.topViewController presentWithBlur:vc withCompletion:nil];
+    }];
+    
     self.menuViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMenuViewController"];
     @weakify(self)
     self.menuViewController.tapHandler = ^ {

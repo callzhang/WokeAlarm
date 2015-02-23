@@ -129,13 +129,14 @@
     EWAlarm *currentAlarm;
     EWActivity *activity;
     BOOL skipCheckActivityCompleted = [EWWakeUpManager shared].skipCheckActivityCompleted;
-    
+    BOOL completed;
     do {
         currentAlarm = [self next:n thAlarmForPerson:person];
         activity = [[EWActivityManager sharedManager] activityForAlarm:currentAlarm];
+        completed = activity.completed && !skipCheckActivityCompleted;
         n++;
         //if current acivity is completed, we should use next activity
-    } while (activity.completed && !skipCheckActivityCompleted && n < person.alarms.count);
+    } while (completed && n < person.alarms.count);
     
     return currentAlarm;
 }
@@ -144,6 +145,10 @@
     if (n>=7) return nil;
     if (!person.isMe) DDLogError(@"%s person passed in is not me!", __FUNCTION__);
     
+    //when just past the alarm time (timer fired), we need the alarm just past, not the next one
+    //but if the wakeup is completed, we want the next alarm
+    //float extra = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWoke ? 0 : kMaxWakeTime;
+    
     NSArray *sortedAlarms = [person.alarms.allObjects sortedArrayUsingComparator:^NSComparisonResult(EWAlarm *obj1, EWAlarm *obj2) {
         NSDate *d1 = [obj1.time nextOccurTimeInWeeks:0 withExtraSeconds:kMaxWakeTime];
         NSDate *d2 = [obj2.time nextOccurTimeInWeeks:0 withExtraSeconds:kMaxWakeTime];
@@ -151,13 +156,7 @@
     }];
 
     for (EWAlarm *alarm in sortedAlarms) {
-        if (alarm.state == nil) {
-            DDLogError(@"Alarm doesn't have state, please check! %@", alarm);
-            alarm.stateValue = YES;
-            if (![alarm validate]) {
-                continue;
-            }
-        }
+        if (![alarm validate]) continue;
         if (alarm.stateValue) n--;
         if (n<0) return alarm;
     }

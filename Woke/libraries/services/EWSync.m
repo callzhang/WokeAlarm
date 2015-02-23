@@ -321,7 +321,7 @@ NSManagedObjectContext *mainContext;
 		
         //check ACL
         if (![EWSync checkAccess:SO]) {
-            DDLogWarn(@"!!! Skip uploading object with no access rights %@ with changes %@", SO.serverID, SO.changedKeys);
+            DDLogWarn(@"!!! Skip uploading object with no access rights %@ with changes %@", SO.serverID, SO.changedKeys.string);
             continue;
         }
         

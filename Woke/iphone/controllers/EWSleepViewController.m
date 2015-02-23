@@ -44,13 +44,8 @@
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
     
-#ifdef DEBUG
-    //add testing button
-    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:self action:@selector(more:)];
-    self.navigationItem.rightBarButtonItem = rightBtn;
-#endif
-    
     [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+        self.timeChildViewController.topLabelLine1.text = [NSDate date].date2String;
         self.labelDateString.text = currentAlarm.time.nextOccurTime.date2dayString;
         self.labelTimeLeft.text = currentAlarm.time.nextOccurTime.timeLeft;
     } repeats:YES];
@@ -63,7 +58,6 @@
 		[EWUIUtil dismissHUD];
 		[self setViewModelAlarm];
 	}];
-    
     [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
         DDLogInfo(@"Sleep view feels there is a change to alarm time, updating view.");
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -85,6 +79,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+#ifdef DEBUG
+    //add testing button
+    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:self action:@selector(more:)];
+    self.navigationItem.rightBarButtonItem = rightBtn;
+#endif
 }
 
 - (void)bindViewModel {

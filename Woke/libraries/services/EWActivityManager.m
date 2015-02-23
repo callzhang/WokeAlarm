@@ -42,49 +42,24 @@ NSString *const EWActivityTypeMedia = @"media";
     //EWAssertMainThread
     EWAlarm *alarm = [[EWAlarmManager sharedInstance] currentAlarmForPerson:person];
     
-    //try to find current activity if nil
-    if (!_currentAlarmActivity) {
-        _currentAlarmActivity = [self activityForAlarm:alarm];
-    }
-    
-    //validate: current activity if exists
-    NSInteger n = 0;
     BOOL completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
     BOOL timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
-    while (_currentAlarmActivity && (completed || !timeMatched)) {
-        DDLogWarn(@"%s Current activity completed or mismatch: %@", __FUNCTION__, _currentAlarmActivity.time.date2detailDateString);
-        //invalid activity, try next
-        _currentAlarmActivity = nil;
-        alarm = [[EWAlarmManager sharedInstance] next:n thAlarmForPerson:person];
+    
+    //reset current alarm if any of
+    if (!_currentAlarmActivity || !timeMatched || completed) {
         _currentAlarmActivity = [self activityForAlarm:alarm];
         completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
         timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
-        n++;
-    }
-    
-    //generate if needed
-    if (!_currentAlarmActivity) {
-        //create new activity
-        if ([NSThread isMainThread]) {
-            _currentAlarmActivity = [EWActivity newActivity];
-        } else {
-            __block EWActivity *activity;
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                activity = [EWActivity newActivity];
-            });
-            _currentAlarmActivity = [activity MR_inContext:person.managedObjectContext];
-        }
-        
-        _currentAlarmActivity.owner = person;
-        _currentAlarmActivity.type = EWActivityTypeAlarm;
-        _currentAlarmActivity.time = alarm.time.nextOccurTime;
-        [_currentAlarmActivity save];
+        NSParameterAssert(!completed && timeMatched);
     }
     
     return _currentAlarmActivity;
 }
 
 - (EWActivity *)activityForAlarm:(EWAlarm *)alarm{
+    if (!alarm) {
+        return nil;
+    }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, alarm.time.nextOccurTime, EWActivityRelationships.owner, alarm.owner];
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
     [activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.objectId ascending:YES],
@@ -95,8 +70,23 @@ NSString *const EWActivityTypeMedia = @"media";
         [activities removeObject:activity];
         [activity remove];
     }
+    if (activities.count == 0 && [alarm validate]) {
+        EWActivity *activity = [self newActivityForAlarm:alarm];
+        [activities addObject:activity];
+    }
     
     return activities.lastObject;
+}
+
+- (EWActivity *)newActivityForAlarm:(EWAlarm *)alarm{
+    //create new activity
+    EWActivity *activity = [EWActivity MR_createEntityInContext:alarm.managedObjectContext];
+    activity.owner = alarm.owner;
+    activity.type = EWActivityTypeAlarm;
+    activity.time = alarm.time.nextOccurTime;
+    activity.createdAt = [NSDate date];
+    [activity save];
+    return activity;
 }
 
 - (void)completeAlarmActivity:(EWActivity *)activity{
@@ -131,8 +121,8 @@ NSString *const EWActivityTypeMedia = @"media";
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     //check alarm
     if (alarm && ![alarm.time.nextOccurTime isEqualToDate:activity.time]) {
-        DDLogError(@"*** %s Alarm time (%@) doesn't match with activity time (%@), abord", __func__, alarm.time.nextOccurTime.date2detailDateString, activity.time.date2detailDateString);
-        [[NSException exceptionWithName:@"EWInternalInconsistance" reason:@"Alarm and Activity mismatched" userInfo:@{@"alarm": alarm, @"activity;=": activity}] raise];
+        DDLogError(@"*** %s Alarm time (%@) doesn't match with activity time (%@), cancel wakeup process!", __func__, alarm.time.nextOccurTime.date2detailDateString, activity.time.date2detailDateString);
+        //[[NSException exceptionWithName:@"EWInternalInconsistance" reason:@"Alarm and Activity mismatched" userInfo:@{@"alarm": alarm, @"activity;=": activity}] raise];
         return NO;
     }
     //check activity

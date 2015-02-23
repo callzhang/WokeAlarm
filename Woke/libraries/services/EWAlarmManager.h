@@ -31,6 +31,9 @@
 /**
  *  current valid alarm for person. It first finds the next alarm that is turned on. then, look for activity for that alarm and make sure that activity is not completed, otherwise the next valid alarm is returned.
  *
+ *  1) When today's alarm completed, it returns the next day's alarm
+ *  2) When otherwise, it will return today's alarm, even with kMaxWakeTime passed
+ *
  *  @param person Person should be me, or otherwise return nil
  *
  *  @return person's next valid alarm
@@ -39,7 +42,7 @@
 /**
  *  next N'th alarm for person
  *
- *  @param n      0 for current and 1 for next...
+ *  @param n = 0 for current and 1 for next...
  *  @param person target person, must be me
  *
  *  @return the desired alarm

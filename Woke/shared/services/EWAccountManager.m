@@ -545,6 +545,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *POGraph, NSError *error) {
         NSMutableDictionary *POGraphInfo = [NSMutableDictionary new];
         if (error) {
+            [EWSession sharedSession].isSyncingUser = NO;
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
             block(error);
             return;
         }
