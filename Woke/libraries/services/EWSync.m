@@ -99,7 +99,7 @@ NSManagedObjectContext *mainContext;
     //initial property
     self.parseSaveCallbacks = [NSMutableDictionary dictionary];
     self.uploadCompletionCallbacks = [NSMutableDictionary new];
-    self.saveToLocalItems = [NSMutableArray new];
+    self.saveToLocalItems = [NSMutableSet new];
     self.serverObjectCache = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
 	
 }

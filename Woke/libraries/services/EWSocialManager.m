@@ -264,7 +264,7 @@
         //session not open, need to open
         DDLogVerbose(@"facebook session state: %lu", state);
         [[EWAccountManager sharedInstance] openFacebookSessionWithCompletion:^{
-            DDLogVerbose(@"Facebook session opened: %lu", [FBSession activeSession].state);
+            DDLogVerbose(@"Facebook session opened: %u", [FBSession activeSession].state);
             
             [self getFacebookFriends];
         }];
@@ -308,7 +308,7 @@
                 //NSLog(@"Continue facebook friends request: %@", nextPage);
                 [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder];
             }else{
-                DDLogInfo(@"Finished loading %ld friends from facebook, transfer to social graph.", friendsHolder.count);
+                DDLogInfo(@"Finished loading %ld friends from facebook, transfer to social graph.", (unsigned long)friendsHolder.count);
                 EWSocial *graph = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
                 graph.facebookFriends = friendsHolder.mutableCopy;
                 graph.facebookUpdated = [NSDate date];
@@ -353,7 +353,7 @@
 	[query includeKey:EWSocialRelationships.owner];
     [query setLimit:50];
     [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *socials, NSError *error) {
-        DDLogDebug(@"===> Found %ld new facebook friends%@", socials.count, [socials valueForKeyPath:@"owner.name"]);
+        DDLogDebug(@"===> Found %ld new facebook friends%@", (unsigned long)socials.count, [socials valueForKeyPath:@"owner.name"]);
         NSMutableArray *resultPeople = [NSMutableArray new];
         EWSocial *sg = [EWPerson mySocialGraph];
         for (EWSocial *social in socials) {

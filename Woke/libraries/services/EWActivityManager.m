@@ -103,7 +103,7 @@ NSString *const EWActivityTypeMedia = @"media";
         NSArray *played = activity.medias;
         [[EWPerson me] removeUnreadMedias:[NSSet setWithArray:played]];
 		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:played]];
-        DDLogInfo(@"Removed %ld medias from my unread medias", played.count);
+        DDLogInfo(@"Removed %ld medias from my unread medias", (unsigned long)played.count);
     }
     
     activity.completed = [NSDate date];

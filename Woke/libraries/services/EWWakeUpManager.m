@@ -282,7 +282,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self.alarmTimer invalidate];
     
     DDLogInfo(@"Scheduled alarm timer in %@", [NSDate getStringFromTime:timeLeft]);
-    self.alarmTimer = [NSTimer bk_timerWithTimeInterval:timeLeft block:^(NSTimer *timer) {
+    self.alarmTimer = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft block:^(NSTimer *timer) {
         DDLogInfo(@"Alarm timer up! start to wake up!");
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimerDidFireNotification object:nil];
         [[EWWakeUpManager sharedInstance] startToWakeUp];

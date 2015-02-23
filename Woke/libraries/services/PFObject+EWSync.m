@@ -260,7 +260,7 @@
 	
 	NSMutableArray *MOs = [[NSClassFromString(self.localClassName) MR_findByAttribute:kParseObjectID withValue:self.objectId inContext:context] mutableCopy];
     if (MOs.count > 1) {
-		DDLogError(@"Find %ld duplicated MO for ID %@(%@)", MOs.count, self.localClassName, self.objectId);
+		DDLogError(@"Find %ld duplicated MO for ID %@(%@)", (unsigned long)MOs.count, self.localClassName, self.objectId);
         for (EWServerObject *mo_ in MOs){
             if (![mo_ validate]) {
                 [mo_ remove];

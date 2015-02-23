@@ -162,7 +162,6 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 #pragma mark - Media File
 - (void)downloadMediaFile{
 	EWMediaFile *file = self.mediaFile;
-	BOOL good = self.mediaFile.audio != nil;
 	if (!file) {
 		PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
 		[filePO fetchIfNeeded];
