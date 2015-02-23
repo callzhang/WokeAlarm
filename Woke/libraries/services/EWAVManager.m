@@ -106,7 +106,14 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 													withOptions: AVAudioSessionCategoryOptionAllowBluetooth
 														  error: &error];
     if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
-    
+#ifdef DEBUG
+	//#else
+	success = [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+	if (!success)  NSLog(@"AVAudioSession error overrideOutputAudioPort:%@",error);
+#endif
+	
+
+	
     //set active
     success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
     if (!success){

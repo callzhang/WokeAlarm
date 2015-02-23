@@ -80,11 +80,10 @@
 
 #pragma mark - UI Actions
 - (IBAction)done:(id)sender {
-    if (self.presentingViewController) {
-        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:^{
-            [[EWWakeUpManager sharedInstance] stopPlayingVoice];
-            [[EWWakeUpManager sharedInstance] wake:nil];
-        }];
+	if (self.presentingViewController) {
+		[[EWWakeUpManager sharedInstance] stopPlayingVoice];
+		[[EWWakeUpManager sharedInstance] wake:nil];
+        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:nil];
     }
 }
 

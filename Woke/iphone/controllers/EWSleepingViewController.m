@@ -24,6 +24,7 @@
 #import "EWSleepViewController.h"
 #import "EWUIUtil.h"
 #import "FBKVOController.h"
+#import "EWActivity.h"
 
 
 FBTweakAction(@"Sleeping VC", @"UI", @"Show Wake Up VC", ^{
@@ -76,7 +77,18 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] bk_map:^id(EWMedia *obj) {
         return obj.author;
     }];
-    
+	
+	
+	if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp)
+		[self showWakeUpVC];else [self hideWakeUpVC];
+	[self.KVOController observe:[EWSession sharedSession] keyPath:@"wakeupStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+		if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
+			[self showWakeUpVC];
+		}else{
+			[self hideWakeUpVC];
+		}
+	}];
+	
     @weakify(self);
     self.timeChildViewController.topLabelLine1.text = [NSString stringWithFormat:@"It is now %@.", [[NSDate date] mt_stringFromDateWithFormat:@"hh:mma" localized:YES]];
     self.timerDisposable = [[RACSignal interval:1 onScheduler:[RACScheduler mainThreadScheduler]] subscribeNext:^(NSDate *date) {
@@ -85,23 +97,15 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     }];
     
     RAC(self, timeChildViewController.date) = [RACObserve(self, nextAlarm.time) distinctUntilChanged];
-    
-    
-    [self hideWakeUpVC];
-    [self.KVOController observe:[EWSession sharedSession] keyPath:@"wakeStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
-            [self showWakeUpVC];
-        }else{
-            [self hideWakeUpVC];
-        }
-    }];
+	
 }
 
 - (void)showWakeUpVC {
     self.wakeUpChildViewController.view.hidden = NO;
     self.wakeUpChildViewController.active = YES;
     self.timeChildViewController.view.hidden = YES;
-    self.peopleArrayChildViewController.view.hidden = YES;
+	self.peopleArrayChildViewController.view.hidden = YES;
+	self.navigationItem.leftBarButtonItem = nil;
 }
 
 - (void)hideWakeUpVC {
@@ -150,19 +154,24 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
     if ([identifier isEqualToString:@"toPostWakeUpView"]) {
-        //test delegate
-        BOOL shouldWakeUp = [[EWWakeUpManager sharedInstance].delegate wakeupManager:[EWWakeUpManager sharedInstance] shouldWakeUpWithAlarm:[EWPerson myCurrentAlarm]];
+        //it's related to to time, not he delegate's method
+		EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+        BOOL shouldWakeUp = [activity.time timeIntervalSinceDate:[NSDate date]] < kMaxEalyWakeInterval;
         if (!shouldWakeUp) {
-            [EWUIUtil showWarningHUBWithString:@"It's too early to wake up"];
+            [EWUIUtil showWarningHUBWithString:@"Too early!"];
         }
-        
         return shouldWakeUp;
     }
     return YES;
 }
 
-//- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
-//    return NO;
-//}
+- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
+	if ([EWWakeUpManager shared].canSnooze) {
+		return YES;
+	}
+	
+	[EWUIUtil showWarningHUBWithString:@"You can't to back to sleep"];
+	return NO;
+}
 
 @end

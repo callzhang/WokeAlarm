@@ -140,7 +140,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //add Woke media is needed
     if (self.medias.count == 0) {
         //need to create some voice
+#ifdef DEBUG
+		[[EWMediaManager sharedInstance] testGetRandomVoiceWithCompletion:^(EWMedia *media, NSError *error) {
+			DDLogInfo(@"Got random voice");
+		}];
+#else
         [[EWMediaManager sharedInstance] getWokeVoice];
+#endif
     }
     
     //set volume
@@ -234,7 +240,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (BOOL)canSnooze{
-    BOOL can = [EWSession sharedSession].wakeupStatus != EWWakeUpStatusSleeping || _forceSnooze;
+    BOOL can = _forceSnooze && [self shouldSleep];
     return can;
 }
 
@@ -244,7 +250,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         activity = [[EWActivityManager sharedManager] currentAlarmActivity];
     }
     if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWakingUp) {
-        DDLogError(@"%s wake up state is NO, skip perform wake action", __FUNCTION__);
+        DDLogError(@"%s wake up state is NOT wakingUp, skip perform wake action", __FUNCTION__);
         return;
     }
     
@@ -383,15 +389,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         DDLogWarn(@"%s No media to play", __FUNCTION__);
         return;
     }
-    
-    if (self.currentMediaIndex.unsignedIntegerValue < _medias.count - 1){
+	
+	self.currentMediaIndex = @(_currentMediaIndex.integerValue+1);
+    if (self.currentMediaIndex.unsignedIntegerValue <= _medias.count - 1){
         //get next cell
         DDLogInfo(@"Play next song (%@)", self.currentMediaIndex);
-        [[EWAVManager sharedManager] playMedia:self.currentMedia];
-        self.currentMediaIndex = @(_currentMediaIndex.integerValue+1);
-        [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
-    }
-    else if (self.currentMediaIndex.unsignedIntegerValue == _medias.count - 1) {
         [[EWAVManager sharedManager] playMedia:self.currentMedia];
         [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
     }
@@ -400,7 +402,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
             //play the first if loopCount > 0
             DDLogInfo(@"Looping, %ld loop left", (long)_loopCount);
             self.loopCount++;
-            self.currentMediaIndex = 0;
+            self.currentMediaIndex = @0;
             [[EWAVManager sharedManager] playMedia:self.currentMedia];
             [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
         }
@@ -414,6 +416,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (void)stopPlayingVoice {
+	self.currentMediaIndex = @0;
     [[EWAVManager sharedManager] volumeTo:0 withCompletion:^{
         [[EWAVManager sharedManager] stopAllPlaying];
     }];
@@ -423,6 +426,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 - (void)playMediaAtIndex:(NSUInteger)index {
     self.currentMediaIndex = @(index);
     [[EWAVManager sharedManager] playMedia:self.currentMedia];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];
 }
 
 - (void)playMedia:(EWMedia *)media {

@@ -22,7 +22,9 @@
 
 @interface EWSleepViewController (){
     EWAlarm *currentAlarm;
+	NSTimer *displayTimer;
 }
+
 
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
@@ -44,8 +46,9 @@
     
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
-    
-    [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+	
+	[displayTimer invalidate];
+    displayTimer = [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
         //self.timeChildViewController.topLabelLine1.text = [NSDate date].date2String;
         self.labelDateString.text = currentAlarm.time.nextOccurTime.date2dayString;
         self.labelTimeLeft.text = currentAlarm.time.nextOccurTime.timeLeft;
@@ -96,7 +99,7 @@
     RAC(self, timeChildViewController.date) = [RACObserve(self.sleepViewModel, date) distinctUntilChanged];
 }
 
-
+#pragma mark - Segue
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     [super prepareForSegue:segue sender:sender];
     
@@ -122,6 +125,16 @@
 	return YES;
 }
 
+
+- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
+	if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
+		[EWUIUtil showWarningHUBWithString:@"Wake up!"];
+		return NO;
+	}
+	return YES;
+}
+
+#pragma mark - UIAction
 - (IBAction)more:(id)sender{
     [EWUtil showTweakPanel];
 }

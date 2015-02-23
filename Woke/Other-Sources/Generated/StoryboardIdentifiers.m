@@ -38,6 +38,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .EWSleep = @"EWSleepViewController",
         .EWNotification = @"EWNotificationViewController",
         .EWProfile = @"EWProfileViewController",
+        .EWRecording = @"EWRecordingViewController",
         .EWLoginGate = @"EWLoginGateViewController",
         .EWWake = @"EWWakeViewController",
         .EWPersonSearchResultTable = @"EWPersonSearchResultTableViewController",

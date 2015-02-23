@@ -10,8 +10,9 @@
 #import "EWMenuViewController.h"
 #import "EWBlurNavigationControllerDelegate.h"
 #import <pop/pop.h>
-#import "EWPostWakeUpViewController.h"
 #import "UIViewController+Blur.h"
+#import "EWSleepingViewController.h"
+#import "EWBlurPresentSegue.h"
 
 typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     MainViewMenuStateOpen,
@@ -32,9 +33,11 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kWakeStartNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         //push post wakeup view in
-        DDLogInfo(@"Main navigation controller received start wake notification. Presenting post wake view!");
-        EWPostWakeUpViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWPostWakeUpViewController class])];
-        [self.topViewController presentWithBlur:vc withCompletion:nil];
+        DDLogInfo(@"Main navigation controller received start wake notification. Presenting sleeping view!");
+        EWSleepingViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWSleepingViewController class])];
+		EWBlurPresentSegue *segue = [[EWBlurPresentSegue alloc] initWithIdentifier:@"" source:self.topViewController destination:vc];
+		[self.topViewController prepareForSegue:segue sender:self];
+		[segue perform];
     }];
     
     self.menuViewController = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWMenuViewController"];
