@@ -18,6 +18,7 @@
 #import "FBTweak.h"
 #import "FBTweakInline.h"
 #import "NSTimer+BlocksKit.h"
+#import "FBKVOController.h"
 
 @interface EWSleepViewController (){
     EWAlarm *currentAlarm;
@@ -45,7 +46,7 @@
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
     
     [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        self.timeChildViewController.topLabelLine1.text = [NSDate date].date2String;
+        //self.timeChildViewController.topLabelLine1.text = [NSDate date].date2String;
         self.labelDateString.text = currentAlarm.time.nextOccurTime.date2dayString;
         self.labelTimeLeft.text = currentAlarm.time.nextOccurTime.timeLeft;
     } repeats:YES];
@@ -63,6 +64,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self setViewModelAlarm];
         });
+    }];
+    [self.KVOController observe:[EWWakeUpManager shared] keyPath:@"wakeupStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        [self setViewModelAlarm];
     }];
     
     if ([EWSession sharedSession].isSyncingUser == YES) {

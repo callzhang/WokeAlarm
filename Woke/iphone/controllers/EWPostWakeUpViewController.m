@@ -30,11 +30,25 @@
         DDLogInfo(@"Snooze disabled, hide back button");
         self.navigationItem.leftBarButtonItem = nil;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
+        EWMedia *media = note.object;
+        NSUInteger index = [self.medias indexOfObject:media];
+        if (index != NSUIntegerMax) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        }
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.8]];
+}
+
+- (void)reloadMedias{
+    [self.tableView reloadData];
 }
 
 #pragma mark - <UITableViewDataSource>

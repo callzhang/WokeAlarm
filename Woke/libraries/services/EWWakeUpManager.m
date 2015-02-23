@@ -442,6 +442,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	
     if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp || forceLoad) {
         self.medias = [EWPerson myUnreadMedias];
+        DDLogInfo(@"Reloaded media and current media is %ld", self.medias.count);
     }else{
         DDLogVerbose(@"Current seesion is not in wakingUp mode, playing media list will not load from myUnreadMedias");
     }
