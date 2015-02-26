@@ -78,8 +78,7 @@
 
 - (NSArray *)items {
     if (!_items) {
-        NSSet *medias = [[EWPerson me] receivedMedias];
-//        NSSet *medias = [[EWPerson me] sentMedias];
+        NSSet *medias = [[EWPerson me] sentMedias];
         NSMutableSet *datesSet = [NSMutableSet set];
         NSSet *map = [medias bk_map:^id(EWMedia *obj) {
             //TODO: use createdAt, but currently it is nil, use updatedAt temporary
