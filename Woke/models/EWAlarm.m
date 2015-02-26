@@ -12,6 +12,7 @@
 #import "NSDictionary+KeyPathAccess.h"
 #import "EWActivityManager.h"
 #import "EWActivity.h"
+#import "NSDate+Extend.h"
 
 @implementation EWAlarm
 
@@ -63,8 +64,8 @@
     }
     if (!self.time) {
         DDLogError(@"Alarm（%@）missing time", self.serverID);
-		if (self.owner == [EWPerson me]) {
-			self.time = [[NSDate date] dateByAddingTimeInterval:8*3600];
+		if (self.owner == [EWPerson meInContext:self.managedObjectContext]) {
+            [self setPrimitiveTime:[[NSDate date] timeByMinutesFrom5am:180]];
 			DDLogInfo(@"Fixed to %@", self.time.date2String);
 		}else {
 			good = NO;
@@ -73,8 +74,8 @@
     //check tone
     if (!self.tone) {
         DDLogError(@"Tone not set!");
-		if (self.owner == [EWPerson me]) {
-			self.tone = [EWPerson me].preference[@"DefaultTone"];
+		if (self.owner == [EWPerson meInContext:self.managedObjectContext]) {
+			[self setPrimitiveTone:[EWPerson me].preference[@"DefaultTone"]];
 			DDLogInfo(@"Fixed to %@", self.tone);
 		}else {
 			good = NO;
@@ -84,7 +85,7 @@
     if (!self.state) {
         DDLogError(@"State not set for alarm: %@", self.objectId);
 		if (self.owner == [EWPerson me]) {
-			self.state = @YES;
+			[self setPrimitiveState:@YES];
 			DDLogInfo(@"Fixed to %@", self.state);
 		}else {
 			good = NO;

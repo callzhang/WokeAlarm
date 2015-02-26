@@ -15,8 +15,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.dateString = @"Thursday, October";
-        self.wakeupText = @"Wake me up plzzzzzzz!";
+        self.dateString = @"-";
+        self.wakeupText = @"";
     }
     return self;
 }

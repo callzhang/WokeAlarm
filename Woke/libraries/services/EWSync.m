@@ -767,7 +767,7 @@ NSManagedObjectContext *mainContext;
     }
     
     //if no ACL, use MO to determine
-    DDLogWarn(@"PO %@(%@) has NO ACL!", po.parseClassName, po.objectId);
+    if (![po isKindOfClass:[PFUser class]]) DDLogWarn(@"PO %@(%@) has NO ACL!", po.parseClassName, po.objectId);
     EWPerson *p = (EWPerson *)SO.ownerObject;
     if (p.isMe){
         return YES;
