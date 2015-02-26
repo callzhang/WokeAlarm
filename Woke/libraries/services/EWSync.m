@@ -864,25 +864,28 @@ NSManagedObjectContext *mainContext;
 - (void)setCachedParseObject:(PFObject *)PO {
     if (PO.isDataAvailable) {
         NSError *err;
+        DDLogVerbose(@"Pin PO %@(%@) to cache", PO.parseClassName, PO.objectId);
+        TICK
         [PO pin:&err];
+        TOCK
         if (err) {
             DDLogError(@"Failed to set cached PO %@(%@):%@", PO.parseClassName, PO.objectId, err.localizedDescription);
         }
         //[self.serverObjectCache setObject:PO forKey:PO.objectId];
         
 		//You can store a PFObject in the local datastore by pinning it. Pinning a PFObject is recursive, just like saving, so any objects that are pointed to by the one you are pinning will also be pinned.
-		NSEntityDescription *entity = [NSEntityDescription entityForName:PO.localClassName inManagedObjectContext:mainContext];
-		[entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-			if (obj.isToMany && !obj.inverseRelationship) {
-				//key to array of pointers
-				NSArray *array = PO[key];
-				for (PFObject *obj in array) {
-                    if (obj.isDataAvailable) {
-                        [self setCachedParseObject:obj];
-                    }
-				}
-			}
-		}];
+//		NSEntityDescription *entity = [NSEntityDescription entityForName:PO.localClassName inManagedObjectContext:mainContext];
+//		[entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+//			if (obj.isToMany && !obj.inverseRelationship) {
+//				//key to array of pointers
+//				NSArray *array = PO[key];
+//				for (PFObject *obj in array) {
+//                    if (obj.isDataAvailable) {
+//                        [self setCachedParseObject:obj];
+//                    }
+//				}
+//			}
+//		}];
     }else{
         DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
     }

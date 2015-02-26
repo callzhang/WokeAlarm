@@ -585,9 +585,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             //save PO first
             if (relation.isToMany) {
                 POGraphInfo[key] = [obj valueForKey:kParseObjectID];
-                for (PFObject *PO in obj) {
-                    [[EWSync sharedInstance] setCachedParseObject:PO];
-                }
+                DDLogInfo(@"Pin %@ to cache", key);
+                TICK
+                [PFObject pinAll:obj];
+                TOCK
             }else{
                 POGraphInfo[key] = [(PFObject *)obj valueForKey:kParseObjectID];
                 [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
