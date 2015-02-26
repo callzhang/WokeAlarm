@@ -315,7 +315,7 @@
 	
 	for (UILocalNotification *aNotif in allNotification) {
 		
-		NSLog(@"===== Deleted %@ (%@) =====", aNotif.userInfo[kLocalNotificationTypeKey], aNotif.fireDate.date2detailDateString);
+		DDLogInfo(@"===== Deleted %@ (%@) =====", aNotif.userInfo[kLocalNotificationTypeKey], aNotif.fireDate.date2detailDateString);
 		[[UIApplication sharedApplication] cancelLocalNotification:aNotif];
 		
 	}

@@ -109,7 +109,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 #ifdef DEBUG
 	//#else
 	success = [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
-	if (!success)  NSLog(@"AVAudioSession error overrideOutputAudioPort:%@",error);
+	if (!success)  DDLogError(@"AVAudioSession error overrideOutputAudioPort:%@",error);
 #endif
 	
 

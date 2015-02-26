@@ -186,9 +186,9 @@
                     }
                     if ([className isEqualToString:@"UIImage"]) {
                         UIImage *img = [UIImage imageWithData:data];
-                        [self setValue:img forKey:key];
+                        [self setPrimitiveValue:img forKey:key];
                     }else{
-                        [self setValue:data forKey:key];
+                        [self setPrimitiveValue:data forKey:key];
                     }
                     //update sync info
                     self.syncInfo[key] = [NSDate date];

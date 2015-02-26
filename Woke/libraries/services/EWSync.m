@@ -10,7 +10,6 @@
 #import "EWUIUtil.h"
 #import "EWServerObject.h"
 #import "AFNetworkReachabilityManager.h"
-#import <WellCached/ELAWellCached.h>
 #import "NSDictionary+KeyPathAccess.h"
 #import "EWErrorManager.h"
 
@@ -100,7 +99,6 @@ NSManagedObjectContext *mainContext;
     self.parseSaveCallbacks = [NSMutableDictionary dictionary];
     self.uploadCompletionCallbacks = [NSMutableDictionary new];
     self.saveToLocalItems = [NSMutableSet new];
-    self.serverObjectCache = [ELAWellCached cacheWithDefaultExpiringDuration:kCacheLifeTime];
 	
 }
 
@@ -364,8 +362,8 @@ NSManagedObjectContext *mainContext;
             DDLogInfo(@"~~~> MO %@(%@) is going to be DELETED, enqueue PO to delete queue.", SO.entity.name, [SO valueForKey:kParseObjectID]);
             //get PO reference
             PFObject *PO = [PFObject objectWithoutDataWithClassName:SO.serverClassName objectId:SO.serverID];
-            //remove PO from cache
-            [self.serverObjectCache removeObjectForKey:SO.serverID];
+            //remove PO from PIN
+			//Not needed
             //add PO to delete queue
             [self appendObjectToDeleteQueue:PO];
         }
@@ -488,15 +486,16 @@ NSManagedObjectContext *mainContext;
 				//not good
 				DDLogError(@"delete object failed, not sure why, %@(%@): error:%@", parseObject.parseClassName, parseObject.objectId, error);
 			}
-			
+			[parseObject deleteEventually];
 			[self removeObjectFromDeleteQueue:parseObject];
-			[self.serverObjectCache removeObjectForKey:parseObject.objectId];
+			//[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 		}];
 	}
 	@catch (NSException *exception) {
 		DDLogError(@"Error in deleting PO: %@, reason: %@", parseObject, exception.description);
 		[self removeObjectFromDeleteQueue:parseObject];
-		[self.serverObjectCache removeObjectForKey:parseObject.objectId];
+		[parseObject deleteEventually];
+		//[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 	}
 }
 
@@ -779,9 +778,10 @@ NSManagedObjectContext *mainContext;
 #pragma mark - Parse helper methods
 + (NSArray *)findParseObjectWithQuery:(PFQuery *)query inContext:(NSManagedObjectContext *)context error:(NSError **)error{
 	NSArray *result = [query findObjects:error];
+	[PFObject pinAll:result error:error];
 	NSMutableArray *resultMOs = [NSMutableArray array];
 	for (PFObject *PO in result) {
-		[[EWSync sharedInstance] setCachedParseObject:PO];
+		//[[EWSync sharedInstance] setCachedParseObject:PO];
 		EWServerObject *MO;
 		if ([PO.localClassName isEqualToString:kSyncUserClass] && PO.objectId != [PFUser currentUser].objectId) {
 			MO = [PO managedObjectInContext:context];
@@ -803,11 +803,18 @@ NSManagedObjectContext *mainContext;
     EWAssertMainThread
     //@try {
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+			if (!objects && error) {
+				DDLogError(@"Failed to get PO: %@", error);
+				if (block) {
+					block(nil, error);
+				}
+				return;
+			}
 			//convert to MO
+			[PFObject pinAll:objects error:&error];
 			__block NSMutableArray *localMOs = [NSMutableArray array];
 			[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
 				for (PFObject *PO in objects) {
-					[[EWSync sharedInstance] setCachedParseObject:PO];
 					EWServerObject *MO;
 					if ([PO.localClassName isEqualToString:kSyncUserClass] && PO.objectId != [PFUser currentUser].objectId) {
 						MO = [PO managedObjectInContext:localContext];

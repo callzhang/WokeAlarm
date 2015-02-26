@@ -296,7 +296,7 @@ static const CGFloat initialDownSampling = 2;
 		//rander the last frame when app become active
 		__weak EWBlurAnimator *weakSelf = self;
 		__block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-			NSLog(@"Application did become active, render last frame of presenting blur image");
+			DDLogInfo(@"Application did become active, render last frame of presenting blur image");
 			weakSelf.blurImage = [[GPUImagePicture alloc] initWithImage:fromView.screenshot];
 			[weakSelf.blurImage addTarget:weakSelf.zoomFilter];
 			[weakSelf.blurImage processImage];

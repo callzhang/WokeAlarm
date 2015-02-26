@@ -193,14 +193,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }
     
     //fetch
-    *error = nil;
     PFQuery *query = [PFUser query];
     [query whereKey:kParseObjectID containedIn:list];
     //[query includeKey:@"friends"];
     NSArray *people = [EWSync findParseObjectWithQuery:query inContext:context error:error];
     
     if (*error) {
-        NSLog(@"*** Failed to fetch wakees: %@", *error);
+        DDLogError(@"*** Failed to fetch wakees: %@", *error);
         self.isFetchingWakees = NO;
         return nil;
     }

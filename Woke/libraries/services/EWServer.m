@@ -226,7 +226,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
                           completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                               if (!error){
                                   NSDictionary *currentPermissions= [(NSArray *)[result data] objectAtIndex:0];
-                                  NSLog(@"current permissions %@", currentPermissions);
+                                  DDLogDebug(@"current permissions %@", currentPermissions);
                                   NSMutableArray *requestPermissions = [[NSMutableArray alloc] initWithArray:@[]];
                                   
                                   // Check if all the permissions we need are present in the user's current permissions
@@ -245,7 +245,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
                                                                           completionHandler:^(FBSession *session, NSError *err) {
                                                                               if (!err) {
                                                                                   // Permission granted
-                                                                                  NSLog(@"new permissions %@", [FBSession.activeSession permissions]);
+                                                                                  DDLogInfo(@"new permissions %@", [FBSession.activeSession permissions]);
                                                                                   // We can request the user information
                                                           [EWServer makeRequestToPostStoryWithId:objectId andUrlString:url];
                                                         //upload a graph and form a OG story
@@ -253,7 +253,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
                                                                               } else {
                                                                                   // An error occurred, we need to handle the error
                                                                                   // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                                                                  NSLog(@"error %@", err.description);
+                                                                                  DDLogError(@"error %@", err.description);
                                                                               }
                                                                           }];
                                   } else {

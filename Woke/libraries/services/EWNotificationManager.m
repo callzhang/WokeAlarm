@@ -136,7 +136,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         
     }else{
         
-        NSLog(@"@@@ unknown type of notification");
+        DDLogError(@"@@@ unknown type of notification");
     }
 }
 

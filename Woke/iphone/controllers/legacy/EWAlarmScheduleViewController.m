@@ -128,7 +128,7 @@ static NSString *cellIdentifier = @"scheduleAlarmCell";
         }
         //state
         if (cell.alarmToggle.selected != alarm.stateValue) {
-            NSLog(@"Change alarm state for %@ to %@", alarm.time.mt_stringFromDateWithFullWeekdayTitle, cell.alarmToggle.selected?@"ON":@"OFF");
+            DDLogVerbose(@"Change alarm state for %@ to %@", alarm.time.mt_stringFromDateWithFullWeekdayTitle, cell.alarmToggle.selected?@"ON":@"OFF");
             alarm.stateValue = cell.alarmToggle.selected?YES:NO;
             //[[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChangedNotification object:alarm userInfo:@{@"alarm": alarm}];
             hasChanges = YES;

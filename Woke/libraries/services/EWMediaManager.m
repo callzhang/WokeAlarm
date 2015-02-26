@@ -39,7 +39,7 @@
     NSString *mediaID = notification[kPushMediaID];
     
     if (!mediaID) {
-        NSLog(@"Push doesn't have media ID, abort!");
+        DDLogError(@"Push doesn't have media ID, abort!");
         return;
     }
     
@@ -55,7 +55,7 @@
     if ([type isEqualToString:kPushMediaTypeVoice]) {
         // ============== Media ================
         NSParameterAssert(mediaID);
-        NSLog(@"Received voice type push");
+        DDLogInfo(@"Received voice type push");
         
 #ifdef DEBUG
         [[[UIAlertView alloc] initWithTitle:@"Voice来啦" message:@"收到一条神秘的语音."  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];

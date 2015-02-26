@@ -551,11 +551,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             return;
         }
         //expecting a dictionary of objects needed to update
-        //return graph level: 1) relation name 2) Array of PFObjects or PFObject
+		//return graph level: 1) relation name 2) Array of PFObjects or PFObject
+		//create a list of POs to pin
+		NSMutableSet *POtoPin = [NSMutableSet new];
         [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
             if ([key isEqualToString:userKey]) {
                 POGraphInfo[key] = @"me";
-                [[EWSync sharedInstance] setCachedParseObject:obj];
+				[[EWSync sharedInstance] setCachedParseObject:obj];
 				[me assignValueFromParseObject:obj];
                 return;
             } else if ([key isEqualToString:deleteKey]) {
@@ -584,16 +586,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             }
             //save PO first
             if (relation.isToMany) {
-                POGraphInfo[key] = [obj valueForKey:kParseObjectID];
+                POGraphInfo[key] = [(NSArray *)[obj valueForKey:kParseObjectID] string];
                 DDLogInfo(@"Pin %@ to cache", key);
-                TICK
-                [PFObject pinAll:obj];
-                TOCK
+				[POtoPin addObjectsFromArray:obj];
             }else{
                 POGraphInfo[key] = [(PFObject *)obj valueForKey:kParseObjectID];
                 [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
+				[POtoPin addObject:obj];
             }
         }];
+		TICK
+		[PFObject pinAll:POtoPin.allObjects error:&error];
+		if (error) DDLogError(@"Failed to Pin returned PO: %@", error);
+		TOCK
         
         DDLogInfo(@"Server returned sync info: %@", POGraphInfo);
 		

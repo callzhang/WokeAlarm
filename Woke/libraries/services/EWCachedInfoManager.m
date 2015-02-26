@@ -271,12 +271,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
                 //activityCache[dateKey] = activityLog;
             }
             @catch (NSException *exception) {
-                NSLog(@"*** Failed to generate activity: %@", exception.description);
+                DDLogError(@"*** Failed to generate activity: %@", exception.description);
                 continue;
             }
             
             localMe.cachedInfo = [localMe.cachedInfo setValue:activityLog forImmutableKeyPath:@[kActivityCache, dateKey]];
-            NSLog(@"activity activity cache updated on %@", dateKey);
+            DDLogVerbose(@"activity activity cache updated on %@", dateKey);
         }
     } ];
 }
