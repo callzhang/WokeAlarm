@@ -503,6 +503,7 @@
 		9B6AB8191A16F201003372A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9B71AC741A22927C00E300CE /* AlarmTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlarmTest.m; sourceTree = "<group>"; };
+		9B7D31311A9F01CA000E8A9F /* GCDSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDSingleton.h; sourceTree = "<group>"; };
 		9B81395B1A15D65900F1A56C /* GKCropBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKCropBorderView.h; sourceTree = "<group>"; };
 		9B81395C1A15D65900F1A56C /* GKCropBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKCropBorderView.m; sourceTree = "<group>"; };
 		9B81395D1A15D65900F1A56C /* GKImageCropOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropOverlayView.h; sourceTree = "<group>"; };
@@ -766,7 +767,6 @@
 			isa = PBXGroup;
 			children = (
 				096AAA911A195A3900B4CBFF /* categories */,
-				096AAAA01A195A3900B4CBFF /* defines */,
 				096AAAA41A195A3900B4CBFF /* helpers */,
 				096AAAA71A195A3900B4CBFF /* services */,
 				0990EF731A22C606001AF099 /* segues */,
@@ -806,17 +806,22 @@
 		096AAAA01A195A3900B4CBFF /* defines */ = {
 			isa = PBXGroup;
 			children = (
+				9B7D31311A9F01CA000E8A9F /* GCDSingleton.h */,
 				096AAAA11A195A3900B4CBFF /* EWDefines.h */,
 				0971F73E1A71EA5B005A7709 /* EWDefines.m */,
 			);
-			path = defines;
+			name = defines;
+			path = ../defines;
 			sourceTree = "<group>";
 		};
 		096AAAA41A195A3900B4CBFF /* helpers */ = {
 			isa = PBXGroup;
 			children = (
+				096AAAA01A195A3900B4CBFF /* defines */,
 				096AAAA51A195A3900B4CBFF /* EWUIUtil.h */,
 				096AAAA61A195A3900B4CBFF /* EWUIUtil.m */,
+				096AAAC91A195A3900B4CBFF /* EWUtil.h */,
+				096AAACA1A195A3900B4CBFF /* EWUtil.m */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -854,8 +859,6 @@
 				096AAAC21A195A3900B4CBFF /* EWCachedInfoManager.m */,
 				096AAAC71A195A3900B4CBFF /* EWUserManager.h */,
 				096AAAC81A195A3900B4CBFF /* EWUserManager.m */,
-				096AAAC91A195A3900B4CBFF /* EWUtil.h */,
-				096AAACA1A195A3900B4CBFF /* EWUtil.m */,
 				096AAACB1A195A3900B4CBFF /* EWWakeUpManager.h */,
 				096AAACC1A195A3900B4CBFF /* EWWakeUpManager.m */,
 				096AAAD11A195A3900B4CBFF /* PFQuery+EWQuery.h */,

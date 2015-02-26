@@ -24,7 +24,6 @@ target 'Woke' do
   pod 'ReactiveViewModel', '~> 0.3'
   pod 'NYXImagesKit', '~> 2.3'
   pod 'dyci', :git => 'https://github.com/DyCI/dyci-main.git'
-  pod 'WellCached', '~> 0.1'
   pod 'GKImagePicker', '~> 0.0'
   pod 'APTimeZones', '~> 1.1'
   pod 'Tweaks', '~> 1.1.0'

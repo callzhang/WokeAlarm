@@ -55,7 +55,7 @@ PODS:
   - dyci (0.1.5.6):
     - dyci/Injections (= 0.1.5.6)
   - dyci/Injections (0.1.5.6)
-  - Expecta (0.3.1)
+  - Expecta (0.3.2)
   - Facebook-iOS-SDK (3.23.0):
     - Bolts (~> 1.0)
   - GKImagePicker (0.0.1)
@@ -112,21 +112,21 @@ PODS:
   - MTDates (1.0.0)
   - NYXImagesKit (2.3)
   - OCMock (3.1.2)
-  - Parse (1.6.2):
+  - Parse (1.6.3):
     - Bolts (~> 1.1)
-  - ParseFacebookUtils (1.6.2):
+  - ParseFacebookUtils (1.6.3):
     - Facebook-iOS-SDK (~> 3.20)
-    - Parse (~> 1.6.2)
+    - Parse (~> 1.6.3)
   - ParseUI (1.1.0):
     - Parse (~> 1.6)
     - ParseFacebookUtils (~> 1.6)
   - pop (1.0.7)
-  - ReactiveCocoa (2.4.4):
-    - ReactiveCocoa/UI (= 2.4.4)
-  - ReactiveCocoa/Core (2.4.4):
+  - ReactiveCocoa (2.4.7):
+    - ReactiveCocoa/UI (= 2.4.7)
+  - ReactiveCocoa/Core (2.4.7):
     - ReactiveCocoa/no-arc
-  - ReactiveCocoa/no-arc (2.4.4)
-  - ReactiveCocoa/UI (2.4.4):
+  - ReactiveCocoa/no-arc (2.4.7)
+  - ReactiveCocoa/UI (2.4.7):
     - ReactiveCocoa/Core
   - ReactiveViewModel (0.3):
     - ReactiveCocoa (~> 2.4)
@@ -134,7 +134,6 @@ PODS:
   - Tweaks (1.1.0)
   - VBFPopFlatButton (0.0.6):
     - pop
-  - WellCached (0.1.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.1)
@@ -142,7 +141,7 @@ DEPENDENCIES:
   - APTimeZones (~> 1.1)
   - BlocksKit (~> 2.2.5)
   - CocoaLumberjack (= 2.0.0-rc)
-  - CrashlyticsFramework (~> 2.2.5.2)
+  - CrashlyticsFramework
   - CrashlyticsLumberjack (= 2.0.0-rc2)
   - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
@@ -165,7 +164,6 @@ DEPENDENCIES:
   - RHAddressBook (~> 1.1)
   - Tweaks (~> 1.1.0)
   - VBFPopFlatButton (~> 0.0.5)
-  - WellCached (~> 0.1)
 
 EXTERNAL SOURCES:
   dyci:
@@ -193,7 +191,7 @@ SPEC CHECKSUMS:
   CrashlyticsLumberjack: d41d1043ceee3312f546242e8bd3ee0ec22e39b1
   DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
   dyci: 63f19224ff515c438e26387546c9301af917953c
-  Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
+  Expecta: ee641011fe10aa1855d487b40e4976dac50ec342
   Facebook-iOS-SDK: 3d65f685348b789e46a9aacf92bfa85b60b63755
   GKImagePicker: 6039f7bf8d517eed0f7583af123c4422784e6c81
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
@@ -207,15 +205,14 @@ SPEC CHECKSUMS:
   MTDates: e04c9433bf5f1d5cb55a1862ec018a01b5da75c3
   NYXImagesKit: 1c9f228ae78fab475d267b3b3a1308e0fba11731
   OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
-  Parse: 60d65108fe39da77ec16c9e51d74b4d296b21424
-  ParseFacebookUtils: 0b86cd67283c60d10e3ddc8427f989f5e60ebbd7
+  Parse: f725f76ef200c5127420690fc6882e57c3813923
+  ParseFacebookUtils: bb14e63862f920cc3f3864b0e373d6771b765255
   ParseUI: 00c4c39aab3944d88758b55416581650caa37f89
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
-  ReactiveCocoa: 31119068e3dde866bd257cf74e1f06b4023bf387
+  ReactiveCocoa: 313fc53cc9aeb2bbbc3f5f13c7eac16478d9af8f
   ReactiveViewModel: 512224f801ea0a603fd394eed0f38bc662b64b9a
   RHAddressBook: 0cad9d33b9494d1e28323b62e5c7afc109cc4294
   Tweaks: 05b197d4a1247288f576587546bc1932189d8c98
   VBFPopFlatButton: 79ca72185b76c2dff8861263118a8c47ef1c1043
-  WellCached: d139993bce456f14c12af349586cfd50f77c1d5c
 
 COCOAPODS: 0.35.0

@@ -221,13 +221,13 @@
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1
 #define COCOAPODS_VERSION_MINOR_Parse 6
-#define COCOAPODS_VERSION_PATCH_Parse 2
+#define COCOAPODS_VERSION_PATCH_Parse 3
 
 // ParseFacebookUtils
 #define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
 #define COCOAPODS_VERSION_MAJOR_ParseFacebookUtils 1
 #define COCOAPODS_VERSION_MINOR_ParseFacebookUtils 6
-#define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 2
+#define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 3
 
 // ParseUI
 #define COCOAPODS_POD_AVAILABLE_ParseUI
@@ -245,25 +245,25 @@
 #define COCOAPODS_POD_AVAILABLE_ReactiveCocoa
 #define COCOAPODS_VERSION_MAJOR_ReactiveCocoa 2
 #define COCOAPODS_VERSION_MINOR_ReactiveCocoa 4
-#define COCOAPODS_VERSION_PATCH_ReactiveCocoa 4
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa 7
 
 // ReactiveCocoa/Core
 #define COCOAPODS_POD_AVAILABLE_ReactiveCocoa_Core
 #define COCOAPODS_VERSION_MAJOR_ReactiveCocoa_Core 2
 #define COCOAPODS_VERSION_MINOR_ReactiveCocoa_Core 4
-#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_Core 4
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_Core 7
 
 // ReactiveCocoa/UI
 #define COCOAPODS_POD_AVAILABLE_ReactiveCocoa_UI
 #define COCOAPODS_VERSION_MAJOR_ReactiveCocoa_UI 2
 #define COCOAPODS_VERSION_MINOR_ReactiveCocoa_UI 4
-#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_UI 4
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_UI 7
 
 // ReactiveCocoa/no-arc
 #define COCOAPODS_POD_AVAILABLE_ReactiveCocoa_no_arc
 #define COCOAPODS_VERSION_MAJOR_ReactiveCocoa_no_arc 2
 #define COCOAPODS_VERSION_MINOR_ReactiveCocoa_no_arc 4
-#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_no_arc 4
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_no_arc 7
 
 // ReactiveViewModel
 #define COCOAPODS_POD_AVAILABLE_ReactiveViewModel
@@ -282,12 +282,6 @@
 #define COCOAPODS_VERSION_MAJOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_MINOR_VBFPopFlatButton 0
 #define COCOAPODS_VERSION_PATCH_VBFPopFlatButton 6
-
-// WellCached
-#define COCOAPODS_POD_AVAILABLE_WellCached
-#define COCOAPODS_VERSION_MAJOR_WellCached 0
-#define COCOAPODS_VERSION_MINOR_WellCached 1
-#define COCOAPODS_VERSION_PATCH_WellCached 1
 
 // apptentive-ios
 #define COCOAPODS_POD_AVAILABLE_apptentive_ios
