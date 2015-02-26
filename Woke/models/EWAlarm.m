@@ -64,7 +64,7 @@
     if (!self.time) {
         DDLogError(@"Alarm（%@）missing time", self.serverID);
 		if (self.owner == [EWPerson me]) {
-			self.time = [[NSDate date] dateByAddingTimeInterval:8*3600];
+//			self.time = [[NSDate date] dateByAddingTimeInterval:8*3600];
 			DDLogInfo(@"Fixed to %@", self.time.date2String);
 		}else {
 			good = NO;
