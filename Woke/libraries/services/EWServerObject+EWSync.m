@@ -204,9 +204,9 @@
                 }
                 if ([className isEqualToString:@"UIImage"]) {
                     UIImage *img = [UIImage imageWithData:data];
-                    [self setValue:img forKey:key];
+                    [self setPrimitiveValue:img forKey:key];
                 }else{
-                    [self setValue:data forKey:key];
+                    [self setPrimitiveValue:data forKey:key];
                 }
                 //update sync info
                 self.syncInfo[key] = [NSDate date];
@@ -227,7 +227,7 @@
                 }
             }else{
                 @try {
-                    [self setValue:parseValue forKey:key];
+                    [self setPrimitiveValue:parseValue forKey:key];
                 }
                 @catch (NSException *exception) {
                     DDLogError(@"Failed to set value for key %@ on MO %@(%@)", key, self.entity.name, self.serverID);

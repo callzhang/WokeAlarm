@@ -279,7 +279,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="vXZ-lx-hvc" kind="custom" identifier="MenuLogoutFadeToLoginGate" customClass="MSReplaceFadeSegue" id="2Sk-gr-QlI"/>
+                                    <segue destination="vXZ-lx-hvc" kind="custom" identifier="MenuLogoutFadeToLoginGate" customClass="EWMenuReplaceFadeSegue" id="2Sk-gr-QlI"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1854,7 +1854,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O3X-Af-XKh" userLabel="time wrapper view">
                                 <rect key="frame" x="45" y="50" width="230" height="80"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TNJ-ny-dUW">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TNJ-ny-dUW">
                                         <rect key="frame" x="0.0" y="-18" width="50" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="Ccl-FR-vdX"/>
@@ -1863,7 +1863,7 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUW-2K-mCP">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUW-2K-mCP">
                                         <rect key="frame" x="120" y="-18" width="55" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="dzx-Po-iCH"/>
@@ -1878,7 +1878,7 @@
                                             <constraint firstAttribute="width" constant="15" id="ppA-KA-cbp"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ild-zj-4UH">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ild-zj-4UH">
                                         <rect key="frame" x="50" y="-18" width="55" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="ARP-1i-RrQ"/>
@@ -1887,7 +1887,7 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6a-9d-C5k">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6a-9d-C5k">
                                         <rect key="frame" x="175" y="-18" width="55" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="e98-Pg-VDM"/>
