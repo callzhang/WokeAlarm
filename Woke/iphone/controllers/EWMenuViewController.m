@@ -49,39 +49,42 @@
     [self showMenu];
 }
 
-/*
 #pragma mark - Segue actions
 - (IBAction)onHome:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToHome sender:self];
     }];
 }
+
 - (IBAction)onNotification:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToNotification sender:self];
     }];
 }
+
 - (IBAction)onAlarms:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToAlarm sender:self];
     }];
 }
+
 - (IBAction)onVoice:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToVoice sender:self];
     }];
 }
+
 - (IBAction)onProfile:(id)sender {
 	[self.mainNavigationController toogleMenuCompletion:^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToProfile sender:self];
 	}];
 }
+
 - (IBAction)onSetting:(id)sender {
     [self.mainNavigationController toogleMenuCompletion:^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToSettings sender:self];
     }];
 }
-*/
 
 #pragma mark -
 - (void)onTap {
@@ -174,10 +177,6 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.mainNavigationController toogleMenuCompletion:nil];
-    });
-    
     if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.menuLogoutFadeToLoginGate]) {
         [[EWAccountManager shared] logout];
     }
