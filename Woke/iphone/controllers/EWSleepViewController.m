@@ -10,7 +10,7 @@
 #import "EWSetStatusViewController.h"
 #import "EWWakeUpManager.h"
 #import "EWTimeChildViewController.h"
-#import "EWAccountManager.h"
+//#import "EWAccountManager.h"
 #import "EWSleepingViewController.h"
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
@@ -19,6 +19,7 @@
 #import "FBTweakInline.h"
 #import "NSTimer+BlocksKit.h"
 #import "FBKVOController.h"
+#import "EWStartUpSequence.h"
 
 @interface EWSleepViewController (){
     EWAlarm *currentAlarm;

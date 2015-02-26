@@ -264,7 +264,7 @@
         //session not open, need to open
         DDLogVerbose(@"facebook session state: %lu", state);
         [[EWAccountManager sharedInstance] openFacebookSessionWithCompletion:^{
-            DDLogVerbose(@"Facebook session opened: %u", [FBSession activeSession].state);
+            DDLogVerbose(@"Facebook session opened: %lu", [FBSession activeSession].state);
             
             [self getFacebookFriends];
         }];

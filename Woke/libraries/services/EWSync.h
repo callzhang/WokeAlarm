@@ -69,8 +69,9 @@ extern NSString * const kEWSyncUploaded;
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
  */
-@property (strong) NSDictionary *changedRecords; //{string of objectID: array of changed keys}
-@property (strong) NSMutableSet *saveToLocalItems;
+@property (atomic, strong) NSDictionary *changedRecords; //{string of objectID: array of changed keys}
+@property (atomic, strong) NSMutableSet *saveToLocalItems;
+@property (atomic, strong) NSMutableDictionary *managedObjectsUpdating;
 @property BOOL isUploading;
 
 
@@ -81,11 +82,7 @@ extern NSString * const kEWSyncUploaded;
 #pragma mark - Connectivity
 + (BOOL)isReachable;
 
-#pragma mark - Parse Server methods
-/**
- The main save function, it save and upload to the server
- */
-+ (void)save __deprecated;
+#pragma mark - Server methods
 + (void)saveAllToLocal:(NSArray *)MOs;
 /**
  The main method of server update/insert/delete.
@@ -162,6 +159,7 @@ extern NSString * const kEWSyncUploaded;
 + (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
++ (void)removeMOFromUpdating:(EWServerObject *)mo;
 
 #pragma mark - Parse helper methods
 //PO query

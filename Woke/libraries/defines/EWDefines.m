@@ -11,6 +11,7 @@
 
 NSString * const kNewMediaNotification = @"media_event";
 NSString * const EWAccountDidLoginNotification = @"EWAccountDidLoginNotification";
+NSString * const EWDataDidSyncNotification = @"EWDataDidSyncNotification";
 NSString * const EWAccountDidLogoutNotification = @"EWAccountDidLogoutNotification";
 NSString * const kWakeStartNotification = @"wake_time";
 NSString * const kWokeNotification = @"woke";

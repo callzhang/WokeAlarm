@@ -12,6 +12,7 @@
 #import "AFNetworkReachabilityManager.h"
 #import "NSDictionary+KeyPathAccess.h"
 #import "EWErrorManager.h"
+#import "FBKVOController.h"
 
 NSString * const kEWSyncUploaded = @"sync_uploaded";
 
@@ -99,7 +100,7 @@ NSManagedObjectContext *mainContext;
     self.parseSaveCallbacks = [NSMutableDictionary dictionary];
     self.uploadCompletionCallbacks = [NSMutableDictionary new];
     self.saveToLocalItems = [NSMutableSet new];
-	
+	self.managedObjectsUpdating = [NSMutableDictionary new];
 }
 
 
@@ -772,6 +773,19 @@ NSManagedObjectContext *mainContext;
         return YES;
     }
     return NO;
+}
+
++ (void)removeMOFromUpdating:(EWServerObject *)mo{
+	NSMutableDictionary *queue = [EWSync sharedInstance].managedObjectsUpdating;
+	[queue removeObjectForKey:mo.serverID];
+	NSUInteger updating = queue.allKeys.count;
+	DDLogInfo(@"There are still %@ MO refreshing", @(updating));
+	if (updating == 0) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			DDLogInfo(@"Data sync finished");
+			[[NSNotificationCenter defaultCenter] postNotificationName:EWDataDidSyncNotification object:nil];
+		});
+	}
 }
 
 

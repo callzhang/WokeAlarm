@@ -20,6 +20,9 @@
         DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
         return;
     }
+	if ([[EWSync sharedInstance].managedObjectsUpdating.allKeys containsObject:parseObject.objectId]) {
+		DDLogWarn(@"Found MO already refreshing %@(%@)", parseObject.localClassName, parseObject.objectId);
+	}
     //download data: the fetch here is just a prevention or default state that data is only refreshed when absolutely necessary. If we need check new data, we should refresh PO before passed in here. For example, we fetch PO at app launch for current user update purpose.
 	NSError *err;
 	[parseObject fetchIfNeededAndSaveToCache:&err];
@@ -130,7 +133,9 @@
     
     //save to local has been applied in assignValueFromParseObject:
 	[self saveToLocal];
-    
+	
+	//remove from updating MO
+	[EWSync removeMOFromUpdating:self];
 }
 
 

@@ -1,6 +1,9 @@
 #import "_EWServerObject.h"
 #import "EWBlockTypes.h"
 #import <Parse/Parse.h>
+
+#define kManagedObjectDeleted		@"mo_deleted"
+
 @class EWServerObject;
 typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thread, NSError *error);
 

@@ -9,9 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "GCDSingleton.h"
 #define kFacebookLastUpdated        @"facebook_last_updated"
-#define kUserRelationSyncRequired   @[@"alarms", @"socialGraph", @"activities"]//list of relations that must be synced before the rest of the application execution
-#define kUserSyncStarted			@"user_sync_started"
-#define kUserSyncCompleted			@"user_sync_completed"
 
 @interface EWAccountManager : NSObject <CLLocationManagerDelegate>
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
@@ -28,11 +25,4 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 - (void)registerLocation;
 - (void)openFacebookSessionWithCompletion:(VoidBlock)block;
 
-// sync user
-/**
- *  Sync user at start up. Send local object ID and updatedAt. When returned from server, update all returned objects.
- *
- *  @param info Dictionary with first level: 1) relation 2) {objectID: updatedAt}
- */
-- (void)syncUserWithCompletion:(ErrorBlock)block;
 @end

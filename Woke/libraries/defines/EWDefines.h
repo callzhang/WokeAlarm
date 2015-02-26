@@ -49,6 +49,7 @@
 //Account Management
 extern NSString * const EWAccountDidLoginNotification;
 extern NSString * const EWAccountDidLogoutNotification;
+extern NSString * const EWDataDidSyncNotification;
 
 //Global parameters
 #define nWeeksToSchedule				1

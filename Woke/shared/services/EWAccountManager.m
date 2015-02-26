@@ -97,20 +97,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     TICK
     DDLogVerbose(@"Start sync user");
     //Delta sync
-    [self syncUserWithCompletion:^(NSError *error){
+    [[EWStartUpSequence sharedInstance] syncUserWithCompletion:^(NSError *error){
         TOCK
         DDLogInfo(@"[a] Resume upload to server");
         [[EWSync sharedInstance] resumeUploadToServer];
         
         //startup sequence
-        DDLogInfo(@"[b] Login data check");
-        [[EWStartUpSequence sharedInstance] loginDataCheck];
+        DDLogInfo(@"[b] Startup sequence");
+        [[EWStartUpSequence sharedInstance] startupSequence];
+		[[EWStartUpSequence sharedInstance] loginDataCheck];
         
         //post notification
         DDLogInfo(@"[c] Broadcast Person login notification");
         [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLoginNotification object:[EWPerson me] userInfo:@{kUserLoggedInUserKey:[EWPerson me]}];
         if (completion) {
-            
             DDLogDebug(@"[d] Run completion block.");
             completion(error);
         }
@@ -462,245 +462,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             DDLogInfo(@"Get proxymate location: %@", loc);
             [person save];
         }
-    }];
-}
-
-#pragma mark - Sync user
-- (void)syncUserWithCompletion:(ErrorBlock)block{
-    EWAssertMainThread
-	[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncStarted object:nil];
-    [EWSession sharedSession].isSyncingUser = YES;
-    NSString *const userKey = @"user";
-    NSString *const deleteKey = @"delete";
-    
-    //generate info dic
-    EWPerson *me = [EWPerson me];
-    NSMutableDictionary *graph = [NSMutableDictionary new];
-    //if no date available for me, it must be up to date.
-    if (me.updatedAt) {
-        graph[userKey] = @{me.serverID: me.updatedAt};
-    } else {
-		//Even though there might be pending changes, but the fact that local user missing update time is a sign of bad run from last session, therefore we should resync from server
-        DDLogError(@"User %@ has no updatedAt, using 1970 time", me.name);
-        graph[userKey] = @{me.objectId: [NSDate dateWithTimeIntervalSince1970:0]};
-    }
-    //get the updated objects
-    NSSet *workingObjects = [EWSync sharedInstance].workingQueue;
-    workingObjects = [workingObjects setByAddingObjectsFromSet:[EWSync sharedInstance].insertQueue];
-    
-    //enumerate
-    [me.entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *relation, BOOL *stop) {
-        if ([relation.destinationEntity.name isEqualToString:kSyncUserClass]) {
-            //Discuss: we don't need to skip user class
-            //return;
-        }
-        id objects = [me valueForKey:key];
-        if (objects) {
-            if ([relation isToMany]) {
-                NSMutableDictionary *related = [NSMutableDictionary new];
-                for (EWServerObject *SO in objects) {
-                    
-                    BOOL good = [SO validate];
-                    
-                    if (!SO.serverID) {
-                        DDLogError(@"Me->%@(%@) doesn't have serverID, add to upload queue.", key, SO.objectID);
-                        [SO uploadEventually];
-                    }
-                    else if ([workingObjects containsObject:SO]) {
-                        //has change, do not update from server, use current time
-                        //or has not updated to Server, meaning it will uploaded with newer data, use current time
-                        related[SO.serverID] = [NSDate date];
-                    }
-                    else if (SO.updatedAt && SO.updatedAt && good){
-                        related[SO.serverID] = SO.updatedAt;
-                    }
-                }
-                //add the graph to the info dic
-                graph[key] = related;
-            }
-            else {
-                //to-one relation
-                graph[key] = @0;//get the key first
-                EWServerObject *SO = (EWServerObject *)objects;
-                BOOL good = [SO validate];
-                if (!SO.serverID) {
-                    DDLogError(@"Me->%@(%@) doesn't have serverID, add to upload queue.", key, SO.objectID);
-                    [SO uploadEventually];
-                }
-                else if ([workingObjects containsObject:SO]) {
-                    //has change, do not update from server, use current time
-                    //or has not updated to Server, meaning it will uploaded with newer data, use current time
-                    graph[key] = @{SO.serverID: [NSDate date]};
-                }
-                else if (SO.serverID && SO.updatedAt && good){
-                    graph[key] = @{SO.objectId: SO.updatedAt};
-                }
-            }
-        }else{
-            graph[key] = @0;
-        }
-    }];
-    
-    //send to cloud
-    [PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *POGraph, NSError *error) {
-        NSMutableDictionary *POGraphInfo = [NSMutableDictionary new];
-        if (error) {
-            [EWSession sharedSession].isSyncingUser = NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
-            block(error);
-            return;
-        }
-        //expecting a dictionary of objects needed to update
-		//return graph level: 1) relation name 2) Array of PFObjects or PFObject
-		//create a list of POs to pin
-		NSMutableSet *POtoPin = [NSMutableSet new];
-        [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-            if ([key isEqualToString:userKey]) {
-                POGraphInfo[key] = @"me";
-				[[EWSync sharedInstance] setCachedParseObject:obj];
-				[me assignValueFromParseObject:obj];
-                return;
-            } else if ([key isEqualToString:deleteKey]) {
-                POGraphInfo[key] = obj;
-				//delete all objects in this Dictionary
-				DDLogInfo(@"Deleting objects %@", obj);
-				[(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
-					NSRelationshipDescription *relation =  me.entity.relationshipsByName[relationName];
-					NSString *className = relation.destinationEntity.name;
-					EWServerObject *MO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:mainContext];
-					if (relation.isToMany) {
-						NSMutableSet *related = [me valueForKey:relationName];
-						[related removeObject:MO];
-						[me setValue:related forKey:relationName];
-					} else {
-						[me setValue:nil forKey:relationName];
-					}
-				}];
-
-                return;
-            }
-            NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
-            if (!relation && ![obj isKindOfClass:[PFObject class]]) {
-                DDLogError(@"Unecpected value from server: %@(%@)", key, obj);
-                return;
-            }
-            //save PO first
-            if (relation.isToMany) {
-                POGraphInfo[key] = [(NSArray *)[obj valueForKey:kParseObjectID] string];
-                DDLogInfo(@"Pin %@ to cache", key);
-				[POtoPin addObjectsFromArray:obj];
-            }else{
-                POGraphInfo[key] = [(PFObject *)obj valueForKey:kParseObjectID];
-                [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
-				[POtoPin addObject:obj];
-            }
-        }];
-		TICK
-		[PFObject pinAll:POtoPin.allObjects error:&error];
-		if (error) DDLogError(@"Failed to Pin returned PO: %@", error);
-		TOCK
-        
-        DDLogInfo(@"Server returned sync info: %@", POGraphInfo);
-		
-		//save me first so the sql has the me object for other threads
-		[me saveToLocal];
-        
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [me MR_inContext:localContext];
-            [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-					
-                NSRelationshipDescription *relation = localMe.entity.relationshipsByName[key];
-                if (!relation) return;
-                
-                //decide whether to update the MO async
-                //Note: download async at beginning is proved to b
-                BOOL sync = YES;//[kUserRelationSyncRequired containsObject:key];
-                
-                //update SO
-                if (relation.isToMany) {
-                    NSArray *objects = (NSArray *)obj;
-                    NSMutableSet *relatedSO = [localMe mutableSetValueForKey:key];
-                    for (PFObject *PO in objects) {
-                        if(!PO.isDataAvailable) {
-                            DDLogError(@"Returned PO without data: %@", PO);
-                            [PO fetch];
-                        }
-                        EWServerObject *MO;
-                        if ([relation.destinationEntity.name isEqualToString:kSyncUserClass]) {
-                            MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAttributesOnly completion:nil];
-                            DDLogInfo(@"Synced properties for %@(%@)", MO.entity.name, MO.serverID);
-                        }else if (sync){
-                            MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
-                            DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
-                        }else {
-                            MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
-                                DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
-                            }];
-                        }
-                        if (![MO validate]) {
-                            DDLogError(@"MO %@(%@) is not valid after download, discard", MO.entity.name, MO.serverID);
-                            [MO remove];
-                        }
-                        else if (![relatedSO containsObject:MO]) {
-                            //add relation
-                            [relatedSO addObject:MO];
-                            [localMe setValue:relatedSO.copy forKey:key];
-                            DDLogVerbose(@"+++> Added relation Me->%@(%@)", key, PO.objectId);
-                        }
-                    }
-                }else{
-                    //to one
-                    PFObject *PO = (PFObject *)obj;
-                    EWServerObject *MO;
-
-                    if(!PO.isDataAvailable) {
-                        DDLogError(@"Returned PO without data: %@", PO);
-                        [PO fetch];
-                    }
-                    if ([relation.destinationEntity.name isEqualToString:kSyncUserClass]) {
-                        MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAttributesOnly completion:nil];
-                        DDLogInfo(@"Synced properties for %@(%@)", MO.entity.name, MO.serverID);
-                    }else if (sync){
-                        MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
-                        DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
-                    }else {
-                        MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
-                            DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
-                        }];
-                    }
-
-                    if (![MO validate]) {
-                        DDLogError(@"MO %@(%@) is not valid after download, discard", MO.entity.name, MO.serverID);
-                        [MO remove];
-                    }
-                    else if ([localMe valueForKey:key] != MO) {
-                        DDLogVerbose(@"+++> Set relation Me->%@(%@)", key, MO.objectId);
-                        [localMe setValue:MO forKey:key];
-                    }
-                }
-            }];
-            
-            //save to local so the updatedAt is assigned
-            [localMe saveToLocal];
-            
-        } completion:^(BOOL contextDidSave, NSError *error2) {
-			[EWSession sharedSession].isSyncingUser = NO;
-			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
-            if (!error2) {
-                DDLogDebug(@"========> Finished user syncing <=========");
-                block(nil);
-            }else{
-				NSString *str = [NSString stringWithFormat:@"========> Failed to save synced user \n This is a very serious error: %@", error2.description];
-                DDLogError(str);
-				EWAlert(str);
-                block(error2);
-            }
-			if (!me.updatedAt) {
-				DDLogError(@"Me is missing updatedAt after syncing data");
-			}
-        }];
-        
-        
     }];
 }
 
