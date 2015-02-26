@@ -14,7 +14,7 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *toRecordingView;
         __unsafe_unretained NSString *menuToHome;
         __unsafe_unretained NSString *menuToVoice;
-        __unsafe_unretained NSString *toPostWakeUpView;
+        __unsafe_unretained NSString *sleepingToPostWakeup;
         __unsafe_unretained NSString *friendsToAddFriends;
         __unsafe_unretained NSString *searchChildViewController;
         __unsafe_unretained NSString *menuToAlarm;
@@ -29,6 +29,7 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *peopleArrayChildViewController;
         __unsafe_unretained NSString *timeChildViewController;
         __unsafe_unretained NSString *menuToNotification;
+        __unsafe_unretained NSString *postWakeupUnwindToSleeping;
         __unsafe_unretained NSString *toSleepingView;
     } segues;
 

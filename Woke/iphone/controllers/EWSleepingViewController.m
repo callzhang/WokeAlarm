@@ -152,19 +152,6 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     DDLogVerbose(@"Segue on SleepView: %@", segue.identifier);
 }
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
-    if ([identifier isEqualToString:@"toPostWakeUpView"]) {
-        //it's related to to time, not he delegate's method
-		EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-        BOOL shouldWakeUp = [activity.time timeIntervalSinceDate:[NSDate date]] < kMaxEalyWakeInterval;
-        if (!shouldWakeUp) {
-            [EWUIUtil showWarningHUBWithString:@"Too early!"];
-        }
-        return shouldWakeUp;
-    }
-    return YES;
-}
-
 - (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
 	if ([EWWakeUpManager shared].canSnooze) {
 		return YES;
@@ -174,4 +161,19 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 	return NO;
 }
 
+- (IBAction)onSlideToWakup:(id)sender {
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+    BOOL shouldWakeUp = [activity.time timeIntervalSinceDate:[NSDate date]] < kMaxEalyWakeInterval;
+    if (shouldWakeUp || [EWWakeUpManager sharedInstance].forceWakeUp) {
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
+    }
+    else {
+        [EWUIUtil showWarningHUBWithString:@"Too early!"];
+    }
+}
+
+#pragma mark - Unwind
+- (IBAction)unwindToSleepingViewController:(UIStoryboardSegue *)segue {
+    
+}
 @end

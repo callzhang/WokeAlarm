@@ -26,7 +26,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableviewHeaderView.backgroundColor = [UIColor clearColor];
-    if (![EWWakeUpManager shared].canSnooze) {
+    if ([EWWakeUpManager shared].canSnooze) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(onBack:)];
+    }
+    else {
         DDLogInfo(@"Snooze disabled, hide back button");
         self.navigationItem.leftBarButtonItem = nil;
     }
@@ -36,7 +39,7 @@
     [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
         EWMedia *media = note.object;
         NSUInteger index = [self.medias indexOfObject:media];
-        if (index != NSUIntegerMax) {
+        if (index != NSNotFound) {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
         }
     }];
@@ -87,6 +90,9 @@
     }
 }
 
+- (void)onBack:(id)sender {
+    [self performSegueWithIdentifier:MainStoryboardIDs.segues.postWakeupUnwindToSleeping sender:self];
+}
 
 - (IBAction)snooze:(id)sender{
     BOOL canSnooze = [EWWakeUpManager shared].canSnooze;

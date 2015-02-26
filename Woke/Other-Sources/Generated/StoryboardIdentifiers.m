@@ -14,7 +14,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .toRecordingView = @"toRecordingView",
         .menuToHome = @"menuToHome",
         .menuToVoice = @"menuToVoice",
-        .toPostWakeUpView = @"toPostWakeUpView",
+        .sleepingToPostWakeup = @"sleepingToPostWakeup",
         .friendsToAddFriends = @"friendsToAddFriends",
         .searchChildViewController = @"searchChildViewController",
         .menuToAlarm = @"menuToAlarm",
@@ -29,6 +29,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .peopleArrayChildViewController = @"peopleArrayChildViewController",
         .timeChildViewController = @"timeChildViewController",
         .menuToNotification = @"menuToNotification",
+        .postWakeupUnwindToSleeping = @"postWakeupUnwindToSleeping",
         .toSleepingView = @"toSleepingView",
     },
 
