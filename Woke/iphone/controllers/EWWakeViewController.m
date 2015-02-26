@@ -78,9 +78,9 @@
     if ([segue.destinationViewController isKindOfClass:[EWProfileViewController class]]) {
         EWProfileViewController *vc = segue.destinationViewController;
         vc.person = _nextWakee;
-    } else if ([segue.destinationViewController isKindOfClass:[EWRecordingViewController class]]){
+    } else if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.wakeToRecorder]){
         EWRecordingViewController *vc = segue.destinationViewController;
-        vc.wakees = @[_nextWakee];
+        vc.person = _nextWakee;
     }
 }
 @end

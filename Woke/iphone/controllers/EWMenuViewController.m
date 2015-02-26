@@ -37,11 +37,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-   
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
     [self.view addGestureRecognizer:tap];
 }
-
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -51,37 +50,37 @@
 
 #pragma mark - Segue actions
 - (IBAction)onHome:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:^{
+    [self.mainNavigationController toogleMenuCompletion: ^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToHome sender:self];
     }];
 }
 
 - (IBAction)onNotification:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:^{
+    [self.mainNavigationController toogleMenuCompletion: ^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToNotification sender:self];
     }];
 }
 
 - (IBAction)onAlarms:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:^{
+    [self.mainNavigationController toogleMenuCompletion: ^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToAlarm sender:self];
     }];
 }
 
 - (IBAction)onVoice:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:^{
+    [self.mainNavigationController toogleMenuCompletion: ^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToVoice sender:self];
     }];
 }
 
 - (IBAction)onProfile:(id)sender {
-	[self.mainNavigationController toogleMenuCompletion:^{
+    [self.mainNavigationController toogleMenuCompletion: ^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToProfile sender:self];
-	}];
+    }];
 }
 
 - (IBAction)onSetting:(id)sender {
-    [self.mainNavigationController toogleMenuCompletion:^{
+    [self.mainNavigationController toogleMenuCompletion: ^{
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToSettings sender:self];
     }];
 }
@@ -133,7 +132,7 @@
 }
 
 #pragma mark - Animation Helper
-- (void)addFadeInAnimationToView:(UIView *)view forKey:(NSString *)key{
+- (void)addFadeInAnimationToView:(UIView *)view forKey:(NSString *)key {
     POPBasicAnimation *fadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
     fadeIn.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     fadeIn.fromValue = @(0.0);
@@ -142,29 +141,29 @@
     [view pop_addAnimation:fadeIn forKey:key];
 }
 
-- (void)addAnimationToConstraint:(NSLayoutConstraint *)constraint index:(NSUInteger)index forKey:(NSString *)key speed:(CGFloat)speed bounciness:(CGFloat)bounciness delay:(CGFloat)delay{
+- (void)addAnimationToConstraint:(NSLayoutConstraint *)constraint index:(NSUInteger)index forKey:(NSString *)key speed:(CGFloat)speed bounciness:(CGFloat)bounciness delay:(CGFloat)delay {
     POPSpringAnimation *notificationAnim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
     notificationAnim.springSpeed = speed;
     notificationAnim.springBounciness = 7.0f;
-//    notificationAnim.beginTime = CACurrentMediaTime() + delay;
+    //    notificationAnim.beginTime = CACurrentMediaTime() + delay;
     notificationAnim.fromValue = @(kTopOriginDefaultConstraint + kFromOriginStepper * index);
     notificationAnim.toValue = @(kHomeOriginDefaultConstraint + kMenuDefaultStepperConstraint * index);
     constraint.constant = [notificationAnim.fromValue floatValue];
     [constraint pop_addAnimation:notificationAnim forKey:key];
 }
 
-- (void)addBackAnimationToConstraint:(NSLayoutConstraint *)constraint index:(NSUInteger)index forKey:(NSString *)key{
+- (void)addBackAnimationToConstraint:(NSLayoutConstraint *)constraint index:(NSUInteger)index forKey:(NSString *)key {
     POPSpringAnimation *notificationAnim = [POPSpringAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
     notificationAnim.springSpeed = 15.0f;
     notificationAnim.springBounciness = 0.0f;
-//    notificationAnim.beginTime = CACurrentMediaTime() + 0.03;
+    //    notificationAnim.beginTime = CACurrentMediaTime() + 0.03;
     notificationAnim.toValue = @(kTopOriginDefaultConstraint);
     notificationAnim.fromValue = @(kHomeOriginDefaultConstraint + kMenuDefaultStepperConstraint * index);
     constraint.constant = [notificationAnim.fromValue floatValue];
     [constraint pop_addAnimation:notificationAnim forKey:key];
 }
 
-- (void)addBackFadeoutToView:(UIView *)view forKey:(NSString *)key{
+- (void)addBackFadeoutToView:(UIView *)view forKey:(NSString *)key {
     POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPViewAlpha];
     fadeOut.fromValue = @(1.0);
     fadeOut.toValue = @(0.0);
@@ -185,4 +184,5 @@
         vc.person = [EWPerson me];
     }
 }
+
 @end

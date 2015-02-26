@@ -135,6 +135,16 @@
 + (UIImage *)wokePlaceholderUserProfileImageMale { return [UIImage imageNamed:@"woke-placeholder-user-profile-image-male"]; }
 + (NSString *)wokePlaceholderUserProfileImageOtherName { return @"woke-placeholder-user-profile-image-other"; }
 + (UIImage *)wokePlaceholderUserProfileImageOther { return [UIImage imageNamed:@"woke-placeholder-user-profile-image-other"]; }
++ (NSString *)wokeRecorderCloseButtonName { return @"woke-recorder-close-button"; }
++ (UIImage *)wokeRecorderCloseButton { return [UIImage imageNamed:@"woke-recorder-close-button"]; }
++ (NSString *)wokeRecorderPlayButtonName { return @"woke-recorder-play-button"; }
++ (UIImage *)wokeRecorderPlayButton { return [UIImage imageNamed:@"woke-recorder-play-button"]; }
++ (NSString *)wokeRecorderRetakeButtonName { return @"woke-recorder-retake-button"; }
++ (UIImage *)wokeRecorderRetakeButton { return [UIImage imageNamed:@"woke-recorder-retake-button"]; }
++ (NSString *)wokeRecorderSendButtonName { return @"woke-recorder-send-button"; }
++ (UIImage *)wokeRecorderSendButton { return [UIImage imageNamed:@"woke-recorder-send-button"]; }
++ (NSString *)wokeRecorderStopButtonName { return @"woke-recorder-stop-button"; }
++ (UIImage *)wokeRecorderStopButton { return [UIImage imageNamed:@"woke-recorder-stop-button"]; }
 + (NSString *)wokeRectangleDisabledName { return @"woke-rectangle-disabled"; }
 + (UIImage *)wokeRectangleDisabled { return [UIImage imageNamed:@"woke-rectangle-disabled"]; }
 + (NSString *)wokeRectangleNormalName { return @"woke-rectangle-normal"; }

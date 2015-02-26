@@ -81,9 +81,6 @@
             <string>Lato-Regular</string>
             <string>Lato-Regular</string>
             <string>Lato-Regular</string>
-            <string>Lato-Regular</string>
-            <string>Lato-Regular</string>
-            <string>Lato-Regular</string>
         </mutableArray>
         <mutableArray key="Lato-Thin.ttf">
             <string>Lato-Thin</string>
@@ -669,7 +666,7 @@
                                 <state key="selected" backgroundImage="woke-rectangle-selected"/>
                                 <connections>
                                     <action selector="onWakeHerButton:" destination="ZmP-te-75G" eventType="touchUpInside" id="HIf-hC-uMG"/>
-                                    <segue destination="qpL-rI-Npc" kind="custom" identifier="toRecordingView" customClass="EWBlurPresentSegue" id="jc1-Xb-1kl"/>
+                                    <segue destination="qpL-rI-Npc" kind="custom" identifier="wakeToRecorder" customClass="EWBlurPresentSegue" id="jc1-Xb-1kl"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEo-IB-dbM">
@@ -2679,156 +2676,33 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="pka-It-sOi">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="ZBE-Wm-kaq"/>
-                                </constraints>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ipW-V9-Aaa"/>
-                                    <barButtonItem style="plain" id="Ogj-eI-s3f">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="akA-ea-Wta">
-                                            <rect key="frame" x="52" y="7" width="59" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Record  ">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="record:" destination="qpL-rI-Npc" eventType="touchUpInside" id="tjc-6e-dN0"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="l8U-wl-DLe"/>
-                                    <barButtonItem style="plain" id="nK3-8J-8Vb">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="CPS-YO-kvU">
-                                            <rect key="frame" x="152" y="7" width="38" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Play  ">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="play:" destination="qpL-rI-Npc" eventType="touchUpInside" id="r2U-9Q-Zmt"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="MhH-uh-NCW"/>
-                                    <barButtonItem style="plain" id="njf-ZL-lwx">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="SFb-Jq-i6Z">
-                                            <rect key="frame" x="232" y="7" width="36" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Send">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="send:" destination="qpL-rI-Npc" eventType="touchUpInside" id="Scn-U3-M3C"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="asu-OW-Gbm"/>
-                                </items>
-                            </toolbar>
-                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PUK-qr-7Bs">
-                                <rect key="frame" x="0.0" y="33" width="320" height="120"/>
-                                <color key="backgroundColor" red="0.85028383220000003" green="0.91106695400000004" blue="1" alpha="0.35999999999999999" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="rfM-yg-lsB"/>
-                                </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="20" minimumInteritemSpacing="10" id="nGB-xQ-9T7">
-                                    <size key="itemSize" width="120" height="120"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="50" minY="0.0" maxX="50" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="recordingViewPersonCell" id="o99-hZ-4ZR" customClass="EWCollectionPersonCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hAr-oM-M5e" userLabel="profile">
-                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
-                                                    <color key="backgroundColor" white="1" alpha="0.10000000000000001" colorSpace="calibratedWhite"/>
-                                                </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Z4R-Cq-1Oi" userLabel="info">
-                                                    <rect key="frame" x="0.0" y="82" width="120" height="40"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="40" id="koU-3M-PTP"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="20"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <size key="shadowOffset" width="0.0" height="1"/>
-                                                </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="YOU" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ibb-FO-nNK" userLabel="initial">
-                                                    <rect key="frame" x="45" y="51" width="30" height="18"/>
-                                                    <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="JEE-ZH-1Gl" userLabel="name">
-                                                    <rect key="frame" x="0.0" y="65" width="120" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="160" id="UPV-RA-Pod"/>
-                                                        <constraint firstAttribute="height" constant="30" id="UgM-IQ-gPp"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="13"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="UPV-RA-Pod"/>
-                                                        </mask>
-                                                    </variation>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <constraints>
-                                            <constraint firstAttribute="centerX" secondItem="Ibb-FO-nNK" secondAttribute="centerX" id="6m7-XY-AQh"/>
-                                            <constraint firstItem="hAr-oM-M5e" firstAttribute="leading" secondItem="o99-hZ-4ZR" secondAttribute="leadingMargin" constant="-8" id="FLm-Tk-g4N"/>
-                                            <constraint firstAttribute="centerX" secondItem="JEE-ZH-1Gl" secondAttribute="centerX" constant="20" id="N4U-0E-J14"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="JEE-ZH-1Gl" secondAttribute="trailing" constant="-8" id="NOC-Gd-lWl"/>
-                                            <constraint firstAttribute="centerY" secondItem="JEE-ZH-1Gl" secondAttribute="centerY" constant="-20" id="S1B-jS-MKf"/>
-                                            <constraint firstAttribute="centerX" secondItem="JEE-ZH-1Gl" secondAttribute="centerX" id="WTx-xH-75c"/>
-                                            <constraint firstItem="Z4R-Cq-1Oi" firstAttribute="leading" secondItem="o99-hZ-4ZR" secondAttribute="leadingMargin" constant="-8" id="X6f-A5-uie"/>
-                                            <constraint firstItem="JEE-ZH-1Gl" firstAttribute="leading" secondItem="o99-hZ-4ZR" secondAttribute="leadingMargin" constant="-8" id="adq-xn-PS5"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="hAr-oM-M5e" secondAttribute="trailing" constant="-8" id="ejY-4H-eUL"/>
-                                            <constraint firstAttribute="centerY" secondItem="JEE-ZH-1Gl" secondAttribute="centerY" id="erv-o7-EpX"/>
-                                            <constraint firstAttribute="centerX" secondItem="Z4R-Cq-1Oi" secondAttribute="centerX" id="fDw-qH-ccR"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="Z4R-Cq-1Oi" secondAttribute="bottom" constant="-10" id="fz0-bX-f9F"/>
-                                            <constraint firstAttribute="centerY" secondItem="Z4R-Cq-1Oi" secondAttribute="centerY" id="nME-R7-lHq"/>
-                                            <constraint firstItem="hAr-oM-M5e" firstAttribute="top" secondItem="o99-hZ-4ZR" secondAttribute="topMargin" constant="-8" id="pcd-t5-CxB"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="Z4R-Cq-1Oi" secondAttribute="trailing" constant="-8" id="pqz-UG-b7y"/>
-                                            <constraint firstAttribute="centerY" secondItem="Ibb-FO-nNK" secondAttribute="centerY" id="wJi-x2-x73"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="hAr-oM-M5e" secondAttribute="bottom" constant="-8" id="zPe-is-3uM"/>
-                                        </constraints>
-                                        <size key="customSize" width="120" height="120"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="N4U-0E-J14"/>
-                                                <exclude reference="WTx-xH-75c"/>
-                                                <exclude reference="erv-o7-EpX"/>
-                                                <exclude reference="nME-R7-lHq"/>
-                                            </mask>
-                                        </variation>
-                                        <connections>
-                                            <outlet property="info" destination="Z4R-Cq-1Oi" id="Qko-ct-Z4U"/>
-                                            <outlet property="initial" destination="Ibb-FO-nNK" id="V1h-uw-Iac"/>
-                                            <outlet property="name" destination="JEE-ZH-1Gl" id="q7C-E9-B0n"/>
-                                            <outlet property="profile" destination="hAr-oM-M5e" id="TGN-oE-jAT"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77I-jZ-dCI" userLabel="record">
+                                <rect key="frame" x="115" y="463" width="90" height="90"/>
+                                <state key="normal" image="woke-recorder-retake-button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <outlet property="dataSource" destination="qpL-rI-Npc" id="6HT-8U-I9q"/>
-                                    <outlet property="delegate" destination="qpL-rI-Npc" id="vc0-dT-e3T"/>
+                                    <action selector="onRecordButton:" destination="qpL-rI-Npc" eventType="touchUpInside" id="P9M-Og-c5V"/>
                                 </connections>
-                            </collectionView>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Zi-83-Tke" userLabel="play">
+                                <rect key="frame" x="115" y="463" width="90" height="90"/>
+                                <state key="normal" image="woke-recorder-play-button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onPlayButton:" destination="qpL-rI-Npc" eventType="touchUpInside" id="1Bm-Yr-oKK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m3m-Y4-FTa" userLabel="stop">
+                                <rect key="frame" x="115" y="463" width="90" height="90"/>
+                                <state key="normal" image="woke-recorder-stop-button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onStopButton:" destination="qpL-rI-Npc" eventType="touchUpInside" id="qG8-tr-FR9"/>
+                                </connections>
+                            </button>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sps-2J-W7b" customClass="SCSiriWaveformView">
                                 <rect key="frame" x="0.0" y="154" width="320" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2836,32 +2710,55 @@
                                     <constraint firstAttribute="height" constant="100" id="KVt-UM-q0d"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M2E-QD-1fl" userLabel="retake">
+                                <rect key="frame" x="10" y="463" width="90" height="90"/>
+                                <state key="normal" image="woke-recorder-retake-button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onRetakeButton:" destination="qpL-rI-Npc" eventType="touchUpInside" id="uwf-Ss-Gpa"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5fP-b1-uRj" userLabel="send">
+                                <rect key="frame" x="220" y="463" width="90" height="90"/>
+                                <state key="normal" image="woke-recorder-send-button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onSendButton:" destination="qpL-rI-Npc" eventType="touchUpInside" id="toC-6T-qPE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="sps-2J-W7b" secondAttribute="trailing" id="1kb-NP-Jhc"/>
                             <constraint firstItem="sps-2J-W7b" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="1s4-Fa-CtF"/>
-                            <constraint firstAttribute="trailing" secondItem="pka-It-sOi" secondAttribute="trailing" id="Bfy-m2-s1x"/>
-                            <constraint firstItem="pka-It-sOi" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="CY6-he-Of2"/>
+                            <constraint firstItem="77I-jZ-dCI" firstAttribute="centerY" secondItem="5fP-b1-uRj" secondAttribute="centerY" id="3Rp-Pd-9u6"/>
+                            <constraint firstItem="7Zi-83-Tke" firstAttribute="centerX" secondItem="m3m-Y4-FTa" secondAttribute="centerX" id="BKK-cM-Urk"/>
+                            <constraint firstItem="7Zi-83-Tke" firstAttribute="centerY" secondItem="m3m-Y4-FTa" secondAttribute="centerY" id="BMt-SA-UAu"/>
+                            <constraint firstAttribute="centerX" secondItem="77I-jZ-dCI" secondAttribute="centerX" id="FHq-Tg-ZzP"/>
+                            <constraint firstItem="5fP-b1-uRj" firstAttribute="leading" secondItem="77I-jZ-dCI" secondAttribute="trailing" constant="15" id="GPE-bl-Tn2"/>
                             <constraint firstAttribute="centerX" secondItem="sps-2J-W7b" secondAttribute="centerX" id="Hdl-5T-Zos"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="bnE-dN-Jfk" secondAttribute="centerX" id="Mxo-LE-LCz"/>
-                            <constraint firstAttribute="trailing" secondItem="PUK-qr-7Bs" secondAttribute="trailing" id="Qhs-pj-REe"/>
+                            <constraint firstItem="2vU-KR-SZ0" firstAttribute="top" secondItem="77I-jZ-dCI" secondAttribute="bottom" constant="15" id="Ro7-Ii-1eb"/>
+                            <constraint firstItem="M2E-QD-1fl" firstAttribute="centerY" secondItem="77I-jZ-dCI" secondAttribute="centerY" id="S4f-3U-3ps"/>
+                            <constraint firstItem="77I-jZ-dCI" firstAttribute="centerX" secondItem="7Zi-83-Tke" secondAttribute="centerX" id="UZ9-3H-mXz"/>
+                            <constraint firstItem="77I-jZ-dCI" firstAttribute="leading" secondItem="M2E-QD-1fl" secondAttribute="trailing" constant="15" id="YN7-Px-mMH"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="niG-8q-xiY" secondAttribute="centerY" constant="50" id="cdi-Zk-Idj"/>
-                            <constraint firstItem="PUK-qr-7Bs" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="eM2-2f-75U"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="niG-8q-xiY" secondAttribute="centerX" id="gFY-zP-sU1"/>
-                            <constraint firstItem="PUK-qr-7Bs" firstAttribute="top" secondItem="dTa-yP-AOc" secondAttribute="bottom" constant="13" id="h1F-KW-ixG"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="bnE-dN-Jfk" secondAttribute="centerY" id="hUj-oE-UmV"/>
-                            <constraint firstItem="2vU-KR-SZ0" firstAttribute="top" secondItem="pka-It-sOi" secondAttribute="bottom" id="jv1-o1-u9M"/>
+                            <constraint firstItem="77I-jZ-dCI" firstAttribute="centerY" secondItem="7Zi-83-Tke" secondAttribute="centerY" id="qcV-EY-7Bi"/>
                             <constraint firstAttribute="centerY" secondItem="sps-2J-W7b" secondAttribute="centerY" constant="80" id="vAI-ow-n6v"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
-                        <outlet property="peopleView" destination="PUK-qr-7Bs" id="oec-xI-pXw"/>
-                        <outlet property="playBtn" destination="CPS-YO-kvU" id="V02-ZD-Hqe"/>
+                        <outlet property="playButton" destination="7Zi-83-Tke" id="CN7-bt-9SC"/>
                         <outlet property="progressView" destination="bnE-dN-Jfk" id="aky-bJ-Ain"/>
-                        <outlet property="recordBtn" destination="akA-ea-Wta" id="5d4-Ek-EP7"/>
-                        <outlet property="sendBtn" destination="SFb-Jq-i6Z" id="tC6-T2-Isg"/>
+                        <outlet property="recordButton" destination="77I-jZ-dCI" id="oBY-V5-w1h"/>
+                        <outlet property="retakeButton" destination="M2E-QD-1fl" id="8di-TW-9BJ"/>
+                        <outlet property="sendButton" destination="5fP-b1-uRj" id="HeQ-nd-gaN"/>
+                        <outlet property="stopButton" destination="m3m-Y4-FTa" id="Gc5-nL-YKw"/>
                         <outlet property="waveformView" destination="sps-2J-W7b" id="Ij5-zL-J1y"/>
                     </connections>
                 </viewController>
@@ -3446,6 +3343,10 @@
         <image name="woke-check-mark" width="20" height="15"/>
         <image name="woke-login-info" width="8" height="17"/>
         <image name="woke-login-info-selected" width="8" height="17"/>
+        <image name="woke-recorder-play-button" width="90" height="90"/>
+        <image name="woke-recorder-retake-button" width="90" height="90"/>
+        <image name="woke-recorder-send-button" width="90" height="90"/>
+        <image name="woke-recorder-stop-button" width="90" height="90"/>
         <image name="woke-rectangle-disabled" width="9" height="9"/>
         <image name="woke-rectangle-normal" width="9" height="9"/>
         <image name="woke-rectangle-selected" width="9" height="9"/>
@@ -3467,7 +3368,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="CBy-Qp-dcT"/>
         <segue reference="v3V-jG-DGb"/>
-        <segue reference="7lF-Wp-60q"/>
+        <segue reference="d4z-tG-E1i"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

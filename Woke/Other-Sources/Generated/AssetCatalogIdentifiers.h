@@ -135,6 +135,16 @@
 + (NSString *)wokePlaceholderUserProfileImageMaleName;
 + (UIImage *)wokePlaceholderUserProfileImageOther;
 + (NSString *)wokePlaceholderUserProfileImageOtherName;
++ (UIImage *)wokeRecorderCloseButton;
++ (NSString *)wokeRecorderCloseButtonName;
++ (UIImage *)wokeRecorderPlayButton;
++ (NSString *)wokeRecorderPlayButtonName;
++ (UIImage *)wokeRecorderRetakeButton;
++ (NSString *)wokeRecorderRetakeButtonName;
++ (UIImage *)wokeRecorderSendButton;
++ (NSString *)wokeRecorderSendButtonName;
++ (UIImage *)wokeRecorderStopButton;
++ (NSString *)wokeRecorderStopButtonName;
 + (UIImage *)wokeRectangleDisabled;
 + (NSString *)wokeRectangleDisabledName;
 + (UIImage *)wokeRectangleNormal;

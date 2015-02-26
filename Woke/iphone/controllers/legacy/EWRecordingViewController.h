@@ -13,27 +13,15 @@
 @class SCSiriWaveformView;
 @class EWPerson;
 
-@interface EWRecordingViewController : EWBaseViewController<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) NSArray *wakees;
+@interface EWRecordingViewController : EWBaseViewController
 
-@property (strong, nonatomic) IBOutlet UIButton *playBtn;
-@property (strong, nonatomic) IBOutlet UIButton *recordBtn;
-@property (strong, nonatomic) IBOutlet UIButton *sendBtn;
 
-@property (strong, nonatomic) IBOutlet UILabel *detail;
-@property (strong, nonatomic) IBOutlet UICollectionView *peopleView;
 @property (weak, nonatomic) IBOutlet SCSiriWaveformView *waveformView;
 @property (strong, nonatomic) IBOutlet UAProgressView *progressView;
-@property (weak, nonatomic) IBOutlet UILabel *wish;
 
-@property (strong, nonatomic) IBOutlet UILabel *retakeLabel;
+- (IBAction)onPlayButton:(id)sender;//or stop
+- (IBAction)onRecordButton:(id)sender;
+- (IBAction)onSendButton:(id)sender;
 
-@property (strong, nonatomic) IBOutlet UILabel *playLabel;
-
-@property (strong, nonatomic) IBOutlet UILabel *sendLabel;
-
-- (IBAction)play:(id)sender;//or stop
-- (IBAction)record:(id)sender;
-- (IBAction)send:(id)sender;
-
+@property (nonatomic, strong) EWPerson *person;
 @end
