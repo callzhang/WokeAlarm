@@ -50,6 +50,7 @@
         if ([relation isToMany]) {
             //if no inverse relation, use Array of pointers
             if (!relation.inverseRelationship) {
+                DDLogVerbose(@"Working on uni-directional relation %@->%@", self.entity.name, key);
                 NSArray *relatedPOs = parseObject[key];
                 NSMutableSet *relatedMOs = [NSMutableSet new];
                 for (PFObject *PO in relatedPOs) {
@@ -67,9 +68,11 @@
                 return;
             }
             
-            //download related PO
+            //============> download related PO <============
             NSError *err2;
-            NSArray *relatedParseObjects = [[toManyRelation query] findObjects:&err2];
+            PFQuery *relationQueue = [toManyRelation query];
+            [relationQueue fromLocalDatastore];
+            NSArray *relatedParseObjects = [relationQueue findObjects:&err2];
             
             //handle error
             if ([err2 code] == kPFErrorObjectNotFound) {
@@ -116,7 +119,7 @@
             }
             if (relatedParseObject) {
                 //find corresponding MO
-                EWServerObject *relatedManagedObject = [relatedParseObject managedObjectInContext:localContext option:EWSyncOptionUpdateNone completion:NULL];
+                EWServerObject *relatedManagedObject = [relatedParseObject managedObjectInContext:localContext option:EWSyncOptionUpdateAttributesOnly completion:NULL];
                 [self setValue:relatedManagedObject forKey:key];
             }else{
 				//related PO is nil

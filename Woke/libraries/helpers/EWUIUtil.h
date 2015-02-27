@@ -27,7 +27,7 @@
 
 // 基本标准界面常量宏
 #define kStandardUITableViewCellHeight     44
-#define kAlarmCellHeight     80
+#define kAlarmCellHeight        80
 
 @interface EWUIUtil : NSObject
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWUIUtil)

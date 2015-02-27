@@ -283,7 +283,7 @@
 	for (UILocalNotification *ln in notifications) {
 		if ([ln.userInfo[kLocalNotificationTypeKey] isEqualToString:kLocalNotificationTypeAlarmTimer]) {
 			
-			DDLogWarn(@"Unmatched alarm notification deleted (%@) ", ln.fireDate.date2detailDateString);
+			DDLogVerbose(@"Unmatched alarm notification deleted (%@) ", ln.fireDate.date2detailDateString);
 			[[UIApplication sharedApplication] cancelLocalNotification:ln];
 		}
 		

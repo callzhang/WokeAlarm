@@ -29,6 +29,8 @@
 	dispatch_sync(dispatch_get_main_queue(), ^{
 		[[NSNotificationCenter defaultCenter] postNotificationName:kManagedObjectDeleted object:self];
 	});
+    [EWSync removeMOFromUpdating:self];
+    
     NSManagedObjectContext *context = self.managedObjectContext;
     [self MR_deleteEntity];
     [context MR_saveToPersistentStoreAndWait];
