@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseTableViewController.h"
+#import "EWBaseViewController.h"
 
 @interface EWAlarmToneViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *alarmLabel;
@@ -15,6 +15,6 @@
 
 @end
 
-@interface EWAlarmToneViewController : EWBaseTableViewController
+@interface EWAlarmToneViewController : EWBaseViewController
 
 @end

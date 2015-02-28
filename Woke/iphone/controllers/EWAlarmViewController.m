@@ -17,6 +17,7 @@
 @interface EWAlarmViewController ()
 @property (nonatomic, strong) NSArray *alarms;
 @property (nonatomic, assign) EWAlarm *nextAlarm;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @end
 
 @implementation EWAlarmViewController
@@ -25,7 +26,7 @@
     
     self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
     self.title = @"Alarms";
-    self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[ImagesCatalog wokeBackground]];
+    self.tableView.backgroundColor = [UIColor clearColor];
     
     self.alarms = [EWPerson myAlarms];
     self.nextAlarm = [EWPerson myCurrentAlarm];

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseTableViewController.h"
+#import "EWBaseViewController.h"
 
-@interface EWAlarmViewController : EWBaseTableViewController
+@interface EWAlarmViewController : EWBaseViewController
 @end

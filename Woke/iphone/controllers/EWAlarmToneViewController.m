@@ -28,16 +28,17 @@
 }
 @end
 
-@interface EWAlarmToneViewController ()
+@interface EWAlarmToneViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) NSArray *items;
 @property (nonatomic, strong) NSString *currentTone;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @end
 
 @implementation EWAlarmToneViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"woke-background"]];
+    self.tableView.backgroundColor = [UIColor clearColor];
     
     self.items = [EWSession sharedSession].alarmTones;
     self.currentTone = [EWSession sharedSession].currentAlarmTone;
