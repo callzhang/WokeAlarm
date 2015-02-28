@@ -24,6 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.rowHeight = 70;
+    [self loadFriendsOnWokeSection];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

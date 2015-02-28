@@ -10,5 +10,5 @@
 #import "EWBaseViewController.h"
 
 @interface EWAddFriendsSearchChildViewController : EWBaseViewController
-
+@property (nonatomic, strong) UISearchController *searchController;
 @end

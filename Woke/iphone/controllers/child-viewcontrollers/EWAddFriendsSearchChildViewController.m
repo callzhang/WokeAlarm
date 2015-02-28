@@ -14,7 +14,6 @@
 
 @interface EWAddFriendsSearchChildViewController ()<UISearchResultsUpdating, UISearchControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) UISearchController *searchController;
 
 @property (nonatomic, strong) NSArray *items;
 @end

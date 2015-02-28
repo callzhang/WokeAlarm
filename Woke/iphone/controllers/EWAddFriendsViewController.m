@@ -13,7 +13,6 @@
 #import "UISegmentedControl+RACSignalSupport.h"
 
 @interface EWAddFriendsViewController ()
-@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, strong) EWAddFriendsContactsChildViewController *contactsChildViewController;
 @property (nonatomic, strong) EWAddFriendsFacebookChildViewController *facebookChildViewController;
 @property (nonatomic, strong) EWAddFriendsSearchChildViewController *searchChildViewController;
@@ -33,6 +32,7 @@
     @weakify(self);
     [[self.segmentedControl rac_signalForControlEvents:UIControlEventValueChanged] subscribeNext:^(UISegmentedControl *sender) {
         @strongify(self);
+        [self.searchChildViewController.searchController setActive:NO];
         NSInteger index = sender.selectedSegmentIndex;
         if (index == 0) {
             [self showFacebook];
