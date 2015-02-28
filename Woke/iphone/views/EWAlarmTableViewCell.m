@@ -11,6 +11,7 @@
 #import "SevenSwitch.h"
 @interface EWAlarmTableViewCell()
 @property (weak, nonatomic) IBOutlet UIImageView *nextImageView;
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation EWAlarmTableViewCell
@@ -34,17 +35,73 @@
     // Configure the view for the selected state
 }
 
-- (IBAction)onPlusButton:(id)sender {
+- (void)startMinusTime {
+    [self stopMinusTime];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(minusTime) userInfo:nil repeats:YES];
+}
+
+- (void)stopMinusTime {
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)minusTime {
+    self.alarm.time = [self.alarm.time mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:-10 seconds:0];
+}
+
+- (void)startPlusTime {
+    [self stopPlusTime];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(plusTime) userInfo:nil repeats:YES];
+}
+
+- (void)stopPlusTime {
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)plusTime {
     self.alarm.time = [self.alarm.time mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:10 seconds:0];
 }
 
+#pragma mark - <IBAction>
+
+- (IBAction)onPlusButton:(id)sender {
+    [self plusTime];
+}
+
 - (IBAction)onMinusButton:(id)sender {
-    self.alarm.time = [self.alarm.time mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:-10 seconds:0];
+    [self minusTime];
+}
+
+- (IBAction)touchUpInsideMinusButton:(id)sender {
+    [self stopMinusTime];
+}
+
+- (IBAction)touchUpOutsideMinusButton:(id)sender {
+    [self stopMinusTime];
+}
+
+- (IBAction)touchDownMinusButton:(id)sender {
+    [self startMinusTime];
+}
+
+- (IBAction)touchDownPlusButton:(id)sender {
+    [self startPlusTime];
+}
+
+- (IBAction)touchUpInsidePlusButton:(id)sender {
+    [self stopPlusTime];
+}
+
+- (IBAction)touchUpOutsideButton:(id)sender {
+    [self stopPlusTime];
 }
 
 - (IBAction)onSwitchValueChanged:(id)sender {
     self.alarm.state = @(self.sevenSwitch.on);
 }
+
+#pragma mark -
 
 - (void)setCellStatusOn:(BOOL)isOn {
     if (isOn) {

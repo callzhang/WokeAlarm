@@ -1053,6 +1053,9 @@
                                             <state key="highlighted" image="woke-alarms-plus-highlighted"/>
                                             <connections>
                                                 <action selector="onPlusButton:" destination="vQc-FA-CBp" eventType="touchUpInside" id="6Hf-k5-tk5"/>
+                                                <action selector="touchDownPlusButton:" destination="vQc-FA-CBp" eventType="touchDown" id="GUP-Fj-DUl"/>
+                                                <action selector="touchUpInsidePlusButton:" destination="vQc-FA-CBp" eventType="touchUpInside" id="hRI-ya-o2d"/>
+                                                <action selector="touchUpOutsideButton:" destination="vQc-FA-CBp" eventType="touchUpOutside" id="umq-z0-x0v"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ok4-yk-EOP">
@@ -1068,6 +1071,9 @@
                                             <state key="highlighted" image="woke-alarms-minus-highlighted"/>
                                             <connections>
                                                 <action selector="onMinusButton:" destination="vQc-FA-CBp" eventType="touchUpInside" id="L2q-ej-0zL"/>
+                                                <action selector="touchDownMinusButton:" destination="vQc-FA-CBp" eventType="touchDown" id="9bg-F1-OPV"/>
+                                                <action selector="touchUpInsideMinusButton:" destination="vQc-FA-CBp" eventType="touchUpInside" id="Vme-l2-1uX"/>
+                                                <action selector="touchUpOutsideMinusButton:" destination="vQc-FA-CBp" eventType="touchUpOutside" id="YQc-du-Gbd"/>
                                             </connections>
                                         </button>
                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-alarms-next-badge" translatesAutoresizingMaskIntoConstraints="NO" id="uA0-pQ-RC7">
