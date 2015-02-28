@@ -140,8 +140,8 @@
 	//check
 	for (EWMedia *media in medias) {
 		[media downloadMediaFileWithCompletion:^(BOOL success, NSError *error) {
-			if (success) {
-				DDLogInfo(@"Updated media %@", media.objectId);
+			if (!success) {
+				DDLogWarn(@"Failed to update media %@", media.objectId);
 			}
 		}];
 	}

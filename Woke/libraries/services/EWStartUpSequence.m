@@ -23,6 +23,7 @@
 #import "PFFacebookUtils.h"
 
 @interface EWStartUpSequence ()
+@property (nonatomic, assign) BOOL dataChecked;
 @end
 
 @implementation EWStartUpSequence
@@ -91,7 +92,13 @@
 
 #pragma mark - Login Check
 - (void)loginDataCheck{
-	
+    
+    if (_dataChecked) {
+        return;
+    }
+    _dataChecked = YES;
+    DDLogInfo(@"=======> start login data check work <========");
+    
     //check alarm, task, and local notif
     DDLogVerbose(@"3. Check alarm");
 	[[EWAlarmManager sharedInstance] scheduleAlarm];
@@ -279,20 +286,15 @@
 				POGraphInfo[key] = [(NSArray *)[obj valueForKey:kParseObjectID] string];
 				DDLogInfo(@"Pin %@ to cache", key);
 				[POtoPin addObjectsFromArray:obj];
-				for (PFObject *PO in obj) {
-					[EWSync sharedInstance].managedObjectsUpdating[PO.objectId] = key;
-				}
 			}else{
 				POGraphInfo[key] = [(PFObject *)obj valueForKey:kParseObjectID];
 				[[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
 				[POtoPin addObject:obj];
-				[EWSync sharedInstance].managedObjectsUpdating[[(PFObject *)obj valueForKey:kParseObjectID]] = key;
 			}
 		}];
 		TICK
 		[PFObject pinAll:POtoPin.allObjects error:&error];
 		if (error) DDLogError(@"Failed to Pin returned PO: %@", error);
-		TOCK
 		
 		DDLogInfo(@"Server returned sync info: %@", POGraphInfo);
 		
@@ -326,7 +328,8 @@
 						}else if (sync){
 							MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
 							DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
-						}else {
+                        }else {
+                            [EWSync sharedInstance].managedObjectsUpdating[[PO valueForKey:kParseObjectID]] = @"syncData";
 							MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
 								DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
 							}];
@@ -358,6 +361,7 @@
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
 						DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
 					}else {
+                        [EWSync sharedInstance].managedObjectsUpdating[[PO valueForKey:kParseObjectID]] = @"syncData";
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
 							DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
 						}];
@@ -377,11 +381,12 @@
 			//save to local so the updatedAt is assigned
 			[localMe saveToLocal];
 			
-		} completion:^(BOOL contextDidSave, NSError *error2) {
+        } completion:^(BOOL contextDidSave, NSError *error2) {
+            DDLogDebug(@"========> Finished user syncing <=========");
+            TOCK
 			[EWSession sharedSession].isSyncingUser = NO;
 			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
 			if (!error2) {
-				DDLogDebug(@"========> Finished user syncing <=========");
 				block(nil);
 			}else{
 				NSString *str = [NSString stringWithFormat:@"========> Failed to save synced user \n This is a very serious error: %@", error2.description];
@@ -393,8 +398,6 @@
 				DDLogError(@"Me is missing updatedAt after syncing data");
 			}
 		}];
-		
-		
 	}];
 }
 

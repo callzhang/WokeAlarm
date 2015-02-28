@@ -26,8 +26,9 @@
 }
 
 - (void)remove{
-	dispatch_sync(dispatch_get_main_queue(), ^{
-		[[NSNotificationCenter defaultCenter] postNotificationName:kManagedObjectDeleted object:self];
+    NSManagedObjectID *selfID = self.objectID;
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[[NSNotificationCenter defaultCenter] postNotificationName:kManagedObjectDeleted object:selfID];
 	});
     [EWSync removeMOFromUpdating:self];
     

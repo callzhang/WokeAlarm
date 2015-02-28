@@ -207,7 +207,7 @@
     //remove excess
     [alarms removeObjectsInArray:newAlarms];
     for (EWAlarm *a in alarms) {
-        DDLogError(@"Corruped or duplicated alarm found and deleted: %@", a.serverID);
+        DDLogError(@"Corruped or duplicated alarm found and deleted: %@", a.time.date2detailDateString);
         [a remove];
     }
     
@@ -267,7 +267,7 @@
     NSDate *today = [NSDate date];
     NSCalendar *cal = [NSCalendar currentCalendar];//TIMEZONE
     NSDateComponents *comp = [NSDateComponents new];//used as a dic to hold time diff
-    comp.day = targetDay - today.mt_weekdayOfWeek-1;
+    comp.day = targetDay - today.mt_weekdayOfWeek + 1;
     NSDate *time = [cal dateByAddingComponents:comp toDate:today options:0];//set the weekday
     comp = [cal components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:time];//get the target date
     NSArray *alarmTimes = [self getSavedAlarmTimes];
