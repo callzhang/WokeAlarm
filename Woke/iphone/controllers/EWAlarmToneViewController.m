@@ -7,6 +7,7 @@
 //
 
 #import "EWAlarmToneViewController.h"
+#import "EWAVManager.h"
 
 @implementation EWAlarmToneViewCell
 
@@ -58,6 +59,11 @@
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[EWAVManager sharedManager] stopAllPlaying];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -85,6 +91,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.currentTone = self.items[indexPath.row];
     [EWSession sharedSession].currentAlarmTone = self.currentTone;
+    
+    [[EWAVManager sharedManager] playSoundFromURL:[[NSBundle mainBundle] URLForResource:self.currentTone withExtension:@"caf"]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
