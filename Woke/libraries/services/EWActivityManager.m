@@ -57,7 +57,7 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (EWActivity *)activityForAlarm:(EWAlarm *)alarm{
-    if (!alarm) {
+    if (!alarm || [alarm validate]) {
         return nil;
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, alarm.time.nextOccurTime, EWActivityRelationships.owner, alarm.owner];
@@ -80,7 +80,7 @@ NSString *const EWActivityTypeMedia = @"media";
 
 - (EWActivity *)newActivityForAlarm:(EWAlarm *)alarm{
     //create new activity
-    EWActivity *activity = [EWActivity MR_createEntityInContext:alarm.managedObjectContext];
+    EWActivity *activity = [EWActivity newActivity];
     activity.owner = alarm.owner;
     activity.type = EWActivityTypeAlarm;
     activity.time = alarm.time.nextOccurTime;

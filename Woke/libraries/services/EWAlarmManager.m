@@ -186,7 +186,7 @@
     //check if alarm scheduled are duplicated
     for (EWAlarm *a in alarms) {
         
-        //get the day alarm represents
+        //get the day alarm represents (1=sun, 6=sat)
         NSInteger i = a.time.mt_weekdayOfWeek-1;
         
         //see if that day has alarm already
@@ -211,7 +211,7 @@
         [a remove];
     }
     
-    //start add alarm if blank
+    //start add alarm if blank (1=sun, 6=sat)
     for (NSUInteger i=0; i<newAlarms.count; i++) {
         if (![newAlarms[i] isEqual:@NO]) {
             //skip if alarm exists
