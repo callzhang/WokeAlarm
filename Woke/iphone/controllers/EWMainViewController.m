@@ -45,8 +45,6 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     
     [self.mainNavigationController setNavigationBarTransparent:YES];
     
-//    self.navigationController.view.backgroundColor = [UIColor clearColor];
-    
     self.mode = MainViewModeSleep;
     
     self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;

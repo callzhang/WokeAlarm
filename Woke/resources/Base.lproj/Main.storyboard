@@ -1158,8 +1158,6 @@
                             <outlet property="delegate" destination="Qdr-6h-6LT" id="OXK-ve-DjF"/>
                         </connections>
                     </tableView>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tp7-vN-6oM" userLabel="First Responder" sceneMemberID="firstResponder"/>

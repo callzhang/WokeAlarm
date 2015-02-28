@@ -45,7 +45,6 @@
     self.title = @"Choose Alarm";
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleDone target:nil action:nil];
-    self.navigationController.navigationBar.translucent = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -97,12 +96,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     //    DDLogInfo(@"%@ : insets: %@", NSStringFromCGPoint(scrollView.contentOffset), NSStringFromUIEdgeInsets(scrollView.scrollIndicatorInsets));
-    float offset = scrollView.scrollIndicatorInsets.top + scrollView.contentOffset.y;
-    if (offset > 0) {
-        [self.mainNavigationController setNavigationBarTransparent:NO];
-    }
-    else {
-        [self.mainNavigationController setNavigationBarTransparent:YES];
-    }
+//    float offset = scrollView.scrollIndicatorInsets.top + scrollView.contentOffset.y;
+//    if (offset > 0) {
+//        [self.mainNavigationController setNavigationBarTransparent:NO];
+//    }
+//    else {
+//        [self.mainNavigationController setNavigationBarTransparent:YES];
+//    }
 }
 @end

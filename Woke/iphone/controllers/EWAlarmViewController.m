@@ -132,12 +132,14 @@
     if (!self.navigationController) {
         return;
     }
-    float offset = scrollView.scrollIndicatorInsets.top + scrollView.contentOffset.y;
-    if (offset > 0) {
-        [self.mainNavigationController setNavigationBarTransparent:NO];
-    }
-    else {
-        [self.mainNavigationController setNavigationBarTransparent:YES];
-    }
+    
+    // transparent disabled by product design
+//    float offset = scrollView.scrollIndicatorInsets.top + scrollView.contentOffset.y;
+//    if (offset > 0) {
+//        [self.mainNavigationController setNavigationBarTransparent:NO];
+//    }
+//    else {
+//        [self.mainNavigationController setNavigationBarTransparent:YES];
+//    }
 }
 @end

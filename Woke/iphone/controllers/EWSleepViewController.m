@@ -75,7 +75,8 @@
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     }];
     
-    [self.KVOController observe:[EWWakeUpManager shared] keyPath:@"wakeupStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+    [RACObserve([EWSession sharedSession], wakeupStatus) subscribeNext:^(NSNumber *status) {
+        @strongify(self);
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     }];
     
