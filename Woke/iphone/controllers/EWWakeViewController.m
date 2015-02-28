@@ -42,10 +42,6 @@
     if ([EWPersonManager shared].wakeeList.count == 0 && !_nextWakee) {
         [EWUIUtil showWatingHUB];
     }
-    
-    [self.KVOController observe:self.profileImageView keyPath:@"backgroundColor" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        DDLogInfo(@"profile pic background changed to %@", _profileImageView.backgroundColor);
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

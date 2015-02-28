@@ -610,7 +610,7 @@
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eiI-YG-cDg" userLabel="porfolio image view">
                                 <rect key="frame" x="81" y="100" width="158" height="158"/>
-                                <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="158" id="N7z-ee-zx7"/>
                                     <constraint firstAttribute="width" constant="158" id="yZO-TO-4cc"/>
@@ -685,7 +685,7 @@
                                     <action selector="onNextButton:" destination="ZmP-te-75G" eventType="touchUpInside" id="oim-UA-mb6"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="thW-SM-uAd" userLabel="profile">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="thW-SM-uAd" userLabel="profile">
                                 <rect key="frame" x="81" y="100" width="158" height="158"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="158" id="eLd-2m-g71"/>
@@ -807,7 +807,7 @@
                                                         <constraint firstAttribute="width" constant="113" id="mOL-T3-90i"/>
                                                         <constraint firstAttribute="height" constant="113" id="uck-gb-qJK"/>
                                                     </constraints>
-                                                    <state key="normal" image="a10">
+                                                    <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
@@ -3334,7 +3334,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="a10" width="128" height="128"/>
         <image name="alarm-dots" width="6" height="40"/>
         <image name="like-icon" width="30" height="30"/>
         <image name="playing-indicator" width="9" height="11"/>
@@ -3372,9 +3371,9 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="CBy-Qp-dcT"/>
-        <segue reference="v3V-jG-DGb"/>
         <segue reference="d4z-tG-E1i"/>
+        <segue reference="v3V-jG-DGb"/>
+        <segue reference="pRr-UO-GET"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>
