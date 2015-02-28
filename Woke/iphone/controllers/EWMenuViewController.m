@@ -13,7 +13,7 @@
 #import "EWProfileViewController.h"
 
 #define kTopOriginDefaultConstraint 20
-#define kHomeOriginDefaultConstraint 66
+#define kHomeOriginDefaultConstraint 46
 #define kMenuDefaultStepperConstraint 54
 #define kFromOriginStepper 30
 

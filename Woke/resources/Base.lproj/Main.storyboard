@@ -201,30 +201,6 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZEp-fY-6cD" userLabel="backgroundView">
                                 <rect key="frame" x="0.0" y="-50" width="320" height="618"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="027-dv-aEP">
-                                        <rect key="frame" x="21" y="406" width="96" height="46"/>
-                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
-                                        <state key="normal" title="Settings">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onSetting:" destination="ztM-CD-1sO" eventType="touchUpInside" id="Yci-0q-rI6"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
-                                        <rect key="frame" x="21" y="352" width="123" height="46"/>
-                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
-                                        <state key="normal" title="My Profile">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onProfile:" destination="ztM-CD-1sO" eventType="touchUpInside" id="3jh-YD-PFf"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x94-DL-jrO">
@@ -271,6 +247,28 @@
                                     <action selector="onVoice:" destination="ztM-CD-1sO" eventType="touchUpInside" id="dhE-hD-8Nq"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="027-dv-aEP">
+                                <rect key="frame" x="21" y="356" width="96" height="46"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                <state key="normal" title="Settings">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onSetting:" destination="ztM-CD-1sO" eventType="touchUpInside" id="Yci-0q-rI6"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
+                                <rect key="frame" x="21" y="302" width="123" height="46"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                <state key="normal" title="My Profile">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onProfile:" destination="ztM-CD-1sO" eventType="touchUpInside" id="3jh-YD-PFf"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIq-mw-Cq6">
                                 <rect key="frame" x="216" y="502" width="84" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
@@ -290,17 +288,22 @@
                             <constraint firstItem="p4y-rw-jgD" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="174" id="6xh-aJ-95Y"/>
                             <constraint firstAttribute="trailing" secondItem="ZEp-fY-6cD" secondAttribute="trailing" id="7M7-hJ-xrd"/>
                             <constraint firstItem="x94-DL-jrO" firstAttribute="leading" secondItem="wHV-nd-2l3" secondAttribute="leading" id="Avd-5g-nO1"/>
+                            <constraint firstItem="027-dv-aEP" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="336" id="HUT-6X-pjV"/>
                             <constraint firstItem="p4y-rw-jgD" firstAttribute="leading" secondItem="wHV-nd-2l3" secondAttribute="leading" id="Jda-L7-KSc"/>
                             <constraint firstItem="wHV-nd-2l3" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="120" id="UXf-Np-fB7"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="p4y-rw-jgD" secondAttribute="leading" id="VsB-JA-8OM"/>
                             <constraint firstAttribute="trailing" secondItem="RIq-mw-Cq6" secondAttribute="trailing" constant="20" id="l0M-MW-trF"/>
+                            <constraint firstItem="mrU-oI-fkp" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="282" id="mCf-Wb-iIq"/>
+                            <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="n6I-dx-rkn"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="228" id="qJi-rd-S1n"/>
+                            <constraint firstItem="027-dv-aEP" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="rj3-A9-MHa"/>
                             <constraint firstItem="x94-DL-jrO" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="66" id="ruz-zV-7t8"/>
                             <constraint firstItem="ZEp-fY-6cD" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="-70" id="w1c-cQ-EhY"/>
                             <constraint firstItem="4FG-ZV-kud" firstAttribute="top" secondItem="RIq-mw-Cq6" secondAttribute="bottom" constant="20" id="w6t-NS-QQO"/>
                             <constraint firstItem="4FG-ZV-kud" firstAttribute="top" secondItem="ZEp-fY-6cD" secondAttribute="bottom" id="yUv-KQ-Voq"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="alarm" destination="p4y-rw-jgD" id="9a0-FD-HIr"/>
@@ -309,9 +312,11 @@
                         <outlet property="home" destination="x94-DL-jrO" id="3GL-fU-ucC"/>
                         <outlet property="homeTopLayoutConstraint" destination="ruz-zV-7t8" id="wFK-x6-Uwf"/>
                         <outlet property="me" destination="mrU-oI-fkp" id="TXD-vs-gjV"/>
+                        <outlet property="meTopLayoutConstraint" destination="mCf-Wb-iIq" id="1IQ-F4-A17"/>
                         <outlet property="notification" destination="wHV-nd-2l3" id="mE5-1g-6dJ"/>
                         <outlet property="notificationTopLayoutConstraint" destination="UXf-Np-fB7" id="Y0B-DC-CD9"/>
                         <outlet property="settings" destination="027-dv-aEP" id="6VF-b0-2it"/>
+                        <outlet property="settingsTopLayoutConstraint" destination="HUT-6X-pjV" id="YKy-9f-ceg"/>
                         <outlet property="voice" destination="6Mb-bv-HXk" id="HA1-Sb-6eY"/>
                         <outlet property="voiceTopLayoutConstraint" destination="qJi-rd-S1n" id="q4Y-tT-VrY"/>
                         <segue destination="Prn-GM-2Iw" kind="custom" identifier="menuToHome" customClass="EWMenuReplaceFadeSegue" id="v3V-jG-DGb"/>
@@ -3372,8 +3377,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="d4z-tG-E1i"/>
+        <segue reference="CBy-Qp-dcT"/>
         <segue reference="v3V-jG-DGb"/>
-        <segue reference="pRr-UO-GET"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>
