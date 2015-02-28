@@ -10,7 +10,6 @@
 #import "EWSetStatusViewController.h"
 #import "EWWakeUpManager.h"
 #import "EWTimeChildViewController.h"
-//#import "EWAccountManager.h"
 #import "EWSleepingViewController.h"
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
@@ -21,26 +20,31 @@
 #import "FBKVOController.h"
 #import "EWStartUpSequence.h"
 
-@interface EWSleepViewController (){
-    EWAlarm *currentAlarm;
-	NSTimer *displayTimer;
-}
-
-
+@interface EWSleepViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
 @property (weak, nonatomic) IBOutlet UILabel *labelWakeupText;
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
+@property (nonatomic, strong) NSTimer *displayTimer;
+@property (nonatomic, strong) id userSyncStartedObserver;
+@property (nonatomic, strong) id userSyncCompletedObserver;
+@property (nonatomic, strong) id alarmTimeChangeObserver;
 @end
 
 @implementation EWSleepViewController
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self.userSyncCompletedObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.userSyncStartedObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.alarmTimeChangeObserver];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.sleepViewModel = [[EWSleepViewModel alloc] init];
     
-    [self setViewModelAlarm];
+    self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     
     //remove background color set in interface builder[used for layouting].
     self.view.backgroundColor = [UIColor clearColor];
@@ -48,29 +52,31 @@
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
 	
-	[displayTimer invalidate];
-    displayTimer = [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        //self.timeChildViewController.topLabelLine1.text = [NSDate date].date2String;
-        self.labelDateString.text = currentAlarm.time.nextOccurTime.date2dayString;
-        self.labelTimeLeft.text = currentAlarm.time.nextOccurTime.timeLeft;
+    @weakify(self);
+	[self.displayTimer invalidate];
+    self.displayTimer = [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+        @strongify(self);
+        self.labelDateString.text = self.sleepViewModel.alarm.time.nextOccurTime.date2dayString;
+        self.labelTimeLeft.text = self.sleepViewModel.alarm.time.nextOccurTime.timeLeft;
     } repeats:YES];
 	
-	[[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
+	self.userSyncStartedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		JGProgressHUD *hud = [EWUIUtil showWatingHUB];
         hud.textLabel.text = @"Syncing data";
 	}];
-    [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncCompleted object:nil queue:nil usingBlock:^(NSNotification *note) {
+    
+    self.userSyncCompletedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncCompleted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[EWUIUtil dismissHUD];
-		[self setViewModelAlarm];
+        self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
 	}];
-    [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
+    
+    self.alarmTimeChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
         DDLogInfo(@"Sleep view feels there is a change to alarm time, updating view.");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self setViewModelAlarm];
-        });
+        self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     }];
+    
     [self.KVOController observe:[EWWakeUpManager shared] keyPath:@"wakeupStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        [self setViewModelAlarm];
+        self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     }];
     
     if ([EWSession sharedSession].isSyncingUser == YES) {
@@ -80,17 +86,12 @@
     [self bindViewModel];
 }
 
-- (void)setViewModelAlarm {
-    currentAlarm = [EWPerson myCurrentAlarm];
-    self.sleepViewModel.alarm = currentAlarm;
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 #ifdef DEBUG
     //add testing button
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:self action:@selector(more:)];
-    self.navigationItem.rightBarButtonItem = rightBtn;
+    self.parentViewController.navigationItem.rightBarButtonItem = rightBtn;
 #endif
 }
 
