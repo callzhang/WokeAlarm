@@ -81,6 +81,7 @@ extern NSString * const EWDataDidSyncNotification;
 #define kLastChecked                    @"last_checked"//stores the last checked task
 #define kSavedAlarms                    @"saved_alarms"
 
+#define onePixel  (1.0 / [UIScreen mainScreen].nativeScale)
 #pragma mark - User / External events
 
 //============> App wide events <==============

@@ -50,16 +50,16 @@ extern const struct MainStoryboardIDs {
     } viewControllers;
 
     struct {
-        __unsafe_unretained NSString *peopleArrayChildView;
-        __unsafe_unretained NSString *settingsCell;
+        __unsafe_unretained NSString *settingTableViewSeparatorCell;
         __unsafe_unretained NSString *EWAlarmToneViewCell;
+        __unsafe_unretained NSString *settingTableViewCell;
         __unsafe_unretained NSString *addFriendsCellSectionHeader;
-        __unsafe_unretained NSString *boolCell;
         __unsafe_unretained NSString *addFriendsCell;
         __unsafe_unretained NSString *EWSentVoiceTableViewCell;
+        __unsafe_unretained NSString *friendsTableViewCellSectionHeader;
         __unsafe_unretained NSString *friendsTableViewCell;
         __unsafe_unretained NSString *EWAlarmToneSelectionCell;
-        __unsafe_unretained NSString *friendsTableViewCellSectionHeader;
+        __unsafe_unretained NSString *peopleArrayChildView;
         __unsafe_unretained NSString *profileTableViewCellProfile;
         __unsafe_unretained NSString *profileTableViewCellNormal;
         __unsafe_unretained NSString *EWAlarmTableViewCell;

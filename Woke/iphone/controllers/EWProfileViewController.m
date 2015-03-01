@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *wakeHerUpButton;
 @property (nonatomic, strong) EWCachedInfoManager *statsManager;
 @property (nonatomic, strong) NSArray *localDataSource;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableViewBottomLayoutConstraint;
 @end
 
 @implementation EWProfileViewController
@@ -36,8 +37,10 @@
         
         if ([person isMe]) {
             self.wakeHerUpButton.hidden = YES;
+            self.tableViewBottomLayoutConstraint.constant = 0;
         }else {
             [self.wakeHerUpButton setTitle:[NSString stringWithFormat:@"Wake %@ Up", person.genderSubjectiveCaseString] forState:UIControlStateNormal];
+            self.tableViewBottomLayoutConstraint.constant = 80;
         }
     }];
 }
@@ -56,7 +59,8 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     if (!_person.isMe) {
-        [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.9]];
+        //[TW] following line trigger fading in the bottom
+//        [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.9]];
     }
 }
 
