@@ -105,7 +105,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //startup sequence
         DDLogInfo(@"[b] Startup sequence");
         [[EWStartUpSequence sharedInstance] startupSequence];
-		[[EWStartUpSequence sharedInstance] loginDataCheck];
+        if ([EWSync sharedInstance].managedObjectsUpdating.count == 0) {
+            [[EWStartUpSequence sharedInstance] loginDataCheck];
+        }else{
+            [NSTimer bk_scheduledTimerWithTimeInterval:30 block:^(NSTimer *timer) {
+                DDLogWarn(@"Start login data check after 30s");
+                [[EWStartUpSequence sharedInstance] loginDataCheck];
+            } repeats:NO];
+        }
         
         //post notification
         DDLogInfo(@"[c] Broadcast Person login notification");
