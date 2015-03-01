@@ -275,7 +275,7 @@
         // knob
         CGFloat normalKnobWidth = frame.size.height - 2 + self.bounds.size.height / 2.0;
         if (self.on)
-            knob.frame = CGRectMake(frame.size.width - (normalKnobWidth + 1), 1, frame.size.height - 2, normalKnobWidth);
+            knob.frame = CGRectMake(frame.size.width - (normalKnobWidth + 1), 1, normalKnobWidth, frame.size.height - 2);
         else
             knob.frame = CGRectMake(1, 1, normalKnobWidth, frame.size.height);
 
