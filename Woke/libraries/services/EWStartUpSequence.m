@@ -22,6 +22,8 @@
 #import "EWAccountManager.h"
 #import "PFFacebookUtils.h"
 #import "FBKVOController.h"
+#import "NSDictionary+KeyPathAccess.h"
+#import "NSTimer+BlocksKit.h"
 
 @interface EWStartUpSequence ()
 @property (nonatomic, assign) BOOL dataChecked;
@@ -62,6 +64,11 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:EWDataDidSyncNotification object:nil];
             [self loginDataCheck];
         }
+        static NSTimer *timer;
+        [timer invalidate];
+        timer = [NSTimer bk_scheduledTimerWithTimeInterval:5 block:^(NSTimer *timer) {
+            DDLogInfo(@"The item still updating is: %@", [EWSync sharedInstance].managedObjectsUpdating);
+        } repeats:NO];
     }];
 	
 	return self;
@@ -112,20 +119,16 @@
     
     //check alarm, task, and local notif
     DDLogVerbose(@"3. Check alarm");
-	[[EWAlarmManager sharedInstance] scheduleAlarm];
-	
-    DDLogVerbose(@"4. Start cache management");
-    [[EWCachedInfoManager shared] startAutoCacheUpdateForMe];
+    [[EWAlarmManager sharedInstance] scheduleAlarm];
+    
+    DDLogVerbose(@"4. Check scheduled local notifications");
+    [[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
     
     DDLogVerbose(@"5. Updating facebook friends");
     [[EWAccountManager sharedInstance] updateMyFacebookInfo];
     
-    //update facebook info
-    //DDLogVerbose(@"6. Updating facebook info");
-    //[EWUserManager updateFacebookInfo];
-    
-	DDLogVerbose(@"6. Check scheduled local notifications");
-	[[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
+    DDLogVerbose(@"6. Check unread medias");
+    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:NULL];
 
     DDLogVerbose(@"7. Refresh my media");
     [[EWMediaManager sharedInstance] checkMediasForPerson:[EWPerson me]];
@@ -166,9 +169,9 @@
 		[[EWAccountManager shared] registerLocation];
 	}
     
-    //unread media
-    DDLogVerbose(@"[3] Check unread medias");
-    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:NULL];
+    
+    DDLogVerbose(@"[3]. Start cache management");
+    [[EWCachedInfoManager shared] startAutoCacheUpdateForMe];
     
 }
 
@@ -266,7 +269,7 @@
 			if ([key isEqualToString:userKey]) {
 				POGraphInfo[key] = @"me";
 				[[EWSync sharedInstance] setCachedParseObject:obj];
-                [EWSync sharedInstance].managedObjectsUpdating[me.serverID] = @"syncData";
+                [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:@"syncData" forImmutableKeyPath:@[me.serverID]];
 				[me assignValueFromParseObject:obj];
 				return;
 			}
@@ -347,7 +350,7 @@
 							MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
 							DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
                         }else {
-                            [EWSync sharedInstance].managedObjectsUpdating[[PO valueForKey:kParseObjectID]] = @"syncData";
+                            [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:@"syncData" forImmutableKeyPath:@[PO.objectId]];
 							MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
 								DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
 							}];
@@ -379,7 +382,7 @@
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
 						DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
 					}else {
-                        [EWSync sharedInstance].managedObjectsUpdating[[PO valueForKey:kParseObjectID]] = @"syncData";
+                        [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:@"syncData" forImmutableKeyPath:@[PO.objectId]];
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
 							DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
 						}];
@@ -397,7 +400,7 @@
 			}];
 			
 			//save to local so the updatedAt is assigned
-			[localMe refreshInBackgroundWithCompletion:nil];
+            [localMe saveToLocal];
 			
         } completion:^(BOOL contextDidSave, NSError *error2) {
             DDLogDebug(@"========> Finished user syncing <=========");

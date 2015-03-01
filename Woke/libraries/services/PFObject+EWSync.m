@@ -382,8 +382,11 @@
         NSError *__autoreleasing err;
         error = &err;
     }
-    if (!self.isDataAvailable)
+    if (!self.isDataAvailable){
         [self fetch:error];
+        [[EWSync sharedInstance] setCachedParseObject:self];
+    }
+    
     /*
     if (!self.isDataAvailable) {
         [self fetch:error];

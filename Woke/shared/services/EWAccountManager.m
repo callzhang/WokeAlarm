@@ -18,23 +18,17 @@
 #import "EWUIUtil.h"
 #import "NSTimer+BlocksKit.h"
 #import "EWStartUpSequence.h"
+#import "INTULocationManager.h"
+
 @import CoreLocation;
 
 @interface EWAccountManager()
 @property (nonatomic) BOOL isUpdatingFacebookInfo;
-@property (nonatomic, strong) CLLocationManager *manager;
+@property (nonatomic, strong) INTULocationManager *manager;
 @end
 
 @implementation EWAccountManager
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
-
-- (instancetype)init{
-    self = [super init];
-    if (self) {
-        self.manager = [CLLocationManager new];
-    }
-    return self;
-}
 
 + (BOOL)isLoggedIn {
     return [PFUser currentUser] != nil;
@@ -105,14 +99,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //startup sequence
         DDLogInfo(@"[b] Startup sequence");
         [[EWStartUpSequence sharedInstance] startupSequence];
+        [[EWStartUpSequence sharedInstance] loginDataCheck];
+        /*
         if ([EWSync sharedInstance].managedObjectsUpdating.count == 0) {
             [[EWStartUpSequence sharedInstance] loginDataCheck];
         }else{
+            DDLogInfo(@"The item still updating is: %@", [EWSync sharedInstance].managedObjectsUpdating);
             [NSTimer bk_scheduledTimerWithTimeInterval:30 block:^(NSTimer *timer) {
                 DDLogWarn(@"Start login data check after 30s");
                 [[EWStartUpSequence sharedInstance] loginDataCheck];
             } repeats:NO];
-        }
+        }*/
         
         //post notification
         DDLogInfo(@"[c] Broadcast Person login notification");
@@ -354,77 +351,28 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 #pragma mark - Geolocation
 
 - (void)registerLocation{
-    self.manager.delegate = self;
-    if ([self.manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
-            [self.manager requestWhenInUseAuthorization];
-        } else if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] ==kCLAuthorizationStatusRestricted){
-            //need pop alert
-            DDLogError(@"Location service disabled");
-            EWAlert(@"Location service is disabled. To find the best match around your area, please enable location service in settings.")
-            [self setProxymateLocationForPerson:[EWPerson me]];
-        }else{
-            [self.manager startUpdatingLocation];
+    self.manager = [INTULocationManager sharedInstance];
+    [self.manager requestLocationWithDesiredAccuracy:INTULocationAccuracyHouse timeout:300 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+        if (status == INTULocationStatusSuccess) {
+            // Request succeeded, meaning achievedAccuracy is at least the requested accuracy, and
+            // currentLocation contains the device's current location.
+            DDLogInfo(@"Updated location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
+            [self processLocation:currentLocation];
         }
-    }else{
-        [self.manager startUpdatingLocation];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    switch (status) {
-        case kCLAuthorizationStatusDenied:
-            DDLogWarn(@"kCLAuthorizationStatusDenied");
-        {
+        else if (status == INTULocationStatusTimedOut) {
+            // Wasn't able to locate the user with the requested accuracy within the timeout interval.
+            // However, currentLocation contains the best location available (if any) as of right now,
+            // and achievedAccuracy has info on the accuracy/recency of the location in currentLocation.
+            DDLogInfo(@"After 300s, we accept location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
+            [self processLocation:currentLocation];
+        }
+        else {
+            // An error occurred, more info is available by looking at the specific status returned.
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alertView show];
             [self setProxymateLocationForPerson:[EWPerson me]];
         }
-            break;
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-        {
-            DDLogInfo(@"kCLAuthorizationStatusAuthorizedWhenInUse");
-            manager.desiredAccuracy = kCLLocationAccuracyBest;
-            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
-            [manager startUpdatingLocation];
-            
-        }
-            break;
-        case kCLAuthorizationStatusAuthorizedAlways:
-        {
-            DDLogInfo(@"kCLAuthorizationStatusAuthorizedAlways");
-            manager.desiredAccuracy = kCLLocationAccuracyBest;
-            manager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
-            [manager startUpdatingLocation];
-        }
-            break;
-        case kCLAuthorizationStatusNotDetermined:
-            DDLogInfo(@"kCLAuthorizationStatusNotDetermined");
-            break;
-        case kCLAuthorizationStatusRestricted:
-            DDLogInfo(@"kCLAuthorizationStatusRestricted");
-            break;
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-    static CLLocation *loc;
-    static NSTimer *locationTimeOut;
-    loc = locations.lastObject;
-    
-    if (loc.horizontalAccuracy <100 && loc.verticalAccuracy < 100) {
-        //bingo
-        DDLogInfo(@"Updated location %@ with accuracy of %.0fm", loc, loc.horizontalAccuracy);
-        [manager stopUpdatingLocation];
-        [locationTimeOut invalidate];
-        [self processLocation:loc];
-    } else if (!locationTimeOut) {
-        locationTimeOut = [NSTimer bk_scheduledTimerWithTimeInterval:300 block:^(NSTimer *timer) {
-            DDLogInfo(@"After 300s, we accept location %@ with accuracy of %.0fm", loc, loc.horizontalAccuracy);
-            [manager stopUpdatingLocation];
-            [self processLocation:loc];
-        } repeats:NO];
-    }
+    }];
 }
 
 - (void)processLocation:(CLLocation *)location{

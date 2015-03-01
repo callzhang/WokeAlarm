@@ -25,7 +25,7 @@
 		DDLogWarn(@"Found MO already refreshing %@(%@), skip!", parseObject.localClassName, parseObject.objectId);
         return;
     }else {
-        [EWSync sharedInstance].managedObjectsUpdating[parseObject.objectId] = parseObject.localClassName;
+        [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:parseObject.localClassName forImmutableKeyPath:@[parseObject.objectId]];
     }
     
     //download data: the fetch here is just a prevention or default state that data is only refreshed when absolutely necessary. If we need check new data, we should refresh PO before passed in here. For example, we fetch PO at app launch for current user update purpose.

@@ -777,16 +777,10 @@ NSManagedObjectContext *mainContext;
 }
 
 + (void)removeMOFromUpdating:(EWServerObject *)mo{
-	NSMutableDictionary *queue = [EWSync sharedInstance].managedObjectsUpdating;
+	NSDictionary *queue = [EWSync sharedInstance].managedObjectsUpdating;
     if ([queue.allKeys containsObject:mo.serverID]) {
-        [queue removeObjectForKey:mo.serverID];
+        [EWSync sharedInstance].managedObjectsUpdating = [queue setValue:nil forImmutableKeyPath:@[mo.serverID]];
     }
-	NSUInteger updating = queue.allKeys.count;
-    static NSTimer *timer;
-    [timer invalidate];
-    timer = [NSTimer bk_scheduledTimerWithTimeInterval:5 block:^(NSTimer *timer) {
-        DDLogInfo(@"The item still updating is: %@", [EWSync sharedInstance].managedObjectsUpdating);
-    } repeats:NO];
 }
 
 

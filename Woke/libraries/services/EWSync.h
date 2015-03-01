@@ -25,8 +25,7 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 //or https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/NSError_Codes
 #define kEWSyncErrorNoConnection            668 //NO_CONNECTION
 #define kEWSyncErrorNoServerID              113 //NO_MORE_SEARCH_HANDLES: No more internal file identifiers available
-
-@class ELAWellCached;
+#define kEWSyncErrorNoPermission            257;
 
 #pragma mark - Sync parameters
 #define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
@@ -65,13 +64,12 @@ extern NSString * const kEWSyncUploaded;
  *  EWManagedObjectSaveCallbackBlock takes two parameters: MO_main_thread and NSError
  */
 @property (strong) NSMutableDictionary *uploadCompletionCallbacks;
-@property (strong) ELAWellCached *serverObjectCache;
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
  */
 @property (atomic, strong) NSDictionary *changedRecords; //{string of objectID: array of changed keys}
 @property (atomic, strong) NSMutableSet *saveToLocalItems;
-@property (atomic, strong) NSMutableDictionary *managedObjectsUpdating;
+@property (atomic, strong) NSDictionary *managedObjectsUpdating;
 @property BOOL isUploading;
 
 
