@@ -21,6 +21,7 @@
 #import "NSPersistentStoreCoordinator+MagicalRecord.h"
 #import "EWAccountManager.h"
 #import "PFFacebookUtils.h"
+#import "FBKVOController.h"
 
 @interface EWStartUpSequence ()
 @property (nonatomic, assign) BOOL dataChecked;
@@ -52,7 +53,16 @@
     [PFFacebookUtils initializeFacebook];
     
     //watch for login event
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWDataDidSyncNotification object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWDataDidSyncNotification object:nil];
+    
+    //observe updating MO
+    [self.KVOController observe:[EWSync sharedInstance] keyPath:@"managedObjectsUpdating" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        if ([EWSession sharedSession].isSyncingUser == NO && [EWSync sharedInstance].managedObjectsUpdating.allKeys.count == 0){
+            DDLogInfo(@"Sync data finished");
+            [[NSNotificationCenter defaultCenter] postNotificationName:EWDataDidSyncNotification object:nil];
+            [self loginDataCheck];
+        }
+    }];
 	
 	return self;
 }
@@ -94,6 +104,7 @@
 - (void)loginDataCheck{
     
     if (_dataChecked) {
+        DDLogInfo(@"Skip data check as it is checked already!");
         return;
     }
     _dataChecked = YES;
@@ -255,9 +266,11 @@
 			if ([key isEqualToString:userKey]) {
 				POGraphInfo[key] = @"me";
 				[[EWSync sharedInstance] setCachedParseObject:obj];
+                [EWSync sharedInstance].managedObjectsUpdating[me.serverID] = @"syncData";
 				[me assignValueFromParseObject:obj];
 				return;
-			} else if ([key isEqualToString:deleteKey]) {
+			}
+            else if ([key isEqualToString:deleteKey]) {
 				POGraphInfo[key] = obj;
 				//delete all objects in this Dictionary
 				DDLogInfo(@"Deleting objects %@", obj);
@@ -273,9 +286,14 @@
 						[me setValue:nil forKey:relationName];
 					}
 				}];
-				
 				return;
-			}
+            }
+            else if ([key isEqualToString:@"mediaFiles"]) {
+                POGraphInfo[key] = [(NSArray *)[obj valueForKey:kParseObjectID] string];
+                DDLogInfo(@"Pin %@ to cache", key);
+                [POtoPin addObjectsFromArray:obj];
+                return;
+            }
 			NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
 			if (!relation && ![obj isKindOfClass:[PFObject class]]) {
 				DDLogError(@"Unecpected value from server: %@(%@)", key, obj);
@@ -379,23 +397,18 @@
 			}];
 			
 			//save to local so the updatedAt is assigned
-			[localMe saveToLocal];
+			[localMe refreshInBackgroundWithCompletion:nil];
 			
         } completion:^(BOOL contextDidSave, NSError *error2) {
             DDLogDebug(@"========> Finished user syncing <=========");
             TOCK
 			[EWSession sharedSession].isSyncingUser = NO;
-			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
-			if (!error2) {
-				block(nil);
-			}else{
+			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:error2];//TODO: remove this
+            block(error2);
+			if (error2) {
 				NSString *str = [NSString stringWithFormat:@"========> Failed to save synced user \n This is a very serious error: %@", error2.description];
 				DDLogError(str);
 				EWAlert(str);
-				block(error2);
-			}
-			if (!me.updatedAt) {
-				DDLogError(@"Me is missing updatedAt after syncing data");
 			}
 		}];
 	}];

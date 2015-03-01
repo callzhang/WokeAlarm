@@ -225,6 +225,8 @@
         NSDate *time = [self getSavedAlarmTimeOnWeekday:i];
         //set alarm time
         a.time = time;
+        //add statement
+        a.statement = [EWPerson me].statement;
         //add to temp array
         newAlarms[i] = a;
         [a save];
@@ -243,7 +245,7 @@
     if (alarms.count != 7 && [EWSync isReachable]) {
         //cannot check alarm for myself, which will cause a checking/schedule cycle
         
-        DDLogVerbose(@"Alarm for me is %lu, fetch from server!", alarms.count);
+        DDLogWarn(@"Alarm for me is %lu, fetch from server!", alarms.count);
         PFQuery *alarmQuery = [PFQuery queryWithClassName:NSStringFromClass([EWAlarm class])];
         [alarmQuery whereKey:EWAlarmRelationships.owner equalTo:[PFUser currentUser]];
         [alarmQuery whereKey:kParseObjectID notContainedIn:[alarms valueForKey:kParseObjectID]];

@@ -48,7 +48,7 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.0-rc):
     - CocoaLumberjack/Default
-  - CrashlyticsFramework (2.2.5.2)
+  - CrashlyticsFramework (2.2.9)
   - CrashlyticsLumberjack (2.0.0-rc2):
     - CocoaLumberjack/Default (>= 2.0.0-rc)
   - DACircularProgress (2.2.0)
@@ -64,6 +64,7 @@ PODS:
     - AFNetworking
     - DACircularProgress
     - pop
+  - INTULocationManager (2.0.2)
   - JGProgressHUD (1.2.3)
   - KVOController (1.0.3)
   - KZAsserts (1.0)
@@ -149,6 +150,7 @@ DEPENDENCIES:
   - GKImagePicker (~> 0.0)
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
+  - INTULocationManager
   - JGProgressHUD (~> 1.2)
   - KVOController (~> 1.0.3)
   - KZBootstrap (~> 0.5.2)
@@ -187,7 +189,7 @@ SPEC CHECKSUMS:
   BlocksKit: 4439e7f30a9f90743462ca63545a15c1f4304cef
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   CocoaLumberjack: 6186e27827fc574b50b16c10102fcc591437f06c
-  CrashlyticsFramework: 4e91082f3019bea7e718e1b67b0a3b56729dbc5d
+  CrashlyticsFramework: 013bae3c30d5b9bfad1aa10008e155e18473984c
   CrashlyticsLumberjack: d41d1043ceee3312f546242e8bd3ee0ec22e39b1
   DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
   dyci: 63f19224ff515c438e26387546c9301af917953c
@@ -196,6 +198,7 @@ SPEC CHECKSUMS:
   GKImagePicker: 6039f7bf8d517eed0f7583af123c4422784e6c81
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: 9639f7c57bdf942dc4e214ff9d8108e08ebd3f27
+  INTULocationManager: 83bec34472a706e178face50a4e5e21ca986b7d2
   JGProgressHUD: 733523c80f69b6dfc41b88a0f33883a89a8b4c3b
   KVOController: b1139ef1fc373b6757e4b69493fedd7b56eb1272
   KZAsserts: 008f2f37ba7dcb4ce87bb262a7f91406812a66e5

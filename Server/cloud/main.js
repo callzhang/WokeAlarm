@@ -563,10 +563,10 @@ Parse.Cloud.define("syncUser", function(request, response) {
           objectsToDelete[PO.id] = relationName;
           console.log("-Delete object: "+PO.id+ " for relation "+relationName + " due to no data");
         }
-        else if (dict.hasOwnProperty(PO.id)) {
+        else if (dict && dict.hasOwnProperty(PO.id)) {
           //exists, compare date
           var clientUpdatedAt = dict[PO.id];
-          if (PO.updatedAt - clientUpdatedAt > 5000){
+          if (PO.updatedAt - clientUpdatedAt > 1000){
             objectsNeedUpdate.push(PO);
             console.log("~Update object "+PO.id+" in relation "+relationName);
           }
@@ -602,7 +602,10 @@ Parse.Cloud.define("syncUser", function(request, response) {
       //dict is {ID: updatedAt} pair
       var dict = request.params[relationName];
       if (PO){
-        var clientUpdatedAt = dict[PO.id];
+        var clientUpdatedAt;
+        if (dict && PO.id in dict) {
+          clientUpdatedAt = dict[PO.id];
+        };
         if (clientUpdatedAt){
           //object exists in local, compare date
           if (PO.updatedAt - clientUpdatedAt > 5000){
@@ -668,13 +671,14 @@ Parse.Cloud.define("syncUser", function(request, response) {
       }else if(key == "unreadMedias") {
         //Relation is Array of POs
         var objects = user.get(key);
+        var files = [];
         var arrayPromise = function (objects, relationName) {
           var fetchAllPromise = Parse.Promise.as();
           if (objects) {
             objects.forEach(function(object) {
               fetchAllPromise = fetchAllPromise.then(function () {
                 return object.fetch({
-                  success: function () {},
+                  success: function (media) {},
                   error: function (error) {
                     objectsToDelete[object.id] = relationName;
                     console.log("***Failed to fetch " + relationName + "(" + object.id + "). Add to deleted object. error: " + error.message);
@@ -682,15 +686,26 @@ Parse.Cloud.define("syncUser", function(request, response) {
                 });
               }, function (error) {
                 return object.fetch();
+              }).then(function (argument) {
+                // download file
+                var file = object.get("mediaFile");
+                if (file) {
+                  files.push(file);
+                  return file.fetch();
+                };
+                return Parse.Promise.as();
               });
             });
           }
 
           fetchAllPromise = fetchAllPromise.then(function () {
             processPOListForRelation(objects, relationName);
+            return Parse.Promise.as(); 
           }, function(error){
             console.log("***Failed to fetch array for relation "+relationName+" with error: "+error);
-          });
+          }).then(function () {
+            processPOListForRelation(files, "mediaFiles");
+          })
 
           return fetchAllPromise;
         };

@@ -782,18 +782,11 @@ NSManagedObjectContext *mainContext;
         [queue removeObjectForKey:mo.serverID];
     }
 	NSUInteger updating = queue.allKeys.count;
-	DDLogInfo(@"There are still %@ MO refreshing", @(updating));
     static NSTimer *timer;
     [timer invalidate];
     timer = [NSTimer bk_scheduledTimerWithTimeInterval:5 block:^(NSTimer *timer) {
         DDLogInfo(@"The item still updating is: %@", [EWSync sharedInstance].managedObjectsUpdating);
     } repeats:NO];
-	if (updating == 0) {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			DDLogInfo(@"Data sync finished");
-			[[NSNotificationCenter defaultCenter] postNotificationName:EWDataDidSyncNotification object:nil];
-		});
-	}
 }
 
 

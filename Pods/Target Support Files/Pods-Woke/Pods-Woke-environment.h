@@ -122,10 +122,9 @@
 
 // CrashlyticsFramework
 #define COCOAPODS_POD_AVAILABLE_CrashlyticsFramework
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 2.2.5.2.
+#define COCOAPODS_VERSION_MAJOR_CrashlyticsFramework 2
+#define COCOAPODS_VERSION_MINOR_CrashlyticsFramework 2
+#define COCOAPODS_VERSION_PATCH_CrashlyticsFramework 9
 
 // CrashlyticsLumberjack
 #define COCOAPODS_POD_AVAILABLE_CrashlyticsLumberjack
@@ -162,6 +161,12 @@
 #define COCOAPODS_VERSION_MAJOR_IDMPhotoBrowser 1
 #define COCOAPODS_VERSION_MINOR_IDMPhotoBrowser 5
 #define COCOAPODS_VERSION_PATCH_IDMPhotoBrowser 2
+
+// INTULocationManager
+#define COCOAPODS_POD_AVAILABLE_INTULocationManager
+#define COCOAPODS_VERSION_MAJOR_INTULocationManager 2
+#define COCOAPODS_VERSION_MINOR_INTULocationManager 0
+#define COCOAPODS_VERSION_PATCH_INTULocationManager 2
 
 // JGProgressHUD
 #define COCOAPODS_POD_AVAILABLE_JGProgressHUD
