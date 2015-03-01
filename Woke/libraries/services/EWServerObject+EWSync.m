@@ -11,6 +11,7 @@
 #import "EWPerson.h"
 #import <objc/runtime.h>
 #import "EWUtil.h"
+#import "NSDictionary+KeyPathAccess.h"
 
 @implementation EWServerObject(EWSync)
 #pragma mark - Server sync
@@ -21,7 +22,7 @@
         return;
     }
     NSString *class = [EWSync sharedInstance].managedObjectsUpdating[parseObject.objectId];
-	if (class && [class isEqualToString:parseObject.localClassName]) {//a special case here is that the sync user will use relation name as value
+	if (class && [class isEqualToString:parseObject.localClassName]) {
 		DDLogWarn(@"Found MO already refreshing %@(%@), skip!", parseObject.localClassName, parseObject.objectId);
         return;
     }else {
@@ -309,54 +310,35 @@
 
 - (void)refreshInBackgroundWithCompletion:(ErrorBlock)block{
     //network check
-    if (![EWSync isReachable]) {
-        DDLogDebug(@"Network not reachable, skip refreshing.");
-        //refresh later
-        [self refreshEventually];
-        if (block) {
-            NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoConnection userInfo:@{NSLocalizedDescriptionKey: @"Server not reachable"}];
-            block(err);
-        }
-        return;
-    }
     
-    if (!self.serverID) {
-        DDLogVerbose(@"When refreshing, MO missing serverID %@, prepare to upload", self.entity.name);
-        [self uploadEventually];
-        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-        NSError *err = [[NSError alloc] initWithDomain:@"com.WokeAlarm" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
-        if (block) {
-            block(err);
-        }
-    }else if ([self.entity.name isEqualToString:kSyncUserClass]) {
-        DDLogError(@"Skip refreshing other user %@", self.serverID);
-        return;
-    }else {
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWServerObject *currentMO = [self MR_inContext:localContext];
-            if (!currentMO) {
-                DDLogError(@"*** Failed to obtain object from database: %@", self);
-                if (block) {
-                    block(nil);
-                }
-                return;
-            }
-            //============ Refresh
-            [currentMO refresh];
-            //=====================
-            
-        } completion:^(BOOL success, NSError *error) {
+    __block NSError *err;
+    [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+        EWServerObject *currentMO = [self MR_inContext:localContext];
+        if (!currentMO) {
+            DDLogError(@"*** Failed to obtain object from database: %@", self);
             if (block) {
-                block(error);
+                block(nil);
             }
-            
-        }];
+            return;
+        }
+        [self refreshInContext:localContext withError:&err];
+    } completion:^(BOOL success, NSError *error) {
+        if (block) {
+            block(error?:err);
+        }
         
-        
-    }
+    }];
 }
 
 - (void)refresh{
+    [self refreshInContext:mainContext withError:nil];
+}
+
+- (void)refreshInContext:(NSManagedObjectContext *)context withError:(NSError *__autoreleasing *)error{
+    if (!error) {
+        NSError __autoreleasing *err;
+        error = &err;
+    }
     //check network
     if (![EWSync isReachable]) {
         DDLogDebug(@"Network not reachable, refresh later.");
@@ -366,13 +348,11 @@
     }
     
     if (!self.serverID) {
-        //NSParameterAssert([self isInserted]);
+        //[self uploadEventually];//potential to create a duplicate if MO is being downloaded
         DDLogWarn(@"!!! The MO %@(%@) trying to refresh doesn't have servreID, skip! %@", self.entity.name, self.serverID, self);
+        *error = [[NSError alloc] initWithDomain:@"WokeAlarm" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
+
     }else{
-        if ([self.entity.name isEqualToString:kSyncUserClass]) {
-            DDLogError(@"Skip refreshing other user %@", self.serverID);
-            return;
-        }
         if ([self changedKeys]) {
             DDLogWarn(@"===>>>> Refreshing MO %@(%@) HAS CHANGES, UNSAFE!(%@)", self.entity.name, self.serverID, self.changedKeys);
         }else{
@@ -383,7 +363,7 @@
         //get the PO
         PFObject *object = self.parseObject;
         //Must update the PO
-        [object fetch];
+        [object fetch:error];
         //update MO
         [self updateValueAndRelationFromParseObject:object];
         //save: already saved in update
