@@ -254,7 +254,8 @@ NSManagedObjectContext *mainContext;
         NSError *newError;
         NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
         EWServerObject *SO_main = (EWServerObject *)[mainContext existingObjectWithID:ID error:&newError];
-        if (newError) {
+        if (!SO_main) {
+			DDLogError(@"%s Failed to find MO with ID %@", __func__, key);
             block(nil, newError);
         }
         else {
@@ -376,6 +377,10 @@ NSManagedObjectContext *mainContext;
 
 #pragma mark - Upload worker
 - (BOOL)updateParseObjectFromManagedObject:(EWServerObject *)serverObject withError:(NSError *__autoreleasing *)error{
+	if (!error) {
+		NSError __autoreleasing *err;
+		error = &err;
+	}
     //validation
     if (![serverObject validate]) {
         DDLogWarn(@"!!! Validation failed for %@(%@), skip upload.", serverObject.entity.name, serverObject.serverID);

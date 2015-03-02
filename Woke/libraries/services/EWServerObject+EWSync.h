@@ -94,6 +94,14 @@
  */
 - (void)saveToServer;
 
+
+/**
+ *  Upload to server immediately
+ *
+ *  @param block Passing EWServerObject's counterparty - PFObject back to the block
+ */
+- (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block;
+
 #pragma mark - Helper methods
 /**
  Reflex method to search for runtime attributes

@@ -87,7 +87,7 @@
 - (UIImage *)screenshot{
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [UIScreen mainScreen].scale);
 	
-	DDLogVerbose(@"Window scale: %f", self.window.screen.scale);
+	//DDLogVerbose(@"Window scale: %f", self.window.screen.scale);
     /* iOS 7 */
     BOOL visible = !self.hidden && self.superview;
     CGFloat alpha = self.alpha;

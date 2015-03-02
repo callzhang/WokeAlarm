@@ -16,12 +16,6 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 - (NSString *)serverID;
 - (void)save;
 - (void)saveWithCompletion:(BoolErrorBlock)block;
-/**
- *  Upload to server immediately
- *
- *  @param block Passing EWServerObject's counterparty - PFObject back to the block
- */
-- (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block;
 - (NSString *)serverClassName;
 
 /**

@@ -95,6 +95,7 @@
 
 - (IBAction)wake:(id)sender {
     EWRecordingViewController *controlelr = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:NSStringFromClass([EWRecordingViewController class])];
+	controlelr.person = self.person;
     [self.navigationController pushViewController:controlelr animated:YES];
 }
 

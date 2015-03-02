@@ -70,30 +70,6 @@
 	}];
 }
 
-- (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
-    if (!self.hasChanges) {
-        DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
-        if (block) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                EWServerObject *MO_main = [self MR_inContext:mainContext];
-                block(MO_main, nil);
-            });
-        }
-        return;
-    }
-    
-    [[EWSync sharedInstance].uploadCompletionCallbacks setObject:block forKey:self.objectID.URIRepresentation.absoluteString];
-    [self save];
-    if ([NSThread isMainThread]) {
-        //upload immediately
-        [[EWSync sharedInstance] uploadToServer];
-    } else {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[EWSync sharedInstance] uploadToServer];
-        });
-    }
-}
-
 - (EWServerObject *)ownerObject{
     return nil;
 }

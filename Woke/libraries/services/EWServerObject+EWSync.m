@@ -520,7 +520,7 @@
     }];
 }
 
-#pragma mark - Tools
+#pragma mark - Network
 
 - (NSArray *)changedKeys{
     NSMutableArray *changes = self.changedValues.allKeys.mutableCopy;
@@ -561,6 +561,38 @@
     [[EWSync sharedInstance].saveToLocalItems removeObject:self.objectID];
     [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:NULL];
     //[[EWSync sharedInstance] appendUpdateQueue:self];
+}
+
+
+- (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
+	if (!self.hasChanges) {
+		DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
+		if (block) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				EWServerObject *MO_main = [self MR_inContext:mainContext];
+				block(MO_main, nil);
+			});
+		}
+		return;
+	}
+	
+	
+	//save and add persistant ID
+	[self save];
+	
+	//add to completion block
+	[[EWSync sharedInstance].uploadCompletionCallbacks setObject:block forKey:self.objectID.URIRepresentation.absoluteString];
+	
+	//trigger save immediately
+	if ([NSThread isMainThread]) {
+		//upload immediately
+		[[EWSync sharedInstance] uploadToServer];
+	} else {
+		//delay 1s so the save action could be completed
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			[[EWSync sharedInstance] uploadToServer];
+		});
+	}
 }
 
 
