@@ -57,7 +57,7 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (EWActivity *)activityForAlarm:(EWAlarm *)alarm{
-    if (!alarm || [alarm validate]) {
+    if (!alarm || ![alarm validate]) {
         return nil;
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, alarm.time.nextOccurTime, EWActivityRelationships.owner, alarm.owner];
