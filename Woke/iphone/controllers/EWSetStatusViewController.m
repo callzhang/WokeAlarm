@@ -22,9 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.statusTextField.text = [EWPerson me].statement;
-//    self.view.backgroundColor = [UIColor clearColor];
-//   
-//    self.baseNavigationController.view.backgroundColor = [UIColor clearColor];
+	
     [self.baseNavigationController setNavigationBarTransparent:YES];
     [self.statusTextField becomeFirstResponder];
 }

@@ -19,6 +19,7 @@
 #import "UIViewController+Blur.h"
 #import "UIView+Extend.h"
 #import "EWUIUtil.h"
+#import "UIAlertView+BlocksKit.h"
 
 #define kNextTaskHasMediaAlert      1011
 #define kFriendRequestAlert         1012
@@ -70,6 +71,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
                                    delegate:[EWNotificationManager sharedInstance]
                           cancelButtonTitle:@"OK"
                           otherButtonTitles: nil] show];
+		
+		[UIAlertView alloc] bk_cancelBlock
         
     } else if ([notification.type isEqualToString:kNotificationTypeFriendRequest]) {
         

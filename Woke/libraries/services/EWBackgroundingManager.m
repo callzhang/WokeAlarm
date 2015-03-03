@@ -37,9 +37,8 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 - (id)init{
     self = [super init];
     if (self) {
-        
-        BACKGROUNDING_FROM_START = NO;
-        
+
+        BACKGROUNDING_FROM_START = YES;
         
         //enter background
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -65,18 +64,16 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
                 NSInteger optionValue = option.integerValue;
                 if (optionValue == AVAudioSessionInterruptionOptionShouldResume) {
                     if (wasBackgrounding) {
-                        if (self.isBackgrounding || BACKGROUNDING_FROM_START) {
-                            [self startBackgrounding];
+						[self startBackgrounding];
 #ifdef DEBUG
-                            UILocalNotification *n = [UILocalNotification new];
-                            n.alertBody = @"Woke is active";
-                            [[UIApplication sharedApplication] scheduleLocalNotification:n];
+						UILocalNotification *n = [UILocalNotification new];
+						n.alertBody = @"Woke is active";
+						[[UIApplication sharedApplication] scheduleLocalNotification:n];
 #endif
-                        }
-                        
                     }
-                    
-                }
+				}else{
+					DDLogWarn(@"Unknown AudioSession option: %@", option);
+				}
             }
             else if (type.integerValue == AVAudioSessionInterruptionTypeBegan){
                 if (self.isBackgrounding) {
@@ -119,7 +116,9 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 #pragma mark - Application state change
 - (void)enterBackground{
-    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusSleeping || self.isBackgrounding || BACKGROUNDING_FROM_START) {
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusSleeping ||
+		![EWSession sharedSession].isRecording || BACKGROUNDING_FROM_START) {
+		
         [self startBackgrounding];
     }
 }

@@ -16,7 +16,6 @@
 
 #import "EWServer.h"
 #import "ATConnect.h"
-#import "EWBackgroundingManager.h"
 #import "EWAlarm.h"
 #import "EWActivity.h"
 #import "EWActivityManager.h"
@@ -26,6 +25,7 @@
 #import "FBTweak.h"
 #import "FBTweakInline.h"
 #import "EWUIUtil.h"
+#import "EWBackgroundingManager.h"
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
     DDLogInfo(@"Forced enable wake up");
@@ -91,7 +91,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	}];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithDelay) name:kAVManagerDidFinishPlaying object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadUnreadMedias) name:kNewMediaNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
         if ([note.object isKindOfClass:[EWMedia class]]) {
             EWMedia *m = (EWMedia *)note.object;
