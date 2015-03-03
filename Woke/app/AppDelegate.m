@@ -34,8 +34,8 @@ UIViewController *rootViewController;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // Enable Crash Reporting
-    [EWUtil initLogging];
-    
+	initLogging();
+	
 	//crashlytics
 	[Crashlytics startWithAPIKey:@"6ec9eab6ca26fcd18d51d0322752b861c63bc348"];
 	

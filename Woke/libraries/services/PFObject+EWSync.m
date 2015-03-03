@@ -56,7 +56,7 @@
                 DDLogVerbose(@"MO attribute %@(%@)->%@ expect no change", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], key);
                 return;
             }
-            NSString *fileName = [NSString stringWithFormat:@"%@.m4a", [PFUser currentUser][@"name"]];
+			NSString *fileName = [NSString stringWithFormat:@"%@.m4a", [PFUser currentUser][@"firstName"]?:[PFUser currentUser].objectId];
             PFFile *dataFile = [PFFile fileWithName:fileName data:value contentType:@"audio/mp4"];
             [self setObject:dataFile forKey:key];
         }

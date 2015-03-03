@@ -3,7 +3,8 @@
 //  Created by Zitao Xiong on 14/09/2014.
 //
 
-#import "EWServerObject.h"
+//#import "EWServerObject.h"
+@class EWServerObject;
 
 typedef void (^DictionaryBlock)(NSDictionary *dictionary);
 typedef void (^BoolBlock)(BOOL success);

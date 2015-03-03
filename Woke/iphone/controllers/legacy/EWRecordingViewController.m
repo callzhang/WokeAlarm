@@ -217,15 +217,19 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
         media.author = [EWPerson me];
         
         [EWServer pushVoice:media toUser:receiver withCompletion:^(BOOL success, NSError *error) {
-            [EWUIUtil dismissHUD];
+			
             if (!success) {
                 DDLogError(@"Failed to push media: %@", error.localizedDescription);
                 [self.view showFailureNotification:@"Failed to send media"];
-            }
+			}else{
+				[self dismissBlurViewControllerWithCompletionHandler:^{
+					[EWUIUtil showSuccessHUBWithString:@"Sent"];
+				}];
+				
+				//clean up
+				recordingFileUrl = nil;
+			}
         }];
-        
-        //clean up
-        recordingFileUrl = nil;
     }
 }
 

@@ -45,6 +45,7 @@
 #define TICK                            NSDate *startTime = [NSDate date];
 #define TOCK                            NSLog(@"Time: %f", -[startTime timeIntervalSinceNow]);
 #define EWAssertMainThread              NSAssert([NSThread isMainThread], @"%s not in main thread", __FUNCTION__);
+#define NoneErrorCreate(error)			if(!error) {NSError __autoreleasing *err; error = &err;}
 
 //Account Management
 extern NSString * const EWAccountDidLoginNotification;
