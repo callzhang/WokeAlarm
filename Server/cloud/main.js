@@ -743,6 +743,37 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
 });
 
+Parse.Cloud.define("sendMedia", function(request, response) {
+  Parse.Cloud.useMasterKey();
+  var receiverID = request.params.receiverID;
+  var receiver;
+  var mediaID = request.params.mediaID;
+  var media;
+  var query = new Parse.Query(Parse.User);
+  query.get(receiverID).then(function (user) {
+    console.log("receiver "+user.id);
+    receiver = user;
+    var EWMedia = Parse.Object.extend("EWMedia");
+    var mediaQuery = new Parse.Query(EWMedia);
+    return mediaQuery.get(mediaID);
+  }).then(function (m) {
+    console.log("media "+m.id);
+    media = m;
+    media.set("receiver", receiver);
+    return media.save();
+  }).then(function () {
+    receiver.add("unreadMedias", media);
+    var receivedMedias = receiver.relation("receivedMedias");
+    receivedMedias.add(media);
+    //TODO: ACL
+    return receiver.save();
+  }).then(function () {
+    response.success(receiver);
+  }, function (error) {
+    response.error(error.message);
+  })
+});
+
 Parse.Cloud.define("updateRelation", function(request, response) {
   Parse.Cloud.useMasterKey();
   var target = request.params.target;

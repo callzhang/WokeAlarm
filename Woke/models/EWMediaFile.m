@@ -89,9 +89,11 @@
 - (BOOL)validate{
     BOOL good = YES;
     if (!self.audio) {
+        DDLogError(@"EWMediaFile %@ missing audio!", self.serverID);
         good = NO;
     }
     if (!self.medias.count == 0){
+        DDLogError(@"EWMediaFile %@ missing media", self.serverID);
         good = NO;
     }
     return good;

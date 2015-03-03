@@ -105,7 +105,7 @@ NSString *const EWActivityTypeMedia = @"media";
 		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:played]];
         DDLogInfo(@"Removed %ld medias from my unread medias", (unsigned long)played.count);
     }
-    
+    activity.statement = [EWPerson meInContext:activity.managedObjectContext].statement;
     activity.completed = [NSDate date];
     self.currentAlarmActivity = nil;
 	[EWPerson me].updatedAt = [NSDate date];

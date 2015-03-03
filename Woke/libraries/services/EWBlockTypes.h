@@ -3,6 +3,7 @@
 //  Created by Zitao Xiong on 14/09/2014.
 //
 
+#import "EWServerObject.h"
 
 typedef void (^DictionaryBlock)(NSDictionary *dictionary);
 typedef void (^BoolBlock)(BOOL success);
@@ -13,3 +14,4 @@ typedef void (^VoidBlock)(void);
 typedef void (^ArrayBlock)(NSArray *array, NSError *error);
 typedef void (^FloatBlock)(float percent);
 typedef void (^SenderBlock)(id sender);
+typedef void (^ManagedObjectErrorBlock)(EWServerObject *MO, NSError *error);

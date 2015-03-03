@@ -223,7 +223,7 @@
                     
                     //add relatedMO to insertQueue
                     if (![[EWSync sharedInstance] contains:relatedMO inQueue:kParseQueueWorking]) {
-                        DDLogWarn(@"Added missing insert object: %@", relatedMO);
+                        DDLogDebug(@"Added missing insert object: %@", relatedMO);
                         [[EWSync sharedInstance] appendInsertQueue:relatedMO];
                     }
                 }

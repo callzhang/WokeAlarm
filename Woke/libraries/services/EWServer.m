@@ -123,31 +123,27 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 
 #pragma mark - Send Voice tone
 + (void)pushVoice:(EWMedia *)media toUser:(EWPerson *)person withCompletion:(BoolErrorBlock)block{
-    
+    EWAssertMainThread
     //TODO: use a server call
     [media updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
         //update Person->medias relation
-        [self updateRelation:@"medias" for:person.parseObject withObject:MO_on_main_thread.parseObject withOperation:@"add" completion:^(NSError *error) {
+        if (!MO_on_main_thread) {
+            DDLogError(@"Failed to upload MO %@(%@)", media.entity.name, media.serverID);
+            if (block) {
+                block(NO, error);
+            }
+            return;
+        }
+        //[self updateRelation:@"receivedMedias" for:person.parseObject withObject:MO_on_main_thread.parseObject withOperation:@"add" completion:^(NSError *error) {
+        [self updateReceiver:person.serverID forMedia:media.serverID withCompletion:^(EWServerObject *MO, NSError *error) {
             if (error) {
                 DDLogError(@"Failed to update relation for new media: %@", media);
+            }else{
+                DDLogVerbose(@"Successfully updated receiver(%@)->media(%@) on server", person.serverID, media.serverID);
             }
-            [media refresh];
+            [media refreshInBackgroundWithCompletion:nil];
         }];
         
-        //set ACL
-        PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
-        if ([[EWPerson me].objectId isEqualToString:WokeUserID]) {
-            //if WOKE, set public
-            [acl setPublicReadAccess:YES];
-            [acl setPublicWriteAccess:YES];
-        }else{
-            [acl setReadAccess:YES forUserId:person.serverID];
-            [acl setWriteAccess:YES forUserId:person.serverID];
-        }
-        
-        PFObject *object = MO_on_main_thread.parseObject;
-        [object setACL:acl];
-        [object saveInBackground];
         
         NSDictionary *pushMessage = @{@"badge": @"Increment",
                                       @"alert": @"Someone has sent you an voice greeting",
@@ -173,7 +169,21 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
     }];
 }
 
-
++ (void)updateReceiver:(NSString *)receiverID forMedia:(NSString *)mediaID withCompletion:(ManagedObjectErrorBlock)block{
+    [PFCloud callFunctionInBackground:@"sendMedia" withParameters:@{@"receiverID":receiverID, @"mediaID":mediaID} block:^(PFUser *receiverPO, NSError *error) {
+        if (receiverPO) {
+            [[EWSync sharedInstance] setCachedParseObject:receiverPO];
+            NSArray *unreadMediaIDs = [receiverPO[EWPersonRelationships.unreadMedias] valueForKey:kParseObjectID];
+            NSAssert([unreadMediaIDs containsObject:mediaID], @"Failed updating receiver->unreadMedias relation in returned PO!");
+        }else{
+            DDLogError(@"Failed updating receiver->unreadMedias relation: %@", error.localizedDescription);
+        }
+        if (block) {
+            EWServerObject *receiver = [receiverPO managedObjectInContext:mainContext];
+            block(receiver, error);
+        }
+    }];
+}
 
 + (void)broadcastMessage:msg onSuccess:(VoidBlock)block onFailure:(VoidBlock)failureBlock{
     
@@ -410,7 +420,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 #pragma mark - Util
 + (void)updateRelation:(NSString *)relation for:(PFObject *)target withObject:(PFObject *)related withOperation:(NSString *)operation completion:(ErrorBlock)block{
     NSDictionary *dic = @{@"target": target, @"related": related, @"relation": relation, @"operation": operation};
-    
+    DDLogDebug(@"Calling cloud function updateRelation with parameter: %@", dic);
     [PFCloud callFunctionInBackground:@"updateRelation" withParameters:dic block:^(id object, NSError *error) {
         if (!object) {
             DDLogError(@"Failed to update relation: %@ with error:%@", dic, error.description);

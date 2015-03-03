@@ -82,7 +82,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	self = [super init];
     self.delegate = [EWActivityManager sharedManager];
     
-    [self reloadMedias];
+    //[self reloadMedias];
     
     self.continuePlay = YES;
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingStartNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -352,6 +352,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 
 #pragma mark - Play for wake up view
 - (void)startToPlayVoice{
+    [self loadUnreadMedias];
     [EWAVManager sharedManager].player.volume = 0;
     [[EWAVManager sharedManager] volumeTo:1 withCompletion:^{
         [self playNextVoice];
@@ -438,7 +439,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self playMediaAtIndex:index];
 }
 
-- (void)reloadMedias{
+- (void)loadUnreadMedias{
 	BOOL forceLoad = NO;
 #ifdef DEBUG
 	forceLoad = YES;

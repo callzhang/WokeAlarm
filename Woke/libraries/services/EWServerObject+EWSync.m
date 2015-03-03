@@ -12,6 +12,7 @@
 #import <objc/runtime.h>
 #import "EWUtil.h"
 #import "NSDictionary+KeyPathAccess.h"
+#import "NSTimer+BlocksKit.h"
 
 @implementation EWServerObject(EWSync)
 #pragma mark - Server sync
@@ -577,11 +578,13 @@
 	}
 	
 	
-	//save and add persistant ID
+	//save and persistant ID
 	[self save];
 	
 	//add to completion block
-	[[EWSync sharedInstance].uploadCompletionCallbacks setObject:block forKey:self.objectID.URIRepresentation.absoluteString];
+    NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[self.objectID] ?: [NSMutableArray array];
+    [moUploadCallbacks addObject:block];
+	[[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:self.objectID];
 	
 	//trigger save immediately
 	if ([NSThread isMainThread]) {

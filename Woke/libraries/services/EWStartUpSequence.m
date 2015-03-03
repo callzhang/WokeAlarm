@@ -117,6 +117,7 @@
     _dataChecked = YES;
     DDLogInfo(@"=======> start login data check work <========");
     
+    
     //check alarm, task, and local notif
     DDLogVerbose(@"3. Check alarm");
     [[EWAlarmManager sharedInstance] scheduleAlarm];
@@ -132,7 +133,10 @@
 
     DDLogVerbose(@"7. Refresh my media");
     [[EWMediaManager sharedInstance] checkMediasForPerson:[EWPerson me]];
-	
+    
+    //resume upload
+    DDLogVerbose(@"8. Check alarm");
+    [[EWSync sharedInstance] resumeUploadToServer];
     
     //update data with timely updates
 	//first time

@@ -60,7 +60,7 @@ extern NSString * const kEWSyncUploaded;
 
 @interface EWSync : NSObject
 /**
- *  Dictionary of {MO_ObjectID_String, EWManagedObjectSaveBlock}
+ *  Dictionary of {MO_ObjectID, ARRAY of EWManagedObjectSaveBlock(s)}
  *  EWManagedObjectSaveCallbackBlock takes two parameters: MO_main_thread and NSError
  */
 @property (strong) NSMutableDictionary *uploadCompletionCallbacks;
