@@ -17,7 +17,6 @@ target 'Woke' do
   pod 'JGProgressHUD', '~> 1.2'
   pod 'IDMPhotoBrowser', '~> 1.4'
   pod 'apptentive-ios', '~> 1.7'
-  pod 'IDMPhotoBrowser', '~> 1.4'
   pod 'libextobjc', '~> 0.4.1'
   pod 'KVOController', '~> 1.0.3'
   pod 'ReactiveCocoa', '~> 2.4'

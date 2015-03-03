@@ -12,6 +12,8 @@
 #import "EWWakeUpViewCell.h"
 #import "EWAVManager.h"
 #import "EWWakeUpManager.h"
+#import "EWPerson+Woke.h"
+#import "EWActivity.h"
 
 @interface EWReceivedVoiceChildViewController ()<UITableViewDelegate, UITableViewDataSource>
 //@property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -50,20 +52,26 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.items[section][@"items"] count];
+//    return [self.items[section][@"items"] count];
+    EWActivity *activity = self.items[section];
+    return activity.medias.count;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCellSectionHeader];
-    NSDictionary *sectionItem = self.items[section];
+    
+    EWActivity *activity = self.items[section];
     
     UILabel *leftLabel = (UILabel *)[cell.contentView viewWithTag:101];
     NSAssert([leftLabel isKindOfClass:[UILabel class]], @"left label is not a UILabel");
     UILabel *rightLabel = (UILabel *)[cell.contentView viewWithTag:102];
     NSAssert([rightLabel isKindOfClass:[UILabel class]], @"right label is not a UILabel");
     
-    leftLabel.text = sectionItem[@"date"];
-    rightLabel.text = @"TBD";
+    NSDate *time = activity.completed;
+    NSString *leftText = [time mt_stringFromDateWithFormat:@"MMM dd, yyyy" localized:YES];
+    NSString *rightText = [NSString stringWithFormat:@"Woke up at %@", [time mt_stringFromDateWithHourAndMinuteFormat:MTDateHourFormat24Hour]];
+    leftLabel.text = leftText;
+    rightLabel.text = rightText;
     
     return cell;
 }
@@ -111,12 +119,23 @@
         }
         
         _items = __items;
+        
+        NSArray *activities = [EWPerson myAlarmActivities];
+        NSMutableArray *noneEmptyActivies = [NSMutableArray array];
+        for (EWActivity *activity in activities) {
+            if (activity.medias.count != 0) {
+                [noneEmptyActivies addObject:activity];
+            }
+        }
+        _items = noneEmptyActivies;
     }
     
     return _items;
 }
 
 - (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
+//    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
+    EWActivity *activity = self.items[indexPath.section];
+    return activity.medias[indexPath.row];
 }
 @end
