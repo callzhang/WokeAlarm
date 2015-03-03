@@ -2194,7 +2194,7 @@
                             </label>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B1U-kk-WzV" customClass="SCSiriWaveformView">
                                 <rect key="frame" x="0.0" y="337" width="320" height="90"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="z2d-jO-1KO"/>
                                 </constraints>
@@ -2769,13 +2769,6 @@
                                     <action selector="onStopButton:" destination="qpL-rI-Npc" eventType="touchUpInside" id="qG8-tr-FR9"/>
                                 </connections>
                             </button>
-                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sps-2J-W7b" customClass="SCSiriWaveformView">
-                                <rect key="frame" x="0.0" y="154" width="320" height="100"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="KVt-UM-q0d"/>
-                                </constraints>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M2E-QD-1fl" userLabel="retake">
                                 <rect key="frame" x="10" y="463" width="90" height="90"/>
                                 <state key="normal" image="woke-recorder-retake-button">
@@ -2794,27 +2787,33 @@
                                     <action selector="onSendButton:" destination="qpL-rI-Npc" eventType="touchUpInside" id="toC-6T-qPE"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FE5-v9-MnG" customClass="SCSiriWaveformView">
+                                <rect key="frame" x="0.0" y="111" width="320" height="100"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="av9-oh-jk2"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="sps-2J-W7b" secondAttribute="trailing" id="1kb-NP-Jhc"/>
-                            <constraint firstItem="sps-2J-W7b" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="1s4-Fa-CtF"/>
                             <constraint firstItem="77I-jZ-dCI" firstAttribute="centerY" secondItem="5fP-b1-uRj" secondAttribute="centerY" id="3Rp-Pd-9u6"/>
+                            <constraint firstItem="FE5-v9-MnG" firstAttribute="top" secondItem="dTa-yP-AOc" secondAttribute="bottom" constant="91" id="5lT-64-tQd"/>
                             <constraint firstItem="7Zi-83-Tke" firstAttribute="centerX" secondItem="m3m-Y4-FTa" secondAttribute="centerX" id="BKK-cM-Urk"/>
                             <constraint firstItem="7Zi-83-Tke" firstAttribute="centerY" secondItem="m3m-Y4-FTa" secondAttribute="centerY" id="BMt-SA-UAu"/>
                             <constraint firstAttribute="centerX" secondItem="77I-jZ-dCI" secondAttribute="centerX" id="FHq-Tg-ZzP"/>
                             <constraint firstItem="5fP-b1-uRj" firstAttribute="leading" secondItem="77I-jZ-dCI" secondAttribute="trailing" constant="15" id="GPE-bl-Tn2"/>
-                            <constraint firstAttribute="centerX" secondItem="sps-2J-W7b" secondAttribute="centerX" id="Hdl-5T-Zos"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="bnE-dN-Jfk" secondAttribute="centerX" id="Mxo-LE-LCz"/>
                             <constraint firstItem="2vU-KR-SZ0" firstAttribute="top" secondItem="77I-jZ-dCI" secondAttribute="bottom" constant="15" id="Ro7-Ii-1eb"/>
                             <constraint firstItem="M2E-QD-1fl" firstAttribute="centerY" secondItem="77I-jZ-dCI" secondAttribute="centerY" id="S4f-3U-3ps"/>
                             <constraint firstItem="77I-jZ-dCI" firstAttribute="centerX" secondItem="7Zi-83-Tke" secondAttribute="centerX" id="UZ9-3H-mXz"/>
                             <constraint firstItem="77I-jZ-dCI" firstAttribute="leading" secondItem="M2E-QD-1fl" secondAttribute="trailing" constant="15" id="YN7-Px-mMH"/>
+                            <constraint firstAttribute="trailing" secondItem="FE5-v9-MnG" secondAttribute="trailing" id="cDe-f9-7Yf"/>
+                            <constraint firstItem="FE5-v9-MnG" firstAttribute="leading" secondItem="niG-8q-xiY" secondAttribute="leading" id="caq-kE-9aV"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="niG-8q-xiY" secondAttribute="centerY" constant="50" id="cdi-Zk-Idj"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerX" secondItem="niG-8q-xiY" secondAttribute="centerX" id="gFY-zP-sU1"/>
                             <constraint firstItem="4YG-wt-UWi" firstAttribute="centerY" secondItem="bnE-dN-Jfk" secondAttribute="centerY" id="hUj-oE-UmV"/>
                             <constraint firstItem="77I-jZ-dCI" firstAttribute="centerY" secondItem="7Zi-83-Tke" secondAttribute="centerY" id="qcV-EY-7Bi"/>
-                            <constraint firstAttribute="centerY" secondItem="sps-2J-W7b" secondAttribute="centerY" constant="80" id="vAI-ow-n6v"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -2825,7 +2824,7 @@
                         <outlet property="retakeButton" destination="M2E-QD-1fl" id="8di-TW-9BJ"/>
                         <outlet property="sendButton" destination="5fP-b1-uRj" id="HeQ-nd-gaN"/>
                         <outlet property="stopButton" destination="m3m-Y4-FTa" id="Gc5-nL-YKw"/>
-                        <outlet property="waveformView" destination="sps-2J-W7b" id="Ij5-zL-J1y"/>
+                        <outlet property="waveformView" destination="FE5-v9-MnG" id="bJ5-b1-eah"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Grv-bH-UnW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3432,8 +3431,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="d4z-tG-E1i"/>
-        <segue reference="CBy-Qp-dcT"/>
         <segue reference="v3V-jG-DGb"/>
+        <segue reference="CBy-Qp-dcT"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

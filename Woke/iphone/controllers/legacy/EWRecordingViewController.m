@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
 
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
+    [self.waveformView updateWithLevel:0.0f];
     
     self.state = EWRecordingViewStateInitial;
 }
