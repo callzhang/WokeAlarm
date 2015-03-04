@@ -48,6 +48,7 @@
     //Woke state -> assign media to next task, download
     if (![[EWPerson me].unreadMedias containsObject:media]) {
         [[EWPerson me] addUnreadMediasObject:media];
+		[[EWPerson me] addReceivedMediasObject:media];
         [[EWPerson me] save];
         [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
     }
@@ -149,14 +150,14 @@
 
 - (NSArray *)checkUnreadMedias{
     EWAssertMainThread
-    return [self checkUnreadMediasInContext:mainContext];
+    return [self checkNewMediasInContext:mainContext];
 }
 
 - (void)checkUnreadMediasWithCompletion:(ArrayBlock)block{
     EWAssertMainThread
     __block NSArray *mediaIDsIncontext;
     [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        mediaIDsIncontext = [[self checkUnreadMediasInContext:localContext] valueForKey:@"objectID"];
+        mediaIDsIncontext = [[self checkNewMediasInContext:localContext] valueForKey:@"objectID"];
     } completion:^(BOOL contextDidSave, NSError *error) {
         if (contextDidSave && block) {
             NSMutableArray *medias = [NSMutableArray new];
@@ -169,7 +170,7 @@
     }];
 }
 
-- (NSArray *)checkUnreadMediasInContext:(NSManagedObjectContext *)context{
+- (NSArray *)checkNewMediasInContext:(NSManagedObjectContext *)context{
     if (![PFUser currentUser]) {
         return nil;
     }
