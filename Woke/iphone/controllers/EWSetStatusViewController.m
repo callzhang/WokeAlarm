@@ -10,6 +10,7 @@
 #import "EWPerson.h"
 #import "JGProgressHUD.h"
 #import "UIViewController+Blur.h"
+#import "EWAlarm.h"
 
 @interface EWSetStatusViewController ()<UITextFieldDelegate, EWBaseViewNavigationBarButtonsDelegate>
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *buttonBottomLayoutConstraint;
@@ -21,8 +22,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.statusTextField.text = [EWPerson me].statement;
-	
+    
+    @weakify(self);
+    [RACObserve(self, alarm) subscribeNext:^(EWAlarm *alarm) {
+       @strongify(self);
+        self.statusTextField.text = alarm.statement;
+    }];
+    
     [self.baseNavigationController setNavigationBarTransparent:YES];
     [self.statusTextField becomeFirstResponder];
 }
@@ -30,8 +36,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    
-    self.statusTextField.text = self.person.statement;
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {

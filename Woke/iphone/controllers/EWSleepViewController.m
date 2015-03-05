@@ -106,9 +106,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     [super prepareForSegue:segue sender:sender];
     
-    if ([segue.identifier isEqualToString:@"toSetStatusController"]) {
-        EWSetStatusViewController *viewController = [[segue.destinationViewController viewControllers] firstObject];
-        viewController.person = [EWPerson me];
+    if ([segue.identifier isEqualToString:MainStoryboardIDs.segues.toStatusViewController]) {
+        EWSetStatusViewController *viewController = segue.destinationViewController;
+        viewController.alarm = self.sleepViewModel.alarm;
     }
     else if ([segue.destinationViewController isKindOfClass:[EWSleepingViewController class]]){
 		[[EWWakeUpManager sharedInstance] sleep:nil];

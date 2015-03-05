@@ -10,5 +10,5 @@
 #import "EWBaseViewController.h"
 
 @interface EWSetStatusViewController : EWBaseViewController
-@property (nonatomic, strong) EWPerson *person;
+@property (nonatomic, strong) EWAlarm *alarm;
 @end

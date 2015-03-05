@@ -42,7 +42,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWWakeUpViewCell *cell = (EWWakeUpViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCell];
     
-//    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
+    //    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
     EWActivity *activity = self.items[indexPath.section];
     cell.media = activity.medias[indexPath.row];
     
@@ -54,7 +54,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    return [self.items[section][@"items"] count];
+    //    return [self.items[section][@"items"] count];
     EWActivity *activity = self.items[section];
     return activity.medias.count;
 }
@@ -136,7 +136,7 @@
 }
 
 - (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
-//    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
+    //    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
     EWActivity *activity = self.items[indexPath.section];
     return activity.medias[indexPath.row];
 }

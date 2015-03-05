@@ -425,7 +425,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="5cY-YF-Z9o" kind="custom" customClass="EWBlurPresentSegue" id="Y04-BM-UKj"/>
+                                            <segue destination="5cY-YF-Z9o" kind="custom" identifier="toStatusViewController" customClass="EWBlurPresentSegue" id="Y04-BM-UKj"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Say something to the person who will wake you up?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1LV-hZ-wFF">
@@ -1547,6 +1547,14 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yCx-5f-5Hw" id="UKk-m7-0Dx">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <visualEffectView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OBv-bJ-haD">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="YdG-ri-L1V">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </view>
+                                            <blurEffect style="dark"/>
+                                        </visualEffectView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hw2-nj-Ubk" userLabel="left">
                                             <rect key="frame" x="13" y="5" width="37" height="20"/>
                                             <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="16"/>
@@ -1560,13 +1568,17 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="0.050000000000000003" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="hw2-nj-Ubk" secondAttribute="centerY" constant="0.5" id="2qA-96-gLL"/>
+                                        <constraint firstAttribute="trailing" secondItem="OBv-bJ-haD" secondAttribute="trailing" id="5rL-pr-Atq"/>
                                         <constraint firstItem="hw2-nj-Ubk" firstAttribute="leading" secondItem="UKk-m7-0Dx" secondAttribute="leading" constant="13" id="Bnd-fe-e0n"/>
+                                        <constraint firstItem="OBv-bJ-haD" firstAttribute="top" secondItem="UKk-m7-0Dx" secondAttribute="top" id="I7L-LS-TuU"/>
+                                        <constraint firstAttribute="bottom" secondItem="OBv-bJ-haD" secondAttribute="bottom" id="XI3-Ck-h9Y"/>
                                         <constraint firstItem="7MK-la-12C" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="hw2-nj-Ubk" secondAttribute="trailing" constant="5" id="Z8Z-Ay-7Sx"/>
                                         <constraint firstAttribute="centerY" secondItem="7MK-la-12C" secondAttribute="centerY" id="a4C-Z6-GZO"/>
                                         <constraint firstAttribute="trailing" secondItem="7MK-la-12C" secondAttribute="trailing" constant="15" id="iVl-Zo-8ye"/>
+                                        <constraint firstItem="OBv-bJ-haD" firstAttribute="leading" secondItem="UKk-m7-0Dx" secondAttribute="leading" id="pfh-W4-AaX"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

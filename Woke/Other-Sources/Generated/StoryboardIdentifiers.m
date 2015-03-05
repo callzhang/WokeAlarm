@@ -25,6 +25,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .menuToSettings = @"menuToSettings",
         .unwindFromStatusViewController = @"unwindFromStatusViewController",
         .facebookChildViewController = @"facebookChildViewController",
+        .toStatusViewController = @"toStatusViewController",
         .peopleArrayChildViewController = @"peopleArrayChildViewController",
         .timeChildViewController = @"timeChildViewController",
         .menuToNotification = @"menuToNotification",
