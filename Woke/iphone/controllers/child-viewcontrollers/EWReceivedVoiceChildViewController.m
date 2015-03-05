@@ -42,7 +42,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWWakeUpViewCell *cell = (EWWakeUpViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCell];
     
-    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
+//    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
+    EWActivity *activity = self.items[indexPath.section];
+    cell.media = activity.medias[indexPath.row];
     
     return cell;
 }
