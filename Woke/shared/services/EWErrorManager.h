@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#define kWokeDomain     @"WokeAlarm"
 #define kEWNoInternetReachabilityErrorCode      101
 #define kEWInvalidObjectErrorCode               102
 

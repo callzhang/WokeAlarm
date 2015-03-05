@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, EWWakeUpStatus) {
 
 @property (nonatomic, assign) BOOL isSchedulingAlarm;
 @property (nonatomic, assign) BOOL isSyncingUser;
+@property (nonatomic, assign) BOOL isRecording;
 @property (nonatomic, strong) EWPerson *currentUser;
 @property (nonatomic, assign) EWWakeUpStatus wakeupStatus;
 

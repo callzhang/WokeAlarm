@@ -19,6 +19,10 @@
 #import "UIViewController+Blur.h"
 #import "UIView+Extend.h"
 #import "EWUIUtil.h"
+#import "UIAlertView+BlocksKit.h"
+#import "NSArray+BlocksKit.h"
+#import "EWActivity.h"
+#import "NSDictionary+KeyPathAccess.h"
 
 #define kNextTaskHasMediaAlert      1011
 #define kFriendRequestAlert         1012
@@ -64,12 +68,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     [EWNotificationManager sharedInstance].notification = notification;
     
     if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
-        
-        [[[UIAlertView alloc] initWithTitle:@"New Voice"
-                                    message:@"You've got a new voice for your next morning!"
-                                   delegate:[EWNotificationManager sharedInstance]
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles: nil] show];
+		
+		[UIAlertView bk_showAlertViewWithTitle:@"New Voice" message:@"You've got a new voice for your next morning!" cancelButtonTitle:@"OK" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+			//do nothing
+			DDLogVerbose(@"New voice alert view clicked");
+		}];
         
     } else if ([notification.type isEqualToString:kNotificationTypeFriendRequest]) {
         
@@ -140,10 +143,52 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     }
 }
 
+#pragma mark - New
+- (EWNotification *)newMediaNotification:(EWMedia *)media{
+	//make only unique media notification per day
+	EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
+		if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
+			//new media go with the activity
+			NSString *activityID = [EWPerson myCurrentAlarmActivity].serverID;
+			if ([notif.userInfo[@"activity"] isEqualToString:activityID]) {
+				return YES;
+			}
+		}
+		return NO;
+	}];
+	
+	if (notification) {
+		notification.userInfo = [notification.userInfo addValue:media.objectId toImmutableKeyPath:@[@"medias"]];
+		[notification save];
+		return notification;
+	}
+	
+	EWNotification *note = [EWNotification newNotification];
+	note.type = kNotificationTypeNewMedia;
+	note.sender = media.author.objectId;
+	note.receiver = [EWPerson me].objectId;
+	EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+	if (!activity.objectId) {
+		[activity updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+			if (error) {
+				DDLogError(@"Failed to save notification (%@) with error %@", note.serverID, error);
+			}else {
+				note.userInfo = @{@"medias": @[media.serverID], @"activity": MO_on_main_thread.serverID};
+				[note save];
+			}
+		}];
+	}else{
+		note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
+		[note save];
+	}
+	return note;
+}
+
+
 #pragma mark - Search
 - (NSArray *)notificationsForPerson:(EWPerson *)person{
     NSArray *notifications = person.notifications.allObjects;
-    
+	
     NSSortDescriptor *sortCompelete = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.completed ascending:YES];
     NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:NO];
     NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];

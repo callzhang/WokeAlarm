@@ -157,6 +157,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 //worker
 - (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
+	NoneErrorCreate(error);
 	//check
 	if (self.isFetchingWakees) {
 		DDLogWarn(@"Already fetching wakees");

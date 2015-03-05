@@ -43,43 +43,6 @@
 }
 
 
-+ (EWNotification *)newMediaNotification:(EWMedia *)media{
-	//make only unique media notification per day
-    EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
-        if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
-            if (notif.userInfo[@"activity"] == [EWPerson myCurrentAlarmActivity].objectId) {
-                return YES;
-            }
-        }
-        return NO;
-    }];
-    
-    if (notification) {
-        notification.userInfo = [notification.userInfo addValue:media.objectId toImmutableKeyPath:@[@"medias"]];
-        [notification save];
-        return notification;
-    }
-
-    EWNotification *note = [self newNotification];
-    note.type = kNotificationTypeNewMedia;
-    note.sender = media.author.objectId;
-    note.receiver = [EWPerson me].objectId;
-    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    if (!activity.objectId) {
-        [activity updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
-            if (error) {
-                DDLogError(@"Failed to save notification (%@) with error %@", note.serverID, error);
-            }else {
-                note.userInfo = @{@"medias": @[media.serverID], @"activity": MO_on_main_thread.serverID};
-                [note save];
-            }
-        }];
-    }else{
-        note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
-        [note save];
-    }
-    return note;
-}
 
 - (BOOL)validate{
     BOOL good = YES;

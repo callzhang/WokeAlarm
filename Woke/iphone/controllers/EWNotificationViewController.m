@@ -19,7 +19,7 @@
 #define kNotificationCellIdentifier     @"NotificationCellIdentifier"
 
 @interface EWNotificationViewController (){
-    NSArray *notifications;
+    NSMutableArray *notifications;
     UIActivityIndicatorView *loading;
 }
 
@@ -88,7 +88,7 @@
 }
 
 - (void)reload{
-    notifications = [EWPerson myNotifications];
+    notifications = [EWPerson myNotifications].mutableCopy;
     [self.tableView reloadData];
 }
 
@@ -147,8 +147,9 @@
         EWNotification *notice = notifications[indexPath.row];
         //remove from view with animation
         [notice remove];
+		[notifications removeObject:notice];
 		[mainContext MR_saveToPersistentStoreAndWait];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
 

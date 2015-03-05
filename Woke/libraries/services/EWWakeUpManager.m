@@ -16,7 +16,6 @@
 
 #import "EWServer.h"
 #import "ATConnect.h"
-#import "EWBackgroundingManager.h"
 #import "EWAlarm.h"
 #import "EWActivity.h"
 #import "EWActivityManager.h"
@@ -26,6 +25,7 @@
 #import "FBTweak.h"
 #import "FBTweakInline.h"
 #import "EWUIUtil.h"
+#import "EWBackgroundingManager.h"
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
     DDLogInfo(@"Forced enable wake up");
@@ -82,7 +82,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	self = [super init];
     self.delegate = [EWActivityManager sharedManager];
     
-    [self reloadMedias];
+    //[self reloadMedias];
     
     self.continuePlay = YES;
 	[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundingStartNotice object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -91,7 +91,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	}];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithDelay) name:kAVManagerDidFinishPlaying object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadUnreadMedias) name:kNewMediaNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
         if ([note.object isKindOfClass:[EWMedia class]]) {
             EWMedia *m = (EWMedia *)note.object;
@@ -352,6 +352,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 
 #pragma mark - Play for wake up view
 - (void)startToPlayVoice{
+    [self loadUnreadMedias];
     [EWAVManager sharedManager].player.volume = 0;
     [[EWAVManager sharedManager] volumeTo:1 withCompletion:^{
         [self playNextVoice];
@@ -438,7 +439,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self playMediaAtIndex:index];
 }
 
-- (void)reloadMedias{
+- (void)loadUnreadMedias{
 	BOOL forceLoad = NO;
 #ifdef DEBUG
 	forceLoad = YES;

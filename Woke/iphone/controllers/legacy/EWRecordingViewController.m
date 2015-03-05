@@ -24,7 +24,6 @@
 #import "EWPersonManager.h"
 #import "EWAVManager.h"
 #import "EWAlarmManager.h"
-#import "EWBackgroundingManager.h"
 #import "EWServer.h"
 #import "UIViewController+Blur.h"
 
@@ -142,14 +141,14 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
+	[EWSession sharedSession].isRecording = YES;
     [[EWAVManager sharedManager] registerRecordingAudioSession];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+	[EWSession sharedSession].isRecording = NO;
     [displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    [[EWBackgroundingManager sharedInstance] registerBackgroudingAudioSession];
 }
 
 #pragma mark- Actions
@@ -197,7 +196,7 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
         }
         
         //save data to task
-        [self.view showLoopingWithTimeout:0];
+        [EWUIUtil showWatingHUB];
         
         [[ATConnect sharedConnection] engage:kRecordVoiceSuccess fromViewController:self];
         
@@ -217,17 +216,19 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
         media.author = [EWPerson me];
         
         [EWServer pushVoice:media toUser:receiver withCompletion:^(BOOL success, NSError *error) {
+			
             if (!success) {
                 DDLogError(@"Failed to push media: %@", error.localizedDescription);
                 [self.view showFailureNotification:@"Failed to send media"];
-            }
-            else{
-                [EWUIUtil dismissHUD];
-            }
+			}else{
+				[self dismissBlurViewControllerWithCompletionHandler:^{
+					[EWUIUtil showSuccessHUBWithString:@"Sent"];
+				}];
+				
+				//clean up
+				recordingFileUrl = nil;
+			}
         }];
-        
-        //clean up
-        recordingFileUrl = nil;
     }
 }
 

@@ -114,7 +114,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWWakeUpManager)
  *
  *  @return The waker
  */
-- (void)reloadMedias;
+- (void)loadUnreadMedias;
 - (void)stopPlayingVoice;
 
 @end

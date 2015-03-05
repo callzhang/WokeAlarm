@@ -361,7 +361,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
 }
 
 + (UIView *)topView{
-	return [self topViewController].view;
+	UIViewController *topVC = [self topViewController];
+	DDLogVerbose(@"Top view controleller is %@", NSStringFromClass([topVC class]));
+	return topVC.view;
 }
 
 + (UIViewController *)topViewController{
@@ -381,6 +383,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
     for (JGProgressHUD *hud in [EWUIUtil shared].HUDs) {
         [hud dismiss];
     }
+	[[EWUIUtil shared].HUDs removeAllObjects];
 }
 
 
