@@ -55,10 +55,6 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
     //add EWBlur Nav Delegate
 //    _blurDelegate = [EWBlurNavigationControllerDelegate new];
 //    self.delegate = _blurDelegate;
-    // listern for notification
-    [[NSNotificationCenter defaultCenter] addObserverForName:kNewMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        EWAlert(@"Main view detected new media");
-    }];
 }
 
 - (void)onMenuButton:(UIButton *)sender {

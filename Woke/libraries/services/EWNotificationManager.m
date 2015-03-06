@@ -64,7 +64,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         return;
     }
     
-//    NSDictionary *userInfo = notification.userInfo;
+    
     [EWNotificationManager sharedInstance].notification = notification;
     
     if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
@@ -146,11 +146,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 #pragma mark - New
 - (EWNotification *)newMediaNotification:(EWMedia *)media{
 	//make only unique media notification per day
+    if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWoke) {
+        DDLogInfo(@"Received media on status (%ld) but not to react to it.", [EWSession sharedSession].wakeupStatus);
+    }
 	EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
 		if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
 			//new media go with the activity
 			NSString *activityID = [EWPerson myCurrentAlarmActivity].serverID;
 			if ([notif.userInfo[@"activity"] isEqualToString:activityID]) {
+                DDLogVerbose(@"Found media notification for activity %@", activityID);
 				return YES;
 			}
 		}
@@ -158,6 +162,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 	}];
 	
 	if (notification) {
+        DDLogVerbose(@"Added media %@ to exisiting media notification %@", media.serverID, notification.serverID);
 		notification.userInfo = [notification.userInfo addValue:media.objectId toImmutableKeyPath:@[@"medias"]];
 		[notification save];
 		return notification;

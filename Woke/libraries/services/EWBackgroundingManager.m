@@ -64,12 +64,8 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
                 NSInteger optionValue = option.integerValue;
                 if (optionValue == AVAudioSessionInterruptionOptionShouldResume) {
                     if (wasBackgrounding) {
+                        DDLogVerbose(@"Woke is still alive after AV interruption");
 						[self startBackgrounding];
-#ifdef DEBUG
-						UILocalNotification *n = [UILocalNotification new];
-						n.alertBody = @"Woke is active";
-						[[UIApplication sharedApplication] scheduleLocalNotification:n];
-#endif
                     }
 				}else{
 					DDLogWarn(@"Unknown AudioSession option: %@", option);

@@ -7,10 +7,6 @@
 //
 
 #import "EWUIUtil.h"
-//#import "MYBlurIntroductionView.h"
-//#import "MYIntroductionPanel.h"
-#import "JGProgressHUD.h"
-#import "UIView+Layout.h"
 
 
 static const float originalSize = 80.0;
@@ -381,7 +377,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
 
 + (void)dismissHUD{
     for (JGProgressHUD *hud in [EWUIUtil shared].HUDs) {
-        [hud dismiss];
+        [hud dismissAfterDelay:0.01];
     }
 	[[EWUIUtil shared].HUDs removeAllObjects];
 }

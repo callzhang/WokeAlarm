@@ -21,5 +21,4 @@
  */
 + (EWNotification *)getNotificationByID:(NSString *)notificationID;
 + (EWNotification *)newNotification;
-+ (EWNotification *)newMediaNotification:(EWMedia *)media;
 @end

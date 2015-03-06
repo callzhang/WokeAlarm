@@ -53,6 +53,9 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
     }
     
+    //create notification
+    [[EWNotificationManager shared] newMediaNotification:media];
+    
     if ([type isEqualToString:kPushMediaTypeVoice]) {
         // ============== Media ================
         NSParameterAssert(mediaID);
@@ -83,7 +86,9 @@
                 EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
                 [[EWPerson meInContext:localContext] addUnreadMediasObject:newMedia];
             } completion:^(BOOL contextDidSave, NSError *error2) {
-				if (contextDidSave) {
+                if (contextDidSave) {
+                    EWMedia *m = [EWMedia getMediaByID:media.objectId inContext:mainContext];
+                    [[EWNotificationManager sharedInstance] newMediaNotification:m];
 					[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
 				}else {
 					DDLogError(@"Failed to save new media: %@", error2);
@@ -106,11 +111,14 @@
 				[[EWPerson meInContext:localContext] addUnreadMediasObject:newMedia];
 			} completion:^(BOOL contextDidSave, NSError *error2) {
 				//notification
-				if (contextDidSave) {
-					[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
-				}else {
-					DDLogError(@"Failed to save new media: %@", error2);
-				}
+                EWMedia *m = (EWMedia *)[media managedObjectInContext:mainContext];
+                [[EWNotificationManager sharedInstance] newMediaNotification:m];
+                if (block) {
+                    block(m, error2);
+                }
+                
+                //broadcast
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
 			}];
 		}else{
 			DDLogError(@"Failed random voice request: %@", error.description);
@@ -190,11 +198,11 @@
 		DDLogInfo(@"Received media(%@) from %@", media.objectId, media.author.name);
         //EWNotification
         if ([NSThread isMainThread]) {
-            [EWNotification newMediaNotification:media];
+            [[EWNotificationManager shared] newMediaNotification:media];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
                 EWMedia *m = (EWMedia *)[media MR_inContext:mainContext];
-                [EWNotification newMediaNotification:m];
+                [[EWNotificationManager shared] newMediaNotification:m];
             });
         }
     }

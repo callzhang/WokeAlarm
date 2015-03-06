@@ -102,7 +102,7 @@
     
     [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
         
-        notifications = array;
+        notifications = array.mutableCopy;
         [loading stopAnimating];
         [self reload];
     }];

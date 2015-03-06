@@ -169,6 +169,7 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 		if (![file validate]) {
 			DDLogError(@"Failed to download media file: %@", file);
 		}
+        [file saveToLocal];
 	}else if(!file.audio){
 		[file refresh];
 	}
