@@ -14,6 +14,7 @@
 #import "EWMedia.h"
 #import "EWAlarmManager.h"
 #import "EWWakeUpManager.h"
+#import "EWNotificationManager.h"
 
 NSString *const EWActivityTypeAlarm = @"alarm";
 NSString *const EWActivityTypeFriendship = @"friendship";
@@ -107,6 +108,7 @@ NSString *const EWActivityTypeMedia = @"media";
     }
     activity.statement = [EWPerson meInContext:activity.managedObjectContext].statement;
     activity.completed = [NSDate date];
+	[[EWNotificationManager shared] deleteNewMediaNotificationForActivity:activity];
     self.currentAlarmActivity = nil;
 	[EWPerson me].updatedAt = [NSDate date];
 	[activity save];

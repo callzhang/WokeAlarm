@@ -25,6 +25,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWNotificationManager)
 - (void)handleNotificatoinFromPush:(NSDictionary *)payload;
 
 - (EWNotification *)newMediaNotification:(EWMedia *)media;
+- (void)deleteNewMediaNotificationForActivity:(EWActivity *)activity;
 
 /**
  When new notification received, handle it
