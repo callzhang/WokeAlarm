@@ -198,7 +198,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:NO];
     NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];
     
-    notifications = [notifications sortedArrayUsingDescriptors:@[sortDate, sortImportance, sortCompelete]];
+    notifications = [notifications sortedArrayUsingDescriptors:@[sortImportance, sortDate, sortCompelete]];
     
     return notifications;
 }
