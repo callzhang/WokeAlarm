@@ -196,7 +196,7 @@
 #pragma mark - Search user with string
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block{
     phrase = [phrase stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if (!phrase || phrase.length == 0) {
+    if (!phrase || phrase.length < 3) {
         block(@[], nil);
         return;
     }

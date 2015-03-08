@@ -32,7 +32,8 @@ UIViewController *rootViewController;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    //disable DYCI
+    //[NSClassFromString(@"SFDynamicCodeInjection") performSelector:@selector(disable)];
     // Enable Crash Reporting
 	initLogging();
 	

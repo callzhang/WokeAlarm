@@ -54,16 +54,18 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
     for (EWAlarm *alarm in [EWPerson myAlarms].copy) {
         if (alarm.time.mt_weekdayOfWeek == [NSDate date].mt_weekdayOfWeek) {
             testingAlarm = alarm;
-            DDLogInfo(@"Changed alarm time from %@ to %@", alarm.time.date2detailDateString, [NSDate date].date2detailDateString);
         }
     }
-    testingAlarm.time = [[NSDate date] timeByAddingSeconds:30];
-    
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:testingAlarm];
+    NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:30];
+    testingAlarm.time = newTime;
+    activity.time = newTime;
+    DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
     [[EWWakeUpManager shared] scheduleAlarmTimer];
     
-    [testingAlarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+    //[testingAlarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
         [EWUIUtil showSuccessHUBWithString:@"Alarm will show in 30s"];
-    }];
+    //}];
 });
 
 

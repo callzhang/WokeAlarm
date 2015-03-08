@@ -183,10 +183,24 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 			}
 		}];
 	}else{
-		note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
+		note.userInfo = @{@"medias": @[media.serverID], @"activity": activity.serverID};
 		[note save];
 	}
 	return note;
+}
+
+- (void)deleteNewMediaNotificationForActivity:(EWActivity *)activity{
+    EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
+        if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
+            //new media go with the activity
+            if ([notif.userInfo[@"activity"] isEqualToString:activity.serverID]) {
+                return YES;
+            }
+        }
+        return NO;
+    }];
+    
+    [notification remove];
 }
 
 

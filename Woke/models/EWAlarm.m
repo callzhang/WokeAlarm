@@ -102,31 +102,29 @@
         //DDLogInfo(@"Set same state to alarm: %@", self);
         return;
     }
-    static NSTimer *timer;
-    [timer invalidate];
-    timer = [NSTimer bk_scheduledTimerWithTimeInterval:3 block:^(NSTimer *timer) {
-        [self willChangeValueForKey:EWAlarmAttributes.state];
-        [self setPrimitiveState:state];
-        [self didChangeValueForKey:EWAlarmAttributes.state];
-        
-        if (![self validate]) {
-            return;
-        }
-        //update saved time in user defaults
-        //[self setSavedAlarmTime];
-        //schedule local notification
-        if (state.boolValue == YES) {
-            //schedule local notif
-            [self scheduleLocalNotification];
-        } else {
-            //cancel local notif
-            [self cancelLocalNotification];
-        }
-        
-        [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
-        [self updateCachedAlarmTime];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChanged object:self];
-    } repeats:NO];
+
+    [self willChangeValueForKey:EWAlarmAttributes.state];
+    [self setPrimitiveState:state];
+    [self didChangeValueForKey:EWAlarmAttributes.state];
+    
+    if (![self validate]) {
+        return;
+    }
+    //update saved time in user defaults
+    //[self setSavedAlarmTime];
+    //schedule local notification
+    if (state.boolValue == YES) {
+        //schedule local notif
+        [self scheduleLocalNotification];
+    } else {
+        //cancel local notif
+        [self cancelLocalNotification];
+    }
+    
+    [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
+    [self updateCachedAlarmTime];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChanged object:self];
+
 }
 
 - (void)setTime:(NSDate *)time {
@@ -134,31 +132,27 @@
         //DDLogInfo(@"Set same time to alarm: %@", self);
         return;
     }
-    static NSTimer *timer;
-    [timer invalidate];
-    timer = [NSTimer bk_scheduledTimerWithTimeInterval:3 block:^(NSTimer *timer) {
-        EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
-        
-        [self willChangeValueForKey:EWAlarmAttributes.time];
-        [self setPrimitiveTime:time];
-        [self didChangeValueForKey:EWAlarmAttributes.time];
-        if (![self validate]) return;
-        
-        //update cached alarm time in currentUser
-        [self updateCachedAlarmTime];
-        
-        //schedule local notification
-        [self scheduleLocalNotification];
-        
-        //update activity's time
-        activity.time = time.nextOccurTime;
-        
-        // schedule on server
-        [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];
-        });
-    } repeats:NO];
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
+    
+    [self willChangeValueForKey:EWAlarmAttributes.time];
+    [self setPrimitiveTime:time];
+    [self didChangeValueForKey:EWAlarmAttributes.time];
+    if (![self validate]) return;
+    
+    //update cached alarm time in currentUser
+    [self updateCachedAlarmTime];
+    
+    //schedule local notification
+    [self scheduleLocalNotification];
+    
+    //update activity's time
+    activity.time = time.nextOccurTime;
+    
+    // schedule on server
+    [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];
+    });
     
 }
 
@@ -365,7 +359,7 @@
         if ([sleepTime timeIntervalSinceNow]>0) {
             sleepNotif.fireDate = sleepTime;
         }else{
-            DDLogError(@"Tring to schedule sleep timer in the past: %@", sleepTime.date2detailDateString);
+            DDLogDebug(@"Tring to schedule sleep timer in the past: %@", sleepTime.date2detailDateString);
             return;
         }
         

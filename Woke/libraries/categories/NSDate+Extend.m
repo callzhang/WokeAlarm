@@ -57,6 +57,13 @@
 	return [parseFormatter stringFromDate:self];
 }
 
+- (NSString *)string{
+    NSDateFormatter *parseFormatter = [[NSDateFormatter alloc] init];
+    parseFormatter.timeZone = [NSTimeZone defaultTimeZone];
+    parseFormatter.dateFormat = @"EEE, MMM dd, HH:mm";
+    return [parseFormatter stringFromDate:self];
+}
+
 - (NSString *)date2dayString{
 	NSDateFormatter *parseFormatter = [[NSDateFormatter alloc] init];
 	parseFormatter.timeZone = [NSTimeZone defaultTimeZone];
@@ -244,11 +251,11 @@
 	if (days >=2) {
 		timeStr = [NSString stringWithFormat:@"%ld days", (long)days];
     }else if (days >=1) {
-        timeStr = [NSString stringWithFormat:@"1 day %ld hours", (long)hours-24];
+        timeStr = [NSString stringWithFormat:@"1 day %ld hours", (long)hours];
 	}else if (hours > 10) {
 		timeStr = [NSString stringWithFormat:@"%ld hours", (long)(hours)];
 	}else if (hours >= 1){
-		timeStr = [NSString stringWithFormat:@"%.1f hours", hours + minutes/60];
+		timeStr = [NSString stringWithFormat:@"%.1f hours", hours];
 	}else if(minutes >= 1){
 		timeStr = [NSString stringWithFormat:@"%ld minutes",(long)minutes];
 	}else{

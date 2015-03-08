@@ -81,6 +81,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [[EWSync sharedInstance] setCachedParseObject:user];
     
     //set up crashlytics user info
+    [Crashlytics setUserName:user.username];
+    [Crashlytics setUserEmail:user.email];
+    [Crashlytics setUserIdentifier:user.objectId];
     
 }
 
