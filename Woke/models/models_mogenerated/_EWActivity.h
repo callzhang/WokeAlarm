@@ -5,9 +5,8 @@
 #import "EWServerObject.h"
 
 extern const struct EWActivityAttributes {
+	__unsafe_unretained NSString *alarmID;
 	__unsafe_unretained NSString *completed;
-	__unsafe_unretained NSString *friendID;
-	__unsafe_unretained NSString *friended;
 	__unsafe_unretained NSString *mediaIDs;
 	__unsafe_unretained NSString *sleepTime;
 	__unsafe_unretained NSString *statement;
@@ -20,7 +19,7 @@ extern const struct EWActivityRelationships {
 } EWActivityRelationships;
 
 extern const struct EWActivityFetchedProperties {
-	__unsafe_unretained NSString *medias;
+	__unsafe_unretained NSString *myMedias;
 } EWActivityFetchedProperties;
 
 @class EWPerson;
@@ -36,21 +35,13 @@ extern const struct EWActivityFetchedProperties {
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 @property (nonatomic, readonly, strong) EWActivityID* objectID;
 
+@property (nonatomic, strong) NSString* alarmID;
+
+//- (BOOL)validateAlarmID:(id*)value_ error:(NSError**)error_;
+
 @property (nonatomic, strong) NSDate* completed;
 
 //- (BOOL)validateCompleted:(id*)value_ error:(NSError**)error_;
-
-@property (nonatomic, strong) NSString* friendID;
-
-//- (BOOL)validateFriendID:(id*)value_ error:(NSError**)error_;
-
-@property (nonatomic, strong) NSNumber* friended;
-
-@property (atomic) BOOL friendedValue;
-- (BOOL)friendedValue;
-- (void)setFriendedValue:(BOOL)value_;
-
-//- (BOOL)validateFriended:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) id mediaIDs;
 
@@ -76,23 +67,17 @@ extern const struct EWActivityFetchedProperties {
 
 //- (BOOL)validateOwner:(id*)value_ error:(NSError**)error_;
 
-@property (nonatomic, readonly) NSArray *medias;
+@property (nonatomic, readonly) NSArray *myMedias;
 
 @end
 
 @interface _EWActivity (CoreDataGeneratedPrimitiveAccessors)
 
+- (NSString*)primitiveAlarmID;
+- (void)setPrimitiveAlarmID:(NSString*)value;
+
 - (NSDate*)primitiveCompleted;
 - (void)setPrimitiveCompleted:(NSDate*)value;
-
-- (NSString*)primitiveFriendID;
-- (void)setPrimitiveFriendID:(NSString*)value;
-
-- (NSNumber*)primitiveFriended;
-- (void)setPrimitiveFriended:(NSNumber*)value;
-
-- (BOOL)primitiveFriendedValue;
-- (void)setPrimitiveFriendedValue:(BOOL)value_;
 
 - (id)primitiveMediaIDs;
 - (void)setPrimitiveMediaIDs:(id)value;

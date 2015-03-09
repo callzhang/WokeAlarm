@@ -49,23 +49,7 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
-    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
-    EWAlarm *testingAlarm;
-    for (EWAlarm *alarm in [EWPerson myAlarms].copy) {
-        if (alarm.time.mt_weekdayOfWeek == [NSDate date].mt_weekdayOfWeek) {
-            testingAlarm = alarm;
-        }
-    }
-    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:testingAlarm];
-    NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:30];
-    testingAlarm.time = newTime;
-    activity.time = newTime;
-    DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
-    [[EWWakeUpManager shared] scheduleAlarmTimer];
-    
-    //[testingAlarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
-        [EWUIUtil showSuccessHUBWithString:@"Alarm will show in 30s"];
-    //}];
+    [[EWWakeUpManager shared] testWakeUpIn30s];
 });
 
 
@@ -75,6 +59,7 @@ NSString * const kEWWakeUpDidStopPlayMediaNotification = @"kEWWakeUpDidStopPlayM
 
 @interface EWWakeUpManager ()
 @property (nonatomic, strong) NSTimer *alarmTimer;
+@property (nonatomic, strong) EWActivity *tempActivity;
 @end
 @implementation EWWakeUpManager
 
@@ -461,5 +446,27 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         return nil;
     }
     return self.medias[_currentMediaIndex.unsignedIntegerValue];
+}
+
+#pragma mark - Test
+- (void)testWakeUpIn30s{
+    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
+    EWAlarm *testingAlarm;
+    for (EWAlarm *alarm in [EWPerson myAlarms]) {
+        if (alarm.time.mt_weekdayOfWeek == [NSDate date].mt_weekdayOfWeek) {
+            testingAlarm = alarm;
+        }
+    }
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:testingAlarm];
+    NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:30];
+    testingAlarm.time = newTime;
+    activity.time = newTime;
+    DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
+    [[EWWakeUpManager shared] scheduleAlarmTimer];
+    
+    //[testingAlarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+    [EWUIUtil showSuccessHUBWithString:@"Alarm will show in 30s"];
+    //}];
+    self.tempActivity = activity;
 }
 @end

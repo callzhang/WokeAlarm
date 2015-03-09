@@ -102,7 +102,9 @@
 
 - (void)testGetRandomVoiceWithCompletion:(void (^)(EWMedia *media, NSError *error))block{
 	//call server test function
-	[PFCloud callFunctionInBackground:@"testGetRandomVoice" withParameters:@{kUserID: [EWPerson me].objectId} block:^(PFObject *media, NSError *error) {
+    NSArray *wokeVoiceIDReceived = [[EWPerson me].receivedMedias valueForKeyPath:[NSString stringWithFormat:@"%@.%@", EWMediaRelationships.mediaFile, kParseObjectID]];
+    NSDictionary *params = @{kUserID: [EWPerson me].objectId, @"wokeVoiceReceived": wokeVoiceIDReceived?:@0};
+	[PFCloud callFunctionInBackground:@"testGetRandomVoice" withParameters:params block:^(PFObject *media, NSError *error) {
 		if (media) {
 			DDLogInfo(@"Got random voice request with media: %@", media);
 			//check media

@@ -146,12 +146,12 @@
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">POST</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="body" type="string">["{\\n  \\"userId\\": \\"XgkwLvvq5v\\"\\n}"]</attribute>
+        <attribute name="body" type="string">[{"data":{"json":"{\\"userId\\":\\"td3zwhA3sF\\",\\"wokeVoiceReceived\\":[\\"WX8A3tXuPh\\"]}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
         <attribute name="order" type="int64">1</attribute>
         <attribute name="name" type="string">getWokeVoice</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z113 z112 z114 z111"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z113 z111 z114 z112"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z111">
         <attribute name="value" type="string"></attribute>

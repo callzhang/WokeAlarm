@@ -381,7 +381,11 @@
                                     <constraint firstAttribute="width" id="KZX-Ff-Ywi"/>
                                 </constraints>
                             </view>
+<<<<<<< HEAD
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoZ-04-ZHl">
+=======
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wednesday, Spetember" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoZ-04-ZHl">
+>>>>>>> origin/master
                                 <rect key="frame" x="50" y="230" width="220" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="fiP-QR-zSH"/>
@@ -390,7 +394,11 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+<<<<<<< HEAD
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2K-SO-fYc">
+=======
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23 hours 29 minutes " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2K-SO-fYc">
+>>>>>>> origin/master
                                 <rect key="frame" x="50" y="250" width="220" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="fEE-oZ-XKW"/>

@@ -104,14 +104,15 @@
                 for (EWServerObject *MO in relatedMOs) {
                     //PFObject *PO = [EWDataStore getCachedParseObjectForID:MO.serverID];
                     //if (!PO) {
-                    PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:[MO valueForKey:kParseObjectID]];
+                    PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:MO.serverID];
                     //}
                     if (PO.objectId) {
                         [relatedPOs addObject:PO];
                     }else{
-                        NSLog(@"objectId not found");
+                        DDLogError(@"PO %@(%@) not found", MO.serverClassName, MO.serverID);
                     }
                 }
+                DDLogInfo(@"Relation %@->%@ changed to %ld items", managedObject.entity.class, key, relatedPOs.count);
                 [self setObject:[relatedPOs copy] forKey:key];
                 return;
             }
