@@ -2436,7 +2436,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lkQ-ao-vzC" userLabel="people-view">
                                                     <rect key="frame" x="0.0" y="0.0" width="270" height="70"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0DM-CU-Bvv">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0DM-CU-Bvv">
                                                             <rect key="frame" x="20" y="10" width="50" height="50"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="50" id="ZdM-vE-k9X"/>
