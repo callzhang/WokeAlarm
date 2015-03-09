@@ -94,7 +94,7 @@
 #define COCOAPODS_POD_AVAILABLE_Bolts
 #define COCOAPODS_VERSION_MAJOR_Bolts 1
 #define COCOAPODS_VERSION_MINOR_Bolts 1
-#define COCOAPODS_VERSION_PATCH_Bolts 3
+#define COCOAPODS_VERSION_PATCH_Bolts 4
 
 // CocoaLumberjack
 #define COCOAPODS_POD_AVAILABLE_CocoaLumberjack
@@ -232,7 +232,7 @@
 #define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
 #define COCOAPODS_VERSION_MAJOR_ParseFacebookUtils 1
 #define COCOAPODS_VERSION_MINOR_ParseFacebookUtils 6
-#define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 3
+#define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 4
 
 // ParseUI
 #define COCOAPODS_POD_AVAILABLE_ParseUI
