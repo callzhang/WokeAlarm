@@ -432,6 +432,7 @@
 		09B521031A25825A008FF7F6 /* EWWakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWWakeViewController.m; sourceTree = "<group>"; };
 		09C5B1E41A166162006EA46C /* UAProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAProgressView.h; sourceTree = "<group>"; };
 		09C5B1E51A166162006EA46C /* UAProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UAProgressView.m; sourceTree = "<group>"; };
+		09D5CCCC1AADE5B300846839 /* Woke.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Woke.entitlements; sourceTree = "<group>"; };
 		09D7370C1A328F4400E8C9ED /* SevenSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SevenSwitch.h; sourceTree = "<group>"; };
 		09D7370D1A328F4400E8C9ED /* SevenSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SevenSwitch.m; sourceTree = "<group>"; };
 		09D7370F1A32951000E8C9ED /* EWAlarmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWAlarmViewController.h; sourceTree = "<group>"; };
@@ -955,6 +956,7 @@
 		09A776E11A11D8D9004AF902 /* Woke */ = {
 			isa = PBXGroup;
 			children = (
+				09D5CCCC1AADE5B300846839 /* Woke.entitlements */,
 				09A7770E1A11E2BD004AF902 /* app */,
 				096AAA3E1A19593300B4CBFF /* iphone */,
 				096AAA901A195A3900B4CBFF /* libraries */,
@@ -1399,6 +1401,9 @@
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
+							};
+							com.apple.HealthKit = {
+								enabled = 0;
 							};
 						};
 					};
