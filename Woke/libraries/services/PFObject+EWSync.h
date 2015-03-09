@@ -12,7 +12,8 @@ typedef enum : NSUInteger {
 	EWSyncOptionUpdateRelation = 1,
 	EWSyncOptionUpdateAttributesOnly = 1<< 2,
 	EWSyncOptionUpdateNone = 1 << 3,
-	EWSyncOptionUpdateAsync = 1 << 4
+	EWSyncOptionUpdateAsync = 1 << 4,
+    EWSyncOptionAutomatic = 1 << 5
 } EWSyncOption;
 
 @class EWServerObject;

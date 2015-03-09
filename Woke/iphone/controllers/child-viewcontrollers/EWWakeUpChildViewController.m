@@ -77,11 +77,7 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 - (void)setActive:(BOOL)active {
     _active = active;
     if (active) {
-        [[EWWakeUpManager sharedInstance] playNextVoice];
         displayLink.paused = NO;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[EWWakeUpManager sharedInstance] playNextVoice];
-        });
     }
     else {
         [[EWWakeUpManager sharedInstance] stopPlayingVoice];

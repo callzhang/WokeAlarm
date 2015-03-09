@@ -11,6 +11,8 @@
 #import "EWAddFriendsTableViewCell.h"
 #import "EWSocialManager.h"
 #import "EWBaseViewController.h"
+#import "EWUIUtil.h"
+#import "NSTimer+BlocksKit.h"
 
 @interface EWAddFriendsSearchChildViewController ()<UISearchResultsUpdating, UISearchControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -58,16 +60,27 @@
 
 #pragma mark - <UISearchResultsUpdating>
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    [[EWSocialManager sharedInstance] searchUserWithPhrase:searchController.searchBar.text
-                                                completion:^(NSArray *array, NSError *error) {
-                                                    if (!error) {
-                                                        self.items = array;
-                                                    }
-                                                    else {
-                                                        DDLogError(@"search error: %@", error);
-                                                    }
-                                                    [self.tableView reloadData];
-                                                }];
+    if (searchController.searchBar.text.length == 0) {
+        return;
+    }
+    static NSTimer *timer;
+    [timer invalidate];
+    timer = [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+        [EWUIUtil showWatingHUB];
+        [[EWSocialManager sharedInstance] searchUserWithPhrase:searchController.searchBar.text
+                                                    completion:^(NSArray *array, NSError *error) {
+                                                        if (!error) {
+                                                            self.items = array;
+                                                            [EWUIUtil dismissHUD];
+                                                        }
+                                                        else {
+                                                            DDLogError(@"search error: %@", error);
+                                                            [EWUIUtil showFailureHUBWithString:@"Failed"];
+                                                        }
+                                                        [self.tableView reloadData];
+                                                    }];
+    } repeats:NO];
+    
 }
 @end
 

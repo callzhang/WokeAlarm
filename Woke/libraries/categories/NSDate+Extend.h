@@ -33,6 +33,10 @@
  */
 - (NSString *)date2detailDateString;
 /**
+ *  retuens Weekday and time
+ */
+- (NSString *)string;
+/**
  Returns Weekday and date
  */
 - (NSString *)date2dayString;

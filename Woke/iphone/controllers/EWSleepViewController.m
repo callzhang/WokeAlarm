@@ -19,6 +19,7 @@
 #import "NSTimer+BlocksKit.h"
 #import "FBKVOController.h"
 #import "EWStartUpSequence.h"
+#import "EWUtil.h"
 
 @interface EWSleepViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;

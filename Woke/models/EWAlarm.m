@@ -13,6 +13,7 @@
 #import "EWActivityManager.h"
 #import "EWActivity.h"
 #import "NSDate+Extend.h"
+#import "NSTimer+BlocksKit.h"
 
 @implementation EWAlarm
 
@@ -101,7 +102,7 @@
         //DDLogInfo(@"Set same state to alarm: %@", self);
         return;
     }
-    
+
     [self willChangeValueForKey:EWAlarmAttributes.state];
     [self setPrimitiveState:state];
     [self didChangeValueForKey:EWAlarmAttributes.state];
@@ -109,20 +110,21 @@
     if (![self validate]) {
         return;
     }
-	//update saved time in user defaults
-	//[self setSavedAlarmTime];
-	//schedule local notification
-	if (state.boolValue == YES) {
-		//schedule local notif
-		[self scheduleLocalNotification];
-	} else {
-		//cancel local notif
-		[self cancelLocalNotification];
-	}
-
+    //update saved time in user defaults
+    //[self setSavedAlarmTime];
+    //schedule local notification
+    if (state.boolValue == YES) {
+        //schedule local notif
+        [self scheduleLocalNotification];
+    } else {
+        //cancel local notif
+        [self cancelLocalNotification];
+    }
+    
     [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     [self updateCachedAlarmTime];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChanged object:self];
+
 }
 
 - (void)setTime:(NSDate *)time {
@@ -130,7 +132,6 @@
         //DDLogInfo(@"Set same time to alarm: %@", self);
         return;
     }
-    
     EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     
     [self willChangeValueForKey:EWAlarmAttributes.time];
@@ -152,6 +153,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];
     });
+    
 }
 
 - (void)setTone:(NSString *)tone {
@@ -357,7 +359,7 @@
         if ([sleepTime timeIntervalSinceNow]>0) {
             sleepNotif.fireDate = sleepTime;
         }else{
-            DDLogError(@"Tring to schedule sleep timer in the past: %@", sleepTime.date2detailDateString);
+            DDLogDebug(@"Tring to schedule sleep timer in the past: %@", sleepTime.date2detailDateString);
             return;
         }
         

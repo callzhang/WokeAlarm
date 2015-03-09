@@ -34,4 +34,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWUtil)
 - (NSString *)string;
 @end
 
+//logging
 void initLogging();
+
+//crashlytics
+void initCrashlytics();

@@ -14,6 +14,7 @@
 #import "EWErrorManager.h"
 #import "FBKVOController.h"
 #import "NSTimer+BlocksKit.h"
+#import "EWUtil.h"
 
 NSString * const kEWSyncUploaded = @"sync_uploaded";
 

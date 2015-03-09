@@ -136,3 +136,7 @@ void initLogging(){
     //crashlytics logger
     [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
 }
+
+void initCrashLytics(){
+    
+}

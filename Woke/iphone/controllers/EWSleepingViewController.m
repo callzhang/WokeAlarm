@@ -83,6 +83,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 		[self showWakeUpVC];else [self hideWakeUpVC];
 	[self.KVOController observe:[EWSession sharedSession] keyPath:@"wakeupStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
 		if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
+            [[EWWakeUpManager sharedInstance] playNextVoice];
 			[self showWakeUpVC];
 		}else{
 			[self hideWakeUpVC];

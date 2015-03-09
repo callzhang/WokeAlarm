@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "EWUtil.h"
+#import "UIView+Extend.h"
+#import "JGProgressHUD.h"
+
 // 基本界面常量宏
 #define kTabBarHeight           49
 

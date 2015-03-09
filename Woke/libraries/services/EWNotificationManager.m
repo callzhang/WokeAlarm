@@ -64,7 +64,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         return;
     }
     
-//    NSDictionary *userInfo = notification.userInfo;
+    
     [EWNotificationManager sharedInstance].notification = notification;
     
     if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
@@ -146,11 +146,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 #pragma mark - New
 - (EWNotification *)newMediaNotification:(EWMedia *)media{
 	//make only unique media notification per day
+    if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWoke) {
+        DDLogInfo(@"Received media on status (%ld) but not to react to it.", [EWSession sharedSession].wakeupStatus);
+    }
 	EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
 		if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
 			//new media go with the activity
 			NSString *activityID = [EWPerson myCurrentAlarmActivity].serverID;
 			if ([notif.userInfo[@"activity"] isEqualToString:activityID]) {
+                DDLogVerbose(@"Found media notification for activity %@", activityID);
 				return YES;
 			}
 		}
@@ -158,6 +162,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 	}];
 	
 	if (notification) {
+        DDLogVerbose(@"Added media %@ to exisiting media notification %@", media.serverID, notification.serverID);
 		notification.userInfo = [notification.userInfo addValue:media.objectId toImmutableKeyPath:@[@"medias"]];
 		[notification save];
 		return notification;
@@ -178,10 +183,24 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 			}
 		}];
 	}else{
-		note.userInfo = @{@"medias": @[media.objectId], @"activity": activity.objectId};
+		note.userInfo = @{@"medias": @[media.serverID], @"activity": activity.serverID};
 		[note save];
 	}
 	return note;
+}
+
+- (void)deleteNewMediaNotificationForActivity:(EWActivity *)activity{
+    EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
+        if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
+            //new media go with the activity
+            if ([notif.userInfo[@"activity"] isEqualToString:activity.serverID]) {
+                return YES;
+            }
+        }
+        return NO;
+    }];
+    
+    [notification remove];
 }
 
 
@@ -193,7 +212,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     NSSortDescriptor *sortDate = [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:NO];
     NSSortDescriptor *sortImportance = [NSSortDescriptor sortDescriptorWithKey:EWNotificationAttributes.importance ascending:NO];
     
-    notifications = [notifications sortedArrayUsingDescriptors:@[sortImportance, sortCompelete, sortDate]];
+    notifications = [notifications sortedArrayUsingDescriptors:@[sortImportance, sortDate, sortCompelete]];
     
     return notifications;
 }

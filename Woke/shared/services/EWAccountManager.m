@@ -19,6 +19,7 @@
 #import "NSTimer+BlocksKit.h"
 #import "EWStartUpSequence.h"
 #import "INTULocationManager.h"
+#import "Crashlytics.h"
 
 @import CoreLocation;
 
@@ -78,6 +79,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     EWPerson *person = [EWPerson findOrCreatePersonWithParseObject:user];
     [EWSession sharedSession].currentUser = person;
     [[EWSync sharedInstance] setCachedParseObject:user];
+    
+    //set up crashlytics user info
+    [Crashlytics setUserName:user.username];
+    [Crashlytics setUserEmail:user.email];
+    [Crashlytics setUserIdentifier:user.objectId];
+    
 }
 
 //login Core Data User with Server User (PFUser)

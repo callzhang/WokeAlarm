@@ -21,6 +21,7 @@
 - (void)awakeFromInsert{
     [super awakeFromInsert];
     self.importance = 0;
+    self.userInfo = [NSDictionary new];
 }
 
 + (EWNotification *)newNotification {

@@ -24,6 +24,7 @@
 #import "FBKVOController.h"
 #import "NSDictionary+KeyPathAccess.h"
 #import "NSTimer+BlocksKit.h"
+#import "EWUtil.h"
 
 @interface EWStartUpSequence ()
 @property (nonatomic, assign) BOOL dataChecked;
