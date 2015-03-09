@@ -10,14 +10,14 @@ before_all do
 
   # sh "./customShellScript.sh"
 
-  cocoapods
+  # cocoapods
 
-  # increment_build_number
+  increment_build_number
 
   ipa({
-    workspace: "MyApp.xcworkspace",
-    configuration: "Debug",
-    scheme: "MyApp",
+    workspace: "Woke.xcworkspace",
+    configuration: "Release",
+    scheme: "Woke",
   })
 
   # xctool
@@ -39,6 +39,11 @@ lane :deploy do
   sigh
   deliver :skip_deploy, :force
   # frameit
+end
+
+lane :only_deploy do
+  sigh
+  deliver :skip_deploy, :force
 end
 
 lane :inhouse do

@@ -18,7 +18,7 @@
 # More information about automatic screenshot upload: 
 # https://github.com/KrauseFx/deliver#upload-screenshots-to-itunes-connect
 screenshots_path "./screenshots"
-
+apple_id "926130460"
 
 # version '1.2' # you can pass this if you want to verify the version number with the ipa file
 # 
@@ -47,7 +47,7 @@ ipa do
     # If you only want to upload app metadata, remove the complete ipa block.
 
     # system("ipa build --verbose") # build your project using Shenzhen
-    "./WokeAlarm.ipa" # Tell 'Deliver' where it can find the finished ipa file
+    "../Woke.ipa" # Tell 'Deliver' where it can find the finished ipa file
 end
 
 # ipa "./latest.ipa" # this can be used instead of the `do` block, if you prefer manually building the ipa file
