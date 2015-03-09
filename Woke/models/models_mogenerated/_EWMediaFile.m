@@ -8,6 +8,7 @@ const struct EWMediaFileAttributes EWMediaFileAttributes = {
 	.image = @"image",
 	.owner = @"owner",
 	.thumbnail = @"thumbnail",
+	.title = @"title",
 	.video = @"video",
 };
 
@@ -51,6 +52,8 @@ const struct EWMediaFileRelationships EWMediaFileRelationships = {
 @dynamic owner;
 
 @dynamic thumbnail;
+
+@dynamic title;
 
 @dynamic video;
 

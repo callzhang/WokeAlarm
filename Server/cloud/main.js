@@ -387,6 +387,7 @@ Parse.Cloud.define("sendFriendshipAcceptanceToUser", function(request, response)
 Parse.Cloud.define("getWokeVoice", function(request, response) {
   Parse.Cloud.useMasterKey();
   var currentUserId = request.params.userId;
+  var wokeVoicesReceived = request.params.wokeVoicesReceived;
   var newMedia;
   var user;
   var voice;
@@ -394,7 +395,7 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
 
 
   var query = new Parse.Query(Parse.User);
-  query.get(currentUserId).then(function(obj){
+  query.get(currentUserId).then(function (obj){
     user = obj;
     console.log("Current user: " + user.get("name"));
     var query = new Parse.Query(Parse.User);
@@ -410,6 +411,10 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
     var voiceFile = Parse.Object.extend("EWMediaFile");
     var mediaFileQuery = new Parse.Query(voiceFile);
     mediaFileQuery.equalTo("owner", woke.id);
+    if (wokeVoicesReceived && wokeVoicesReceived != 0) {
+      console.log("woke voice received: " + wokeVoicesReceived);
+      mediaFileQuery.notContainedIn("objectId", wokeVoicesReceived);
+    };
     return mediaFileQuery.find();
   }, function (list, error) {
     console.log("failed to find Woke: " + error.message);
@@ -425,7 +430,8 @@ Parse.Cloud.define("getWokeVoice", function(request, response) {
     var media = new EWMedia;
     media.set("receiver", user);
     media.set("author", woke);
-    media.set("message", "Voice from Woke");
+    var title = voice.get("title") == undefined ? voice.get("title") : "Voice from Woke";
+    media.set("message", title);
     media.set("type", "voice");
     media.set("mediaFile", voice);
     return media.save();
