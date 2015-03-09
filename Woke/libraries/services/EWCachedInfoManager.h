@@ -23,6 +23,7 @@
 #define kAveWakeLength      @"ave_wake_length"
 #define kAveWakeTime        @"ave_wake_time"
 #define kSuccessRate        @"ave_success_rate"
+#define kAverageSleepLength @"ave_sleep_length"
 #define kWakeability        @"wakeability"
 
 //activity
@@ -50,6 +51,8 @@
 @property (nonatomic) NSString *successString;
 @property (nonatomic) NSNumber *wakability;
 @property (nonatomic) NSString *wakabilityStr;
+@property (nonatomic) NSNumber *averageSleepLength;
+@property (nonatomic) NSString *averageSleepLengthString;
 
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
 + (instancetype)managerForPerson:(EWPerson *)person;

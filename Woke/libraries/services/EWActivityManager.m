@@ -39,7 +39,7 @@ NSString *const EWActivityTypeMedia = @"media";
     return activities;
 }
 
-- (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person{
+- (EWActivity *)currentActivityForPerson:(EWPerson *)person{
     //EWAssertMainThread
     EWAlarm *alarm = [[EWAlarmManager sharedInstance] currentAlarmForPerson:person];
     
@@ -61,19 +61,25 @@ NSString *const EWActivityTypeMedia = @"media";
     if (!alarm || ![alarm validate]) {
         return nil;
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K = %@", EWActivityAttributes.type, EWActivityTypeAlarm, EWActivityAttributes.time, alarm.time.nextOccurTime, EWActivityRelationships.owner, alarm.owner];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner];
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
-    [activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.objectId ascending:YES],
-                                       [NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
+    [activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
     while (activities.count >1) {
         EWActivity *activity = activities.firstObject;
         DDLogError(@"Multiple current alarm activities found, please check: \n%@", activity.serverID);
         [activities removeObject:activity];
         [activity remove];
     }
-    if (activities.count == 0 && [alarm validate]) {
+    if (activities.count == 0) {
         EWActivity *activity = [self newActivityForAlarm:alarm];
         [activities addObject:activity];
+    }else{
+        EWActivity *activity = activities.firstObject;
+        if (![activity.time isEqualToDate:alarm.time.nextOccurTime]) {
+            DDLogError(@"Activity %@ time %@ doesn't not equal to alarm %@ time %@", activity.serverID, activity.time, alarm.serverID, alarm.time);
+            activity.time = alarm.time.nextOccurTime;
+            [activity save];
+        }
     }
     
     return activities.lastObject;
@@ -81,10 +87,12 @@ NSString *const EWActivityTypeMedia = @"media";
 
 - (EWActivity *)newActivityForAlarm:(EWAlarm *)alarm{
     //create new activity
+    DDLogDebug(@"Creating new activity for alarm: %@", alarm);
     EWActivity *activity = [EWActivity newActivity];
     activity.owner = alarm.owner;
     activity.type = EWActivityTypeAlarm;
     activity.time = alarm.time.nextOccurTime;
+    activity.alarmID = alarm.serverID;
     activity.createdAt = [NSDate date];
     [activity save];
     return activity;
@@ -96,12 +104,8 @@ NSString *const EWActivityTypeMedia = @"media";
         DDLogError(@"%s The activity passed in is not the current activity", __FUNCTION__);
     }else{
         //add unread medias to current media
-        for (EWMedia *media in [EWPerson myUnreadMedias]) {
-			//if (media.played) {
-				[activity addMediaID:media.objectId];
-			//}
-        }
-        NSArray *played = activity.medias;
+        NSArray *played = [EWPerson myUnreadMedias];
+        [activity addMediaIDs:[played valueForKey:kParseObjectID]];
         [EWPerson me].unreadMedias = nil;
 		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:played]];
         DDLogInfo(@"Removed %ld medias from my unread medias", (unsigned long)played.count);

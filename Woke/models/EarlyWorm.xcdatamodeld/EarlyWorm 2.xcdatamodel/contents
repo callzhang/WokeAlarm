@@ -9,9 +9,8 @@
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="achievements" inverseEntity="EWPerson" syncable="YES"/>
     </entity>
     <entity name="EWActivity" representedClassName="EWActivity" parentEntity="EWServerObject" syncable="YES">
+        <attribute name="alarmID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="completed" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="friended" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="friendID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mediaIDs" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="sleepTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="statement" optional="YES" attributeType="String" syncable="YES"/>
@@ -131,7 +130,7 @@
     </entity>
     <elements>
         <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="EWActivity" positionX="0" positionY="0" width="128" height="209"/>
+        <element name="EWActivity" positionX="0" positionY="0" width="128" height="194"/>
         <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
         <element name="EWFriendRequest" positionX="9" positionY="153" width="128" height="28"/>
         <element name="EWMedia" positionX="0" positionY="0" width="128" height="208"/>

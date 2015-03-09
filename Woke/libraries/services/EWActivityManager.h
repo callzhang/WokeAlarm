@@ -44,7 +44,7 @@ extern NSString *const EWActivityTypeMedia;
  *
  *  @return current activity
  */
-- (EWActivity *)currentAlarmActivityForPerson:(EWPerson *)person;
+- (EWActivity *)currentActivityForPerson:(EWPerson *)person;
 - (void)completeAlarmActivity:(EWActivity *)activity;
 
 @end

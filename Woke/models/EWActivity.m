@@ -2,12 +2,6 @@
 #import "EWSession.h"
 #import "EWMedia.h"
 
-const struct EWActivityTypes EWActivityTypes = {
-    .media = @"media",
-    .friendship = @"friendship",
-    .alarm = @"alarm"
-};
-
 @interface EWActivity ()
 
 // Private interface goes here.
@@ -47,31 +41,18 @@ const struct EWActivityTypes EWActivityTypes = {
     if (!self.type) {
         good = NO;
     }
-    else if ([self.type isEqualToString:EWActivityTypes.alarm]) {
-        if (!self.time) {
-            DDLogError(@"Activity %@ missing time", self.objectId);
-            good = NO;
-        }
+    if (!self.time) {
+        DDLogError(@"Activity %@ missing time", self.objectId);
+        good = NO;
     }
     
     return good;
 }
 
-- (void)addMediaID:(NSString *)serverID{
+- (void)addMediaIDs:(NSArray *)serverIDs{
     NSMutableSet *mediaArray = [NSMutableSet setWithArray:self.mediaIDs] ?: [NSMutableSet new];
-    [mediaArray addObject:serverID];
+    [mediaArray addObject:serverIDs];
     self.mediaIDs = mediaArray.allObjects;
-    [self save];
-}
-
-
-- (EWActivity *)createWithPerson:(EWPerson *)person friended:(BOOL)friended {
-    EWActivity *activity = [EWActivity newActivity];
-    activity.type = EWActivityTypes.friendship;
-    activity.friendedValue = friended;
-    activity.friendID = person.objectId;
-    
-    return activity;
 }
 
 -(EWServerObject *)ownerObject{

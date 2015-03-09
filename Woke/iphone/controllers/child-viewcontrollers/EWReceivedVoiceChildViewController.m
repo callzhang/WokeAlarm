@@ -43,8 +43,9 @@
     EWWakeUpViewCell *cell = (EWWakeUpViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCell];
     
     //    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
-    EWActivity *activity = self.items[indexPath.section];
-    cell.media = activity.medias[indexPath.row];
+//    EWActivity *activity = self.items[indexPath.section];
+//    cell.media = activity.medias[indexPath.row];
+    cell.media = [self objectInItemsAtIndexPath:indexPath];
     
     return cell;
 }
@@ -79,7 +80,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath][@"media"];
+    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath];
     if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
         [[EWAVManager sharedManager] stopAllPlaying];
         self.playingMedia = nil;
@@ -94,33 +95,33 @@
 #pragma mark -
 - (NSArray *)items {
     if (!_items) {
-        NSSet *medias = [[EWPerson me] receivedMedias];
-        NSMutableSet *datesSet = [NSMutableSet set];
-        NSSet *map = [medias bk_map:^id(EWMedia *obj) {
-            //TODO: use createdAt, but currently it is nil, use updatedAt temporary
-            NSString *date = [obj.updatedAt mt_stringFromDateWithFormat:@"MMM dd, yyyy" localized:YES] ? : @"";
-            [datesSet addObject:date];
-            return @{@"date": date, @"media": obj};
-        }];
-        
-        NSMutableArray *__items = [NSMutableArray array];
-        
-        for (NSString *date in datesSet) {
-            NSMutableArray *objectInSameDate = [NSMutableArray array];
-            
-            //iterate objects in map, added object has same <date> into <objectInSameDate>
-            for (NSDictionary *dict in map) {
-                NSString *inDate = dict[@"date"];
-                
-                if ([inDate isEqualToString:date]) {
-                    [objectInSameDate addObject:dict];
-                }
-            }
-            
-            [__items addObject:@{@"date": date, @"items": objectInSameDate}];
-        }
-        
-        _items = __items;
+//        NSSet *medias = [[EWPerson me] receivedMedias];
+//        NSMutableSet *datesSet = [NSMutableSet set];
+//        NSSet *map = [medias bk_map:^id(EWMedia *obj) {
+//            //TODO: use createdAt, but currently it is nil, use updatedAt temporary
+//            NSString *date = [obj.updatedAt mt_stringFromDateWithFormat:@"MMM dd, yyyy" localized:YES] ? : @"";
+//            [datesSet addObject:date];
+//            return @{@"date": date, @"media": obj};
+//        }];
+//        
+//        NSMutableArray *__items = [NSMutableArray array];
+//        
+//        for (NSString *date in datesSet) {
+//            NSMutableArray *objectInSameDate = [NSMutableArray array];
+//            
+//            //iterate objects in map, added object has same <date> into <objectInSameDate>
+//            for (NSDictionary *dict in map) {
+//                NSString *inDate = dict[@"date"];
+//                
+//                if ([inDate isEqualToString:date]) {
+//                    [objectInSameDate addObject:dict];
+//                }
+//            }
+//            
+//            [__items addObject:@{@"date": date, @"items": objectInSameDate}];
+//        }
+//        
+//        _items = __items;
         
         NSArray *activities = [EWPerson myAlarmActivities];
         NSMutableArray *noneEmptyActivies = [NSMutableArray array];
@@ -135,7 +136,7 @@
     return _items;
 }
 
-- (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
+- (EWMedia *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
     //    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
     EWActivity *activity = self.items[indexPath.section];
     return activity.medias[indexPath.row];

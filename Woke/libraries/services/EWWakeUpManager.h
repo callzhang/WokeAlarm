@@ -117,4 +117,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWWakeUpManager)
 - (void)loadUnreadMedias;
 - (void)stopPlayingVoice;
 
+#pragma mark - Test
+- (void)testWakeUpIn30s;
 @end

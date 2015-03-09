@@ -78,7 +78,7 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
 
 + (EWActivity *)myCurrentAlarmActivity{
     EWAssertMainThread
-    EWActivity *activity = [[EWActivityManager sharedManager] currentAlarmActivityForPerson:[EWPerson me]];
+    EWActivity *activity = [[EWActivityManager sharedManager] currentActivityForPerson:[EWPerson me]];
     return activity;
 }
 

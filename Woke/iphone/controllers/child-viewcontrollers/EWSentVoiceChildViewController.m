@@ -13,6 +13,7 @@
 #import "EWSentVoiceTableViewCell.h"
 #import "EWWakeUpManager.h"
 #import "EWAVManager.h"
+#import "EWActivity.h"
 
 @interface EWSentVoiceChildViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -35,7 +36,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWSentVoiceTableViewCell *cell = (EWSentVoiceTableViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWSentVoiceTableViewCell];
     
-    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
+    cell.media = [self objectInItemsAtIndexPath:indexPath];
     
     return cell;
 }
@@ -64,7 +65,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath][@"media"];
+    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath];
     if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
         [[EWAVManager sharedManager] stopAllPlaying];
         self.playingMedia = nil;
@@ -110,7 +111,9 @@
     return _items;
 }
 
-- (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
+- (EWMedia *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
+//    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
+    EWActivity *activity = self.items[indexPath.section];
+    return activity.medias[indexPath.row];
 }
 @end

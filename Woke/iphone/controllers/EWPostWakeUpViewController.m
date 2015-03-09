@@ -62,6 +62,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWWakeUpViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWWakeUpViewCell"];
     cell.media = [self medias][indexPath.row];
+    [cell.image applyHexagonSoftMask];
     return cell;
 }
 
