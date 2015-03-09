@@ -142,6 +142,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //cancel local alarm
     [alarm cancelLocalNotification];
     
+    //cancel alarm timer
+    [self.alarmTimer invalidate];
+    
+    
     if ([self.delegate respondsToSelector:@selector(wakeUpManagerDidWakeUp:)]) {
         [self.delegate wakeUpManagerDidWakeUp:self];
     }
@@ -278,7 +282,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     self.alarmTimer = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft block:^(NSTimer *timer) {
         DDLogInfo(@"Alarm timer up! start to wake up!");
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimerDidFireNotification object:nil];
+        
+        //start to wake up
         [[EWWakeUpManager sharedInstance] startToWakeUp];
+        
+        //schedule timer
+        //fire an alarm
+        DDLogVerbose(@"=============> Firing Alarm timer notification <===============");
+        UILocalNotification *note = [[UILocalNotification alloc] init];
+        note.alertBody = [NSString stringWithFormat:@"It's time to wake up (%@)", [activity.time date2String]];
+        note.alertAction = @"Wake up!";
+        //alarm.soundName = me.preference[@"DefaultTone"];
+        note.userInfo = @{kActivityLocalID: activity.objectID.URIRepresentation.absoluteString,
+                          kLocalNotificationTypeKey: kLocalNotificationTypeAlarmTimer};
+        [[UIApplication sharedApplication] scheduleLocalNotification:note];
     } repeats:NO];
 }
 
