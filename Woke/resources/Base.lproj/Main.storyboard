@@ -3423,9 +3423,9 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="d4z-tG-E1i"/>
-        <segue reference="v3V-jG-DGb"/>
         <segue reference="CBy-Qp-dcT"/>
+        <segue reference="v3V-jG-DGb"/>
+        <segue reference="7lF-Wp-60q"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

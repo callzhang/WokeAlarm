@@ -70,7 +70,7 @@
     EWPeopleArrayCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PeopleArrayChildViewIdentifier" forIndexPath:indexPath];
     if (self.people.count > kMaxCellNumer) {
         if (indexPath.row == kMaxCellNumer - 1) {
-            [cell setNumberLabelText:[NSString stringWithFormat:@"+%@", @(self.people.count - kMaxCellNumer)]];
+            [cell setNumberLabelText:[NSString stringWithFormat:@"+%@", @(self.people.count - kMaxCellNumer + 1)]];
         }
         else {
             cell.person = self.people[indexPath.row];
