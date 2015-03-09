@@ -195,6 +195,8 @@
 + (UIImage *)wokeUserProfileAddFriendButtonHighlighted { return [UIImage imageNamed:@"woke-user-profile-add-friend-button-highlighted"]; }
 + (NSString *)wokeUserProfileAddFriendButtonName { return @"woke-user-profile-add-friend-button"; }
 + (UIImage *)wokeUserProfileAddFriendButton { return [UIImage imageNamed:@"woke-user-profile-add-friend-button"]; }
++ (NSString *)wokeUserProfileDisclosureIndicatorName { return @"woke-user-profile-disclosure-indicator"; }
++ (UIImage *)wokeUserProfileDisclosureIndicator { return [UIImage imageNamed:@"woke-user-profile-disclosure-indicator"]; }
 + (NSString *)wokeUserProfileFriendRequestReceivedButtonHighlightedName { return @"woke-user-profile-friend-request-received-button-highlighted"; }
 + (UIImage *)wokeUserProfileFriendRequestReceivedButtonHighlighted { return [UIImage imageNamed:@"woke-user-profile-friend-request-received-button-highlighted"]; }
 + (NSString *)wokeUserProfileFriendRequestReceivedButtonName { return @"woke-user-profile-friend-request-received-button"; }

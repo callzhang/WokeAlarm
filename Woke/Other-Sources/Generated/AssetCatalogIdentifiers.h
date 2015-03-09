@@ -195,6 +195,8 @@
 + (NSString *)wokeUserProfileAddFriendButtonHighlightedName;
 + (UIImage *)wokeUserProfileAddFriendButton;
 + (NSString *)wokeUserProfileAddFriendButtonName;
++ (UIImage *)wokeUserProfileDisclosureIndicator;
++ (NSString *)wokeUserProfileDisclosureIndicatorName;
 + (UIImage *)wokeUserProfileFriendRequestReceivedButtonHighlighted;
 + (NSString *)wokeUserProfileFriendRequestReceivedButtonHighlightedName;
 + (UIImage *)wokeUserProfileFriendRequestReceivedButton;

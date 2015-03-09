@@ -120,6 +120,10 @@
         }
         cell.leftAlignLabel.text = title;
         cell.rightAlignLabel.text = ((NSString * (^)(void))item[@"detail"])();
+        void (^ configuration)(EWProfileViewNormalTableViewCell *cell) = item[@"configuration"];
+        if (configuration) {
+            configuration(cell);
+        }
         return cell;
     }
     
@@ -158,6 +162,8 @@
                            if ([self.person isMe]) {
                                [self performSegueWithIdentifier:MainStoryboardIDs.segues.profileToFriends sender:self];
                            }
+                       }, @"configuration": ^(EWProfileViewNormalTableViewCell *cell) {
+                           cell.accessoryView = [[UIImageView alloc] initWithImage:[ImagesCatalog wokeUserProfileDisclosureIndicator]];
                        }},
                        @{@"name": ^{
                            return [NSString stringWithFormat:@"People woke %@ up", _person.genderSubjectiveCaseString];
