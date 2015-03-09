@@ -56,6 +56,7 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
     [RACObserve(self, model.currentMedia) subscribeNext:^(EWMedia *currentMedia) {
        @strongify(self);
         self.profileImageView.image = self.model.currentMedia.author.profilePic;
+        [self.profileImageView applyHexagonSoftMask];
         self.nameLabel.text = self.model.currentMedia.author.name;
     }];
     
@@ -68,6 +69,7 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress:)];
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     displayLink.paused = YES;
+    self.waveView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

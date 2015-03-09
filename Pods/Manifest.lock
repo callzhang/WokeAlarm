@@ -113,12 +113,12 @@ PODS:
   - MTDates (1.0.0)
   - NYXImagesKit (2.3)
   - OCMock (3.1.2)
-  - Parse (1.6.3):
+  - Parse (1.6.4):
     - Bolts (~> 1.1)
   - ParseFacebookUtils (1.6.4):
     - Facebook-iOS-SDK (~> 3.20)
     - Parse (~> 1.6.4)
-  - ParseUI (1.1.0):
+  - ParseUI (1.1.1):
     - Parse (~> 1.6)
     - ParseFacebookUtils (~> 1.6)
   - pop (1.0.7)
@@ -200,9 +200,9 @@ SPEC CHECKSUMS:
   MTDates: e04c9433bf5f1d5cb55a1862ec018a01b5da75c3
   NYXImagesKit: 1c9f228ae78fab475d267b3b3a1308e0fba11731
   OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
-  Parse: f725f76ef200c5127420690fc6882e57c3813923
+  Parse: c2610f7a12ad0defc974803b819c4efe7746e6db
   ParseFacebookUtils: 00833ccf6fec7d6429e2403fe457496a5089358b
-  ParseUI: 00c4c39aab3944d88758b55416581650caa37f89
+  ParseUI: f7e9e0e5271f75a19c74ead8fdd95d36160e268e
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   ReactiveCocoa: 313fc53cc9aeb2bbbc3f5f13c7eac16478d9af8f
   ReactiveViewModel: 512224f801ea0a603fd394eed0f38bc662b64b9a
