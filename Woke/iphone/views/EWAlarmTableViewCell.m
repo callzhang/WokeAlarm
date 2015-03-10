@@ -108,7 +108,7 @@
 
 - (void)performScheduleNotification {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleLocalNotification) object:nil];
-    [self performSelector:@selector(scheduleLocalNotification) withObject:nil afterDelay:1];
+    [self performSelector:@selector(scheduleNotification) withObject:nil afterDelay:1];
 }
 
 - (void)scheduleNotification {

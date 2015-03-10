@@ -435,9 +435,10 @@
         [manager.requestSerializer setValue:kParseRestAPIId forHTTPHeaderField:@"X-Parse-REST-API-Key"];
         [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
-        
+        //To schedule a push according to each device's local time, the timeZone parameter should be an ISO 8601 date without a time zone, i.e. 2015-03-11T12:00:00 . Note that Installations without a timeZone will be excluded from this localized push.
         NSDictionary *dic = @{@"where":@{kUsername:[EWPerson me].username},
                               @"push_time":[NSNumber numberWithDouble:[time timeIntervalSince1970]+30],
+                              @"expiration_interval": @3600,
                               @"data":@{@"alert":@"Time to get up",
                                         @"content-available":@1,
                                         kPushType: kPushTypeAlarmTimer,

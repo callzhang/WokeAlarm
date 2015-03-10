@@ -112,7 +112,6 @@
         return;
     }
     
-    [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     [self updateCachedAlarmTime];
     [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmStateChanged object:self];
 
@@ -124,12 +123,14 @@
         return;
     }
     
+    
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
+    
     [self willChangeValueForKey:EWAlarmAttributes.time];
     [self setPrimitiveTime:time];
     [self didChangeValueForKey:EWAlarmAttributes.time];
     if (![self validate]) return;
     
-    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     //update activity's time
     activity.time = time.nextOccurTime;
     
