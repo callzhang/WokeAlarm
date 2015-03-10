@@ -1060,7 +1060,7 @@
                                                     <state key="selected" image="woke-alarms-plus-highlighted"/>
                                                     <state key="highlighted" image="woke-alarms-plus-highlighted"/>
                                                     <connections>
-                                                        <action selector="onPlusButton:" destination="ySU-2X-0JB" eventType="touchUpInside" id="eDx-a3-Yd0"/>
+                                                        <action selector="onPlusButton:" destination="ySU-2X-0JB" eventType="touchUpInside" id="iLK-cZ-uNw"/>
                                                         <action selector="touchDownPlusButton:" destination="ySU-2X-0JB" eventType="touchDown" id="ACh-nZ-T5v"/>
                                                         <action selector="touchUpInsidePlusButton:" destination="ySU-2X-0JB" eventType="touchUpInside" id="pmS-jv-7NV"/>
                                                         <action selector="touchUpOutsideButton:" destination="ySU-2X-0JB" eventType="touchUpOutside" id="dxz-vL-H3X"/>
@@ -1078,7 +1078,7 @@
                                                     <state key="selected" image="woke-alarms-minus-highlighted"/>
                                                     <state key="highlighted" image="woke-alarms-minus-highlighted"/>
                                                     <connections>
-                                                        <action selector="onMinusButton:" destination="ySU-2X-0JB" eventType="touchUpInside" id="GlO-ZQ-cwO"/>
+                                                        <action selector="onMinusButton:" destination="ySU-2X-0JB" eventType="touchUpInside" id="XBt-hG-z3g"/>
                                                         <action selector="touchDownMinusButton:" destination="ySU-2X-0JB" eventType="touchDown" id="Du9-qs-Ntq"/>
                                                         <action selector="touchUpInsideMinusButton:" destination="ySU-2X-0JB" eventType="touchUpInside" id="DSp-Qv-Nlr"/>
                                                         <action selector="touchUpOutsideMinusButton:" destination="ySU-2X-0JB" eventType="touchUpOutside" id="aTt-kR-bp6"/>

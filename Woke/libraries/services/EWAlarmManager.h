@@ -56,7 +56,8 @@
 - (void)checkAlarmsFromServer;
 
 //UTIL
-- (NSDate *)getSavedAlarmTimeOnWeekday:(NSInteger)wkd;
+//- (NSDate *)getSavedAlarmTimeOnWeekday:(NSInteger)wkd;
+//- (void)setSavedAlarmTimes;
 
 //local notification
 - (void)checkScheduledLocalNotifications;
@@ -64,7 +65,6 @@
 - (void)scheduleSleepNotifications;
 - (void)cancelAllNotifications;
 - (void)cancelSleepNotifications;
-
 
 /*
  Use REST to create a notification on server

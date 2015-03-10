@@ -80,7 +80,7 @@ extern NSString * const EWDataDidSyncNotification;
 #define kAWSEndPointDicKey              @"AWS_EndPoint_dic"
 #define kAWSTopicDicKey                 @"AWS_Topic_dic"
 #define kLastChecked                    @"last_checked"//stores the last checked task
-#define kSavedAlarms                    @"saved_alarms"
+//#define kSavedAlarms                    @"saved_alarms"
 
 #define onePixel  (1.0 / [UIScreen mainScreen].nativeScale)
 #pragma mark - User / External events

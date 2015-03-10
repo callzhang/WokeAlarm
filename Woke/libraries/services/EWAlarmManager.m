@@ -55,10 +55,10 @@
 - (void)alarmChanged:(NSNotification *)note{
     EWAlarm *alarm = note.object;
     if ([note.name isEqualToString:kAlarmTimeChanged]) {
-        [self scheduleNotificationOnServerForAlarm:alarm];
+        //[self scheduleNotificationOnServerForAlarm:alarm];
     }else if ([note.name isEqualToString:kAlarmStateChanged]){
         if (alarm.stateValue) {
-            [self scheduleNotificationOnServerForAlarm:alarm];
+            //[self scheduleNotificationOnServerForAlarm:alarm];
         }
     }
 }
@@ -222,7 +222,8 @@
         EWAlarm *a = [EWAlarm newAlarm];
         
         //get time
-        NSDate *time = [self getSavedAlarmTimeOnWeekday:i];
+        NSDate *time = [EWAlarm getCachedAlarmTimeOnWeekday:i];
+        NSAssert(time.mt_weekdayOfWeek == (long)i, @"Got cached time %@ not matching desired weekday %ld", time.string, (long)i);
         //set alarm time
         a.time = time;
         //add statement
@@ -263,42 +264,57 @@
     }
 }
 
-#pragma mark - Get/Set alarm to UserDefaults
-- (NSDate *)getSavedAlarmTimeOnWeekday:(NSInteger)targetDay{
-    //set weekday
-    NSDate *today = [NSDate date];
-    NSCalendar *cal = [NSCalendar currentCalendar];//TIMEZONE
-    NSDateComponents *comp = [NSDateComponents new];//used as a dic to hold time diff
-    comp.day = targetDay - today.mt_weekdayOfWeek + 1;
-    NSDate *time = [cal dateByAddingComponents:comp toDate:today options:0];//set the weekday
-    comp = [cal components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:time];//get the target date
-    NSArray *alarmTimes = [self getSavedAlarmTimes];
-    double number = [(NSNumber *)alarmTimes[targetDay] doubleValue];
-    NSInteger hour = (NSInteger)floor(number);
-    NSInteger minute = (NSInteger)round((number - hour)*100);
-    comp.hour = hour;
-    comp.minute = minute;
-    time = [cal dateFromComponents:comp];
-    DDLogVerbose(@"Get saved alarm time %@", time);
-    return time;
-}
-
-
-
-//Get saved time in user defaults
-- (NSArray *)getSavedAlarmTimes{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *alarmTimes = [defaults valueForKey:kSavedAlarms];
-    //create if not exsit
-    if (!alarmTimes) {
-        //if asking saved value, the alarm is not scheduled
-        DDLogInfo(@"=== Saved alarm time not found, use default values!");
-        alarmTimes = defaultAlarmTimes;
-        [defaults setObject:alarmTimes forKey:kSavedAlarms];
-        [defaults synchronize];
-    }
-    return alarmTimes;
-}
+//#pragma mark - Get/Set alarm to UserDefaults
+//- (NSDate *)getSavedAlarmTimeOnWeekday:(NSInteger)targetDay{
+//    //set weekday
+//    NSDate *today = [NSDate date];
+//    NSCalendar *cal = [NSCalendar currentCalendar];//TIMEZONE
+//    NSDateComponents *comp = [NSDateComponents new];//used as a dic to hold time diff
+//    comp.day = targetDay - today.mt_weekdayOfWeek + 1;
+//    NSDate *time = [cal dateByAddingComponents:comp toDate:today options:0];//set the weekday
+//    comp = [cal components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:time];//get the target date
+//    NSArray *alarmTimes = [self getSavedAlarmTimes];
+//    double number = [(NSNumber *)alarmTimes[targetDay] doubleValue];
+//    NSInteger hour = (NSInteger)floor(number);
+//    NSInteger minute = (NSInteger)round((number - hour)*100);
+//    comp.hour = hour;
+//    comp.minute = minute;
+//    time = [cal dateFromComponents:comp];
+//    DDLogVerbose(@"Get saved alarm time %@", time);
+//    return time;
+//}
+//
+//
+//
+////Get saved time in user defaults
+//- (NSArray *)getSavedAlarmTimes{
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    NSArray *alarmTimes = [defaults valueForKey:kSavedAlarms];
+//    //create if not exsit
+//    if (!alarmTimes) {
+//        //if asking saved value, the alarm is not scheduled
+//        DDLogInfo(@"=== Saved alarm time not found, use default values!");
+//        alarmTimes = defaultAlarmTimes;
+//        [defaults setObject:alarmTimes forKey:kSavedAlarms];
+//        [defaults synchronize];
+//    }
+//    return alarmTimes;
+//}
+//
+////update saved time in user defaults
+//- (void)setSavedAlarmTimes{
+//    
+//    NSMutableArray *alarmTimes = [[[NSUserDefaults standardUserDefaults] objectForKey:kSavedAlarms] mutableCopy];
+//    for (EWAlarm *alarm in [EWPerson myAlarms]) {
+//        NSInteger wkd = alarm.time.mt_weekdayOfWeek - 1;
+//        double hour = alarm.time.mt_hourOfDay;
+//        double minute = alarm.time.mt_minuteOfHour;
+//        double number = round(hour*100 + minute)/100.0;
+//        [alarmTimes setObject:[NSNumber numberWithDouble:number] atIndexedSubscript:wkd];
+//    }
+//    [[NSUserDefaults standardUserDefaults] setObject:alarmTimes.copy forKey:kSavedAlarms];
+//    DDLogVerbose(@"Updated saved alarm time: %@", alarmTimes.string);
+//}
 
 
 
@@ -326,7 +342,6 @@
 		//make sure the redundent notif didn't prevent scheduling of new notification
 		[self checkScheduledLocalNotifications];
 	}
-	
 }
 
 

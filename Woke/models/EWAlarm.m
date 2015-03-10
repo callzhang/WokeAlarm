@@ -14,6 +14,7 @@
 #import "EWActivity.h"
 #import "NSDate+Extend.h"
 #import "NSTimer+BlocksKit.h"
+#import "NSDate+MTDates.h"
 
 @implementation EWAlarm
 
@@ -110,16 +111,6 @@
     if (![self validate]) {
         return;
     }
-    //update saved time in user defaults
-    //[self setSavedAlarmTime];
-    //schedule local notification
-    if (state.boolValue == YES) {
-        //schedule local notif
-        [self scheduleLocalNotification];
-    } else {
-        //cancel local notif
-        [self cancelLocalNotification];
-    }
     
     [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     [self updateCachedAlarmTime];
@@ -132,28 +123,27 @@
         //DDLogInfo(@"Set same time to alarm: %@", self);
         return;
     }
-    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     
     [self willChangeValueForKey:EWAlarmAttributes.time];
     [self setPrimitiveTime:time];
     [self didChangeValueForKey:EWAlarmAttributes.time];
     if (![self validate]) return;
     
-    //update cached alarm time in currentUser
-    [self updateCachedAlarmTime];
-    
-    //schedule local notification
-    [self scheduleLocalNotification];
-    
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     //update activity's time
     activity.time = time.nextOccurTime;
     
-    // schedule on server
-    [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
+    static NSTimer *timer;
+    [timer invalidate];
+    timer = [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+        
+        
+        
+    } repeats:NO];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];
     });
-    
 }
 
 - (void)setTone:(NSString *)tone {
@@ -179,19 +169,6 @@
 }
 
 
-#pragma mark - Tools
-//update saved time in user defaults
-//- (void)setSavedAlarmTime{
-//	NSInteger wkd = self.time.mt_weekdayOfWeek - 1;
-//	double hour = self.time.mt_hourOfDay;
-//	double minute = self.time.mt_minuteOfHour;
-//	double number = round(hour*100 + minute)/100.0;
-//    NSMutableArray *alarmTimes = [[[NSUserDefaults standardUserDefaults] objectForKey:kSavedAlarms] mutableCopy];
-//	[alarmTimes setObject:[NSNumber numberWithDouble:number] atIndexedSubscript:wkd];
-//	[[NSUserDefaults standardUserDefaults] setObject:alarmTimes.copy forKey:kSavedAlarms];
-//}
-
-
 #pragma mark - Cached alarm time to user defaults
 //the alarm time stored in person's cached info
 - (void)updateCachedAlarmTime{
@@ -214,7 +191,51 @@
     DDLogVerbose(@"Updated cached statements: %@ on %@", self.statement, wkday);
 }
 
-#pragma mark - Local Notification
++ (NSDate *)getCachedAlarmTimeOnWeekday:(NSInteger)targetDay{
+    EWAssertMainThread
+    EWPerson *me = [EWPerson me];
+    NSArray *weekdayStrings = [NSDate mt_weekdaySymbols];
+    NSString *wkday = weekdayStrings[targetDay];
+    NSDate *time = [me.cachedInfo valueForKeyPath:[NSString stringWithFormat:@"%@.%@", kCachedAlarmTimes, wkday]];
+    if (!time) {
+        time = [self getCachedAlarmTimeOnWeekday:targetDay];
+    }
+    DDLogVerbose(@"Get cached alarm times: %@", time.string);
+    
+    return time;
+}
+
++ (NSDate *)getSavedAlarmTimeOnWeekday:(NSInteger)targetDay{
+    //set weekday
+    NSDate *today = [NSDate date];
+    NSCalendar *cal = [NSCalendar currentCalendar];//TIMEZONE
+    NSDateComponents *comp = [NSDateComponents new];//used as a dic to hold time diff
+    comp.day = targetDay - today.mt_weekdayOfWeek + 1;
+    NSDate *time = [cal dateByAddingComponents:comp toDate:today options:0];//set the weekday
+    comp = [cal components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:time];//get the target date
+    NSArray *alarmTimes = defaultAlarmTimes;
+    double number = [(NSNumber *)alarmTimes[targetDay] doubleValue];
+    NSInteger hour = (NSInteger)floor(number);
+    NSInteger minute = (NSInteger)round((number - hour)*100);
+    comp.hour = hour;
+    comp.minute = minute;
+    time = [cal dateFromComponents:comp];
+    DDLogVerbose(@"Get saved alarm time %@", time);
+    return time;
+}
+
+#pragma mark - Notification
+- (void)scheduleLocalAndPushNotification{
+    // schedule on server
+    [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
+    
+    //update cached alarm time in currentUser
+    [self updateCachedAlarmTime];
+    
+    //schedule local notification
+    [self scheduleLocalNotification];
+}
+
 - (void)scheduleLocalNotification{
 	//check state
     if (![self validate]) {
