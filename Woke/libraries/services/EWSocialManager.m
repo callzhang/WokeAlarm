@@ -336,9 +336,14 @@
     NSArray *facebookIDs = social.facebookFriends.allKeys;
     if (facebookIDs.count == 0 || social.facebookUpdated.timeElapsed < 24 * 3600) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K IN %@", kParseObjectID, social.facebookRelatedUsers];
-            NSArray *users = [EWPerson MR_findAllWithPredicate:predicate inContext:mainContext];
-            block(users, nil);
+            NSArray *people = [EWPerson MR_findAll];
+            NSArray *fbIDs = social.facebookRelatedUsers;
+            NSArray *fbFriends = [people bk_select:^BOOL(EWPerson *person) {
+                if ([fbIDs containsObject:person.facebookID]) {
+                    return YES;
+                }
+            }];
+            block(fbFriends, nil);
         });
         
         return;

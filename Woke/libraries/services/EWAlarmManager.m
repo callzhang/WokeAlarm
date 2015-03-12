@@ -223,7 +223,7 @@
         
         //get time
         NSDate *time = [EWAlarm getCachedAlarmTimeOnWeekday:i];
-        NSAssert(time.mt_weekdayOfWeek == (long)i, @"Got cached time %@ not matching desired weekday %ld", time.string, (long)i);
+        NSAssert(time.mt_weekdayOfWeek - i-1 == 0, @"Got cached time %@ not matching desired weekday %ld", time.string, (long)i);
         //set alarm time
         a.time = time;
         //add statement
