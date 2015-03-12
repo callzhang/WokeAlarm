@@ -16,9 +16,6 @@
 
 @implementation EWAlarmTableViewCell
 
-- (void)awakeFromNib {
-}
-
 - (void)setNextAlarm:(BOOL)nextAlarm {
     _nextAlarm = nextAlarm;
     if (_nextAlarm) {
@@ -64,7 +61,6 @@
 }
 
 #pragma mark - <IBAction>
-
 - (IBAction)onPlusButton:(id)sender {
     [self plusTime];
 }
@@ -75,10 +71,12 @@
 
 - (IBAction)touchUpInsideMinusButton:(id)sender {
     [self stopMinusTime];
+    [self performScheduleNotification];
 }
 
 - (IBAction)touchUpOutsideMinusButton:(id)sender {
     [self stopMinusTime];
+    [self performScheduleNotification];
 }
 
 - (IBAction)touchDownMinusButton:(id)sender {
@@ -91,14 +89,31 @@
 
 - (IBAction)touchUpInsidePlusButton:(id)sender {
     [self stopPlusTime];
+    [self performScheduleNotification];
 }
 
 - (IBAction)touchUpOutsideButton:(id)sender {
     [self stopPlusTime];
+    [self performScheduleNotification];
 }
 
 - (IBAction)onSwitchValueChanged:(id)sender {
     self.alarm.state = @(self.sevenSwitch.on);
+    if (self.sevenSwitch.on) {
+        [self performScheduleNotification];
+    }else{
+        [self.alarm cancelLocalNotification];
+    }
+}
+
+- (void)performScheduleNotification {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleLocalNotification) object:nil];
+    [self performSelector:@selector(scheduleNotification) withObject:nil afterDelay:1];
+}
+
+- (void)scheduleNotification {
+    DDLogVerbose(@"shedule notification");
+    [self.alarm scheduleLocalAndPushNotification];
 }
 
 #pragma mark -

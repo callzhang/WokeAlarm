@@ -78,7 +78,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	}];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNextVoiceWithDelay) name:kAVManagerDidFinishPlaying object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadUnreadMedias) name:kNewMediaNotification object:nil];
+	
     [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
         if ([note.object isKindOfClass:[EWMedia class]]) {
             EWMedia *m = (EWMedia *)note.object;
@@ -90,7 +90,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
             }
         }
     }];
-    
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadUnreadMedias) name:kNewMediaNotification object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleAlarmTimer) name:kAlarmTimeChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleAlarmTimer) name:kAlarmStateChanged object:nil];
+	
     //first time loop
     self.loopCount = kLoopMediaPlayCount;
     
@@ -479,7 +484,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     testingAlarm.time = newTime;
     activity.time = newTime;
     DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
-    [[EWWakeUpManager shared] scheduleAlarmTimer];
+	[[EWWakeUpManager shared] scheduleAlarmTimer];
+	
     
     //[testingAlarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
     [EWUIUtil showSuccessHUBWithString:@"Alarm will show in 30s"];

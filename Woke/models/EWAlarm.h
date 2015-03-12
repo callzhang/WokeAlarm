@@ -24,6 +24,7 @@
 //cached info
 - (void)updateCachedAlarmTime;
 - (void)updateCachedStatement;
++ (NSDate *)getCachedAlarmTimeOnWeekday:(NSInteger)targetDay;
 
 //timer local notification
 /**
@@ -31,6 +32,7 @@
  */
 - (void)scheduleLocalNotification;
 - (void)scheduleSleepLocalNotification;
+- (void)scheduleLocalAndPushNotification;
 /**
  cancel both timer and sleep notification
  */

@@ -76,7 +76,7 @@ NSString *const EWActivityTypeMedia = @"media";
     }else{
         EWActivity *activity = activities.firstObject;
         if (![activity.time isEqualToDate:alarm.time.nextOccurTime]) {
-            DDLogError(@"Activity %@ time %@ doesn't not equal to alarm %@ time %@", activity.serverID, activity.time, alarm.serverID, alarm.time);
+            DDLogWarn(@"Activity %@ time %@ doesn't not equal to alarm %@ time %@", activity.serverID, activity.time, alarm.serverID, alarm.time);
             activity.time = alarm.time.nextOccurTime;
             [activity save];
         }
