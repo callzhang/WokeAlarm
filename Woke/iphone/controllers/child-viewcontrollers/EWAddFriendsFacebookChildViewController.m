@@ -111,18 +111,23 @@
                                      };
         self.facebookFrinedsOnWoke = dictionary;
         
+        [self loadLocalFriends];
         [self.tableView reloadData];
     }];
-    
+
+    [self loadLocalFriends];
+}
+
+- (void)loadLocalFriends {
     NSMutableDictionary *facebookFriendsDictioanry = [EWPerson mySocialGraph].facebookFriends;
     
     NSMutableArray *facebookFriends = [NSMutableArray array];
     
     [facebookFriendsDictioanry enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [facebookFriends addObject:@{
-                                    @"id": key,
-                                    @"name": obj,
-                                    @"imageURL": [[EWSocialManager sharedInstance] getFacebookProfilePictureURLWithID:key]
+                                     @"id": key,
+                                     @"name": obj,
+                                     @"imageURL": [[EWSocialManager sharedInstance] getFacebookProfilePictureURLWithID:key]
                                      }];
     }];
     
@@ -130,14 +135,19 @@
     
     NSMutableArray *friendsToRemove = [NSMutableArray array];
     
-    NSArray *facebookFriendIDs = [facebookFriends valueForKeyPath:@"name"];
+    NSArray *facebookFriendIDs = [facebookFriends valueForKeyPath:@"id"];
     [self.facebookFrinedsOnWoke[@"rows"] enumerateObjectsUsingBlock:^(EWPerson *person, NSUInteger idx, BOOL *stop) {
         NSString *facebookID = person.socialGraph.facebookID;//TODO: change facebook ID retrive
         if ([facebookFriendIDs containsObject:facebookID]) {
-            [friendsToRemove addObject:person];
+           [facebookFriends enumerateObjectsUsingBlock:^(NSDictionary *dic, NSUInteger idx, BOOL *stop) {
+               if ([dic[@"id"] isEqualToString:facebookID]) {
+                   [friendsToRemove addObject:dic];
+               }
+           }];
         }
     }];
     
+    [facebookFriends removeObjectsInArray:friendsToRemove];
     
     self.facebookFriends = @{
                              @"type": @"facebook",

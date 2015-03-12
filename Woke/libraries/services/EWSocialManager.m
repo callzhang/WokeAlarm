@@ -334,7 +334,9 @@
     if (!block) return;
     EWSocial *social = [EWPerson mySocialGraph];
     NSArray *facebookIDs = social.facebookFriends.allKeys;
-    if (facebookIDs.count == 0 || social.facebookUpdated.timeElapsed < 24 * 3600) {
+    if (facebookIDs.count == 0
+//        || social.facebookUpdated.timeElapsed < 24 * 3600
+        ) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSArray *people = [EWPerson MR_findAll];
             NSArray *fbIDs = social.facebookRelatedUsers;
