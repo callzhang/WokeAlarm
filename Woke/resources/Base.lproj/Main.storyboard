@@ -1365,7 +1365,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MLF-1O-Lfw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-432" y="2941"/>
+            <point key="canvasLocation" x="-397" y="2941"/>
         </scene>
         <!--Received Voice Child View Controller-->
         <scene sceneID="HE8-fa-fPp">

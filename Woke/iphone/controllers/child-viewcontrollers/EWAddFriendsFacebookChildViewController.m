@@ -103,12 +103,12 @@
             return ;
         }
         
-    NSDictionary *dictionary = @{@"type": @"woke", @"rows": array,
-      @"sectionName": ^{
-          //TODO, 单复数
-          return [NSString stringWithFormat:@"%@ friends on Woke", @(array.count)];
-      }, @"showRightButton": @(YES)
-                                 };
+        NSDictionary *dictionary = @{@"type": @"woke", @"rows": array,
+                                     @"sectionName": ^{
+                                         //TODO, 单复数
+                                         return [NSString stringWithFormat:@"%@ friends on Woke", @(array.count)];
+                                     }, @"showRightButton": @(YES)
+                                     };
         self.facebookFrinedsOnWoke = dictionary;
         
         [self.tableView reloadData];
