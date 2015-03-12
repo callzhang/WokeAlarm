@@ -36,7 +36,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWSentVoiceTableViewCell *cell = (EWSentVoiceTableViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWSentVoiceTableViewCell];
     
-    cell.media = [self objectInItemsAtIndexPath:indexPath];
+    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
     
     return cell;
 }
@@ -65,7 +65,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath];
+    NSDictionary *dict = [self objectInItemsAtIndexPath:indexPath];
+    EWMedia *targetMedia = dict[@"media"];
+    
     if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
         [[EWAVManager sharedManager] stopAllPlaying];
         self.playingMedia = nil;
@@ -111,9 +113,7 @@
     return _items;
 }
 
-- (EWMedia *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
-//    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
-    EWActivity *activity = self.items[indexPath.section];
-    return activity.medias[indexPath.row];
+- (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
 }
 @end

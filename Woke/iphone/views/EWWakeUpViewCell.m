@@ -143,6 +143,7 @@
     //set value
     self.name.text = media.author.name;
     self.image.image = media.mediaFile.thumbnail?:media.author.profilePic;
+    [self.image applyHexagonSoftMask];
     self.progress.progress = 0;
     
     NSString *name = imageAssetNameFromEmoji(media.response);
