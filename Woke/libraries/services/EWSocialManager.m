@@ -342,6 +342,7 @@
                 if ([fbIDs containsObject:person.facebookID]) {
                     return YES;
                 }
+                return NO;
             }];
             block(fbFriends, nil);
         });
