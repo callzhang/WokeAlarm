@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="Lato-Light.ttf">
+            <string>Lato-Light</string>
+        </mutableArray>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWAddFriendsTableViewCell" rowHeight="70" id="jmn-mC-prM" customClass="EWAddFriendsTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jmn-mC-prM" id="Ta8-BB-6h3">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uBm-nT-ejO">
+                        <rect key="frame" x="20" y="10" width="50" height="50"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="RVm-Wu-kby"/>
+                            <constraint firstAttribute="width" constant="50" id="sT0-A5-uYm"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="twn-OA-bma">
+                        <rect key="frame" x="80" y="25" width="37" height="20"/>
+                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="16"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vlb-LC-xam">
+                        <rect key="frame" x="269" y="22" width="30" height="30"/>
+                        <state key="normal">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uzs-rK-XWu" userLabel="inviteButton">
+                        <rect key="frame" x="269" y="22" width="30" height="30"/>
+                        <state key="normal">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="uzs-rK-XWu" secondAttribute="trailing" constant="21" id="0oG-jM-XpF"/>
+                    <constraint firstAttribute="centerY" secondItem="uBm-nT-ejO" secondAttribute="centerY" id="4vK-B8-6lo"/>
+                    <constraint firstItem="uBm-nT-ejO" firstAttribute="leading" secondItem="Ta8-BB-6h3" secondAttribute="leading" constant="20" id="AJQ-3n-1PP"/>
+                    <constraint firstItem="uzs-rK-XWu" firstAttribute="centerY" secondItem="vlb-LC-xam" secondAttribute="centerY" id="CWK-Ka-KY7"/>
+                    <constraint firstItem="uzs-rK-XWu" firstAttribute="centerX" secondItem="vlb-LC-xam" secondAttribute="centerX" id="MZd-4l-gay"/>
+                    <constraint firstItem="twn-OA-bma" firstAttribute="leading" secondItem="uBm-nT-ejO" secondAttribute="trailing" constant="10" id="R8e-J2-0Oc"/>
+                    <constraint firstAttribute="centerY" secondItem="vlb-LC-xam" secondAttribute="centerY" constant="-2" id="UQ8-fZ-18z"/>
+                    <constraint firstAttribute="trailing" secondItem="vlb-LC-xam" secondAttribute="trailing" constant="21" id="YUR-dN-4UG"/>
+                    <constraint firstItem="vlb-LC-xam" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="twn-OA-bma" secondAttribute="trailing" constant="10" id="r0t-RQ-LE9"/>
+                    <constraint firstItem="uBm-nT-ejO" firstAttribute="centerY" secondItem="twn-OA-bma" secondAttribute="centerY" id="z7f-JN-Rm5"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="MZd-4l-gay"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <connections>
+                <outlet property="inviteButton" destination="uzs-rK-XWu" id="uys-M3-4Tp"/>
+                <outlet property="nameLabel" destination="twn-OA-bma" id="N34-1e-WMp"/>
+                <outlet property="profileImageView" destination="uBm-nT-ejO" id="pe6-kF-1wV"/>
+                <outlet property="rightButton" destination="vlb-LC-xam" id="ASa-6T-QOG"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

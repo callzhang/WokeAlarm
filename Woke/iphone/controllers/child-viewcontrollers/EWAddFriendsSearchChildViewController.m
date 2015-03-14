@@ -37,6 +37,7 @@
     self.tableView.tableHeaderView = self.searchController.searchBar;
    
     self.definesPresentationContext = YES;
+    [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendTableViewCell" bundle:nil] forCellReuseIdentifier:@"EWAddFriendsTableViewCell"];
 }
 
 #pragma mark - <UITableViewDataSource>
@@ -49,7 +50,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.addFriendsCell];
+    EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendTableViewCell"];
     
     EWPerson *person = self.items[indexPath.row];
     

@@ -27,6 +27,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.rowHeight = 70;
+    [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendTableViewCell" bundle:nil] forCellReuseIdentifier:@"EWAddFriendsTableViewCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendsSectionTableViewCell" bundle:nil] forCellReuseIdentifier:@"AddFriendsCellSectionHeader"];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -45,7 +47,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.addFriendsCell];
+    EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendsTableViewCell"];
     
     NSDictionary *section = self.items[indexPath.section];
     if ([section[@"type"] isEqualToString:@"address-book"]) {
