@@ -13,6 +13,7 @@ const struct MainStoryboardIDs MainStoryboardIDs = {
         .profileToFriends = @"profileToFriends",
         .menuToHome = @"menuToHome",
         .menuToVoice = @"menuToVoice",
+        .menuToFriends = @"menuToFriends",
         .sleepingToPostWakeup = @"sleepingToPostWakeup",
         .friendsToAddFriends = @"friendsToAddFriends",
         .searchChildViewController = @"searchChildViewController",

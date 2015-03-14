@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *alarmTopLayoutConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *voiceTopLayoutConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *meTopLayoutConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *friendsTopLayoutConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *settingsTopLayoutConstraint;
 
 @property (weak, nonatomic) IBOutlet UIButton *home;
@@ -31,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *voice;
 @property (weak, nonatomic) IBOutlet UIButton *me;
 @property (weak, nonatomic) IBOutlet UIButton *settings;
+@property (weak, nonatomic) IBOutlet UIButton *friends;
 @end
 
 @implementation EWMenuViewController
@@ -85,6 +87,11 @@
     }];
 }
 
+- (IBAction)onFriends:(id)sender {
+    [self.mainNavigationController toogleMenuCompletion:^{
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuToFriends sender:self];
+    }];
+}
 #pragma mark -
 - (void)onTap {
     if (self.tapHandler) {
@@ -105,13 +112,15 @@
     [self addAnimationToConstraint:self.alarmTopLayoutConstraint index:2 forKey:@"alarmTop" speed:20.0f bounciness:14.0f delay:0.03];
     [self addAnimationToConstraint:self.voiceTopLayoutConstraint index:3 forKey:@"voiceTop" speed:25.0f bounciness:14.0f delay:0.03];
     [self addAnimationToConstraint:self.meTopLayoutConstraint index:4 forKey:@"meTop" speed:30.0f bounciness:14.0f delay:0.03];
-    [self addAnimationToConstraint:self.settingsTopLayoutConstraint index:5 forKey:@"settignsTop" speed:35.0f bounciness:14.0f delay:0.03];
+    [self addAnimationToConstraint:self.friendsTopLayoutConstraint index:5 forKey:@"friendsTop" speed:35.0f bounciness:14.0f delay:0.03];
+    [self addAnimationToConstraint:self.settingsTopLayoutConstraint index:6 forKey:@"settignsTop" speed:35.0f bounciness:14.0f delay:0.03];
     
     [self addFadeInAnimationToView:self.home forKey:@"home FadeIn"];
     [self addFadeInAnimationToView:self.notification forKey:@"notification FadeIn"];
     [self addFadeInAnimationToView:self.alarm forKey:@"alarm FadeIn"];
     [self addFadeInAnimationToView:self.voice forKey:@"voice FadeIn"];
     [self addFadeInAnimationToView:self.me forKey:@"me FadeIn"];
+    [self addFadeInAnimationToView:self.friends forKey:@"friends FadeIn"];
     [self addFadeInAnimationToView:self.settings forKey:@"settings FadeIn"];
 }
 
@@ -121,13 +130,15 @@
     [self addBackAnimationToConstraint:self.alarmTopLayoutConstraint index:2 forKey:@"alarm back"];
     [self addBackAnimationToConstraint:self.voiceTopLayoutConstraint index:3 forKey:@"voice back"];
     [self addBackAnimationToConstraint:self.meTopLayoutConstraint index:4 forKey:@"me back"];
-    [self addBackAnimationToConstraint:self.settingsTopLayoutConstraint index:5 forKey:@"setting back"];
+    [self addBackAnimationToConstraint:self.friendsTopLayoutConstraint index:5 forKey:@"setting back"];
+    [self addBackAnimationToConstraint:self.settingsTopLayoutConstraint index:6 forKey:@"setting back"];
     
     [self addBackFadeoutToView:self.home forKey:@"home fade"];
     [self addBackFadeoutToView:self.notification forKey:@"notification fade"];
     [self addBackFadeoutToView:self.alarm forKey:@"alarm fade"];
     [self addBackFadeoutToView:self.voice forKey:@"voice fade"];
     [self addBackFadeoutToView:self.me forKey:@"me fade"];
+    [self addBackFadeoutToView:self.friends forKey:@"friends fade"];
     [self addBackFadeoutToView:self.settings forKey:@"settings fade"];
 }
 

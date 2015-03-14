@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ne0-fa-NmS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -21,6 +21,7 @@
             <string>Lato-Hairline</string>
         </mutableArray>
         <mutableArray key="Lato-Light.ttf">
+            <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
@@ -201,7 +202,28 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZEp-fY-6cD" userLabel="backgroundView">
                                 <rect key="frame" x="0.0" y="-50" width="320" height="618"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uZb-q4-XbC">
+                                        <rect key="frame" x="22" y="460" width="96" height="46"/>
+                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                        <state key="normal" title="Settings">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onSetting:" destination="ztM-CD-1sO" eventType="touchUpInside" id="BfH-hz-rID"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="uZb-q4-XbC" firstAttribute="top" secondItem="ZEp-fY-6cD" secondAttribute="top" constant="448" id="SAn-XV-LpY"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="SAn-XV-LpY"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x94-DL-jrO">
                                 <rect key="frame" x="21" y="86" width="74" height="46"/>
@@ -248,14 +270,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="027-dv-aEP">
-                                <rect key="frame" x="21" y="356" width="96" height="46"/>
+                                <rect key="frame" x="21" y="356" width="88" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
-                                <state key="normal" title="Settings">
+                                <state key="normal" title="Friends">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="onSetting:" destination="ztM-CD-1sO" eventType="touchUpInside" id="Yci-0q-rI6"/>
+                                    <action selector="onFriends:" destination="ztM-CD-1sO" eventType="touchUpInside" id="K4N-Ek-edo"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrU-oI-fkp">
@@ -292,9 +314,11 @@
                             <constraint firstItem="p4y-rw-jgD" firstAttribute="leading" secondItem="wHV-nd-2l3" secondAttribute="leading" id="Jda-L7-KSc"/>
                             <constraint firstItem="wHV-nd-2l3" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="120" id="UXf-Np-fB7"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="p4y-rw-jgD" secondAttribute="leading" id="VsB-JA-8OM"/>
+                            <constraint firstItem="uZb-q4-XbC" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" constant="1" id="jVv-2z-qw7"/>
                             <constraint firstAttribute="trailing" secondItem="RIq-mw-Cq6" secondAttribute="trailing" constant="20" id="l0M-MW-trF"/>
                             <constraint firstItem="mrU-oI-fkp" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="282" id="mCf-Wb-iIq"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="n6I-dx-rkn"/>
+                            <constraint firstItem="uZb-q4-XbC" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="390" id="pJb-3y-QcX"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="228" id="qJi-rd-S1n"/>
                             <constraint firstItem="027-dv-aEP" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="rj3-A9-MHa"/>
                             <constraint firstItem="x94-DL-jrO" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="66" id="ruz-zV-7t8"/>
@@ -309,6 +333,8 @@
                         <outlet property="alarm" destination="p4y-rw-jgD" id="9a0-FD-HIr"/>
                         <outlet property="alarmTopLayoutConstraint" destination="6xh-aJ-95Y" id="Oot-7D-dd1"/>
                         <outlet property="backgroundView" destination="ZEp-fY-6cD" id="wRy-Ug-nPc"/>
+                        <outlet property="friends" destination="027-dv-aEP" id="tR8-oZ-9hB"/>
+                        <outlet property="friendsTopLayoutConstraint" destination="HUT-6X-pjV" id="iyy-5n-nou"/>
                         <outlet property="home" destination="x94-DL-jrO" id="3GL-fU-ucC"/>
                         <outlet property="homeTopLayoutConstraint" destination="ruz-zV-7t8" id="wFK-x6-Uwf"/>
                         <outlet property="me" destination="mrU-oI-fkp" id="TXD-vs-gjV"/>
@@ -316,7 +342,7 @@
                         <outlet property="notification" destination="wHV-nd-2l3" id="mE5-1g-6dJ"/>
                         <outlet property="notificationTopLayoutConstraint" destination="UXf-Np-fB7" id="Y0B-DC-CD9"/>
                         <outlet property="settings" destination="027-dv-aEP" id="6VF-b0-2it"/>
-                        <outlet property="settingsTopLayoutConstraint" destination="HUT-6X-pjV" id="YKy-9f-ceg"/>
+                        <outlet property="settingsTopLayoutConstraint" destination="pJb-3y-QcX" id="Mjq-6f-w7u"/>
                         <outlet property="voice" destination="6Mb-bv-HXk" id="HA1-Sb-6eY"/>
                         <outlet property="voiceTopLayoutConstraint" destination="qJi-rd-S1n" id="q4Y-tT-VrY"/>
                         <segue destination="Prn-GM-2Iw" kind="custom" identifier="menuToHome" customClass="EWMenuReplaceFadeSegue" id="v3V-jG-DGb"/>
@@ -325,6 +351,7 @@
                         <segue destination="T0a-bL-MOd" kind="custom" identifier="menuToProfile" customClass="EWMenuReplaceFadeSegue" id="CBy-Qp-dcT"/>
                         <segue destination="bmc-Gr-H2M" kind="custom" identifier="menuToAlarm" customClass="EWMenuReplaceFadeSegue" id="vK7-fe-ZIO"/>
                         <segue destination="Qvo-kH-4j9" kind="custom" identifier="menuToSettings" customClass="EWMenuReplaceFadeSegue" id="xBh-rC-qtM"/>
+                        <segue destination="efu-Ue-Kfd" kind="custom" identifier="menuToFriends" customClass="EWMenuReplaceFadeSegue" id="wLP-1t-7ZH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VMg-tE-8Qf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3423,8 +3450,9 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="CBy-Qp-dcT"/>
+        <segue reference="wLP-1t-7ZH"/>
         <segue reference="v3V-jG-DGb"/>
+        <segue reference="CBy-Qp-dcT"/>
         <segue reference="7lF-Wp-60q"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
