@@ -22,6 +22,7 @@
 #import "INTULocationManager.h"
 #import "Crashlytics.h"
 #import "FBKVOController.h"
+#import "UIAlertView+BlocksKit.h"
 
 @import CoreLocation;
 
@@ -315,8 +316,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }
         else {
             // An error occurred, more info is available by looking at the specific status returned.
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-            [alertView show];
+            [UIAlertView bk_showAlertViewWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Go"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                //set location
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+            }];
             [self setProxymateLocationForPerson:[EWPerson me]];
         }
     }];
