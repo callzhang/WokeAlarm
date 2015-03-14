@@ -199,7 +199,7 @@
     NSString *wkday = weekdayStrings[targetDay];
     NSDate *time = [me.cachedInfo valueForKeyPath:[NSString stringWithFormat:@"%@.%@", kCachedAlarmTimes, wkday]];
     if (!time) {
-        time = [self getCachedAlarmTimeOnWeekday:targetDay];
+        time = [self getSavedAlarmTimeOnWeekday:targetDay];
     }
     DDLogVerbose(@"Get cached alarm times: %@", time.string);
     
