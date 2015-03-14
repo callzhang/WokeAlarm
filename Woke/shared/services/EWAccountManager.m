@@ -92,7 +92,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     //test
     [self.KVOController observe:person keyPath:EWPersonRelationships.unreadMedias options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        if ([EWPerson myUnreadMedias].count > 2) {
+        static NSUInteger lastUnreadCount;
+        if ([EWPerson myUnreadMedias].count != lastUnreadCount) {
+            lastUnreadCount = [EWPerson myUnreadMedias].count;
             DDLogInfo(@"Found unread medias changed to %ld", [EWPerson myUnreadMedias].count);
         }
     }];
@@ -264,7 +266,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         //save time
 		[[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:@"facebook_last_updated"];
         //update friends
-        [[EWSocialManager sharedInstance] getFacebookFriends];
+        [[EWSocialManager sharedInstance] getFacebookFriendsWithCompletion:nil];
         self.isUpdatingFacebookInfo = NO;
     }];
 }
@@ -301,7 +303,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 - (void)registerLocation{
     self.manager = [INTULocationManager sharedInstance];
-    [self.manager requestLocationWithDesiredAccuracy:INTULocationAccuracyHouse timeout:300 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+    INTULocationRequestID requestID = [self.manager requestLocationWithDesiredAccuracy:INTULocationAccuracyBlock timeout:60 delayUntilAuthorized:YES block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
         if (status == INTULocationStatusSuccess) {
             // Request succeeded, meaning achievedAccuracy is at least the requested accuracy, and
             // currentLocation contains the device's current location.
@@ -312,18 +314,25 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             // Wasn't able to locate the user with the requested accuracy within the timeout interval.
             // However, currentLocation contains the best location available (if any) as of right now,
             // and achievedAccuracy has info on the accuracy/recency of the location in currentLocation.
-            DDLogInfo(@"After 300s, we accept location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
+            DDLogInfo(@"After 60s, we accept location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
             [self processLocation:currentLocation];
         }
         else {
             // An error occurred, more info is available by looking at the specific status returned.
             [UIAlertView bk_showAlertViewWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Go"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 //set location
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                if (buttonIndex == 1) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                }
             }];
 
             [self setProxymateLocationForPerson:[EWPerson me]];
         }
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [self.manager cancelLocationRequest:requestID];
+        DDLogWarn(@"Woke exit when location request in progress");
     }];
 }
 

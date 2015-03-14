@@ -24,7 +24,7 @@
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block;
 
 //facebook friends search
-- (void)getFacebookFriends;
+- (void)getFacebookFriendsWithCompletion:(VoidBlock)block;
 //match facebook friends on server to find related users
 - (void)findFacebookRelatedUsersWithCompletion:(ArrayBlock)block;
 - (NSURL *)getFacebookProfilePictureURLWithID:(NSString *)fid;

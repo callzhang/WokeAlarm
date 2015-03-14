@@ -132,13 +132,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //add Woke media is needed
     if (self.medias.count == 0) {
         //need to create some voice
-#ifdef DEBUG
-		[[EWMediaManager sharedInstance] testGetRandomVoiceWithCompletion:^(EWMedia *media, NSError *error) {
-			DDLogInfo(@"Got random voice");
-		}];
-#else
         [[EWMediaManager sharedInstance] getWokeVoice];
-#endif
     }
     
     //set volume
