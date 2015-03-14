@@ -59,11 +59,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
 
 //Start automatic cachedInfo management for me
 - (void)startAutoCacheUpdateForMe;
-/**
- * Snapshot activity cache and save to cachedInfo 
- @attention Currently the cached activities are unused 
- */
-- (void)updateActivityCacheWithCompletion:(VoidBlock)block;
 - (void)updateCachedFriends;
 - (void)updateCachedAlarmTimes;
 - (void)updateCachedStatements;

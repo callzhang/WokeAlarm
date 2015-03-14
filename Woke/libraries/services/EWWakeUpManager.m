@@ -483,6 +483,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:30];
     testingAlarm.time = newTime;
     activity.time = newTime;
+    activity.mediaIDs = [NSMutableArray array];
     DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
 	[[EWWakeUpManager shared] scheduleAlarmTimer];
 	

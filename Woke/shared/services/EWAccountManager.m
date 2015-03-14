@@ -22,6 +22,7 @@
 #import "INTULocationManager.h"
 #import "Crashlytics.h"
 #import "FBKVOController.h"
+#import <BlocksKit+UIKit.h>
 #import "UIAlertView+BlocksKit.h"
 
 @import CoreLocation;
@@ -87,11 +88,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [Crashlytics setUserName:user.username];
     [Crashlytics setUserEmail:user.email];
     [Crashlytics setUserIdentifier:user.objectId];
-    [Crashlytics setObjectValue:user.objectId forKey:@"userID"];
+    [Crashlytics setObjectValue:user[@"firstName"] forKey:@"name"];
     
     //test
     [self.KVOController observe:person keyPath:EWPersonRelationships.unreadMedias options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        if ([EWPerson myUnreadMedias].count > 5) {
+        if ([EWPerson myUnreadMedias].count > 2) {
             DDLogInfo(@"Found unread medias changed to %ld", [EWPerson myUnreadMedias].count);
         }
     }];
@@ -320,6 +321,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                 //set location
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
             }];
+
             [self setProxymateLocationForPerson:[EWPerson me]];
         }
     }];

@@ -30,6 +30,7 @@
 @property (nonatomic, strong) id userSyncStartedObserver;
 @property (nonatomic, strong) id userSyncCompletedObserver;
 @property (nonatomic, strong) id alarmTimeChangeObserver;
+@property (nonatomic, strong) id wokeObserver;
 @end
 
 @implementation EWSleepViewController
@@ -38,6 +39,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self.userSyncCompletedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self.userSyncStartedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self.alarmTimeChangeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.wokeObserver];
 }
 
 - (void)viewDidLoad {
@@ -70,6 +72,10 @@
 		[EWUIUtil dismissHUD];
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
 	}];
+    
+    self.wokeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kWokeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
+    }];
     
     self.alarmTimeChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
         DDLogInfo(@"Sleep view feels there is a change to alarm time, updating view.");
