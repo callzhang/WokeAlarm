@@ -112,7 +112,7 @@
 - (void)testFindAddressBookFriends{
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Expect to find adressbook friends"];
-    [[EWSocialManager sharedInstance] findAddressbookUsersFromContactsWithCompletion:^(NSArray *array, NSError *error) {
+    [[EWSocialManager sharedInstance] findAddressbookUsersInWokeWithCompletion:^(NSArray *array, NSError *error) {
         NSLog(@"Found %ld ab matched friends from server", array.count);
         if (!error) {
             [expectation fulfill];

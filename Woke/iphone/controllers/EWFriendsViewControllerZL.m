@@ -170,7 +170,7 @@
         }
             break;
         case 2:{//Search name from server
-            [[EWSocialManager sharedInstance] findAddressbookUsersFromContactsWithCompletion:^(NSArray *array, NSError *error) {
+            [[EWSocialManager sharedInstance] findAddressbookUsersInWokeWithCompletion:^(NSArray *array, NSError *error) {
                 block(array, error);
             }];
         }

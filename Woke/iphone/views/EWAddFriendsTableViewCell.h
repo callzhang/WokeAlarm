@@ -9,10 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "EWPerson+Woke.h"
 
+typedef NS_ENUM(NSUInteger, EWAddFreindTableViewCellType) {
+    EWAddFreindTableViewCellTypeAddFriend,
+    EWAddFreindTableViewCellTypeInvite,
+};
+
 @interface EWAddFriendsTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;
+@property (weak, nonatomic) IBOutlet UIButton *inviteButton;
 
 @property (nonatomic, strong) EWPerson *person;
+@property (nonatomic, assign) EWAddFreindTableViewCellType type;
+
+@property (nonatomic, copy) void (^ onInviteBlock)(void);
 @end

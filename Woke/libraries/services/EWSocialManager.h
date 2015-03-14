@@ -18,7 +18,7 @@
 - (void)updateFriendshipTimeline;
 
 //Addressbook Search
-- (void)findAddressbookUsersFromContactsWithCompletion:(ArrayBlock)completion;
+- (void)findAddressbookUsersInWokeWithCompletion:(ArrayBlock)completion;
 - (NSArray *)addressBookRecordIDsWithEmail:(NSString *)email;
 //return an array of EWPerson
 - (void)searchUserWithPhrase:(NSString *)phrase completion:(ArrayBlock)block;
@@ -28,4 +28,8 @@
 //match facebook friends on server to find related users
 - (void)findFacebookRelatedUsersWithCompletion:(ArrayBlock)block;
 - (NSURL *)getFacebookProfilePictureURLWithID:(NSString *)fid;
+/**
+ *  RHPeople
+ */
+- (NSArray *) addressPeople;
 @end

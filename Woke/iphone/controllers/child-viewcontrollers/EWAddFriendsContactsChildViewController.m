@@ -11,6 +11,9 @@
 #import "UIImageView+AFNetworking.h"
 #import "EWSocialManager.h"
 #import "EWPerson.h"
+#import "RHPerson.h"
+#import "RHAddressBook.h"
+#import "BlocksKit.h"
 
 @interface EWAddFriendsContactsChildViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -24,6 +27,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.rowHeight = 70;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self loadLocalContactFriends];
     [self loadFriendsOnWokeSection];
 }
 
@@ -39,18 +48,63 @@
     EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.addFriendsCell];
     
     NSDictionary *section = self.items[indexPath.section];
-    if ([section[@"type"] isEqualToString:@"woke"]) {
-        EWPerson *person = section[@"rows"][indexPath.row];
-        cell.person = person;
+    if ([section[@"type"] isEqualToString:@"address-book"]) {
+        cell.type = EWAddFreindTableViewCellTypeInvite;
+        
+        RHPerson *person = section[@"rows"][indexPath.row];
+        if (person.thumbnail) {
+            cell.profileImageView.image = person.thumbnail;
+        }
+        else {
+            //NOTE: only male here
+            cell.profileImageView.image = [ImagesCatalog wokePlaceholderUserProfileImageMale];
+        }
+        
+        [cell.rightButton removeTarget:self action:nil forControlEvents:UIControlEventAllEvents];
+        NSString *name = person.name ? : @"";
+        cell.nameLabel.text = name;
+        @weakify(self);
+        cell.onInviteBlock = ^{
+            @strongify(self);
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Invite" message:[NSString stringWithFormat:@"Invite %@ to woke?", name] preferredStyle:UIAlertControllerStyleActionSheet];
+            //add email
+            for (NSString *email in person.emails.values) {
+                if (!email) continue;
+                UIAlertAction *action = [UIAlertAction actionWithTitle:email style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                    //TODO: email
+                    DDLogInfo(@"show action");
+                }];
+                [alert addAction:action];
+            }
+            
+            //add phone
+            for (NSString *phone in person.phoneNumbers.values) {
+                UIAlertAction *action = [UIAlertAction actionWithTitle:phone style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                    //TODO: phone
+                    DDLogInfo(@"show action");
+                }];
+                [alert addAction:action];
+            }
+            
+            [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+            [self presentViewController:alert animated:YES completion:nil];
+        };
     }
-    else if ([section[@"type"] isEqualToString:@"facebook"]) {
+    else if ([section[@"type"] isEqualToString:@"woke"]) {
+        cell.type = EWAddFreindTableViewCellTypeAddFriend;
+        
         NSDictionary *item = section[@"rows"][indexPath.row];
         cell.nameLabel.text = item[@"name"];
-        [cell.profileImageView setImageWithURL:item[@"imageURL"]];
-        cell.profileImageView.contentMode = UIViewContentModeScaleAspectFill;
-        [cell.profileImageView applyHexagonSoftMask];
-//        [cell.rightButton setImage:<#(UIImage *)#> forState:<#(UIControlState)#>]; //set invite button
+        UIImage *image = item[@"image"];
+        if (image) {
+            cell.profileImageView.image = image;
+        }
+        else {
+            cell.profileImageView.image = [ImagesCatalog wokePlaceholderUserProfileImageMale];
+        }
     }
+
+    cell.profileImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     return cell;
 }
@@ -98,56 +152,45 @@
 }
 
 - (void)loadFriendsOnWokeSection {
-    [[EWSocialManager sharedInstance] findAddressbookUsersFromContactsWithCompletion:^(NSArray *array, NSError *error) {
+    [[EWSocialManager sharedInstance] findAddressbookUsersInWokeWithCompletion:^(NSArray *array, NSError *error) {
         if (array.count == 0) {
             return ;
         }
+        NSArray *addressBookFriendsInWoke = [EWPerson mySocialGraph].addressBookRelatedUsers ? : @[];
         
-        NSDictionary *dictionary = @{@"type": @"woke", @"rows": array,
-                                     @"sectionName": ^{
-                                         //TODO, 单复数
-                                         return [NSString stringWithFormat:@"%@ friend%@ on Woke", @(array.count), array.count>1?@"s":@""];
-                                     }, @"showRightButton": @(YES)
-                                     };
-        self.contactFrinedsOnWoke = dictionary;
+        self.contactFrinedsOnWoke = @{
+                                      @"type": @"woke",
+                                      //            @{@"email": email, @"name": contact.name, @"image": thumbnail}
+                                      @"rows": addressBookFriendsInWoke,
+                                      @"sectionName": ^{
+                                          //TODO, 单复数
+                                          return [NSString stringWithFormat:@"invite other %@ friends?", @(addressBookFriendsInWoke.count)];
+                                      }, @"showRightButton": @(NO)
+                                      };
+        
+        [self loadLocalContactFriends];
         
         [self.tableView reloadData];
     }];
-    
-    NSMutableDictionary *facebookFriendsDictioanry = [EWPerson mySocialGraph].facebookFriends;
-    
-    NSMutableArray *facebookFriends = [NSMutableArray array];
-    
-    [facebookFriendsDictioanry enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [facebookFriends addObject:@{
-                                     @"id": key,
-                                     @"name": obj,
-                                     @"imageURL": [[EWSocialManager sharedInstance] getFacebookProfilePictureURLWithID:key]
-                                     }];
-    }];
-    
-    [facebookFriends sortUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES]]];
-    
-    NSMutableArray *friendsToRemove = [NSMutableArray array];
-    
-    NSArray *facebookFriendIDs = [facebookFriends valueForKeyPath:@"name"];
-    [self.contactFrinedsOnWoke[@"rows"] enumerateObjectsUsingBlock:^(EWPerson *person, NSUInteger idx, BOOL *stop) {
-        NSString *facebookID = person.socialGraph.facebookID;//TODO: change facebook ID retrive
-        if ([facebookFriendIDs containsObject:facebookID]) {
-            [friendsToRemove addObject:person];
-        }
-    }];
-    
-    
-    self.contactFriends = @{
-                             @"type": @"facebook",
-                             @"rows": facebookFriends,
-                             @"sectionName": ^{
-                                 //TODO, 单复数
-                                 return [NSString stringWithFormat:@"invite other %@ friends?", @(facebookFriends.count)];
-                             }, @"showRightButton": @(NO)
-                             };
-    
-    [self.tableView reloadData];
+}
+
+- (void)loadLocalContactFriends {
+    if ([RHAddressBook authorizationStatus] == RHAuthorizationStatusNotDetermined) {
+        [[[RHAddressBook alloc] init] requestAuthorizationWithCompletion:^(bool granted, NSError *error) {
+            [self loadLocalContactFriends];
+            return;
+        }];
+    }
+    else {
+        NSArray *people = [EWSocialManager sharedInstance].addressPeople;
+        self.contactFriends = @{
+                                @"type": @"address-book",
+                                @"rows": people,
+                                @"sectionName": ^{
+                                    return [NSString stringWithFormat:@"invite other %@ friend%@?", @(people.count), people.count > 1 ? @"s":@""];
+                                }, @"showRightButton": @(NO)
+                                };
+        [self.tableView reloadData];
+    }
 }
 @end

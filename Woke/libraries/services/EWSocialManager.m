@@ -120,7 +120,11 @@
     return _addressBook;
 }
 
-- (void)findAddressbookUsersFromContactsWithCompletion:(ArrayBlock)completion {
+- (NSArray *) addressPeople {
+    return self.addressBook.people;
+}
+
+- (void)findAddressbookUsersInWokeWithCompletion:(ArrayBlock)completion {
     
     EWSocial *social = [EWPerson mySocialGraph];
     NSDate *lastChecked = social.addressBookUpdated;
@@ -137,7 +141,7 @@
             [self.addressBook requestAuthorizationWithCompletion:^(bool granted, NSError *error) {
                 if (granted) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self findAddressbookUsersFromContactsWithCompletion:completion];
+                        [self findAddressbookUsersInWokeWithCompletion:completion];
                     });
                 }else{
                     completion(nil, error);
@@ -163,7 +167,11 @@
     for (RHPerson *contact in contacts) {
         [contactsEmails addObjectsFromArray:contact.emails.values];
         for (NSString *email in contact.emails.values) {
-            [myContactFriends addObject:@{@"email": email, @"name": contact.name}];
+            UIImage *thumbnail = contact.thumbnail;
+            if (!thumbnail) {
+                thumbnail = (id)[NSNull null];
+            }
+            [myContactFriends addObject:@{@"email": email, @"name": contact.name, @"image": thumbnail}];
         }
     }
     social.addressBookFriends = myContactFriends;

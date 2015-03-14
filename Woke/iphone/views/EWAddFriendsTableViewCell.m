@@ -14,6 +14,12 @@
 - (void)awakeFromNib {
     self.backgroundColor = [UIColor clearColor];
     self.contentView.backgroundColor = [UIColor clearColor];
+    [self.profileImageView applyHexagonSoftMask];
+    [self.inviteButton setImage:[ImagesCatalog wokeAddFriendsInviteButton] forState:UIControlStateNormal];
+    [self.inviteButton setImage:[ImagesCatalog wokeAddFriendsInviteButtonHighlighted] forState:UIControlStateHighlighted];
+    
+    self.type = EWAddFreindTableViewCellTypeAddFriend;
+    [self.inviteButton addTarget:self action:@selector(onInviteButton:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setPerson:(EWPerson *)person {
@@ -61,4 +67,26 @@
                                      }
                                  }];
 }
+
+- (void)setType:(EWAddFreindTableViewCellType)type {
+    _type = type;
+    if (type == EWAddFreindTableViewCellTypeAddFriend) {
+        self.rightButton.hidden = NO;
+        self.inviteButton.hidden = YES;
+    }
+    else if (type == EWAddFreindTableViewCellTypeInvite) {
+        self.rightButton.hidden = YES;
+        self.inviteButton.hidden = NO;
+    }
+    else {
+        DDLogError(@"button type %@ not supported", @(type));
+    }
+}
+
+- (void)onInviteButton:(id)sender {
+    if (self.onInviteBlock) {
+        self.onInviteBlock();
+    }
+}
 @end
+
