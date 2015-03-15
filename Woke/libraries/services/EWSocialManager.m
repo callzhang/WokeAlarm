@@ -17,6 +17,16 @@
 #import "PFFacebookUtils.h"
 #import "EWAccountManager.h"
 #import "EWErrorManager.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
+
+FBTweakAction(@"Social Manager", @"Action", @"Get facebook friends", ^{
+    [EWPerson mySocialGraph].facebookUpdated = nil;
+    [[EWSocialManager sharedInstance] getFacebookFriendsWithCompletion:^{
+        DDLogInfo(@"Got %lu facebook friends", [EWPerson mySocialGraph].facebookFriends.allKeys.count);
+    }];
+});
+
 
 @interface EWSocialManager()
 @property (nonatomic, strong) RHAddressBook *addressBook;
@@ -300,12 +310,12 @@
 - (void)getFacebookFriendsWithPath:(NSString *)path withReturnData:(NSMutableDictionary *)friendsHolder withCompletion:(VoidBlock)block{
     [FBRequestConnection startWithGraphPath:path completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         
-        DDLogVerbose(@"Got facebook friends list, start processing");
         if (!error){
             NSArray *friends = (NSArray *)result[@"data"];
             NSString *nextPage = (NSString *)result[@"paging"][@"next"]	;
             //parse
             if (friends) {
+                DDLogVerbose(@"Got facebook friends list, start processing");
                 for (NSDictionary *pair in friends) {
                     NSString *fb_id = pair[@"id"];
                     NSString *name = pair[@"name"];
@@ -352,6 +362,7 @@
     NSArray *facebookIDs = social.facebookFriends.allKeys;
     //if my facebookFriends is empty, and woke has never serched for facebookFriends, start search for fbFriends
     if (facebookIDs.count == 0 && !social.facebookUpdated) {
+        DDLogInfo(@"My social hasn't been updated for facebook friends. Get fb friends first and then redo find woke fb user.");
         [self getFacebookFriendsWithCompletion:^{
             [self findFacebookRelatedUsersWithCompletion:block];
         }];

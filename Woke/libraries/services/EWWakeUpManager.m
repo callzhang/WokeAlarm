@@ -49,7 +49,11 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
-    [[EWWakeUpManager shared] testWakeUpIn30s];
+    [[EWWakeUpManager shared] testWakeUpInSeconds:30];
+});
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 1 hour", ^{
+    [[EWWakeUpManager shared] testWakeUpInSeconds:3600];
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completion date", ^{
@@ -261,14 +265,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //set wakeup time, move to past, schedule and save
     [[EWActivityManager sharedManager] completeAlarmActivity:activity];
     
-    //post notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
-    
     //playing states
     self.continuePlay = NO;
     self.medias = nil;
     self.currentMediaIndex = nil;
     self.skipCheckActivityCompleted = NO;
+    
+    //post notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     
     //THOUGHTS: something to do in the future
     //notify friends and challengers
@@ -475,7 +479,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 #pragma mark - Test
-- (void)testWakeUpIn30s{
+- (void)testWakeUpInSeconds:(NSInteger)seconds{
     [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
     EWAlarm *testingAlarm;
     for (EWAlarm *alarm in [EWPerson myAlarms]) {
@@ -484,7 +488,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         }
     }
     EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:testingAlarm];
-    NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:30];
+    NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:seconds];
     testingAlarm.time = newTime;
     activity.time = newTime;
     NSUInteger mediaCount = activity.mediaIDs.count;

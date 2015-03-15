@@ -37,10 +37,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kAVManagerDidStartPlaying object:nil queue:nil usingBlock:^(NSNotification *note) {
-        EWMedia *media = note.object;
-        NSUInteger index = [self.medias indexOfObject:media];
-        if (index != NSNotFound) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+            EWMedia *media = note.object;
+            [self scrollToMedia:media];
+        }else{
+            static id observer;
+            observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication] queue:nil usingBlock:^(NSNotification *note) {
+                DDLogVerbose(@"application did enter foreground, start move to playing cell");
+                [self scrollToPlayingMedia];
+                [[NSNotificationCenter defaultCenter] removeObserver:observer];
+            }];
         }
     }];
 }
@@ -105,9 +111,17 @@
     }
 }
 
-//- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
-//    return NO;
-//}
+- (void)scrollToPlayingMedia{
+    EWMedia *m = [EWWakeUpManager shared].currentMedia;
+    [self scrollToMedia:m];
+}
+
+- (void)scrollToMedia:(EWMedia *)media{
+    NSUInteger index = [self.medias indexOfObject:media];
+    if (index != NSNotFound && [UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    }
+}
 
 #pragma mark - Delegate
 - (IBAction)close:(id)sender{
