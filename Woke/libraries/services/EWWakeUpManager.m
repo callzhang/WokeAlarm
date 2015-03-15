@@ -446,7 +446,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 - (void)loadUnreadMedias{
 	BOOL forceLoad = NO;
 #ifdef DEBUG
-	forceLoad = YES;
+	//forceLoad = YES;
 #endif
 	
     if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp || forceLoad) {
