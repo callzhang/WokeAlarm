@@ -34,7 +34,6 @@ extern NSString * const EWPersonDefaultName;
  */
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
 
-
 //validate
 - (BOOL)validate;
 

@@ -358,6 +358,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self loadUnreadMedias];
     [EWAVManager sharedManager].player.volume = 0;
     [[EWAVManager sharedManager] volumeTo:1 withCompletion:^{
+        self.currentMediaIndex = @(-1);
         [self playNextVoice];
     }];
 }
@@ -477,7 +478,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:30];
     testingAlarm.time = newTime;
     activity.time = newTime;
+    NSUInteger mediaCount = activity.mediaIDs.count;
     activity.mediaIDs = [NSMutableArray array];
+    DDLogVerbose(@"Removed %lu medias from activity, now unreadMedias cound is %lu", (unsigned long)mediaCount, (unsigned long)[EWPerson myUnreadMedias].count);
     DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
 	[[EWWakeUpManager shared] scheduleAlarmTimer];
 	

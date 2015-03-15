@@ -74,7 +74,9 @@
 	}];
     
     self.wokeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kWokeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
+        [NSTimer bk_scheduledTimerWithTimeInterval:kMaxWakeTime+1 block:^(NSTimer *timer) {
+            self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
+        } repeats:NO];
     }];
     
     self.alarmTimeChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {

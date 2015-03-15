@@ -674,7 +674,9 @@ Parse.Cloud.define("syncUser", function(request, response) {
         };
         promises.push(toOnePromise(PO, key));
 
-      }else if(key == "unreadMedias") {
+      }
+      /*
+      else if(key == "unreadMedias") {
         //Relation is Array of POs
         var objects = user.get(key);
         var files = [];
@@ -716,9 +718,9 @@ Parse.Cloud.define("syncUser", function(request, response) {
           return fetchAllPromise;
         };
         promises.push(arrayPromise(objects, key));
-
-
-      }else {
+      }
+      */
+      else {
          //To-Many Relation
          //create promise to work on to-many relation and add it to the 'When()' collection
         var toManyRelationPromise = function (relationName){
@@ -756,19 +758,22 @@ Parse.Cloud.define("sendMedia", function(request, response) {
   var mediaID = request.params.mediaID;
   var media;
   var query = new Parse.Query(Parse.User);
+
   query.get(receiverID).then(function (user) {
+    //find receiver
     console.log("receiver "+user.id);
     receiver = user;
     var EWMedia = Parse.Object.extend("EWMedia");
     var mediaQuery = new Parse.Query(EWMedia);
     return mediaQuery.get(mediaID);
   }).then(function (m) {
+    //find media
     console.log("media "+m.id);
     media = m;
     media.set("receiver", receiver);
     return media.save();
   }).then(function () {
-    receiver.add("unreadMedias", media);
+    //add relation
     var receivedMedias = receiver.relation("receivedMedias");
     receivedMedias.add(media);
     //TODO: ACL

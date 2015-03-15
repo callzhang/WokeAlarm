@@ -106,9 +106,7 @@ NSString *const EWActivityTypeMedia = @"media";
         //add unread medias to current media
         NSArray *played = [EWPerson myUnreadMedias];
         [activity addMediaIDs:[played valueForKey:kParseObjectID]];
-        [EWPerson me].unreadMedias = nil;
-		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:played]];
-        DDLogInfo(@"Removed %ld medias from my unread medias", (unsigned long)played.count);
+        DDLogInfo(@"Added %ld medias to activity %@", (unsigned long)played.count, activity.time.string);
     }
     activity.statement = [EWPerson meInContext:activity.managedObjectContext].statement;
     activity.completed = [NSDate date];

@@ -40,8 +40,9 @@
 
 /**
  Check unread medias
+ Moved to EWPerson+Woke
  */
-- (NSArray *)unreadMediasForPerson:(EWPerson *)person;
+//- (NSArray *)unreadMediasForPerson:(EWPerson *)person;
 
 /**
  *Check all my meidas, making sure they have the media file ready.

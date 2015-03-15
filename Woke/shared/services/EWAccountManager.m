@@ -91,7 +91,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [Crashlytics setObjectValue:user[@"firstName"] forKey:@"name"];
     
     //test
-    [self.KVOController observe:person keyPath:EWPersonRelationships.unreadMedias options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+    [self.KVOController observe:person keyPath:@"unreadMedias" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
         static NSUInteger lastUnreadCount;
         NSUInteger count = [EWPerson myUnreadMedias].count;
         if (count!= lastUnreadCount && count>0) {
@@ -99,13 +99,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             DDLogDebug(@"Found unread medias changed to %ld", [EWPerson myUnreadMedias].count);
         }
     }];
-    
-//    [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextObjectsDidChangeNotification object:[NSManagedObjectContext MR_rootSavingContext] queue:nil usingBlock:^(NSNotification *note) {
-//        NSArray *updates = [note.userInfo[NSUpdatedObjectsKey] valueForKey:kParseObjectID];
-//        if ([updates containsObject:person.serverID]) {
-//            DDLogDebug(@"Me changed: %@", updates);
-//        }
-//    }];
 }
 
 //login Core Data User with Server User (PFUser)
@@ -356,23 +349,21 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     //DDLogVerbose(@"Get user location with lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude);
     
     //reverse search address
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        CLGeocoder *geoloc = [[CLGeocoder alloc] init];
-        [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
-            
-            if (!err && [placemarks count] > 0) {
-                CLPlacemark *placemark = [placemarks lastObject];
-                //get info
-                [EWPerson me].city = placemark.locality;
-                [EWPerson me].country = placemark.country;
-            } else {
-                DDLogWarn(@"%@", err.debugDescription);
-            }
-            [[EWPerson me] save];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:kUserLocationUpdated object:nil];
-        }];
-    });
+    CLGeocoder *geoloc = [[CLGeocoder alloc] init];
+    [geoloc reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *err) {
+        
+        if (!err && [placemarks count] > 0) {
+            CLPlacemark *placemark = [placemarks lastObject];
+            //get info
+            [EWPerson me].city = placemark.locality;
+            [EWPerson me].country = placemark.country;
+        } else {
+            DDLogWarn(@"%@", err.debugDescription);
+        }
+        [[EWPerson me] save];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUserLocationUpdated object:nil];
+    }];
 }
 
 - (void)setProxymateLocationForPerson:(EWPerson *)person{

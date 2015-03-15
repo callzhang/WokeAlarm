@@ -173,8 +173,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
     [PFCloud callFunctionInBackground:@"sendMedia" withParameters:@{@"receiverID":receiverID, @"mediaID":mediaID} block:^(PFUser *receiverPO, NSError *error) {
         if (receiverPO) {
             [[EWSync sharedInstance] setCachedParseObject:receiverPO];
-            NSArray *unreadMediaIDs = [receiverPO[EWPersonRelationships.unreadMedias] valueForKey:kParseObjectID];
-            NSAssert([unreadMediaIDs containsObject:mediaID], @"Failed updating receiver->unreadMedias relation in returned PO!");
         }else{
             DDLogError(@"Failed updating receiver->unreadMedias relation: %@", error.localizedDescription);
         }
