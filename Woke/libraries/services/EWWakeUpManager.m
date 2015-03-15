@@ -52,7 +52,7 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
     [[EWWakeUpManager shared] testWakeUpIn30s];
 });
 
-FBTweakAction(@"WakeUpManager", @"Action", @"Remove (all future) activities' completion date", ^{
+FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completion date", ^{
     NSArray *futureActivities = [EWActivity MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K = %@ AND %K > %@", EWActivityRelationships.owner, [EWPerson me], EWActivityAttributes.time, [NSDate date]] inContext:mainContext];
     for(EWActivity *activity in futureActivities){
         DDLogDebug(@"Activity's completion time %@ removed", activity.completed.string);
