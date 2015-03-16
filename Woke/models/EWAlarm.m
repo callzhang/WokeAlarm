@@ -29,7 +29,7 @@
     EWAlarm *a = [EWAlarm MR_createEntity];
     a.updatedAt = [NSDate date];
     a.owner = [EWPerson me];
-    a.state = @YES;
+    a.state = @NO;
     a.tone = [EWPerson me].preference[@"DefaultTone"];
     
     return a;
@@ -127,6 +127,18 @@
     EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     
     [self willChangeValueForKey:EWAlarmAttributes.time];
+    NSInteger weekday0 = self.time.mt_weekdayOfWeek;
+    NSInteger weekday1 = time.mt_weekdayOfWeek;
+    if (weekday0 != weekday1) {
+        //adjust time
+        if ([time timeIntervalSinceDate:self.time] > 0) {
+            DDLogInfo(@"Time is next day, subtract 1 day");
+            time = [time mt_dateByAddingYears:0 months:0 weeks:0 days:-1 hours:0 minutes:0 seconds:0];
+        }else{
+            DDLogInfo(@"Time is previous day, add 1 day");
+            time = [time mt_dateByAddingYears:0 months:0 weeks:0 days:1 hours:0 minutes:0 seconds:0];
+        }
+    }
     [self setPrimitiveTime:time];
     [self didChangeValueForKey:EWAlarmAttributes.time];
     if (![self validate]) return;
@@ -299,7 +311,7 @@
                 }
                 
                 [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
-                DDLogInfo(@"Local Notif scheduled at %@", localNotif.fireDate.date2detailDateString);
+                DDLogVerbose(@"Local Notif scheduled at %@", localNotif.fireDate.date2detailDateString);
             }
         }
 		
@@ -360,7 +372,7 @@
                 if ([sleep.fireDate isEqualToDate:sleepTime]) {
                     sleepNotificationScheduled = YES;
                 }else{
-                    DDLogError(@"Found sleep notification with incorrect time %@, should be %@.", sleep.fireDate.date2detailDateString, sleepTime.date2detailDateString);
+                    DDLogWarn(@"Found sleep notification with incorrect time %@, should be %@.", sleep.fireDate.date2detailDateString, sleepTime.date2detailDateString);
                     [[UIApplication sharedApplication] cancelLocalNotification:sleep];
                 }
                 
