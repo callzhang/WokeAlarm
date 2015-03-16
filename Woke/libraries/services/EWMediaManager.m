@@ -193,18 +193,14 @@
 
     for (EWMedia *media in newMedia) {
 		[media downloadMediaFile];
-        [[EWPerson me] addReceivedMediasObject:media];
+        [[EWPerson meInContext:context] addReceivedMediasObject:media];
         //new media
 		DDLogInfo(@"Received media(%@) from %@", media.objectId, media.author.name);
         //EWNotification
-        if ([NSThread isMainThread]) {
-            [[EWNotificationManager shared] newMediaNotification:media];
-        }else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                EWMedia *m = (EWMedia *)[media MR_inContext:mainContext];
-                [[EWNotificationManager shared] newMediaNotification:m];
-            });
-        }
+		dispatch_async(dispatch_get_main_queue(), ^{
+			EWMedia *m = (EWMedia *)[media MR_inContext:mainContext];
+			[[EWNotificationManager shared] newMediaNotification:m];
+		});
     }
 	
     if (newMedia.count) {
