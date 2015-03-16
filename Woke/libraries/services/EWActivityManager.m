@@ -51,7 +51,7 @@ NSString *const EWActivityTypeMedia = @"media";
         _currentAlarmActivity = [self activityForAlarm:alarm];
         completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
         timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
-        NSParameterAssert(!completed && timeMatched);
+        NSAssert(!completed && timeMatched, @"alert %@ doesn't match alarm %@", _currentAlarmActivity, alarm);
     }
     
     return _currentAlarmActivity;
@@ -63,7 +63,7 @@ NSString *const EWActivityTypeMedia = @"media";
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner];
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
-    [activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
+	//[activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
     while (activities.count >1) {
         EWActivity *activity = activities.firstObject;
         DDLogError(@"Multiple current alarm activities found, please check: \n%@", activity.serverID);

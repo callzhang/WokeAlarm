@@ -136,22 +136,23 @@
         completed = activity.completed && !skipCheckActivityCompleted;
         n++;
         //if current acivity is completed, we should use next activity
-    } while (completed && n < person.alarms.count);
-    
+    } while (completed);
+
     return currentAlarm;
 }
 
 - (EWAlarm *)next:(NSInteger)n thAlarmForPerson:(EWPerson *)person{
-    if (n>=7) return nil;
+	NSInteger week = floor(n/7);
     if (!person.isMe) DDLogError(@"%s person passed in is not me!", __FUNCTION__);
-    
+	if (week > 0) DDLogDebug(@"Passing next %ldth alarm, %ld weeks later.", n, week);
+	n = n%7;
     //when just past the alarm time (timer fired), we need the alarm just past, not the next one
     //but if the wakeup is completed, we want the next alarm
     //float extra = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWoke ? 0 : kMaxWakeTime;
     
     NSArray *sortedAlarms = [person.alarms.allObjects sortedArrayUsingComparator:^NSComparisonResult(EWAlarm *obj1, EWAlarm *obj2) {
-        NSDate *d1 = [obj1.time nextOccurTimeInWeeks:0 withExtraSeconds:kMaxWakeTime];
-        NSDate *d2 = [obj2.time nextOccurTimeInWeeks:0 withExtraSeconds:kMaxWakeTime];
+        NSDate *d1 = [obj1.time nextOccurTimeInWeeks:week withExtraSeconds:kMaxWakeTime];
+        NSDate *d2 = [obj2.time nextOccurTimeInWeeks:week withExtraSeconds:kMaxWakeTime];
         return [d1 compare:d2];
     }];
 
