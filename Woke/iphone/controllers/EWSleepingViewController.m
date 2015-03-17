@@ -25,6 +25,7 @@
 #import "EWUIUtil.h"
 #import "FBKVOController.h"
 #import "EWActivity.h"
+#import "FBShimmeringView.h"
 
 
 FBTweakAction(@"Sleeping VC", @"UI", @"Show Wake Up VC", ^{
@@ -58,6 +59,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 @property (nonatomic, strong) EWAlarm *nextAlarm;
 @property (nonatomic, strong) EWWakeUpChildViewController *wakeUpChildViewController;
 @property (nonatomic, strong) RACDisposable *timerDisposable;
+@property (weak, nonatomic) IBOutlet FBShimmeringView *shimmeringView;
+@property (nonatomic, strong) UILabel *slideLabel;
+@property (nonatomic, assign) BOOL shouldComplete;
 @end
 
 @implementation EWSleepingViewController
@@ -99,6 +103,58 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     
     RAC(self, timeChildViewController.date) = [RACObserve(self, nextAlarm.time) distinctUntilChanged];
 	
+    self.slideLabel = [[UILabel alloc] initWithFrame:self.shimmeringView.bounds];
+    self.slideLabel.font = [UIFont fontWithName:@"Lato-Light" size:24];
+    self.slideLabel.textColor = [UIColor whiteColor];
+    self.slideLabel.text = @"Slide to Wake Up";
+    self.slideLabel.textAlignment = NSTextAlignmentCenter;
+    
+    self.shimmeringView.contentView = self.slideLabel;
+    self.shimmeringView.shimmering = YES;
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGesture:)];
+    [self.shimmeringView addGestureRecognizer:panGesture];
+}
+
+- (void)onPanGesture:(UIPanGestureRecognizer *)sender {
+    //TODO: add interactive transition: http://nsscreencast.com/episodes/88-interactive-view-controller-transitions
+    CGPoint translation = [sender translationInView:self.shimmeringView.superview];
+    
+    UIGestureRecognizerState state = sender.state;
+    switch (state) {
+        case UIGestureRecognizerStateBegan:
+            break;
+            
+        case UIGestureRecognizerStateChanged: {
+            const CGFloat DragAmount = 200;
+            const CGFloat Threshold = 0.5;
+            CGFloat percent = translation.x / DragAmount;
+            percent = fmaxf(percent, 0.0);
+            percent = fminf(percent, 1.0);
+//            [self updateInteractiveTransition:percent];
+            
+            _shouldComplete = percent >= Threshold;
+            break;
+        }
+            
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled: {
+            if (sender.state == UIGestureRecognizerStateCancelled || !_shouldComplete) {
+//                [self cancelInteractiveTransition];
+            } else {
+                [self finishInteractiveTransition];
+            }
+            break;
+        }
+            
+            
+        default:
+            break;
+    }
+}
+
+- (void)finishInteractiveTransition {
+    [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
 }
 
 - (void)showWakeUpVC {

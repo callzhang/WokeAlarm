@@ -142,7 +142,7 @@
 #define COCOAPODS_POD_AVAILABLE_Facebook_iOS_SDK
 #define COCOAPODS_VERSION_MAJOR_Facebook_iOS_SDK 3
 #define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 23
-#define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 0
+#define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 1
 
 // GKImagePicker
 #define COCOAPODS_POD_AVAILABLE_GKImagePicker
@@ -275,6 +275,12 @@
 #define COCOAPODS_VERSION_MAJOR_ReactiveViewModel 0
 #define COCOAPODS_VERSION_MINOR_ReactiveViewModel 3
 #define COCOAPODS_VERSION_PATCH_ReactiveViewModel 0
+
+// Shimmer
+#define COCOAPODS_POD_AVAILABLE_Shimmer
+#define COCOAPODS_VERSION_MAJOR_Shimmer 1
+#define COCOAPODS_VERSION_MINOR_Shimmer 0
+#define COCOAPODS_VERSION_PATCH_Shimmer 2
 
 // Tweaks
 #define COCOAPODS_POD_AVAILABLE_Tweaks

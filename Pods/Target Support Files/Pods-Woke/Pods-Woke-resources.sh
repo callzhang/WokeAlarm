@@ -6,6 +6,8 @@ mkdir -p "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 RESOURCES_TO_COPY=${PODS_ROOT}/resources-to-copy-${TARGETNAME}.txt
 > "$RESOURCES_TO_COPY"
 
+XCASSET_FILES=""
+
 install_resource()
 {
   case $1 in
@@ -31,7 +33,12 @@ install_resource()
       echo "xcrun momc \"${PODS_ROOT}/$1\" \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcdatamodeld`.momd\""
       xcrun momc "${PODS_ROOT}/$1" "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcdatamodeld`.momd"
       ;;
+    *.xcmappingmodel)
+      echo "xcrun mapc \"${PODS_ROOT}/$1\" \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcmappingmodel`.cdm\""
+      xcrun mapc "${PODS_ROOT}/$1" "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/`basename "$1" .xcmappingmodel`.cdm"
+      ;;
     *.xcassets)
+      XCASSET_FILES="$XCASSET_FILES '$1'"
       ;;
     /*)
       echo "$1"
@@ -43,39 +50,122 @@ install_resource()
       ;;
   esac
 }
-          install_resource "APTimeZones/APTimeZones/timezonesDB.json"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton.png"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton@2x.png"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed.png"
-                    install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed@2x.png"
-                    install_resource "GPUImage/framework/Resources/lookup.png"
-                    install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
-                    install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
-                    install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"
-                    install_resource "GPUImage/framework/Resources/lookup_soft_elegance_2.png"
-                    install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
-                    install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
-                    install_resource "JGProgressHUD/JGProgressHUD/JGProgressHUD/JGProgressHUD Resources.bundle"
-                    install_resource "KZBootstrap/Pod/Assets/Scripts/bootstrap.sh"
-                    install_resource "KZBootstrap/Pod/Assets/Scripts/buildNumber.sh"
-                    install_resource "KZBootstrap/Pod/Assets/Scripts/iconVersioning.sh"
-                    install_resource "KZBootstrap/Pod/Assets/Scripts/lines.sh"
-                    install_resource "KZBootstrap/Pod/Assets/Scripts/processEnvironments.swift"
-                    install_resource "KZBootstrap/Pod/Assets/Scripts/todo.sh"
-                    install_resource "KZBootstrap/Pod/Assets/Scripts/user.sh"
-                    install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
-          
+if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_resource "APTimeZones/APTimeZones/timezonesDB.json"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed@2x.png"
+  install_resource "GPUImage/framework/Resources/lookup.png"
+  install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
+  install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_2.png"
+  install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
+  install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
+  install_resource "JGProgressHUD/JGProgressHUD/JGProgressHUD/JGProgressHUD Resources.bundle"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/bootstrap.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/buildNumber.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/iconVersioning.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/lines.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/processEnvironments.swift"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/todo.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/user.sh"
+  install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
+fi
+if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_resource "APTimeZones/APTimeZones/timezonesDB.json"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed@2x.png"
+  install_resource "GPUImage/framework/Resources/lookup.png"
+  install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
+  install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_2.png"
+  install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
+  install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
+  install_resource "JGProgressHUD/JGProgressHUD/JGProgressHUD/JGProgressHUD Resources.bundle"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/bootstrap.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/buildNumber.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/iconVersioning.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/lines.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/processEnvironments.swift"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/todo.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/user.sh"
+  install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
+fi
+if [[ "$CONFIGURATION" == "adhoc" ]]; then
+  install_resource "APTimeZones/APTimeZones/timezonesDB.json"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed@2x.png"
+  install_resource "GPUImage/framework/Resources/lookup.png"
+  install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
+  install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_2.png"
+  install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
+  install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
+  install_resource "JGProgressHUD/JGProgressHUD/JGProgressHUD/JGProgressHUD Resources.bundle"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/bootstrap.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/buildNumber.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/iconVersioning.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/lines.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/processEnvironments.swift"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/todo.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/user.sh"
+  install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
+fi
+if [[ "$CONFIGURATION" == "profiling" ]]; then
+  install_resource "APTimeZones/APTimeZones/timezonesDB.json"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetButtonPressed@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButton@2x.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed.png"
+  install_resource "GKImagePicker/GKImages/PLCameraSheetDoneButtonPressed@2x.png"
+  install_resource "GPUImage/framework/Resources/lookup.png"
+  install_resource "GPUImage/framework/Resources/lookup_amatorka.png"
+  install_resource "GPUImage/framework/Resources/lookup_miss_etikate.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_1.png"
+  install_resource "GPUImage/framework/Resources/lookup_soft_elegance_2.png"
+  install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
+  install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
+  install_resource "JGProgressHUD/JGProgressHUD/JGProgressHUD/JGProgressHUD Resources.bundle"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/bootstrap.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/buildNumber.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/iconVersioning.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/lines.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/processEnvironments.swift"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/todo.sh"
+  install_resource "KZBootstrap/Pod/Assets/Scripts/user.sh"
+  install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
+fi
+
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 if [[ "${ACTION}" == "install" ]]; then
   rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${INSTALL_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 fi
 rm -f "$RESOURCES_TO_COPY"
 
-if [[ -n "${WRAPPER_EXTENSION}" ]] && [ "`xcrun --find actool`" ] && [ `find . -name '*.xcassets' | wc -l` -ne 0 ]
+if [[ -n "${WRAPPER_EXTENSION}" ]] && [ "`xcrun --find actool`" ] && [ -n $XCASSET_FILES ]
 then
   case "${TARGETED_DEVICE_FAMILY}" in
     1,2)
@@ -91,5 +181,5 @@ then
       TARGET_DEVICE_ARGS="--target-device mac"
       ;;
   esac
-  find "${PWD}" -name "*.xcassets" -print0 | xargs -0 actool --output-format human-readable-text --notices --warnings --platform "${PLATFORM_NAME}" --minimum-deployment-target "${IPHONEOS_DEPLOYMENT_TARGET}" ${TARGET_DEVICE_ARGS} --compress-pngs --compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+  echo $XCASSET_FILES | xargs actool --output-format human-readable-text --notices --warnings --platform "${PLATFORM_NAME}" --minimum-deployment-target "${IPHONEOS_DEPLOYMENT_TARGET}" ${TARGET_DEVICE_ARGS} --compress-pngs --compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 fi

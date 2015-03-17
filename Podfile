@@ -31,6 +31,7 @@ target 'Woke' do
   pod 'CocoaLumberjack', '2.0.0-rc'
   pod 'CrashlyticsLumberjack', '2.0.0-rc2'
   pod 'INTULocationManager'
+  pod 'Shimmer', '~> 1.0.2'
 end
 
 target 'WokeTests' do

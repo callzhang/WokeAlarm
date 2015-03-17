@@ -70,6 +70,7 @@
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
+            <string>Lato-Light</string>
         </mutableArray>
         <mutableArray key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
@@ -2115,9 +2116,14 @@
                                     <segue destination="FOH-VM-Mox" kind="embed" identifier="timeChildViewController" id="7lF-Wp-60q"/>
                                 </connections>
                             </containerView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Ig-65-fRc">
-                                <rect key="frame" x="55" y="518" width="228" height="30"/>
-                                <state key="normal" title="Slide[CLICK PLEASE] to wake up">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Ig-65-fRc">
+                                <rect key="frame" x="10" y="478" width="300" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="KxZ-8e-Cvh"/>
+                                    <constraint firstAttribute="height" constant="100" id="dDh-iD-f5c"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="24"/>
+                                <state key="normal" title="Slide to Wake Up">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2131,6 +2137,14 @@
                                     <segue destination="XNP-i7-YoG" kind="embed" identifier="wakeUpChildViewController" id="k35-7w-Prr"/>
                                 </connections>
                             </containerView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ixa-4b-Xen" customClass="FBShimmeringView">
+                                <rect key="frame" x="10" y="478" width="300" height="80"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="Hnp-b0-eOU"/>
+                                    <constraint firstAttribute="width" constant="300" id="vaO-lc-NwT"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -2139,14 +2153,15 @@
                             <constraint firstItem="gpM-jP-AUb" firstAttribute="centerX" secondItem="zRK-C0-vGh" secondAttribute="centerX" id="8Mj-1C-A5x"/>
                             <constraint firstItem="kOZ-k9-xaA" firstAttribute="leading" secondItem="dpM-AB-dCq" secondAttribute="leading" id="A8q-kY-5b1"/>
                             <constraint firstAttribute="trailing" secondItem="9a1-dQ-5rY" secondAttribute="trailing" id="BXl-GF-36w"/>
-                            <constraint firstItem="9a1-dQ-5rY" firstAttribute="top" secondItem="kIz-E8-wEa" secondAttribute="bottom" constant="-20" id="CFW-Lm-2E8"/>
-                            <constraint firstItem="1Dm-ca-lF9" firstAttribute="top" secondItem="8Ig-65-fRc" secondAttribute="bottom" constant="20" id="FfK-yl-lDW"/>
+                            <constraint firstItem="1Dm-ca-lF9" firstAttribute="top" secondItem="8Ig-65-fRc" secondAttribute="centerY" constant="40" id="FfK-yl-lDW"/>
                             <constraint firstItem="zRK-C0-vGh" firstAttribute="top" secondItem="gpM-jP-AUb" secondAttribute="bottom" id="I9G-Hw-B62"/>
                             <constraint firstAttribute="trailing" secondItem="kOZ-k9-xaA" secondAttribute="trailing" id="JgE-Nx-ACY"/>
+                            <constraint firstAttribute="centerX" secondItem="Ixa-4b-Xen" secondAttribute="centerX" id="Jyb-CO-rsK"/>
                             <constraint firstItem="wQN-Cp-KEY" firstAttribute="centerX" secondItem="zRK-C0-vGh" secondAttribute="centerX" id="QZM-bf-SwD"/>
                             <constraint firstItem="6Ou-yL-M51" firstAttribute="width" secondItem="dpM-AB-dCq" secondAttribute="width" id="Wsj-gS-r2e"/>
                             <constraint firstItem="nRz-xm-bzj" firstAttribute="top" secondItem="wQN-Cp-KEY" secondAttribute="bottom" id="XX3-dr-Aoc"/>
                             <constraint firstItem="9a1-dQ-5rY" firstAttribute="bottom" secondItem="1Dm-ca-lF9" secondAttribute="top" multiplier="83.5/100" constant="1" id="Ydq-gj-b4g"/>
+                            <constraint firstItem="1Dm-ca-lF9" firstAttribute="top" secondItem="Ixa-4b-Xen" secondAttribute="centerY" constant="50" id="bnq-8t-XP7"/>
                             <constraint firstItem="wQN-Cp-KEY" firstAttribute="height" secondItem="dpM-AB-dCq" secondAttribute="height" multiplier="5:100" id="cyU-EP-kc7"/>
                             <constraint firstItem="kOZ-k9-xaA" firstAttribute="top" secondItem="dpM-AB-dCq" secondAttribute="top" id="drf-wN-kfG"/>
                             <constraint firstAttribute="centerX" secondItem="6Ou-yL-M51" secondAttribute="centerX" id="f3s-Zp-yj4"/>
@@ -2156,18 +2171,14 @@
                             <constraint firstItem="gpM-jP-AUb" firstAttribute="height" secondItem="dpM-AB-dCq" secondAttribute="height" multiplier="5:100" id="hZO-Sj-2dm"/>
                             <constraint firstItem="1Dm-ca-lF9" firstAttribute="top" secondItem="kOZ-k9-xaA" secondAttribute="bottom" id="o4c-8F-7pL"/>
                             <constraint firstItem="wQN-Cp-KEY" firstAttribute="top" secondItem="zRK-C0-vGh" secondAttribute="bottom" id="oIc-zj-Zvt"/>
-                            <constraint firstAttribute="centerX" secondItem="8Ig-65-fRc" secondAttribute="centerX" constant="-9" id="tkL-bk-4Ct"/>
+                            <constraint firstAttribute="centerX" secondItem="8Ig-65-fRc" secondAttribute="centerX" id="tkL-bk-4Ct"/>
                             <constraint firstAttribute="centerX" secondItem="nRz-xm-bzj" secondAttribute="centerX" id="ttV-Jy-C9v"/>
                             <constraint firstItem="gpM-jP-AUb" firstAttribute="top" secondItem="6Ou-yL-M51" secondAttribute="bottom" constant="1" id="wgh-25-QKK"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="CFW-Lm-2E8"/>
-                            </mask>
-                        </variation>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="shimmeringView" destination="Ixa-4b-Xen" id="t4a-wp-lOb"/>
                         <segue destination="Lp5-7U-6rj" kind="show" identifier="sleepingToPostWakeup" id="qqo-Xj-9xe"/>
                     </connections>
                 </viewController>
