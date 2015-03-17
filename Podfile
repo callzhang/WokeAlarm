@@ -31,6 +31,8 @@ target 'Woke' do
   pod 'CrashlyticsLumberjack', '2.0.0-rc2'
   pod 'Shimmer', '~> 1.0.2'
   pod 'INTULocationManager', '~> 2.0'
+  pod 'InflectorKit', '~> 0.0.1'
+  pod 'ParseFacebookUtils', '~> 1.6.4'
 end
 
 target 'WokeTests' do

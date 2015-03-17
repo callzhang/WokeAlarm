@@ -45,15 +45,15 @@
             NSAssert(time, @"userTime is nil");
             NSAssert(userTimezone, @"timeZone is nil");
             NSAssert(userTime.date2detailDateString, @"userTime.date2detailDateString is nil");
-            NSString *timeString = [NSString stringWithFormat:@"Next Alarm: %@ (%@)", userTime.date2detailDateString, userTimezone.abbreviation];
+            NSString *timeString = [NSString stringWithFormat:@"Next Alarm: %@ (%@)", [userTime mt_stringFromDateWithFormat:@"EEE dd, h:mm aa" localized:YES], userTimezone.abbreviation];
             [self.nextAlarmButton setTitle:timeString forState:UIControlStateNormal];
         }
         else{
-            [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString] forState:UIControlStateNormal];
+            [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", [time mt_stringFromDateWithFormat:@"EEE dd, h:mm aa" localized:YES]] forState:UIControlStateNormal];
         }
     }
     else {
-        [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString] forState:UIControlStateNormal];
+        [self.nextAlarmButton setTitle:[NSString stringWithFormat:@"Next Alarm: %@", [time mt_stringFromDateWithFormat:@"EEE dd, h:mm aa" localized:YES]] forState:UIControlStateNormal];
     }
 }
 

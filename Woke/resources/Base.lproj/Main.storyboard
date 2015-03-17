@@ -398,14 +398,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7SC-QR-jdD" userLabel="14% top spacer">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7SC-QR-jdD" userLabel="14% top spacer">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="KZX-Ff-Ywi"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoZ-04-ZHl">
-                                <rect key="frame" x="50" y="230" width="220" height="20"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoZ-04-ZHl">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="fiP-QR-zSH"/>
                                 </constraints>
@@ -413,8 +412,7 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2K-SO-fYc">
-                                <rect key="frame" x="50" y="250" width="220" height="20"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2K-SO-fYc">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="220" id="fEE-oZ-XKW"/>
                                 </constraints>
@@ -422,7 +420,7 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d1h-mZ-fGj" userLabel="9.6% bottom spacer">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d1h-mZ-fGj" userLabel="9.6% bottom spacer">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="fvY-kC-LlX"/>
@@ -879,7 +877,7 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9em-Hn-WxM" userLabel="next-alarm-view">
-                                                    <rect key="frame" x="82" y="189" width="157" height="25"/>
+                                                    <rect key="frame" x="85" y="189" width="151" height="25"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivf-tQ-Wws">
                                                             <rect key="frame" x="0.0" y="0.0" width="136" height="25"/>
@@ -893,7 +891,7 @@
                                                             </connections>
                                                         </button>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="woke-user-profile-timezone-icon" translatesAutoresizingMaskIntoConstraints="NO" id="ETe-7U-nHl">
-                                                            <rect key="frame" x="145" y="7" width="12" height="12"/>
+                                                            <rect key="frame" x="139" y="7" width="12" height="12"/>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -905,7 +903,7 @@
                                                         <constraint firstAttribute="bottom" secondItem="ETe-7U-nHl" secondAttribute="bottom" id="GCQ-QN-rZL"/>
                                                         <constraint firstItem="ivf-tQ-Wws" firstAttribute="leading" secondItem="9em-Hn-WxM" secondAttribute="leading" id="Ghb-th-waM"/>
                                                         <constraint firstItem="ivf-tQ-Wws" firstAttribute="centerY" secondItem="ETe-7U-nHl" secondAttribute="centerY" id="JQN-da-19y"/>
-                                                        <constraint firstItem="ETe-7U-nHl" firstAttribute="leading" secondItem="ivf-tQ-Wws" secondAttribute="trailing" constant="9" id="RFE-7T-azb"/>
+                                                        <constraint firstItem="ETe-7U-nHl" firstAttribute="leading" secondItem="ivf-tQ-Wws" secondAttribute="trailing" constant="3" id="RFE-7T-azb"/>
                                                         <constraint firstAttribute="bottom" secondItem="ivf-tQ-Wws" secondAttribute="bottom" id="cMc-It-5BQ"/>
                                                         <constraint firstItem="ETe-7U-nHl" firstAttribute="top" secondItem="9em-Hn-WxM" secondAttribute="top" id="kPS-Oy-rPg"/>
                                                     </constraints>
@@ -2208,8 +2206,8 @@
                                     <segue destination="PuF-Y3-KYl" kind="embed" identifier="smallTimeChildViewController" id="NC5-n9-VsI"/>
                                 </connections>
                             </containerView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Misty Rovertson" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lj4-ct-wpI">
-                                <rect key="frame" x="104" y="287" width="113" height="25"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Misty Rovertson" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lj4-ct-wpI">
+                                <rect key="frame" x="104" y="286" width="113" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="FP7-Ik-7Jl"/>
                                 </constraints>
@@ -2217,8 +2215,8 @@
                                 <color key="textColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="sent you a wake-up message" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCH-da-yBd">
-                                <rect key="frame" x="62" y="312" width="198" height="25"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sent you a wake-up message" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCH-da-yBd">
+                                <rect key="frame" x="62" y="311" width="198" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="vf9-Le-XQt"/>
                                 </constraints>
@@ -2226,8 +2224,8 @@
                                 <color key="textColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B1U-kk-WzV" customClass="SCSiriWaveformView">
-                                <rect key="frame" x="0.0" y="337" width="320" height="90"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B1U-kk-WzV" customClass="SCSiriWaveformView">
+                                <rect key="frame" x="0.0" y="336" width="320" height="90"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="z2d-jO-1KO"/>
@@ -2661,14 +2659,14 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7bQ-xp-Rdn">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7bQ-xp-Rdn">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="RbG-12-qMN"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bEa-nT-ate">
-                                <rect key="frame" x="15" y="277" width="290" height="1"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bEa-nT-ate">
+                                <rect key="frame" x="15" y="233" width="290" height="1"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="La4-96-ATy"/>
@@ -2688,8 +2686,8 @@
                                     <action selector="onDoneButton:" destination="5cY-YF-Z9o" eventType="touchUpInside" id="uK1-KG-spc"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Status" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JcO-C9-XpN">
-                                <rect key="frame" x="0.0" y="235" width="320" height="43"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Status" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JcO-C9-XpN">
+                                <rect key="frame" x="0.0" y="190" width="320" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="rwS-4o-T8a"/>
                                 </constraints>
@@ -3269,10 +3267,10 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7lF-Wp-60q"/>
-        <segue reference="Rze-Xr-CCz"/>
         <segue reference="CBy-Qp-dcT"/>
         <segue reference="v3V-jG-DGb"/>
+        <segue reference="Rze-Xr-CCz"/>
+        <segue reference="7lF-Wp-60q"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

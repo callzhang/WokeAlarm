@@ -64,6 +64,7 @@ PODS:
     - AFNetworking
     - DACircularProgress
     - pop
+  - InflectorKit (0.0.1)
   - INTULocationManager (2.0.2)
   - JGProgressHUD (1.2.3)
   - KVOController (1.0.3)
@@ -118,9 +119,6 @@ PODS:
   - ParseFacebookUtils (1.6.4):
     - Facebook-iOS-SDK (~> 3.20)
     - Parse (~> 1.6.4)
-  - ParseUI (1.1.1):
-    - Parse (~> 1.6)
-    - ParseFacebookUtils (~> 1.6)
   - pop (1.0.7)
   - ReactiveCocoa (2.4.7):
     - ReactiveCocoa/UI (= 2.4.7)
@@ -143,7 +141,7 @@ DEPENDENCIES:
   - APTimeZones (~> 1.1)
   - BlocksKit (~> 2.2.5)
   - CocoaLumberjack (= 2.0.0-rc)
-  - CrashlyticsFramework
+  - CrashlyticsFramework (~> 2.2)
   - CrashlyticsLumberjack (= 2.0.0-rc2)
   - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
@@ -151,7 +149,8 @@ DEPENDENCIES:
   - GKImagePicker (~> 0.0)
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
-  - INTULocationManager
+  - InflectorKit (~> 0.0.1)
+  - INTULocationManager (~> 2.0)
   - JGProgressHUD (~> 1.2)
   - KVOController (~> 1.0.3)
   - KZBootstrap (~> 0.5.2)
@@ -160,8 +159,8 @@ DEPENDENCIES:
   - MTDates (~> 1.0)
   - NYXImagesKit (~> 2.3)
   - OCMock (~> 3.1.1)
-  - Parse
-  - ParseUI
+  - Parse (~> 1.6)
+  - ParseFacebookUtils (~> 1.6.4)
   - ReactiveCocoa (~> 2.4)
   - ReactiveViewModel (~> 0.3)
   - RHAddressBook (~> 1.1)
@@ -200,6 +199,7 @@ SPEC CHECKSUMS:
   GKImagePicker: 6039f7bf8d517eed0f7583af123c4422784e6c81
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: 9639f7c57bdf942dc4e214ff9d8108e08ebd3f27
+  InflectorKit: bb1f5c9feb01d17450b8bcdeb7ab1ef1832b2247
   INTULocationManager: 83bec34472a706e178face50a4e5e21ca986b7d2
   JGProgressHUD: 733523c80f69b6dfc41b88a0f33883a89a8b4c3b
   KVOController: b1139ef1fc373b6757e4b69493fedd7b56eb1272
@@ -212,7 +212,6 @@ SPEC CHECKSUMS:
   OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
   Parse: c2610f7a12ad0defc974803b819c4efe7746e6db
   ParseFacebookUtils: 00833ccf6fec7d6429e2403fe457496a5089358b
-  ParseUI: f7e9e0e5271f75a19c74ead8fdd95d36160e268e
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   ReactiveCocoa: 313fc53cc9aeb2bbbc3f5f13c7eac16478d9af8f
   ReactiveViewModel: 512224f801ea0a603fd394eed0f38bc662b64b9a

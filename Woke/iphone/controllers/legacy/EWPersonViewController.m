@@ -204,9 +204,9 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 	if (person.location) {
 		NSTimeZone *userTimezone = [[APTimeZones sharedInstance] timeZoneWithLocation:person.location];
 		NSDate *userTime = [time mt_inTimeZone:userTimezone];
-		self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@ (%@)", userTime.date2detailDateString, userTimezone.abbreviation];
+		self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@ (%@)", [time mt_stringFromDateWithFormat:@"EEE dd, H:mm a" localized:YES], userTimezone.abbreviation];
 	}else{
-		self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@", time.date2detailDateString];
+		self.nextAlarm.text = [NSString stringWithFormat:@"Next Alarm: %@", [time mt_stringFromDateWithFormat:@"EEE dd, H:mm a" localized:YES]];
 	}
 }
 

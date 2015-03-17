@@ -211,5 +211,7 @@
 + (NSString *)wokeUserProfileFriendedButtonName;
 + (UIImage *)wokeUserProfileLocationDot;
 + (NSString *)wokeUserProfileLocationDotName;
++ (UIImage *)wokeUserProfileTimezoneIcon;
++ (NSString *)wokeUserProfileTimezoneIconName;
 
 @end

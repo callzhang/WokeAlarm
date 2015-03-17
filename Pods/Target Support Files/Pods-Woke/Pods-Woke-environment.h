@@ -168,6 +168,12 @@
 #define COCOAPODS_VERSION_MINOR_INTULocationManager 0
 #define COCOAPODS_VERSION_PATCH_INTULocationManager 2
 
+// InflectorKit
+#define COCOAPODS_POD_AVAILABLE_InflectorKit
+#define COCOAPODS_VERSION_MAJOR_InflectorKit 0
+#define COCOAPODS_VERSION_MINOR_InflectorKit 0
+#define COCOAPODS_VERSION_PATCH_InflectorKit 1
+
 // JGProgressHUD
 #define COCOAPODS_POD_AVAILABLE_JGProgressHUD
 #define COCOAPODS_VERSION_MAJOR_JGProgressHUD 1
@@ -233,12 +239,6 @@
 #define COCOAPODS_VERSION_MAJOR_ParseFacebookUtils 1
 #define COCOAPODS_VERSION_MINOR_ParseFacebookUtils 6
 #define COCOAPODS_VERSION_PATCH_ParseFacebookUtils 4
-
-// ParseUI
-#define COCOAPODS_POD_AVAILABLE_ParseUI
-#define COCOAPODS_VERSION_MAJOR_ParseUI 1
-#define COCOAPODS_VERSION_MINOR_ParseUI 1
-#define COCOAPODS_VERSION_PATCH_ParseUI 1
 
 // RHAddressBook
 #define COCOAPODS_POD_AVAILABLE_RHAddressBook

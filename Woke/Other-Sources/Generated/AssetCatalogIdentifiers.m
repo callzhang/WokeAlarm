@@ -211,5 +211,7 @@
 + (UIImage *)wokeUserProfileFriendedButton { return [UIImage imageNamed:@"woke-user-profile-friended-button"]; }
 + (NSString *)wokeUserProfileLocationDotName { return @"woke-user-profile-location-dot"; }
 + (UIImage *)wokeUserProfileLocationDot { return [UIImage imageNamed:@"woke-user-profile-location-dot"]; }
++ (NSString *)wokeUserProfileTimezoneIconName { return @"woke-user-profile-timezone-icon"; }
++ (UIImage *)wokeUserProfileTimezoneIcon { return [UIImage imageNamed:@"woke-user-profile-timezone-icon"]; }
 
 @end
