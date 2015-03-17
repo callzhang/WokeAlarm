@@ -409,4 +409,73 @@ FBTweakAction(@"Social Manager", @"Action", @"Get facebook friends", ^{
     NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/v2.2/%@/picture?type=large", fid];
     return [NSURL URLWithString:imageUrl];
 }
+
+- (void)inviteFacebookFriends{
+    // Check if the Facebook app is installed and we can present
+    // the message dialog
+    FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
+    params.link = [NSURL URLWithString:@"http://WokeAlarm.com"];
+    params.name = @"Wake up me, please?";
+    params.caption = @"Woke";
+    params.picture = [NSURL URLWithString:@"http://i.imgur.com/g3Qc1HN.png"];
+    params.linkDescription = @"Please wake me up tomorrow on Woke.";
+    
+    // If the Facebook app is installed and we can present the share dialog
+    if ([FBDialogs canPresentMessageDialogWithParams:params]) {
+        // Enable button or other UI to initiate launch of the Message Dialog
+        [FBDialogs presentShareDialogWithLink:params.link name:params.name caption:params.caption description:params.linkDescription picture:params.picture clientState:nil handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+            if(error) {
+                // An error occurred, we need to handle the error
+                // See: https://developers.facebook.com/docs/ios/errors
+                DDLogError(@"Error messaging link: %@", error.description);
+            } else {
+                // Success
+                DDLogVerbose(@"Fb messager presentaed, result %@", results);
+            }
+        }];
+    }  else {
+        // Disable button or other UI for Message Dialog
+        NSMutableDictionary *params =
+        [NSMutableDictionary dictionaryWithObjectsAndKeys:
+         @"Facebook SDK for iOS", @"name",
+         @"Build great social apps and get more installs.", @"caption",
+         @"The Facebook SDK for iOS makes it easier and faster to develop Facebook integrated iOS apps.", @"description",
+         @"https://developers.facebook.com/ios", @"link",
+         @"https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png", @"picture",
+         nil];
+        
+        // Invoke the dialog
+        [FBWebDialogs presentFeedDialogModallyWithSession:nil parameters:params handler:^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
+             if (error) {
+                 // Error launching the dialog or publishing a story.
+                 NSLog(@"Error publishing story.");
+             } else {
+                 if (result == FBWebDialogResultDialogNotCompleted) {
+                     // User clicked the "x" icon
+                     NSLog(@"User canceled story publishing.");
+                 } else {
+                     // Handle the publish feed callback
+                     NSDictionary *urlParams;// = [self parseURLParams:[resultURL query]];
+                     if (![urlParams valueForKey:@"post_id"]) {
+                         // User clicked the Cancel button
+                         NSLog(@"User canceled story publishing.");
+                     } else {
+                         // User clicked the Share button
+                         NSString *msg = [NSString stringWithFormat:
+                                          @"Posted story, id: %@",
+                                          [urlParams valueForKey:@"post_id"]];
+                         NSLog(@"%@", msg);
+                         // Show the result in an alert
+                         [[[UIAlertView alloc] initWithTitle:@"Result"
+                                                     message:msg
+                                                    delegate:nil
+                                           cancelButtonTitle:@"OK!"
+                                           otherButtonTitles:nil]
+                          show];
+                     }
+                 }
+             }
+         }];
+    }
+}
 @end

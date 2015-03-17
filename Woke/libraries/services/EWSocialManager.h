@@ -32,4 +32,9 @@
  *  RHPeople
  */
 - (NSArray *) addressPeople;
+
+/**
+ *  invitation from facebook
+ */
+- (void)inviteFacebookFriends;
 @end

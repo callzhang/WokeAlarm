@@ -110,9 +110,12 @@ UIViewController *rootViewController;
          annotation:(id)annotation {
     
     BOOL handled_1 = [FBSession.activeSession handleOpenURL:url];
-    BOOL handled_2 =  [FBAppCall handleOpenURL:url
-                             sourceApplication:sourceApplication
-                                   withSession:[PFFacebookUtils session]];
+    BOOL handled_2 =  [FBAppCall handleOpenURL:url sourceApplication:sourceApplication fallbackHandler:^(FBAppCall *call) {
+        DDLogError(@"Unhandled deep link: %@", url);
+        // Here goes the code to handle the links.
+        // Use the links to show a relevant view of your app to the user
+        [EWUIUtil showFailureHUBWithString:@"Facebook invitation failed"];
+    }];
     
     return handled_1 && handled_2;
 }
