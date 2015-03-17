@@ -13,6 +13,9 @@
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
 #import "EWSleepingViewController.h"
+#import "TTTArrayFormatter.h"
+#import "BlocksKit.h"
+#import "NSString+InflectorKit.h"
 
 
 @interface EWPostWakeUpViewController()<UITableViewDataSource, UITableViewDelegate, EWBaseViewNavigationBarButtonsDelegate>
@@ -49,6 +52,8 @@
             }];
         }
     }];
+    
+    [self updateHeaderLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -56,8 +61,26 @@
     [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.8]];
 }
 
+- (void)updateHeaderLabel {
+    NSArray *lists = [[self medias] bk_map:^id(EWMedia *media) {
+        return media.author.name;
+    }];
+    TTTArrayFormatter *formatter = [[TTTArrayFormatter alloc] init];
+    [formatter setUsesAbbreviatedConjunction:NO];
+    [formatter setUsesSerialDelimiter:NO];
+    NSString *target = @"message";
+    if (lists.count == 1) {
+        target = [target singularizedString];
+    }
+    else {
+        target = [target pluralizedString];
+    }
+    self.tableViewHeaderLabel.text = [NSString stringWithFormat:@"%@ sent you wake up %@.", [formatter stringFromArray:lists], target];
+}
+
 - (void)reloadMedias{
     [self.tableView reloadData];
+    [self updateHeaderLabel];
 }
 
 #pragma mark - <UITableViewDataSource>

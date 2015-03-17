@@ -58,6 +58,25 @@ PODS:
   - Expecta (0.3.2)
   - Facebook-iOS-SDK (3.23.1):
     - Bolts (~> 1.0)
+  - FormatterKit (1.8.0):
+    - FormatterKit/AddressFormatter (= 1.8.0)
+    - FormatterKit/ArrayFormatter (= 1.8.0)
+    - FormatterKit/ColorFormatter (= 1.8.0)
+    - FormatterKit/LocationFormatter (= 1.8.0)
+    - FormatterKit/NameFormatter (= 1.8.0)
+    - FormatterKit/OrdinalNumberFormatter (= 1.8.0)
+    - FormatterKit/TimeIntervalFormatter (= 1.8.0)
+    - FormatterKit/UnitOfInformationFormatter (= 1.8.0)
+    - FormatterKit/URLRequestFormatter (= 1.8.0)
+  - FormatterKit/AddressFormatter (1.8.0)
+  - FormatterKit/ArrayFormatter (1.8.0)
+  - FormatterKit/ColorFormatter (1.8.0)
+  - FormatterKit/LocationFormatter (1.8.0)
+  - FormatterKit/NameFormatter (1.8.0)
+  - FormatterKit/OrdinalNumberFormatter (1.8.0)
+  - FormatterKit/TimeIntervalFormatter (1.8.0)
+  - FormatterKit/UnitOfInformationFormatter (1.8.0)
+  - FormatterKit/URLRequestFormatter (1.8.0)
   - GKImagePicker (0.0.1)
   - GPUImage (0.1.6)
   - IDMPhotoBrowser (1.5.2):
@@ -146,6 +165,7 @@ DEPENDENCIES:
   - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.23)
+  - FormatterKit (~> 1.8.0)
   - GKImagePicker (~> 0.0)
   - GPUImage (~> 0.1.6)
   - IDMPhotoBrowser (~> 1.4)
@@ -196,6 +216,7 @@ SPEC CHECKSUMS:
   dyci: 099c2e6dc98abb8f21b370cabbf1443ff700608a
   Expecta: ee641011fe10aa1855d487b40e4976dac50ec342
   Facebook-iOS-SDK: 89dae50e975ebab95a01b0962d27277fc9cf08fd
+  FormatterKit: 547a808c41172136a3f3acb424ac9361d38bb32f
   GKImagePicker: 6039f7bf8d517eed0f7583af123c4422784e6c81
   GPUImage: cecb0830bb9428f50192042e3c7b53810f51388e
   IDMPhotoBrowser: 9639f7c57bdf942dc4e214ff9d8108e08ebd3f27

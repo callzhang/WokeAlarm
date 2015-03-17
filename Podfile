@@ -32,6 +32,7 @@ target 'Woke' do
   pod 'Shimmer', '~> 1.0.2'
   pod 'INTULocationManager', '~> 2.0'
   pod 'InflectorKit', '~> 0.0.1'
+  pod 'FormatterKit', '~> 1.8.0'
   pod 'ParseFacebookUtils', '~> 1.6.4'
 end
 
