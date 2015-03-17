@@ -96,16 +96,23 @@
 	[EWBackgroundingManager sharedInstance];
 	
 	//fetch everyone
-	DDLogVerbose(@"1. Getting everyone");
+	DDLogVerbose(@"[1]. Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
 	
 	//refresh current user
-	DDLogVerbose(@"2. Register user notification");
+	DDLogVerbose(@"[2]. Register user notification");
 	[[EWServer shared] requestNotificationPermissions];
 	
 	//location
-	DDLogVerbose(@"8. Start location update");
+	DDLogVerbose(@"[3]. Start location update");
 	[[EWAccountManager shared] registerLocation];
+    
+    
+    DDLogVerbose(@"[4]. Start cache management");
+    [[EWCachedInfoManager shared] startAutoCacheUpdateForMe];
+    
+    DDLogVerbose(@"[5]. Start upload log files");
+    [EWUtil uploadUpdatedLogFiles];
 }
 
 #pragma mark - Login Check
@@ -165,19 +172,17 @@
     }
 	
 	//fetch everyone
-	DDLogVerbose(@"[1] Getting everyone");
+	DDLogVerbose(@"<1> Getting everyone");
 	[[EWPersonManager sharedInstance] getWakeesInBackgroundWithCompletion:NULL];
 
     //location
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-		DDLogVerbose(@"[2] Start location recurring update");
+		DDLogVerbose(@"<2> Start location recurring update");
 		[[EWAccountManager shared] registerLocation];
 	}
     
-    
-    DDLogVerbose(@"[3]. Start cache management");
-    [[EWCachedInfoManager shared] startAutoCacheUpdateForMe];
-    
+    DDLogVerbose(@"<3>. Start upload log files");
+    [EWUtil uploadUpdatedLogFiles];
 }
 
 
