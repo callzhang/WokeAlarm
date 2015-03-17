@@ -16,6 +16,7 @@
     UIViewController *sourceViewController = self.sourceViewController;
     UIViewController *destinationViewController = self.destinationViewController;
     
+    
     if (sourceViewController.navigationController) {
         [sourceViewController.navigationController.view.layer addAnimation:transition forKey:kCATransition];
         NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:sourceViewController.navigationController.viewControllers];
