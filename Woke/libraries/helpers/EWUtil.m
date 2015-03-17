@@ -22,7 +22,12 @@
 #import "UIGestureRecognizer+BlocksKit.h"
 #import "UIViewController+Blur.h"
 #import "Bolts.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
 
+FBTweakAction(@"EWUtil", @"Action", @"Upload log files", ^{
+	[EWUtil uploadUpdatedLogFiles];
+});
 
 @interface EWUtil()<FBTweakViewControllerDelegate>
 @property (nonatomic, strong) DDFileLogger *fileLogger;
@@ -86,7 +91,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
         //compare updatedAt
         NSMutableArray *localFileInfos = logFileInfos.mutableCopy;
         for (PFObject *log in objects) {
-            
             NSString *name = log[@"logFileName"];
             NSUInteger idx = [logFileNames indexOfObject:name];
             DDLogFileInfo *info = logFileInfos[idx];
@@ -96,9 +100,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
                 //file updated, need to update again.
                 PFFile *logFile = [PFFile fileWithName:name data:[NSData dataWithContentsOfFile:info.filePath]];
                 log[@"log"] = logFile;
-                [[log saveEventually] continueWithBlock:^id(BFTask *task) {
+                [[log saveInBackground] continueWithBlock:^id(BFTask *task) {
                     if (task.isCancelled) {
-                        // the save was cancelled.
                         DDLogWarn(@"Log %@ canclled to update %@", name, task.error);
                     } else if (task.error) {
                         DDLogError(@"Log %@ failed to update %@", name, task.error);
@@ -107,7 +110,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
                     }
                     return nil;
                 }];
-                
             }
         }
         
@@ -123,7 +125,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
             log[@"log"] = file;
             [[log saveInBackground] continueWithBlock:^id(BFTask *task) {
                 if (task.isCancelled) {
-                    // the save was cancelled.
                     DDLogWarn(@"Log %@ canclled to create %@", name, task.error);
                 } else if (task.error) {
                     DDLogError(@"Log %@ failed to create %@", name, task.error);

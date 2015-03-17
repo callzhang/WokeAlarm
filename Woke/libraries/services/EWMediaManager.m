@@ -74,8 +74,29 @@
     }
 }
 
+#pragma mark - Get voice
+- (EWMedia *)getWokeVoice{
+	EWAssertMainThread
+	NSError *error;
+	EWMedia *newMedia;
+	PFObject *media = [PFCloud callFunction:@"getWokeVoice" withParameters:@{kUserID: [EWPerson me].objectId} error:&error];
+	if (media) {
+		DDLogInfo(@"Finished get woke voice request with media: %@", media);
+		//check media
+			newMedia = [EWMedia getMediaByID:media.objectId inContext:mainContext];
+			[[EWPerson me] addReceivedMediasObject:newMedia];
+			[[EWNotificationManager sharedInstance] newMediaNotification:newMedia];
+			[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:newMedia];
+		
+	}else{
+		DDLogError(@"Failed Woke voice request: %@", error.description);
+	}
+	
+	return newMedia;
+}
 
-- (void)getWokeVoice{
+
+- (void)getWokeVoiceWithCompletion:(void (^)(EWMedia *, NSError *))block{
     //call server test function
     [PFCloud callFunctionInBackground:@"getWokeVoice" withParameters:@{kUserID: [EWPerson me].objectId} block:^(PFObject *media, NSError *error) {
         if (media) {
@@ -85,16 +106,24 @@
                 EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
                 [[EWPerson meInContext:localContext] addReceivedMediasObject:newMedia];
             } completion:^(BOOL contextDidSave, NSError *error2) {
+				EWMedia *m;
                 if (contextDidSave) {
-                    EWMedia *m = [EWMedia getMediaByID:media.objectId inContext:mainContext];
+                    m = [EWMedia getMediaByID:media.objectId inContext:mainContext];
                     [[EWNotificationManager sharedInstance] newMediaNotification:m];
 					[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:m];
 				}else {
 					DDLogError(@"Failed to save new media: %@", error2);
 				}
+				
+				if (block) {
+					block(m, nil);
+				}
             }];
         }else{
             DDLogError(@"Failed Woke voice request: %@", error.description);
+			if (block) {
+				block(nil, error);
+			}
         }
     }];
 }

@@ -54,6 +54,7 @@
 - (void)checkUnreadMediasWithCompletion:(ArrayBlock)block;
 
 //get ramdom voice
-- (void)getWokeVoice;
+- (EWMedia *)getWokeVoice;
+- (void)getWokeVoiceWithCompletion:(void (^)(EWMedia *media, NSError *error))block;
 - (void)testGetRandomVoiceWithCompletion:(void (^)(EWMedia *media, NSError *error))block;
-@end
+@end;

@@ -65,6 +65,15 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completio
     }
 });
 
+FBTweakAction(@"WakeUpManager", @"Action", @"Remove unread medias", ^{
+	NSArray *unread = [EWPerson myUnreadMedias];
+	for (EWMedia *media in unread) {
+		DDLogDebug(@"Delete EWMedia PO %@", media.serverID);
+		[media.parseObject delete];
+		[media remove];
+	}
+});
+
 
 NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotification";
 NSString * const kEWWakeUpDidPlayNextMediaNotification = @"kEWWakeUpDidPlayNextMediaNotification";
@@ -145,7 +154,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //add Woke media is needed
     if (self.medias.count == 0) {
         //need to create some voice
-        [[EWMediaManager sharedInstance] getWokeVoice];
+        EWMedia *newMedia = [[EWMediaManager sharedInstance] getWokeVoice];
+		self.medias = @[newMedia];
     }
     
     //set volume

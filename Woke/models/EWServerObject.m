@@ -34,6 +34,7 @@
     [EWSync removeMOFromUpdating:self];
     
     NSManagedObjectContext *context = self.managedObjectContext;
+	//[self.parseObject unpin];//no need to unpin, it will be deleted later
     [self MR_deleteEntity];
     [context MR_saveToPersistentStoreAndWait];
 }
