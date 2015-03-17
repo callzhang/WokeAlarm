@@ -11,6 +11,8 @@
 
 @class EWPerson;
 @interface EWSocialManager : NSObject
+@property (nonatomic, assign) BOOL forceInviteWithWeb;
+
 
 + (EWSocialManager *)sharedInstance;
 
