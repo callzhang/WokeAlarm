@@ -35,7 +35,6 @@ const struct EWPersonRelationships EWPersonRelationships = {
 	.sentMedias = @"sentMedias",
 	.sentMessages = @"sentMessages",
 	.socialGraph = @"socialGraph",
-	.unreadMedias = @"unreadMedias",
 };
 
 @implementation EWPersonID
@@ -221,17 +220,6 @@ const struct EWPersonRelationships EWPersonRelationships = {
 }
 
 @dynamic socialGraph;
-
-@dynamic unreadMedias;
-
-- (NSMutableSet*)unreadMediasSet {
-	[self willAccessValueForKey:@"unreadMedias"];
-
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"unreadMedias"];
-
-	[self didAccessValueForKey:@"unreadMedias"];
-	return result;
-}
 
 @end
 

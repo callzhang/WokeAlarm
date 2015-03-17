@@ -103,7 +103,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     
     //set category
     BOOL success = [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback
-													withOptions: AVAudioSessionCategoryOptionAllowBluetooth
+													withOptions: AVAudioSessionCategoryOptionDefaultToSpeaker
 														  error: &error];
     if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
 #ifdef DEBUG

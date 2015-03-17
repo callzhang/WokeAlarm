@@ -320,7 +320,7 @@
         }
     }
     //try to assign value only
-    if (attrbutesNeedUpdate && option != EWSyncOptionUpdateNone) {
+    if (attrbutesNeedUpdate && option == EWSyncOptionUpdateAttributesOnly) {
         [MO assignValueFromParseObject:self];
     }
     

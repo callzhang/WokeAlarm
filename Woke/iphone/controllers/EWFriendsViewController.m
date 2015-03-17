@@ -12,6 +12,7 @@
 #import "EWProfileViewController.h"
 #import "UIStoryboard+Extensions.h"
 #import "UIBarButtonItem+BlocksKit.h"
+#import "UIViewController+Blur.h"
 
 #define kFriendViewCellSectionLabelID 991
 
@@ -105,6 +106,6 @@
         
     }];
     
-    [self presentViewController:nav animated:YES completion:nil];
+    [self presentWithBlur:nav withCompletion:nil];
 }
 @end

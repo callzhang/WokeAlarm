@@ -84,8 +84,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWCachedInfoManager)
     stats[kWakeability] = self.wakability;
     stats[kAverageSleepLength] = self.averageSleepLength;
     
-    [[self class] setCachedInfoWithValue:stats forKeyPath:@[kStatsCache]];
-    
     _currentPerson.cachedInfo = [_currentPerson.cachedInfo setValue:stats forImmutableKeyPath:@[kStatsCache]];
     [_currentPerson save];
 }

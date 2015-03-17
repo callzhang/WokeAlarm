@@ -47,7 +47,6 @@
     EWMedia *media = [EWMedia getMediaByID:mediaID];
     //Woke state -> assign media to next task, download
     if (![[EWPerson me].unreadMedias containsObject:media]) {
-        [[EWPerson me] addUnreadMediasObject:media];
 		[[EWPerson me] addReceivedMediasObject:media];
         [[EWPerson me] save];
         [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
@@ -84,12 +83,12 @@
             //check media
             [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
-                [[EWPerson meInContext:localContext] addUnreadMediasObject:newMedia];
+                [[EWPerson meInContext:localContext] addReceivedMediasObject:newMedia];
             } completion:^(BOOL contextDidSave, NSError *error2) {
                 if (contextDidSave) {
                     EWMedia *m = [EWMedia getMediaByID:media.objectId inContext:mainContext];
                     [[EWNotificationManager sharedInstance] newMediaNotification:m];
-					[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
+					[[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:m];
 				}else {
 					DDLogError(@"Failed to save new media: %@", error2);
 				}
@@ -110,7 +109,7 @@
 			//check media
 			[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
 				EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
-				[[EWPerson meInContext:localContext] addUnreadMediasObject:newMedia];
+				[[EWPerson meInContext:localContext] addReceivedMediasObject:newMedia];
 			} completion:^(BOOL contextDidSave, NSError *error2) {
 				//notification
                 EWMedia *m = (EWMedia *)[media managedObjectInContext:mainContext];
@@ -147,7 +146,7 @@
 - (void)checkMediasForPerson:(EWPerson *)person{
 	NSMutableSet *medias = person.sentMedias.mutableCopy;
 	[medias unionSet:person.receivedMedias];
-	[medias unionSet:person.unreadMedias];
+	[medias addObjectsFromArray:person.unreadMedias];
 	//check
 	for (EWMedia *media in medias) {
 		[media downloadMediaFileWithCompletion:^(BOOL success, NSError *error) {
@@ -187,26 +186,21 @@
     EWPerson *localMe = [EWPerson meInContext:context];
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWMedia class])];
     [query whereKey:EWMediaRelationships.receiver equalTo:[PFUser currentUser]];
-    NSSet *unreadMediaIDs = [localMe.unreadMedias valueForKey:kParseObjectID];
 	NSSet *receivedMediaIDs = [localMe.receivedMedias valueForKey:kParseObjectID];
-    [query whereKey:kParseObjectID notContainedIn:[unreadMediaIDs setByAddingObjectsFromSet:receivedMediaIDs].allObjects];
+    [query whereKey:kParseObjectID notContainedIn:receivedMediaIDs.allObjects];
 	NSError *err;
     NSArray *newMedia = [EWSync findParseObjectWithQuery:query inContext:context error:&err];
 
     for (EWMedia *media in newMedia) {
 		[media downloadMediaFile];
-        [[EWPerson me] addUnreadMediasObject:media];
+        [[EWPerson meInContext:context] addReceivedMediasObject:media];
         //new media
 		DDLogInfo(@"Received media(%@) from %@", media.objectId, media.author.name);
         //EWNotification
-        if ([NSThread isMainThread]) {
-            [[EWNotificationManager shared] newMediaNotification:media];
-        }else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                EWMedia *m = (EWMedia *)[media MR_inContext:mainContext];
-                [[EWNotificationManager shared] newMediaNotification:m];
-            });
-        }
+		dispatch_async(dispatch_get_main_queue(), ^{
+			EWMedia *m = (EWMedia *)[media MR_inContext:mainContext];
+			[[EWNotificationManager shared] newMediaNotification:m];
+		});
     }
 	
     if (newMedia.count) {
@@ -217,24 +211,7 @@
         });
     }
 
-	return [[EWMediaManager sharedInstance] unreadMediasForPerson:[EWPerson meInContext:context]];
-}
-
-- (NSArray *)unreadMediasForPerson:(EWPerson *)person{
-    NSArray *unreadMedias = person.unreadMedias.allObjects;
-    //filter only target date not in the future
-    NSArray *unreadMediasForToday = [unreadMedias bk_select:^BOOL(EWMedia *obj) {
-        if (!obj.targetDate) {
-            return YES;
-        }else if ([obj.targetDate timeIntervalSinceDate:[EWPerson myCurrentAlarmActivity].time.nextOccurTime] < 0){
-            return YES;
-        }
-        return NO;
-    }];
-    //sort by priority and created date
-    unreadMediasForToday = [unreadMediasForToday sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWMediaAttributes.priority ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
-    return unreadMediasForToday;
-    
+	return [EWPerson meInContext:context].unreadMedias;
 }
 
 @end

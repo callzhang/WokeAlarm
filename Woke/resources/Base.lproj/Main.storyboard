@@ -255,9 +255,9 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Mb-bv-HXk">
-                                <rect key="frame" x="21" y="248" width="66" height="46"/>
+                                <rect key="frame" x="21" y="248" width="78" height="46"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
-                                <state key="normal" title="Voice">
+                                <state key="normal" title="Voices">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1442,6 +1442,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="hC7-OW-utx"/>
                                                     </constraints>
+                                                    <color key="trackTintColor" white="1" alpha="0.48999999999999999" colorSpace="calibratedWhite"/>
                                                 </progressView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1943,7 +1944,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O3X-Af-XKh" userLabel="time wrapper view">
                                 <rect key="frame" x="45" y="50" width="230" height="80"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TNJ-ny-dUW">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TNJ-ny-dUW">
                                         <rect key="frame" x="0.0" y="-18" width="50" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="Ccl-FR-vdX"/>
@@ -1952,7 +1953,7 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUW-2K-mCP">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUW-2K-mCP">
                                         <rect key="frame" x="120" y="-18" width="55" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="dzx-Po-iCH"/>
@@ -1967,7 +1968,7 @@
                                             <constraint firstAttribute="width" constant="15" id="ppA-KA-cbp"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ild-zj-4UH">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ild-zj-4UH">
                                         <rect key="frame" x="50" y="-18" width="55" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="ARP-1i-RrQ"/>
@@ -1976,7 +1977,7 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6a-9d-C5k">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6a-9d-C5k">
                                         <rect key="frame" x="175" y="-18" width="55" height="116"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="e98-Pg-VDM"/>
@@ -2491,6 +2492,8 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="zZn-hv-rgw"/>
                                                             </constraints>
+                                                            <color key="progressTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="trackTintColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         </progressView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3266,10 +3269,10 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="wLP-1t-7ZH"/>
-        <segue reference="v3V-jG-DGb"/>
-        <segue reference="CBy-Qp-dcT"/>
         <segue reference="7lF-Wp-60q"/>
+        <segue reference="Rze-Xr-CCz"/>
+        <segue reference="CBy-Qp-dcT"/>
+        <segue reference="v3V-jG-DGb"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

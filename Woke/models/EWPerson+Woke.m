@@ -60,6 +60,29 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
     }];
 }
 
+
+
+- (NSArray *)unreadMedias{
+    NSMutableArray *unread = self.receivedMedias.allObjects.mutableCopy;
+    for (EWActivity *activity in self.activities) {
+        [unread removeObjectsInArray:activity.medias];
+    }
+    
+    //filter out future targeted medias
+    NSArray *unreadMediasForToday = [unread bk_select:^BOOL(EWMedia *obj) {
+        if (!obj.targetDate) {
+            return YES;
+        }else if ([obj.targetDate timeIntervalSinceDate:[EWPerson myCurrentAlarmActivity].time.nextOccurTime] < 0){
+            return YES;
+        }
+        return NO;
+    }];
+    
+    //sort by priority and created date
+    unreadMediasForToday = [unreadMediasForToday sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWMediaAttributes.priority ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
+    return unreadMediasForToday;
+}
+
 #pragma mark - My Stuffs
 
 + (NSArray *)myActivities {
@@ -109,7 +132,7 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
 
 + (NSArray *)myUnreadMedias{
     EWAssertMainThread
-    return [[EWMediaManager sharedInstance] unreadMediasForPerson:[EWPerson me]];
+    return [EWPerson me].unreadMedias;
 }
 
 + (NSArray *)myFriends{

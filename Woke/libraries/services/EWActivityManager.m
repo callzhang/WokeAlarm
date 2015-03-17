@@ -51,7 +51,7 @@ NSString *const EWActivityTypeMedia = @"media";
         _currentAlarmActivity = [self activityForAlarm:alarm];
         completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
         timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
-        NSParameterAssert(!completed && timeMatched);
+        NSAssert(!completed && timeMatched, @"alert %@ doesn't match alarm %@", _currentAlarmActivity, alarm);
     }
     
     return _currentAlarmActivity;
@@ -63,7 +63,7 @@ NSString *const EWActivityTypeMedia = @"media";
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner];
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
-    [activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
+	//[activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
     while (activities.count >1) {
         EWActivity *activity = activities.firstObject;
         DDLogError(@"Multiple current alarm activities found, please check: \n%@", activity.serverID);
@@ -106,9 +106,7 @@ NSString *const EWActivityTypeMedia = @"media";
         //add unread medias to current media
         NSArray *played = [EWPerson myUnreadMedias];
         [activity addMediaIDs:[played valueForKey:kParseObjectID]];
-        [EWPerson me].unreadMedias = nil;
-		[[EWPerson me] addReceivedMedias:[NSSet setWithArray:played]];
-        DDLogInfo(@"Removed %ld medias from my unread medias", (unsigned long)played.count);
+        DDLogInfo(@"Added %ld medias to activity %@", (unsigned long)played.count, activity.time.string);
     }
     activity.statement = [EWPerson meInContext:activity.managedObjectContext].statement;
     activity.completed = [NSDate date];

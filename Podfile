@@ -6,8 +6,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 target 'Woke' do
   pod 'Facebook-iOS-SDK', '~> 3.23'
   pod 'GPUImage', '~> 0.1.6'
-  pod 'Parse'
-  pod 'ParseUI'
+  pod 'Parse', '~> 1.6'
   pod 'AFNetworking', '~> 2.5.1'
   pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
   pod 'BlocksKit', '~> 2.2.5'
@@ -27,11 +26,11 @@ target 'Woke' do
   pod 'APTimeZones', '~> 1.1'
   pod 'Tweaks', '~> 1.1.0'
   pod 'RHAddressBook', '~> 1.1'
-  pod 'CrashlyticsFramework'
+  pod 'CrashlyticsFramework', '~> 2.2'
   pod 'CocoaLumberjack', '2.0.0-rc'
   pod 'CrashlyticsLumberjack', '2.0.0-rc2'
-  pod 'INTULocationManager'
   pod 'Shimmer', '~> 1.0.2'
+  pod 'INTULocationManager', '~> 2.0'
 end
 
 target 'WokeTests' do

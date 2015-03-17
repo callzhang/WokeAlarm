@@ -76,21 +76,28 @@
     UIActionSheet *sheet;
     if (_person.isMe) {
         
-        sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Close" destructiveButtonTitle:nil otherButtonTitles:@"Preference",@"Log out", nil];
-#ifdef DEBUG
-        [sheet addButtonWithTitle:@"Add friend"];
-        [sheet addButtonWithTitle:@"Send Voice Greeting"];
-#endif
+        sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Facebook profile",@"Log out", nil];
     }else{
         //sheet.destructiveButtonIndex = 0;
         if (_person.friendshipStatus == EWFriendshipStatusFriended) {
-            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Close" destructiveButtonTitle:nil otherButtonTitles:@"Flag", @"Unfriend", @"Send Voice Greeting", @"Friend history", @"Block", nil];
+            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Flag", @"Unfriend", @"Facebook profile", nil];
         }else{
             
-            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Close" destructiveButtonTitle:nil otherButtonTitles:@"Add friend", @"Block", nil];
+            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Facebook profile", @"Flag", @"Block", nil];
         }
     }
     [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
+    if ([title isEqualToString:@"Facebook profile"]) {
+        //TODO:Facebook profile
+    } else if ([title isEqualToString:@"Unfriend"]){
+        //TODO:Unfriend
+    } else if ([title isEqualToString:@"Log out"]) {
+        //TODO:logout
+    }
 }
 
 - (IBAction)wake:(id)sender {

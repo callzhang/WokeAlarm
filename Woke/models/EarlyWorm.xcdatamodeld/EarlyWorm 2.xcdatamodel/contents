@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C109" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14C1510" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="EWAchievement" representedClassName="EWAchievement" parentEntity="EWServerObject" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Transformable" syncable="YES"/>
@@ -109,7 +109,6 @@
         <relationship name="sentMedias" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMedia" inverseName="author" inverseEntity="EWMedia" syncable="YES"/>
         <relationship name="sentMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMessage" inverseName="sender" inverseEntity="EWMessage" syncable="YES"/>
         <relationship name="socialGraph" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWSocial" inverseName="owner" inverseEntity="EWSocial" syncable="YES"/>
-        <relationship name="unreadMedias" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWMedia" syncable="YES"/>
     </entity>
     <entity name="EWServerObject" representedClassName="EWServerObject" isAbstract="YES" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -138,7 +137,7 @@
         <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="150"/>
         <element name="EWMessage" positionX="0" positionY="0" width="128" height="30"/>
         <element name="EWNotification" positionX="0" positionY="0" width="128" height="191"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="128" height="478"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="128" height="465"/>
         <element name="EWServerObject" positionX="0" positionY="0" width="128" height="105"/>
         <element name="EWSocial" positionX="0" positionY="0" width="128" height="193"/>
     </elements>

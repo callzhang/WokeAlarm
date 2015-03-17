@@ -36,7 +36,6 @@ extern const struct EWPersonRelationships {
 	__unsafe_unretained NSString *sentMedias;
 	__unsafe_unretained NSString *sentMessages;
 	__unsafe_unretained NSString *socialGraph;
-	__unsafe_unretained NSString *unreadMedias;
 } EWPersonRelationships;
 
 @class EWAchievement;
@@ -51,7 +50,6 @@ extern const struct EWPersonRelationships {
 @class EWMedia;
 @class EWMessage;
 @class EWSocial;
-@class EWMedia;
 
 @class NSObject;
 
@@ -188,10 +186,6 @@ extern const struct EWPersonRelationships {
 
 //- (BOOL)validateSocialGraph:(id*)value_ error:(NSError**)error_;
 
-@property (nonatomic, strong) NSSet *unreadMedias;
-
-- (NSMutableSet*)unreadMediasSet;
-
 @end
 
 @interface _EWPerson (AchievementsCoreDataGeneratedAccessors)
@@ -282,14 +276,6 @@ extern const struct EWPersonRelationships {
 
 @end
 
-@interface _EWPerson (UnreadMediasCoreDataGeneratedAccessors)
-- (void)addUnreadMedias:(NSSet*)value_;
-- (void)removeUnreadMedias:(NSSet*)value_;
-- (void)addUnreadMediasObject:(EWMedia*)value_;
-- (void)removeUnreadMediasObject:(EWMedia*)value_;
-
-@end
-
 @interface _EWPerson (CoreDataGeneratedPrimitiveAccessors)
 
 - (id)primitiveBgImage;
@@ -375,8 +361,5 @@ extern const struct EWPersonRelationships {
 
 - (EWSocial*)primitiveSocialGraph;
 - (void)setPrimitiveSocialGraph:(EWSocial*)value;
-
-- (NSMutableSet*)primitiveUnreadMedias;
-- (void)setPrimitiveUnreadMedias:(NSMutableSet*)value;
 
 @end

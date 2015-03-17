@@ -18,13 +18,13 @@
 #import "EWUIUtil.h"
 #import "EWCachedInfoManager.h"
 #import "EWBackgroundingManager.h"
-#import "NSPersistentStoreCoordinator+MagicalRecord.h"
 #import "EWAccountManager.h"
 #import "PFFacebookUtils.h"
 #import "FBKVOController.h"
 #import "NSDictionary+KeyPathAccess.h"
 #import "NSTimer+BlocksKit.h"
 #import "EWUtil.h"
+#import "NSManagedObjectContext+MagicalRecord.h"
 
 @interface EWStartUpSequence ()
 @property (nonatomic, assign) BOOL dataChecked;
@@ -59,18 +59,18 @@
 	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDataCheck) name:EWDataDidSyncNotification object:nil];
     
     //observe updating MO
-    [self.KVOController observe:[EWSync sharedInstance] keyPath:@"managedObjectsUpdating" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        if ([EWSession sharedSession].isSyncingUser == NO && [EWSync sharedInstance].managedObjectsUpdating.allKeys.count == 0){
-            DDLogInfo(@"Sync data finished");
-            [[NSNotificationCenter defaultCenter] postNotificationName:EWDataDidSyncNotification object:nil];
-            [self loginDataCheck];
-        }
-        static NSTimer *timer;
-        [timer invalidate];
-        timer = [NSTimer bk_scheduledTimerWithTimeInterval:5 block:^(NSTimer *timer) {
-            DDLogInfo(@"The item still updating is: %@", [EWSync sharedInstance].managedObjectsUpdating);
-        } repeats:NO];
-    }];
+//    [self.KVOController observe:[EWSync sharedInstance] keyPath:@"managedObjectsUpdating" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+//        if ([EWSession sharedSession].isSyncingUser == NO && [EWSync sharedInstance].managedObjectsUpdating.allKeys.count == 0){
+//            DDLogInfo(@"Sync data finished");
+//            [[NSNotificationCenter defaultCenter] postNotificationName:EWDataDidSyncNotification object:nil];
+//            [self loginDataCheck];
+//        }
+//        static NSTimer *timer;
+//        [timer invalidate];
+//        timer = [NSTimer bk_scheduledTimerWithTimeInterval:5 block:^(NSTimer *timer) {
+//            DDLogInfo(@"The item still updating is: %@", [EWSync sharedInstance].managedObjectsUpdating);
+//        } repeats:NO];
+//    }];
 	
 	return self;
 }
@@ -327,7 +327,7 @@
 		//save me first so the sql has the me object for other threads
 		[me saveToLocal];
 		
-		[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+		[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 			EWPerson *localMe = [me MR_inContext:localContext];
 			[POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
 				

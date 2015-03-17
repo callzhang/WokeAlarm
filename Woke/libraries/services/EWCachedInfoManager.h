@@ -63,6 +63,4 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWCachedInfoManager);
 - (void)updateCachedAlarmTimes;
 - (void)updateCachedStatements;
 
-//Helper
-+ (void)setCachedInfoWithValue:(id)value forKeyPath:(NSArray *)keyPathArray;
 @end

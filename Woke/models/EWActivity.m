@@ -51,8 +51,8 @@
 
 - (void)addMediaIDs:(NSArray *)serverIDs{
     NSMutableSet *mediaArray = [NSMutableSet setWithArray:self.mediaIDs] ?: [NSMutableSet new];
-    [mediaArray addObject:serverIDs];
-    self.mediaIDs = mediaArray.allObjects;
+    [mediaArray addObjectsFromArray:serverIDs];
+    self.mediaIDs = mediaArray.allObjects.mutableCopy;
 }
 
 -(EWServerObject *)ownerObject{

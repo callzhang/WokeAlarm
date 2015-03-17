@@ -20,9 +20,11 @@ typedef NS_ENUM(NSInteger, EWFriendshipStatus){
 extern NSString * const kFriendshipStatusChanged;
 
 @interface EWPerson(Woke)
+
 + (EWPerson *)me;
 + (EWPerson *)meInContext:(NSManagedObjectContext *)context;
 - (BOOL)isMe;
+- (NSArray *)unreadMedias;
 
 //my stuff
 + (NSArray *)myActivities;

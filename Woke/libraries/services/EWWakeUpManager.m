@@ -49,7 +49,20 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
-    [[EWWakeUpManager shared] testWakeUpIn30s];
+    [[EWWakeUpManager shared] testWakeUpInSeconds:30];
+});
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 1 hour", ^{
+    [[EWWakeUpManager shared] testWakeUpInSeconds:3600];
+});
+
+FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completion date", ^{
+    NSArray *futureActivities = [EWActivity MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K = %@ AND %K > %@", EWActivityRelationships.owner, [EWPerson me], EWActivityAttributes.time, [NSDate date]] inContext:mainContext];
+    for(EWActivity *activity in futureActivities){
+        DDLogDebug(@"Activity's completion time %@ removed", activity.completed.string);
+        activity.completed = nil;
+        [activity save];
+    }
 });
 
 
@@ -132,13 +145,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //add Woke media is needed
     if (self.medias.count == 0) {
         //need to create some voice
-#ifdef DEBUG
-		[[EWMediaManager sharedInstance] testGetRandomVoiceWithCompletion:^(EWMedia *media, NSError *error) {
-			DDLogInfo(@"Got random voice");
-		}];
-#else
         [[EWMediaManager sharedInstance] getWokeVoice];
-#endif
     }
     
     //set volume
@@ -258,14 +265,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //set wakeup time, move to past, schedule and save
     [[EWActivityManager sharedManager] completeAlarmActivity:activity];
     
-    //post notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
-    
     //playing states
     self.continuePlay = NO;
     self.medias = nil;
     self.currentMediaIndex = nil;
     self.skipCheckActivityCompleted = NO;
+    
+    //post notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
     
     //THOUGHTS: something to do in the future
     //notify friends and challengers
@@ -364,6 +371,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self loadUnreadMedias];
     [EWAVManager sharedManager].player.volume = 0;
     [[EWAVManager sharedManager] volumeTo:1 withCompletion:^{
+        self.currentMediaIndex = @(-1);
         [self playNextVoice];
     }];
 }
@@ -451,7 +459,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 - (void)loadUnreadMedias{
 	BOOL forceLoad = NO;
 #ifdef DEBUG
-	forceLoad = YES;
+	//forceLoad = YES;
 #endif
 	
     if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp || forceLoad) {
@@ -471,7 +479,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 #pragma mark - Test
-- (void)testWakeUpIn30s{
+- (void)testWakeUpInSeconds:(NSInteger)seconds{
     [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = YES;
     EWAlarm *testingAlarm;
     for (EWAlarm *alarm in [EWPerson myAlarms]) {
@@ -480,10 +488,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         }
     }
     EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:testingAlarm];
-    NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:30];
+    NSDate *newTime = [[NSDate date] mt_dateByAddingYears:0 months:0 weeks:0 days:0 hours:0 minutes:0 seconds:seconds];
     testingAlarm.time = newTime;
     activity.time = newTime;
+    NSUInteger mediaCount = activity.mediaIDs.count;
     activity.mediaIDs = [NSMutableArray array];
+    DDLogVerbose(@"Removed %lu medias from activity, now unreadMedias cound is %lu", (unsigned long)mediaCount, (unsigned long)[EWPerson myUnreadMedias].count);
     DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
 	[[EWWakeUpManager shared] scheduleAlarmTimer];
 	
