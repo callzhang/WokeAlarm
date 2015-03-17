@@ -21,10 +21,11 @@
 #import "BlocksKit+UIKit.h"
 #import "UIGestureRecognizer+BlocksKit.h"
 #import "UIViewController+Blur.h"
-//#import <AdSupport/ASIdentifierManager.h>
+#import "Bolts.h"
+
 
 @interface EWUtil()<FBTweakViewControllerDelegate>
-
+@property (nonatomic, strong) DDFileLogger *fileLogger;
 @end
 
 @implementation EWUtil
@@ -72,6 +73,67 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
 
 + (void)initLogging{
     initLogging();
+}
+
++ (void)uploadUpdatedLogFiles{
+    PFQuery *logFileQuery = [PFQuery queryWithClassName:@"EWLog"];
+    [logFileQuery whereKey:@"installation" equalTo:[PFInstallation currentInstallation]];
+    [logFileQuery whereKey:@"user" equalTo:[PFUser currentUser]];
+    NSArray *logFileNames = [[EWUtil shared].fileLogger.logFileManager sortedLogFileNames];
+    NSArray *logFileInfos = [[EWUtil shared].fileLogger.logFileManager sortedLogFileInfos];
+    [logFileQuery whereKey:@"logFileName" containedIn:logFileNames];
+    [logFileQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //compare updatedAt
+        NSMutableArray *localFileInfos = logFileInfos.mutableCopy;
+        for (PFObject *log in objects) {
+            
+            NSString *name = log[@"logFileName"];
+            NSUInteger idx = [logFileNames indexOfObject:name];
+            DDLogFileInfo *info = logFileInfos[idx];
+            [localFileInfos removeObject:info];
+            NSDate *updated = info.modificationDate;
+            if ([updated timeIntervalSinceDate:log.updatedAt] > 60) {
+                //file updated, need to update again.
+                PFFile *logFile = [PFFile fileWithName:name data:[NSData dataWithContentsOfFile:info.filePath]];
+                log[@"log"] = logFile;
+                [[log saveEventually] continueWithBlock:^id(BFTask *task) {
+                    if (task.isCancelled) {
+                        // the save was cancelled.
+                        DDLogWarn(@"Log %@ canclled to update %@", name, task.error);
+                    } else if (task.error) {
+                        DDLogError(@"Log %@ failed to update %@", name, task.error);
+                    } else {
+                        DDLogDebug(@"Log file %@ updated", name);
+                    }
+                    return nil;
+                }];
+                
+            }
+        }
+        
+        for (DDLogFileInfo *info in localFileInfos) {
+            NSString *path = info.filePath;
+            NSString *name = info.fileName;
+            NSData *logData = [NSData dataWithContentsOfFile:path];
+            PFFile *file = [PFFile fileWithName:name data:logData];
+            PFObject *log = [PFObject objectWithClassName:@"EWLog"];
+            log[@"user"] = [PFUser currentUser];
+            log[@"installation"] = [PFInstallation currentInstallation];
+            log[@"logFileName"] = name;
+            log[@"log"] = file;
+            [[log saveInBackground] continueWithBlock:^id(BFTask *task) {
+                if (task.isCancelled) {
+                    // the save was cancelled.
+                    DDLogWarn(@"Log %@ canclled to create %@", name, task.error);
+                } else if (task.error) {
+                    DDLogError(@"Log %@ failed to create %@", name, task.error);
+                } else {
+                    DDLogDebug(@"Log file %@ created", name);
+                }
+                return nil;
+            }];
+        }
+    }];
 }
 
 + (void)addTestGesture{
@@ -128,10 +190,10 @@ void initLogging(){
     [log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
     
     //file logger
-    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
-    fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
-    fileLogger.logFileManager.maximumNumberOfLogFiles = 7;//keep a week's log
-    [DDLog addLogger:fileLogger];
+    [EWUtil shared].fileLogger = [[DDFileLogger alloc] init];
+    [EWUtil shared].fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
+    [EWUtil shared].fileLogger.logFileManager.maximumNumberOfLogFiles = 7;//keep a week's log
+    [DDLog addLogger:[EWUtil shared].fileLogger];
     
     //crashlytics logger
     [DDLog addLogger:[CrashlyticsLogger sharedInstance]];

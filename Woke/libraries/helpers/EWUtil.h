@@ -24,6 +24,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWUtil)
 
 //logging
 + (void)initLogging;
++ (void)uploadUpdatedLogFiles;
 
 //testing
 + (void)addTestGesture;
