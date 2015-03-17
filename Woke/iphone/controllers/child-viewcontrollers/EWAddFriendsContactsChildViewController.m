@@ -7,7 +7,7 @@
 //
 
 #import "EWAddFriendsContactsChildViewController.h"
-#import "EWAddFriendsTableViewCell.h"
+#import "EWAddFriendTableViewCell.h"
 #import "UIImageView+AFNetworking.h"
 #import "EWSocialManager.h"
 #import "EWPerson.h"
@@ -27,7 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.rowHeight = 70;
-    [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendTableViewCell" bundle:nil] forCellReuseIdentifier:@"EWAddFriendsTableViewCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendTableViewCell" bundle:nil] forCellReuseIdentifier:@"EWAddFriendTableViewCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendsSectionTableViewCell" bundle:nil] forCellReuseIdentifier:@"AddFriendsCellSectionHeader"];
 }
 
@@ -47,7 +47,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendsTableViewCell"];
+    EWAddFriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendTableViewCell"];
     
     NSDictionary *section = self.items[indexPath.section];
     if ([section[@"type"] isEqualToString:@"address-book"]) {

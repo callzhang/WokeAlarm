@@ -1,5 +1,4 @@
 //
-//  EWAddFriendsTableViewCell.h
 //  Woke
 //
 //  Created by Zitao Xiong on 2/2/15.
@@ -14,7 +13,7 @@ typedef NS_ENUM(NSUInteger, EWAddFreindTableViewCellType) {
     EWAddFreindTableViewCellTypeInvite,
 };
 
-@interface EWAddFriendsTableViewCell : UITableViewCell
+@interface EWAddFriendTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;

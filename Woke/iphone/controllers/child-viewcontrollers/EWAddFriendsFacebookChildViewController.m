@@ -8,7 +8,7 @@
 
 #import "EWAddFriendsFacebookChildViewController.h"
 #import "EWSocialManager.h"
-#import "EWAddFriendsTableViewCell.h"
+#import "EWAddFriendTableViewCell.h"
 #import "UIImageView+AFNetworking.h"
 
 @interface EWAddFriendsFacebookChildViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -22,7 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendTableViewCell" bundle:nil] forCellReuseIdentifier:@"EWAddFriendsTableViewCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendTableViewCell" bundle:nil] forCellReuseIdentifier:@"EWAddFriendTableViewCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"EWAddFriendsSectionTableViewCell" bundle:nil] forCellReuseIdentifier:@"AddFriendsCellSectionHeader"];
     [self loadFriendsOnWokeSection];
     self.tableView.rowHeight = 70;
@@ -38,7 +38,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWAddFriendsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendsTableViewCell"];
+    EWAddFriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendTableViewCell"];
     
     NSDictionary *section = self.items[indexPath.section];
     if ([section[@"type"] isEqualToString:@"woke"]) {
