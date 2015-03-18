@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="fastlane">
   <testsuite name="deploy">
-    <testcase name="0: cocoapods" time="23.019622"/>
-    <testcase name="1: increment_build_number" time="1.19677"/>
-    <testcase name="2: ipa" time="201.611606"/>
-    <testcase name="3: sigh" time="22.23451"/>
-    <testcase name="4: deliver" time="88.979994"/>
+    <testcase name="0: cocoapods" time="23.455514"/>
+    <testcase name="1: ipa" time="208.489751"/>
+    <testcase name="2: snapshot" time="2.276196">
+      <failure message="/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/actions/actions_helper.rb:28:in `execute_action'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/fast_file.rb:82:in `block in method_missing'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/fast_file.rb:81:in `chdir'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/fast_file.rb:81:in `method_missing'&#10;(eval):31:in `block (2 levels) in parse'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/runner.rb:18:in `call'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/runner.rb:18:in `block in execute'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/runner.rb:12:in `chdir'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/runner.rb:12:in `execute'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/lane_manager.rb:29:in `block in cruise_lanes'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/lane_manager.rb:28:in `each'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/lib/fastlane/lane_manager.rb:28:in `cruise_lanes'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/bin/fastlane:32:in `block (2 levels) in run'&#10;/Library/Ruby/Gems/2.0.0/gems/commander-4.3.0/lib/commander/command.rb:179:in `call'&#10;/Library/Ruby/Gems/2.0.0/gems/commander-4.3.0/lib/commander/command.rb:179:in `call'&#10;/Library/Ruby/Gems/2.0.0/gems/commander-4.3.0/lib/commander/command.rb:154:in `run'&#10;/Library/Ruby/Gems/2.0.0/gems/commander-4.3.0/lib/commander/runner.rb:421:in `run_active_command'&#10;/Library/Ruby/Gems/2.0.0/gems/commander-4.3.0/lib/commander/runner.rb:81:in `run!'&#10;/Library/Ruby/Gems/2.0.0/gems/commander-4.3.0/lib/commander/delegates.rb:15:in `run!'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/bin/fastlane:60:in `run'&#10;/Library/Ruby/Gems/2.0.0/gems/fastlane-0.2.1/bin/fastlane:64:in `&lt;top (required)&gt;'&#10;/usr/bin/fastlane:23:in `load'&#10;/usr/bin/fastlane:23:in `&lt;main&gt;'&#10;&#10; [31mscheme has to be an String [0m"/>
+    </testcase>
   </testsuite>
 </testsuites>

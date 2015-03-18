@@ -1,5 +1,5 @@
-app_identifier "com.wokealarm.WOKE"
-apple_id "derek.shopping@gmail.com"
+app_identifier "com.wokealarm.WOKE" # The bundle identifier of your app
+apple_id "derek.shopping@gmail.com" # Your Apple email address
 
 # You can uncomment the lines below and add your own 
 # team selection in case you're in multiple teams
