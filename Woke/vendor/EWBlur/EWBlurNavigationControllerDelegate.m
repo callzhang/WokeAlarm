@@ -23,8 +23,8 @@ static NSString * PushSegueIdentifier = @"push segue identifier";
 
 - (void)awakeFromNib
 {
-//    UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-//    [self.navigationController.view addGestureRecognizer:panRecognizer];
+    UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+    [self.navigationController.view addGestureRecognizer:panRecognizer];
     self.animator = [EWBlurAnimator new];
 }
 
@@ -35,29 +35,29 @@ static NSString * PushSegueIdentifier = @"push segue identifier";
     return self;
 }
 
-//- (void)pan:(UIPanGestureRecognizer*)recognizer
-//{
-//    UIView* view = self.navigationController.view;
-//    if (recognizer.state == UIGestureRecognizerStateBegan) {
-//        CGPoint location = [recognizer locationInView:view];
-//        if (location.x > CGRectGetMidX(view.bounds) && self.navigationController.viewControllers.count == 1){
-//            self.interactionController = [UIPercentDrivenInteractiveTransition new];
-//            [self.navigationController.visibleViewController performSegueWithIdentifier:PushSegueIdentifier sender:self];
-//        }
-//    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-//        CGPoint translation = [recognizer translationInView:view];
-//        // fabs() 求浮点数的绝对值
-//        CGFloat d = fabs(translation.x / CGRectGetWidth(view.bounds));
-//        [self.interactionController updateInteractiveTransition:d];
-//    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-//        if ([recognizer velocityInView:view].x < 0) {
-//            [self.interactionController finishInteractiveTransition];
-//        } else {
-//            [self.interactionController cancelInteractiveTransition];
-//        }
-//        self.interactionController = nil;
-//    }
-//}
+- (void)pan:(UIPanGestureRecognizer*)recognizer
+{
+    UIView* view = self.navigationController.view;
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint location = [recognizer locationInView:view];
+        if (location.x > CGRectGetMidX(view.bounds) && self.navigationController.viewControllers.count == 1){
+            self.interactionController = [UIPercentDrivenInteractiveTransition new];
+            [self.navigationController.visibleViewController performSegueWithIdentifier:PushSegueIdentifier sender:self];
+        }
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        CGPoint translation = [recognizer translationInView:view];
+        // fabs() 求浮点数的绝对值
+        CGFloat d = fabs(translation.x / CGRectGetWidth(view.bounds));
+        [self.interactionController updateInteractiveTransition:d];
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        if ([recognizer velocityInView:view].x < 0) {
+            [self.interactionController finishInteractiveTransition];
+        } else {
+            [self.interactionController cancelInteractiveTransition];
+        }
+        self.interactionController = nil;
+    }
+}
 
 #pragma mark - UINavigationViewControllerDelegate
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC

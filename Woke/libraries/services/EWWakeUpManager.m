@@ -69,8 +69,7 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Remove unread medias", ^{
 	NSArray *unread = [EWPerson myUnreadMedias];
 	for (EWMedia *media in unread) {
 		DDLogDebug(@"Delete EWMedia PO %@", media.serverID);
-		[media.parseObject delete];
-		[media remove];
+        [[EWPerson me] removeReceivedMediasObject:media];
 	}
 });
 
