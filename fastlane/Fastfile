@@ -12,7 +12,7 @@ before_all do
 
   cocoapods
 
-  # increment_build_number
+  increment_build_number
 
   ipa({
     workspace: "Woke.xcworkspace",
@@ -24,21 +24,26 @@ before_all do
 end
 
 lane :test do
-  snapshot
+  # snapshot
 end
 
 lane :beta do
-  snapshot
+  # snapshot
   sigh
   deliver :skip_deploy, :beta
   # sh "your_script.sh"
 end
 
 lane :deploy do
-  snapshot
+  # snapshot
   sigh
   deliver :skip_deploy, :force
   # frameit
+end
+
+lane :only_deploy do
+  sigh
+  deliver :skip_deploy, :force
 end
 
 lane :inhouse do
