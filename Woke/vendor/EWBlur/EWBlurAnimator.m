@@ -15,7 +15,6 @@
 #import "GPUImageTransformFilter.h"
 #import "GPUImageToneCurveFilter.h"
 #import "GPUImageNormalBlendFilter.h"
-//#import "EWAppDelegate.h"
 #import "UIView+Extend.h"
 
 
@@ -190,45 +189,12 @@ static const CGFloat initialDownSampling = 2;
 #pragma mark - Interactive Transition
 
 - (void)startInteractiveTransition:(id <UIViewControllerContextTransitioning>)transitionContext {
-    UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    if ([fromVC isKindOfClass:[UINavigationController class]]) {
-        //set up guesture recognizer
-        UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-        [toVC.view addGestureRecognizer:panRecognizer];
-    }
-    else{
-        //start
-        [self animateTransition:transitionContext];
-    }
+    [self animateTransition:transitionContext];
 }
 
 
 
-- (void)pan:(UIPanGestureRecognizer*)recognizer
-{
-    UIView* view = self.navigationController.view;
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        CGPoint location = [recognizer locationInView:view];
-        if (location.x > CGRectGetMidX(view.bounds) && self.navigationController.viewControllers.count == 1){
-            self.interactionController = [UIPercentDrivenInteractiveTransition new];
-            [self.navigationController.visibleViewController performSegueWithIdentifier:PushSegueIdentifier sender:self];
-        }
-    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint translation = [recognizer translationInView:view];
-        // fabs() 求浮点数的绝对值
-        CGFloat d = fabs(translation.x / CGRectGetWidth(view.bounds));
-        [self.interactionController updateInteractiveTransition:d];
-    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        if ([recognizer velocityInView:view].x < 0) {
-            [self.interactionController finishInteractiveTransition];
-        } else {
-            [self.interactionController cancelInteractiveTransition];
-        }
-        self.interactionController = nil;
-    }
-}
-
+#pragma mark - Custom function
 - (void)updateFrame:(CADisplayLink*)link
 {
     [self updateProgress:link];
@@ -274,7 +240,6 @@ static const CGFloat initialDownSampling = 2;
 }
 
 
-#pragma mark - Custom function
 - (void)triggerRenderOfNextFrame
 {
     BOOL active = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
@@ -326,6 +291,7 @@ static const CGFloat initialDownSampling = 2;
     
 }
 
+#pragma mark - UIPercentDrivenInteractiveTransition
 - (void)cancelInteractiveTransition
 {
     // TODO: [Lei]

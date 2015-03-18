@@ -17,8 +17,18 @@
 #import "EWAlarmManager.h"
 #import "EWAlarm.h"
 #import "NSTimer+BlocksKit.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
 
 @import MediaPlayer;
+
+FBTweakAction(@"AVManager", @"Action", @"Normal Volume", ^{
+	[EWAVManager sharedManager].normalVolume = YES;
+	[NSTimer bk_scheduledTimerWithTimeInterval:3600 block:^(NSTimer *timer) {
+		[EWAVManager sharedManager].normalVolume = NO;
+		DDLogInfo(@"Volume has been reset to MAX");
+	} repeats:NO];
+});
 
 NSString * const kEWAVManagerDidStopPlayNotification = @"kEWAVManagerDidStopPlayNotification";
 NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUpdateProgressNotification";
@@ -148,7 +158,10 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     EWAssertMainThread
     
 	//set to max volume
-	[self setDeviceVolume:1.0];
+	if (!self.normalVolume) {
+		[self setDeviceVolume:1.0];
+	}
+	
     if (!mi){
         [self playSoundFromFileName:kSilentSound];
     }else if (_media == mi){

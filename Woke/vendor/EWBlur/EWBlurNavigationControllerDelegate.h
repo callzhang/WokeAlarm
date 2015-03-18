@@ -10,5 +10,4 @@
 
 @interface EWBlurNavigationControllerDelegate : NSObject <UINavigationControllerDelegate, UIViewControllerTransitioningDelegate>
 
-
 @end

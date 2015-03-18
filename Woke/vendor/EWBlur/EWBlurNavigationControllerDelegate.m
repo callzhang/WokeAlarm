@@ -9,23 +9,22 @@
 #import "EWBlurNavigationControllerDelegate.h"
 #import "EWBlurAnimator.h"
 
-static NSString * PushSegueIdentifier = @"push segue identifier";
-
 @interface EWBlurNavigationControllerDelegate ()
 
-@property (weak, nonatomic) IBOutlet UINavigationController *navigationController;
+@property (weak, nonatomic) UINavigationController *fromNavigationController;
+@property (weak, nonatomic) UIViewController *toViewController;
 @property (strong, nonatomic) EWBlurAnimator* animator;
-@property (strong, nonatomic) UIPercentDrivenInteractiveTransition* interactionController;
+//@property (strong, nonatomic) UIPercentDrivenInteractiveTransition* interactionController;
 
 @end
 
 @implementation EWBlurNavigationControllerDelegate
 
-- (void)awakeFromNib
-{
-    UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-    [self.navigationController.view addGestureRecognizer:panRecognizer];
-    self.animator = [EWBlurAnimator new];
+- (EWBlurAnimator *)animator{
+	if (!_animator) {
+		_animator = [EWBlurAnimator new];
+	}
+	return _animator;
 }
 
 
@@ -35,46 +34,66 @@ static NSString * PushSegueIdentifier = @"push segue identifier";
     return self;
 }
 
+- (void)setNavigationController:(UINavigationController *)fromNavigationController{
+	NSParameterAssert([fromNavigationController isKindOfClass:[UINavigationController class]]);
+	_fromNavigationController = fromNavigationController;
+	fromNavigationController.delegate = self;
+	UIScreenEdgePanGestureRecognizer* panRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+	panRecognizer.edges = UIRectEdgeLeft;
+	[self.fromNavigationController.view addGestureRecognizer:panRecognizer];
+}
+
 - (void)pan:(UIPanGestureRecognizer*)recognizer
 {
-    UIView* view = self.navigationController.view;
+    UIView* view = self.fromNavigationController.view;
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         CGPoint location = [recognizer locationInView:view];
-        if (location.x > CGRectGetMidX(view.bounds) && self.navigationController.viewControllers.count == 1){
-            self.interactionController = [UIPercentDrivenInteractiveTransition new];
-            [self.navigationController.visibleViewController performSegueWithIdentifier:PushSegueIdentifier sender:self];
+        if (location.x < CGRectGetMidX(view.bounds)){
+			self.animator.type = kInteractivePush;
+			[self.fromNavigationController pushViewController:self.toViewController animated:YES];
         }
+		else{
+			self.animator.type = kInteractivePop;
+			[self.fromNavigationController popViewControllerAnimated:YES];
+		}
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGPoint translation = [recognizer translationInView:view];
         // fabs() 求浮点数的绝对值
         CGFloat d = fabs(translation.x / CGRectGetWidth(view.bounds));
-        [self.interactionController updateInteractiveTransition:d];
+		//[self.animator updateInteractiveTransition:d];
+		[self.animator setProgress:d];
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
         if ([recognizer velocityInView:view].x < 0) {
-            [self.interactionController finishInteractiveTransition];
+            [self.animator finishInteractiveTransition];
         } else {
-            [self.interactionController cancelInteractiveTransition];
+            [self.animator cancelInteractiveTransition];
         }
-        self.interactionController = nil;
+		self.animator = nil;
     }
 }
 
 #pragma mark - UINavigationViewControllerDelegate
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
 {
+	self.fromNavigationController = navigationController;
+	self.toViewController = toVC;
     if (operation == UINavigationControllerOperationPush) {
         self.animator.type = UINavigationControllerOperationPush;
-        return self.animator;
+		//return self.animator;
     }else if (operation == UINavigationControllerOperationPop){
         self.animator.type = UINavigationControllerOperationPop;
-        return self.animator;
+		//return self.animator;
     }
-    return nil;
+    return self.animator;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController
 {
-    return self.interactionController;
+    return self.animator;
+}
+
+- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning>)animator{
+	return nil; // We don't want to use interactive transition to dismiss the modal view, we are just going to use the standard animator.
 }
 
 #pragma mark - UIViewController transitioning

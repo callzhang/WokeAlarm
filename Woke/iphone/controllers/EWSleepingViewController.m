@@ -26,6 +26,7 @@
 #import "FBKVOController.h"
 #import "EWActivity.h"
 #import "FBShimmeringView.h"
+#import "EWActivityManager.h"
 
 
 FBTweakAction(@"Sleeping VC", @"UI", @"Show Wake Up VC", ^{
@@ -233,8 +234,8 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 }
 
 - (IBAction)onSlideToWakup:(id)sender {
-    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    BOOL shouldWakeUp = [activity.time timeIntervalSinceDate:[NSDate date]] < kMaxEalyWakeInterval;
+	//EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+	BOOL shouldWakeUp = [[EWActivityManager sharedManager] wakeupManager:[EWWakeUpManager shared] shouldWakeUpWithAlarm:[EWPerson myCurrentAlarm]];
     if (shouldWakeUp || [EWWakeUpManager sharedInstance].forceWakeUp) {
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
     }
