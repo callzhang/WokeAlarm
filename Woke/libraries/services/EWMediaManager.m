@@ -172,7 +172,7 @@
     return medias;
 }
 
-- (void)checkMediasForPerson:(EWPerson *)person{
+- (void)checkMediaFilesForPerson:(EWPerson *)person{
 	NSMutableSet *medias = person.sentMedias.mutableCopy;
 	[medias unionSet:person.receivedMedias];
 	[medias addObjectsFromArray:person.unreadMedias];
@@ -186,15 +186,15 @@
 	}
 }
 
-- (NSArray *)checkUnreadMedias{
+- (NSArray *)checkNewMedias{
     EWAssertMainThread
     return [self checkNewMediasInContext:mainContext];
 }
 
-- (void)checkUnreadMediasWithCompletion:(ArrayBlock)block{
-    EWAssertMainThread
+- (void)checkNewMediasWithCompletion:(ArrayBlock)block{
+    
     __block NSArray *mediaIDsIncontext;
-    [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         mediaIDsIncontext = [[self checkNewMediasInContext:localContext] valueForKey:@"objectID"];
     } completion:^(BOOL contextDidSave, NSError *error) {
         if (contextDidSave && block) {

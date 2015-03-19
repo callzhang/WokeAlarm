@@ -47,6 +47,7 @@ extern NSString * const kEWAVManagerDidUpdateProgressNotification;
 @property (retain, nonatomic) AVAudioRecorder *recorder;
 @property (nonatomic) float playingProgress;
 @property (nonatomic, readonly) BOOL isPlaying;
+@property (nonatomic, assign) BOOL skipForceMaxVolume;
 
 + (EWAVManager *)sharedManager;
 

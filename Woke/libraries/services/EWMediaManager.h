@@ -47,11 +47,19 @@
 /**
  *Check all my meidas, making sure they have the media file ready.
  */
-- (void)checkMediasForPerson:(EWPerson *)person;
+- (void)checkMediaFilesForPerson:(EWPerson *)person;
 
-//Check media assets relationship
-- (NSArray *)checkUnreadMedias;
-- (void)checkUnreadMediasWithCompletion:(ArrayBlock)block;
+/**
+ *  check new medias from server, in sync
+ *
+ *  @return List of NEW medias
+ */
+- (NSArray *)checkNewMedias;
+/**
+ *  Check new medias from server, async
+ *
+ */
+- (void)checkNewMediasWithCompletion:(ArrayBlock)block;
 
 //get ramdom voice
 - (EWMedia *)getWokeVoice;

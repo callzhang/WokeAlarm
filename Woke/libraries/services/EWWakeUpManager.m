@@ -28,32 +28,31 @@
 #import "EWBackgroundingManager.h"
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
-    DDLogInfo(@"Forced enable wake up");
     [EWWakeUpManager sharedInstance].forceWakeUp = ![EWWakeUpManager sharedInstance].forceWakeUp;
-    //[[EWWakeUpManager sharedInstance] startToWakeUp];
+    DDLogInfo(@"Forced wake up %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
-    DDLogInfo(@"Add Woke Voice");
     [EWWakeUpManager sharedInstance].forceSnooze = ![EWWakeUpManager sharedInstance].forceSnooze;
+    DDLogInfo(@"Force snooze %@", [EWWakeUpManager sharedInstance].forceSnooze?@"enabled":@"disabled");
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
-    DDLogInfo(@"Force sleep enabled");
     [EWWakeUpManager sharedInstance].forceSleep = ![EWWakeUpManager sharedInstance].forceSleep;
+    DDLogInfo(@"Force sleep %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
-    DDLogInfo(@"Skipped checking activity completed");
     [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = ![EWWakeUpManager sharedInstance].skipCheckActivityCompleted;
+    DDLogInfo(@"Skipped checking activity %@", [EWWakeUpManager sharedInstance].skipCheckActivityCompleted?@"enabled":@"disabled");
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
     [[EWWakeUpManager shared] testWakeUpInSeconds:30];
 });
 
-FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 1 hour", ^{
-    [[EWWakeUpManager shared] testWakeUpInSeconds:3600];
+FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 10s", ^{
+    [[EWWakeUpManager shared] testWakeUpInSeconds:10];
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completion date", ^{
@@ -68,9 +67,8 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completio
 FBTweakAction(@"WakeUpManager", @"Action", @"Remove unread medias", ^{
 	NSArray *unread = [EWPerson myUnreadMedias];
 	for (EWMedia *media in unread) {
-		DDLogDebug(@"Delete EWMedia PO %@", media.serverID);
-		[media.parseObject delete];
-		[media remove];
+		DDLogDebug(@"Removed EWMedia PO %@", media.serverID);
+        [[EWPerson me] removeReceivedMediasObject:media];
 	}
 });
 
@@ -149,17 +147,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
     
     //update media
-    self.medias = [[EWMediaManager sharedInstance] checkUnreadMedias];
+    self.medias = [EWPerson myUnreadMedias];
     
     //add Woke media is needed
     if (self.medias.count == 0) {
-        //need to create some voice
+        //need to create some voice in sync
         EWMedia *newMedia = [[EWMediaManager sharedInstance] getWokeVoice];
 		self.medias = @[newMedia];
     }
-    
-    //set volume
-    [[EWAVManager sharedManager] setDeviceVolume:1.0];
     
     //cancel local alarm
     [alarm cancelLocalNotification];
@@ -257,6 +252,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     return can;
 }
 
+- (BOOL)canWakeUp{
+    return [self.delegate wakeupManager:self shouldWakeUpWithAlarm:[EWPerson myCurrentAlarm]];
+}
+
 //indicate that the user has woke
 - (void)wake:(EWActivity *)activity{
     if (!activity) {
@@ -286,7 +285,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     
     //THOUGHTS: something to do in the future
     //notify friends and challengers
-    //update history stats
 }
 
 
@@ -318,6 +316,22 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         note.userInfo = @{kActivityLocalID: activity.objectID.URIRepresentation.absoluteString,
                           kLocalNotificationTypeKey: kLocalNotificationTypeAlarmTimer};
         [[UIApplication sharedApplication] scheduleLocalNotification:note];
+    } repeats:NO];
+    
+    //sleep status switch
+    static NSTimer *wakeableTimer;
+    [wakeableTimer invalidate];
+    wakeableTimer = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft - kMaxEarlyWakeHours*3600 block:^(NSTimer *timer) {
+        
+        //broadcast wake enabled status
+        [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeEnabled object:nil];
+        //also check voices
+        [[EWMediaManager sharedInstance] checkNewMediasWithCompletion:^(NSArray *array, NSError *error) {
+            DDLogInfo(@"Found %lu new medias", array.count);
+            if ([EWPerson myUnreadMedias].count == 0) {
+                [[EWMediaManager sharedInstance] getWokeVoiceWithCompletion:NULL];
+            }
+        }];
     } repeats:NO];
 }
 

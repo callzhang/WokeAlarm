@@ -17,6 +17,13 @@
 #import "EWAlarmManager.h"
 #import "EWAlarm.h"
 #import "NSTimer+BlocksKit.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
+
+FBTweakAction(@"AVManager", @"UI", @"Toggle max volume", ^{
+    [EWAVManager sharedManager].skipForceMaxVolume = ![EWAVManager sharedManager].skipForceMaxVolume;
+    DDLogInfo(@"Skip max volume: %@", [EWAVManager sharedManager].skipForceMaxVolume?@"YES":@"NO");
+});
 
 @import MediaPlayer;
 
@@ -509,6 +516,10 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 }
 
 - (void)setDeviceVolume:(float)volume{
+    if (self.skipForceMaxVolume) {
+        DDLogInfo(@"Skipped setting device volume");
+        return;
+    }
 	UISlider* volumeViewSlider = nil;
 	for (UIView *view in [volumeView subviews]){
 		if ([view.class.description isEqualToString:@"MPVolumeSlider"]){

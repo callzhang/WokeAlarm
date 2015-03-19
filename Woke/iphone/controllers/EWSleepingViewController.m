@@ -41,19 +41,25 @@ FBTweakAction(@"Sleeping VC", @"UI", @"Hide Wake Up VC", ^{
 FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up[With Delay 5]", ^{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //DDLogInfo(@"Add Woke Voice");
-        [[EWMediaManager sharedInstance] getWokeVoice];
+        [[EWMediaManager sharedInstance] getWokeVoiceWithCompletion:^(EWMedia *media, NSError *error) {
+            DDLogInfo(@"Voice added");
+        }];
     });
 });
 
-FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
+FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     //DDLogInfo(@"Add Woke Voice");
-	[[EWMediaManager sharedInstance] getWokeVoice];
+	[[EWMediaManager sharedInstance] getWokeVoiceWithCompletion:^(EWMedia *media, NSError *error) {
+        DDLogInfo(@"Voice added");
+    }];
 });
 
 
 
 
-@interface EWSleepingViewController ()<EWBaseViewNavigationBarButtonsDelegate>
+@interface EWSleepingViewController ()<EWBaseViewNavigationBarButtonsDelegate>{
+    id wakeEnabledObserver;
+}
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
 @property (nonatomic, strong) EWPeopleArrayChildViewController *peopleArrayChildViewController;
 @property (nonatomic, strong) EWAlarm *nextAlarm;
@@ -66,7 +72,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 
 @implementation EWSleepingViewController
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:wakeEnabledObserver];
 }
 
 - (void)viewDidLoad {
@@ -95,10 +101,15 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 	}];
 	
     @weakify(self);
+    //time labels
     self.timeChildViewController.topLabelLine1.text = [NSString stringWithFormat:@"It is now %@.", [[NSDate date] mt_stringFromDateWithFormat:@"hh:mma" localized:YES]];
     self.timerDisposable = [[RACSignal interval:1 onScheduler:[RACScheduler mainThreadScheduler]] subscribeNext:^(NSDate *date) {
         @strongify(self);
         self.timeChildViewController.topLabelLine1.text = [NSString stringWithFormat:@"It is now %@.", [date mt_stringFromDateWithFormat:@"hh:mma" localized:YES]];
+    }];
+    //wake enabled change
+    wakeEnabledObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kEWWakeEnabled object:nil queue:nil usingBlock:^(NSNotification *note) {
+        self.slideLabel.text = @"Slide to Wake Up";
     }];
     
     RAC(self, timeChildViewController.date) = [RACObserve(self, nextAlarm.time) distinctUntilChanged];
@@ -106,7 +117,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     self.slideLabel = [[UILabel alloc] initWithFrame:self.shimmeringView.bounds];
     self.slideLabel.font = [UIFont fontWithName:@"Lato-Light" size:24];
     self.slideLabel.textColor = [UIColor whiteColor];
-    self.slideLabel.text = @"Slide to Wake Up";
+    self.slideLabel.text = @"Slide to Cancel";
     self.slideLabel.textAlignment = NSTextAlignmentCenter;
     
     self.shimmeringView.contentView = self.slideLabel;
@@ -154,7 +165,12 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 }
 
 - (void)finishInteractiveTransition {
-    [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
+    
+    if ([EWWakeUpManager sharedInstance].canWakeUp) {
+        [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
+    } else {
+        [self close:nil];
+    }
 }
 
 - (void)showWakeUpVC {
@@ -176,9 +192,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
     //Delay update people
     //TODO: Zitao fixed new media handling, and chenged "getWokeVoice" to background, check if the unread medias is correct.
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] bk_map:^id(EWMedia *obj) {
-            return obj.author;
-        }];
+        self.peopleArrayChildViewController.people = [[EWPerson myUnreadMedias] valueForKey:EWMediaRelationships.author];
     });
 }
 
@@ -201,10 +215,12 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
         DDLogInfo(@"===> Unsleep");
         [[EWWakeUpManager sharedInstance] unsleep];
     }
-    else if ([segue.destinationViewController isKindOfClass:[EWPostWakeUpViewController class]]) {
-        //wake up
-        [[EWWakeUpManager sharedInstance] startToWakeUp];
-    }
+    //the logic of wake up is seperated, change the logic to
+//    else if ([segue.destinationViewController isKindOfClass:[EWPostWakeUpViewController class]]) {
+//        //wake up
+//        NSAssert(NO, @"The slide to wake up gesture should handle the view transition, instead of segue");
+//        [[EWWakeUpManager sharedInstance] startToWakeUp];
+//    }
     
     DDLogVerbose(@"Segue on SleepView: %@", segue.identifier);
 }
@@ -232,16 +248,16 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add People to Wake up", ^{
 	return NO;
 }
 
-- (IBAction)onSlideToWakup:(id)sender {
-    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    BOOL shouldWakeUp = [activity.time timeIntervalSinceDate:[NSDate date]] < kMaxEalyWakeInterval;
-    if (shouldWakeUp || [EWWakeUpManager sharedInstance].forceWakeUp) {
-        [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
-    }
-    else {
-        [EWUIUtil showWarningHUBWithString:@"Too early!"];
-    }
-}
+//- (IBAction)onSlideToWakup:(id)sender {
+//    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+//    BOOL shouldWakeUp = [activity.time timeIntervalSinceDate:[NSDate date]] < kMaxEalyWakeInterval;
+//    if (shouldWakeUp || [EWWakeUpManager sharedInstance].forceWakeUp) {
+//        [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
+//    }
+//    else {
+//        [EWUIUtil showWarningHUBWithString:@"Too early!"];
+//    }
+//}
 
 #pragma mark - Unwind
 - (IBAction)unwindToSleepingViewController:(UIStoryboardSegue *)segue {

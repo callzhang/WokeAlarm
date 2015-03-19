@@ -137,10 +137,10 @@
     [[EWAccountManager sharedInstance] updateMyFacebookInfo];
     
     DDLogVerbose(@"6. Check unread medias");
-    [[EWMediaManager sharedInstance] checkUnreadMediasWithCompletion:NULL];
+    [[EWMediaManager sharedInstance] checkNewMediasWithCompletion:NULL];
 
     DDLogVerbose(@"7. Refresh my media");
-    [[EWMediaManager sharedInstance] checkMediasForPerson:[EWPerson me]];
+    [[EWMediaManager sharedInstance] checkMediaFilesForPerson:[EWPerson me]];
     
     //resume upload
     DDLogVerbose(@"8. Check alarm");

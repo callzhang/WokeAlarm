@@ -13,6 +13,8 @@
 #define kNewNediaPlaying        @"new_media_playing"
 #define kLoopMediaPlayCount     100
 #define kMaxEarlySleepHours		3
+#define kMaxEarlyWakeHours      1.5
+#define kEWWakeEnabled          @"wake_enabled"
 
 @import UIKit;
 @class EWActivity, EWAlarm, EWPerson, EWWakeUpManager;
@@ -37,6 +39,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 @interface EWWakeUpManager : NSObject
 @property (nonatomic, copy) NSArray *medias;
 @property (nonatomic, weak) NSObject<EWWakeUpDelegate> *delegate;
+@property (nonatomic, readonly) BOOL canWakeUp;
 
 //play control
 @property (nonatomic, assign) BOOL continuePlay;
