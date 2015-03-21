@@ -67,7 +67,7 @@
         self.labelTimeLeft.text = self.sleepViewModel.alarm.time.nextOccurTime.timeLeft;
         if (!self.sleepViewModel.alarm.canSleep) {
             self.sleepButton.enabled = NO;
-            NSString *string = [NSString stringWithFormat:@"Start sleep in %@", [NSDate getStringFromTime:self.sleepViewModel.alarm.sleepHoursLeft*3600]];
+            NSString *string = [NSString stringWithFormat:@"Start sleep in %@", [NSDate getStringFromTime:self.sleepViewModel.alarm.hoursAbleToSleep*3600]];
             [self.sleepButton setTitle:string forState:UIControlStateNormal];
         } else {
             [self.sleepButton setTitle:@"Start Sleeping" forState:UIControlStateNormal];

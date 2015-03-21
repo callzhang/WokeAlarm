@@ -422,15 +422,21 @@
 
 
 #pragma mark - Tool
-- (float)sleepHoursLeft{
+- (float)hoursToSleep{
     NSNumber *duration = [EWPerson me].preference[kSleepDuration];
     float sleepTimeLeft = self.time.nextOccurTime.timeIntervalSinceNow/3600;
     sleepTimeLeft -= duration.floatValue;
     return sleepTimeLeft;
 }
 
+- (float)hoursAbleToSleep{
+    return self.hoursToSleep - kMaxEarlySleepHours;
+}
+
 - (BOOL)canSleep{
-    return (self.sleepHoursLeft - kMaxEarlySleepHours) < 0;
+    BOOL canSleep = self.hoursAbleToSleep < 0;
+    BOOL forceSleep = [EWWakeUpManager shared].forceSleep;
+    return canSleep || forceSleep;
 }
 
 @end

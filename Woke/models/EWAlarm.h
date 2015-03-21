@@ -41,6 +41,7 @@
 - (NSArray *)localNotifications;//both sleep and timer
 
 //Tool
-- (float)sleepHoursLeft;
+- (float)hoursToSleep;
+- (float)hoursAbleToSleep;
 - (BOOL)canSleep;
 @end
