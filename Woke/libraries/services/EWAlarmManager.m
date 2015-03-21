@@ -250,7 +250,7 @@
         DDLogWarn(@"Alarm for me is %lu, fetch from server!", alarms.count);
         PFQuery *alarmQuery = [PFQuery queryWithClassName:NSStringFromClass([EWAlarm class])];
         [alarmQuery whereKey:EWAlarmRelationships.owner equalTo:[PFUser currentUser]];
-        [alarmQuery whereKey:kParseObjectID notContainedIn:[alarms valueForKey:kParseObjectID]];
+        if (alarms.count) [alarmQuery whereKey:kParseObjectID notContainedIn:[alarms valueForKey:kParseObjectID]];
 		NSArray *newAlarms = [EWSync findParseObjectWithQuery:alarmQuery inContext:mainContext error:NULL];
         
         for (EWAlarm *alarm in newAlarms) {

@@ -11,7 +11,7 @@
 #import "EWBackgroundingManager.h"
 #import "EWSession.h"
 
-OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+//OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 @interface EWBackgroundingManager(){
     NSTimer *backgroundingtimer;
@@ -183,9 +183,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
         [application endBackgroundTask:backgroundTaskIdentifier];
     }
     //stop timer
-    if ([backgroundingtimer isValid]){
-        [backgroundingtimer invalidate];
-    }
+    [backgroundingtimer invalidate];
     
     //stop backgrounding fail notif
     if (backgroundingFailNotification) {
@@ -211,7 +209,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	NSDate *start;
 	if (timer) {
 		NSInteger count;
-		start = timer.userInfo[@"start_date"];
+		start = timer.userInfo[@"start"];
 		count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
 		DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceNow]/3600);
 		count++;
@@ -220,7 +218,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	}else{
 		//first time
 		userInfo = [NSMutableDictionary new];
-		userInfo[@"start_date"] = [NSDate date];
+		userInfo[@"start"] = [NSDate date];
 		userInfo[@"count"] = @0;
 	}
 	
@@ -241,7 +239,7 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 		DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
 		
 		//schedule timer
-		if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
+		[backgroundingtimer invalidate];
 		NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
 		if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
 		backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
@@ -253,7 +251,8 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	if (backgroundingFailNotification) {
 		[[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
 	}
-#ifdef DEBUG
+    
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusSleeping || DEBUG) {
 		backgroundingFailNotification= [[UILocalNotification alloc] init];
 		backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:200];
 		backgroundingFailNotification.alertBody = @"Woke stopped running. Tap here to reactivate it.";
@@ -261,7 +260,8 @@ OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 		backgroundingFailNotification.userInfo = @{kLocalNotificationTypeKey: kLocalNotificationTypeReactivate};
 		backgroundingFailNotification.soundName = backgroundingFailureSound;
 		[[UIApplication sharedApplication] scheduleLocalNotification:backgroundingFailNotification];
-#endif
+    }
+
 }
 
 - (void)playSilentSound{

@@ -32,12 +32,6 @@
 
 + (EWMediaManager *)sharedInstance;
 
-
-/**
- Fetch media by author
- */
-- (NSArray *)mediaCreatedByPerson:(EWPerson *)person;
-
 /**
  Check unread medias
  Moved to EWPerson+Woke

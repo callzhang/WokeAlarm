@@ -156,22 +156,6 @@
 	}];
 }
 
-//possible redundant API, my media should be ready on start
-- (NSArray *)mediaCreatedByPerson:(EWPerson *)person{
-    NSArray *medias = [person.sentMedias allObjects];
-    if (medias.count == 0 && [person isMe]) {
-        //query
-        PFQuery *q = [[[PFUser currentUser] relationForKey:EWPersonRelationships.sentMedias] query];
-		[q whereKey:kParseObjectID notContainedIn:[EWPerson me].sentMedias.allObjects];
-		NSArray *MOs = [EWSync findParseObjectWithQuery:q inContext:person.managedObjectContext error:nil];
-		for (EWMedia *m in MOs) {
-			NSAssert(m.author == [EWPerson me], @"EWMedia's author missing: %@", m.serverID);
-		}
-		DDLogInfo(@"My media updated with %lu new medias", (unsigned long)MOs.count);
-    }
-    return medias;
-}
-
 - (void)checkMediaFilesForPerson:(EWPerson *)person{
 	NSMutableSet *medias = person.sentMedias.mutableCopy;
 	[medias unionSet:person.receivedMedias];
@@ -216,7 +200,7 @@
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWMedia class])];
     [query whereKey:EWMediaRelationships.receiver equalTo:[PFUser currentUser]];
 	NSSet *receivedMediaIDs = [localMe.receivedMedias valueForKey:kParseObjectID];
-    [query whereKey:kParseObjectID notContainedIn:receivedMediaIDs.allObjects];
+    if (receivedMediaIDs.count) [query whereKey:kParseObjectID notContainedIn:receivedMediaIDs.allObjects];
 	NSError *err;
     NSArray *newMedia = [EWSync findParseObjectWithQuery:query inContext:context error:&err];
 
