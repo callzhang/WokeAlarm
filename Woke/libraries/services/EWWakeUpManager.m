@@ -231,20 +231,26 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (BOOL)shouldSleep{
-	EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-	NSNumber *duration = [EWPerson me].preference[kSleepDuration];
-	float sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
+	float sleepTimeLeft = [self hoursLeftToSleep];
 	//max sleep 5 hours early
-	BOOL canSleep = sleepTimeLeft < duration.floatValue+kMaxEarlySleepHours && sleepTimeLeft > 0;
+	BOOL canSleep = sleepTimeLeft < kMaxEarlySleepHours;
 	if (!canSleep) {
 		if (self.forceSleep) {
 			canSleep = YES;
-			DDLogInfo(@"Forced enable sleep with %.1f hours advance", sleepTimeLeft - duration.floatValue);
+			DDLogInfo(@"Forced enable sleep with %.1f hours advance", sleepTimeLeft);
 		} else {
-			DDLogWarn(@"Should not sleep with %.1f hours advance", sleepTimeLeft - duration.floatValue);
+			DDLogWarn(@"Should not sleep with %.1f hours advance", sleepTimeLeft);
 		}
 	}
 	return canSleep;
+}
+
+- (float)hoursLeftToSleep{
+    NSNumber *duration = [EWPerson me].preference[kSleepDuration];
+    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
+    float sleepTimeLeft = activity.time.timeIntervalSinceNow/3600;
+    sleepTimeLeft -= duration.floatValue;
+    return sleepTimeLeft;
 }
 
 - (BOOL)canSnooze{
@@ -318,7 +324,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         [[UIApplication sharedApplication] scheduleLocalNotification:note];
     } repeats:NO];
     
-    //sleep status switch
+    //wake status switch
     static NSTimer *wakeableTimer;
     [wakeableTimer invalidate];
     wakeableTimer = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft - kMaxEarlyWakeHours*3600 block:^(NSTimer *timer) {
@@ -332,6 +338,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
                 [[EWMediaManager sharedInstance] getWokeVoiceWithCompletion:NULL];
             }
         }];
+    } repeats:NO];
+    
+    //sleep status
+    static NSTimer *sleepableTimer;
+    [sleepableTimer invalidate];
+    float timeAbleToSleep = ([self hoursLeftToSleep] - kMaxEarlySleepHours) * 3600;
+    sleepableTimer = [NSTimer bk_scheduledTimerWithTimeInterval:timeAbleToSleep  block:^(NSTimer *timer) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kEWSleepEnabled object:nil];
     } repeats:NO];
 }
 

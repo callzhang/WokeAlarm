@@ -15,6 +15,7 @@
 #define kMaxEarlySleepHours		3
 #define kMaxEarlyWakeHours      1.5
 #define kEWWakeEnabled          @"wake_enabled"
+#define kEWSleepEnabled         @"sleep_enabled"
 
 @import UIKit;
 @class EWActivity, EWAlarm, EWPerson, EWWakeUpManager;

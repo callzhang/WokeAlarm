@@ -40,4 +40,7 @@
 - (void)cancelSleepLocalNotification;
 - (NSArray *)localNotifications;//both sleep and timer
 
+//Tool
+- (float)sleepHoursLeft;
+- (BOOL)canSleep;
 @end

@@ -244,7 +244,7 @@
 	time = fabs(time);
 	NSInteger t = (NSInteger)time;
 	CGFloat days = time / 3600 / 24;
-	CGFloat hours = (t % (3600*24)) / 3600;
+	CGFloat hours = (t % (3600*24)) / 3600.0f;
 	CGFloat minutes = floor((t % 3600)/60);
 	CGFloat seconds = t % 60;
 	

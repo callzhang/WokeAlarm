@@ -420,4 +420,17 @@
     return self.owner;
 }
 
+
+#pragma mark - Tool
+- (float)sleepHoursLeft{
+    NSNumber *duration = [EWPerson me].preference[kSleepDuration];
+    float sleepTimeLeft = self.time.nextOccurTime.timeIntervalSinceNow/3600;
+    sleepTimeLeft -= duration.floatValue;
+    return sleepTimeLeft;
+}
+
+- (BOOL)canSleep{
+    return (self.sleepHoursLeft - kMaxEarlySleepHours) < 0;
+}
+
 @end

@@ -21,32 +21,36 @@
 #import "EWStartUpSequence.h"
 #import "EWUtil.h"
 
-@interface EWSleepViewController ()
+@interface EWSleepViewController (){
+    id sleepEnabledObserver;
+    id userSyncStartedObserver;
+    id userSyncCompletedObserver;
+    id alarmTimeChangeObserver;
+    id wokeObserver;
+}
 @property (weak, nonatomic) IBOutlet UILabel *labelDateString;
 @property (weak, nonatomic) IBOutlet UILabel *labelTimeLeft;
 @property (weak, nonatomic) IBOutlet UILabel *labelWakeupText;
+@property (weak, nonatomic) IBOutlet UIButton *sleepButton;
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
 @property (nonatomic, strong) NSTimer *displayTimer;
-@property (nonatomic, strong) id userSyncStartedObserver;
-@property (nonatomic, strong) id userSyncCompletedObserver;
-@property (nonatomic, strong) id alarmTimeChangeObserver;
-@property (nonatomic, strong) id wokeObserver;
 @end
 
 @implementation EWSleepViewController
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self.userSyncCompletedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:self.userSyncStartedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:self.alarmTimeChangeObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:self.wokeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:userSyncCompletedObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:userSyncStartedObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:alarmTimeChangeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:wokeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:sleepEnabledObserver];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.sleepViewModel = [[EWSleepViewModel alloc] init];
-    
+    self.sleepButton.enabled = NO;
     self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     
     //remove background color set in interface builder[used for layouting].
@@ -61,25 +65,38 @@
         @strongify(self);
         self.labelDateString.text = self.sleepViewModel.alarm.time.nextOccurTime.date2dayString;
         self.labelTimeLeft.text = self.sleepViewModel.alarm.time.nextOccurTime.timeLeft;
+        if (!self.sleepViewModel.alarm.canSleep) {
+            self.sleepButton.enabled = NO;
+            NSString *string = [NSString stringWithFormat:@"Start sleep in %@", [NSDate getStringFromTime:self.sleepViewModel.alarm.sleepHoursLeft*3600]];
+            [self.sleepButton setTitle:string forState:UIControlStateNormal];
+        } else {
+            [self.sleepButton setTitle:@"Start Sleeping" forState:UIControlStateNormal];
+            self.sleepButton.enabled = YES;
+        }
     } repeats:YES];
 	
-	self.userSyncStartedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
+	userSyncStartedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		JGProgressHUD *hud = [EWUIUtil showWatingHUB];
         hud.textLabel.text = @"Syncing data";
 	}];
     
-    self.userSyncCompletedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncCompleted object:nil queue:nil usingBlock:^(NSNotification *note) {
+    userSyncCompletedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncCompleted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		[EWUIUtil dismissHUD];
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
 	}];
     
-    self.wokeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kWokeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+    wokeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kWokeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     }];
     
-    self.alarmTimeChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
+    alarmTimeChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
         DDLogInfo(@"Sleep view feels there is a change to alarm time, updating view.");
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
+    }];
+    
+    sleepEnabledObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kEWSleepEnabled object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [self.sleepButton setTitle:@"Start Sleeping" forState:UIControlStateNormal];
+        self.sleepButton.enabled = YES;
     }];
     
     [RACObserve([EWSession sharedSession], wakeupStatus) subscribeNext:^(NSNumber *status) {

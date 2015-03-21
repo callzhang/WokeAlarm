@@ -469,7 +469,7 @@
                                     <constraint firstAttribute="trailing" secondItem="1LV-hZ-wFF" secondAttribute="trailing" constant="25" id="kpC-4f-33c"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSN-dE-35g">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSN-dE-35g">
                                 <rect key="frame" x="16" y="505" width="288" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="iDX-qh-NDn"/>
@@ -514,6 +514,7 @@
                         <outlet property="labelDateString" destination="zoZ-04-ZHl" id="H1L-37-cF0"/>
                         <outlet property="labelTimeLeft" destination="Z2K-SO-fYc" id="oQV-dD-Bsv"/>
                         <outlet property="labelWakeupText" destination="1LV-hZ-wFF" id="FeS-gH-CAe"/>
+                        <outlet property="sleepButton" destination="cSN-dE-35g" id="cHI-6G-Rsd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="odY-hj-5bB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3252,7 +3253,7 @@
         <segue reference="Rze-Xr-CCz"/>
         <segue reference="CBy-Qp-dcT"/>
         <segue reference="v3V-jG-DGb"/>
-        <segue reference="7lF-Wp-60q"/>
+        <segue reference="d4z-tG-E1i"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
