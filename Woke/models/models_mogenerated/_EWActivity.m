@@ -10,7 +10,6 @@ const struct EWActivityAttributes EWActivityAttributes = {
 	.sleepTime = @"sleepTime",
 	.statement = @"statement",
 	.time = @"time",
-	.type = @"type",
 };
 
 const struct EWActivityRelationships EWActivityRelationships = {
@@ -61,8 +60,6 @@ const struct EWActivityFetchedProperties EWActivityFetchedProperties = {
 @dynamic statement;
 
 @dynamic time;
-
-@dynamic type;
 
 @dynamic owner;
 

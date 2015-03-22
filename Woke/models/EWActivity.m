@@ -36,13 +36,15 @@
 - (BOOL)validate{
     BOOL good = YES;
     if (!self.owner) {
+        DDLogError(@"Activity %@ missing owner", self.serverID);
         good = NO;
     }
-    if (!self.type) {
+    if (!self.alarmID) {
+        DDLogError(@"Activity %@ missing alarmID", self.serverID);
         good = NO;
     }
     if (!self.time) {
-        DDLogError(@"Activity %@ missing time", self.objectId);
+        DDLogError(@"Activity %@ missing time", self.serverID);
         good = NO;
     }
     

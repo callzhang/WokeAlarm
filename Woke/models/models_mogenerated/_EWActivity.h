@@ -11,7 +11,6 @@ extern const struct EWActivityAttributes {
 	__unsafe_unretained NSString *sleepTime;
 	__unsafe_unretained NSString *statement;
 	__unsafe_unretained NSString *time;
-	__unsafe_unretained NSString *type;
 } EWActivityAttributes;
 
 extern const struct EWActivityRelationships {
@@ -58,10 +57,6 @@ extern const struct EWActivityFetchedProperties {
 @property (nonatomic, strong) NSDate* time;
 
 //- (BOOL)validateTime:(id*)value_ error:(NSError**)error_;
-
-@property (nonatomic, strong) NSString* type;
-
-//- (BOOL)validateType:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) EWPerson *owner;
 

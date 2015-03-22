@@ -552,6 +552,10 @@ Parse.Cloud.define("syncUser", function(request, response) {
   }
   var query = new Parse.Query(Parse.User);
   query.get(userID).then( function(user){
+    if (user == undef) {
+      console.log("User not exists yet");
+      response.success({});
+    };
 
     //========== FUNCTIONS DEFINITION =============
 

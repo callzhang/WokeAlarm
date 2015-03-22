@@ -15,10 +15,10 @@
 #import "EWAlarmManager.h"
 #import "EWWakeUpManager.h"
 #import "EWNotificationManager.h"
-
-NSString *const EWActivityTypeAlarm = @"alarm";
-NSString *const EWActivityTypeFriendship = @"friendship";
-NSString *const EWActivityTypeMedia = @"media";
+//
+//NSString *const EWActivityTypeAlarm = @"alarm";
+//NSString *const EWActivityTypeFriendship = @"friendship";
+//NSString *const EWActivityTypeMedia = @"media";
 
 @implementation EWActivityManager
 
@@ -61,9 +61,9 @@ NSString *const EWActivityTypeMedia = @"media";
     if (!alarm || ![alarm validate]) {
         return nil;
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K > %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner, EWActivityAttributes.time, [alarm.time mt_oneDayPrevious]];
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
-	//[activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
+	[activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
     while (activities.count >1) {
         EWActivity *activity = activities.firstObject;
         DDLogError(@"Multiple current alarm activities found, please check: \n%@", activity.serverID);
@@ -90,7 +90,7 @@ NSString *const EWActivityTypeMedia = @"media";
     DDLogDebug(@"Creating new activity for alarm: %@", alarm);
     EWActivity *activity = [EWActivity newActivity];
     activity.owner = alarm.owner;
-    activity.type = EWActivityTypeAlarm;
+    //activity.type = EWActivityTypeAlarm;
     activity.time = alarm.time.nextOccurTime;
     activity.alarmID = alarm.serverID;
     activity.createdAt = [NSDate date];
@@ -99,7 +99,7 @@ NSString *const EWActivityTypeMedia = @"media";
 }
 
 - (void)completeAlarmActivity:(EWActivity *)activity{
-    NSParameterAssert([activity.type isEqualToString:EWActivityTypeAlarm]);
+    //NSParameterAssert([activity.type isEqualToString:EWActivityTypeAlarm]);
     if (activity != self.currentAlarmActivity) {
         DDLogError(@"%s The activity passed in is not the current activity", __FUNCTION__);
     }else{

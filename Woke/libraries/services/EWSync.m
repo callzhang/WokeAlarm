@@ -421,8 +421,17 @@ NSManagedObjectContext *mainContext;
         //insert
         object = [PFObject objectWithClassName:serverObject.serverClassName];
         [object pin:error];
-        //TODO: need to test if we can skip saving first
-		[object save:error];//need to save before working on PFRelation
+        //TODO: need to test if we can skip saving first. For example, if there is unsaved object related, the save process will throw exception
+        @try {
+            //need to save before working on PFRelation
+            [object save:error];
+        }
+        @catch (NSException *exception) {
+            DDLogError(@"Failed to save PO %@", object);
+            [object saveEventually];
+            [serverObject uploadEventually];
+        }
+		
         if (!*error) {
             DDLogVerbose(@"+++> CREATED PO %@(%@)", object.parseClassName, object.objectId);
             [serverObject setValue:object.objectId forKey:kParseObjectID];
