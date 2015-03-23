@@ -90,15 +90,6 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
     return [[EWActivityManager sharedManager] activitiesForPerson:[EWPerson me]];
 }
 
-+ (NSArray *)myAlarmActivities{
-    EWAssertMainThread
-    NSArray *activities = [self myActivities];
-    NSArray *alarmActivities = [activities bk_select:^BOOL(EWActivity *obj) {
-        return [obj.type isEqualToString:EWActivityTypeAlarm] ? YES : NO;
-    }];
-    return alarmActivities;
-}
-
 + (EWActivity *)myCurrentAlarmActivity{
     EWAssertMainThread
     EWActivity *activity = [[EWActivityManager sharedManager] currentActivityForPerson:[EWPerson me]];

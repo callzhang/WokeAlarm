@@ -28,7 +28,6 @@ extern NSString * const kFriendshipStatusChanged;
 
 //my stuff
 + (NSArray *)myActivities;
-+ (NSArray *)myAlarmActivities;
 + (NSArray *)myUnreadNotifications;
 + (NSArray *)myNotifications;
 + (NSArray *)myAlarms;

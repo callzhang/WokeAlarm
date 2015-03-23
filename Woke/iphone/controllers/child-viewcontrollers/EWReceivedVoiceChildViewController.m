@@ -123,7 +123,7 @@
 //        
 //        _items = __items;
         
-        NSArray *activities = [EWPerson myAlarmActivities];
+        NSArray *activities = [EWPerson myActivities];
         NSMutableArray *noneEmptyActivies = [NSMutableArray array];
         for (EWActivity *activity in activities) {
             if (activity.medias.count != 0) {

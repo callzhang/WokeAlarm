@@ -567,16 +567,20 @@
 
 - (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
 	if (!self.hasChanges) {
-		DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
-		if (block) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				EWServerObject *MO_main = [self MR_inContext:mainContext];
-				block(MO_main, nil);
-			});
-		}
-		return;
+        if (!self.serverID) {
+            //add to upload queue
+            [[EWSync sharedInstance] appendInsertQueue:self];
+        } else {
+            DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
+            if (block) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    EWServerObject *MO_main = [self MR_inContext:mainContext];
+                    block(MO_main, nil);
+                });
+            }
+            return;
+        }
 	}
-	
 	
 	//save and persistant ID
 	[self save];
