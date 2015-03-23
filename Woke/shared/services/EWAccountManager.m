@@ -344,7 +344,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         location = [[CLLocation alloc] initWithLatitude:40.732019 longitude:-73.992684];
     }
     [EWPerson me].location = location;
-    [[EWPerson me] save];
+	//[[EWPerson me] save];
     
     //DDLogVerbose(@"Get user location with lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude);
     

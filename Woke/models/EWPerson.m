@@ -12,6 +12,7 @@
 #import "EWPerson+Woke.h"
 #import "EWCachedInfoManager.h"
 #import "FBKVOController.h"
+#import "EWSync.h"
 
 NSString * const EWPersonDefaultName = @"New User";
 
@@ -31,6 +32,12 @@ NSString * const EWPersonDefaultName = @"New User";
 	//we should not set default value for those who would be synced as PFFile, as they will be regarded as downloaded
     //[self setPrimitiveValue:[ImagesCatalog profileSlice] forKey:EWPersonAttributes.profilePic];
     //[self setPrimitiveValue:[[CLLocation alloc] initWithLatitude:0 longitude:0] forKey:EWPersonAttributes.location];
+}
+
+- (void)save{
+	if ([EWSync sharedInstance].isUploading) {
+		
+	}
 }
 
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{

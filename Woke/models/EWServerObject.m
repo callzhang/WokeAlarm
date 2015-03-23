@@ -26,7 +26,7 @@
 }
 
 - (void)remove{
-    DDLogDebug(@"Deleted MO %@(%@)", self.entity.name, self.serverID);
+    DDLogDebug(@"---> Deleted MO %@(%@)", self.entity.name, self.serverID);
     NSManagedObjectID *selfID = self.objectID;
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[[NSNotificationCenter defaultCenter] postNotificationName:kManagedObjectDeleted object:selfID];

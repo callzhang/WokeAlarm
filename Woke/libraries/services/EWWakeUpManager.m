@@ -64,14 +64,19 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completio
     }
 });
 
-FBTweakAction(@"WakeUpManager", @"Action", @"Remove unread medias", ^{
+FBTweakAction(@"WakeUpManager", @"Action", @"Unread medias", ^{
 	NSArray *unread = [EWPerson myUnreadMedias];
 	for (EWMedia *media in unread) {
 		DDLogDebug(@"Removed EWMedia PO %@", media.serverID);
-        [[EWPerson me] removeReceivedMediasObject:media];
+		[[EWPerson me] removeReceivedMediasObject:media];
 	}
 });
 
+FBTweakAction(@"WakeUpManager", @"Action", @"Unread medias count", ^{
+	NSArray *unread = [EWPerson myUnreadMedias];
+	NSString *str = [NSString stringWithFormat:@"Unread medias: %lu", unread.count];
+	EWAlert(str);
+});
 
 NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotification";
 NSString * const kEWWakeUpDidPlayNextMediaNotification = @"kEWWakeUpDidPlayNextMediaNotification";

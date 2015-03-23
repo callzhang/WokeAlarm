@@ -81,8 +81,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
 }
 
 + (void)uploadUpdatedLogFiles{
+	PFInstallation *installation = [PFInstallation currentInstallation];
+	[installation fetchIfNeeded];
     PFQuery *logFileQuery = [PFQuery queryWithClassName:@"EWLog"];
-    [logFileQuery whereKey:@"installation" equalTo:[PFInstallation currentInstallation]];
+    [logFileQuery whereKey:@"installation" equalTo:installation];
     [logFileQuery whereKey:@"user" equalTo:[PFUser currentUser]];
     NSArray *logFileNames = [[EWUtil shared].fileLogger.logFileManager sortedLogFileNames];
     NSArray *logFileInfos = [[EWUtil shared].fileLogger.logFileManager sortedLogFileInfos];

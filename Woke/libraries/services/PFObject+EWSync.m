@@ -272,6 +272,7 @@
         while (MOs.count > 1) {
             EWServerObject *mo_ = MOs.firstObject;
             [mo_ remove];
+			[MOs removeObject:mo_];
             //remove from the update queue
             [[EWSync sharedInstance] removeObjectFromDeleteQueue:self];
         }
