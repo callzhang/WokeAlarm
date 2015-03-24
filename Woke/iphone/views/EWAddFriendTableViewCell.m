@@ -21,6 +21,30 @@
     [self.inviteButton addTarget:self action:@selector(onInviteButton:) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void)updateWithFriendshipStatus:(NSNumber *)status {
+    EWFriendshipStatus statusValue = [status integerValue];
+    switch (statusValue) {
+        case EWFriendshipStatusNone:
+        case EWFriendshipStatusUnknown:
+            [self.rightButton setImage:[ImagesCatalog wokeAddFriendsAddFriendButtonSmall] forState:UIControlStateNormal];
+            [self.rightButton setImage:[ImagesCatalog wokeAddFriendsAddFriendButtonSmallHighlighted] forState:UIControlStateHighlighted];
+            break;
+        case EWFriendshipStatusSent:
+            [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmall] forState:UIControlStateNormal];
+            [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmallHighlighted] forState:UIControlStateHighlighted];
+            break;
+        case EWFriendshipStatusDenied:
+        case EWFriendshipStatusFriended:
+        case EWFriendshipStatusReceived:
+            //TODO: missing states
+            [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmall] forState:UIControlStateNormal];
+            [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmallHighlighted] forState:UIControlStateHighlighted];
+            break;
+        default:
+            break;
+    }
+}
+
 - (void)setPerson:(EWPerson *)person {
     if (_person != person) {
         _person = person;
@@ -32,27 +56,7 @@
         [RACObserve(self.person, friendshipStatus) subscribeNext:^(NSNumber *status) {
             @strongify(self);
             DDLogVerbose(@"RAC friendship status: %@", status);
-            EWFriendshipStatus statusValue = [status integerValue];
-            switch (statusValue) {
-                case EWFriendshipStatusNone:
-                case EWFriendshipStatusUnknown:
-                    [self.rightButton setImage:[ImagesCatalog wokeAddFriendsAddFriendButtonSmall] forState:UIControlStateNormal];
-                    [self.rightButton setImage:[ImagesCatalog wokeAddFriendsAddFriendButtonSmallHighlighted] forState:UIControlStateHighlighted];
-                    break;
-                case EWFriendshipStatusSent:
-                    [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmall] forState:UIControlStateNormal];
-                    [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmallHighlighted] forState:UIControlStateHighlighted];
-                    break;
-                case EWFriendshipStatusDenied:
-                case EWFriendshipStatusFriended:
-                case EWFriendshipStatusReceived:
-                    //TODO: missing states
-                    [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmall] forState:UIControlStateNormal];
-                    [self.rightButton setImage:[ImagesCatalog wokeAddFriendsFriendRequestSentButtonSmallHighlighted] forState:UIControlStateHighlighted];
-                    break;
-                default:
-                    break;
-            }
+            [self updateWithFriendshipStatus:status];
         }];
     }
 }
@@ -64,6 +68,7 @@
                                      if (error) {
                                          DDLogError(@"got friend request sending error:%@", error);
                                      }
+                                     [self updateWithFriendshipStatus:@(status)];
                                  }];
 }
 

@@ -10,12 +10,13 @@
 #import "EWSocialManager.h"
 #import "EWAddFriendTableViewCell.h"
 #import "UIImageView+AFNetworking.h"
+#import "EWPersonManager.h"
 
 @interface EWAddFriendsFacebookChildViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, readonly) NSArray *items;
 @property (nonatomic, strong) NSDictionary *facebookFrinedsOnWoke;
-@property (nonatomic, strong) NSDictionary *facebookFriends;
+//@property (nonatomic, strong) NSDictionary *facebookFriends;
 @end
 
 @implementation EWAddFriendsFacebookChildViewController
@@ -45,13 +46,8 @@
         EWPerson *person = section[@"rows"][indexPath.row];
         cell.person = person;
     }
-    else if ([section[@"type"] isEqualToString:@"facebook"]) {
-        NSDictionary *item = section[@"rows"][indexPath.row];
-        cell.nameLabel.text = item[@"name"];
-        [cell.profileImageView setImageWithURL:item[@"imageURL"]];
-        cell.profileImageView.contentMode = UIViewContentModeScaleAspectFill;
-        [cell.profileImageView applyHexagonSoftMask];
-//        [cell.rightButton setImage:<#(UIImage *)#> forState:<#(UIControlState)#>]; //set invite button
+    else {
+        DDLogError(@"not supported");
     }
     
     return cell;
@@ -69,18 +65,36 @@
         NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
         UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
         NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
+        
         if (isFriendsSection) {
             sectionLabel.text = ((NSString* (^)(void))self.facebookFrinedsOnWoke[@"sectionName"])();
             addAllButton.hidden = NO;
         }
         else {
-            sectionLabel.text = ((NSString* (^)(void))self.facebookFriends[@"sectionName"])();
-            addAllButton.hidden = YES;
+//            sectionLabel.text = ((NSString* (^)(void))self.facebookFriends[@"sectionName"])();
+//            addAllButton.hidden = YES;
         }
-    }
+        
+        [addAllButton removeTarget:self action:nil forControlEvents:UIControlEventAllEvents];
+        [addAllButton addTarget:self action:@selector(onAddAllButton) forControlEvents:UIControlEventTouchUpInside];
 
+    }
     
     return cell;
+}
+
+- (void)onAddAllButton {
+    NSArray *rows = self.items.firstObject[@"rows"];
+    for (EWPerson *person in rows) {
+        if (person.friendshipStatus == EWFriendshipStatusNone) {
+            [[EWPersonManager shared] requestFriend:person completion:^(EWFriendshipStatus status, NSError *error) {
+                DDLogVerbose(@"friend request sent, status changed to :%@", @(status));
+                if (error) {
+                    DDLogError(@"got friend request sending error:%@", error);
+                }
+            }];
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -88,13 +102,9 @@
 }
 
 - (NSArray *)items {
-    if (self.facebookFriends && self.facebookFrinedsOnWoke) {
-        return @[self.facebookFrinedsOnWoke, self.facebookFriends];
+    if (self.facebookFrinedsOnWoke) {
+        return @[self.facebookFrinedsOnWoke];
     }
-    else if (self.facebookFriends) {
-        return @[self.facebookFriends];
-    }
-    
     
     return nil;
 }
@@ -113,53 +123,50 @@
                                      };
         self.facebookFrinedsOnWoke = dictionary;
         
-        [self loadLocalFriends];
         [self.tableView reloadData];
     }];
-
-    [self loadLocalFriends];
 }
 
-- (void)loadLocalFriends {
-    NSMutableDictionary *facebookFriendsDictioanry = [EWPerson mySocialGraph].facebookFriends;
-    
-    NSMutableArray *facebookFriends = [NSMutableArray array];
-    
-    [facebookFriendsDictioanry enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [facebookFriends addObject:@{
-                                     @"id": key,
-                                     @"name": obj,
-                                     @"imageURL": [[EWSocialManager sharedInstance] getFacebookProfilePictureURLWithID:key]
-                                     }];
-    }];
-    
-    [facebookFriends sortUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES]]];
-    
-    NSMutableArray *friendsToRemove = [NSMutableArray array];
-    
-    NSArray *facebookFriendIDs = [facebookFriends valueForKeyPath:@"id"];
-    [self.facebookFrinedsOnWoke[@"rows"] enumerateObjectsUsingBlock:^(EWPerson *person, NSUInteger idx, BOOL *stop) {
-        NSString *facebookID = person.socialGraph.facebookID;//TODO: change facebook ID retrive
-        if ([facebookFriendIDs containsObject:facebookID]) {
-           [facebookFriends enumerateObjectsUsingBlock:^(NSDictionary *dic, NSUInteger idx, BOOL *stop) {
-               if ([dic[@"id"] isEqualToString:facebookID]) {
-                   [friendsToRemove addObject:dic];
-               }
-           }];
-        }
-    }];
-    
-    [facebookFriends removeObjectsInArray:friendsToRemove];
-    
-    self.facebookFriends = @{
-                             @"type": @"facebook",
-                             @"rows": facebookFriends,
-                             @"sectionName": ^{
-                                 //TODO, 单复数
-                                 return [NSString stringWithFormat:@"invite other %@ friends?", @(facebookFriends.count)];
-                             }, @"showRightButton": @(NO)
-                             };
-    
-    [self.tableView reloadData];
-}
+//- (void)loadLocalFriends {
+//    NSMutableDictionary *facebookFriendsDictioanry = [EWPerson mySocialGraph].facebookFriends;
+//    
+//    NSMutableArray *facebookFriends = [NSMutableArray array];
+//    
+//    [facebookFriendsDictioanry enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+//        [facebookFriends addObject:@{
+//                                     @"id": key,
+//                                     @"name": obj,
+//                                     @"imageURL": [[EWSocialManager sharedInstance] getFacebookProfilePictureURLWithID:key]
+//                                     }];
+//    }];
+//    
+//    [facebookFriends sortUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES]]];
+//    
+//    NSMutableArray *friendsToRemove = [NSMutableArray array];
+//    
+//    NSArray *facebookFriendIDs = [facebookFriends valueForKeyPath:@"id"];
+//    [self.facebookFrinedsOnWoke[@"rows"] enumerateObjectsUsingBlock:^(EWPerson *person, NSUInteger idx, BOOL *stop) {
+//        NSString *facebookID = person.socialGraph.facebookID;//TODO: change facebook ID retrive
+//        if ([facebookFriendIDs containsObject:facebookID]) {
+//           [facebookFriends enumerateObjectsUsingBlock:^(NSDictionary *dic, NSUInteger idx, BOOL *stop) {
+//               if ([dic[@"id"] isEqualToString:facebookID]) {
+//                   [friendsToRemove addObject:dic];
+//               }
+//           }];
+//        }
+//    }];
+//    
+//    [facebookFriends removeObjectsInArray:friendsToRemove];
+//    
+//    self.facebookFriends = @{
+//                             @"type": @"facebook",
+//                             @"rows": facebookFriends,
+//                             @"sectionName": ^{
+//                                 //TODO, 单复数
+//                                 return [NSString stringWithFormat:@"invite other %@ friends?", @(facebookFriends.count)];
+//                             }, @"showRightButton": @(NO)
+//                             };
+//    
+//    [self.tableView reloadData];
+//}
 @end

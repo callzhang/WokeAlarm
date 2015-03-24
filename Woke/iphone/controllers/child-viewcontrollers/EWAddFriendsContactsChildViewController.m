@@ -131,6 +131,9 @@
             sectionLabel.text = ((NSString* (^)(void))self.contactFriends[@"sectionName"])();
             addAllButton.hidden = YES;
         }
+        
+//        [addAllButton removeTarget:self action:nil forControlEvents:UIControlEventAllEvents];
+//        [addAllButton addTarget:self action:@selector(onAddAllButton) forControlEvents:UIControlEventTouchUpInside];
     }
     
     
@@ -152,6 +155,7 @@
     
     return nil;
 }
+
 
 - (void)loadFriendsOnWokeSection {
     [[EWSocialManager sharedInstance] findAddressbookUsersInWokeWithCompletion:^(NSArray *array, NSError *error) {
