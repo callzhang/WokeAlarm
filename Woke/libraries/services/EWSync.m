@@ -756,7 +756,7 @@ NSManagedObjectContext *mainContext;
     //validate MO, only used when uploading MO to PO
     BOOL good = YES;
     
-    if (![SO valueForKey:kUpdatedDateKey] && SO.serverID) {
+    if (!SO.updated && SO.serverID) {
         DDLogWarn(@"The %@(%@) you are trying to validate haven't been downloaded fully. Skip validating.", SO.entity.name, SO.serverID);
         return NO;
     }

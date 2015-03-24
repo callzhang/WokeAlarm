@@ -34,12 +34,6 @@ NSString * const EWPersonDefaultName = @"New User";
     //[self setPrimitiveValue:[[CLLocation alloc] initWithLatitude:0 longitude:0] forKey:EWPersonAttributes.location];
 }
 
-- (void)save{
-	if ([EWSync sharedInstance].isUploading) {
-		
-	}
-}
-
 + (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user{
     EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
     if (user.isNew || !user[@"name"]) {
@@ -47,7 +41,7 @@ NSString * const EWPersonDefaultName = @"New User";
         person.firstName = @"New";
         person.lastName = @"User";
         person.preference = kUserDefaults;
-        //person.updatedAt = [NSDate date];
+        person.updatedAt = [NSDate dateWithTimeIntervalSince1970:0];
     }
     
     //no need to save here
