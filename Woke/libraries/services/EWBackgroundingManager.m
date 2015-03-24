@@ -252,7 +252,11 @@
 		[[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
 	}
     
-    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusSleeping || DEBUG) {
+    BOOL shouldKeepScheduling = NO;
+#ifdef DEBUG
+    shouldKeepScheduling = YES;
+#endif
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusSleeping || shouldKeepScheduling) {
 		backgroundingFailNotification= [[UILocalNotification alloc] init];
 		backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:200];
 		backgroundingFailNotification.alertBody = @"Woke stopped running. Tap here to reactivate it.";
@@ -261,7 +265,6 @@
 		backgroundingFailNotification.soundName = backgroundingFailureSound;
 		[[UIApplication sharedApplication] scheduleLocalNotification:backgroundingFailNotification];
     }
-
 }
 
 - (void)playSilentSound{
