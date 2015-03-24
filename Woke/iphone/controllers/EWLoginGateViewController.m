@@ -35,15 +35,6 @@
             [self.view showFailureNotification:[NSString stringWithFormat:@"Failed to log in: %@", error.localizedDescription]];
         }
         else {
-            [[EWAccountManager shared] updateFromFacebookCompletion:^(NSError *error2) {
-                if (error2) {
-                    [self.view showFailureNotification:[NSString stringWithFormat:@"Failed to log in: %@", error2.localizedDescription]];
-                    [EWErrorManager handleError:error2];
-                } else {
-                    //show success view on top view
-                    [EWUIUtil showSuccessHUBWithString:@"Logged in"];
-                }
-            }];
             
             [self performSegueWithIdentifier:@"TempShowMainViewSegue" sender:self];
         }

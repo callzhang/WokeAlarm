@@ -841,6 +841,7 @@
 		096AAAA71A195A3900B4CBFF /* services */ = {
 			isa = PBXGroup;
 			children = (
+				9B105AC61AC12D9D00EB2F5F /* legacy */,
 				9BC0F0611A658B560033E5A7 /* sync */,
 				096AAAA81A195A3900B4CBFF /* EWActivityManager.h */,
 				096AAAA91A195A3900B4CBFF /* EWActivityManager.m */,
@@ -869,8 +870,6 @@
 				096AAAC01A195A3900B4CBFF /* EWSocialManager.m */,
 				096AAAC11A195A3900B4CBFF /* EWCachedInfoManager.h */,
 				096AAAC21A195A3900B4CBFF /* EWCachedInfoManager.m */,
-				096AAAC71A195A3900B4CBFF /* EWUserManager.h */,
-				096AAAC81A195A3900B4CBFF /* EWUserManager.m */,
 				096AAACB1A195A3900B4CBFF /* EWWakeUpManager.h */,
 				096AAACC1A195A3900B4CBFF /* EWWakeUpManager.m */,
 				096AAAD11A195A3900B4CBFF /* PFQuery+EWQuery.h */,
@@ -1192,6 +1191,15 @@
 				9B25631E1A1952FA00010B9E /* _EWSocial.m */,
 			);
 			path = models_mogenerated;
+			sourceTree = "<group>";
+		};
+		9B105AC61AC12D9D00EB2F5F /* legacy */ = {
+			isa = PBXGroup;
+			children = (
+				096AAAC71A195A3900B4CBFF /* EWUserManager.h */,
+				096AAAC81A195A3900B4CBFF /* EWUserManager.m */,
+			);
+			name = legacy;
 			sourceTree = "<group>";
 		};
 		9B1551841A5CBDC200C2EE41 /* components */ = {

@@ -23,7 +23,7 @@ extern NSString * const EWPersonDefaultName;
 @property (nonatomic, strong) NSDictionary *preference;
 @property (nonatomic, strong) NSDictionary *cachedInfo;
 @property (nonatomic, strong) NSArray *images;
-@property (nonatomic, readwrite) NSString *name;
+@property (nonatomic, readonly) NSString *name;
 
 /**
  *  Find or create EWPerson from PFUser

@@ -49,12 +49,22 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             [self refreshEverythingIfNecesseryWithCompletion:^(NSError *err){
                 //if new user, link with facebook
                 if([PFUser currentUser].isNew){
-                    /**
-                     *  Handle external event such as welcoming message and broadcasting new user to the community
-                     */
-                    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
-                    EWAlert(msg);
-                    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
+                    [[EWAccountManager shared] updateFromFacebookCompletion:^(NSError *error2) {
+                        if (error2) {
+                            [EWErrorManager handleError:error2];
+                        } else {
+                            //show success view on top view
+                            [EWUIUtil showSuccessHUBWithString:@"Logged in"];
+                            //set up crashlytics user info
+                            [Crashlytics setUserName:user.username];
+                            [Crashlytics setUserEmail:user.email];
+                            [Crashlytics setUserIdentifier:user.objectId];
+                            [Crashlytics setObjectValue:user[@"firstName"] forKey:@"name"];
+                        }
+                        
+                        //Handle external event such as welcoming message and broadcasting new user to the community
+                        [self handleNewUser];
+                    }];
                 }
                 
                 //logged into the Core Data user
@@ -137,28 +147,26 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 
 //called on login
 - (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion {
-    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
-        [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *data, NSError *error) {
-            if (error) {
-                [EWErrorManager handleError:error];
-            }
-            else {
-                [self updateUserWithFBData:data];
-            }
+    if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+        [PFFacebookUtils linkUser:[PFUser currentUser] permissions:[[self class] facebookPermissions] block:^(BOOL succeeded, NSError *error){
+            DDLogInfo(@"Facebook account linked %@", succeeded?@"YES":@"NO");
+            if (error) [EWErrorManager handleError:error];
         }];
     }
-    else {
-        [PFFacebookUtils linkUser:[PFUser currentUser] permissions:[[self class] facebookPermissions] block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                if (completion) {
-                    completion(error);
-                }
-                else {
-                    [self updateFromFacebookCompletion:completion];
-                }
-            }
-        }];
-    }
+
+    [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *data, NSError *error) {
+        if (!data) {
+            [EWErrorManager handleError:error];
+        }
+        else {
+            [self updateUserWithFBData:data];
+            [[EWPerson me] save];
+        }
+        
+        if (completion) {
+            completion(error);
+        }
+    }];
 }
 
 - (void)logout {
@@ -172,6 +180,18 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLogoutNotification object:self userInfo:nil];
 }
+
+
+
+/**
+ *  Handle external event such as welcoming message and broadcasting new user to the community
+ */
+- (void)handleNewUser{
+    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
+    EWAlert(msg);
+    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
+}
+
 
 #pragma mark - Facebook
 - (void)updateMyFacebookInfo{

@@ -551,11 +551,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
     console.log("Request for user "+userID+" with udpatedAt: "+userUpdatedAt);
   }
   var query = new Parse.Query(Parse.User);
-  query.get(userID).then( function(user){
-    if (user == undefined) {
-      console.log("User not exists yet");
-      response.success({});
-    };
+  query.get(userID).then(function (user){
 
     //========== FUNCTIONS DEFINITION =============
 
@@ -659,10 +655,13 @@ Parse.Cloud.define("syncUser", function(request, response) {
     for (var key in request.params){
       if (key == "user") continue;
 
+      var relationOrPO = user.get(key);
+      if (!relationOrPO) continue;
+
       //socialGraph is the only to-one relation
       //we currently don't have a way to distinguish PFRelation or Array
-      relationOrPO = user.get(key);
-      if (!(relationOrPO instanceof Relation){
+      if (relationOrPO.id){
+        console.log("processing to one relation " + key);
         //toOne relation
         var PO = user.get(key);
 
@@ -695,6 +694,10 @@ Parse.Cloud.define("syncUser", function(request, response) {
     //wait until all promises finish
     return Parse.Promise.when(promises);
 
+  }, function (error) {
+    //failed to find user
+    console.log("User " + userID + " doesn't not exist" + error.message);
+    return Parse.Promise.as();
 
   }).then(function(){
     //add the delete queue to response
@@ -702,8 +705,8 @@ Parse.Cloud.define("syncUser", function(request, response) {
     info["delete"] = objectsToDelete;
     //return
     response.success(info);
-  }, function(error){
-    response.error("Failed to run parallel inspection. Error: "+error.message);
+  }, function (error){
+    response.error("Failed to run user relation inspection. Error: "+error.message);
   });
 
 });

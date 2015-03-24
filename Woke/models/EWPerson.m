@@ -44,7 +44,8 @@ NSString * const EWPersonDefaultName = @"New User";
     EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
     if (user.isNew || !user[@"name"]) {
         DDLogInfo(@"New user signed up, assign default value");
-        person.name = kDefaultUsername;
+        person.firstName = @"New";
+        person.lastName = @"User";
         person.preference = kUserDefaults;
         //person.updatedAt = [NSDate date];
     }
