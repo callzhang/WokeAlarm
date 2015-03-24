@@ -661,7 +661,8 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
       //socialGraph is the only to-one relation
       //we currently don't have a way to distinguish PFRelation or Array
-      if (key == "socialGraph"){
+      relationOrPO = user.get(key);
+      if (!(relationOrPO instanceof Relation){
         //toOne relation
         var PO = user.get(key);
 
@@ -670,60 +671,12 @@ Parse.Cloud.define("syncUser", function(request, response) {
             return PO.fetch().then(function () {
               updatePOForRelation(PO, relationName);
             })
-          }else{
-            return Parse.Promise.as().then(function () {
-              updatePOForRelation(PO, relationName);
-            });
           }
         };
         promises.push(toOnePromise(PO, key));
 
       }
-      /*
-      else if(key == "unreadMedias") {
-        //Relation is Array of POs
-        var objects = user.get(key);
-        var files = [];
-        var arrayPromise = function (objects, relationName) {
-          var fetchAllPromise = Parse.Promise.as();
-          if (objects) {
-            objects.forEach(function(object) {
-              fetchAllPromise = fetchAllPromise.then(function () {
-                return object.fetch({
-                  success: function (media) {},
-                  error: function (error) {
-                    objectsToDelete[object.id] = relationName;
-                    console.log("***Failed to fetch " + relationName + "(" + object.id + "). Add to deleted object. error: " + error.message);
-                  }
-                });
-              }, function (error) {
-                return object.fetch();
-              }).then(function (argument) {
-                // download file
-                var file = object.get("mediaFile");
-                if (file) {
-                  files.push(file);
-                  return file.fetch();
-                };
-                return Parse.Promise.as();
-              });
-            });
-          }
-
-          fetchAllPromise = fetchAllPromise.then(function () {
-            processPOListForRelation(objects, relationName);
-            return Parse.Promise.as(); 
-          }, function(error){
-            console.log("***Failed to fetch array for relation "+relationName+" with error: "+error);
-          }).then(function () {
-            processPOListForRelation(files, "mediaFiles");
-          })
-
-          return fetchAllPromise;
-        };
-        promises.push(arrayPromise(objects, key));
-      }
-      */
+      
       else {
          //To-Many Relation
          //create promise to work on to-many relation and add it to the 'When()' collection

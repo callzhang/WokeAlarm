@@ -90,15 +90,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [Crashlytics setUserIdentifier:user.objectId];
     [Crashlytics setObjectValue:user[@"firstName"] forKey:@"name"];
     
-    //test
-    [self.KVOController observe:person keyPath:@"unreadMedias" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        static NSUInteger lastUnreadCount;
-        NSUInteger count = [EWPerson myUnreadMedias].count;
-        if (count!= lastUnreadCount && count>0) {
-            lastUnreadCount = count;
-            DDLogDebug(@"Found unread medias changed to %ld", [EWPerson myUnreadMedias].count);
-        }
-    }];
 }
 
 //login Core Data User with Server User (PFUser)
