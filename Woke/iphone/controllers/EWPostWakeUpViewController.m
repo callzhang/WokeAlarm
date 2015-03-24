@@ -29,13 +29,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableviewHeaderView.backgroundColor = [UIColor clearColor];
-    if ([EWWakeUpManager shared].canSnooze) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(onBack:)];
-    }
-    else {
-        DDLogInfo(@"Snooze disabled, hide back button");
-        self.navigationItem.leftBarButtonItem = nil;
-    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMedias) name:kNewMediaNotification object:nil];
     
@@ -57,7 +50,14 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
+	[super viewDidAppear:animated];
+	if ([EWWakeUpManager shared].canSnooze) {
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(onBack:)];
+	}
+	else {
+		DDLogInfo(@"Snooze disabled, hide back button");
+		self.navigationItem.leftBarButtonItem = nil;
+	}
     [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.8]];
 }
 
@@ -141,7 +141,9 @@
 
 - (void)scrollToMedia:(EWMedia *)media{
     NSUInteger index = [self.medias indexOfObject:media];
-    if (index != NSNotFound && [UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+	NSUInteger cellCount = [self.tableView numberOfRowsInSection:0];
+	BOOL appActive = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
+    if (index != NSNotFound && index < cellCount && appActive) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     }
 }

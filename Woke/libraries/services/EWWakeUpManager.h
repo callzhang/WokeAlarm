@@ -22,7 +22,6 @@
 NSUInteger static maxLoop = 100;
 
 extern NSString * const kAlarmTimerDidFireNotification;
-
 extern NSString * const kEWWakeUpDidPlayNextMediaNotification;
 extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 
@@ -40,7 +39,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 @interface EWWakeUpManager : NSObject
 @property (nonatomic, copy) NSArray *medias;
 @property (nonatomic, weak) NSObject<EWWakeUpDelegate> *delegate;
-@property (nonatomic, readonly) BOOL canWakeUp;
+@property (nonatomic, readonly) BOOL canStartToWakeUp;
 
 //play control
 @property (nonatomic, assign) BOOL continuePlay;

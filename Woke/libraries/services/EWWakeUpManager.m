@@ -27,25 +27,25 @@
 #import "EWUIUtil.h"
 #import "EWBackgroundingManager.h"
 
-FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
-    [EWWakeUpManager sharedInstance].forceWakeUp = ![EWWakeUpManager sharedInstance].forceWakeUp;
-    DDLogInfo(@"Forced wake up %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
-});
-
-FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
-    [EWWakeUpManager sharedInstance].forceSnooze = ![EWWakeUpManager sharedInstance].forceSnooze;
-    DDLogInfo(@"Force snooze %@", [EWWakeUpManager sharedInstance].forceSnooze?@"enabled":@"disabled");
-});
-
-FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
-    [EWWakeUpManager sharedInstance].forceSleep = ![EWWakeUpManager sharedInstance].forceSleep;
-    DDLogInfo(@"Force sleep %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
-});
-
-FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
-    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = ![EWWakeUpManager sharedInstance].skipCheckActivityCompleted;
-    DDLogInfo(@"Skipped checking activity %@", [EWWakeUpManager sharedInstance].skipCheckActivityCompleted?@"enabled":@"disabled");
-});
+//FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
+//    [EWWakeUpManager sharedInstance].forceWakeUp = ![EWWakeUpManager sharedInstance].forceWakeUp;
+//    DDLogInfo(@"Forced wake up %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
+//});
+//
+//FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
+//    [EWWakeUpManager sharedInstance].forceSnooze = ![EWWakeUpManager sharedInstance].forceSnooze;
+//    DDLogInfo(@"Force snooze %@", [EWWakeUpManager sharedInstance].forceSnooze?@"enabled":@"disabled");
+//});
+//
+//FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
+//    [EWWakeUpManager sharedInstance].forceSleep = ![EWWakeUpManager sharedInstance].forceSleep;
+//    DDLogInfo(@"Force sleep %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
+//});
+//
+//FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
+//    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = ![EWWakeUpManager sharedInstance].skipCheckActivityCompleted;
+//    DDLogInfo(@"Skipped checking activity %@", [EWWakeUpManager sharedInstance].skipCheckActivityCompleted?@"enabled":@"disabled");
+//});
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
     [[EWWakeUpManager shared] testWakeUpInSeconds:30];
@@ -64,7 +64,7 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completio
     }
 });
 
-FBTweakAction(@"WakeUpManager", @"Action", @"Unread medias", ^{
+FBTweakAction(@"WakeUpManager", @"Action", @"Remove unread medias", ^{
 	NSArray *unread = [EWPerson myUnreadMedias];
 	for (EWMedia *media in unread) {
 		DDLogDebug(@"Removed EWMedia PO %@", media.serverID);
@@ -122,7 +122,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleAlarmTimer) name:kAlarmStateChanged object:nil];
 	
     //first time loop
-    self.loopCount = kLoopMediaPlayCount;
+    FBTweakBind(self, loopCount, @"WakeUpManager", @"Play", @"loop count", 100);
+	FBTweakBind(self, forceSleep, @"WakeUpManager", @"Wake", @"Enable force sleep", NO);
+	FBTweakBind(self, forceWakeUp, @"WakeUpManager", @"Wake", @"Enable force wake up", NO);
+	FBTweakBind(self, forceSnooze, @"WakeUpManager", @"Wake", @"Enable snooze", NO);
+	FBTweakBind(self, skipCheckActivityCompleted, @"WakeUpManager", @"Wake", @"Skip check activity completed", NO);
     
 	return self;
 }
@@ -263,7 +267,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     return can;
 }
 
-- (BOOL)canWakeUp{
+- (BOOL)canStartToWakeUp{
     return [self.delegate wakeupManager:self shouldWakeUpWithAlarm:[EWPerson myCurrentAlarm]];
 }
 
@@ -354,68 +358,18 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     } repeats:NO];
 }
 
-/*
-- (void)alarmTimerCheck{
-    //check time
-    if (![EWPerson me]) return;
-    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    
-    //alarm time up
-    NSTimeInterval timeLeft = [activity.time timeIntervalSinceNow];
-    
-    
-    static NSTimer *timerScheduled;
-    //set up a wake Up Timer
-    if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:activity.time])) {
-        NSLog(@"About to init alart timer in %fs", timeLeft);
-        [timerScheduled invalidate];
-        timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
-            [[EWWakeUpManager sharedInstance] startToWakeUp];
-        } repeats:NO];
-        NSLog(@"===========================>> Alarm Timer scheduled on %@) <<=============================", activity.time.date2String);
-    }
-    //schedule next check
-    if (timeLeft > kServerUpdateInterval) {
-        [NSTimer scheduledTimerWithTimeInterval:timeLeft/2 target:self selector:@selector(alarmTimerCheck) userInfo:nil repeats:NO];
-        DDLogVerbose(@"Next alarm timer check in %.1fs", timeLeft/2);
-    }
-}
-
-- (void)sleepTimerCheck{
-    //check time
-    if (![EWPerson me]) return;
-    EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    //alarm time up
-    NSNumber *sleepDuration = [EWPerson me].preference[kSleepDuration];
-    NSInteger durationInSeconds = sleepDuration.integerValue * 3600;
-    NSDate *sleepTime = [activity.time dateByAddingTimeInterval:-durationInSeconds];
-    NSTimeInterval timeLeft = sleepTime.timeIntervalSinceNow;
-    static NSTimer *timerScheduled;
-    
-    //if there is time left and the sleepTimer is either not set up or the sleepTimer is not correct, reschedule a sleepTimer
-    if (timeLeft > 0 && (!timerScheduled || ![timerScheduled.fireDate isEqualToDate:sleepTime])) {
-        DDLogVerbose(@"About to init alarm timer in %fs", timeLeft);
-        [timerScheduled invalidate];
-        timerScheduled = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft-1 block:^(NSTimer *timer) {
-            [[EWWakeUpManager sharedInstance] sleep:nil];
-        } repeats:NO];
-        DDLogVerbose(@"===========================>> Sleep Timer scheduled on %@ <<=============================", sleepTime.date2String);
-    }
-    
-    //schedule next sleep timer check if the time left is larger than 5mim
-    if (timeLeft > 300) {
-        [NSTimer scheduledTimerWithTimeInterval:timeLeft/2 target:self selector:@selector(sleepTimerCheck) userInfo:nil repeats:NO];
-        DDLogVerbose(@"Next alarm timer check in %.1fs", timeLeft);
-    }
-}*/
 
 #pragma mark - Play for wake up view
 - (void)startToPlayVoice{
     [self loadUnreadMedias];
-    [EWAVManager sharedManager].player.volume = 0;
+	//play
+	self.currentMediaIndex = @(-1);
+	[self playNextVoice];
+	
+	//volume
+	[EWAVManager sharedManager].player.volume = 0;
     [[EWAVManager sharedManager] volumeTo:1 withCompletion:^{
-        self.currentMediaIndex = @(-1);
-        [self playNextVoice];
+		DDLogVerbose(@"Volume adjusted to full");
     }];
 }
 
@@ -540,10 +494,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
 	[[EWWakeUpManager shared] scheduleAlarmTimer];
 	
-    
-    //[testingAlarm updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
-    [EWUIUtil showSuccessHUBWithString:@"Alarm will show in 30s"];
-    //}];
+	NSString *str = [NSString stringWithFormat:@"Alarm will show in %lds", seconds];
+    [EWUIUtil showSuccessHUBWithString:str];
     self.tempActivity = activity;
 }
 @end

@@ -29,7 +29,7 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet SCSiriWaveformView *waveView;
-@property (nonatomic, strong) id didPlayNextObserver;
+@property (nonatomic, strong) id didStopPlayObserver;
 @property (nonatomic, strong) EWWakeupChildViewModel *model;
 
 @end
@@ -38,6 +38,7 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self.didStopPlayObserver];
 }
 
 - (void)viewDidLoad {
@@ -61,11 +62,10 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
     }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopWave) name:@"ew.stopwave" object:nil];
-//    self.didPlayNextObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kEWWakeUpDidPlayNextMediaNotification
-//                                                                                 object:nil queue:nil usingBlock:^(NSNotification *note) {
-//                                                                                   @strongify(self);
-//                                                                                     self.profileImageView.image = [self currentMedia].author.profilePic;
-//                                                                                 }];
+	self.didStopPlayObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kEWWakeUpDidStopPlayMediaNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+		@strongify(self);
+		[self stopWave];
+	}];
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress:)];
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     displayLink.paused = YES;
@@ -91,13 +91,14 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 #pragma mark - Update progress
 - (void)updateProgress:(CADisplayLink *)link {
     CGFloat progress = 0.0;
-    if([EWAVManager sharedManager].player.isPlaying) {
-        progress = (CGFloat) [EWAVManager sharedManager].player.currentTime /kMaxRecordTime;
+	AVAudioPlayer *player = [EWAVManager sharedManager].player;
+    if(player.isPlaying) {
+        progress = (CGFloat) player.currentTime / player.duration;
         //set prpgress
         if (progress<1) {
             [self updateMeters];
         }
-    }
+	}
 }
 
 - (void)updateMeters{

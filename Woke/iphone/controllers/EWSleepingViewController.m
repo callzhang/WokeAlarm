@@ -93,7 +93,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 		[self showWakeUpVC];else [self hideWakeUpVC];
 	[self.KVOController observe:[EWSession sharedSession] keyPath:@"wakeupStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
 		if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
-            [[EWWakeUpManager sharedInstance] playNextVoice];
+			//[[EWWakeUpManager sharedInstance] playNextVoice];
 			[self showWakeUpVC];
 		}else{
 			[self hideWakeUpVC];
@@ -117,7 +117,14 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     self.slideLabel = [[UILabel alloc] initWithFrame:self.shimmeringView.bounds];
     self.slideLabel.font = [UIFont fontWithName:@"Lato-Light" size:24];
     self.slideLabel.textColor = [UIColor whiteColor];
-    self.slideLabel.text = @"Slide to Cancel";
+	
+	BOOL canStartToWakeUp = [EWWakeUpManager sharedInstance].canStartToWakeUp;
+	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
+	if (canStartToWakeUp || canWakeUp) {
+		self.slideLabel.text = @"Slide to Wake Up";
+	} else {
+		self.slideLabel.text = @"Slide to Cancel";
+	}
     self.slideLabel.textAlignment = NSTextAlignmentCenter;
     
     self.shimmeringView.contentView = self.slideLabel;
@@ -165,8 +172,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 }
 
 - (void)finishInteractiveTransition {
-    
-    if ([EWWakeUpManager sharedInstance].canWakeUp) {
+	BOOL canStartToWakeUp = [EWWakeUpManager sharedInstance].canStartToWakeUp;
+	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
+    if (canWakeUp || canStartToWakeUp) {
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
     } else {
         [self close:nil];
@@ -181,13 +189,16 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 	self.navigationItem.leftBarButtonItem = nil;
 }
 
+
 - (void)hideWakeUpVC {
+	NSParameterAssert(self.wakeUpChildViewController.view);
+	NSParameterAssert(self.timeChildViewController.view);
+	NSParameterAssert(self.peopleArrayChildViewController.view);
     self.wakeUpChildViewController.view.hidden = YES;
     self.wakeUpChildViewController.active = NO;
     self.timeChildViewController.view.hidden = NO;
     self.peopleArrayChildViewController.view.hidden = NO;
 }
-
 - (void)onNewMediaNotification {
     //Delay update people
     //TODO: Zitao fixed new media handling, and chenged "getWokeVoice" to background, check if the unread medias is correct.

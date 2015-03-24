@@ -528,6 +528,8 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 		}
 	}
 	
+	if (volumeViewSlider.value == volume) return;
+	
 	//change
 	[volumeViewSlider setValue:volume animated:YES];
 	[volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
