@@ -49,10 +49,10 @@
     if (_media != media) {
         _media = media;
         
-        self.profileImageView.image = media.mediaFile.thumbnail?:media.author.profilePic;
+        self.profileImageView.image = media.mediaFile.thumbnail?:media.receiver.profilePic;
         [self.profileImageView applyHexagonSoftMask];
         
-        self.nameLabel.text = self.media.author.name;
+        self.nameLabel.text = self.media.receiver.name;
         
         self.progressView.progress = 0;
         
