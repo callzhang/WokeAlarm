@@ -773,7 +773,7 @@
         <!--Profile View Controller-->
         <scene sceneID="Hfm-WI-dL4">
             <objects>
-                <viewController storyboardIdentifier="EWProfileViewController" id="T0a-bL-MOd" customClass="EWProfileViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EWProfileViewController" automaticallyAdjustsScrollViewInsets="NO" id="T0a-bL-MOd" customClass="EWProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Veq-NB-gnl"/>
                         <viewControllerLayoutGuide type="bottom" id="87Y-fB-bZn"/>
