@@ -133,8 +133,8 @@
     DDLogVerbose(@"4. Check scheduled local notifications");
     [[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
     
-    DDLogVerbose(@"5. Updating facebook friends");
-    [[EWAccountManager sharedInstance] updateMyFacebookInfo];
+    //DDLogVerbose(@"5. Updating facebook friends");
+    //[[EWAccountManager sharedInstance] updateMyFacebookInfoWithCompletion:NULL];
     
     DDLogVerbose(@"6. Check unread medias");
     [[EWMediaManager sharedInstance] checkNewMediasWithCompletion:NULL];

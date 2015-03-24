@@ -451,13 +451,20 @@ NSManagedObjectContext *mainContext;
     }
     NSManagedObjectID *ID = serverObject.objectID;
     [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *err) {
-        EWServerObject *MO_main = (EWServerObject *)[mainContext objectWithID:ID];
+        NSError *error1;
+        EWServerObject *MO_main = (EWServerObject *)[mainContext existingObjectWithID:ID error:&error1];
         if (succeeded) {
-            //assign connection between MO and PO
-            [self performSaveCallbacksWithParseObject:object andManagedObjectID:MO_main.objectID];
-            //set updated time
-            NSDate *updated = object.updatedAt;
-            MO_main.updatedAt = updated;
+            if (MO_main) {
+                //assign connection between MO and PO
+                [self performSaveCallbacksWithParseObject:object andManagedObjectID:MO_main.objectID];
+                //set updated time
+                NSDate *updated = object.updatedAt;
+                MO_main.updatedAt = updated;
+            }
+            else {
+                DDLogError(@"Failed to get %@(%@) on main thread: %@", serverObject.entity.name, serverObject.serverID, error1.localizedDescription);
+                [serverObject uploadEventually];
+            }
         }
 		else{
             *error = err;

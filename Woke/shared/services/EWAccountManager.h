@@ -14,14 +14,14 @@
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWAccountManager);
 
 - (void)loginFacebookCompletion:(ErrorBlock)completion;
-- (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion;
+//- (void)updateFromFacebookCompletion:(void (^)(NSError *error))completion;
 - (void)fetchCurrentUser:(PFUser *)user;
 - (void)refreshEverythingIfNecesseryWithCompletion:(ErrorBlock)completion;
 + (BOOL)isLoggedIn;
 - (void)logout;
 
 //tools
-- (void)updateMyFacebookInfo;
+- (void)updateMyFacebookInfoWithCompletion:(ErrorBlock)block;
 - (void)registerLocation;
 - (void)openFacebookSessionWithCompletion:(VoidBlock)block;
 
