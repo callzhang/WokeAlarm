@@ -79,7 +79,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     [super viewDidLoad];
     
     //add unwind action
-    [self.navigationItem.leftBarButtonItem setAction:@selector(close:)];
+    self.navigationItem.leftBarButtonItem = nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNewMediaNotification) name:kNewMediaNotification object:nil];
     
