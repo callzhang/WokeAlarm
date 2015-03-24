@@ -92,6 +92,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 	if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp)
 		[self showWakeUpVC];else [self hideWakeUpVC];
 	[self.KVOController observe:[EWSession sharedSession] keyPath:@"wakeupStatus" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+		DDLogInfo(@"Observed wakeup status changed to %@", change[NSKeyValueChangeNewKey]);
 		if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
 			//[[EWWakeUpManager sharedInstance] playNextVoice];
 			[self showWakeUpVC];
@@ -119,7 +120,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     self.slideLabel.textColor = [UIColor whiteColor];
 	
 	BOOL canStartToWakeUp = [EWWakeUpManager sharedInstance].canStartToWakeUp;
-	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
+	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp;
 	if (canStartToWakeUp || canWakeUp) {
 		self.slideLabel.text = @"Slide to Wake Up";
 	} else {
@@ -173,7 +174,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 
 - (void)finishInteractiveTransition {
 	BOOL canStartToWakeUp = [EWWakeUpManager sharedInstance].canStartToWakeUp;
-	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
+	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp;
     if (canWakeUp || canStartToWakeUp) {
         [self performSegueWithIdentifier:MainStoryboardIDs.segues.sleepingToPostWakeup sender:self];
     } else {
@@ -182,6 +183,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 }
 
 - (void)showWakeUpVC {
+	NSParameterAssert(self.wakeUpChildViewController.view);
+	NSParameterAssert(self.timeChildViewController.view);
+	NSParameterAssert(self.peopleArrayChildViewController.view);
     self.wakeUpChildViewController.view.hidden = NO;
     self.wakeUpChildViewController.active = YES;
     self.timeChildViewController.view.hidden = YES;

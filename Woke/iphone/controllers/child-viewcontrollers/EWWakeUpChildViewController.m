@@ -82,7 +82,7 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
         displayLink.paused = NO;
     }
     else {
-        [[EWWakeUpManager sharedInstance] stopPlayingVoice];
+		//[[EWWakeUpManager sharedInstance] stopPlayingVoice];
         displayLink.paused = YES;
     }
 }
