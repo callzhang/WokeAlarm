@@ -143,4 +143,9 @@
 //        [self.mainNavigationController setNavigationBarTransparent:YES];
 //    }
 }
+
+#pragma mark - Status Bar
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 @end

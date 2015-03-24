@@ -108,4 +108,8 @@
     
     [self presentWithBlur:nav withCompletion:nil];
 }
+#pragma mark - Status Bar
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 @end

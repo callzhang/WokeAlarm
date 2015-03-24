@@ -242,5 +242,8 @@
     return label; 
 }
 
-
+#pragma mark - Status Bar
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 @end
