@@ -6,21 +6,22 @@
 //  Copyright (c) 2014 wokealarm. All rights reserved.
 //
 
+//model
 #import "AppDelegate.h"
 #import "EWStartUpSequence.h"
-#import "FBSession.h"
-#import "FBAppCall.h"
-#import "PFFacebookUtils.h"
 #import "EWAccountManager.h"
 #import "EWSession.h"
 #import "EWLoginGateViewController.h"
 #import "EWMainViewController.h"
 #import "EWStyleController.h"
 #import "EWServer.h"
-
+//utility
 #import "Crashlytics.h"
 #import "EWUIUtil.h"
 #import "EWUtil.h"
+#import "FBSession.h"
+#import "FBAppCall.h"
+#import "PFFacebookUtils.h"
 
 UIViewController *rootViewController;
 
@@ -32,10 +33,15 @@ UIViewController *rootViewController;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    //disable DYCI
+	
+	//disable DYCI
     //[NSClassFromString(@"SFDynamicCodeInjection") performSelector:@selector(disable)];
+	
     // Enable Crash Reporting
 	initLogging();
+	
+	//add testing panel callout gesture
+	[EWUtil addTestGesture];
 	
 	//crashlytics
 	[Crashlytics startWithAPIKey:@"6ec9eab6ca26fcd18d51d0322752b861c63bc348"];
@@ -71,9 +77,6 @@ UIViewController *rootViewController;
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
         
     }
-    
-    //add testing panel callout gesture
-    [EWUtil addTestGesture];
     
     //finish launching
     return YES;

@@ -24,6 +24,7 @@
 #import "Bolts.h"
 #import "FBTweak.h"
 #import "FBTweakInline.h"
+#import "FBTweakStore.h"
 
 FBTweakAction(@"EWUtil", @"Action", @"Upload log files", ^{
 	[EWUtil uploadUpdatedLogFiles];
@@ -146,8 +147,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
         [EWUtil showTweakPanel];
     }];
     longGesture.numberOfTouchesRequired = 2;
-    longGesture.minimumPressDuration = 2;
+    longGesture.minimumPressDuration = 1;
     [[UIWindow mainWindow] addGestureRecognizer:longGesture];
+	
+	//reset stored value
+	[[FBTweakStore sharedInstance] reset];
+	DDLogInfo(@"FBTweak stored value resetted");
 }
 
 + (void)showTweakPanel{
