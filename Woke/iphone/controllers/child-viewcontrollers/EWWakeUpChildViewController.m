@@ -102,8 +102,18 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 }
 
 - (void)updateMeters{
-    [[EWAVManager sharedManager].recorder updateMeters];
-    CGFloat normalizedValue = (float)pow (10, [[EWAVManager sharedManager].recorder averagePowerForChannel:0]/30);
+	CGFloat value = 0;
+	
+	if ([EWAVManager sharedManager].player.isPlaying) {
+		[[EWAVManager sharedManager].player updateMeters];
+		value = [[EWAVManager sharedManager].player peakPowerForChannel:0];
+	}
+	else if ([EWAVManager sharedManager].recorder.isRecording) {
+		[[EWAVManager sharedManager].recorder updateMeters];
+		value = [[EWAVManager sharedManager].recorder averagePowerForChannel:0];
+	}
+	
+    CGFloat normalizedValue = pow(10, value/30);
     [self.waveView updateWithLevel:normalizedValue];
 }
 
