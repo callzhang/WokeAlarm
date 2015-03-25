@@ -22,7 +22,6 @@
 #import "EWUtil.h"
 
 @interface EWSleepViewController (){
-    id sleepEnabledObserver;
     id userSyncStartedObserver;
     id userSyncCompletedObserver;
     id alarmTimeChangeObserver;
@@ -33,7 +32,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelWakeupText;
 @property (weak, nonatomic) IBOutlet UIButton *sleepButton;
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;
-@property (nonatomic, strong) NSTimer *displayTimer;
+@property (nonatomic, strong) NSTimer *updateSleepButtonTimer;
 @end
 
 @implementation EWSleepViewController
@@ -43,14 +42,12 @@
     [[NSNotificationCenter defaultCenter] removeObserver:userSyncStartedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:alarmTimeChangeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:wokeObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:sleepEnabledObserver];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.sleepViewModel = [[EWSleepViewModel alloc] init];
-    self.sleepButton.enabled = NO;
     self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     
     //remove background color set in interface builder[used for layouting].
@@ -59,21 +56,8 @@
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
 	
-    @weakify(self);
-	[self.displayTimer invalidate];
-    self.displayTimer = [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        @strongify(self);
-        self.labelDateString.text = self.sleepViewModel.alarm.time.nextOccurTime.date2dayString;
-        self.labelTimeLeft.text = self.sleepViewModel.alarm.time.nextOccurTime.timeLeft;
-        if (!self.sleepViewModel.alarm.canSleep) {
-            self.sleepButton.enabled = NO;
-            NSString *string = [NSString stringWithFormat:@"Start sleep in %@", [NSDate getStringFromTime:self.sleepViewModel.alarm.hoursAbleToSleep*3600]];
-            [self.sleepButton setTitle:string forState:UIControlStateNormal];
-        } else {
-            [self.sleepButton setTitle:@"Start Sleeping" forState:UIControlStateNormal];
-            self.sleepButton.enabled = YES;
-        }
-    } repeats:YES];
+	[self.updateSleepButtonTimer invalidate];
+    self.updateSleepButtonTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateSleepButton) userInfo:nil repeats:YES];
 	
 	userSyncStartedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		JGProgressHUD *hud = [EWUIUtil showWatingHUB];
@@ -94,11 +78,7 @@
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     }];
     
-    sleepEnabledObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kEWSleepEnabled object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self.sleepButton setTitle:@"Start Sleeping" forState:UIControlStateNormal];
-        self.sleepButton.enabled = YES;
-    }];
-    
+    @weakify(self);
     [RACObserve([EWSession sharedSession], wakeupStatus) subscribeNext:^(NSNumber *status) {
         @strongify(self);
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
@@ -126,6 +106,21 @@
     RAC(self, timeChildViewController.date) = [RACObserve(self.sleepViewModel, date) distinctUntilChanged];
 }
 
+- (void)updateSleepButton {
+    self.labelDateString.text = self.sleepViewModel.alarm.time.nextOccurTime.date2dayString;
+    self.labelTimeLeft.text = self.sleepViewModel.alarm.time.nextOccurTime.timeLeft;
+    
+    if (self.sleepViewModel.alarm.canSleep) {
+        self.sleepButton.enabled = YES;
+        [self.sleepButton setTitle:@"Start Sleeping" forState:UIControlStateNormal];
+    }
+    else {
+        self.sleepButton.enabled = NO;
+        NSString *string = [NSString stringWithFormat:@"Start sleep in %@", [NSDate getStringFromTime:self.sleepViewModel.alarm.hoursAbleToSleep*3600]];
+        [self.sleepButton setTitle:string forState:UIControlStateNormal];
+    }
+}
+
 #pragma mark - Segue
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     [super prepareForSegue:segue sender:sender];
@@ -141,17 +136,6 @@
         [[EWWakeUpManager sharedInstance] unsleep];
     }
 }
-
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
-	if ([identifier isEqualToString:@"toSleepingView"]){
-		if (![EWWakeUpManager sharedInstance].shouldSleep) {
-			[EWUIUtil showWarningHUBWithString:@"Too early"];
-			return NO;
-		}
-	}
-	return YES;
-}
-
 
 - (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController *)fromViewController withSender:(id)sender{
 	if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {

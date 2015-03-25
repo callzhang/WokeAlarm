@@ -68,6 +68,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 @property (weak, nonatomic) IBOutlet FBShimmeringView *shimmeringView;
 @property (nonatomic, strong) UILabel *slideLabel;
 @property (nonatomic, assign) BOOL shouldComplete;
+
+//ViewModel Property
+@property (nonatomic, assign) BOOL canWakeUp;
 @end
 
 @implementation EWSleepingViewController
@@ -110,7 +113,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     }];
     //wake enabled change
     wakeEnabledObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kEWWakeEnabled object:nil queue:nil usingBlock:^(NSNotification *note) {
-        self.slideLabel.text = @"Slide to Wake Up";
+        [self updateCanWakeup];
     }];
     
     RAC(self, timeChildViewController.date) = [RACObserve(self, nextAlarm.time) distinctUntilChanged];
@@ -119,13 +122,16 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     self.slideLabel.font = [UIFont fontWithName:@"Lato-Light" size:24];
     self.slideLabel.textColor = [UIColor whiteColor];
 	
-	BOOL canStartToWakeUp = [EWWakeUpManager sharedInstance].canStartToWakeUp;
-	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp;
-	if (canStartToWakeUp || canWakeUp) {
-		self.slideLabel.text = @"Slide to Wake Up";
-	} else {
-		self.slideLabel.text = @"Slide to Cancel";
-	}
+    [self updateCanWakeup];
+    [RACObserve(self, canWakeUp) subscribeNext:^(NSNumber *canWakeUp) {
+        @strongify(self);
+        if ([canWakeUp boolValue]) {
+            self.slideLabel.text = @"Slide to Wake Up";
+        }
+        else {
+            self.slideLabel.text = @"Slide to Cancel";
+        }
+    }];
     self.slideLabel.textAlignment = NSTextAlignmentCenter;
     
     self.shimmeringView.contentView = self.slideLabel;
@@ -133,6 +139,12 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGesture:)];
     [self.shimmeringView addGestureRecognizer:panGesture];
+}
+
+- (void)updateCanWakeup {
+	BOOL canStartToWakeUp = [EWWakeUpManager sharedInstance].canStartToWakeUp;
+	BOOL canWakeUp = [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp;
+    self.canWakeUp = canStartToWakeUp || canWakeUp;
 }
 
 - (void)onPanGesture:(UIPanGestureRecognizer *)sender {

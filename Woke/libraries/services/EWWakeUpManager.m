@@ -348,14 +348,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
             }
         }];
     } repeats:NO];
-    
-    //sleep status
-    static NSTimer *sleepableTimer;
-    [sleepableTimer invalidate];
-    float timeAbleToSleep = ([self hoursLeftToSleep] - kMaxEarlySleepHours) * 3600;
-    sleepableTimer = [NSTimer bk_scheduledTimerWithTimeInterval:timeAbleToSleep  block:^(NSTimer *timer) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kEWSleepEnabled object:nil];
-    } repeats:NO];
 }
 
 
