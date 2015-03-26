@@ -25,6 +25,7 @@
 #import "NSTimer+BlocksKit.h"
 #import "EWUtil.h"
 #import "NSManagedObjectContext+MagicalRecord.h"
+#import "EWNotificationManager.h"
 
 @interface EWStartUpSequence ()
 @property (nonatomic, assign) BOOL dataChecked;
@@ -132,10 +133,13 @@
     
     DDLogVerbose(@"4. Check scheduled local notifications");
     [[EWAlarmManager sharedInstance] checkScheduledLocalNotifications];
-    
+	
+	//skip checking fb as it will check at beginning
     //DDLogVerbose(@"5. Updating facebook friends");
     //[[EWAccountManager sharedInstance] updateMyFacebookInfoWithCompletion:NULL];
-    
+	DDLogVerbose(@"5. Check redundant new media notifications");
+	[[EWNotificationManager shared] checkNotifications];
+	
     DDLogVerbose(@"6. Check unread medias");
     [[EWMediaManager sharedInstance] checkNewMediasWithCompletion:NULL];
 
@@ -150,7 +154,7 @@
 	//first time
 	NSMutableDictionary *userInfo = [NSMutableDictionary new];
 	userInfo[@"start_date"] = [NSDate date];
-	userInfo[@"count"] = @0;
+	userInfo[@"count"] = @1;
 	[NSTimer scheduledTimerWithTimeInterval:kServerUpdateInterval target:self selector:@selector(serverUpdate:) userInfo:userInfo repeats:YES];
 	
 }

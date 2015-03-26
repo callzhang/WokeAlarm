@@ -699,11 +699,7 @@ NSManagedObjectContext *mainContext;
 #pragma mark - Core Data
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
 	EWAssertMainThread
-    
-    if (!error) {
-        NSError __autoreleasing *err;
-        error = &err;
-    }
+	
     NSManagedObject * MO = [self findObjectWithClass:className withID:serverID inContext:mainContext error:error];
     return MO;
 }
@@ -712,7 +708,11 @@ NSManagedObjectContext *mainContext;
     if (objectID == nil) {
         DDLogError(@"%s !!! Passed in nil to get current MO", __func__);
         return nil;
-    }
+	}
+	if (!error) {
+		NSError __autoreleasing *err;
+		error = &err;
+	}
     EWServerObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectID inContext:context];
     if (!MO) {
         PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:objectID error:error];
@@ -814,7 +814,7 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Parse helper methods
-+ (NSArray *)findParseObjectWithQuery:(PFQuery *)query inContext:(NSManagedObjectContext *)context error:(NSError **)error{
++ (NSArray *)findObjectFromServerWithQuery:(PFQuery *)query inContext:(NSManagedObjectContext *)context error:(NSError **)error{
 	NSArray *result = [query findObjects:error];
 	[PFObject pinAll:result error:error];
 	NSMutableArray *resultMOs = [NSMutableArray array];
@@ -837,7 +837,7 @@ NSManagedObjectContext *mainContext;
 	return resultMOs;
 }
 
-+ (void)findParseObjectInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
++ (void)findObjectsFromServerInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block{//cache query
     EWAssertMainThread
     //@try {
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

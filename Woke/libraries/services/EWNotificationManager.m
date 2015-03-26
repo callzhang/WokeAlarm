@@ -158,6 +158,61 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     }
 }
 
+
+- (void)finishedNotification:(EWNotification *)notice{
+	//archieve
+	if (!notice.completed) {
+		notice.completed = [NSDate date];
+	}
+	[notice save];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationCompleted object:notice];
+	
+	self.notification = nil;
+	self.person = nil;
+}
+
+- (void)checkNotifications{
+	EWActivity *currentActivity = [EWPerson myCurrentAlarmActivity];
+	[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+		//remove past new media notifications
+		EWActivity *localCurrentActivity = [currentActivity MR_inContext:localContext];
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K != %@", EWNotificationAttributes.type, kNotificationTypeNewMedia, @"userInfo.activity", localCurrentActivity.serverID];
+		NSArray *notificationForPastActivities = [EWNotification MR_findAllWithPredicate:predicate inContext:localContext];
+		for (EWNotification *note in notificationForPastActivities) {
+			EWActivity *activity = (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([EWActivity class]) withID:note.userInfo[@"activity"] inContext:localContext error:nil];
+			DDLogInfo(@"Removed redundant notification (%@) on %@", note.serverID, activity.time);
+			[note remove];
+		}
+		
+		//download related person
+		NSMutableSet *senderIDs = [[[EWPerson meInContext:localContext].notifications valueForKey:EWNotificationAttributes.sender] mutableCopy];
+		PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWPerson class]).serverClass];
+		[query whereKeyExists:EWPersonAttributes.profilePic];
+		[query fromLocalDatastore];
+		NSArray *localPersonIDs = [[query findObjects:nil] valueForKey:kParseObjectID];
+		[senderIDs minusSet:[NSSet setWithArray:localPersonIDs]];
+		PFQuery *personQuery = [PFQuery queryWithClassName:NSStringFromClass([EWPerson class])];
+		if (senderIDs.count) {
+			[personQuery whereKey:kParseObjectID containedIn:senderIDs.allObjects];
+			NSArray *senders = [EWSync findObjectFromServerWithQuery:personQuery inContext:localContext error:nil];
+			DDLogInfo(@"Found senders from checking notification: %@", [senders valueForKey:EWPersonAttributes.firstName]);
+		}
+	} completion:^(BOOL contextDidSave, NSError *error) {
+		DDLogVerbose(@"Finished checking notifications %@", error.localizedDescription);
+	}];
+	
+}
+
+- (void)deleteNewMediaNotificationForActivity:(EWActivity *)activity{
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@", EWNotificationAttributes.type, kNotificationTypeNewMedia, @"userInfo.activity", activity.serverID];
+	NSArray *notificationForPastActivities = [EWNotification MR_findAllWithPredicate:predicate];
+	
+	for (EWNotification *note in notificationForPastActivities) {
+		DDLogInfo(@"Removed redundant notification (%@) for activity on %@", note.serverID, activity.time);
+		[note remove];
+	}
+}
+
 #pragma mark - New
 - (EWNotification *)newMediaNotification:(EWMedia *)media{
 	//make only unique media notification per day
@@ -204,20 +259,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 	return note;
 }
 
-- (void)deleteNewMediaNotificationForActivity:(EWActivity *)activity{
-    EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
-        if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
-            //new media go with the activity
-            if ([notif.userInfo[@"activity"] isEqualToString:activity.serverID]) {
-                return YES;
-            }
-        }
-        return NO;
-    }];
-    
-    [notification remove];
-}
-
 
 #pragma mark - Search
 - (NSArray *)notificationsForPerson:(EWPerson *)person{
@@ -240,7 +281,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         [query whereKey:kParseObjectID notContainedIn:existingNotes.allObjects];
     }
 	[query whereKey:EWNotificationRelationships.owner equalTo:[PFUser objectWithoutDataWithObjectId:[PFUser currentUser].objectId]];
-    [EWSync findParseObjectInBackgroundWithQuery:query completion:^(NSArray *notifications, NSError *error) {
+    [EWSync findObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *notifications, NSError *error) {
         for (EWNotification *notification in notifications) {
 				NSAssert(notification.ownerObject == [EWPerson me], @"owner missing: %@", notification.ownerObject.serverID);
 				DDLogVerbose(@"Found new notification %@(%@)", notification.type, notification.objectId);
@@ -314,18 +355,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     
     [self finishedNotification:self.notification];
     
-}
-
-- (void)finishedNotification:(EWNotification *)notice{
-    //archieve
-    if (!notice.completed) {
-        notice.completed = [NSDate date];
-    }
-    [notice save];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationCompleted object:notice];
-    
-    self.notification = nil;
-    self.person = nil;
 }
 
 @end
