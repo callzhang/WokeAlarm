@@ -14,8 +14,6 @@
 #import "FBKVOController.h"
 #import "EWSync.h"
 
-NSString * const EWPersonDefaultName = @"New User";
-
 @implementation EWPerson
 @dynamic location;
 @dynamic profilePic;
@@ -38,8 +36,6 @@ NSString * const EWPersonDefaultName = @"New User";
     EWPerson *person = (EWPerson *)[user managedObjectInContext:mainContext];
     if (user.isNew || !user[@"name"]) {
         DDLogInfo(@"New user signed up, assign default value");
-        person.firstName = @"New";
-        person.lastName = @"User";
         person.preference = kUserDefaults;
         person.updatedAt = [NSDate dateWithTimeIntervalSince1970:0];
     }
