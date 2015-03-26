@@ -207,26 +207,44 @@
 	UIApplication *application = [UIApplication sharedApplication];
 	NSMutableDictionary *userInfo;
 	NSDate *start;
+    float t;
+    NSMutableString *newLine;
 	if (timer) {
 		NSInteger count;
 		start = timer.userInfo[@"start"];
-		count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
-		DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceNow]/3600);
+        NSDate *last = timer.userInfo[@"last"];
+        count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
+        float batt0 = [(NSNumber *)timer.userInfo[@"batt"] floatValue];
+        float batt1 = [UIDevice currentDevice].batteryLevel;
+        float dur = -[last timeIntervalSinceNow]/3600;
+        newLine = [NSMutableString stringWithFormat:@"\n\n===>>> Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. ", start.string, (long)count, -[start timeIntervalSinceNow]/3600];
+        if (batt0 >= batt1) {
+            //not charging
+            t = batt1 / ((batt0 - batt1)/dur);
+            [newLine appendFormat:@"Current battery level is %.1f %%, and estimated time left is %.1f hours", batt1*100.0f, t];
+        }else{
+            t = (1.0f-batt0)/((batt0 - batt1)/dur);
+            [newLine appendFormat:@"Current battery level is %.1f %%, and estimated time until fully chaged is %.1f hours", batt1*100.0f, t];
+        }
 		count++;
 		timer.userInfo[@"count"] = @(count);
+        userInfo[@"batt"] = @(batt1);
 		userInfo = timer.userInfo;
 	}else{
-		//first time
+        //first time
+        [UIDevice currentDevice].batteryMonitoringEnabled = YES;
 		userInfo = [NSMutableDictionary new];
-		userInfo[@"start"] = [NSDate date];
+        userInfo[@"start"] = [NSDate date];
+        userInfo[@"last"] = [NSDate date];
 		userInfo[@"count"] = @0;
+        userInfo[@"batt"] = @([UIDevice currentDevice].batteryLevel);
 	}
 	
 	//keep old background task
 	UIBackgroundTaskIdentifier tempID = backgroundTaskIdentifier;
 	//begin a new background task
 	backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
-		DDLogError(@"The backgound task ended after %@ of running", start.timeElapsedString);
+		DDLogError(@"The backgound task ended after %@ of running. Current battery level is %.0f", start.timeElapsedString, [UIDevice currentDevice].batteryLevel);
 	}];
 	//end old bg task
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -234,18 +252,16 @@
 	});
 	
 	//check time left
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-		double timeLeft = application.backgroundTimeRemaining;
-		DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
-		
-		//schedule timer
-		[backgroundingtimer invalidate];
-		NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
-		if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
-		backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
-		DDLogVerbose(@"Scheduled background timer %ld", (long)randomInterval);
-	});
-	
+    double timeLeft = application.backgroundTimeRemaining;
+    [newLine appendFormat: @"Background time left: %.1f", timeLeft>999?999:timeLeft];
+    
+    //schedule timer
+    [backgroundingtimer invalidate];
+    NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
+    if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
+    backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
+    [newLine appendFormat:@"Scheduled background timer %ld", (long)randomInterval];
+    DDLogVerbose(newLine);
 	
 	//alert user
 	if (backgroundingFailNotification) {

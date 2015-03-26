@@ -60,7 +60,8 @@
         //kNotificationTypeFriendAccepted
         
         NSString *personID = notification.sender;
-        EWPerson *sender = [[EWPersonManager sharedInstance] getPersonByServerID:personID];
+        NSError *error;
+        EWPerson *sender = [[EWPersonManager sharedInstance] getPersonByServerID:personID error:&error];
         self.profilePic.hidden = NO;
         if (sender.profilePic) {
             self.profilePic.image = sender.profilePic;

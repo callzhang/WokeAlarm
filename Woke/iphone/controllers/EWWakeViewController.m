@@ -35,8 +35,14 @@
     self.view.backgroundColor = [UIColor clearColor];
     
     [[EWPersonManager shared] nextWakeeWithCompletion:^(EWPerson *person) {
-        [EWUIUtil dismissHUD];
-        self.nextWakee = person;
+        if (person) {
+            [EWUIUtil dismissHUD];
+            self.nextWakee = person;
+        } else {
+            [EWUIUtil showFailureHUBWithString:@"Failed to fetch wakee"];
+            //TODO: [Zitao] handle Offline senario
+        }
+        
     }];
     
     if ([EWPersonManager shared].wakeeList.count == 0 && !_nextWakee) {

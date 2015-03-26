@@ -192,7 +192,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     EWAlarm *alarm;
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
     if (alarmID) {
-        alarm = [EWAlarm getAlarmByID:alarmID];
+        alarm = [EWAlarm getAlarmByID:alarmID error:nil];
         BOOL nextAlarmMatched = [activity.time isEqualToDate:alarm.time.nextOccurTime];
         if (!nextAlarmMatched) {
             DDLogError(@"The sleep notification sent is not the same as the next alarm, skip sleep");

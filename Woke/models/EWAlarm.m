@@ -36,12 +36,11 @@
 }
 
 #pragma mark - Search
-+ (instancetype)getAlarmByID:(NSString *)alarmID{
++ (instancetype)getAlarmByID:(NSString *)alarmID error:(NSError *__autoreleasing *)error{
     EWAssertMainThread
-    NSError *error;
-    EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:alarmID error:&error];
-    if (error) {
-        DDLogError(error.description);
+    EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:alarmID error:error];
+    if (*error) {
+        DDLogError((*error).description);
     }
     return alarm;
 }

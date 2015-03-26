@@ -19,6 +19,6 @@
 /**
  check if store notification is the same state as server
  */
-+ (EWNotification *)getNotificationByID:(NSString *)notificationID;
++ (EWNotification *)getNotificationByID:(NSString *)notificationID error:(NSError **)error;
 + (EWNotification *)newNotification;
 @end

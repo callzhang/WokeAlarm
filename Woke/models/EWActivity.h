@@ -7,7 +7,7 @@
 + (EWActivity *)newActivity;
 
 // search
-+ (EWActivity *)getActivityWithID:(NSString *)ID;
++ (EWActivity *)getActivityWithID:(NSString *)ID error:(NSError **)error;
 - (NSArray *)medias;
 // valid
 - (BOOL)validate;

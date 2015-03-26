@@ -9,5 +9,5 @@
 @property (nonatomic, strong) NSMutableDictionary *friendshipTimeline;
 
 + (instancetype)newSocialForPerson:(EWPerson *)person;
-+ (instancetype)getSocialByID:(NSString *)socialID;
++ (instancetype)getSocialByID:(NSString *)socialID error:(NSError **)error;
 @end

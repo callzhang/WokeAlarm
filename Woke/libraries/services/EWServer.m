@@ -68,8 +68,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 	else if([type isEqualToString:kPushTypeAlarmTimer]){
 		// ============== Alarm Timer ================
         NSString *alarmID = payload[kPushAlarmID];
-        EWAlarm *alarm = [EWAlarm getAlarmByID:alarmID];
-        [[EWWakeUpManager sharedInstance] startToWakeUpWithAlarm:alarm];
+        NSError *error;
+        EWAlarm *alarm = [EWAlarm getAlarmByID:alarmID error:&error];
+        if (alarm) {
+            [[EWWakeUpManager sharedInstance] startToWakeUpWithAlarm:alarm];
+        } else {
+            DDLogError(@"Failed to handle alarm type push with alarm (%@) error: %@", alarmID, error.localizedDescription);
+        }
 	}
 	else if ([type isEqualToString:kPushTypeNotification]){
 		[[EWNotificationManager sharedInstance] handleNotificatoinFromPush:payload];

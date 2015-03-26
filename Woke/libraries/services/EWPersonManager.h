@@ -34,7 +34,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWPersonManager);
 @property BOOL isFetchingWakees;
 
 //- (EWPerson *)findOrCreatePersonWithParseObject:(PFUser *)user;
-- (EWPerson *)getPersonByServerID:(NSString *)ID;
+- (EWPerson *)getPersonByServerID:(NSString *)ID error:(NSError **)error;
 - (void)getWakeesInBackgroundWithCompletion:(VoidBlock)block;
 - (NSArray *)getWakeesInContext:(NSManagedObjectContext *)context error:(NSError **)error;
 /**

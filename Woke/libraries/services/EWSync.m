@@ -700,6 +700,10 @@ NSManagedObjectContext *mainContext;
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
 	EWAssertMainThread
     
+    if (!error) {
+        NSError __autoreleasing *err;
+        error = &err;
+    }
     NSManagedObject * MO = [self findObjectWithClass:className withID:serverID inContext:mainContext error:error];
     return MO;
 }
@@ -714,7 +718,7 @@ NSManagedObjectContext *mainContext;
         PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:objectID error:error];
         MO = [PO managedObjectUpdatedInContext:context];
         if (!MO) {
-            DDLogError(@"Failed getting exsiting MO(%@): %@", className, (*error).description);
+            DDLogError(@"Failed getting MO with class (%@): %@", className, (*error).description);
         }
     }
     return MO;
@@ -945,11 +949,11 @@ NSManagedObjectContext *mainContext;
 	}
     //if not found, then download
     if (!object.isDataAvailable) {
-        NSEntityDescription *entity = [NSEntityDescription entityForName:class inManagedObjectContext:mainContext];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:object.localClassName inManagedObjectContext:mainContext];
         //fetch from server if not found
         //or if PO doesn't have data avaiable
         //or if PO is older than MO
-        PFQuery *q = [PFQuery queryWithClassName:class.serverClass];
+        PFQuery *q = [PFQuery queryWithClassName:class];
         [q whereKey:kParseObjectID equalTo:ID];
         //add other uni-direction relationship as well (to masximize data per call)
         [entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
@@ -959,11 +963,10 @@ NSManagedObjectContext *mainContext;
         }];
         
         //find on server
-		object = [q findObjects].firstObject;
+		object = [q findObjects:error].firstObject;
 		[self setCachedParseObject:object];
     }
     return object;
-
 }
 
 

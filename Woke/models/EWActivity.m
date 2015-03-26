@@ -23,8 +23,8 @@
     return activity;
 }
 
-+ (EWActivity *)getActivityWithID:(NSString *)ID{
-    return (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([self class]) withID:ID error:nil];
++ (EWActivity *)getActivityWithID:(NSString *)ID error:(NSError **)error{
+    return (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([self class]) withID:ID error:error];
 }
 
 - (NSArray *)medias{

@@ -46,7 +46,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 #pragma mark - Handle
 - (void)handleNotificatoinFromPush:(NSDictionary *)payload{
     NSString *notificationID = payload[kPushNofiticationID];
-    EWNotification *notice = [EWNotification getNotificationByID:notificationID];
+    NSError *error;
+    EWNotification *notice = [EWNotification getNotificationByID:notificationID error:&error];
+    if (!notice) {
+        DDLogError(@"Failed to get notice(%@) with error: %@", notificationID, error.localizedDescription);
+        return;
+    }
     [[EWPerson me] addNotificationsObject:notice];
 	
 	//save
@@ -58,9 +63,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 
 
 - (void)handleNotification:(NSString *)notificationID{
-    EWNotification *notification = [EWNotification getNotificationByID:notificationID];
+    NSError *error;
+    EWNotification *notification = [EWNotification getNotificationByID:notificationID error:&error];
     if (!notification) {
-        DDLogError(@"@@@ Cannot find notification %@", notificationID);
+        DDLogError(@"Cannot find notification %@ error: %@", notificationID, error.localizedDescription);
         return;
     }
     
@@ -80,7 +86,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         //EWPerson *person = notification.owner;
         
         NSString *personID = notification.sender;
-        EWPerson *person = [[EWPersonManager sharedInstance] getPersonByServerID:personID];
+        
+        EWPerson *person = [[EWPersonManager sharedInstance] getPersonByServerID:personID error:nil];
+        if (!person) {
+            DDLogError(@"Failed to get person (%@) error: %@", personID, error.localizedDescription);
+            return;
+        }
         [EWNotificationManager sharedInstance].person = person;
         
         //alert
@@ -96,7 +107,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     } else if ([notification.type isEqualToString:kNotificationTypeFriendAccepted]) {
         
         NSString *personID = notification.sender;
-        EWPerson *person = [[EWPersonManager sharedInstance] getPersonByServerID:personID];
+        EWPerson *person = [[EWPersonManager sharedInstance] getPersonByServerID:personID error:&error];
+        if (!person) {
+            DDLogError(@"Failed to get person (%@) error: %@", personID, error.localizedDescription);
+            return;
+        }
         //EWPerson *person = notification.owner;
         [EWNotificationManager sharedInstance].person = person;
         

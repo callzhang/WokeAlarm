@@ -19,8 +19,8 @@
     return mediaFile;
 }
 
-+ (EWMediaFile *)getMediaFileByID:(NSString *)ID{
-    EWMediaFile *m = (EWMediaFile *)[EWSync findObjectWithClass:@"EWMediaFile" withID:ID error:nil];
++ (EWMediaFile *)getMediaFileByID:(NSString *)ID error:(NSError *__autoreleasing *)error{
+    EWMediaFile *m = (EWMediaFile *)[EWSync findObjectWithClass:@"EWMediaFile" withID:ID error:error];
     return m;
 }
 

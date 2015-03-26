@@ -466,13 +466,13 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 
 #pragma mark - Remote control
 - (void)displayNowPlayingInfoToLockScreen:(EWMedia *)m{
-    if (!m) return;
+    NSParameterAssert(m);
     if (!m.author) return;
         
     //only support iOS5+
     if (NSClassFromString(@"MPNowPlayingInfoCenter")){
         
-        self.media = m;
+        //self.media = m;
         EWAlarm *nextAlarm = [EWPerson myCurrentAlarm];
         
         NSString *title = nextAlarm.time.mt_stringFromDateWithFullWeekdayTitle;

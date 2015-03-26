@@ -37,12 +37,11 @@
 	return sg;
 }
 
-+ (instancetype)getSocialByID:(NSString *)socialID{
++ (instancetype)getSocialByID:(NSString *)socialID error:(NSError *__autoreleasing *)error{
     EWAssertMainThread
-    NSError *error;
-    EWSocial *social = (EWSocial *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:socialID error:&error];
-    if (error) {
-        DDLogError(error.description);
+    EWSocial *social = (EWSocial *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:socialID error:error];
+    if (!social) {
+        DDLogError((*error).description);
     }
     return social;
 }

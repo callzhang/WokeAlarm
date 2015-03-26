@@ -16,7 +16,7 @@
 + (instancetype)newAlarm;
 
 // sarch
-+ (instancetype)getAlarmByID:(NSString *)alarmID;
++ (instancetype)getAlarmByID:(NSString *)alarmID error:(NSError **)error;
 
 //validate
 - (BOOL)validate;

@@ -34,11 +34,10 @@
 
 
 
-+ (EWNotification *)getNotificationByID:(NSString *)notificationID{
-    NSError *error;
-    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID error:&error];
++ (EWNotification *)getNotificationByID:(NSString *)notificationID error:(NSError *__autoreleasing *)error{
+    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID error:error];
     if (!notification) {
-        DDLogError(@"%s fail to get notification: %@", __FUNCTION__, error.description);
+        DDLogError(@"%s fail to get notification: %@", __FUNCTION__, (*error).description);
     }
     return notification;
 }
