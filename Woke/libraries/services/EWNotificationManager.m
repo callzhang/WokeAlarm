@@ -241,7 +241,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 	EWNotification *note = [EWNotification newNotification];
 	note.type = kNotificationTypeNewMedia;
 	note.sender = media.author.objectId;
-	note.receiver = [EWPerson me].objectId;
+	note.receiver = [EWPerson me].serverID;
 	EWActivity *activity = [EWPerson myCurrentAlarmActivity];
 	if (!activity.objectId) {
 		[activity updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {

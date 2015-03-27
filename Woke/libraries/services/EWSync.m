@@ -133,8 +133,13 @@ NSManagedObjectContext *mainContext;
 - (void)uploadToServer{
     //make sure it is called on main thread
     EWAssertMainThread
+    if (self.reachability.networkReachabilityStatus <= AFNetworkReachabilityStatusNotReachable) {
+        DDLogInfo(@"Network not reachable, abroad uploading");
+        return;
+    }
+    
     if([mainContext hasChanges]){
-        DDLogDebug(@"There is still some change, save and do it later");
+        DDLogDebug(@"There is still some change, save and upload later");
         [mainContext MR_saveToPersistentStoreAndWait];
         return;
     }

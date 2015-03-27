@@ -15,7 +15,6 @@
 #define everyoneCheckTimeOut            600 //10min
 #define numberOfRelevantUsers           @10 //number of relevant users returned
 #define radiusOfRelevantUsers           @-1  //search radius in kilometers for relevant users
-#define kDefaultUsername                    @"New User"
 #define kEveryoneLastFetched                @"everyone_last_fetched"
 #define kEveryone                           @"everyone"
 #define kLastCheckedMe                      @"last_checked_me"
