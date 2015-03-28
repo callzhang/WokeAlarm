@@ -69,7 +69,6 @@
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
-            <string>Lato-Light</string>
         </mutableArray>
         <mutableArray key="Lato-Regular.ttf">
             <string>Lato-Regular</string>
@@ -286,17 +285,6 @@
                                     <action selector="onProfile:" destination="ztM-CD-1sO" eventType="touchUpInside" id="3jh-YD-PFf"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIq-mw-Cq6">
-                                <rect key="frame" x="216" y="502" width="84" height="46"/>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
-                                <state key="normal" title="Logout">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="vXZ-lx-hvc" kind="custom" identifier="MenuLogoutFadeToLoginGate" customClass="EWMenuReplaceFadeSegue" id="2Sk-gr-QlI"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -310,7 +298,6 @@
                             <constraint firstItem="wHV-nd-2l3" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="120" id="UXf-Np-fB7"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="p4y-rw-jgD" secondAttribute="leading" id="VsB-JA-8OM"/>
                             <constraint firstItem="uZb-q4-XbC" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" constant="1" id="jVv-2z-qw7"/>
-                            <constraint firstAttribute="trailing" secondItem="RIq-mw-Cq6" secondAttribute="trailing" constant="20" id="l0M-MW-trF"/>
                             <constraint firstItem="mrU-oI-fkp" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="282" id="mCf-Wb-iIq"/>
                             <constraint firstItem="6Mb-bv-HXk" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="n6I-dx-rkn"/>
                             <constraint firstItem="uZb-q4-XbC" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="390" id="pJb-3y-QcX"/>
@@ -318,7 +305,6 @@
                             <constraint firstItem="027-dv-aEP" firstAttribute="leading" secondItem="mrU-oI-fkp" secondAttribute="leading" id="rj3-A9-MHa"/>
                             <constraint firstItem="x94-DL-jrO" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="66" id="ruz-zV-7t8"/>
                             <constraint firstItem="ZEp-fY-6cD" firstAttribute="top" secondItem="Sjk-Et-QbX" secondAttribute="bottom" constant="-70" id="w1c-cQ-EhY"/>
-                            <constraint firstItem="4FG-ZV-kud" firstAttribute="top" secondItem="RIq-mw-Cq6" secondAttribute="bottom" constant="20" id="w6t-NS-QQO"/>
                             <constraint firstItem="4FG-ZV-kud" firstAttribute="top" secondItem="ZEp-fY-6cD" secondAttribute="bottom" id="yUv-KQ-Voq"/>
                         </constraints>
                     </view>
@@ -347,6 +333,7 @@
                         <segue destination="bmc-Gr-H2M" kind="custom" identifier="menuToAlarm" customClass="EWMenuReplaceFadeSegue" id="vK7-fe-ZIO"/>
                         <segue destination="Qvo-kH-4j9" kind="custom" identifier="menuToSettings" customClass="EWMenuReplaceFadeSegue" id="xBh-rC-qtM"/>
                         <segue destination="efu-Ue-Kfd" kind="custom" identifier="menuToFriends" customClass="EWMenuReplaceFadeSegue" id="wLP-1t-7ZH"/>
+                        <segue destination="vXZ-lx-hvc" kind="custom" identifier="MenuLogoutFadeToLoginGate" customClass="MSReplaceFadeSegue" id="EsI-ze-QKL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VMg-tE-8Qf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1303,6 +1290,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="tableView" destination="oO5-KU-VEc" id="WAC-7S-LgS"/>
+                        <segue destination="vXZ-lx-hvc" kind="custom" identifier="MenuLogoutFadeToLoginGate" customClass="MSReplaceFadeSegue" id="qEe-Vv-RSN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Ll-v4-dU5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3251,10 +3239,11 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="pRr-UO-GET"/>
-        <segue reference="Rze-Xr-CCz"/>
-        <segue reference="d4z-tG-E1i"/>
+        <segue reference="CBy-Qp-dcT"/>
+        <segue reference="wLP-1t-7ZH"/>
         <segue reference="v3V-jG-DGb"/>
+        <segue reference="qEe-Vv-RSN"/>
+        <segue reference="d4z-tG-E1i"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

@@ -136,6 +136,19 @@
                      [alert addSubview:image];
                      [alert show ];
                  }
+                 },
+             @{
+                 @"identifier": MainStoryboardIDs.reusables.settingTableViewSeparatorCell
+                 },
+             @{
+                 @"identifier": MainStoryboardIDs.reusables.settingTableViewCell,
+                 @"type": @(EWSettingsTableViewCellTypeStandard),
+                 @"text": @"Logout",
+                 @"backgroundColor": [UIColor colorWithWhite:1.0 alpha:0.04],
+                 @"action": ^{
+                     [[EWAccountManager shared] logout];
+                     [self performSegueWithIdentifier:MainStoryboardIDs.segues.menuLogoutFadeToLoginGate sender:self];
+                 }
                  }
              ];
 }
