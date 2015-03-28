@@ -760,6 +760,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="nameLabel" destination="FYb-xQ-Ifp" id="1I3-CW-WMV"/>
+                        <outlet property="nextButton" destination="HEo-IB-dbM" id="MRy-0W-deM"/>
                         <outlet property="profileImageView" destination="eiI-YG-cDg" id="T5U-6T-rtt"/>
                         <outlet property="statusLabel" destination="ZNX-QY-fw8" id="KTz-9c-7h2"/>
                         <outlet property="wakeButton" destination="vCK-ky-v90" id="nYs-wi-kFh"/>
@@ -3250,10 +3251,10 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="pRr-UO-GET"/>
         <segue reference="Rze-Xr-CCz"/>
-        <segue reference="CBy-Qp-dcT"/>
-        <segue reference="v3V-jG-DGb"/>
         <segue reference="d4z-tG-E1i"/>
+        <segue reference="v3V-jG-DGb"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
