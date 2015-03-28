@@ -247,7 +247,7 @@
     if (alarms.count != 7 && [EWSync isReachable]) {
         //cannot check alarm for myself, which will cause a checking/schedule cycle
         
-        DDLogWarn(@"Alarm for me is %lu, fetch from server!", alarms.count);
+        DDLogWarn(@"Alarm for me is %lu, fetch from server!", (unsigned long)alarms.count);
         PFQuery *alarmQuery = [PFQuery queryWithClassName:NSStringFromClass([EWAlarm class])];
         [alarmQuery whereKey:EWAlarmRelationships.owner equalTo:[PFUser currentUser]];
         if (alarms.count) [alarmQuery whereKey:kParseObjectID notContainedIn:[alarms valueForKey:kParseObjectID]];

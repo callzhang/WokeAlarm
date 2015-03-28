@@ -11,6 +11,7 @@
 #import "EWAlarmTableViewCell.h"
 #import "EWAlarm.h"
 #import "EWAlarmToneViewController.h"
+#import "EWAlarmManager.h"
 
 #define kToneLabelTag 99
 
@@ -34,6 +35,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[EWAlarmManager sharedInstance] scheduleAlarm];
     [self.tableView reloadData];
 }
 
