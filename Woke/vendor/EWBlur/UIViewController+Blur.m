@@ -9,6 +9,7 @@
 #import "UIViewController+Blur.h"
 #import "EWUIUtil.h"
 #import "EWBlurNavigationControllerDelegate.h"
+#import "EWBaseViewController.h"
 
 
 static EWBlurNavigationControllerDelegate *delegate = nil;
@@ -34,7 +35,20 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 	
 	viewController.transitioningDelegate = delegate;
 	if ([viewController isKindOfClass:[UINavigationController class]]) {
-		[(UINavigationController *)viewController setDelegate:delegate];
+		UINavigationController *nav = (UINavigationController *)viewController;
+		[nav setDelegate:delegate];
+		
+		//transparant
+		if ([viewController isKindOfClass:[EWBaseNavigationController class]]) {
+			[(EWBaseNavigationController *)viewController setNavigationBarTransparent:YES];
+		}
+		
+		//buttons
+		if ([nav.topViewController isKindOfClass:[EWBaseViewController class]]) {
+			[(EWBaseViewController *)nav.topViewController addNavigationBarButtons];
+		}
+	}else if ([viewController isKindOfClass:[EWBaseViewController class]]) {
+		[(EWBaseViewController *)viewController addNavigationBarButtons];
 	}
 	
 	//hide status bar

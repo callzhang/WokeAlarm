@@ -37,6 +37,8 @@
     if (user.isNew || !user[@"name"]) {
         DDLogInfo(@"New user signed up, assign default value");
         person.preference = kUserDefaults;
+        person.statement = @"Someone wake me up!";
+        //name should not be assigned here
         person.updatedAt = [NSDate dateWithTimeIntervalSince1970:0];
     }
     
@@ -66,11 +68,11 @@
         good = NO;
     }
     if(!self.firstName){
-        DDLogError(@"name is missing for user %@", self);
+        DDLogError(@"name is missing for user %@", self.serverID);
         good = NO;
     }
     if(!self.profilePic){
-        DDLogError(@"Missing profile pic for user %@", self);
+        DDLogError(@"Missing profile pic for user %@", self.name);
         good = NO;
     }
     if(!self.username){

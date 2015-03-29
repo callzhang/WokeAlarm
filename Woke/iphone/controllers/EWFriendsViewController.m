@@ -95,18 +95,19 @@
     
     EWProfileViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:MainStoryboardIDs.viewControllers.EWProfile];
     vc.person = person;
-    EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:vc];
-    [nav setNavigationBarTransparent:YES];
-    @weakify(vc);
-    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] bk_initWithTitle:@"Close" style:UIBarButtonItemStylePlain handler:^(id sender) {
-       @strongify(vc);
-        [vc dismissViewControllerAnimated:YES completion:nil];
-    }];
-    vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithTitle:@"More" style:UIBarButtonItemStylePlain handler:^(id sender) {
-        
-    }];
-    
-    [self presentWithBlur:nav withCompletion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+//    EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:vc];
+//    [nav setNavigationBarTransparent:YES];
+//    @weakify(vc);
+//    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] bk_initWithTitle:@"Close" style:UIBarButtonItemStylePlain handler:^(id sender) {
+//       @strongify(vc);
+//        [vc dismissViewControllerAnimated:YES completion:nil];
+//    }];
+//    vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithTitle:@"More" style:UIBarButtonItemStylePlain handler:^(id sender) {
+//        
+//    }];
+//    
+//    [self presentWithBlur:nav withCompletion:nil];
 }
 #pragma mark - Status Bar
 - (UIStatusBarStyle)preferredStatusBarStyle {

@@ -26,6 +26,7 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *menuToSettings;
         __unsafe_unretained NSString *unwindFromStatusViewController;
         __unsafe_unretained NSString *facebookChildViewController;
+        __unsafe_unretained NSString *notificationToProfile;
         __unsafe_unretained NSString *toStatusViewController;
         __unsafe_unretained NSString *peopleArrayChildViewController;
         __unsafe_unretained NSString *timeChildViewController;

@@ -33,6 +33,10 @@
 #define nNotificationToDisplay      9
 
 
+FBTweakAction(@"Notification", @"Action", @"Check notifications", ^{
+    [[EWNotificationManager sharedInstance] checkNotifications];
+});
+
 @interface EWNotificationManager()
 //@property EWPerson *person;
 //@property EWMedia *media;
@@ -77,10 +81,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     
     if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
 		
-		[UIAlertView bk_showAlertViewWithTitle:@"New Voice" message:@"You've got a new voice for your next morning!" cancelButtonTitle:@"OK" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-			//do nothing
-			DDLogVerbose(@"New voice alert view clicked");
-		}];
+        [EWUIUtil showSuccessHUBWithString:@"You got a new voice!"];
         
     } else if ([notification.type isEqualToString:kNotificationTypeFriendRequest]) {
         
@@ -123,7 +124,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
                     case 2:{ //profile
                         EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
                         controller.person = requester;
-                        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+                        EWBaseNavigationController *navController = [[EWBaseNavigationController alloc] initWithRootViewController:controller];
                         [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
                         break;
                     }
@@ -163,7 +164,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
                 }
                 EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
                 controller.person = person;
-                [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:controller withCompletion:NULL];
+                EWBaseNavigationController *navController = [[EWBaseNavigationController alloc] initWithRootViewController:controller];
+                [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
             }];
         }
         
@@ -208,16 +210,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 		EWActivity *localCurrentActivity = [currentActivity MR_inContext:localContext];
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K != %@", EWNotificationAttributes.type, kNotificationTypeNewMedia, @"userInfo.activity", localCurrentActivity.serverID];
 		NSArray *notificationForPastActivities = [EWNotification MR_findAllWithPredicate:predicate inContext:localContext];
-        NSArray *pastMediaNotifications = [[EWPerson meInContext:localContext].notifications.allObjects bk_select:^BOOL(EWNotification *note) {
-            if (note.type == kNotificationTypeNewMedia && ![note.userInfo[@"activity"] isEqualToString:localCurrentActivity.serverID]) {
-                return YES;
-            }
-            return NO;
-        }];
+//        NSArray *pastMediaNotifications = [[EWPerson meInContext:localContext].notifications.allObjects bk_select:^BOOL(EWNotification *note) {
+//            if (note.type == kNotificationTypeNewMedia && ![note.userInfo[@"activity"] isEqualToString:localCurrentActivity.serverID]) {
+//                return YES;
+//            }
+//            return NO;
+//        }];
 		for (EWNotification *note in notificationForPastActivities) {
 			EWActivity *activity = (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([EWActivity class]) withID:note.userInfo[@"activity"] inContext:localContext error:nil];
 			DDLogInfo(@"Removed redundant notification (%@) on %@", note.serverID, activity.time);
-            note.owner = nil;
 			[note remove];
 		}
 		
@@ -236,6 +237,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 		}
 	} completion:^(BOOL contextDidSave, NSError *error) {
 		DDLogVerbose(@"Finished checking notifications %@", error.localizedDescription);
+        [[EWSync sharedInstance] uploadToServer];
 	}];
 	
 }
