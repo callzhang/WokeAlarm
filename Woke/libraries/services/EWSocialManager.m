@@ -393,7 +393,9 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
         EWSocial *mySocial = [EWPerson mySocialGraph];
         for (EWSocial *social in socials) {
 			EWPerson *person = social.owner;
-			NSParameterAssert(person);
+            if (!person) {
+                DDLogWarn(@"Failed to get owner for EWSocial (%@)", social.serverID);
+            }
             [resultPeople addObject:person];
             
             //add facebook ID to social
