@@ -249,7 +249,6 @@ NSManagedObjectContext *mainContext;
 - (void)runManagedObjectCompletionBlockForObjectID:(NSManagedObjectID *)ID{
     EWAssertMainThread
     NSArray *blocks = self.uploadCompletionCallbacks[ID];
-    [self.uploadCompletionCallbacks removeObjectForKey:ID];
     for (EWManagedObjectSaveCallbackBlock block in blocks) {
         EWServerObject *MO = (EWServerObject *)[mainContext objectWithID:ID];
         DDLogInfo(@"===> Run MO upload completion block %@(%@)", MO.entity.name, MO.serverID);
@@ -257,9 +256,14 @@ NSManagedObjectContext *mainContext;
         NSError *error;
         @try {
             serverID = MO.serverID;
+            if (!serverID) {
+                error = [[NSError alloc] initWithDomain:kWokeDomain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: @"The ManagedObject does not have server ID when save finishes."}];
+            }else{
+                [self.uploadCompletionCallbacks removeObjectForKey:ID];
+            }
         }
         @catch (NSException *exception) {
-            error = [[NSError alloc] initWithDomain:kWokeDomain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: @"The ManagedObject not exists.", NSUnderlyingErrorKey: exception}];
+            error = [[NSError alloc] initWithDomain:kWokeDomain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: @"The ManagedObject does not exists.", NSUnderlyingErrorKey: exception}];
         }
         block(MO, error);
     }
@@ -912,6 +916,10 @@ NSManagedObjectContext *mainContext;
 }
 
 - (void)setCachedParseObject:(PFObject *)PO {
+    if (!PO) {
+        DDLogError(@"Set nil for PO cache");
+        return;
+    }
     if (PO.isDataAvailable) {
         NSError *err;
         DDLogVerbose(@"Pin PO %@(%@) to cache", PO.parseClassName, PO.objectId);
@@ -924,18 +932,7 @@ NSManagedObjectContext *mainContext;
         //[self.serverObjectCache setObject:PO forKey:PO.objectId];
         
 		//You can store a PFObject in the local datastore by pinning it. Pinning a PFObject is recursive, just like saving, so any objects that are pointed to by the one you are pinning will also be pinned.
-//		NSEntityDescription *entity = [NSEntityDescription entityForName:PO.localClassName inManagedObjectContext:mainContext];
-//		[entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-//			if (obj.isToMany && !obj.inverseRelationship) {
-//				//key to array of pointers
-//				NSArray *array = PO[key];
-//				for (PFObject *obj in array) {
-//                    if (obj.isDataAvailable) {
-//                        [self setCachedParseObject:obj];
-//                    }
-//				}
-//			}
-//		}];
+
     }else{
         DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
     }

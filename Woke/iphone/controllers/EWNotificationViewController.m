@@ -99,13 +99,14 @@
 
 - (IBAction)refresh:(id)sender{
     [loading startAnimating];
-    
-    [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
-        
-		//notifications = array.mutableCopy;
-        [loading stopAnimating];
-        [self reload];
-    }];
+    if ([EWPerson me].isOutDated) {
+        [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
+            
+            //notifications = array.mutableCopy;
+            [loading stopAnimating];
+            [self reload];
+        }];
+    }
 }
 
 #pragma mark - TableView
@@ -127,7 +128,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     EWNotification *notice = notifications[indexPath.row];
-    [[EWNotificationManager shared] handleNotification:notice.objectId];
+    [[EWNotificationManager shared] notificationDidClicked:notice.objectId];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
