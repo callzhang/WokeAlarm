@@ -282,7 +282,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 	EWActivity *activity = [EWPerson myCurrentAlarmActivity];
 	if (!activity.serverID) {
 		[activity updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
-			if (error) {
+			if (error || !MO_on_main_thread.serverID) {
 				DDLogError(@"Failed to save notification (%@) with error %@", note.serverID, error);
 			}else {
 				note.userInfo = @{@"medias": @[media.serverID], @"activity": MO_on_main_thread.serverID};
