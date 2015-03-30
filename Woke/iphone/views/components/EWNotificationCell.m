@@ -79,8 +79,10 @@
         else if([type isEqualToString:kNotificationTypeFriendAccepted]){
             self.detail.text = [NSString stringWithFormat:@"%@ has accepted your friend request", sender.name];
         }
-        else if (kNotificationTypeNewMedia){
+        else if ([type isEqualToString:kNotificationTypeNewMedia]){
             self.detail.text = @"You have received voice(s) for next wake up.";
+        }else if ([type isEqualToString:kNotificationTypeNewUser]){
+            self.detail.text = [NSString stringWithFormat:@"Your friend %@ just joined Woke", sender.name];
         }
     }
     

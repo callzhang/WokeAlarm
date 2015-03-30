@@ -183,28 +183,36 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
                           cancelButtonTitle:@"OK"
                           otherButtonTitles: @"More", nil] show];
         
-    }else{
-        
-        DDLogError(@"@@@ unknown type of notification");
+    }else if ([notification.type isEqualToString:kNotificationTypeNewUser]) {
+        EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
+        EWPerson *friend = [[EWPersonManager sharedInstance] getPersonByServerID:notification.sender error:nil];
+        controller.person = friend;
+        EWBaseNavigationController *navController = [[EWBaseNavigationController alloc] initWithRootViewController:controller];
+        [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
+    }
+    else{
+        NSString *str = [NSString stringWithFormat:@"unknown type of notification: %@", notification.type];
+        DDLogError(str);
+        EWAlert(str);
     }
     
-    [self finishedNotification:notification];
+    [self setCompletionForNotification:notification];
 }
 
 
-- (void)finishedNotification:(EWNotification *)notice{
+- (void)setCompletionForNotification:(EWNotification *)notice{
 	//archieve
 	if (!notice.completed) {
-		notice.completed = [NSDate date];
+        notice.completed = [NSDate date];
+        [notice save];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationCompleted object:notice];
 	}
-	[notice save];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationCompleted object:notice];
 
 }
 
 - (void)checkNotifications{
 	EWActivity *currentActivity = [EWPerson myCurrentAlarmActivity];
-	[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+	[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
         
         //remove past new media notifications
 		EWActivity *localCurrentActivity = [currentActivity MR_inContext:localContext];
@@ -319,7 +327,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 		NSSet *existingNotes = [[EWPerson me].notifications valueForKey:kParseObjectID];
         [query whereKey:kParseObjectID notContainedIn:existingNotes.allObjects];
     }
-	[query whereKey:EWNotificationRelationships.owner equalTo:[PFUser objectWithoutDataWithObjectId:[PFUser currentUser].objectId]];
+	[query whereKey:EWNotificationRelationships.owner equalTo:[PFUser objectWithoutDataWithObjectId:[PFUser currentUser].objectId]];//send PFUser directly maybe cause error
     [EWSync findObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *notifications, NSError *error) {
         for (EWNotification *notification in notifications) {
 				NSAssert(notification.ownerObject == [EWPerson me], @"owner missing: %@", notification.ownerObject.serverID);

@@ -188,7 +188,7 @@ NSManagedObjectContext *mainContext;
     }
     
     //logging
-    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, deletedServerObjects);
+    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, self.deletedClassAndIDs);
     
     //save callbacks
     //NSMutableDictionary *callbacks = _uploadCompletionCallbacks;
@@ -202,7 +202,6 @@ NSManagedObjectContext *mainContext;
                 DDLogVerbose(@"*** MO %@(%@) to upload haven't saved", MO.entity.name, MO.serverID);
                 continue;
             }
-			
 			
 			//=================>> Upload method <<===================
             NSError *error;
@@ -514,11 +513,11 @@ NSManagedObjectContext *mainContext;
 			}
 			else{
 				//not good
-				DDLogError(@"delete object failed, not sure why, %@(%@): error:%@", parseObject.parseClassName, parseObject.objectId, error);
+                DDLogError(@"delete object failed, not sure why, %@(%@): error:%@", parseObject.parseClassName, parseObject.objectId, error);
+                [parseObject deleteEventually];
 			}
-			[parseObject deleteEventually];
+            
 			[self removeObjectFromDeleteQueue:parseObject];
-			//[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 		}];
 	}
 	@catch (NSException *exception) {
@@ -714,6 +713,7 @@ NSManagedObjectContext *mainContext;
 }
 
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
+    NSParameterAssert(className);
     if (objectID == nil) {
         DDLogError(@"%s !!! Passed in nil to get current MO", __func__);
         return nil;
@@ -872,7 +872,7 @@ NSManagedObjectContext *mainContext;
 					if ([MO validate]) {
 						[localMOs addObject:MO];
 					} else {
-						DDLogError(@"The MO downloaded from query %@(%@) is not valide", MO.entity.name, MO.serverID);
+						DDLogError(@"The MO downloaded from query %@(%@) is not valide => delete", MO.entity.name, MO.serverID);
 						[MO remove];
 					}
 				}
@@ -995,6 +995,14 @@ NSManagedObjectContext *mainContext;
         }
     }];
     return info.copy;
+}
+
+- (NSDictionary *)deletedClassAndIDs{
+    NSMutableDictionary *info = [NSMutableDictionary new];
+    for (PFObject *PO in self.deleteQueue) {
+        info[PO.objectId] = PO.parseClassName;
+    }
+    return info;
 }
 @end
 
