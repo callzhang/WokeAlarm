@@ -32,7 +32,7 @@
  */
 - (void)scheduleLocalNotification;
 - (void)scheduleSleepLocalNotification;
-- (void)scheduleLocalAndPushNotification;
+- (void)scheduleNotificationsAndUpdateCacheedTimes;
 /**
  cancel both timer and sleep notification
  */

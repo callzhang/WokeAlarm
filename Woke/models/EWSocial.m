@@ -10,14 +10,12 @@
 @dynamic addressBookFriends;
 @dynamic addressBookRelatedUsers;
 @dynamic facebookFriends;
-@dynamic facebookRelatedUsers;
 @dynamic friendshipTimeline;
 
 // Custom logic goes here.
 
 - (void)awakeFromInsert{
     [super awakeFromInsert];
-    self.facebookRelatedUsers = [NSMutableArray new];
     self.facebookFriends = [NSMutableDictionary new];
     self.addressBookFriends = [NSMutableArray new];
     self.addressBookRelatedUsers = [NSMutableArray new];

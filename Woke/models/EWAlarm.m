@@ -117,9 +117,6 @@
         return;
     }
     
-    
-    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
-    
     [self willChangeValueForKey:EWAlarmAttributes.time];
     if (self.time) {
         NSInteger weekday0 = self.time.mt_weekdayOfWeek;
@@ -141,15 +138,11 @@
     if (![self validate]) return;
     
     //update activity's time
+    EWActivity *activity = [[EWActivityManager sharedManager] activityForAlarm:self];
     activity.time = time.nextOccurTime;
     
-    static NSTimer *timer;
-    [timer invalidate];
-    timer = [NSTimer bk_scheduledTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        
-        
-        
-    } repeats:NO];
+    //update time schedule
+    [self updateCachedAlarmTime];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlarmTimeChanged object:self];
@@ -235,7 +228,7 @@
 }
 
 #pragma mark - Notification
-- (void)scheduleLocalAndPushNotification{
+- (void)scheduleNotificationsAndUpdateCacheedTimes{
     // schedule on server
     [[EWAlarmManager sharedInstance] scheduleNotificationOnServerForAlarm:self];
     

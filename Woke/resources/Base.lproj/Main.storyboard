@@ -997,7 +997,7 @@
                         <outlet property="tableView" destination="Xwo-Q3-Shc" id="6KM-83-MZc"/>
                         <outlet property="tableViewBottomLayoutConstraint" destination="Pmz-qq-pwn" id="gKd-Eh-XQe"/>
                         <outlet property="wakeHerUpButton" destination="Cpy-04-fg9" id="iMj-hz-iCL"/>
-                        <segue destination="efu-Ue-Kfd" kind="show" identifier="profileToFriends" id="Rze-Xr-CCz"/>
+                        <segue destination="efu-Ue-Kfd" kind="custom" identifier="profileToFriends" customClass="EWBlurPushSegue" id="Rze-Xr-CCz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k5t-j9-YCU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2939,6 +2939,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="tableView" destination="XSU-Ry-b1X" id="hqf-og-y5B"/>
+                        <segue destination="T0a-bL-MOd" kind="custom" identifier="notificationToProfile" customClass="EWBlurPushSegue" id="e6y-LC-ugB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1BP-Uf-e5I" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3079,7 +3080,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="tableView" destination="tdv-58-XVw" id="mgx-r6-g6d"/>
-                        <segue destination="ZiN-mu-0gc" kind="show" identifier="friendsToAddFriends" id="y2e-wY-2Ei"/>
+                        <segue destination="ZiN-mu-0gc" kind="custom" identifier="friendsToAddFriends" customClass="EWBlurPushSegue" id="y2e-wY-2Ei"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WcM-J0-URr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3239,11 +3240,11 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="CBy-Qp-dcT"/>
-        <segue reference="wLP-1t-7ZH"/>
+        <segue reference="d4z-tG-E1i"/>
+        <segue reference="e6y-LC-ugB"/>
         <segue reference="v3V-jG-DGb"/>
         <segue reference="qEe-Vv-RSN"/>
-        <segue reference="d4z-tG-E1i"/>
+        <segue reference="Rze-Xr-CCz"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

@@ -58,10 +58,7 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if (!_person.isMe) {
-        //[TW] following line trigger fading in the bottom
-//        [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.9]];
-    }
+    NSParameterAssert(_person);
 }
 
 

@@ -69,9 +69,12 @@
     NSDate *nextTime;
     //first try to get it from cache
     NSDictionary *times = person.cachedInfo[kCachedAlarmTimes];
-    if (!times && person.isMe) {
-        [[EWCachedInfoManager shared] updateCachedAlarmTimes];
-        times = person.cachedInfo[kCachedAlarmTimes];
+    if (!times) {
+        DDLogError(@"Missing time schedule");
+        if (person.isMe) {
+            [[EWCachedInfoManager shared] updateCachedAlarmTimes];
+            times = person.cachedInfo[kCachedAlarmTimes];
+        }
     }
     
     for (NSDate *time in times.allValues) {
@@ -212,7 +215,7 @@
         [a remove];
     }
     
-    //start add alarm if blank (1=sun, 6=sat)
+    //start add alarm if blank (0=sun, 6=sat)
     for (NSUInteger i=0; i<newAlarms.count; i++) {
         if (![newAlarms[i] isEqual:@NO]) {
             //skip if alarm exists
@@ -232,6 +235,8 @@
         //add to temp array
         newAlarms[i] = a;
         [a save];
+        
+        [a scheduleNotificationsAndUpdateCacheedTimes];
     }
     
     [EWSession sharedSession].isSchedulingAlarm = NO;

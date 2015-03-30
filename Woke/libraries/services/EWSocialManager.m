@@ -347,7 +347,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
                 [social save];
                 
                 //search for facebook related user
-                [self findFacebookRelatedUsersWithCompletion:NULL];
+                [self findNonFriendedFacebookFriendsInWokeWithCompletion:NULL];
                 
                 //completion
                 if (block) {
@@ -360,11 +360,12 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
             // See: https://developers.facebook.com/docs/ios/errors
             [EWErrorManager handleError:error];
         }
+        
     }];
 }
 
 #pragma mark - Find related server users
-- (void)findFacebookRelatedUsersWithCompletion:(ArrayBlock)block{
+- (void)findNonFriendedFacebookFriendsInWokeWithCompletion:(ArrayBlock)block{
     //get list of fb id
     if (!block) return;
     EWSocial *social = [EWPerson mySocialGraph];
@@ -373,11 +374,14 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
     if (facebookIDs.count == 0 && !social.facebookUpdated) {
         DDLogInfo(@"My social hasn't been updated for facebook friends. Get fb friends first and then redo find woke fb user.");
         [self getFacebookFriendsWithCompletion:^{
-            [self findFacebookRelatedUsersWithCompletion:block];
+            [self findNonFriendedFacebookFriendsInWokeWithCompletion:block];
         }];
         
         return;
     }
+    
+    
+    //find EWSocial with
     PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWSocial class])];
     [query whereKey:EWSocialAttributes.facebookID containedIn:facebookIDs];
 	NSSet *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
@@ -393,14 +397,11 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
         EWSocial *mySocial = [EWPerson mySocialGraph];
         for (EWSocial *social in socials) {
 			EWPerson *person = social.owner;
-			NSParameterAssert(person);
-            [resultPeople addObject:person];
-            
-            //add facebook ID to social
-            if (!mySocial.facebookRelatedUsers) mySocial.facebookRelatedUsers = [NSMutableArray new];
-            if (![mySocial.facebookRelatedUsers containsObject:social.facebookID]) {
-                [mySocial.facebookRelatedUsers addObject:social.facebookID];
+            if (!person) {
+                DDLogWarn(@"Failed to get owner for EWSocial (%@)", social.serverID);
+                continue;
             }
+            [resultPeople addObject:person];
         }
         
         //save my social

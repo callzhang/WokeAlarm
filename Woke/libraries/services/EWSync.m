@@ -188,7 +188,7 @@ NSManagedObjectContext *mainContext;
     }
     
     //logging
-    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, deletedServerObjects);
+    DDLogInfo(@"============ Start updating to server =============== \n Inserts:%@, \n Updates:%@ \n and Deletes:%@ ", [insertedManagedObjects valueForKeyPath:@"entity.name"], self.updatingClassAndValues, self.deletedClassAndIDs);
     
     //save callbacks
     //NSMutableDictionary *callbacks = _uploadCompletionCallbacks;
@@ -202,7 +202,6 @@ NSManagedObjectContext *mainContext;
                 DDLogVerbose(@"*** MO %@(%@) to upload haven't saved", MO.entity.name, MO.serverID);
                 continue;
             }
-			
 			
 			//=================>> Upload method <<===================
             NSError *error;
@@ -249,7 +248,6 @@ NSManagedObjectContext *mainContext;
 - (void)runManagedObjectCompletionBlockForObjectID:(NSManagedObjectID *)ID{
     EWAssertMainThread
     NSArray *blocks = self.uploadCompletionCallbacks[ID];
-    [self.uploadCompletionCallbacks removeObjectForKey:ID];
     for (EWManagedObjectSaveCallbackBlock block in blocks) {
         EWServerObject *MO = (EWServerObject *)[mainContext objectWithID:ID];
         DDLogInfo(@"===> Run MO upload completion block %@(%@)", MO.entity.name, MO.serverID);
@@ -257,9 +255,14 @@ NSManagedObjectContext *mainContext;
         NSError *error;
         @try {
             serverID = MO.serverID;
+            if (!serverID) {
+                error = [[NSError alloc] initWithDomain:kWokeDomain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: @"The ManagedObject does not have server ID when save finishes."}];
+            }else{
+                [self.uploadCompletionCallbacks removeObjectForKey:ID];
+            }
         }
         @catch (NSException *exception) {
-            error = [[NSError alloc] initWithDomain:kWokeDomain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: @"The ManagedObject not exists.", NSUnderlyingErrorKey: exception}];
+            error = [[NSError alloc] initWithDomain:kWokeDomain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: @"The ManagedObject does not exists.", NSUnderlyingErrorKey: exception}];
         }
         block(MO, error);
     }
@@ -510,11 +513,11 @@ NSManagedObjectContext *mainContext;
 			}
 			else{
 				//not good
-				DDLogError(@"delete object failed, not sure why, %@(%@): error:%@", parseObject.parseClassName, parseObject.objectId, error);
+                DDLogError(@"delete object failed, not sure why, %@(%@): error:%@", parseObject.parseClassName, parseObject.objectId, error);
+                [parseObject deleteEventually];
 			}
-			[parseObject deleteEventually];
+            
 			[self removeObjectFromDeleteQueue:parseObject];
-			//[self.serverObjectCache removeObjectForKey:parseObject.objectId];
 		}];
 	}
 	@catch (NSException *exception) {
@@ -710,6 +713,7 @@ NSManagedObjectContext *mainContext;
 }
 
 + (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
+    NSParameterAssert(className);
     if (objectID == nil) {
         DDLogError(@"%s !!! Passed in nil to get current MO", __func__);
         return nil;
@@ -868,7 +872,7 @@ NSManagedObjectContext *mainContext;
 					if ([MO validate]) {
 						[localMOs addObject:MO];
 					} else {
-						DDLogError(@"The MO downloaded from query %@(%@) is not valide", MO.entity.name, MO.serverID);
+						DDLogError(@"The MO downloaded from query %@(%@) is not valide => delete", MO.entity.name, MO.serverID);
 						[MO remove];
 					}
 				}
@@ -912,6 +916,10 @@ NSManagedObjectContext *mainContext;
 }
 
 - (void)setCachedParseObject:(PFObject *)PO {
+    if (!PO) {
+        DDLogError(@"Set nil for PO cache");
+        return;
+    }
     if (PO.isDataAvailable) {
         NSError *err;
         DDLogVerbose(@"Pin PO %@(%@) to cache", PO.parseClassName, PO.objectId);
@@ -924,18 +932,7 @@ NSManagedObjectContext *mainContext;
         //[self.serverObjectCache setObject:PO forKey:PO.objectId];
         
 		//You can store a PFObject in the local datastore by pinning it. Pinning a PFObject is recursive, just like saving, so any objects that are pointed to by the one you are pinning will also be pinned.
-//		NSEntityDescription *entity = [NSEntityDescription entityForName:PO.localClassName inManagedObjectContext:mainContext];
-//		[entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-//			if (obj.isToMany && !obj.inverseRelationship) {
-//				//key to array of pointers
-//				NSArray *array = PO[key];
-//				for (PFObject *obj in array) {
-//                    if (obj.isDataAvailable) {
-//                        [self setCachedParseObject:obj];
-//                    }
-//				}
-//			}
-//		}];
+
     }else{
         DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
     }
@@ -998,6 +995,14 @@ NSManagedObjectContext *mainContext;
         }
     }];
     return info.copy;
+}
+
+- (NSDictionary *)deletedClassAndIDs{
+    NSMutableDictionary *info = [NSMutableDictionary new];
+    for (PFObject *PO in self.deleteQueue) {
+        info[PO.objectId] = PO.parseClassName;
+    }
+    return info;
 }
 @end
 

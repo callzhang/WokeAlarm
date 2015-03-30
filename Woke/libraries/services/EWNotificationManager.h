@@ -33,7 +33,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWNotificationManager)
  1. Decide weather to alert user
  2. Check if is in the notification queue
  */
-- (void)handleNotification:(NSString *)notificationID;
+- (void)notificationDidClicked:(NSString *)notificationID;
 
 //Search
 - (NSArray *)notificationsForPerson:(EWPerson *)person;

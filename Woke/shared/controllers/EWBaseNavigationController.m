@@ -56,6 +56,15 @@
     }
 }
 
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
+    if ([viewController isKindOfClass:[EWBaseViewController class]]) {
+        [(EWBaseViewController *)viewController addNavigationBarButtons];
+    }
+    [self setNavigationBarTransparent:YES];
+    
+    [super pushViewController:viewController animated:animated];
+}
+
 - (BOOL)prefersStatusBarHidden {
     if (self.viewControllers.count) {
         UIViewController *vc = self.viewControllers.firstObject;

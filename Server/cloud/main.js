@@ -711,6 +711,7 @@ Parse.Cloud.define("syncUser", function(request, response) {
 
 });
 
+//add media to receiver's relation
 Parse.Cloud.define("sendMedia", function(request, response) {
   Parse.Cloud.useMasterKey();
   var receiverID = request.params.receiverID;
@@ -745,6 +746,7 @@ Parse.Cloud.define("sendMedia", function(request, response) {
   })
 });
 
+//low level tool method to update relation
 Parse.Cloud.define("updateRelation", function(request, response) {
   Parse.Cloud.useMasterKey();
   var target = request.params.target;
@@ -835,11 +837,11 @@ Parse.Cloud.define("updateRelation", function(request, response) {
 
 });
 
+
 Parse.Cloud.define("handleNewUser", function(request, response) {
   Parse.Cloud.useMasterKey();
   var userID = request.params.userID;
   var email = request.params.email;
-  console.log("query email" + email);
   var facebookID = request.params.facebookID;
 
   //types
@@ -854,26 +856,26 @@ Parse.Cloud.define("handleNewUser", function(request, response) {
     newUser = user;
     //query email in addressBook
     var contactsQuery = new Parse.Query(EWSocial);
-    contactsQuery.equalTo("addressBookFriends", email);
+    contactsQuery.equalTo("addressBookFriendsEmailArray", email);//also can be used for searching array
     return contactsQuery.find();
   }).then(function (socials) {
     console.log("Found "+socials.length+" addressbook email connection");
     //save users list
     socials.forEach(function (social) {
       var user = social.get("owner");
-      console.log(user.id);
+      console.log("Find addressbook friend: " + user.id);
       relatedUsers.push(user);
     });
     //query email in facebook
     var facebookQuery = new Parse.Query(EWSocial);
-    facebookQuery.equalTo("facebookFriends", facebookID);
+    facebookQuery.equalTo("facebookFriendsArray", facebookID);
     return facebookQuery.find();
   }).then(function (socials) {
     console.log("Found "+socials.length+" facebook connection");
     //add fb users
     socials.forEach(function (social) {
       var user = social.get("owner");
-      console.log(user.id);
+      console.log("Find facebook friend: " + user.id);
       relatedUsers.push(user);
     });
     //send notification and EWNotification
@@ -925,10 +927,16 @@ Parse.Cloud.define("handleNewUser", function(request, response) {
         }
       });
     });
+
+    //save
     return Parse.Object.saveAll(users);
   }).then(function (users) {
     console.log("Saved "+users.length+" users");
-    response.success(users);
+    var userIDs = [];
+    users.forEach(function (user) {
+      userIDs.push(user.id);
+    })
+    response.success(userIDs);
   }, function (error) {
     console.log("failed to save all users")
     response.error(error);
@@ -962,7 +970,7 @@ Parse.Cloud.beforeSave("EWSocial", function(request, response) {
   var facebookIDs = [];
   var friends = social.get("facebookFriends");
   for (var key in friends) {
-    if (friends.hasOwnProperty(key)) {
+    if (friends.hasOwnProperty(key)) {//check?
       facebookIDs.push(key);
     }
   }

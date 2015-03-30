@@ -67,7 +67,7 @@ extern NSString * const kEWSyncUploaded;
 /**
  * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
  */
-@property (atomic, strong) NSDictionary *changedRecords; //{string of objectID: array of changed keys}
+@property (atomic, strong) NSDictionary *changedRecords; //{objectID: array of changed keys}
 @property (atomic, strong) NSMutableSet *saveToLocalItems;
 @property (atomic, strong) NSDictionary *managedObjectsUpdating;
 @property BOOL isUploading;

@@ -33,6 +33,8 @@
 #import "StoryboardIdentifiers.h"
 #import "AssetCatalogIdentifiers.h"
 #import "GCDSingleton.h"
+#import "FBTweak.h"
+#import "FBTweakInline.h"
 
 //static NSUInteger ddLogLevel = DDLogLevelAll;
 static NSUInteger ddLogLevel = LOG_LEVEL_VERBOSE;

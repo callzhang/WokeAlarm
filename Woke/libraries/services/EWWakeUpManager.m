@@ -22,30 +22,9 @@
 #import "EWAlarmManager.h"
 #import "NSTimer+BlocksKit.h"
 
-#import "FBTweak.h"
-#import "FBTweakInline.h"
 #import "EWUIUtil.h"
 #import "EWBackgroundingManager.h"
 
-//FBTweakAction(@"WakeUpManager", @"Action", @"Force wake up", ^{
-//    [EWWakeUpManager sharedInstance].forceWakeUp = ![EWWakeUpManager sharedInstance].forceWakeUp;
-//    DDLogInfo(@"Forced wake up %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
-//});
-//
-//FBTweakAction(@"WakeUpManager", @"Action", @"Enable snooze", ^{
-//    [EWWakeUpManager sharedInstance].forceSnooze = ![EWWakeUpManager sharedInstance].forceSnooze;
-//    DDLogInfo(@"Force snooze %@", [EWWakeUpManager sharedInstance].forceSnooze?@"enabled":@"disabled");
-//});
-//
-//FBTweakAction(@"WakeUpManager", @"Action", @"Force enable sleep", ^{
-//    [EWWakeUpManager sharedInstance].forceSleep = ![EWWakeUpManager sharedInstance].forceSleep;
-//    DDLogInfo(@"Force sleep %@", [EWWakeUpManager sharedInstance].forceSleep?@"enabled":@"disabled");
-//});
-//
-//FBTweakAction(@"WakeUpManager", @"Action", @"Skip check activity completed", ^{
-//    [EWWakeUpManager sharedInstance].skipCheckActivityCompleted = ![EWWakeUpManager sharedInstance].skipCheckActivityCompleted;
-//    DDLogInfo(@"Skipped checking activity %@", [EWWakeUpManager sharedInstance].skipCheckActivityCompleted?@"enabled":@"disabled");
-//});
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 30s", ^{
     [[EWWakeUpManager shared] testWakeUpInSeconds:30];

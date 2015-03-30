@@ -110,7 +110,7 @@
 }
 
 - (void)loadFriendsOnWokeSection {
-    [[EWSocialManager sharedInstance] findFacebookRelatedUsersWithCompletion:^(NSArray *array, NSError *error) {
+    [[EWSocialManager sharedInstance] findNonFriendedFacebookFriendsInWokeWithCompletion:^(NSArray *array, NSError *error) {
         if (array.count == 0) {
             return ;
         }

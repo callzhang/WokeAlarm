@@ -9,7 +9,6 @@ const struct EWSocialAttributes EWSocialAttributes = {
 	.addressBookUpdated = @"addressBookUpdated",
 	.facebookFriends = @"facebookFriends",
 	.facebookID = @"facebookID",
-	.facebookRelatedUsers = @"facebookRelatedUsers",
 	.facebookToken = @"facebookToken",
 	.facebookUpdated = @"facebookUpdated",
 	.friendshipTimeline = @"friendshipTimeline",
@@ -57,8 +56,6 @@ const struct EWSocialRelationships EWSocialRelationships = {
 @dynamic facebookFriends;
 
 @dynamic facebookID;
-
-@dynamic facebookRelatedUsers;
 
 @dynamic facebookToken;
 

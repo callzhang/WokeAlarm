@@ -171,9 +171,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
  *  Handle external event such as welcoming message and broadcasting new user to the community
  */
 - (void)handleNewUser{
-    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
-    EWAlert(msg);
-    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
+    //NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
+    //EWAlert(msg);
+    //[EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
+    NSString *email = [EWPerson me].email?:@"";
+    NSString *facebookID = [EWPerson me].facebookID;
+    NSParameterAssert(facebookID);
+    [PFCloud callFunctionInBackground:@"handleNewUser" withParameters:@{@"userID": [EWPerson me].serverID, @"email": email, @"facebookID": facebookID} block:^(NSArray *relatedUsers, NSError *error) {
+        if (error) {
+            DDLogError(@"Failed to handle new user: %@", error.localizedDescription);
+        } else {
+            DDLogInfo(@"Handled new user and users delivered: %@", relatedUsers);
+        }
+    }];
 }
 
 
