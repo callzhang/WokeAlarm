@@ -113,7 +113,7 @@
 
 - (void)scheduleNotification {
     DDLogVerbose(@"shedule notification");
-    [self.alarm scheduleLocalAndPushNotification];
+    [self.alarm scheduleNotificationsAndUpdateCacheedTimes];
 }
 
 #pragma mark -

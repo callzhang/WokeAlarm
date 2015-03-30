@@ -36,8 +36,9 @@
     }
     
     NSDate *time = [[EWAlarmManager sharedInstance] nextAlarmTimeForPerson:_person];
-//    NSAssert(time, @"time for person:%@ is nil", _person);
-    
+    if (!time) {
+        return;
+    }
     if (showGlobalTime.boolValue) {
         if (_person.location) {
             NSTimeZone *userTimezone = [[APTimeZones sharedInstance] timeZoneWithLocation:_person.location];
