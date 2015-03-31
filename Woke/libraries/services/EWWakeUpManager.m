@@ -141,7 +141,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     if (self.medias.count == 0) {
         //need to create some voice in sync
         EWMedia *newMedia = [[EWMediaManager sharedInstance] getWokeVoice];
-		self.medias = @[newMedia];
+		if (newMedia) {
+			self.medias = @[newMedia];
+		} else {
+			//TODO add a local fallback voice
+		}
     }
     
     //cancel local alarm
