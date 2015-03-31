@@ -39,9 +39,6 @@
 + (instancetype)getAlarmByID:(NSString *)alarmID error:(NSError *__autoreleasing *)error{
     EWAssertMainThread
     EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:NSStringFromClass(self) withID:alarmID error:error];
-    if (*error) {
-        DDLogError((*error).description);
-    }
     return alarm;
 }
 
