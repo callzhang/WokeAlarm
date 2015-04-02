@@ -262,6 +262,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 
 #pragma mark - New
 - (EWNotification *)newMediaNotification:(EWMedia *)media{
+    if (!media.serverID) {
+        DDLogError(@"Media passed in doesn't have serverID: %@", media);
+        [media updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
+            if (MO_on_main_thread.serverID) {
+                [self newMediaNotification:(EWMedia *)MO_on_main_thread];
+            }
+        }];
+        return nil;
+    }
 	//make only unique media notification per day
     if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWoke) {
         DDLogInfo(@"Received media on status (%ld) but not to react to it.", [EWSession sharedSession].wakeupStatus);
