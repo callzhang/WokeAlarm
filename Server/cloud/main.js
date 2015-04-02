@@ -5,8 +5,8 @@
 //
 Parse.Cloud.define("getRelevantUsers", function(request, response) {
   var objectId = request.params.objectId;
-  var radius = -1;
-  if (request.params.radius !== undefined) radius = request.params.radius;
+  var radius = request.params.radius;
+  radius = radius == undefined ? -1 : radius;
   var topk = request.params.topk;
   var userLocation = request.params.location;
 
@@ -127,7 +127,8 @@ Parse.Cloud.define("getRelevantUsers", function(request, response) {
     }
 
     response.success(mergedList.map(function(x) { return x.id; }));
-
+  }, function (err) {
+    response.error("failed request with error: " + err.message);
   });
 });
 

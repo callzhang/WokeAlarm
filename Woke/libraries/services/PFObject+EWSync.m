@@ -179,7 +179,7 @@
                     
                     //add relatedMO to insertQueue
                     if (![[EWSync sharedInstance] contains:relatedManagedObject inQueue:kParseQueueWorking]) {
-                        DDLogWarn(@"Added missing insert object: %@", relatedManagedObject);
+                        DDLogWarn(@"Added missing insert object: %@(%@) when updating to-many relation %@", relatedManagedObject.entity.name, relatedManagedObject.serverID, key);
                         [[EWSync sharedInstance] appendInsertQueue:relatedManagedObject];
                     }
                 }
@@ -224,7 +224,7 @@
                     
                     //add relatedMO to insertQueue
                     if (![[EWSync sharedInstance] contains:relatedMO inQueue:kParseQueueWorking]) {
-                        DDLogDebug(@"Added missing insert object: %@", relatedMO);
+                        DDLogDebug(@"Added missing insert object: %@(%@) when updating to-one relation %@", relatedMO.entity.name, relatedMO.serverID, key);
                         [[EWSync sharedInstance] appendInsertQueue:relatedMO];
                     }
                 }

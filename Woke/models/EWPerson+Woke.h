@@ -33,12 +33,12 @@ extern NSString * const kFriendshipStatusChanged;
 + (NSArray *)myAlarms;
 + (NSArray *)myFriends;
 + (EWSocial *)mySocialGraph;
-
-- (void)updateStatus:(NSString *)status completion:(void (^)(NSError *error))completion;
-
 + (EWAlarm *)myCurrentAlarm;
 + (EWActivity *)myCurrentAlarmActivity;
 + (NSArray *)myUnreadMedias;
+
+- (void)updateStatus:(NSString *)status completion:(void (^)(NSError *error))completion;
+
 
 //social
 - (EWFriendshipStatus)friendshipStatus;

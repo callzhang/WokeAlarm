@@ -16,8 +16,6 @@
 
 //#import <CocoaLumberjack/CocoaLumberjack.h>
 #import "KZBootstrapUserMacros.h"
-
-
 #import <Parse/Parse.h>
 #import "CoreData+MagicalRecord.h"
 #import "EWDefines.h"

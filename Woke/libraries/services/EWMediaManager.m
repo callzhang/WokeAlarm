@@ -212,6 +212,10 @@
         //EWNotification
 		dispatch_async(dispatch_get_main_queue(), ^{
 			EWMedia *m = (EWMedia *)[media MR_inContext:mainContext];
+			if (!m) {
+				DDLogError(@"Cannot find media %@ on main thread! Cancel new media notification", media.serverID);
+				return;
+			}
 			[[EWNotificationManager shared] newMediaNotification:m];
 		});
     }
