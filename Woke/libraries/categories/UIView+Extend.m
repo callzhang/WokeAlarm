@@ -38,6 +38,9 @@
             case hudStyleWarning:
                 hud.indicatorView = [[JGProgressHUDIndicatorView alloc] initWithContentView:[[UIImageView alloc] initWithImage:[ImagesCatalog warning]]];
                 break;
+				
+			case HUDStyleInfo:
+				break;
                 
             default:
                 break;

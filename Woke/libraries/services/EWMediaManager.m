@@ -64,12 +64,12 @@
         [[[UIAlertView alloc] initWithTitle:@"Voice来啦" message:@"收到一条神秘的语音."  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 #endif
         
-    }else if([type isEqualToString:@"test"]){
+    }else{
         
         // ============== Test ================
-        
-        DDLogInfo(@"Received === test === type push");
-        EWAlert(@"Received === test === type push");
+		NSString *str = [NSString stringWithFormat:@"Received === %@ === type media push", type];
+        DDLogInfo(str);
+        EWAlert(str);
         [UIApplication sharedApplication].applicationIconBadgeNumber = 99;
     }
 }
@@ -223,7 +223,7 @@
     if (newMedia.count) {
         //notify user for the new media
         dispatch_async(dispatch_get_main_queue(), ^{
-            EWAlert(@"You got voice for your next wake up");
+            EWAlert(@"[DEBUG] got voice for next wake up");
             [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
         });
     }

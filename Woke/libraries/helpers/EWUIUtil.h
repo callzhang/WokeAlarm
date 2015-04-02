@@ -67,6 +67,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWUIUtil)
 //HUD
 @property (nonatomic, strong) NSMutableArray *HUDs;
 + (JGProgressHUD *)showWatingHUB;
++ (JGProgressHUD *)showText:(NSString *)text;
 + (JGProgressHUD *)showSuccessHUBWithString:(NSString *)string;
 + (JGProgressHUD *)showFailureHUBWithString:(NSString *)string;
 + (JGProgressHUD *)showWarningHUBWithString:(NSString *)string;

@@ -32,6 +32,7 @@
 #import "EWAlarm.h"
 #import "PFFacebookUtils.h"
 #import "FacebookSDK.h"
+#import "EWUIUtil.h"
 
 
 
@@ -174,7 +175,7 @@
                 }];
             }else{
                 DDLogError(@"Failed to sign up new user: %@", error.description);
-                EWAlert(@"Server not available, please try again.");
+				[EWUIUtil showtext:@"Server not available, please try again."];
                 [EWUserManager showLoginPanel];
             }
             
@@ -218,9 +219,10 @@
 
 + (void)handleNewUser{
     [EWUserManager linkWithFacebook];
-    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
-    EWAlert(msg);
-    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
+//    NSString *msg = [NSString stringWithFormat:@"Welcome %@ joining Woke!", [EWPerson me].name];
+//    EWAlert(msg);
+//    [EWServer broadcastMessage:msg onSuccess:NULL onFailure:NULL];
+	[PFCloud call
 }
 
 

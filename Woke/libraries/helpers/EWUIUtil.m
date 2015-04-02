@@ -349,6 +349,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
     return hud;
 }
 
++ (JGProgressHUD *)showText:(NSString *)text{
+	UIView *rootView = [self topView];
+	JGProgressHUD *hud = [rootView showNotification:text WithStyle:HUDStyleInfo	audoHide:10];
+	[[EWUIUtil shared].HUDs addObject:hud];
+	return hud;
+}
+
 + (JGProgressHUD *)showWatingHUB{
     UIView *rootView = [self topView];
     JGProgressHUD *hud = [rootView showLoopingWithTimeout:0];

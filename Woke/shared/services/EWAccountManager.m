@@ -334,21 +334,28 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             DDLogInfo(@"After 60s, we accept location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
             [self processLocation:currentLocation];
         }
+		else if (status & (INTULocationStatusServicesDenied | INTULocationStatusServicesDisabled | INTULocationStatusServicesRestricted)){
+			DDLogError(@"Failed to get location with status of %ld and location of %@", status, currentLocation);
+			// An error occurred, more info is available by looking at the specific status returned.
+			[UIAlertView bk_showAlertViewWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Go"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+				//set location
+				if (buttonIndex == 1) {
+					[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+				}
+			}];
+			
+			[self setProxymateLocationForPerson:[EWPerson me]];
+		}
         else {
-            // An error occurred, more info is available by looking at the specific status returned.
-            [UIAlertView bk_showAlertViewWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Go"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-                //set location
-                if (buttonIndex == 1) {
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                }
-            }];
-
-            [self setProxymateLocationForPerson:[EWPerson me]];
+			DDLogError(@"Failed to get location with status of %ld and location of %@", status, currentLocation);
+			[EWUIUtil showText:@"Location service failed"];
+			
+			[self setProxymateLocationForPerson:[EWPerson me]];
         }
     }];
-    
+	
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self.manager cancelLocationRequest:requestID];
+        [self.manager forceCompleteLocationRequest:requestID];
         DDLogWarn(@"Woke exit when location request in progress");
     }];
 }

@@ -37,6 +37,18 @@ FBTweakAction(@"Notification", @"Action", @"Check notifications", ^{
     [[EWNotificationManager sharedInstance] checkNotifications];
 });
 
+FBTweakAction(@"Notification", @"Action", @"Create a system notification", ^{
+	EWNotification *note = [EWNotification newNotification];
+	note.type = kNotificationTypeSystemNotice;
+	NSDictionary *info = @{@"title": @"Test title", @"content": @"Test content. Click to new page.", @"link": @"http://semi-sane.com"};
+	note.userInfo = info;
+	note.receiver = [EWPerson me].serverID;
+	[[EWPerson me] addNotificationsObject:note];
+	[note save];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationNew object:note];
+	[[EWNotificationManager shared] notificationDidClicked:note];
+});
+
 @interface EWNotificationManager()
 //@property EWPerson *person;
 //@property EWMedia *media;
@@ -64,20 +76,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 		[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationNew object:notice userInfo:nil];
 	}];
     
-    [self notificationDidClicked:notificationID];
+    [self notificationDidClicked:notice];
 }
 
 
-- (void)notificationDidClicked:(NSString *)notificationID{
+- (void)notificationDidClicked:(EWNotification *)notification{
     NSError *error;
-    EWNotification *notification = [EWNotification getNotificationByID:notificationID error:&error];
-    if (!notification) {
-        DDLogError(@"Cannot find notification %@ error: %@", notificationID, error.localizedDescription);
-        return;
-    }
-    
-    
-    //[EWNotificationManager sharedInstance].notification = notification;
+	NSParameterAssert(notification);
     
     if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
 		NSArray *medias = notification.userInfo[@"medias"];

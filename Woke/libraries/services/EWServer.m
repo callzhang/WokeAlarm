@@ -80,16 +80,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 		[[EWNotificationManager sharedInstance] handleNotificatoinFromPush:payload];
 	}
     else if ([type isEqualToString:kPushTypeBroadcast]){
+        //TODO: this is a bad practice to broadcast something, need to remove in future version
         NSString *message = payload[@"alert"];
-        EWAlert(message);
+        [EWUIUtil showText:message];
     }
 	else{
 		// Other push type not supported
 		NSString *str = [NSString stringWithFormat:@"Unknown push type received: %@", payload];
 		DDLogError(@"Received unknown type of push msg: %@", str);
-#ifdef DEBUG
 		EWAlert(str);
-#endif
 	}
 }
 
