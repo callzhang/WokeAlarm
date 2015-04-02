@@ -23,7 +23,7 @@
 FBTweakAction(@"Social Manager", @"Action", @"Get facebook friends", ^{
     [EWPerson mySocialGraph].facebookUpdated = nil;
     [[EWSocialManager sharedInstance] getFacebookFriendsWithCompletion:^{
-        DDLogInfo(@"Got %lu facebook friends", [EWPerson mySocialGraph].facebookFriends.allKeys.count);
+        DDLogInfo(@"Got %lu facebook friends", (unsigned long)[EWPerson mySocialGraph].facebookFriends.allKeys.count);
     }];
 });
 

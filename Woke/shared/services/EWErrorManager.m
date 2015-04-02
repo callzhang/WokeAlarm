@@ -114,4 +114,9 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
     NSError *err = [[NSError alloc] initWithDomain:kWokeDomain code:kEWInvalidObjectErrorCode userInfo:@{NSLocalizedDescriptionKey: des}];
     return err;
 }
+
++ (NSError *)noServerIDError{
+	NSError *err = [[NSError alloc] initWithDomain:@"WokeAlarm" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
+	return err;
+}
 @end

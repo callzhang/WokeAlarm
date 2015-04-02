@@ -147,7 +147,7 @@
 - (EWAlarm *)next:(NSInteger)n thAlarmForPerson:(EWPerson *)person{
 	NSInteger week = floor(n/7);
     if (!person.isMe) DDLogError(@"%s person passed in is not me!", __FUNCTION__);
-	if (week > 0) DDLogDebug(@"Passing next %ldth alarm, %ld weeks later.", n, week);
+	if (week > 0) DDLogDebug(@"Passing next %ldth alarm, %ld weeks later.", (long)n, week);
 	n = n%7;
     //when just past the alarm time (timer fired), we need the alarm just past, not the next one
     //but if the wakeup is completed, we want the next alarm

@@ -112,7 +112,7 @@
                         DDLogError(@"PO %@(%@) not found", MO.serverClassName, MO.serverID);
                     }
                 }
-                DDLogInfo(@"Relation %@->%@ changed to %ld items", managedObject.entity.class, key, relatedPOs.count);
+                DDLogInfo(@"Relation %@->%@ changed to %ld items", managedObject.entity.class, key, (unsigned long)relatedPOs.count);
                 [self setObject:[relatedPOs copy] forKey:key];
                 return;
             }
@@ -379,7 +379,7 @@
 }
 
 #pragma mark - Cache
-- (void)fetchIfNeededAndSaveToCache:(NSError *__autoreleasing *)error{
+- (BOOL)fetchIfNeededAndSaveToCache:(NSError *__autoreleasing *)error{
     if (!error) {
         NSError *__autoreleasing err;
         error = &err;

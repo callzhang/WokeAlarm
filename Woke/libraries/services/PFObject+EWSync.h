@@ -41,5 +41,5 @@ typedef enum : NSUInteger {
 - (NSString *)localClassName;
 
 //cache
-- (void)fetchIfNeededAndSaveToCache:(NSError **)error;
+- (BOOL)fetchIfNeededAndSaveToCache:(NSError **)error;
 @end

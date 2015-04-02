@@ -46,7 +46,8 @@
  Refresh ManagedObject value from server in the current thread
  @discussion If the ParseID is not found on this ManagedObject, an insert action will performed.
  */
-- (void)refresh;
+- (BOOL)refresh:(NSError **)error;
+- (BOOL)refreshInContext:(NSManagedObjectContext *)context withError:(NSError **)error;
 
 /**
  *Refresh related MO from server in background.
@@ -56,7 +57,7 @@
  *It also checks that if any data on server has duplication.
  *@discussion it is usually used for current user object (me)
  */
-- (void)refreshRelatedWithCompletion:(ErrorBlock)block;
+//- (void)refreshRelatedWithCompletion:(ErrorBlock)block;
 
 /**
  Update object from PO for value, and related PO that is returned as Array of pointers

@@ -13,6 +13,7 @@
 #import "EWUtil.h"
 #import "NSDictionary+KeyPathAccess.h"
 #import "NSTimer+BlocksKit.h"
+#import "EWErrorManager.h"
 
 @implementation EWServerObject(EWSync)
 #pragma mark - Server sync
@@ -178,7 +179,7 @@
         //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
             //update only it is outdated
-            BOOL hasData = [self valueForKey:key];
+            BOOL hasData = [self valueForKey:key] != nil;
             NSDate *time = self.syncInfo[key];
             BOOL upToDate = time && [time timeElapsed] < kServerUpdateInterval;
             if (hasData && upToDate) {
@@ -331,11 +332,12 @@
     }];
 }
 
-- (void)refresh{
-    [self refreshInContext:mainContext withError:nil];
+- (BOOL)refresh:(NSError *__autoreleasing *)error{
+	EWAssertMainThread
+    return [self refreshInContext:mainContext withError:error];
 }
 
-- (void)refreshInContext:(NSManagedObjectContext *)context withError:(NSError *__autoreleasing *)error{
+- (BOOL)refreshInContext:(NSManagedObjectContext *)context withError:(NSError *__autoreleasing *)error{
     if (!error) {
         NSError __autoreleasing *err;
         error = &err;
@@ -345,13 +347,16 @@
         DDLogDebug(@"Network not reachable, refresh later.");
         //refresh later
         [self refreshEventually];
-        return;
+		*error = [EWErrorManager noInternetConnectError];
+        return NO;
     }
     
     if (!self.serverID) {
         //[self uploadEventually];//potential to create a duplicate if MO is being downloaded
         DDLogWarn(@"!!! The MO %@(%@) trying to refresh doesn't have servreID, skip! %@", self.entity.name, self.serverID, self);
-        *error = [[NSError alloc] initWithDomain:@"WokeAlarm" code:kEWSyncErrorNoServerID userInfo:@{NSLocalizedDescriptionKey: @"No object identification (objectId) available"}];
+		*error = [EWErrorManager noServerIDError];
+		[self uploadEventually];
+		return NO;
 
     }else{
         if ([self changedKeys]) {
@@ -370,6 +375,8 @@
         //save: already saved in update
         //[self saveToLocal];
     }
+	
+	return YES;
 }
 
 - (void)refreshEventually{
@@ -396,8 +403,8 @@
     }
     
     //first try to refresh if needed
-    [self refresh];
-    
+	[self refresh:nil];
+	
     //then iterate all relations
     NSDictionary *relations = self.entity.relationshipsByName;
     [relations enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *description, BOOL *stop) {
@@ -408,11 +415,11 @@
                 if ([MO isKindOfClass:[EWPerson class]]) {
                     return ;
                 }
-                [MO refresh];
+				[MO refresh:nil];
             }
         }else{
             EWServerObject *MO = [self valueForKey:key];
-            [MO refresh];
+			[MO refresh:nil];
         }
     }];
     

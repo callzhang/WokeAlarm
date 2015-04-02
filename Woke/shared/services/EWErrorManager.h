@@ -18,4 +18,5 @@ extern NSString * const EWErrorInfoDescriptionKey;
 + (void)handleError:(NSError *)error;
 + (NSError *)noInternetConnectError;
 + (NSError *)invalidObjectError:(id)obj;
++ (NSError *)noServerIDError;
 @end

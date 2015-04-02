@@ -779,7 +779,7 @@ NSManagedObjectContext *mainContext;
 		if (!tryFix) {
 			return NO;
 		}
-		[SO refresh];
+		[SO refresh:nil];
 		good = [SO validate];
 	}
 	

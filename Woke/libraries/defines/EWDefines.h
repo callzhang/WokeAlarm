@@ -20,9 +20,7 @@
 #define kCustomGray                     EWSTR2COLOR(@"48494B")
 #define kColorMediumGray                EWSTR2COLOR(@"7e7e7e")
 #define kCustomLightGray                EWSTR2COLOR(@"#DDDDDD")
-
-
-#define ringtoneNameList                @[@"Autumn Spring.caf", @"Daybreak.caf", @"Drive.caf", @"Parisian Dream.caf", @"Sunny Afternoon.caf", @"Tropical Delight.caf"]
+#define createErrorIfNULL(error)		if (!error) {NSError __autoreleasing *err;error = &err;}
 
 // Keys
 #define kParsePushUrl                   @"https://api.parse.com/1/push"
@@ -33,7 +31,6 @@
 #define kParseMasterKey                 @"iEjKEePThBb4KxJVj64o3nbkBGYrGzm6NPiFaFoN"
 #define WokeUserID                      @"CvCaWauseD"
 #define KATConnectKey                   @"61c58f4a6f819d0f209606bdf5e9eeadabfc73529dba358cd079df0dc6dd1102"
-
 
 
 // 任务宏

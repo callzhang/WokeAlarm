@@ -53,7 +53,7 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Remove unread medias", ^{
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Unread medias count", ^{
 	NSArray *unread = [EWPerson myUnreadMedias];
-	NSString *str = [NSString stringWithFormat:@"Unread medias: %lu", unread.count];
+	NSString *str = [NSString stringWithFormat:@"Unread medias: %lu", (unsigned long)unread.count];
 	EWAlert(str);
 });
 
@@ -325,7 +325,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeEnabled object:nil];
         //also check voices
         [[EWMediaManager sharedInstance] checkNewMediasWithCompletion:^(NSArray *array, NSError *error) {
-            DDLogInfo(@"Found %lu new medias", array.count);
+            DDLogInfo(@"Found %lu new medias", (unsigned long)array.count);
             if ([EWPerson myUnreadMedias].count == 0) {
                 [[EWMediaManager sharedInstance] getWokeVoiceWithCompletion:NULL];
             }
@@ -436,7 +436,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	
     if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp || forceLoad) {
         self.medias = [EWPerson myUnreadMedias];
-        DDLogInfo(@"Reloaded media and current media is %ld", self.medias.count);
+        DDLogInfo(@"Reloaded media and current media is %ld", (unsigned long)self.medias.count);
     }else{
         DDLogVerbose(@"Current seesion is not in wakingUp mode, playing media list will not load from myUnreadMedias");
     }
@@ -469,7 +469,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     DDLogDebug(@"Activity %@ and Alarm %@ changed to %@", activity.serverID, testingAlarm.serverID, newTime.string);
 	[[EWWakeUpManager shared] scheduleAlarmTimer];
 	
-	NSString *str = [NSString stringWithFormat:@"Alarm will show in %lds", seconds];
+	NSString *str = [NSString stringWithFormat:@"Alarm will show in %lds", (long)seconds];
     [EWUIUtil showSuccessHUBWithString:str];
     self.tempActivity = activity;
 }

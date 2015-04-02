@@ -1,6 +1,7 @@
 #import "EWMedia.h"
 #import "EWMediaFile.h"
 #import "AssetCatalogIdentifiers.h"
+#import "EWErrorManager.h"
 
 const struct EWMediaEmoji EWMediaEmoji = {
     .smile = @"[SMILE]",
@@ -149,7 +150,7 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 + (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context{
 	PFObject *mediaPO = [[EWSync sharedInstance] getParseObjectWithClass:NSStringFromClass([EWMedia class]) ID:mediaID error:nil];
     EWMedia *media = (EWMedia *)[mediaPO managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:nil];
-	[media downloadMediaFile];
+	[media downloadMediaFile:nil];
 
 	if (![media validate]) {
 		DDLogError(@"Get new media but not valid: %@", media);
@@ -160,7 +161,8 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 
 
 #pragma mark - Media File
-- (void)downloadMediaFile{
+- (BOOL)downloadMediaFile:(NSError *__autoreleasing *)error{
+	createErrorIfNULL(error);
 	EWMediaFile *file = self.mediaFile;
 	if (!file) {
 		PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
@@ -168,11 +170,15 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 		file = (EWMediaFile *)[filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateRelation completion:nil];
 		if (![file validate]) {
 			DDLogError(@"Failed to download media file: %@", file);
+			*error = [EWErrorManager invalidObjectError:self];
+			return NO;
 		}
         [file saveToLocal];
+		return YES;
 	}else if(!file.audio){
-		[file refresh];
+		return [file refreshInContext:self.managedObjectContext withError:error];
 	}
+	return YES;
 }
 
 - (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{

@@ -205,7 +205,7 @@
     NSArray *newMedia = [EWSync findObjectFromServerWithQuery:query inContext:context error:&err];
 
     for (EWMedia *media in newMedia) {
-		[media downloadMediaFile];
+		[media downloadMediaFile:nil];
         [[EWPerson meInContext:context] addReceivedMediasObject:media];
         //new media
 		DDLogInfo(@"Received media(%@) from %@", media.objectId, media.author.name);

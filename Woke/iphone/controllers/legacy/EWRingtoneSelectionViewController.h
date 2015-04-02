@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Shens. All rights reserved.
 //
 
+#define ringtoneNameList                @[@"Autumn Spring.caf", @"Daybreak.caf", @"Drive.caf", @"Parisian Dream.caf", @"Sunny Afternoon.caf", @"Tropical Delight.caf"]
+
 #import <UIKit/UIKit.h>
 @class EWRingtoneSelectionViewController;
 
