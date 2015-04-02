@@ -80,8 +80,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     //[EWNotificationManager sharedInstance].notification = notification;
     
     if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
-		
-        [EWUIUtil showSuccessHUBWithString:@"You got a new voice!"];
+		NSArray *medias = notification.userInfo[@"medias"];
+        [EWUIUtil showSuccessHUBWithString:[NSString stringWithFormat:@"You have %lu voice awaiting!", medias.count]];
         
     } else if ([notification.type isEqualToString:kNotificationTypeFriendRequest]) {
         
@@ -99,11 +99,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         
         if (notification.completed) {
             //show profile view
-            EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
-            controller.person = requester;
-            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-            [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
-            
+			[self presentProfileView:requester];
+			
         } else {
             [UIAlertView bk_showAlertViewWithTitle:@"Friendship request" message:[NSString stringWithFormat:@"%@ wants to be your friend.", requester.name] cancelButtonTitle:@"Don't accept" otherButtonTitles:@[@"Accept", @"Profile"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 switch (buttonIndex) {
@@ -122,10 +119,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
                         break;
                     }
                     case 2:{ //profile
-                        EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
-                        controller.person = requester;
-                        EWBaseNavigationController *navController = [[EWBaseNavigationController alloc] initWithRootViewController:controller];
-                        [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
+						[self presentProfileView:requester];
                         break;
                     }
                     default:
@@ -145,27 +139,16 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         
         //alert
         if (notification.completed) {
-            EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
-			controller.person = person;
+			[self presentProfileView:person];
 			
-            [[UIApplication sharedApplication].delegate.window.rootViewController presentWithBlur:controller withCompletion:NULL];
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Friend accepted"
-                                                            message:[NSString stringWithFormat:@"%@ has accepted your friend request. View profile?", person.name]
-                                                           delegate:[EWNotificationManager sharedInstance]
-                                                  cancelButtonTitle:@"No"
-                                                  otherButtonTitles:@"Yes", nil];
-            alert.tag = kFriendAcceptedAlert;
-            [alert show];
             
             [UIAlertView bk_showAlertViewWithTitle:@"Friendship accepted" message:[NSString stringWithFormat:@"%@ has accepted your friend request. View profile?", person.name] cancelButtonTitle:@"No" otherButtonTitles:@[@"YES"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 if (buttonIndex == 0) {
                     return;
                 }
-                EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
-                controller.person = person;
-                EWBaseNavigationController *navController = [[EWBaseNavigationController alloc] initWithRootViewController:controller];
-                [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
+				
+				[self presentProfileView:person];
             }];
         }
         
@@ -176,19 +159,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         //->Link
         NSString *title = notification.userInfo[@"title"];
         NSString *body = notification.userInfo[@"content"];
-        //NSString *link = notification.userInfo[@"link"];
-        [[[UIAlertView alloc] initWithTitle:title
-                                    message:[NSString stringWithFormat:@"%@\n", body]
-                                   delegate:[EWNotificationManager sharedInstance]
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles: @"More", nil] show];
+        NSString *link = notification.userInfo[@"link"];
+		[UIAlertView bk_showAlertViewWithTitle:title message:body cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Detail"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+			if (link) {
+				DDLogInfo(@"Opening url from notice: %@", link);
+				NSURL *url = [NSURL URLWithString:link];
+				[[UIApplication sharedApplication] openURL:url];
+			}
+		}];
         
     }else if ([notification.type isEqualToString:kNotificationTypeNewUser]) {
-        EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
         EWPerson *friend = [[EWPersonManager sharedInstance] getPersonByServerID:notification.sender error:nil];
-        controller.person = friend;
-        EWBaseNavigationController *navController = [[EWBaseNavigationController alloc] initWithRootViewController:controller];
-        [[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
+		[self presentProfileView:friend];
+		
     }
     else{
         NSString *str = [NSString stringWithFormat:@"unknown type of notification: %@", notification.type];
@@ -262,18 +245,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 
 #pragma mark - New
 - (EWNotification *)newMediaNotification:(EWMedia *)media{
-    if (!media.serverID) {
-        DDLogError(@"Media passed in doesn't have serverID: %@", media);
-        [media updateToServerWithCompletion:^(EWServerObject *MO_on_main_thread, NSError *error) {
-            if (MO_on_main_thread.serverID) {
-                [self newMediaNotification:(EWMedia *)MO_on_main_thread];
-            }
-        }];
-        return nil;
-    }
+	NSParameterAssert(media.serverID);
 	//make only unique media notification per day
     if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWoke) {
-        DDLogInfo(@"Received media on status (%ld) but not to react to it.", [EWSession sharedSession].wakeupStatus);
+        DDLogInfo(@"Received media on status (%ld) but not to react to it.", (long)[EWSession sharedSession].wakeupStatus);
     }
 	EWNotification *notification= [[EWPerson myNotifications] bk_match:^BOOL(EWNotification *notif) {
 		if ([notif.type isEqualToString:kNotificationTypeNewMedia]) {
@@ -347,6 +322,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
             block(notes, error);
         }
     }];
+}
+
+- (void)presentProfileView:(EWPerson *)person{
+	EWProfileViewController *controller = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWProfileViewController"];
+	controller.person = person;
+	EWBaseNavigationController *navController = [[EWBaseNavigationController alloc] initWithRootViewController:controller];
+	[[UIWindow mainWindow].rootViewController presentWithBlur:navController withCompletion:NULL];
 }
 
 @end

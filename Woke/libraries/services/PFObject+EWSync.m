@@ -415,6 +415,8 @@
     else if (interval < 0) {
         //cache newer
         DDLogWarn(@"Cache is newer than current PO: %@(%@)", self.parseClassName, self.objectId);
-    }*/
+	 }*/
+	
+	return YES;
 }
 @end

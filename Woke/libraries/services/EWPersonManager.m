@@ -241,6 +241,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 - (void)requestFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion{
     EWAssertMainThread
+	[EWUIUtil showWatingHUB];
     [self sendFriendRequestToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
         if (request) {
             [[EWPerson me] addFriendshipRequestSentObject:request];
@@ -256,7 +257,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
             }
         }
         else {
-            [EWUIUtil showFailureHUBWithString:@"Failed"];
+			[EWUIUtil showFailureHUBWithString:@"Failed"];
+			completion(EWFriendshipStatusUnknown, error);
         }
     }];
 }
@@ -264,6 +266,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 - (void)acceptFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion{
     
     EWAssertMainThread
+	
+	[EWUIUtil showWatingHUB];
+	
     [self sendFriendAcceptToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
         if (request) {
             [[EWPerson me] addFriendsObject:person];
