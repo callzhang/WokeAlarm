@@ -83,7 +83,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
 
 + (void)uploadUpdatedLogFiles{
 	PFInstallation *installation = [PFInstallation currentInstallation];
-    if ([PFUser currentUser].isNew) {
+    if (!installation.objectId) {
         [installation save];
     }
     PFQuery *logFileQuery = [PFQuery queryWithClassName:@"EWLog"];

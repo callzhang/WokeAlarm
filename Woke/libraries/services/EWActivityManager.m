@@ -104,7 +104,13 @@
         DDLogError(@"%s The activity passed in is not the current activity", __FUNCTION__);
     }else{
         //add unread medias to current media
-        NSArray *played = [EWPerson myUnreadMedias];
+        NSArray *played = [[EWPerson myUnreadMedias] bk_select:^BOOL(EWMedia *obj) {
+            if (obj.played) {
+                return YES;
+            } else {
+                return NO;
+            }
+        }];
         [activity addMediaIDs:[played valueForKey:kParseObjectID]];
         DDLogInfo(@"Added %ld medias to activity %@", (unsigned long)played.count, activity.time.string);
     }

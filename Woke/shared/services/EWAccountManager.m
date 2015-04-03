@@ -27,6 +27,20 @@
 #import "FBGraphLocation.h"
 #import "FBGraphPlace.h"
 
+
+FBTweakAction(@"AccountManager", @"Action", @"Purge Core Data", ^{
+    if([EWAccountManager isLoggedIn]){
+        [EWUIUtil showText:@"Please log out first"];
+        return;
+    }
+    [UIAlertView bk_showAlertViewWithTitle:@"Confirm delete data" message:@"Are you sure to delete all local core data stack?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"YES"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        if (buttonIndex > 0){
+            [MagicalRecord cleanUp];
+        }
+    }];
+});
+
+
 @import CoreLocation;
 
 @interface EWAccountManager()
@@ -255,13 +269,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     me.socialProfileID = [NSString stringWithFormat:@"%@%@", kFacebookIDPrefix, user.objectID];
     //gender
     me.gender = user[@"gender"];
-    //city
+    //location
     me.city = user.location.location.city;
-    //preference
-    if(!me.preference){
-        //new user
-        me.preference = kUserDefaults;
-    }
+    me.country = user.location.location.country;
     
     if (!me.profilePic) {
         //download profile picture if needed

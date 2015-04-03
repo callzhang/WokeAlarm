@@ -64,22 +64,14 @@
 - (BOOL)validate{
     
     BOOL good = YES;
-    if (!self.serverID) {
-		DDLogError(@"EWPerson %@ missing server ID", self.name);
-        good = NO;
-    }
-    if(!self.firstName){
-        DDLogError(@"name is missing for user %@", self.serverID);
-        good = NO;
-    }
+    NSParameterAssert(self.serverID);
+    NSParameterAssert(self.updatedAt);
+    //NSParameterAssert(self.firstName);
+    NSParameterAssert(self.username);
+    NSParameterAssert(self.cachedInfo);
     if(!self.profilePic){
         DDLogError(@"Missing profile pic for user %@", self.name);
         good = NO;
-    }
-    if(!self.username){
-        good = NO;
-        //self.username = [PFUser currentUser].username;
-        DDLogError(@"Username is missing for user %@", self);
     }
 	
 	//check me
@@ -87,16 +79,9 @@
 		if (self.alarms.count != 7) {
 			good = NO;
 			DDLogError(@"The person failed validation: alarms: %ld", (long)self.alarms.count);
-		}
-		if (!self.updatedAt) {
-			DDLogError(@"Missing updatedAt key for me");
-			good = NO;
-		}
-		//preference
-		if (!self.preference) {
-			DDLogError(@"Missing preference for me");
-			self.preference = kUserDefaults;
-		}
+        }
+        NSParameterAssert(self.preference);
+        NSParameterAssert(self.socialProfileID);
 	}
 	
     return good;
