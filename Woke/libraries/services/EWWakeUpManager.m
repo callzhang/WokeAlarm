@@ -316,7 +316,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         [[UIApplication sharedApplication] scheduleLocalNotification:note];
     } repeats:NO];
     
-    //wake status switch
+    //sleep status switch
     static NSTimer *wakeableTimer;
     [wakeableTimer invalidate];
     wakeableTimer = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft - kMaxEarlyWakeHours*3600 block:^(NSTimer *timer) {
@@ -330,6 +330,16 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
                 [[EWMediaManager sharedInstance] getWokeVoiceWithCompletion:NULL];
             }
         }];
+    } repeats:NO];
+    
+    //sleep status switch
+    static NSTimer *wakeUpTimeout;
+    [wakeUpTimeout invalidate];
+    wakeUpTimeout = [NSTimer bk_scheduledTimerWithTimeInterval:timeLeft + kMaxWakeTime block:^(NSTimer *timer) {
+        
+        //broadcast wake enabled status
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWokeNotification object:nil];
+
     } repeats:NO];
 }
 
