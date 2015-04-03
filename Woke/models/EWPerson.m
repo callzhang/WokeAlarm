@@ -40,6 +40,7 @@
         person.statement = @"Someone wake me up!";
         //name should not be assigned here
         person.updatedAt = [NSDate dateWithTimeIntervalSince1970:0];
+        person.cachedInfo = [NSDictionary new];
     }
     
     //no need to save here
@@ -110,9 +111,12 @@
 }
 
 - (NSString *)facebookID{
-    PFObject *user = self.parseObject;
-    NSString *ID = [user valueForKeyPath:@"authData.facebook.id"];
-    return ID;
+    NSString *ID = self.socialProfileID;
+    if ([ID hasPrefix:kFacebookIDPrefix]) {
+        ID = [ID substringFromIndex:[kFacebookIDPrefix length]];
+        return ID;
+    }
+    return nil;
 }
 
 @end

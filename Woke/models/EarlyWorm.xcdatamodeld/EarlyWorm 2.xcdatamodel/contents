@@ -94,6 +94,7 @@
         <attribute name="location" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="preference" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="profilePic" optional="YES" attributeType="Transformable" storedInTruthFile="YES" syncable="YES"/>
+        <attribute name="socialProfileID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="statement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="achievements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EWAchievement" inverseName="owner" inverseEntity="EWAchievement" syncable="YES"/>
@@ -127,16 +128,16 @@
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWPerson" inverseName="socialGraph" inverseEntity="EWPerson" syncable="YES"/>
     </entity>
     <elements>
-        <element name="EWAchievement" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWActivity" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWAlarm" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWFriendRequest" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWMedia" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWMediaFile" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWMessage" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWNotification" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWPerson" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWServerObject" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EWSocial" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EWAchievement" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="EWActivity" positionX="0" positionY="0" width="128" height="179"/>
+        <element name="EWAlarm" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="EWFriendRequest" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="EWMedia" positionX="0" positionY="0" width="128" height="210"/>
+        <element name="EWMediaFile" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="EWMessage" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="EWNotification" positionX="0" positionY="0" width="128" height="194"/>
+        <element name="EWPerson" positionX="0" positionY="0" width="128" height="480"/>
+        <element name="EWServerObject" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="EWSocial" positionX="0" positionY="0" width="128" height="180"/>
     </elements>
 </model>

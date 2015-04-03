@@ -24,6 +24,8 @@
 #import "FBKVOController.h"
 #import <BlocksKit+UIKit.h>
 #import "UIAlertView+BlocksKit.h"
+#import "FBGraphLocation.h"
+#import "FBGraphPlace.h"
 
 @import CoreLocation;
 
@@ -250,10 +252,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     }
     //facebook link
     sg.facebookID = user.objectID;
+    me.socialProfileID = [NSString stringWithFormat:@"%@%@", kFacebookIDPrefix, user.objectID];
     //gender
     me.gender = user[@"gender"];
     //city
-    me.city = user.location[@"name"];
+    me.city = user.location.location.city;
     //preference
     if(!me.preference){
         //new user

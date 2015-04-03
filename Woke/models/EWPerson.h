@@ -9,6 +9,7 @@
 #import <CoreData/CoreData.h>
 #import "_EWPerson.h"
 #import <Parse/Parse.h>
+#define kFacebookIDPrefix         @"fb_"
 
 @import CoreLocation;
 

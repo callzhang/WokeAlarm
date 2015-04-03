@@ -173,7 +173,7 @@
 //the alarm time stored in person's cached info
 - (void)updateCachedAlarmTime{
     EWPerson *me = [EWPerson meInContext:self.managedObjectContext];
-    NSDictionary *cache = me.cachedInfo;
+    NSDictionary *cache = me.cachedInfo?:[NSDictionary new];
     NSString *wkday = self.time.mt_stringFromDateWithFullWeekdayTitle;
     if (!wkday) return;
     me.cachedInfo = [cache setValue:self.time.nextOccurTime forImmutableKeyPath:@[kCachedAlarmTimes, wkday]];

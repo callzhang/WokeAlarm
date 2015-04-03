@@ -19,6 +19,7 @@ extern const struct EWPersonAttributes {
 	__unsafe_unretained NSString *location;
 	__unsafe_unretained NSString *preference;
 	__unsafe_unretained NSString *profilePic;
+	__unsafe_unretained NSString *socialProfileID;
 	__unsafe_unretained NSString *statement;
 	__unsafe_unretained NSString *username;
 } EWPersonAttributes;
@@ -129,6 +130,10 @@ extern const struct EWPersonRelationships {
 @property (nonatomic, strong) id profilePic;
 
 //- (BOOL)validateProfilePic:(id*)value_ error:(NSError**)error_;
+
+@property (nonatomic, strong) NSString* socialProfileID;
+
+//- (BOOL)validateSocialProfileID:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) NSString* statement;
 
@@ -319,6 +324,9 @@ extern const struct EWPersonRelationships {
 
 - (id)primitiveProfilePic;
 - (void)setPrimitiveProfilePic:(id)value;
+
+- (NSString*)primitiveSocialProfileID;
+- (void)setPrimitiveSocialProfileID:(NSString*)value;
 
 - (NSString*)primitiveStatement;
 - (void)setPrimitiveStatement:(NSString*)value;

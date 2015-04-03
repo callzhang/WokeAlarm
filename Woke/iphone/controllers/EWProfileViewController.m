@@ -13,8 +13,11 @@
 #import "EWUIUtil.h"
 #import "UIViewController+Blur.h"
 #import "EWRecordingViewController.h"
+#import "UIActionSheet+BlocksKit.h"
+#import "EWAccountManager.h"
+#import "EWPersonManager.h"
 
-@interface EWProfileViewController ()<UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
+@interface EWProfileViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *wakeHerUpButton;
 @property (nonatomic, strong) EWCachedInfoManager *statsManager;
@@ -66,6 +69,8 @@
 - (IBAction)close:(id)sender {
     if (self.presentingViewController){
         [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+    }else{
+        [self.navigationController dismissBlurViewControllerWithCompletionHandler:NULL];
     }
 }
 
@@ -73,28 +78,67 @@
     UIActionSheet *sheet;
     if (_person.isMe) {
         
-        sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Facebook profile",@"Log out", nil];
+        //sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Facebook profile",@"Log out", nil];
+        sheet = [UIActionSheet bk_actionSheetWithTitle:nil];
+        [sheet bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+        [sheet bk_addButtonWithTitle:@"Facebook" handler:^{
+            [self openFacebookProfileForPerson:_person];
+        }];
+        [sheet bk_addButtonWithTitle:@"Log out" handler:^{
+            [[EWAccountManager shared] logout];
+        }];
+        [sheet showInView:self.view];
+        
     }else{
-        //sheet.destructiveButtonIndex = 0;
+        sheet = [UIActionSheet bk_actionSheetWithTitle:nil];
+        [sheet bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+        [sheet bk_addButtonWithTitle:@"Flag" handler:^{
+            [EWUIUtil showText:@"Flag not supported yet"];
+        }];
+        [sheet bk_addButtonWithTitle:@"Facebook" handler:^{
+            [self openFacebookProfileForPerson:_person];
+        }];
         if (_person.friendshipStatus == EWFriendshipStatusFriended) {
-            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Flag", @"Unfriend", @"Facebook profile", nil];
+            [sheet bk_addButtonWithTitle:@"Unfriend" handler:^{
+                [[EWPersonManager shared] unfriend:_person completion:^(BOOL success, NSError *error) {
+                    DDLogDebug(@"Unfriend %@ with error: %@", success?@"YES":@"NO", error);
+                    if (success) {
+                        [EWUIUtil showSuccessHUBWithString:@"Unfriended"];
+                    } else {
+                        [EWUIUtil showFailureHUBWithString:@"Unfriend failed"];
+                    }
+                }];
+            }];
         }else{
             
-            sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Facebook profile", @"Flag", @"Block", nil];
+            [sheet bk_addButtonWithTitle:@"Send friendship request" handler:^{
+                [[EWPersonManager shared] requestFriend:_person completion:^(EWFriendshipStatus status, NSError *error) {
+                    DDLogDebug(@"Friendship requested %@  error: %@", status == EWFriendshipStatusSent?@"YES":@"NO", error);
+                    if (status == EWFriendshipStatusSent) {
+                        [EWUIUtil showSuccessHUBWithString:@"Request sent"];
+                    } else {
+                        [EWUIUtil showFailureHUBWithString:@"Request failed"];
+                    }
+                }];
+            }];
         }
     }
     [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
-    if ([title isEqualToString:@"Facebook profile"]) {
-        //TODO:Facebook profile
-    } else if ([title isEqualToString:@"Unfriend"]){
-        //TODO:Unfriend
-    } else if ([title isEqualToString:@"Log out"]) {
-        //TODO:logout
+- (void)openFacebookProfileForPerson:(EWPerson *)person{
+    
+    if (!person.facebookID) {
+        DDLogError(@"Person %@ don't has a facebook ID", person.name);
+        return;
     }
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb://profile/%@", person.facebookID]];
+    BOOL canOpen = [[UIApplication sharedApplication] canOpenURL:url];
+    if (!canOpen) {
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.facebook.com/profile.php?id=%@", person.facebookID]];
+    }
+    
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 - (IBAction)wake:(id)sender {

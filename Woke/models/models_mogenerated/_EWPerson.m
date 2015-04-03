@@ -18,6 +18,7 @@ const struct EWPersonAttributes EWPersonAttributes = {
 	.location = @"location",
 	.preference = @"preference",
 	.profilePic = @"profilePic",
+	.socialProfileID = @"socialProfileID",
 	.statement = @"statement",
 	.username = @"username",
 };
@@ -93,6 +94,8 @@ const struct EWPersonRelationships EWPersonRelationships = {
 @dynamic preference;
 
 @dynamic profilePic;
+
+@dynamic socialProfileID;
 
 @dynamic statement;
 
