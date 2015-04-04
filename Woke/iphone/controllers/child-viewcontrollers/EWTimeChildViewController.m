@@ -37,6 +37,7 @@
         @strongify(self);
         NSString *hour = [date mt_stringFromDateWithFormat:@"h" localized:NO];
         NSString *minutes = [date mt_stringFromDateWithFormat:@"mm" localized:NO];
+        NSString *period = [date mt_stringFromDateWithFormat:@"a" localized:NO];
         if (hour.length == 1) {
             self.labelTime1.text = @"";
             self.firstLetterWidthConstraint.constant = 0;
@@ -53,6 +54,7 @@
             self.labelTime2.text = [hour substringWithRange:NSMakeRange(1, 1)];
         }
         
+        self.labelAmpm.text = period;
         self.labelTime3.text = [minutes substringWithRange:NSMakeRange(0, 1)];
         self.labelTime4.text = [minutes substringWithRange:NSMakeRange(1, 1)];
     }];
