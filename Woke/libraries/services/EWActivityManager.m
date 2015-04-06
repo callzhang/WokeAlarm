@@ -51,7 +51,9 @@
         _currentAlarmActivity = [self activityForAlarm:alarm];
         completed = _currentAlarmActivity.completed && ![EWWakeUpManager shared].skipCheckActivityCompleted;
         timeMatched = [_currentAlarmActivity.time isEqualToDate: alarm.time.nextOccurTime];
-        NSAssert(!completed && timeMatched, @"alert %@ doesn't match alarm %@", _currentAlarmActivity, alarm);
+        if (_currentAlarmActivity) {
+            NSAssert(!completed && timeMatched, @"alert %@ doesn't match alarm %@", _currentAlarmActivity, alarm);
+        }
     }
     
     return _currentAlarmActivity;
@@ -61,7 +63,7 @@
     if (!alarm || ![alarm validate]) {
         return nil;
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K > %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner, EWActivityAttributes.time, [alarm.time mt_oneDayPrevious]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K > %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner, EWActivityAttributes.time, [alarm.time.nextOccurTime mt_oneDayPrevious]];
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
 	[activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
     while (activities.count >1) {

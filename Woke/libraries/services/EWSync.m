@@ -157,7 +157,7 @@ NSManagedObjectContext *mainContext;
     if (!self.isReachable) {
         DDLogDebug(@"Network not reachable, skip uploading");
         self.isUploading = NO;
-        //[self runAllCompletionBlocks:self.uploadCompletionCallbacks withError:[EWErrorManager noInternetConnectError]];
+        [self runAllManagedObjectSavingCompletionBlocksWithError:[EWErrorManager noInternetConnectError]];
         return;
     }
     
@@ -177,7 +177,8 @@ NSManagedObjectContext *mainContext;
     NSSet *workingObjects = self.workingQueue.copy;
     if (workingObjects.count == 0 && deletedServerObjects.count == 0){
         DDLogInfo(@"No change detacted, skip uploading");
-        //[self runAllCompletionBlocks:self.uploadCompletionCallbacks withError:nil];
+        self.isUploading = NO;
+        [self runAllManagedObjectSavingCompletionBlocksWithError:nil];
         return;
     }
     for (NSString *key in self.changedRecords.allKeys) {
@@ -232,27 +233,32 @@ NSManagedObjectContext *mainContext;
         DDLogVerbose(@"=========== Finished uploading to saver ===============");
         self.isUploading = NO;
         //perform upload completion blocks (if PO finished saving first and skipped performing the blocks)
-        [self.uploadCompletionCallbacks enumerateKeysAndObjectsUsingBlock:^(NSManagedObjectID *key, NSArray *blocks, BOOL *stop) {
-            NSArray *saveCallbacks = [self.parseSaveCallbacks objectForKey:key];
-            if (!saveCallbacks || saveCallbacks.count == 0) {
-                EWServerObject *MO = (EWServerObject *)[mainContext objectWithID:key];
-                DDLogDebug(@"Found MO %@(%@) has completion block when uploading finishes", MO.entity.name, MO.serverID);
-                [self runManagedObjectCompletionBlockForObjectID:key];
-            }
-        }];
+        [self runAllManagedObjectSavingCompletionBlocksWithError:error];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kEWSyncUploaded object:error];
     }];
 }
 
-- (void)runManagedObjectCompletionBlockForObjectID:(NSManagedObjectID *)ID{
+- (void)runAllManagedObjectSavingCompletionBlocksWithError:(NSError *)error{
+    [self.uploadCompletionCallbacks enumerateKeysAndObjectsUsingBlock:^(NSManagedObjectID *key, NSArray *blocks, BOOL *stop) {
+        //check if MO is still updating, skip if so
+        NSArray *saveCallbacks = [self.parseSaveCallbacks objectForKey:key];
+        if (!saveCallbacks || saveCallbacks.count == 0) {
+            //MO is not updating
+            EWServerObject *MO = (EWServerObject *)[mainContext objectWithID:key];
+            DDLogVerbose(@"Found MO %@(%@) has completion block when uploading finishes", MO.entity.name, MO.serverID);
+            [self runManagedObjectCompletionBlockForObjectID:key withError:error];
+        }
+    }];
+}
+
+- (void)runManagedObjectCompletionBlockForObjectID:(NSManagedObjectID *)ID withError:(NSError *)error{
     EWAssertMainThread
     NSArray *blocks = self.uploadCompletionCallbacks[ID];
     for (EWManagedObjectSaveCallbackBlock block in blocks) {
         EWServerObject *MO = (EWServerObject *)[mainContext objectWithID:ID];
         DDLogInfo(@"===> Run MO upload completion block %@(%@)", MO.entity.name, MO.serverID);
         NSString *serverID;
-        NSError *error;
         @try {
             serverID = MO.serverID;
             if (!serverID) {
@@ -551,7 +557,7 @@ NSManagedObjectContext *mainContext;
     }
     //MO save completion block
     if (!self.isUploading) {
-        [self runManagedObjectCompletionBlockForObjectID:managedObjectID];
+        [self runManagedObjectCompletionBlockForObjectID:managedObjectID withError:nil];
     }
     
 }

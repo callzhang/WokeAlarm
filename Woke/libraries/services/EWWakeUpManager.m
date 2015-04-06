@@ -212,7 +212,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         return;
     }
     if (!activity.sleepTime) {
-        DDLogError(@"No sleep time recorded, handing in the sleep view too long?");
+        DDLogError(@"No sleep time recorded, hanging in the sleep view too long?");
         return;
     }
     
@@ -290,7 +290,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 - (void)scheduleAlarmTimer {
     if (![EWPerson me]) return;
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
-    
+    if (!activity) {
+        DDLogInfo(@"No activity found. Possibly no alarm turned on.");
+        return;
+    }
     //alarm time up
 	NSTimeInterval timeLeft = activity.time.timeIntervalSinceNow;
     

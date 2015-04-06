@@ -56,8 +56,10 @@
     self.timeChildViewController.topLabelLine1.text = @"";
     self.timeChildViewController.topLabelLine2.text = @"Next Alarm";
 	
+    //
+    self.sleepButton.enabled = NO;
 	[self.updateSleepButtonTimer invalidate];
-    self.updateSleepButtonTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateSleepButton) userInfo:nil repeats:YES];
+    self.updateSleepButtonTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTextsAndButtons) userInfo:nil repeats:YES];
 	
 	userSyncStartedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kUserSyncStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
 		JGProgressHUD *hud = [EWUIUtil showWatingHUB];
@@ -106,7 +108,7 @@
     RAC(self, timeChildViewController.date) = [RACObserve(self.sleepViewModel, date) distinctUntilChanged];
 }
 
-- (void)updateSleepButton {
+- (void)updateTextsAndButtons {
     self.labelDateString.text = self.sleepViewModel.alarm.time.nextOccurTime.date2dayString;
     self.labelTimeLeft.text = self.sleepViewModel.alarm.time.nextOccurTime.timeLeft;
     
