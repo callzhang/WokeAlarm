@@ -19,15 +19,15 @@
 #import "NSTimer+BlocksKit.h"
 #import "FBTweak.h"
 #import "FBTweakInline.h"
+@import MediaPlayer;
 
 FBTweakAction(@"AVManager", @"UI", @"Toggle max volume", ^{
     [EWAVManager sharedManager].skipForceMaxVolume = ![EWAVManager sharedManager].skipForceMaxVolume;
     DDLogInfo(@"Skip max volume: %@", [EWAVManager sharedManager].skipForceMaxVolume?@"YES":@"NO");
 });
 
-@import MediaPlayer;
 
-NSString * const kEWAVManagerDidStopPlayNotification = @"kEWAVManagerDidStopPlayNotification";
+//NSString * const kEWAVManagerDidStopPlayNotification = @"kEWAVManagerDidStopPlayNotification";
 NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUpdateProgressNotification";
 
 @interface EWAVManager(){
@@ -92,8 +92,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
         }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidStartPlaying) name:kAVManagerDidStartPlaying object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidStopPlaying) name:kAVManagerDidFinishPlaying object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidStopPlaying) name:kEWAVManagerDidStopPlayNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidStopPlaying) name:kAVManagerDidFinishPlaying object:nil];
     }
     return self;
 }
@@ -225,7 +224,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 //Depreciated: play from url
 - (void)playSoundFromURL:(NSURL *)url{
 	if (!url) {
-		DDLogVerbose(@"Url is empty, skip playing");
+		DDLogError(@"Url is empty, skip playing");
 		//[self audioPlayerDidFinishPlaying:player successfully:YES];
 		return;
 	}
@@ -284,7 +283,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 	//[updateTimer invalidate];
 	//remove target action
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kEWAVManagerDidStopPlayNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kEWAVManagerDidStopPlayNotification object:nil];
 }
 
 #pragma mark - Record
@@ -354,62 +353,25 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 }
 
 - (void)onAVManagerDidStopPlaying {
-    [self stopUpdateProgress];
+	[self stopUpdateProgress];
+	self.player.currentTime = 0.0;
+	if (self.audioFinishBlock) {
+		self.audioFinishBlock(nil);
+		self.audioFinishBlock = nil;
+	}
+	else if (self.media) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:self.media];
+	}else{
+		//recording replay stopped
+		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:nil];
+	}
 }
-//- (void)updateViewForPlayerState:(AVAudioPlayer *)p
-//{
-//    //set up timer
-//    if (p.playing){
-//		player.volume = 1.0;
-//	}
-//}
-//
-//- (void)updateViewForRecorderState:(AVAudioRecorder *)r{
-//
-//	if (updateTimer)
-//		[updateTimer invalidate];
-//    
-//	if (r.recording)
-//	{
-//		
-//	}
-//	else
-//	{
-//		[updateTimer invalidate];
-//	}
-//}
-
-
-//-(void)updateCurrentTime:(NSTimer *)timer{
-//    AVAudioPlayer *p = (AVAudioPlayer *)timer.userInfo;
-//    if (!progressBar.isTouchInside) {
-//        if(![p isEqual:player]) DDLogVerbose(@"***Player passed in is not correct");
-//        progressBar.value = (float)player.currentTime;
-//        //currentTime.text = [NSString stringWithFormat:@"%02ld\"", (long)player.currentTime % 60, nil];
-//    }
-//}
-//
-//-(void)updateCurrentTimeForRecorder:(NSTimer *)timer{
-//    AVAudioRecorder *r = (AVAudioRecorder *)timer.userInfo;
-//    if(![r isEqual:recorder]) DDLogVerbose(@"***Recorder passed in is not correct");
-//    if (!progressBar.isTouchInside) {
-//        progressBar.value = (float)recorder.currentTime;
-//        currentTime.text = [NSString stringWithFormat:@"%02ld\"", (long)recorder.currentTime % 60, nil];
-//    }
-//}
 
 
 #pragma mark - AVAudioPlayer delegate method
 - (void)audioPlayerDidFinishPlaying: (AVAudioPlayer *)player successfully:(BOOL)flag {
     DDLogVerbose(@"Player finished (%@)", flag?@"Success":@"Failed");
-    //[updateTimer invalidate];
-    self.player.currentTime = 0.0;
-    if (self.media) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:self.media];
-    }else if(self.recorder.url){
-        //recording replay stopped
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:player];
-    }
+	[self onAVManagerDidStopPlaying];
 }
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
@@ -455,11 +417,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 }
 
 void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
-    
-    if ([EWAVManager sharedManager].media) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:nil];
-        //DDLogVerbose(@"broadcasting finish event");
-    }    
+	[[EWAVManager sharedManager] onAVManagerDidStopPlaying];
     [[UIApplication sharedApplication] endBackgroundTask:(NSInteger)bgTaskId];
 }
 
@@ -503,7 +461,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 - (void)volumeTo:(float)volume withCompletion:(VoidBlock)block{
 	float step = (volume-self.player.volume)>0 ? 0.1 : -0.1;
     if (ABS(self.player.volume - volume) > 0.1 && self.player) {
-        self.player.volume = (float)self.player.volume + step;
+        self.player.volume = self.player.volume + step;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 			[self volumeTo:volume withCompletion:block];
 		});

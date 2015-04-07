@@ -27,8 +27,8 @@
 #define kAVManagerDidFinishPlaying      @"avmanager_finished_playing"
 #define kAVManagerDidStartRecording     @"avmanager_started_recording"
 #define kAVManagerDidFinishRecording    @"avmanager_finished_recording"
-
-extern NSString * const kEWAVManagerDidStopPlayNotification;
+//
+//extern NSString * const kEWAVManagerDidStopPlayNotification;
 extern NSString * const kEWAVManagerDidUpdateProgressNotification;
 
 @class EWMediaCell, EWMedia, EWMediaSlider, EWAVManager;
@@ -48,6 +48,7 @@ extern NSString * const kEWAVManagerDidUpdateProgressNotification;
 @property (nonatomic) float playingProgress;
 @property (nonatomic, readonly) BOOL isPlaying;
 @property (nonatomic, assign) BOOL skipForceMaxVolume;
+@property (nonatomic, copy) ErrorBlock audioFinishBlock;
 
 + (EWAVManager *)sharedManager;
 

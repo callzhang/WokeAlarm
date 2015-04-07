@@ -57,7 +57,7 @@
     });
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidFinishPlaying) name:kAVManagerDidFinishPlaying object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidFinishPlaying) name:kEWAVManagerDidStopPlayNotification object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAVManagerDidFinishPlaying) name:kEWAVManagerDidStopPlayNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onProgressDidUpdateNotification:) name:kEWAVManagerDidUpdateProgressNotification object:nil];
     
     [self prepareForReuse];

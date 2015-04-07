@@ -352,7 +352,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [self loadUnreadMedias];
 	//play
 	self.currentMediaIndex = @(-1);
-	[self playNextVoice];
+	self.continuePlay = YES;
+	//[self playNextVoice];
+	[EWAVManager sharedManager].audioFinishBlock = ^(NSError *error){
+		DDLogInfo(@"Finished playing rington, start to play audio.");
+		[self playNextVoice];
+	};
+	NSString *ringtone = [EWPerson me].preference[@"DefaultTone"];
+	[[EWAVManager sharedManager] playSoundFromFileName:ringtone];
 	
 	//volume
 	[EWAVManager sharedManager].player.volume = 0;
