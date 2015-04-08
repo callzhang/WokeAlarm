@@ -63,6 +63,7 @@
     if (!alarm || ![alarm validate]) {
         return nil;
     }
+    EWActivity *activity;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@ AND %K = %@ AND %K > %@", EWActivityAttributes.alarmID, alarm.serverID, EWActivityRelationships.owner, alarm.owner, EWActivityAttributes.time, [alarm.time.nextOccurTime mt_oneDayPrevious]];
     NSMutableArray *activities = [EWActivity MR_findAllWithPredicate:predicate].mutableCopy;
 	[activities sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:EWServerObjectAttributes.createdAt ascending:YES]]];
@@ -73,18 +74,18 @@
         [activity remove];
     }
     if (activities.count == 0) {
-        EWActivity *activity = [self newActivityForAlarm:alarm];
-        [activities addObject:activity];
+        activity = [self newActivityForAlarm:alarm];
+        
     }else{
-        EWActivity *activity = activities.firstObject;
+        activity = activities.firstObject;
+        NSParameterAssert([alarm.time.nextOccurTime.mt_oneDayPrevious isEarlierThan:activity.time]);
         if (![activity.time isEqualToDate:alarm.time.nextOccurTime]) {
-            DDLogWarn(@"Activity %@ time %@ doesn't not equal to alarm %@ time %@", activity.serverID, activity.time, alarm.serverID, alarm.time);
+            DDLogWarn(@"Activity %@ time %@ doesn't not equal to alarm %@ time %@", activity.serverID, activity.time.string, alarm.serverID, alarm.time.nextOccurTime.string);
             activity.time = alarm.time.nextOccurTime;
             [activity save];
         }
     }
-    
-    return activities.lastObject;
+    return activity;
 }
 
 - (EWActivity *)newActivityForAlarm:(EWAlarm *)alarm{
