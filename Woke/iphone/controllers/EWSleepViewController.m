@@ -95,13 +95,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	UIBarButtonItem *rightBtn;
-//#ifdef DEBUG
-//    //add testing button
-//    rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:self action:@selector(more:)];
-//#else
-	rightBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(more:)];
-//#endif
+	UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(more:)];
     self.parentViewController.navigationItem.rightBarButtonItem = rightBtn;
 }
 
@@ -152,11 +146,6 @@
 
 #pragma mark - UIAction
 - (IBAction)more:(id)sender{
-#ifdef DEBUG
 	[[ATConnect sharedConnection] presentMessageCenterFromViewController:self];
-	//[EWUtil showTweakPanel];
-#else
-	[[ATConnect sharedConnection] presentMessageCenterFromViewController:self];
-#endif
 }
 @end

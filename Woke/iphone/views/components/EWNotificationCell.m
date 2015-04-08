@@ -62,16 +62,24 @@
         NSString *personID = notification.sender;
         NSError *error;
         EWPerson *sender = [[EWPersonManager sharedInstance] getPersonByServerID:personID error:&error];
-        self.profilePic.hidden = NO;
-        if (sender.profilePic) {
-            self.profilePic.image = sender.profilePic;
-        }
-        else{
-            //download
-            [sender refreshShallowWithCompletion:^(NSError *error) {
-                self.profilePic.image = sender.profilePic;
-            }];
-        }
+		__block EWPerson *localPerson;
+		[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+			localPerson = (EWPerson *)[EWSync findObjectWithClass:NSStringFromClass([EWPerson class]) withID:personID inContext:localContext error:nil];
+			//NSParameterAssert(localPerson);
+		} completion:^(BOOL contextDidSave, NSError *error) {
+			EWPerson *sender = [localPerson MR_inContext:mainContext];
+			self.profilePic.hidden = NO;
+			if (sender.profilePic) {
+				self.profilePic.image = sender.profilePic;
+			}
+			else{
+				//download
+				[sender refreshShallowWithCompletion:^(NSError *error) {
+					self.profilePic.image = sender.profilePic;
+				}];
+			}
+		}];
+		
         //TODO: add "xxx ago" times
         if([type isEqualToString:kNotificationTypeFriendRequest]){
             self.detail.text = [NSString stringWithFormat:@"%@ has sent you a friend request", sender.name];
