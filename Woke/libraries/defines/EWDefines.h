@@ -30,7 +30,7 @@
 #define kParseRestAPIId                 @"ZtAlif0L5UiL1HzXGS71XfI6dxyTJWXgis37t2oo"
 #define kParseMasterKey                 @"iEjKEePThBb4KxJVj64o3nbkBGYrGzm6NPiFaFoN"
 #define WokeUserID                      @"CvCaWauseD"
-#define KATConnectKey                   @"61c58f4a6f819d0f209606bdf5e9eeadabfc73529dba358cd079df0dc6dd1102"
+#define kATConnectKey                   @"61c58f4a6f819d0f209606bdf5e9eeadabfc73529dba358cd079df0dc6dd1102"
 
 
 // 任务宏

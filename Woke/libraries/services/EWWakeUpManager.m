@@ -314,14 +314,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         
         //schedule timer
         //fire an alarm
-        DDLogVerbose(@"=============> Firing Alarm timer notification <===============");
-        UILocalNotification *note = [[UILocalNotification alloc] init];
-        note.alertBody = [NSString stringWithFormat:@"It's time to wake up (%@)", [activity.time date2String]];
-        note.alertAction = @"Wake up!";
-        //alarm.soundName = me.preference[@"DefaultTone"];
-        note.userInfo = @{kActivityLocalID: activity.objectID.URIRepresentation.absoluteString,
-                          kLocalNotificationTypeKey: kLocalNotificationTypeAlarmTimer};
-        [[UIApplication sharedApplication] scheduleLocalNotification:note];
+//        DDLogVerbose(@"=============> Firing Alarm timer notification <===============");
+//        UILocalNotification *note = [[UILocalNotification alloc] init];
+//        note.alertBody = [NSString stringWithFormat:@"It's time to wake up (%@)", [activity.time date2String]];
+//        note.alertAction = @"Wake up!";
+//        //alarm.soundName = me.preference[@"DefaultTone"];
+//        note.userInfo = @{kActivityLocalID: activity.objectID.URIRepresentation.absoluteString,
+//                          kLocalNotificationTypeKey: kLocalNotificationTypeAlarmTimer};
+//        [[UIApplication sharedApplication] scheduleLocalNotification:note];
     } repeats:NO];
     
     //sleep status switch

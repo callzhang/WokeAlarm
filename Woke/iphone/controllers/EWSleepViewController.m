@@ -19,6 +19,7 @@
 #import "NSTimer+BlocksKit.h"
 #import "FBKVOController.h"
 #import "EWStartUpSequence.h"
+#import "ATConnect.h"
 #import "EWUtil.h"
 
 @interface EWSleepViewController (){
@@ -76,7 +77,6 @@
     }];
     
     alarmTimeChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kAlarmTimeChanged object:nil queue:nil usingBlock:^(NSNotification *note) {
-        DDLogInfo(@"Sleep view feels there is a change to alarm time, updating view.");
         self.sleepViewModel.alarm = [EWPerson myCurrentAlarm];
     }];
     
@@ -95,11 +95,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-#ifdef DEBUG
-    //add testing button
-    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:self action:@selector(more:)];
+	UIBarButtonItem *rightBtn;
+//#ifdef DEBUG
+//    //add testing button
+//    rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:self action:@selector(more:)];
+//#else
+	rightBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(more:)];
+//#endif
     self.parentViewController.navigationItem.rightBarButtonItem = rightBtn;
-#endif
 }
 
 - (void)bindViewModel {
@@ -149,6 +152,11 @@
 
 #pragma mark - UIAction
 - (IBAction)more:(id)sender{
-    [EWUtil showTweakPanel];
+#ifdef DEBUG
+	[[ATConnect sharedConnection] presentMessageCenterFromViewController:self];
+	//[EWUtil showTweakPanel];
+#else
+	[[ATConnect sharedConnection] presentMessageCenterFromViewController:self];
+#endif
 }
 @end

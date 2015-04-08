@@ -22,10 +22,12 @@
 #import "FBSession.h"
 #import "FBAppCall.h"
 #import "PFFacebookUtils.h"
+#import "BlocksKit+UIKit.h"
+#import "ATConnect.h"
 
 UIViewController *rootViewController;
 
-@interface AppDelegate ()<UIAlertViewDelegate>
+@interface AppDelegate ()
 
 @end
 
@@ -49,6 +51,9 @@ UIViewController *rootViewController;
 	// Parse
     [Parse enableLocalDatastore];
 	[Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
+	
+	//apptentive
+	[ATConnect sharedConnection].apiKey = kATConnectKey;
 	
 	//UI
 	[EWStyleController applySystemStyle];
@@ -89,8 +94,9 @@ UIViewController *rootViewController;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+	NSUInteger unreadCount = [EWPerson myUnreadNotifications].count;
+	unreadCount += [ATConnect sharedConnection].unreadMessageCount;
+	DDLogVerbose(@"Set app bedge count to %lu", (long unsigned)unreadCount);
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -133,7 +139,11 @@ UIViewController *rootViewController;
 		[[NSNotificationCenter defaultCenter] postNotificationName:kUserNotificationRegistered object:notificationSettings];
 	}else{
 		DDLogError(@"Failed to register user notification");
-        [[[UIAlertView alloc] initWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." delegate:self cancelButtonTitle:@"Not now" otherButtonTitles:@"OK", nil] show];
+		[UIAlertView bk_showAlertViewWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Fix"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+			if (buttonIndex == 1) {
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+			}
+		}];
 	}
 }
 
@@ -142,8 +152,12 @@ UIViewController *rootViewController;
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    if (error.code != 3000) {
-        [[[UIAlertView alloc] initWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." delegate:self cancelButtonTitle:@"Not now" otherButtonTitles:@"OK", nil] show];
+	if (error.code != 3000) {
+		[UIAlertView bk_showAlertViewWithTitle:@"Something wrong" message:@"Woke failed to schedule alarm Notification. Please fix it in Setting." cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Fix"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+			if (buttonIndex == 1) {
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+			}
+		}];
     }
     DDLogError(@"Failed to register push: %@", error);
 }
@@ -155,13 +169,5 @@ UIViewController *rootViewController;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
     [EWServer handlePushNotification:userInfo];
-}
-
-#pragma mark - UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    if ([title isEqualToString:@"OK"]) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-    }
 }
 @end
