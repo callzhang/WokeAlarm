@@ -35,7 +35,7 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Wake Up in 10s", ^{
 });
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Remove future activities' completion date", ^{
-    NSArray *futureActivities = [EWActivity MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K = %@ AND %K > %@", EWActivityRelationships.owner, [EWPerson me], EWActivityAttributes.time, [NSDate date]] inContext:mainContext];
+    NSArray *futureActivities = [EWActivity MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K = %@ AND %K > %@ AND %K != nil", EWActivityRelationships.owner, [EWPerson me], EWActivityAttributes.time, [NSDate date], EWActivityAttributes.completed] inContext:mainContext];
     for(EWActivity *activity in futureActivities){
         DDLogDebug(@"Activity's completion time %@ removed", activity.completed.string);
         activity.completed = nil;
@@ -196,6 +196,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //mark sleep time on activity
     if (activity.sleepTime) {
         DDLogInfo(@"Back to sleep again. Last sleep time was %@", activity.sleepTime.date2detailDateString);
+    }
+    //if there is medias in activity, remove it
+    if (activity.mediaIDs.count) {
+        DDLogWarn(@"Activity already has medias: %@", activity.mediaIDs);
+        [activity.mediaIDs removeAllObjects];
     }
     activity.sleepTime = [NSDate date];
     [activity save];
