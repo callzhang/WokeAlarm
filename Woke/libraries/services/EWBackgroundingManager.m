@@ -9,6 +9,7 @@
 //
 
 #import "EWBackgroundingManager.h"
+#import "AppDelegate.h"
 #import "EWSession.h"
 
 //OBJC_EXTERN void CLSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
@@ -55,6 +56,19 @@
             NSString *words = [NSString stringWithFormat:@"Application will terminate after %.1f hours of running. Current battery level is %.1f%%", -start.timeIntervalSinceNow/3600, [UIDevice currentDevice].batteryLevel*100];
             DDLogError(words);
         }];
+		//push notification
+		[[NSNotificationCenter defaultCenter] addObserverForName:kReceivedRemoteNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+			UIApplicationState state = [UIApplication sharedApplication].applicationState;
+			if (state == UIApplicationStateInactive || state == UIApplicationStateBackground) {
+				DDLogInfo(@"Received push in background, start backgrounding!");
+				[self startBackgrounding];
+			}
+		}];
+		//background fetch
+		[[NSNotificationCenter defaultCenter] addObserverForName:kBackgroundFetchStarted object:nil queue:nil usingBlock:^(NSNotification *note) {
+			DDLogInfo(@"Started background fetch, start backgrounding!");
+			[self startBackgrounding];
+		}];
         //AvaudioSession
         [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioSessionInterruptionNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
             static BOOL wasBackgrounding;

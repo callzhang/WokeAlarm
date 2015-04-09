@@ -94,13 +94,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
 
 
 #pragma mark - Handle Local Notification
-+ (void)handleLocalNotification:(UILocalNotification *)notification{
-    NSString *type = notification.userInfo[kLocalNotificationTypeKey];
++ (void)handleLocalNotification:(NSDictionary *)userInfo{
+    NSString *type = userInfo[kLocalNotificationTypeKey];
     DDLogVerbose(@"Received local notification: %@", type);
     
     if ([type isEqualToString:kLocalNotificationTypeAlarmTimer]) {
         EWAlarm *alarm;
-        NSString *alarmLocalID = notification.userInfo[kLocalAlarmID];
+        NSString *alarmLocalID = userInfo[kLocalAlarmID];
         NSURL *url = [NSURL URLWithString:alarmLocalID];
         NSManagedObjectID *ID = [mainContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
         if (ID) {
@@ -113,12 +113,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
         EWAlert(@"You brought me back!");
 		
     }else if ([type isEqualToString:kLocalNotificationTypeSleepTimer]){
-        DDLogVerbose(@"=== Received Sleep timer local notification, broadcasting sleep event, and enter sleep mode... \n%@", notification);
+        DDLogVerbose(@"=== Received Sleep timer local notification %@", userInfo);
         
-        [[EWWakeUpManager sharedInstance] sleep:notification];
+        [[EWWakeUpManager sharedInstance] sleep:userInfo];
     }
     else{
-        DDLogWarn(@"Unexpected Local Notification Type. Detail: %@", notification);
+        DDLogWarn(@"Unexpected Local Notification Type. Detail: %@", userInfo);
     }
 
 }

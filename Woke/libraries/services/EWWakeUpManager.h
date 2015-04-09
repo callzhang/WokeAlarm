@@ -77,7 +77,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWWakeUpManager)
  *
  *  @param notification the notification used to identify which alarm/activity it is going to sleep for. Pass nil to sleep for current alarm/activity
  */
-- (void)sleep:(UILocalNotification *)notification;
+- (void)sleep:(NSDictionary *)userInfo;
 - (void)unsleep;
 - (BOOL)shouldSleep;
 - (BOOL)canSnooze;

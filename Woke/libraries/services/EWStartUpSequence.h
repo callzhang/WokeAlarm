@@ -17,6 +17,7 @@
 
 @interface EWStartUpSequence : NSObject
 @property (nonatomic, retain) NSDate *lastChecked;//The date that last sync with server
+@property (nonatomic, strong) NSDictionary *launchOptions;
 + (EWStartUpSequence *)sharedInstance;
 - (void)startupSequence;
 - (void)loginDataCheck;

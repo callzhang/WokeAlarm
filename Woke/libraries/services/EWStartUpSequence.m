@@ -114,6 +114,18 @@
     
     DDLogVerbose(@"[5]. Start upload log files");
     [EWUtil uploadUpdatedLogFiles];
+	
+	DDLogVerbose(@"[6]. Handle launch options");
+	if (self.launchOptions) {
+		NSDictionary *remoteNotificationPayload = [_launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+		NSDictionary *localNotificationPayload = [_launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+		if (remoteNotificationPayload) {
+			[EWServer handlePushNotification:remoteNotificationPayload];
+		} else if (localNotificationPayload) {
+			[EWServer handleLocalNotification:localNotificationPayload];
+		}
+		self.launchOptions = nil;
+	}
 }
 
 #pragma mark - Login Check

@@ -16,7 +16,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWServer)
 + (void)handlePushNotification:(NSDictionary *)payload;
 
 #pragma mark - Handle Local Notification
-+ (void)handleLocalNotification:(UILocalNotification *)localNotif;
++ (void)handleLocalNotification:(NSDictionary *)userInfo;
 
 
 /**

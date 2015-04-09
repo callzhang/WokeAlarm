@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#define kReceivedRemoteNotification		@"received_remote_notification"
+#define kBackgroundFetchStarted			@"background_fetch_started"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

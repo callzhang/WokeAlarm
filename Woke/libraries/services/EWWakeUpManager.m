@@ -167,10 +167,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     self.continuePlay = YES;
 }
 
-- (void)sleep:(UILocalNotification *)notification{
+- (void)sleep:(NSDictionary *)userInfo{
     //we use local alarm ID because when scheduling sleep notification, alarm could be be available
     if (![EWPerson me]) return;
-    NSString *alarmID = notification.userInfo[kLocalAlarmID];
+    NSString *alarmID = userInfo[kLocalAlarmID];
     //logged in enter sleep mode
     EWAlarm *alarm;
     EWActivity *activity = [EWPerson myCurrentAlarmActivity];
@@ -192,7 +192,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     //state change
     [EWSession sharedSession].wakeupStatus = EWWakeUpStatusSleeping;
     //send notification so baseNavigationView can present the sleepView
-    [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:notification];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kSleepNotification object:userInfo];
     //mark sleep time on activity
     if (activity.sleepTime) {
         DDLogInfo(@"Back to sleep again. Last sleep time was %@", activity.sleepTime.date2detailDateString);

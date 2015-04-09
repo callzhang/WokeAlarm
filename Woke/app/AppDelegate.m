@@ -59,8 +59,8 @@ UIViewController *rootViewController;
 	[EWStyleController applySystemStyle];
 	self.window.tintColor = [UIColor whiteColor];
 	
-    //watch for login
-    [EWStartUpSequence sharedInstance];
+    //Init startup sequence and save launch options
+    [EWStartUpSequence sharedInstance].launchOptions = launchOptions;
     
     //Login process: https://www.lucidchart.com/documents/edit/47d70f1c-5306-dbab-81ce-6d480a005610
     if ([EWAccountManager isLoggedIn]) {
@@ -149,6 +149,7 @@ UIViewController *rootViewController;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 	[[EWServer shared] registerPushNotificationWithToken:deviceToken];
+	[[ATConnect sharedConnection] addParseIntegrationWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -164,10 +165,40 @@ UIViewController *rootViewController;
 
 #pragma mark - Handle notification
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
-    [EWServer handleLocalNotification:notification];
+    [EWServer handleLocalNotification:notification.userInfo];
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
     [EWServer handlePushNotification:userInfo];
+	[[ATConnect sharedConnection] didReceiveRemoteNotification:userInfo fromViewController:[EWUIUtil topViewController]];
+	
+	DDLogInfo(@"Activated app from background fetch");
+	[[NSNotificationCenter defaultCenter] postNotificationName:kReceivedRemoteNotification object:application];
+	
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		completionHandler(UIBackgroundFetchResultNewData);
+	});
+}
+
+#pragma mark - Background fetch method (this is called periodocially
+-(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+	DDLogVerbose(@"======== Launched in background due to background fetch event ==========");
+	//enable audio session and keep audio port
+	[[NSNotificationCenter defaultCenter] postNotificationName:kBackgroundFetchStarted object:application];
+	
+	//check media assets
+	//BOOL newMedia = [[EWMediaManager sharedInstance] checkMediaAssets];
+	
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//		DDLogVerbose(@"Returned background fetch handler with %@", newMedia?@"new data":@"no data");
+//		if (newMedia) {
+//			completionHandler(UIBackgroundFetchResultNewData);
+//		}else{
+//			completionHandler(UIBackgroundFetchResultNoData);
+//		}
+			completionHandler(UIBackgroundFetchResultNewData);
+	});
+	
 }
 @end
