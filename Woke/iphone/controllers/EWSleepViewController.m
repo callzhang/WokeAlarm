@@ -146,6 +146,7 @@
 
 #pragma mark - UIAction
 - (IBAction)more:(id)sender{
-	[[ATConnect sharedConnection] presentMessageCenterFromViewController:self];
+    //[ATConnect sharedConnection].showEmailField = NO;
+    [[ATConnect sharedConnection] presentMessageCenterFromViewController:self withCustomData:@{@"name":[EWPerson me].name, @"ID":[EWPerson me].serverID, @"email":[EWPerson me].email?:@""}];
 }
 @end
