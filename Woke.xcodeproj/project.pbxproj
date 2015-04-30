@@ -59,6 +59,8 @@
 		093DB7821A65FD970032E7EB /* EWPostWakeupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */; };
 		09660F9E1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09660F9D1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib */; };
 		09660FA01AB4E7F300F1E3DA /* EWAddFriendsSectionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09660F9F1AB4E7F300F1E3DA /* EWAddFriendsSectionTableViewCell.xib */; };
+		09682BC21AF2A27A00FDA66B /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09682BC01AF2A27A00FDA66B /* Fabric.framework */; };
+		09682BC31AF2A27A00FDA66B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09682BC11AF2A27A00FDA66B /* Crashlytics.framework */; };
 		096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */; };
 		096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA4B1A19593300B4CBFF /* EWMainViewController.m */; };
 		096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */; };
@@ -285,6 +287,8 @@
 		093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPostWakeupTableViewCell.m; sourceTree = "<group>"; };
 		09660F9D1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWAddFriendTableViewCell.xib; sourceTree = "<group>"; };
 		09660F9F1AB4E7F300F1E3DA /* EWAddFriendsSectionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWAddFriendsSectionTableViewCell.xib; sourceTree = "<group>"; };
+		09682BC01AF2A27A00FDA66B /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = Pods/CrashlyticsFramework/Fabric.framework; sourceTree = "<group>"; };
+		09682BC11AF2A27A00FDA66B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = Pods/CrashlyticsFramework/Crashlytics.framework; sourceTree = "<group>"; };
 		096AAA461A19593300B4CBFF /* EWLoginGateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWLoginGateViewController.h; sourceTree = "<group>"; };
 		096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWLoginGateViewController.m; sourceTree = "<group>"; };
 		096AAA4A1A19593300B4CBFF /* EWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainViewController.h; sourceTree = "<group>"; };
@@ -590,7 +594,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09682BC21AF2A27A00FDA66B /* Fabric.framework in Frameworks */,
 				9B1AABB01AC3CB7300B17654 /* MediaPlayer.framework in Frameworks */,
+				09682BC31AF2A27A00FDA66B /* Crashlytics.framework in Frameworks */,
 				9B10F7871A999C8D004A7492 /* libsqlite3.dylib in Frameworks */,
 				9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */,
 				9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */,
@@ -1332,6 +1338,8 @@
 				9B38950E1A514072004D4290 /* MobileCoreServices.framework */,
 				9B38950C1A51405A004D4290 /* SystemConfiguration.framework */,
 				9B38950A1A51404B004D4290 /* libstdc++.6.dylib */,
+				09682BC01AF2A27A00FDA66B /* Fabric.framework */,
+				09682BC11AF2A27A00FDA66B /* Crashlytics.framework */,
 				9B3895081A514022004D4290 /* libz.dylib */,
 				9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */,
 				9B6AB8191A16F201003372A8 /* CoreGraphics.framework */,
@@ -1561,7 +1569,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Pods/CrashlyticsFramework/Crashlytics.framework/run 6ec9eab6ca26fcd18d51d0322752b861c63bc348 62daabb6809cba6858b14be1c7271e7ecad241fda41e4bf70463be17fc210744\n#Parse crash reporting\n#echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\n#if [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\n#exit 0;\n#fi\n\n#export PATH=/usr/local/bin:$PATH\n#cd ${SRCROOT}/Server\n#parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "./Pods/CrashlyticsFramework/Fabric.framework/run 6ec9eab6ca26fcd18d51d0322752b861c63bc348 62daabb6809cba6858b14be1c7271e7ecad241fda41e4bf70463be17fc210744\n#Parse crash reporting\n#echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\n#if [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\n#exit 0;\n#fi\n\n#export PATH=/usr/local/bin:$PATH\n#cd ${SRCROOT}/Server\n#parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
 		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1949,6 +1957,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1974,6 +1983,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2277,6 +2287,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2360,6 +2371,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

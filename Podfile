@@ -6,7 +6,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 target 'Woke' do
   pod 'Facebook-iOS-SDK', '~> 3.23'
   pod 'GPUImage', '~> 0.1.6'
-  pod 'Parse', '~> 1.6'
+  pod 'Parse', '~> 1.7.2'
   pod 'AFNetworking', '~> 2.5.1'
   pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
   pod 'BlocksKit', '~> 2.2.5'
@@ -33,7 +33,7 @@ target 'Woke' do
   pod 'INTULocationManager', '~> 2.0'
   pod 'InflectorKit', '~> 0.0.1'
   pod 'FormatterKit', '~> 1.8.0'
-  pod 'ParseFacebookUtils', '~> 1.6.4'
+  pod 'ParseFacebookUtils', '~> 1.7.2'
 end
 
 target 'WokeTests' do

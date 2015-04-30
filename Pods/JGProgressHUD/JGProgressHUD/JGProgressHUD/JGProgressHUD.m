@@ -35,12 +35,20 @@
 #define iOS8 (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_8_0)
 #endif
 
+NS_INLINE CGRect JGProgressHUD_CGRectIntegral(CGRect rect) {
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    return (CGRect){{((CGFloat)floor(rect.origin.x*scale))/scale, ((CGFloat)floor(rect.origin.y*scale))/scale}, {((CGFloat)ceil(rect.size.width*scale))/scale, ((CGFloat)ceil(rect.size.height*scale))/scale}};
+}
+
 @interface JGProgressHUD () {
     BOOL _transitioning;
     BOOL _updateAfterAppear;
     
     BOOL _dismissAfterTransitionFinished;
     BOOL _dismissAfterTransitionFinishedWithAnimation;
+    
+    CFAbsoluteTime _displayTimestamp;
     
     JGProgressHUDIndicatorView *_indicatorViewAfterTransitioning;
 }
@@ -85,9 +93,11 @@ static CGRect keyboardFrame = (CGRect){{0.0f, 0.0f}, {0.0f, 0.0f}};
 + (void)load {
     [super load];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameDidChange:) name:UIKeyboardDidChangeFrameNotification object:nil];
+    @autoreleasepool {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameDidChange:) name:UIKeyboardDidChangeFrameNotification object:nil];
+    }
 }
 
 #pragma mark - Initializers
@@ -186,7 +196,7 @@ static CGRect keyboardFrame = (CGRect){{0.0f, 0.0f}, {0.0f, 0.0f}};
             break;
     }
     
-    self.HUDView.frame = frame;
+    self.HUDView.frame = JGProgressHUD_CGRectIntegral(frame);
 }
 
 - (void)updateHUDAnimated:(BOOL)animated animateIndicatorViewFrame:(BOOL)animateIndicator {
@@ -286,12 +296,12 @@ static CGRect keyboardFrame = (CGRect){{0.0f, 0.0f}, {0.0f, 0.0f}};
             self.indicatorView.frame = indicatorFrame;
         }
         
-        _textLabel.frame = labelFrame;
-        _detailTextLabel.frame = detailFrame;
+        _textLabel.frame = JGProgressHUD_CGRectIntegral(labelFrame);
+        _detailTextLabel.frame = JGProgressHUD_CGRectIntegral(detailFrame);
     };
     
     if (!animateIndicator) {
-        self.indicatorView.frame = indicatorFrame;
+        self.indicatorView.frame = JGProgressHUD_CGRectIntegral(indicatorFrame);
     }
     
     if (self.layoutChangeAnimationDuration > 0.0f && animated && !_transitioning) {
@@ -328,6 +338,7 @@ static CGRect keyboardFrame = (CGRect){{0.0f, 0.0f}, {0.0f, 0.0f}};
     self.hidden = NO;
     
     _transitioning = NO;
+    _displayTimestamp = CFAbsoluteTimeGetCurrent(); //Correct timestamp to the current time for animated presentations
     
     if (_indicatorViewAfterTransitioning) {
         self.indicatorView = _indicatorViewAfterTransitioning;
@@ -389,6 +400,8 @@ static CGRect keyboardFrame = (CGRect){{0.0f, 0.0f}, {0.0f, 0.0f}};
     
     _transitioning = YES;
     
+    _displayTimestamp = CFAbsoluteTimeGetCurrent();
+    
     if ([self.delegate respondsToSelector:@selector(progressHUD:willPresentInView:)]) {
         [self.delegate progressHUD:self willPresentInView:view];
     }
@@ -433,6 +446,18 @@ static CGRect keyboardFrame = (CGRect){{0.0f, 0.0f}, {0.0f, 0.0f}};
     
     if (self.targetView == nil) {
         return;
+    }
+    
+    if (self.minimumDisplayTime > 0.0 && _displayTimestamp > 0.0) {
+        CFAbsoluteTime displayedTime = CFAbsoluteTimeGetCurrent()-_displayTimestamp;
+        
+        if (displayedTime < self.minimumDisplayTime) {
+            NSTimeInterval delta = self.minimumDisplayTime-displayedTime;
+            
+            [self dismissAfterDelay:delta animated:animated];
+            
+            return;
+        }
     }
     
     _transitioning = YES;
@@ -818,21 +843,6 @@ static CGRect keyboardFrame = (CGRect){{0.0f, 0.0f}, {0.0f, 0.0f}};
 
 + (NSArray *)allProgressHUDsInViewHierarchy:(UIView *)view {
     return [self _allProgressHUDsInViewHierarchy:view].copy;
-}
-
-@end
-
-
-@implementation JGProgressHUD (Deprecated)
-
-@dynamic progressIndicatorView, useProgressIndicatorView;
-
-- (void)setProgressIndicatorView:(JGProgressHUDIndicatorView *)progressIndicatorView {
-    [self setIndicatorView:progressIndicatorView];
-}
-
-- (JGProgressHUDIndicatorView *)progressIndicatorView {
-    return [self indicatorView];
 }
 
 @end

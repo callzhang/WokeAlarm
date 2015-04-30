@@ -285,12 +285,15 @@ NSString *const ATEngagementCodePointApptentiveAppInteractionKey = @"app";
 	return [[ATInteraction apptentiveAppInteraction] engage:event fromViewController:nil];
 }
 
-- (BOOL)engageLocalEvent:(NSString *)event userInfo:(NSDictionary *)userInfo customData:(NSDictionary *)customData extendedData:(NSArray *)extendedData fromViewController:(UIViewController *)viewController {
-	return [[ATInteraction localAppInteraction] engage:event fromViewController:viewController];
+- (BOOL)engageLocalEvent:(NSString *)event userInfo:(NSDictionary *)userInfo customData:(NSDictionary *)customData extendedData:(NSArray *)extendedData fromViewController:(UIViewController *)viewController {	
+	return [[ATInteraction localAppInteraction] engage:event fromViewController:viewController userInfo:userInfo customData:customData extendedData:extendedData];
 }
 
 - (BOOL)engageCodePoint:(NSString *)codePoint fromInteraction:(ATInteraction *)fromInteraction userInfo:(NSDictionary *)userInfo customData:(NSDictionary *)customData extendedData:(NSArray *)extendedData fromViewController:(UIViewController *)viewController {
 	ATLogInfo(@"Engage Apptentive event: %@", codePoint);
+	if (![[ATBackend sharedBackend] isReady]) {
+		return NO;
+	}
 	
 	[[ApptentiveMetrics sharedMetrics] addMetricWithName:codePoint fromInteraction:fromInteraction info:userInfo customData:customData extendedData:extendedData];
 	
@@ -440,6 +443,13 @@ NSString *const ATEngagementCodePointApptentiveAppInteractionKey = @"app";
 - (void)presentInteraction:(ATInteraction *)interaction fromViewController:(UIViewController *)viewController {
 	if (!interaction) {
 		ATLogError(@"Attempting to present an interaction that does not exist!");
+		return;
+	}
+	
+	if (![[NSThread currentThread] isMainThread]) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self presentInteraction:interaction fromViewController:viewController];
+		});
 		return;
 	}
 	

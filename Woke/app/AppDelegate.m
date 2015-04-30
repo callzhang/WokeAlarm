@@ -16,7 +16,6 @@
 #import "EWStyleController.h"
 #import "EWServer.h"
 //utility
-#import "Crashlytics.h"
 #import "EWUIUtil.h"
 #import "EWUtil.h"
 #import "FBSession.h"
@@ -24,6 +23,8 @@
 #import "PFFacebookUtils.h"
 #import "BlocksKit+UIKit.h"
 #import "ATConnect.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 UIViewController *rootViewController;
 
@@ -46,7 +47,8 @@ UIViewController *rootViewController;
 	[EWUtil addTestGesture];
 	
 	//crashlytics
-	[Crashlytics startWithAPIKey:@"6ec9eab6ca26fcd18d51d0322752b861c63bc348"];
+    [Fabric with:@[CrashlyticsKit]];
+
 	
 	// Parse
     [Parse enableLocalDatastore];

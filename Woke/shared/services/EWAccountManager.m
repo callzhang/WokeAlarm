@@ -20,7 +20,6 @@
 #import "NSTimer+BlocksKit.h"
 #import "EWStartUpSequence.h"
 #import "INTULocationManager.h"
-#import "Crashlytics.h"
 #import "FBKVOController.h"
 #import <BlocksKit+UIKit.h>
 #import "UIAlertView+BlocksKit.h"
@@ -79,11 +78,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
                         } else {
                             //show success view on top view
                             [EWUIUtil showSuccessHUBWithString:@"Logged in"];
-                            //set up crashlytics user info
-                            [Crashlytics setUserName:user.username];
-                            [Crashlytics setUserEmail:user.email];
-                            [Crashlytics setUserIdentifier:user.objectId];
-                            [Crashlytics setObjectValue:user[@"firstName"] forKey:@"name"];
                         }
                         
                         //Handle external event such as welcoming message and broadcasting new user to the community
@@ -119,10 +113,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     [[EWSync sharedInstance] setCachedParseObject:user];
     
     //set up crashlytics user info
-    [Crashlytics setUserName:user.username];
-    [Crashlytics setUserEmail:user.email];
-    [Crashlytics setUserIdentifier:user.objectId];
-    [Crashlytics setObjectValue:user[@"firstName"] forKey:@"name"];
+//    [Crashlytics setUserName:user.username];
+//    [Crashlytics setUserEmail:user.email];
+//    [Crashlytics setUserIdentifier:user.objectId];
+//    [Crashlytics setObjectValue:user[@"firstName"] forKey:@"name"];
     
 }
 
