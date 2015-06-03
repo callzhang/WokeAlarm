@@ -268,13 +268,13 @@
 #define COCOAPODS_POD_AVAILABLE_KZBootstrap
 #define COCOAPODS_VERSION_MAJOR_KZBootstrap 0
 #define COCOAPODS_VERSION_MINOR_KZBootstrap 5
-#define COCOAPODS_VERSION_PATCH_KZBootstrap 3
+#define COCOAPODS_VERSION_PATCH_KZBootstrap 5
 
 // KZBootstrap/Core
 #define COCOAPODS_POD_AVAILABLE_KZBootstrap_Core
 #define COCOAPODS_VERSION_MAJOR_KZBootstrap_Core 0
 #define COCOAPODS_VERSION_MINOR_KZBootstrap_Core 5
-#define COCOAPODS_VERSION_PATCH_KZBootstrap_Core 3
+#define COCOAPODS_VERSION_PATCH_KZBootstrap_Core 5
 
 // MTDates
 #define COCOAPODS_POD_AVAILABLE_MTDates

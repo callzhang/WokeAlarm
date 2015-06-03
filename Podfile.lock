@@ -93,9 +93,9 @@ PODS:
   - JGProgressHUD (1.2.5)
   - KVOController (1.0.3)
   - KZAsserts (1.0)
-  - KZBootstrap (0.5.3):
-    - KZBootstrap/Core (= 0.5.3)
-  - KZBootstrap/Core (0.5.3):
+  - KZBootstrap (0.5.5):
+    - KZBootstrap/Core (= 0.5.5)
+  - KZBootstrap/Core (0.5.5):
     - KZAsserts (~> 1.0)
   - libextobjc (0.4.1):
     - libextobjc/EXTADT (= 0.4.1)
@@ -179,7 +179,7 @@ DEPENDENCIES:
   - INTULocationManager (~> 2.0)
   - JGProgressHUD (~> 1.2)
   - KVOController (~> 1.0.3)
-  - KZBootstrap (~> 0.5.2)
+  - KZBootstrap (~> 0.5.5)
   - libextobjc (~> 0.4.1)
   - MagicalRecord (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
   - MTDates (~> 1.0)
@@ -231,7 +231,7 @@ SPEC CHECKSUMS:
   JGProgressHUD: 4d709935604cdf671b3039a95bbcb6960b19b885
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
   KZAsserts: 6e613b569a33582dc94cf7a1f34a2c6d870982a7
-  KZBootstrap: 11f5f8f34d0d0d5d1163447eb26eff1ac4715761
+  KZBootstrap: f4dbeacb8d925129280dcfe83a2167d9cfc45803
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MagicalRecord: 5b7e807bc07c5d642af1f7d894b7fe0d3c317ca2
   MTDates: aa8006ac046c3fc4f2bb9df95603e9b5bdac9467
@@ -247,4 +247,4 @@ SPEC CHECKSUMS:
   Tweaks: fea40672d34a7185051b7786be0d587cd76d253c
   VBFPopFlatButton: 782344da63f104c279a857d806e065117a7e1196
 
-COCOAPODS: 0.36.3
+COCOAPODS: 0.37.1

@@ -10,7 +10,7 @@ target 'Woke' do
   pod 'AFNetworking', '~> 2.5.1'
   pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
   pod 'BlocksKit', '~> 2.2.5'
-  pod 'KZBootstrap', '~> 0.5.2'
+  pod 'KZBootstrap', '~> 0.5.5'
   pod 'VBFPopFlatButton', '~> 0.0.5'
   pod 'MTDates', '~> 1.0'
   pod 'JGProgressHUD', '~> 1.2'
