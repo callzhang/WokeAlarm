@@ -1,4 +1,2 @@
 WokeAlarm
 =========
-test
-kdd
