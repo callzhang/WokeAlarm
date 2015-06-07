@@ -17,7 +17,7 @@
 //#import <CocoaLumberjack/CocoaLumberjack.h>
 #import "KZBootstrapUserMacros.h"
 #import <Parse/Parse.h>
-#import "CoreData+MagicalRecord.h"
+#import "MagicalRecord.h"
 #import "EWDefines.h"
 #import "EWSync.h"
 #import "NSManagedObjectContext+ChainSave.h"
@@ -35,5 +35,5 @@
 #import "FBTweakInline.h"
 
 //static NSUInteger ddLogLevel = DDLogLevelAll;
-static NSUInteger ddLogLevel = LOG_LEVEL_VERBOSE;
+static NSUInteger ddLogLevel = DDLogLevelAll;
 #endif

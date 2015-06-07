@@ -93,6 +93,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }
         else {
             if (error) {
+                [self logout];
                 if (completion) {
                     completion(error);
                 }

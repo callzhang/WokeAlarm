@@ -8,7 +8,7 @@ target 'Woke' do
   pod 'GPUImage', '~> 0.1.6'
   pod 'Parse', '~> 1.7.2'
   pod 'AFNetworking', '~> 2.5.1'
-  pod 'MagicalRecord', :git => 'https://github.com/magicalpanda/MagicalRecord' , :tag =>'v2.3.0-beta.5'
+  pod 'MagicalRecord', '~> 2.3'
   pod 'BlocksKit', '~> 2.2.5'
   pod 'KZBootstrap', '~> 0.5.5'
   # pod 'VBFPopFlatButton', '~> 0.0.5'
