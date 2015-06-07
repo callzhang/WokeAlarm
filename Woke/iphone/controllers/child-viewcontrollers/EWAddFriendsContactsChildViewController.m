@@ -15,7 +15,7 @@
 #import "RHAddressBook.h"
 #import "BlocksKit.h"
 
-@interface EWAddFriendsContactsChildViewController ()
+@interface EWAddFriendsContactsChildViewController ()<UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, readonly) NSArray *items;
 @property (nonatomic, strong) NSDictionary *contactFrinedsOnWoke;
@@ -38,17 +38,101 @@
     [self loadFriendsOnWokeSection];
 }
 
+- (NSIndexPath *)convertIndexPathToSingleIndexPath:(NSIndexPath *)indexPath {
+    NSParameterAssert(self.items.count <= 2);
+    
+    if (indexPath.section == 0) {
+        return indexPath;
+    }
+    else {
+        return [NSIndexPath indexPathForRow:indexPath.row + [[self.items[0] valueForKey:@"rows"] count] + 1 inSection:0];
+    }
+}
+
+/**
+ * convert raw indexpath to index path with section, do not support if indexPath is actually a section header
+ * *  data strcuture is 1st header + count of 1st items + 2nd header + count of 2st items
+ *
+ */
+- (NSIndexPath *)convertSingleIndexPathToCombineIndexPath:(NSIndexPath *)indexPath {
+    NSInteger row = indexPath.row;
+    if (row > (NSInteger) [[self.items[0] valueForKey:@"rows"] count]+ 1) {
+        return [NSIndexPath indexPathForRow:row - [[self.items[0] valueForKey:@"rows"] count] - 1 - 1 inSection:1];
+    }
+    else if ([self isHeaderSection:indexPath]) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"indexPath is a header" userInfo:nil];
+    }
+    else {
+        return [NSIndexPath indexPathForRow:row - 1 inSection:0];
+    }
+}
+
+- (BOOL)isHeaderSection:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0 && indexPath.section == 0) {
+        return YES;
+    }
+    else if (indexPath.row == (NSInteger)[[self.items[0] valueForKey:@"rows"] count] + 1) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.items.count;
+//    return self.items.count;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.items[section][@"rows"] count];
+//    return [self.items[section][@"rows"] count];
+    if (self.items.count == 1) {
+        return [[self.items[0] valueForKey:@"rows"] count] + 1;
+    }
+    else if (self.items.count == 2){
+        return [[self.items[0] valueForKey:@"rows"] count] + 1 + [[self.items[1] valueForKey:@"rows"] integerValue] + 1;
+    }
+    else {
+        return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self isHeaderSection:indexPath]) {
+        NSInteger section = 0;
+        if (indexPath.row == (NSInteger)[[self.items[0] valueForKey:@"rows"] count] + 1) {
+            section = 1;
+        }
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendsCellSectionHeader"];
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = [UIColor clearColor];
+        
+        if (cell) {
+            BOOL isFriendsSection = [self.items[section][@"type"] isEqualToString:@"woke"];
+            
+            UILabel *sectionLabel = (UILabel *)[cell.contentView viewWithTag:101];
+            NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
+            UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
+            NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
+            if (isFriendsSection) {
+                sectionLabel.text = ((NSString* (^)(void))self.contactFrinedsOnWoke[@"sectionName"])();
+                addAllButton.hidden = NO;
+            }
+            else {
+                sectionLabel.text = ((NSString* (^)(void))self.contactFriends[@"sectionName"])();
+                addAllButton.hidden = YES;
+            }
+        }
+        
+        
+        return cell;
+    }
+    
     EWAddFriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendTableViewCell"];
     
+    indexPath = [self convertSingleIndexPathToCombineIndexPath:indexPath];
     NSDictionary *section = self.items[indexPath.section];
     if ([section[@"type"] isEqualToString:@"address-book"]) {
         cell.type = EWAddFreindTableViewCellTypeInvite;
@@ -111,37 +195,43 @@
     return cell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendsCellSectionHeader"];
-    cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.backgroundColor = [UIColor clearColor];
-    
-    if (cell) {
-        BOOL isFriendsSection = [self.items[section][@"type"] isEqualToString:@"woke"];
-        
-        UILabel *sectionLabel = (UILabel *)[cell.contentView viewWithTag:101];
-        NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
-        UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
-        NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
-        if (isFriendsSection) {
-            sectionLabel.text = ((NSString* (^)(void))self.contactFrinedsOnWoke[@"sectionName"])();
-            addAllButton.hidden = NO;
-        }
-        else {
-            sectionLabel.text = ((NSString* (^)(void))self.contactFriends[@"sectionName"])();
-            addAllButton.hidden = YES;
-        }
-        
-//        [addAllButton removeTarget:self action:nil forControlEvents:UIControlEventAllEvents];
-//        [addAllButton addTarget:self action:@selector(onAddAllButton) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    
-    return cell;
-}
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendsCellSectionHeader"];
+//    cell.contentView.backgroundColor = [UIColor clearColor];
+//    cell.backgroundColor = [UIColor clearColor];
+//    
+//    if (cell) {
+//        BOOL isFriendsSection = [self.items[section][@"type"] isEqualToString:@"woke"];
+//        
+//        UILabel *sectionLabel = (UILabel *)[cell.contentView viewWithTag:101];
+//        NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
+//        UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
+//        NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
+//        if (isFriendsSection) {
+//            sectionLabel.text = ((NSString* (^)(void))self.contactFrinedsOnWoke[@"sectionName"])();
+//            addAllButton.hidden = NO;
+//        }
+//        else {
+//            sectionLabel.text = ((NSString* (^)(void))self.contactFriends[@"sectionName"])();
+//            addAllButton.hidden = YES;
+//        }
+//    }
+//    
+//    
+//    return cell;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+//    return 44;
+//}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 44;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self isHeaderSection:indexPath]) {
+        return 30;
+    }
+    else {
+        return 70;
+    }
 }
 
 - (NSArray *)items {

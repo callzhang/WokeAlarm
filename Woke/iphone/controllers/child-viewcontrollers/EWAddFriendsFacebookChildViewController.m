@@ -31,14 +31,60 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.items.count;
+//    return self.items.count;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.items[section][@"rows"] count];
+//    return [self.items[section][@"rows"] count];
+    if (self.items.count == 1) {
+        return [[self.items[0] valueForKey:@"rows"] count] + 1;
+    }
+    else if (self.items.count == 2){
+        return [[self.items[0] valueForKey:@"rows"] count] + 1 + [[self.items[1] valueForKey:@"rows"] integerValue] + 1;
+    }
+    else {
+        return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self isHeaderSection:indexPath]) {
+        NSInteger section = 0;
+        if (indexPath.row == (NSInteger)[[self.items[0] valueForKey:@"rows"] count] + 1) {
+            section = 1;
+        }
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendsCellSectionHeader"];
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = [UIColor clearColor];
+        
+        if (cell) {
+            BOOL isFriendsSection = [self.items[section][@"type"] isEqualToString:@"woke"];
+            
+            UILabel *sectionLabel = (UILabel *)[cell.contentView viewWithTag:101];
+            NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
+            UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
+            NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
+            
+            if (isFriendsSection) {
+                sectionLabel.text = ((NSString* (^)(void))self.facebookFrinedsOnWoke[@"sectionName"])();
+                addAllButton.hidden = NO;
+            }
+            else {
+                //            sectionLabel.text = ((NSString* (^)(void))self.facebookFriends[@"sectionName"])();
+                //            addAllButton.hidden = YES;
+            }
+            
+            [addAllButton removeTarget:self action:nil forControlEvents:UIControlEventAllEvents];
+            [addAllButton addTarget:self action:@selector(onAddAllButton) forControlEvents:UIControlEventTouchUpInside];
+            
+        }
+        
+        return cell;
+    }
+    indexPath = [self convertSingleIndexPathToCombineIndexPath:indexPath];
+    
     EWAddFriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EWAddFriendTableViewCell"];
     
     NSDictionary *section = self.items[indexPath.section];
@@ -53,36 +99,69 @@
     return cell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendsCellSectionHeader"];
-    cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.backgroundColor = [UIColor clearColor];
-    
-    if (cell) {
-        BOOL isFriendsSection = [self.items[section][@"type"] isEqualToString:@"woke"];
-        
-        UILabel *sectionLabel = (UILabel *)[cell.contentView viewWithTag:101];
-        NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
-        UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
-        NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
-        
-        if (isFriendsSection) {
-            sectionLabel.text = ((NSString* (^)(void))self.facebookFrinedsOnWoke[@"sectionName"])();
-            addAllButton.hidden = NO;
-        }
-        else {
-//            sectionLabel.text = ((NSString* (^)(void))self.facebookFriends[@"sectionName"])();
-//            addAllButton.hidden = YES;
-        }
-        
-        [addAllButton removeTarget:self action:nil forControlEvents:UIControlEventAllEvents];
-        [addAllButton addTarget:self action:@selector(onAddAllButton) forControlEvents:UIControlEventTouchUpInside];
-
+- (NSIndexPath *)convertSingleIndexPathToCombineIndexPath:(NSIndexPath *)indexPath {
+    NSInteger row = indexPath.row;
+    if (row > (NSInteger) [[self.items[0] valueForKey:@"rows"] count]+ 1) {
+        return [NSIndexPath indexPathForRow:row - [[self.items[0] valueForKey:@"rows"] count] - 1 - 1 inSection:1];
     }
-    
-    return cell;
+    else if ([self isHeaderSection:indexPath]) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"indexPath is a header" userInfo:nil];
+    }
+    else {
+        return [NSIndexPath indexPathForRow:row - 1 inSection:0];
+    }
 }
 
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendsCellSectionHeader"];
+//    cell.contentView.backgroundColor = [UIColor clearColor];
+//    cell.backgroundColor = [UIColor clearColor];
+//    
+//    if (cell) {
+//        BOOL isFriendsSection = [self.items[section][@"type"] isEqualToString:@"woke"];
+//        
+//        UILabel *sectionLabel = (UILabel *)[cell.contentView viewWithTag:101];
+//        NSAssert([sectionLabel isKindOfClass:[UILabel class]], @"section label with tag 101 is not a UILabel");
+//        UIButton *addAllButton = (UIButton *)[cell.contentView viewWithTag:102];
+//        NSAssert([addAllButton isKindOfClass:[UIButton class]], @"button with tag 102 is not a UIButton");
+//        
+//        if (isFriendsSection) {
+//            sectionLabel.text = ((NSString* (^)(void))self.facebookFrinedsOnWoke[@"sectionName"])();
+//            addAllButton.hidden = NO;
+//        }
+//        else {
+////            sectionLabel.text = ((NSString* (^)(void))self.facebookFriends[@"sectionName"])();
+////            addAllButton.hidden = YES;
+//        }
+//        
+//        [addAllButton removeTarget:self action:nil forControlEvents:UIControlEventAllEvents];
+//        [addAllButton addTarget:self action:@selector(onAddAllButton) forControlEvents:UIControlEventTouchUpInside];
+//
+//    }
+//    
+//    return cell;
+//}
+
+- (BOOL)isHeaderSection:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0 && indexPath.section == 0) {
+        return YES;
+    }
+    else if (indexPath.row == (NSInteger)[[self.items[0] valueForKey:@"rows"] count] + 1) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self isHeaderSection:indexPath]) {
+        return 30;
+    }
+    else {
+        return 70;
+    }
+}
 - (void)onAddAllButton {
     NSArray *rows = self.items.firstObject[@"rows"];
     for (EWPerson *person in rows) {
@@ -97,9 +176,9 @@
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 44;
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+//    return 44;
+//}
 
 - (NSArray *)items {
     if (self.facebookFrinedsOnWoke) {
