@@ -49,6 +49,7 @@ enum {
 - (void)statusBarChanged:(NSNotification *)notification;
 - (void)keyboardWasShown:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
+- (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)feedbackChanged:(NSNotification *)notification;
 - (void)hide:(BOOL)animated;
 - (void)finishHide;
@@ -115,6 +116,7 @@ enum {
 	}
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChanged:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
@@ -160,11 +162,7 @@ enum {
 	
 	[self positionInWindow];
 	
-	if ([self.emailField.text isEqualToString:@""] && self.showEmailAddressField) {
-		[self.emailField becomeFirstResponder];
-	} else {
-		[self.feedbackView becomeFirstResponder];
-	}
+	[self selectFirstResponder];
 	
 	self.window.center = CGPointMake(CGRectGetMidX(endingFrame), CGRectGetMidY(endingFrame));
 	self.containerView.center = [self offscreenPositionOfView];
@@ -233,15 +231,28 @@ enum {
 		shadowView.alpha = 1.0;
 	} completion:^(BOOL finished) {
 		self.window.hidden = NO;
+		
+		[self selectFirstResponder];
+	}];
+	[shadowView release], shadowView = nil;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:ATMessageCenterIntroDidShowNotification object:self userInfo:nil];
+}
+
+- (void)selectFirstResponder {
+	BOOL iPhoneIdiom = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone);
+	UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+	BOOL landScapeOrientation = (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight);
+	
+	if (iPhoneIdiom && landScapeOrientation) {
+		// Don't initial show keyboard
+	} else {
 		if ([self.emailField.text isEqualToString:@""] && self.showEmailAddressField) {
 			[self.emailField becomeFirstResponder];
 		} else {
 			[self.feedbackView becomeFirstResponder];
 		}
-	}];
-	[shadowView release], shadowView = nil;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ATMessageCenterIntroDidShowNotification object:self userInfo:nil];
+	}
 }
 
 - (void)didReceiveMemoryWarning {
@@ -492,6 +503,11 @@ enum {
 	return [self shouldReturn:textField];
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+	[self.scrollView scrollRectToVisible:textField.frame animated:YES];
+}
+
+
 #pragma mark UITextViewDelegate
 - (void)textViewDidChange:(UITextView *)textView {
 	if (textView == self.feedbackView) {
@@ -517,6 +533,10 @@ enum {
 			self.scrollView.contentSize = newContentSize;
 		}
 	}
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+	[self.scrollView scrollRectToVisible:textView.frame animated:YES];
 }
 
 #pragma mark UIScrollViewDelegate
@@ -882,11 +902,13 @@ enum {
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
 	@autoreleasepool {
-		if (self.window.hidden == NO) {
-			[self retain];
-			[self unhide:NO];
-		}
+		[self retain];
+		[self unhide:NO];
 	}
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notification {
+	[self hide:NO];
 }
 
 - (void)feedbackChanged:(NSNotification *)notification {
@@ -960,30 +982,38 @@ enum {
 - (CGRect)onscreenRectOfView {
 	BOOL constrainViewWidth = [self isIPhoneAppInIPad];
 	UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-	CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
 	CGRect screenBounds = [[UIScreen mainScreen] bounds];
-	CGFloat w = statusBarSize.width;
-	CGFloat h = statusBarSize.height;
-	if (CGSizeEqualToSize(CGSizeZero, statusBarSize)) {
-		w = screenBounds.size.width;
-		h = screenBounds.size.height;
-	}
+	CGFloat w = screenBounds.size.width;
+	CGFloat h = screenBounds.size.height;
 	
 	BOOL isLandscape = NO;
 	
 	CGFloat windowWidth = 0.0;
+	CGFloat windowHeight = 0.0;
 	
-	switch (orientation) {
-		case UIInterfaceOrientationLandscapeLeft:
-		case UIInterfaceOrientationLandscapeRight:
+	if ([ATUtilities osVersionGreaterThanOrEqualTo:@"8.0"]) {
+		w = screenBounds.size.width;
+		h = screenBounds.size.height;
+		windowWidth = w;
+		windowHeight = h;
+		if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
 			isLandscape = YES;
-			windowWidth = h;
-			break;
-		case UIInterfaceOrientationPortraitUpsideDown:
-		case UIInterfaceOrientationPortrait:
-		default:
-			windowWidth = w;
-			break;
+		}
+	} else {
+		switch (orientation) {
+			case UIInterfaceOrientationLandscapeLeft:
+			case UIInterfaceOrientationLandscapeRight:
+				isLandscape = YES;
+				windowWidth = h;
+				windowHeight = w;
+				break;
+			case UIInterfaceOrientationPortraitUpsideDown:
+			case UIInterfaceOrientationPortrait:
+			default:
+				windowWidth = w;
+				windowHeight = h;
+				break;
+		}
 	}
 	
 	CGFloat viewHeight = 0.0;
@@ -992,20 +1022,24 @@ enum {
 	CGFloat originX = 0.0;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		if (CGRectEqualToRect(CGRectZero, lastKeyboardRect)) {
-			viewHeight = isLandscape ? 368.0 : 368.0;
-		} else {
-			CGFloat keyboardHeight = lastKeyboardRect.size.height;
-			viewHeight = self.view.window.bounds.size.height - (isLandscape ? keyboardHeight + 40 : keyboardHeight + 100 + 200);
-		}
-		originY = isLandscape ? 20.0 : 200;
-		viewWidth = windowWidth - 12*2 - 100.0;
-		originX = floorf((windowWidth - viewWidth)/2.0);
+		CGFloat keyboardHeight = lastKeyboardRect.size.height;
+		
+		viewWidth = 532;
+		viewHeight = 328;
+		
+		originX = floorf((windowWidth - viewWidth) / 2.0);
+		originY = floorf((windowHeight - viewHeight - keyboardHeight) / 2.0);
+		
 	} else {
 		if (CGRectEqualToRect(CGRectZero, lastKeyboardRect)) {
-			CGFloat landscapeKeyboardHeight = 162;
-			CGFloat portraitKeyboardHeight = 216;
-			viewHeight = self.view.window.bounds.size.height - (isLandscape ? landscapeKeyboardHeight + 8 - 6 : portraitKeyboardHeight + 8);
+			if (isLandscape) {
+				CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+				viewHeight = windowHeight - 6 - MIN(statusBarSize.height, statusBarSize.width);
+			} else {
+				CGFloat landscapeKeyboardHeight = 162;
+				CGFloat portraitKeyboardHeight = 216;
+				viewHeight = self.view.window.bounds.size.height - (isLandscape ? landscapeKeyboardHeight + 8 - 6 : portraitKeyboardHeight + 8);
+			}
 		} else {
 			CGFloat keyboardHeight = lastKeyboardRect.size.height;
 			viewHeight = self.view.window.bounds.size.height - (isLandscape ? keyboardHeight + 8 - 6 : keyboardHeight + 8);
@@ -1022,17 +1056,6 @@ enum {
 	f.origin.x = originX;
 	f.size.width = viewWidth;
 	f.size.height = viewHeight;
-
-	// Fix for iOS 8.
-	// Should convert message panel to Auto Layout.
-	if ([ATUtilities osVersionGreaterThanOrEqualTo:@"8.0"]) {
-		if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
-			CGFloat width = screenBounds.size.width - 12;
-			CGFloat height = screenBounds.size.height - lastKeyboardRect.size.height - statusBarSize.height;
-			
-			f = CGRectMake(6, 0, width, height);
-		}
-	}
 	
 	return f;
 }
@@ -1121,35 +1144,7 @@ enum {
 		self.window.frame = newFrame;
 	}
 	
-	// Fix for iOS 8.
-	// Should convert message panel to Auto Layout.
-	CGRect onscreenRect = [self onscreenRectOfView];
-	if ([ATUtilities osVersionGreaterThanOrEqualTo:@"8.0"]) {
-		CGRect contentFrame;
-		switch (orientation) {
-			case UIInterfaceOrientationLandscapeLeft:
-			case UIInterfaceOrientationLandscapeRight:
-			{
-				CGFloat originY = 2;
-				CGFloat keyboardHeight = lastKeyboardRect.size.height;
-				CGFloat contentHeight = self.view.window.bounds.size.height - keyboardHeight - 2 * originY;
-
-				CGFloat contentWidth = self.view.window.bounds.size.width - 100.0;
-				CGFloat originX = floorf((self.view.window.bounds.size.width - contentWidth) / 2.0);
-
-				contentFrame = CGRectMake(originX, originY, contentWidth, contentHeight);
-				break;
-			}
-			case UIInterfaceOrientationPortraitUpsideDown:
-			case UIInterfaceOrientationPortrait:
-			default:
-				contentFrame = onscreenRect;
-				break;
-		}
-		self.containerView.frame = contentFrame;
-	} else {
-		self.containerView.frame = onscreenRect;
-	}
+	self.containerView.frame = [self onscreenRectOfView];
 	
 	[self textViewDidChange:self.feedbackView];
 	

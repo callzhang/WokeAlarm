@@ -131,6 +131,16 @@
 	}
 	lastSeenPresentingViewControllerFrame = f;
 	lastSeenPresentingViewControllerTransform = t;
+
+	// Show keyboard on rotation
+	if (self.emailField.isFirstResponder || self.feedbackView.isFirstResponder) {
+		// Remain first responder
+	} else if ([self.emailField.text isEqualToString:@""] && self.showEmailAddressField) {
+		[self.emailField becomeFirstResponder];
+	} else {
+		[self.feedbackView becomeFirstResponder];
+	}
+	
 #if USE_BLUR
 	UIImage *blurred = [self blurredBackgroundScreenshot];
 	[UIView transitionWithView:self.backgroundImageView
@@ -156,7 +166,11 @@
 	self.containerView.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
 	self.containerView.layer.cornerRadius = 7.0;
 	
-	NSInteger buttonHeight = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ? 44 : 30;
+	NSInteger buttonHeight = 44;
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone &&  UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]) ) {
+		buttonHeight = 33;
+	}
 	
 	CGFloat pixelLineWidth = [[UIScreen mainScreen] scale] == 2 ? 0.25 : 0.5;
 	
@@ -258,6 +272,12 @@
 			sizedEmail = [sizingString sizeWithFont:emailFont];
 #			pragma clang diagnostic pop
 		}
+		
+		// Larger email field for iPad
+		CGFloat minEmailHeght = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? 44 : 33;
+		CGFloat emailHeight = MAX(minEmailHeght, sizedEmail.height);
+		sizedEmail = CGSizeMake(sizedEmail.width, emailHeight);
+		
 		CGRect emailFrame = CGRectMake(0, offsetY, width, sizedEmail.height);
 		emailFrame = CGRectInset(emailFrame, horizontalPadding+extraHorzontalPadding, 0);
 		
@@ -343,6 +363,9 @@
 	self.feedbackView.placeholderColor = [self.view tintColor];
 	
 	CGSize contentSize = CGSizeMake(self.scrollView.bounds.size.width, offsetY);
+	
+	self.scrollView.showsHorizontalScrollIndicator = NO;
+	self.scrollView.showsVerticalScrollIndicator = NO;
 	
 	self.scrollView.contentSize = contentSize;
 	[self textViewDidChange:self.feedbackView];

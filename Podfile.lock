@@ -1,28 +1,28 @@
 PODS:
-  - AFNetworking (2.5.3):
-    - AFNetworking/NSURLConnection (= 2.5.3)
-    - AFNetworking/NSURLSession (= 2.5.3)
-    - AFNetworking/Reachability (= 2.5.3)
-    - AFNetworking/Security (= 2.5.3)
-    - AFNetworking/Serialization (= 2.5.3)
-    - AFNetworking/UIKit (= 2.5.3)
-  - AFNetworking/NSURLConnection (2.5.3):
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.3):
+  - AFNetworking/NSURLSession (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.3)
-  - AFNetworking/Security (2.5.3)
-  - AFNetworking/Serialization (2.5.3)
-  - AFNetworking/UIKit (2.5.3):
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - apptentive-ios (1.7.2):
-    - apptentive-ios/arc-files (= 1.7.2)
-  - apptentive-ios/arc-files (1.7.2)
+  - apptentive-ios (1.7.3):
+    - apptentive-ios/arc-files (= 1.7.3)
+  - apptentive-ios/arc-files (1.7.3)
   - APTimeZones (1.1)
   - BlocksKit (2.2.5):
     - BlocksKit/All (= 2.2.5)
@@ -39,12 +39,12 @@ PODS:
   - BlocksKit/UIKit (2.2.5):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
-  - Bolts (1.1.5):
-    - Bolts/AppLinks (= 1.1.5)
-    - Bolts/Tasks (= 1.1.5)
-  - Bolts/AppLinks (1.1.5):
+  - Bolts (1.2.0):
+    - Bolts/AppLinks (= 1.2.0)
+    - Bolts/Tasks (= 1.2.0)
+  - Bolts/AppLinks (1.2.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.1.5)
+  - Bolts/Tasks (1.2.0)
   - CocoaLumberjack (2.0.0-rc):
     - CocoaLumberjack/Default (= 2.0.0-rc)
     - CocoaLumberjack/Extensions (= 2.0.0-rc)
@@ -57,9 +57,6 @@ PODS:
   - CrashlyticsLumberjack (2.0.0-rc2):
     - CocoaLumberjack/Default (>= 2.0.0-rc)
   - DACircularProgress (2.3.1)
-  - dyci (0.1.5.6):
-    - dyci/Injections (= 0.1.5.6)
-  - dyci/Injections (0.1.5.6)
   - Expecta (0.3.2)
   - Facebook-iOS-SDK (3.23.2):
     - Bolts (~> 1.0)
@@ -90,7 +87,7 @@ PODS:
     - pop
   - InflectorKit (0.0.1)
   - INTULocationManager (2.0.2)
-  - JGProgressHUD (1.2.5)
+  - JGProgressHUD (1.2.7)
   - KVOController (1.0.3)
   - KZAsserts (1.0)
   - KZBootstrap (0.5.5):
@@ -138,12 +135,12 @@ PODS:
   - MTDates (1.0.2)
   - NYXImagesKit (2.3)
   - OCMock (3.1.2)
-  - Parse (1.7.2):
-    - Bolts (~> 1.1)
-  - ParseFacebookUtils (1.7.2):
-    - Bolts (~> 1.1)
+  - Parse (1.7.4):
+    - Bolts/Tasks (>= 1.1.5)
+  - ParseFacebookUtils (1.7.4):
+    - Bolts/Tasks (>= 1.1.5)
     - Facebook-iOS-SDK (~> 3.23)
-    - Parse (~> 1.7.2)
+    - Parse (~> 1.7.4)
   - pop (1.0.7)
   - ReactiveCocoa (2.5):
     - ReactiveCocoa/UI (= 2.5)
@@ -157,8 +154,6 @@ PODS:
   - RHAddressBook (1.1.1)
   - Shimmer (1.0.2)
   - Tweaks (1.1.0)
-  - VBFPopFlatButton (0.0.6):
-    - pop
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.1)
@@ -168,7 +163,6 @@ DEPENDENCIES:
   - CocoaLumberjack (= 2.0.0-rc)
   - CrashlyticsFramework (~> 2.2)
   - CrashlyticsLumberjack (= 2.0.0-rc2)
-  - dyci (from `https://github.com/DyCI/dyci-main.git`)
   - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.23)
   - FormatterKit (~> 1.8.0)
@@ -192,34 +186,27 @@ DEPENDENCIES:
   - RHAddressBook (~> 1.1)
   - Shimmer (~> 1.0.2)
   - Tweaks (~> 1.1.0)
-  - VBFPopFlatButton (~> 0.0.5)
 
 EXTERNAL SOURCES:
-  dyci:
-    :git: https://github.com/DyCI/dyci-main.git
   MagicalRecord:
     :git: https://github.com/magicalpanda/MagicalRecord
     :tag: v2.3.0-beta.5
 
 CHECKOUT OPTIONS:
-  dyci:
-    :commit: 0f03a803bbad5b90d15022b52609aa68b8262ab6
-    :git: https://github.com/DyCI/dyci-main.git
   MagicalRecord:
     :git: https://github.com/magicalpanda/MagicalRecord
     :tag: v2.3.0-beta.5
 
 SPEC CHECKSUMS:
-  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
-  apptentive-ios: 6c80d5cd568c4fe2381880cf1785e5d3a59282f9
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  apptentive-ios: be0b8dbc17b443eb624b3a015017f521b096f003
   APTimeZones: ddb9aca50fff41d6313eb29d86d37b1edf9d2942
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
-  Bolts: aac24961496d504aa56fc267cde95162a71bac39
+  Bolts: d176cb1e0012175589e389a9db49b85e27787576
   CocoaLumberjack: 04c5b9b7479dd4276a09700fcd6644423ea1751c
   CrashlyticsFramework: 2f7c515a2d74c8636bf47e761621f2f68193747e
   CrashlyticsLumberjack: 109eba5693487358215a04665a9526190ed73712
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  dyci: 099c2e6dc98abb8f21b370cabbf1443ff700608a
   Expecta: 8c507baf13211207b1e9d0a741480600e6b4ed15
   Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
   FormatterKit: bddde83e054edf9d9ee14f9de3b3a5103db256f4
@@ -228,7 +215,7 @@ SPEC CHECKSUMS:
   IDMPhotoBrowser: ebbfa6690456b72dd92d93b7bc11d71519f4d06d
   InflectorKit: 64497199e6764f4d8337cab7f700a77b13d76a73
   INTULocationManager: 4eb51ce242d95950676a535208056d9cb246d879
-  JGProgressHUD: 4d709935604cdf671b3039a95bbcb6960b19b885
+  JGProgressHUD: a45c1d16adddf7e38092ce3f0d71d3955d2de2ec
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
   KZAsserts: 6e613b569a33582dc94cf7a1f34a2c6d870982a7
   KZBootstrap: f4dbeacb8d925129280dcfe83a2167d9cfc45803
@@ -237,14 +224,13 @@ SPEC CHECKSUMS:
   MTDates: aa8006ac046c3fc4f2bb9df95603e9b5bdac9467
   NYXImagesKit: 8163e3335a40eaa173ca5bbbf81fafb57d3947eb
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
-  Parse: e1959adb9fe2fcd4736dac20b3ac691d47a4f06c
-  ParseFacebookUtils: 26f436ad7da9fc39acb4784c01cfcef0ea3a9709
+  Parse: 6ca512c6e860b66739c95151b2f76ac4712b7842
+  ParseFacebookUtils: 7115990b291ae95b920fde413272828d0eb0d963
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
   ReactiveViewModel: 58918dcbcec2d3151195ab1ed9163c57a8163999
   RHAddressBook: 870e9e0b34cb917b9c4c600fc3b7d5b530b23b13
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   Tweaks: fea40672d34a7185051b7786be0d587cd76d253c
-  VBFPopFlatButton: 782344da63f104c279a857d806e065117a7e1196
 
 COCOAPODS: 0.37.1
