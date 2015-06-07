@@ -57,10 +57,11 @@
 		0929D7E91AA26FBC00FA1F8F /* EWSettingsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0929D7E81AA26FBC00FA1F8F /* EWSettingsTableViewCell.m */; };
 		093DB77F1A65FC8D0032E7EB /* EWPostWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */; };
 		093DB7821A65FD970032E7EB /* EWPostWakeupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */; };
+		096585C21B24E4E4001AB46F /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 096585C01B24E4E4001AB46F /* Crashlytics.framework */; };
+		096585C31B24E4E4001AB46F /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 096585C11B24E4E4001AB46F /* Fabric.framework */; };
+		096585C61B24E539001AB46F /* CrashlyticsLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 096585C51B24E539001AB46F /* CrashlyticsLogger.m */; };
 		09660F9E1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09660F9D1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib */; };
 		09660FA01AB4E7F300F1E3DA /* EWAddFriendsSectionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09660F9F1AB4E7F300F1E3DA /* EWAddFriendsSectionTableViewCell.xib */; };
-		09682BC21AF2A27A00FDA66B /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09682BC01AF2A27A00FDA66B /* Fabric.framework */; };
-		09682BC31AF2A27A00FDA66B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09682BC11AF2A27A00FDA66B /* Crashlytics.framework */; };
 		096AAA711A19593300B4CBFF /* EWLoginGateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */; };
 		096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA4B1A19593300B4CBFF /* EWMainViewController.m */; };
 		096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */; };
@@ -149,7 +150,7 @@
 		09DF4F8B1A1434AF00BEA328 /* _EWPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F421A1434AF00BEA328 /* _EWPerson.m */; };
 		09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F441A1434AF00BEA328 /* _EWServerObject.m */; };
 		09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E17AFF1A15C01800317F8D /* SCSiriWaveformView.m */; };
-		8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B95C7310A02172389FEF1951 /* libPods-Woke.a */; };
+		2C50F5DD963D7C6A77519AA2 /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8221F2BCAC47BB8019AC1F9F /* libPods-Woke.a */; };
 		9B10F7871A999C8D004A7492 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B10F7861A999C8D004A7492 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9B1AABB01AC3CB7300B17654 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B1AABAF1AC3CB7300B17654 /* MediaPlayer.framework */; };
 		9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B25631E1A1952FA00010B9E /* _EWSocial.m */; };
@@ -200,7 +201,7 @@
 		9BF9CC7A1A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9CC791A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m */; };
 		9BFF57121A4C8FB90067EE9B /* EWPerson+Woke.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BFF57111A4C8FB90067EE9B /* EWPerson+Woke.m */; };
 		9BFFABE81A5B9AB3008E123F /* EWCollectionPersonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */; };
-		A3428B2612EFBC90CE29A819 /* libPods-WokeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */; };
+		DDBC9B337B979E237CA8A0C8 /* libPods-WokeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 189BE5DEDE139F9DECE0253D /* libPods-WokeTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -285,10 +286,12 @@
 		093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPostWakeUpViewController.m; sourceTree = "<group>"; };
 		093DB7801A65FD970032E7EB /* EWPostWakeupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPostWakeupTableViewCell.h; sourceTree = "<group>"; };
 		093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPostWakeupTableViewCell.m; sourceTree = "<group>"; };
+		096585C01B24E4E4001AB46F /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = Woke/frameworks/Crashlytics.framework; sourceTree = "<group>"; };
+		096585C11B24E4E4001AB46F /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = Woke/frameworks/Fabric.framework; sourceTree = "<group>"; };
+		096585C41B24E539001AB46F /* CrashlyticsLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashlyticsLogger.h; path = Woke/frameworks/CrashlyticsLogger.h; sourceTree = "<group>"; };
+		096585C51B24E539001AB46F /* CrashlyticsLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashlyticsLogger.m; path = Woke/frameworks/CrashlyticsLogger.m; sourceTree = "<group>"; };
 		09660F9D1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWAddFriendTableViewCell.xib; sourceTree = "<group>"; };
 		09660F9F1AB4E7F300F1E3DA /* EWAddFriendsSectionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWAddFriendsSectionTableViewCell.xib; sourceTree = "<group>"; };
-		09682BC01AF2A27A00FDA66B /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = Pods/CrashlyticsFramework/Fabric.framework; sourceTree = "<group>"; };
-		09682BC11AF2A27A00FDA66B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = Pods/CrashlyticsFramework/Crashlytics.framework; sourceTree = "<group>"; };
 		096AAA461A19593300B4CBFF /* EWLoginGateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWLoginGateViewController.h; sourceTree = "<group>"; };
 		096AAA471A19593300B4CBFF /* EWLoginGateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWLoginGateViewController.m; sourceTree = "<group>"; };
 		096AAA4A1A19593300B4CBFF /* EWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWMainViewController.h; sourceTree = "<group>"; };
@@ -485,13 +488,13 @@
 		09DF4F441A1434AF00BEA328 /* _EWServerObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _EWServerObject.m; sourceTree = "<group>"; };
 		09E17AFE1A15C01800317F8D /* SCSiriWaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCSiriWaveformView.h; sourceTree = "<group>"; };
 		09E17AFF1A15C01800317F8D /* SCSiriWaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCSiriWaveformView.m; sourceTree = "<group>"; };
-		0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.debug.xcconfig"; sourceTree = "<group>"; };
-		1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.release.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.release.xcconfig"; sourceTree = "<group>"; };
-		33CC203CE3F896C30051DE1A /* Pods-WokeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.debug.xcconfig"; sourceTree = "<group>"; };
-		38875B40B98664E6A62D1273 /* Pods-WokeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.release.xcconfig"; sourceTree = "<group>"; };
-		3F10CE727EA990DC609D7F05 /* Pods-WokeTests.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.adhoc.xcconfig"; sourceTree = "<group>"; };
-		568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
-		6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WokeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		17BA0B79E32BD7C394BD4D77 /* Pods-Woke.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.profiling.xcconfig"; sourceTree = "<group>"; };
+		189BE5DEDE139F9DECE0253D /* libPods-WokeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WokeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B4447F38E3498E810A1C88F /* Pods-WokeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.release.xcconfig"; sourceTree = "<group>"; };
+		24FC26E7F8469C704B3E2287 /* Pods-WokeTests.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.adhoc.xcconfig"; sourceTree = "<group>"; };
+		47D3BBDB090D4E3CC6379A90 /* Pods-Woke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.release.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.release.xcconfig"; sourceTree = "<group>"; };
+		708AF01CEB7C1F7429BA0157 /* Pods-Woke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.debug.xcconfig"; sourceTree = "<group>"; };
+		8221F2BCAC47BB8019AC1F9F /* libPods-Woke.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Woke.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B10F7861A999C8D004A7492 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		9B1375DA1A536CD100D5E8F5 /* KZBootstrapUserMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KZBootstrapUserMacros.h; sourceTree = "<group>"; };
 		9B1AABAF1AC3CB7300B17654 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -584,9 +587,9 @@
 		9BFF57101A4C8FB90067EE9B /* EWPerson+Woke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EWPerson+Woke.h"; sourceTree = "<group>"; };
 		9BFF57111A4C8FB90067EE9B /* EWPerson+Woke.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EWPerson+Woke.m"; sourceTree = "<group>"; };
 		9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWCollectionPersonCell.xib; sourceTree = "<group>"; };
-		B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.adhoc.xcconfig"; sourceTree = "<group>"; };
-		B95C7310A02172389FEF1951 /* libPods-Woke.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Woke.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E99CC22C9AEFD7C29BAB9044 /* Pods-WokeTests.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.profiling.xcconfig"; sourceTree = "<group>"; };
+		C56B5BEC45F88C42D78C9B4E /* Pods-WokeTests.profiling.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.profiling.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.profiling.xcconfig"; sourceTree = "<group>"; };
+		DC0C90AC2080136D0EBDB9E5 /* Pods-Woke.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.adhoc.xcconfig"; sourceTree = "<group>"; };
+		FDE8FE5466E6644283773C40 /* Pods-WokeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -594,14 +597,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09682BC21AF2A27A00FDA66B /* Fabric.framework in Frameworks */,
 				9B1AABB01AC3CB7300B17654 /* MediaPlayer.framework in Frameworks */,
-				09682BC31AF2A27A00FDA66B /* Crashlytics.framework in Frameworks */,
 				9B10F7871A999C8D004A7492 /* libsqlite3.dylib in Frameworks */,
 				9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */,
+				096585C31B24E4E4001AB46F /* Fabric.framework in Frameworks */,
 				9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */,
 				9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */,
-				8E1E370E64275A32CA7FC9A9 /* libPods-Woke.a in Frameworks */,
+				2C50F5DD963D7C6A77519AA2 /* libPods-Woke.a in Frameworks */,
+				096585C21B24E4E4001AB46F /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -609,7 +612,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3428B2612EFBC90CE29A819 /* libPods-WokeTests.a in Frameworks */,
+				DDBC9B337B979E237CA8A0C8 /* libPods-WokeTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -952,8 +955,8 @@
 				09A776E11A11D8D9004AF902 /* Woke */,
 				09A776FB1A11D8D9004AF902 /* WokeTests */,
 				09A776E01A11D8D9004AF902 /* Products */,
-				D36CBA141A78EB696382308E /* Pods */,
 				AA1A75AA2E60E49CC73E6319 /* Frameworks */,
+				F2F838834A13AD0085101B9C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1333,34 +1336,36 @@
 		AA1A75AA2E60E49CC73E6319 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				096585C41B24E539001AB46F /* CrashlyticsLogger.h */,
+				096585C51B24E539001AB46F /* CrashlyticsLogger.m */,
+				096585C01B24E4E4001AB46F /* Crashlytics.framework */,
+				096585C11B24E4E4001AB46F /* Fabric.framework */,
 				9B1AABAF1AC3CB7300B17654 /* MediaPlayer.framework */,
 				9B10F7861A999C8D004A7492 /* libsqlite3.dylib */,
 				9B38950E1A514072004D4290 /* MobileCoreServices.framework */,
 				9B38950C1A51405A004D4290 /* SystemConfiguration.framework */,
 				9B38950A1A51404B004D4290 /* libstdc++.6.dylib */,
-				09682BC01AF2A27A00FDA66B /* Fabric.framework */,
-				09682BC11AF2A27A00FDA66B /* Crashlytics.framework */,
 				9B3895081A514022004D4290 /* libz.dylib */,
 				9B6AB81B1A16F20B003372A8 /* QuartzCore.framework */,
 				9B6AB8191A16F201003372A8 /* CoreGraphics.framework */,
 				9B6AB8171A16F1F6003372A8 /* UIKit.framework */,
-				B95C7310A02172389FEF1951 /* libPods-Woke.a */,
-				6F54F0166D9600FC08680BDC /* libPods-WokeTests.a */,
+				8221F2BCAC47BB8019AC1F9F /* libPods-Woke.a */,
+				189BE5DEDE139F9DECE0253D /* libPods-WokeTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D36CBA141A78EB696382308E /* Pods */ = {
+		F2F838834A13AD0085101B9C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */,
-				1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */,
-				B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */,
-				568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */,
-				33CC203CE3F896C30051DE1A /* Pods-WokeTests.debug.xcconfig */,
-				38875B40B98664E6A62D1273 /* Pods-WokeTests.release.xcconfig */,
-				3F10CE727EA990DC609D7F05 /* Pods-WokeTests.adhoc.xcconfig */,
-				E99CC22C9AEFD7C29BAB9044 /* Pods-WokeTests.profiling.xcconfig */,
+				708AF01CEB7C1F7429BA0157 /* Pods-Woke.debug.xcconfig */,
+				47D3BBDB090D4E3CC6379A90 /* Pods-Woke.release.xcconfig */,
+				DC0C90AC2080136D0EBDB9E5 /* Pods-Woke.adhoc.xcconfig */,
+				17BA0B79E32BD7C394BD4D77 /* Pods-Woke.profiling.xcconfig */,
+				FDE8FE5466E6644283773C40 /* Pods-WokeTests.debug.xcconfig */,
+				1B4447F38E3498E810A1C88F /* Pods-WokeTests.release.xcconfig */,
+				24FC26E7F8469C704B3E2287 /* Pods-WokeTests.adhoc.xcconfig */,
+				C56B5BEC45F88C42D78C9B4E /* Pods-WokeTests.profiling.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1372,15 +1377,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 09A777021A11D8D9004AF902 /* Build configuration list for PBXNativeTarget "Woke" */;
 			buildPhases = (
-				9CD61C4D16EF52D8A3FCCDDB /* Check Pods Manifest.lock */,
+				78F40B67CBD8F5153732ADC2 /* Check Pods Manifest.lock */,
 				0913B91C1A7B145E00B9945E /* Generate Storyboard Identifier File */,
 				0913B91D1A7B147100B9945E /* Generate Asset Catalog Identifier File */,
 				09A776DB1A11D8D9004AF902 /* Sources */,
 				09A776DC1A11D8D9004AF902 /* Frameworks */,
 				09A776DD1A11D8D9004AF902 /* Resources */,
-				A6ACF7036880B6CF269077FB /* Copy Pods Resources */,
 				E93DC57A1C384A7E8FEAF65F /* KZBootstrap setup */,
 				9B3895061A51394F004D4290 /* ShellScript */,
+				914DF41C0738C7CAE6B65A37 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1395,11 +1400,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 09A777051A11D8D9004AF902 /* Build configuration list for PBXNativeTarget "WokeTests" */;
 			buildPhases = (
-				5E49EB2218E09C583D3D0207 /* Check Pods Manifest.lock */,
+				1E53AA40FC0AA427220B910A /* Check Pods Manifest.lock */,
 				09A776F41A11D8D9004AF902 /* Sources */,
 				09A776F51A11D8D9004AF902 /* Frameworks */,
 				09A776F61A11D8D9004AF902 /* Resources */,
-				E6E2274D3409E33A50BEEF25 /* Copy Pods Resources */,
+				6472DE87ACF9F5787706F093 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1543,7 +1548,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script walks the asset catalogs in your project and creates\n# AssetCatalogIdentifiers.{h,m} with methods for all the UIImages\n# found therein.\n# The generated files live in the Other Sources group.\n\n# If this is not desired behavior for you, or you don't use\n# asset catalogs, feel free to remove this build phase and the\n# generated files in Other Sources.\n\n\"${SRCROOT}/Scripts/GenerateAssetCatalogIDs.py\"";
 		};
-		5E49EB2218E09C583D3D0207 /* Check Pods Manifest.lock */ = {
+		1E53AA40FC0AA427220B910A /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1558,33 +1563,22 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		9B3895061A51394F004D4290 /* ShellScript */ = {
+		6472DE87ACF9F5787706F093 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Pods/CrashlyticsFramework/Fabric.framework/run 6ec9eab6ca26fcd18d51d0322752b861c63bc348 62daabb6809cba6858b14be1c7271e7ecad241fda41e4bf70463be17fc210744\n#Parse crash reporting\n#echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\n#if [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\n#exit 0;\n#fi\n\n#export PATH=/usr/local/bin:$PATH\n#cd ${SRCROOT}/Server\n#parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
-		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "mogenerator --v2 -m Woke/Models/EarlyWorm.xcdatamodeld -O Woke/Models/ --machine-dir Woke/Models/models_mogenerated";
-		};
-		9CD61C4D16EF52D8A3FCCDDB /* Check Pods Manifest.lock */ = {
+		78F40B67CBD8F5153732ADC2 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1599,7 +1593,7 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		A6ACF7036880B6CF269077FB /* Copy Pods Resources */ = {
+		914DF41C0738C7CAE6B65A37 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1614,20 +1608,31 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Woke/Pods-Woke-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E6E2274D3409E33A50BEEF25 /* Copy Pods Resources */ = {
+		9B3895061A51394F004D4290 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "./Woke/frameworks/Fabric.framework/run 6ec9eab6ca26fcd18d51d0322752b861c63bc348 62daabb6809cba6858b14be1c7271e7ecad241fda41e4bf70463be17fc210744\n#Parse crash reporting\n#echo \"Starting dSYM uploading\"\n\n#if [ \"$BUILD_STYLE\" == \"Debug\" ]; then\n#echo \"Skipping debug build\"\n#exit 0;\n#fi\n\n#if [ \"$EFFECTIVE_PLATFORM_NAME\" == \"-iphonesimulator\" ]; then\n#echo \"Skipping simulator build\"\n#exit 0;\n#fi\n\n#export PATH=/usr/local/bin:$PATH\n#cd ${SRCROOT}/Server\n#parse symbols \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+		};
+		9B93312E1A147DCD00A402B5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mogenerator --v2 -m Woke/Models/EarlyWorm.xcdatamodeld -O Woke/Models/ --machine-dir Woke/Models/models_mogenerated";
 		};
 		E93DC57A1C384A7E8FEAF65F /* KZBootstrap setup */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1705,6 +1710,7 @@
 				096AAAD51A195A3900B4CBFF /* NSString+Extend.m in Sources */,
 				09DF4F7A1A1434AF00BEA328 /* EWMedia.m in Sources */,
 				09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */,
+				096585C61B24E539001AB46F /* CrashlyticsLogger.m in Sources */,
 				9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */,
 				091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */,
 				096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */,
@@ -1949,7 +1955,7 @@
 		};
 		09A777031A11D8D9004AF902 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0E66A2BAB09D55A75050CC5A /* Pods-Woke.debug.xcconfig */;
+			baseConfigurationReference = 708AF01CEB7C1F7429BA0157 /* Pods-Woke.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1958,6 +1964,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
+					"$(PROJECT_DIR)/Woke/frameworks",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1975,7 +1982,7 @@
 		};
 		09A777041A11D8D9004AF902 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D40004B4E0E7D6FFBEACCF3 /* Pods-Woke.release.xcconfig */;
+			baseConfigurationReference = 47D3BBDB090D4E3CC6379A90 /* Pods-Woke.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1984,6 +1991,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
+					"$(PROJECT_DIR)/Woke/frameworks",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2002,7 +2010,7 @@
 		};
 		09A777061A11D8D9004AF902 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 33CC203CE3F896C30051DE1A /* Pods-WokeTests.debug.xcconfig */;
+			baseConfigurationReference = FDE8FE5466E6644283773C40 /* Pods-WokeTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2018,7 +2026,7 @@
 		};
 		09A777071A11D8D9004AF902 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 38875B40B98664E6A62D1273 /* Pods-WokeTests.release.xcconfig */;
+			baseConfigurationReference = 1B4447F38E3498E810A1C88F /* Pods-WokeTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2034,7 +2042,7 @@
 		};
 		2738B373D9E3409781FFBE87 /* adhoc */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3F10CE727EA990DC609D7F05 /* Pods-WokeTests.adhoc.xcconfig */;
+			baseConfigurationReference = 24FC26E7F8469C704B3E2287 /* Pods-WokeTests.adhoc.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2050,7 +2058,7 @@
 		};
 		36533C93ADC54C2F8C03C451 /* profiling */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E99CC22C9AEFD7C29BAB9044 /* Pods-WokeTests.profiling.xcconfig */;
+			baseConfigurationReference = C56B5BEC45F88C42D78C9B4E /* Pods-WokeTests.profiling.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2280,7 +2288,7 @@
 		};
 		C6B55ABCC357471F8A39AEAB /* profiling */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 568DCB0FA022C50526C1D44B /* Pods-Woke.profiling.xcconfig */;
+			baseConfigurationReference = 17BA0B79E32BD7C394BD4D77 /* Pods-Woke.profiling.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2289,6 +2297,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
+					"$(PROJECT_DIR)/Woke/frameworks",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2364,7 +2373,7 @@
 		};
 		E8EFDEBA57C3467EBFD6D61E /* adhoc */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B50BC7368D3FED2D74B92DCB /* Pods-Woke.adhoc.xcconfig */;
+			baseConfigurationReference = DC0C90AC2080136D0EBDB9E5 /* Pods-Woke.adhoc.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2373,6 +2382,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Pods/CrashlyticsFramework",
+					"$(PROJECT_DIR)/Woke/frameworks",
 				);
 				GCC_PREFIX_HEADER = Woke/support/PrefixHeader.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

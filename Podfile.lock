@@ -53,9 +53,6 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.0-rc):
     - CocoaLumberjack/Default
-  - CrashlyticsFramework (2.2.10)
-  - CrashlyticsLumberjack (2.0.0-rc2):
-    - CocoaLumberjack/Default (>= 2.0.0-rc)
   - DACircularProgress (2.3.1)
   - Expecta (0.3.2)
   - Facebook-iOS-SDK (3.23.2):
@@ -159,8 +156,6 @@ DEPENDENCIES:
   - APTimeZones (~> 1.1)
   - BlocksKit (~> 2.2.5)
   - CocoaLumberjack (= 2.0.0-rc)
-  - CrashlyticsFramework (~> 2.2)
-  - CrashlyticsLumberjack (= 2.0.0-rc2)
   - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.23)
   - FormatterKit (~> 1.8.0)
@@ -193,8 +188,6 @@ SPEC CHECKSUMS:
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
   CocoaLumberjack: 04c5b9b7479dd4276a09700fcd6644423ea1751c
-  CrashlyticsFramework: 2f7c515a2d74c8636bf47e761621f2f68193747e
-  CrashlyticsLumberjack: 109eba5693487358215a04665a9526190ed73712
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Expecta: 8c507baf13211207b1e9d0a741480600e6b4ed15
   Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3

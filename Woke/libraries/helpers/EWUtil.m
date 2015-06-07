@@ -8,7 +8,7 @@
 //  This class serves as the basic file input/output class that handles file namagement and memory management
 
 #import "EWUtil.h"
-#import <CrashlyticsLogger.h>
+#import "CrashlyticsLogger.h"
 #import "DDLog.h"
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
