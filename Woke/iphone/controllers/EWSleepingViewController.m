@@ -26,6 +26,7 @@
 #import "FBKVOController.h"
 #import "EWActivity.h"
 #import "FBShimmeringView.h"
+#import "POP.h"
 
 
 FBTweakAction(@"Sleeping VC", @"UI", @"Show Wake Up VC", ^{
@@ -71,6 +72,9 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 
 //ViewModel Property
 @property (nonatomic, assign) BOOL canWakeUp;
+
+//Animation
+@property (nonatomic, assign) CGRect slideToWakeUpFrame;
 @end
 
 @implementation EWSleepingViewController
@@ -138,7 +142,11 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     self.shimmeringView.shimmering = YES;
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGesture:)];
-    [self.shimmeringView addGestureRecognizer:panGesture];
+    [self.view addGestureRecognizer:panGesture];
+}
+
+- (void)viewDidLayoutSubviews {
+    self.slideToWakeUpFrame = self.shimmeringView.frame;
 }
 
 - (void)updateCanWakeup {
@@ -164,6 +172,8 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
             percent = fminf(percent, 1.0);
 //            [self updateInteractiveTransition:percent];
             
+            CGPoint newPoint = CGPointMake(self.slideToWakeUpFrame.origin.x + translation.x, self.slideToWakeUpFrame.origin.y);
+            self.shimmeringView.frame = CGRectMake(newPoint.x, newPoint.y, self.slideToWakeUpFrame.size.width, self.slideToWakeUpFrame.size.height);
             _shouldComplete = percent >= Threshold;
             break;
         }
@@ -171,7 +181,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled: {
             if (sender.state == UIGestureRecognizerStateCancelled || !_shouldComplete) {
-//                [self cancelInteractiveTransition];
+                [self cancelInteractiveTransition];
             } else {
                 [self finishInteractiveTransition];
             }
@@ -182,6 +192,14 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
         default:
             break;
     }
+}
+
+
+- (void)cancelInteractiveTransition {
+    POPSpringAnimation *spring = [POPSpringAnimation animationWithPropertyNamed:kPOPViewFrame];
+    spring.toValue = [NSValue valueWithCGRect:self.slideToWakeUpFrame];
+    
+    [self.shimmeringView pop_addAnimation:spring forKey:@"cancel-slide-to-wake-up"];
 }
 
 - (void)finishInteractiveTransition {
