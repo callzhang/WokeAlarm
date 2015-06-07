@@ -129,9 +129,7 @@ PODS:
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - libextobjc/UmbrellaHeader (0.4.1)
-  - MagicalRecord (2.3.0-beta.5):
-    - MagicalRecord/Core (= 2.3.0-beta.5)
-  - MagicalRecord/Core (2.3.0-beta.5)
+  - MagicalRecord (2.3.0)
   - MTDates (1.0.2)
   - NYXImagesKit (2.3)
   - OCMock (3.1.2)
@@ -175,7 +173,7 @@ DEPENDENCIES:
   - KVOController (~> 1.0.3)
   - KZBootstrap (~> 0.5.5)
   - libextobjc (~> 0.4.1)
-  - MagicalRecord (from `https://github.com/magicalpanda/MagicalRecord`, tag `v2.3.0-beta.5`)
+  - MagicalRecord (~> 2.3)
   - MTDates (~> 1.0)
   - NYXImagesKit (~> 2.3)
   - OCMock (~> 3.1.1)
@@ -187,16 +185,6 @@ DEPENDENCIES:
   - RHAddressBook (~> 1.1)
   - Shimmer (~> 1.0.2)
   - Tweaks (~> 1.1.0)
-
-EXTERNAL SOURCES:
-  MagicalRecord:
-    :git: https://github.com/magicalpanda/MagicalRecord
-    :tag: v2.3.0-beta.5
-
-CHECKOUT OPTIONS:
-  MagicalRecord:
-    :git: https://github.com/magicalpanda/MagicalRecord
-    :tag: v2.3.0-beta.5
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
@@ -221,7 +209,7 @@ SPEC CHECKSUMS:
   KZAsserts: 6e613b569a33582dc94cf7a1f34a2c6d870982a7
   KZBootstrap: f4dbeacb8d925129280dcfe83a2167d9cfc45803
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
-  MagicalRecord: 5b7e807bc07c5d642af1f7d894b7fe0d3c317ca2
+  MagicalRecord: 89eb7d7ead39fb37f01c3d010665ee94d17f8dba
   MTDates: aa8006ac046c3fc4f2bb9df95603e9b5bdac9467
   NYXImagesKit: 8163e3335a40eaa173ca5bbbf81fafb57d3947eb
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
@@ -234,4 +222,4 @@ SPEC CHECKSUMS:
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   Tweaks: fea40672d34a7185051b7786be0d587cd76d253c
 
-COCOAPODS: 0.37.1
+COCOAPODS: 0.37.2

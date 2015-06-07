@@ -193,11 +193,11 @@ void initLogging(){
     // because this require some setup for Xcode, commented out here.
     // https://github.com/CocoaLumberjack/CocoaLumberjack/wiki/XcodeColors
     [log setColorsEnabled:YES];
-    [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:LOG_FLAG_ERROR];
-    [log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:LOG_FLAG_WARN];
-    [log setForegroundColor:[UIColor orangeColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
+    [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:DDLogFlagError];
+    [log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:DDLogFlagWarning];
+    [log setForegroundColor:[UIColor orangeColor] backgroundColor:nil forFlag:DDLogFlagInfo];
     //white for debug
-    [log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
+    [log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:DDLogFlagInfo];
     
     //file logger
     [EWUtil shared].fileLogger = [[DDFileLogger alloc] init];
