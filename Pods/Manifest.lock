@@ -181,6 +181,7 @@ DEPENDENCIES:
   - OCMock (~> 3.1.1)
   - Parse (~> 1.7.2)
   - ParseFacebookUtils (~> 1.7.2)
+  - pop (~> 1.0.7)
   - ReactiveCocoa (~> 2.4)
   - ReactiveViewModel (~> 0.3)
   - RHAddressBook (~> 1.1)
