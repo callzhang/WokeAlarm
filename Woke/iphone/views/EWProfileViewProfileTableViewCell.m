@@ -105,6 +105,7 @@
     self.personDisposable = [RACObserve(self, person) subscribeNext:^(EWPerson *person) {
         @strongify(self);
         //pic
+        self.profileImageButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.profileImageButton setImage:person.profilePic forState:UIControlStateNormal];
         [self.profileImageButton applyHexagonSoftMask];
         //name
