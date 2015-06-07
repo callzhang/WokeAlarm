@@ -308,4 +308,8 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 - (IBAction)unwindToSleepingViewController:(UIStoryboardSegue *)segue {
     
 }
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
 @end

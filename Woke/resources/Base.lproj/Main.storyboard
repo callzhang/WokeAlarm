@@ -3243,9 +3243,9 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="v3V-jG-DGb"/>
-        <segue reference="qEe-Vv-RSN"/>
         <segue reference="e6y-LC-ugB"/>
+        <segue reference="qEe-Vv-RSN"/>
+        <segue reference="tfZ-IS-2Ts"/>
         <segue reference="Rze-Xr-CCz"/>
         <segue reference="7lF-Wp-60q"/>
     </inferredMetricsTieBreakers>
