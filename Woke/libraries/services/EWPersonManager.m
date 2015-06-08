@@ -266,9 +266,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     
     EWAssertMainThread
 	
-	[EWUIUtil showWatingHUB];
-	
     [self sendFriendAcceptToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
+        //TODO: something is wrong when accepting request: got pending when friended
         if (request) {
             [[EWPerson me] addFriendsObject:person];
             [[EWPerson me] saveToLocal];
@@ -283,7 +282,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
             }
         }
         else {
-            [EWUIUtil showFailureHUBWithString:@"Failed"];
             completion(EWFriendshipStatusUnknown, error);
         }
     }];

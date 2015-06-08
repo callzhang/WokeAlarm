@@ -98,8 +98,8 @@
 }
 
 - (IBAction)refresh:(id)sender{
-    [loading startAnimating];
     if ([EWPerson me].isOutDated) {
+        [loading startAnimating];
         [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
             
             //notifications = array.mutableCopy;
@@ -129,10 +129,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     EWNotification *notice = notifications[indexPath.row];
     [[EWNotificationManager shared] notificationDidClicked:notice];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    });
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

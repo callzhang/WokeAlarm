@@ -86,7 +86,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     
     if ([notification.type isEqualToString:kNotificationTypeNewMedia]) {
 		NSArray *medias = notification.userInfo[@"medias"];
-        [EWUIUtil showSuccessHUBWithString:[NSString stringWithFormat:@"You have %lu voice awaiting!", medias.count]];
+        [EWUIUtil showText:[NSString stringWithFormat:@"You have %lu voice awaiting!", medias.count]];
         
     } else if ([notification.type isEqualToString:kNotificationTypeFriendRequest]) {
         
@@ -102,9 +102,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
             return;
         }
         
-        if (notification.completed) {
+        if ([[EWPerson myFriends] containsObject:requester]) {
             //show profile view
-			[self presentProfileView:requester];
+			//[self presentProfileView:requester];
+            [UIAlertView bk_showAlertViewWithTitle:@"Already accepted" message:@"Friendship already accepted, view profile?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Yes"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                switch (buttonIndex) {
+                    case 0:
+                        break;
+                        
+                    default:
+                        [self presentProfileView:requester];
+                        break;
+                }
+            }];
 			
         } else {
             [UIAlertView bk_showAlertViewWithTitle:@"Friendship request" message:[NSString stringWithFormat:@"%@ wants to be your friend.", requester.name] cancelButtonTitle:@"Don't accept" otherButtonTitles:@[@"Accept", @"Profile"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
@@ -116,9 +126,13 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
                     case 1:{ //accepted
                         [[EWPerson me] addFriendsObject:requester];
                         [requester addFriendsObject:[EWPerson me]];
+                        
+                        [EWUIUtil showWatingHUB];
                         [[EWPersonManager shared] acceptFriend:requester completion:^(EWFriendshipStatus status, NSError *error) {
                             if (status == EWFriendshipStatusFriended) {
                                 [EWUIUtil showSuccessHUBWithString:@"Accepted"];
+                            } else {
+                                [EWUIUtil showFailureHUBWithString:@"Failed, try again?"];
                             }
                         }];
                         break;

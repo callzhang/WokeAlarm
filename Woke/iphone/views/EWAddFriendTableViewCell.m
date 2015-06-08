@@ -63,10 +63,14 @@
 }
 
 - (IBAction)onAddFriendButton:(id)sender {
+    if (self.person.friendshipStatus == EWFriendshipStatusSent) {
+        [EWUIUtil showText:@"Request already sent"];
+        return;
+    }
     [EWUIUtil showWatingHUB];
     [[EWPersonManager shared] requestFriend:self.person completion:^(EWFriendshipStatus status, NSError *error) {
          [EWUIUtil dismissHUD];
-         DDLogVerbose(@"friend request sent, status changed to :%@", @(status));
+         DDLogVerbose(@"friend request sent, status changed to:%@", @(status));
          if (error) {
              [EWUIUtil showFailureHUBWithString:nil];
              DDLogError(@"got friend request sending error:%@", error);

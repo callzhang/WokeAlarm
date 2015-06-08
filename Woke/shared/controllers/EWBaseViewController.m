@@ -35,27 +35,34 @@
 
 
 - (void)addNavigationBarButtons{
-    //not in navigation controller
-    if ([self respondsToSelector:@selector(close:)]) {
-        
-        UIBarButtonItem *leftButton;
-        
-        if (self.navigationController) {
-            if (self.navigationController.viewControllers.count > 1) {
-                leftButton = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog backButton] style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
-                self.navigationItem.backBarButtonItem = leftButton;
-            } else {
-                //set menu button only if friends view controller is the only one in the stack
+
+    UIBarButtonItem *leftButton;
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.count > 1) {
+            DDLogVerbose(@"Set back image for %@", NSStringFromClass(self.class));
+//            leftButton = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog backButton] style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
+//            self.navigationItem.leftBarButtonItem = leftButton;
+            self.navigationController.navigationBar.backIndicatorImage = [ImagesCatalog backButton];
+        } else {
+            if ([self.navigationController isKindOfClass:[EWMainNavigationController class]]) {
+                DDLogVerbose(@"Set menu button for %@", NSStringFromClass(self.class));
+                //set menu button only if view controller is the only one in the stack
                 leftButton = [self.mainNavigationController menuBarButtonItem];
                 self.navigationItem.leftBarButtonItem = leftButton;
+            }else {
+                DDLogVerbose(@"Added close button for %@", NSStringFromClass(self.class));
+                leftButton = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog closeButton] style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
+                self.navigationItem.leftBarButtonItem = leftButton;
             }
-        } else if (self.presentingViewController) {
-            leftButton = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog wokeNavMenuClose] style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
-            self.navigationItem.leftBarButtonItem = leftButton;
         }
+    } else if (self.presentingViewController) {
+        DDLogVerbose(@"Added close button for %@", NSStringFromClass(self.class));
+        leftButton = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog closeButton] style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
+        self.navigationItem.leftBarButtonItem = leftButton;
     }
     
     if ([self respondsToSelector:@selector(more:)]) {
+        DDLogVerbose(@"Added [...] button for %@", NSStringFromClass(self.class));
         UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStyleDone target:self action:@selector(more:)];
         self.navigationItem.rightBarButtonItem = rightBtn;
     }
@@ -83,7 +90,8 @@
 
 - (IBAction)close:(id)sender{
     //DDLogError(@"Please use sub-class implementation");
-    if (self.presentingViewController || self.navigationController.viewControllers.firstObject == self){
+    if (self.presentingViewController/* || self.navigationController.viewControllers.firstObject == self*/){
+        NSParameterAssert(self.navigationController.viewControllers.count == 1);//when more than one vc in the stack, we should use nav's method to go back, rather than using the close function
         [self dismissViewControllerAnimated:YES completion:NULL];
     }else {
         [self.navigationController popViewControllerAnimated:YES];
