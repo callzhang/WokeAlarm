@@ -25,11 +25,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setNavigationBarTransparent:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
+
+//- (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
+//    self = [super initWithRootViewController:rootViewController];
+//    [self setNavigationBarTransparent:YES];
+//    return self;
+//}
 
 - (void)setNavigationBarTransparent:(BOOL)transparent {
     
@@ -57,11 +64,6 @@
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
-    if ([viewController isKindOfClass:[EWBaseViewController class]]) {
-        [(EWBaseViewController *)viewController addNavigationBarButtons];
-    }
-    [self setNavigationBarTransparent:YES];
-    
     [super pushViewController:viewController animated:animated];
 }
 

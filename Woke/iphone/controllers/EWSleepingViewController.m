@@ -58,7 +58,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
 
 
 
-@interface EWSleepingViewController ()<EWBaseViewNavigationBarButtonsDelegate>{
+@interface EWSleepingViewController (){
     id wakeEnabledObserver;
 }
 @property (nonatomic, strong) EWTimeChildViewController *timeChildViewController;

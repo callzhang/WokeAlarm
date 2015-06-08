@@ -7,6 +7,7 @@
 
 #import "EWAddFriendTableViewCell.h"
 #import "EWPersonManager.h"
+#import "EWUIUtil.h"
 
 @implementation EWAddFriendTableViewCell
 
@@ -62,14 +63,16 @@
 }
 
 - (IBAction)onAddFriendButton:(id)sender {
-    [[EWPersonManager shared] requestFriend:self.person
-                                 completion:^(EWFriendshipStatus status, NSError *error) {
-                                     DDLogVerbose(@"friend request sent, status changed to :%@", @(status));
-                                     if (error) {
-                                         DDLogError(@"got friend request sending error:%@", error);
-                                     }
-                                     [self updateWithFriendshipStatus:@(status)];
-                                 }];
+    [EWUIUtil showWatingHUB];
+    [[EWPersonManager shared] requestFriend:self.person completion:^(EWFriendshipStatus status, NSError *error) {
+         [EWUIUtil dismissHUD];
+         DDLogVerbose(@"friend request sent, status changed to :%@", @(status));
+         if (error) {
+             [EWUIUtil showFailureHUBWithString:nil];
+             DDLogError(@"got friend request sending error:%@", error);
+         }
+         [self updateWithFriendshipStatus:@(status)];
+     }];
 }
 
 - (void)setType:(EWAddFreindTableViewCellType)type {

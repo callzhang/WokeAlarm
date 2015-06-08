@@ -25,7 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+    //self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
     self.title = @"Alarms";
     self.tableView.backgroundColor = [UIColor clearColor];
     

@@ -626,7 +626,7 @@
 
 - (BOOL)isOutDated{
     NSDate *date = self.updatedAt;
-    BOOL outdated = !date.timeElapsed < kServerUpdateInterval;
+    BOOL outdated = !(date.timeElapsed < kServerUpdateInterval);
     return outdated;
 }
 

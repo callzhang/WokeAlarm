@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+    //self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
     self.title = @"Voice";
     
     @weakify(self);

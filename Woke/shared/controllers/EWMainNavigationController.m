@@ -121,7 +121,7 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 #pragma mark - Helper
 - (UIBarButtonItem *)menuBarButtonItem {
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [menuButton setImage:[UIImage imageNamed:@"woke-nav-menu"] forState:UIControlStateNormal];
+    [menuButton setImage:[ImagesCatalog wokeNavMenu] forState:UIControlStateNormal];
     menuButton.frame = CGRectMake(0, 0, 35, 35);
     [menuButton addTarget:self action:@selector(onMenuButton:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -145,17 +145,17 @@ typedef NS_ENUM(NSUInteger, MainViewMenuState) {
 }
 
 @end
-
-@implementation UIViewController(EWMainNavigationController)
-
-- (EWMainNavigationController *)mainNavigationController {
-    EWMainNavigationController *mainController = (EWMainNavigationController*)self.navigationController;
-    if ([mainController isKindOfClass:[EWMainNavigationController class]]) {
-        return mainController;
-    }
-    
-    DDLogError(@"can't find EWMainNavigationController");
-    DDLogError(@"nav controller is %@", self.navigationController);
-    return nil;
-}
-@end
+//
+//@implementation UIViewController(EWMainNavigationController)
+//
+//- (EWMainNavigationController *)mainNavigationController {
+//    EWMainNavigationController *mainController = (EWMainNavigationController*)self.navigationController;
+//    if ([mainController isKindOfClass:[EWMainNavigationController class]]) {
+//        return mainController;
+//    }
+//    
+//    DDLogError(@"can't find EWMainNavigationController");
+//    DDLogError(@"nav controller is %@", self.navigationController);
+//    return nil;
+//}
+//@end

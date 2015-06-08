@@ -301,7 +301,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
         //get social graph of current user
         EWSocial *graph = [EWPerson mySocialGraph];
         //skip if checked within a week
-        if (graph.facebookUpdated && abs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
+        if (graph.facebookUpdated && fabs([graph.facebookUpdated timeIntervalSinceNow]) < kSocialGraphUpdateInterval) {
             DDLogVerbose(@"Facebook friends check skipped.");
             if (block) {
                 block();
@@ -347,7 +347,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
                 [social save];
                 
                 //search for facebook related user
-                [self findNonFriendedFacebookFriendsInWokeWithCompletion:NULL];
+                [self findNotFriendedFacebookFriendsWithCompletion:NULL];
                 
                 //completion
                 if (block) {
@@ -365,7 +365,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
 }
 
 #pragma mark - Find related server users
-- (void)findNonFriendedFacebookFriendsInWokeWithCompletion:(ArrayBlock)block{
+- (void)findNotFriendedFacebookFriendsWithCompletion:(ArrayBlock)block{
     //get list of fb id
     if (!block) return;
     EWSocial *social = [EWPerson mySocialGraph];
@@ -374,7 +374,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
     if (facebookIDs.count == 0 && !social.facebookUpdated) {
         DDLogInfo(@"My social hasn't been updated for facebook friends. Get fb friends first and then redo find woke fb user.");
         [self getFacebookFriendsWithCompletion:^{
-            [self findNonFriendedFacebookFriendsInWokeWithCompletion:block];
+            [self findNotFriendedFacebookFriendsWithCompletion:block];
         }];
         
         return;
@@ -387,7 +387,6 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
 	NSSet *friendsFbIDs = [[EWPerson me] valueForKeyPath:[NSString stringWithFormat:@"%@.%@.%@", EWPersonRelationships.friends, EWPersonRelationships.socialGraph, EWSocialAttributes.facebookID]];
 	if (friendsFbIDs.count) {
 		[query whereKey:EWSocialAttributes.facebookID notContainedIn:friendsFbIDs.allObjects];
-        DDLogInfo(@"Exclude friends's facebookID: %@", facebookIDs);
 	}
 	[query includeKey:EWSocialRelationships.owner];
     //[query setLimit:50];

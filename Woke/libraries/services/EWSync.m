@@ -47,9 +47,6 @@ NSManagedObjectContext *mainContext;
 
 - (void)setup{
     
-    //server: enable alert when offline
-    [Parse errorMessagesEnabled:YES];
-    
     //Access Control: enable public read access while disabling public write access.
     PFACL *defaultACL = [PFACL ACL];
     [defaultACL setPublicReadAccess:YES];

@@ -236,14 +236,10 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
 }
 
 - (IBAction)close:(id)sender {
-    if (self.navigationController) {
-        if ([[self.navigationController viewControllers] objectAtIndex:0] == self || !self.navigationController) {
-            [self.navigationController dismissBlurViewControllerWithCompletionHandler:NULL];
-        }else{
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    }else if (self.presentingViewController){
-        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
+    if ([[self.navigationController viewControllers] objectAtIndex:0] == self || !self.navigationController) {
+        [self.navigationController dismissBlurViewControllerWithCompletionHandler:NULL];
+    }else{
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

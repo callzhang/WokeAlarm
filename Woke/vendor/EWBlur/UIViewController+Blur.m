@@ -37,16 +37,6 @@ static EWBlurNavigationControllerDelegate *delegate = nil;
 	if ([viewController isKindOfClass:[UINavigationController class]]) {
 		UINavigationController *nav = (UINavigationController *)viewController;
 		[nav setDelegate:delegate];
-		
-		//transparant
-		if ([viewController isKindOfClass:[EWBaseNavigationController class]]) {
-			[(EWBaseNavigationController *)viewController setNavigationBarTransparent:YES];
-		}
-		
-		//buttons
-		if ([nav.topViewController isKindOfClass:[EWBaseViewController class]]) {
-			[(EWBaseViewController *)nav.topViewController addNavigationBarButtons];
-		}
 	}else if ([viewController isKindOfClass:[EWBaseViewController class]]) {
 		[(EWBaseViewController *)viewController addNavigationBarButtons];
 	}

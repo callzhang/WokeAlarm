@@ -36,10 +36,6 @@
     self.tableView.sectionIndexColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add Friends" style:UIBarButtonItemStylePlain target:self action:@selector(onAddFriendsBarButtonItem:)];
     
-    //set menu button only if friends view controller is the only one in the stack
-    if (self.navigationController.viewControllers.count == 1) {
-        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
-    }
 }
 
 - (void)onAddFriendsBarButtonItem:(UIBarButtonItem *)item {

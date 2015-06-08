@@ -44,7 +44,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(about:)];
-    self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+    //self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
     self.title = @"Preferences";
     self.tableView.backgroundColor = [UIColor clearColor];
 }

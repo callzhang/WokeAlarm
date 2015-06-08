@@ -241,7 +241,6 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 - (void)requestFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion{
     EWAssertMainThread
-	[EWUIUtil showWatingHUB];
     [self sendFriendRequestToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
         if (request) {
             [[EWPerson me] addFriendshipRequestSentObject:request];

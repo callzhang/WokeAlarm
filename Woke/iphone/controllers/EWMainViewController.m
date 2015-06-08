@@ -43,12 +43,12 @@ typedef NS_ENUM(NSUInteger, MainViewMode) {
     [self.modeSegmentedControl addTarget:self action:@selector(onSegmentedValueChanged:) forControlEvents:UIControlEventValueChanged];
     self.navigationItem.titleView = self.modeSegmentedControl;
     
-    [self.mainNavigationController setNavigationBarTransparent:YES];
+    //[self.mainNavigationController setNavigationBarTransparent:YES];
     
     self.mode = MainViewModeSleep;
     
-    self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    //self.navigationItem.leftBarButtonItem = self.mainNavigationController.menuBarButtonItem;
+    //self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

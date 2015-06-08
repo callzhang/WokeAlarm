@@ -10,7 +10,7 @@
 #import "EWBaseViewController.h"
 
 typedef void(^MenuBackgroundTapHanlder)(void);
-@interface EWMenuViewController : EWBaseViewController
+@interface EWMenuViewController : UIViewController
 
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundView;

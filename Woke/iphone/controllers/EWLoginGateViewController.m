@@ -17,11 +17,11 @@
 
 @implementation EWLoginGateViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    [self.mainNavigationController setNavigationBarTransparent:YES];
-}
+//- (void)viewDidLoad {
+//    [super viewDidLoad];
+//    
+//    [self.mainNavigationController setNavigationBarTransparent:YES];
+//}
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

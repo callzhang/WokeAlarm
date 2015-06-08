@@ -49,7 +49,7 @@
     UIBarButtonItem *refreshBtn = [[UIBarButtonItem alloc] initWithCustomView:loading];
     refreshBtn.action = @selector(refresh:);
     refreshBtn.target = self;
-    self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    //self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
     self.navigationItem.rightBarButtonItem = refreshBtn;
     
     NSInteger nUnread = notifications.count;

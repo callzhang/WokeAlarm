@@ -127,7 +127,7 @@
 
 - (void)testSearchFacebookUser{
 	XCTestExpectation *expectation = [self expectationWithDescription:@"Expect to find facebook friends"];
-	[[EWSocialManager sharedInstance] findNonFriendedFacebookFriendsInWokeWithCompletion:^(NSArray *array, NSError *error) {
+	[[EWSocialManager sharedInstance] findNotFriendedFacebookFriendsWithCompletion:^(NSArray *array, NSError *error) {
 		NSLog(@"Found %ld face matched friends from server", array.count);
 		if (!error) {
 			[expectation fulfill];

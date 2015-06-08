@@ -43,12 +43,12 @@ UIViewController *rootViewController;
     // Enable Crash Reporting
 	initLogging();
 	
-	//add testing panel callout gesture
+#ifdef DEBUG//add testing panel callout gesture
 	[EWUtil addTestGesture];
+#endif
 	
 	//crashlytics
     [Fabric with:@[CrashlyticsKit]];
-
 	
 	// Parse
     [Parse enableLocalDatastore];

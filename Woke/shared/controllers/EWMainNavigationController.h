@@ -14,6 +14,6 @@
 @end
 
 
-@interface UIViewController(EWMainNavigationController)
-@property (nonatomic, readonly) EWMainNavigationController *mainNavigationController;
-@end
+//@interface UIViewController(EWMainNavigationController)
+//@property (nonatomic, readonly) EWMainNavigationController *mainNavigationController;
+//@end

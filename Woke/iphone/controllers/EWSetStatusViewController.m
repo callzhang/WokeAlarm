@@ -12,7 +12,7 @@
 #import "UIViewController+Blur.h"
 #import "EWAlarm.h"
 
-@interface EWSetStatusViewController ()<UITextFieldDelegate, EWBaseViewNavigationBarButtonsDelegate>
+@interface EWSetStatusViewController ()<UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *buttonBottomLayoutConstraint;
 @property (weak, nonatomic) IBOutlet UITextField *statusTextField;
 
@@ -29,7 +29,7 @@
         self.statusTextField.text = alarm.statement;
     }];
     
-    [self.baseNavigationController setNavigationBarTransparent:YES];
+    //[self.baseNavigationController setNavigationBarTransparent:YES];
     [self.statusTextField becomeFirstResponder];
 }
 

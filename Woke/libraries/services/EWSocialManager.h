@@ -28,7 +28,7 @@
 //facebook friends search
 - (void)getFacebookFriendsWithCompletion:(VoidBlock)block;
 //match facebook friends on server to find related users
-- (void)findNonFriendedFacebookFriendsInWokeWithCompletion:(ArrayBlock)block;
+- (void)findNotFriendedFacebookFriendsWithCompletion:(ArrayBlock)block;
 - (NSURL *)getFacebookProfilePictureURLWithID:(NSString *)fid;
 /**
  *  RHPeople

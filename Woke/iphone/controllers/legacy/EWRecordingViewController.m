@@ -34,7 +34,7 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
     EWRecordingViewStatePlaying,
 };
 
-@interface EWRecordingViewController ()<EWBaseViewNavigationBarButtonsDelegate>{
+@interface EWRecordingViewController (){
     NSURL *recordingFileUrl;
     CADisplayLink *displayLink;
 }
@@ -58,11 +58,6 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
     
     //texts
     self.title = @"Recording";
-
-    //NavigationController
-    if (!self.navigationItem.leftBarButtonItem) {
-        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
-    }
 
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
@@ -232,13 +227,12 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
     }
 }
 
-//delegate
 - (IBAction)close:(id)sender {
     if ([[EWAVManager sharedManager].recorder isRecording]) {
         [EWUIUtil showWarningHUBWithString:@"Woke is recording"];
     }
     else{
-        [self dismissBlurViewControllerWithCompletionHandler:NULL];
+        [super close:sender];
     }
 }
 

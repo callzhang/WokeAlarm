@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "EWBaseViewController.h"
 
-@interface EWProfileViewController : EWBaseViewController<EWBaseViewNavigationBarButtonsDelegate>
+@interface EWProfileViewController : EWBaseViewController
 
 @property (nonatomic, strong) EWPerson *person;
 @end

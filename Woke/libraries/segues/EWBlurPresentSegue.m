@@ -24,10 +24,7 @@
     }
     else{
         nav = [[EWBaseNavigationController alloc] initWithRootViewController:toVC];
-        [nav setNavigationBarTransparent:YES];
-        if ([toVC isKindOfClass:[EWBaseViewController class]]) {
-            [(EWBaseViewController *)toVC addNavigationBarButtons];
-        }
+        //[nav setNavigationBarTransparent:YES];
     }
         
     [fromVC presentViewControllerWithBlurBackground:nav];

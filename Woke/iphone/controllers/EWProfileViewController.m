@@ -48,17 +48,6 @@
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    if (!self.navigationItem.leftBarButtonItem) {
-        self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
-    }
-    if (!self.navigationItem.rightBarButtonItem) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[ImagesCatalog moreButton] style:UIBarButtonItemStylePlain target:self action:@selector(more:)];
-    }
-}
-
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     NSParameterAssert(_person);
