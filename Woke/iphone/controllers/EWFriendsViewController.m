@@ -25,7 +25,6 @@
 @end
 
 @implementation EWFriendsViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (!self.friends) {

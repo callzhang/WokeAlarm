@@ -333,14 +333,12 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             // Request succeeded, meaning achievedAccuracy is at least the requested accuracy, and
             // currentLocation contains the device's current location.
             DDLogInfo(@"Updated location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
-            [self processLocation:currentLocation];
         }
         else if (status == INTULocationStatusTimedOut) {
             // Wasn't able to locate the user with the requested accuracy within the timeout interval.
             // However, currentLocation contains the best location available (if any) as of right now,
             // and achievedAccuracy has info on the accuracy/recency of the location in currentLocation.
             DDLogInfo(@"After 60s, we accept location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
-            [self processLocation:currentLocation];
         }
 		else if (status & (INTULocationStatusServicesDenied | INTULocationStatusServicesDisabled | INTULocationStatusServicesRestricted)){
 			DDLogError(@"Failed to get location with status of %ld and location of %@", status, currentLocation);
@@ -351,14 +349,17 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 					[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 				}
 			}];
-			
-			[self setProxymateLocationForPerson:[EWPerson me]];
 		}
         else {
 			DDLogError(@"Failed to get location with status of %ld and location of %@", status, currentLocation);
-			[EWUIUtil showText:@"Location service failed"];
-			
-			[self setProxymateLocationForPerson:[EWPerson me]];
+			[EWUIUtil showText:@"Location update failed"];
+        }
+        
+        //process location
+        if (currentLocation) {
+            [self processLocation:currentLocation];
+        }else {
+            [self setProxymateLocationForPerson:[EWPerson me]];
         }
     }];
 	
