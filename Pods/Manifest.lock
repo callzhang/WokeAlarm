@@ -55,8 +55,19 @@ PODS:
     - CocoaLumberjack/Default
   - DACircularProgress (2.3.1)
   - Expecta (0.3.2)
-  - Facebook-iOS-SDK (3.23.2):
-    - Bolts (~> 1.0)
+  - FBSDKCoreKit (4.2.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc (= 4.2.0)
+    - FBSDKCoreKit/no-arc (= 4.2.0)
+  - FBSDKCoreKit/arc (4.2.0):
+    - Bolts (~> 1.1)
+  - FBSDKCoreKit/no-arc (4.2.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc
+  - FBSDKLoginKit (4.2.0):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.2.0):
+    - FBSDKCoreKit
   - FormatterKit (1.8.0):
     - FormatterKit/AddressFormatter (= 1.8.0)
     - FormatterKit/ArrayFormatter (= 1.8.0)
@@ -132,9 +143,10 @@ PODS:
   - OCMock (3.1.2)
   - Parse (1.7.4):
     - Bolts/Tasks (>= 1.1.5)
-  - ParseFacebookUtils (1.7.4):
+  - ParseFacebookUtilsV4 (1.7.4):
     - Bolts/Tasks (>= 1.1.5)
-    - Facebook-iOS-SDK (~> 3.23)
+    - FBSDKCoreKit (~> 4.0)
+    - FBSDKLoginKit (~> 4.0)
     - Parse (~> 1.7.4)
   - pop (1.0.7)
   - ReactiveCocoa (2.5):
@@ -157,7 +169,7 @@ DEPENDENCIES:
   - BlocksKit (~> 2.2.5)
   - CocoaLumberjack (= 2.0.0-rc)
   - Expecta (~> 0.3.1)
-  - Facebook-iOS-SDK (~> 3.23)
+  - FBSDKShareKit (~> 4.2.0)
   - FormatterKit (~> 1.8.0)
   - GKImagePicker (~> 0.0)
   - GPUImage (~> 0.1.6)
@@ -173,7 +185,7 @@ DEPENDENCIES:
   - NYXImagesKit (~> 2.3)
   - OCMock (~> 3.1.1)
   - Parse (~> 1.7.2)
-  - ParseFacebookUtils (~> 1.7.2)
+  - ParseFacebookUtilsV4 (~> 1.7.4)
   - pop (~> 1.0.7)
   - ReactiveCocoa (~> 2.4)
   - ReactiveViewModel (~> 0.3)
@@ -190,7 +202,9 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 04c5b9b7479dd4276a09700fcd6644423ea1751c
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Expecta: 8c507baf13211207b1e9d0a741480600e6b4ed15
-  Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
+  FBSDKCoreKit: 84b3616a361801f190e43a9909caead7bb6087c7
+  FBSDKLoginKit: 57e37106af12c9e264e473dcb75d7decdbb07fe4
+  FBSDKShareKit: 931746fdf8fb95efd6e12310ec14b2b3295e2aec
   FormatterKit: bddde83e054edf9d9ee14f9de3b3a5103db256f4
   GKImagePicker: 38eabf8e048ed7275f9bc3cc3c3f3620c4a4826f
   GPUImage: 4675ce4a5370ca92fcea8623b2a08b8f0c51b940
@@ -207,7 +221,7 @@ SPEC CHECKSUMS:
   NYXImagesKit: 8163e3335a40eaa173ca5bbbf81fafb57d3947eb
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
   Parse: 6ca512c6e860b66739c95151b2f76ac4712b7842
-  ParseFacebookUtils: 7115990b291ae95b920fde413272828d0eb0d963
+  ParseFacebookUtilsV4: 481ea7b00f8f62440c314ac7f80eada228bf7488
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
   ReactiveViewModel: 58918dcbcec2d3151195ab1ed9163c57a8163999

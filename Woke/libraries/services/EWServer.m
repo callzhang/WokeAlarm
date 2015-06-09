@@ -24,8 +24,9 @@
 //Tool
 #import "EWUIUtil.h"
 #import "EWAlarmManager.h"
-#import "FBRequestConnection.h"
-#import "FBSession.h"
+#import "FacebookSDKWorkAround.h"
+//#import "FBRequestConnection.h"
+//#import "FBSession.h"
 
 @implementation EWServer
 GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
@@ -234,8 +235,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
     NSArray *permissionsNeeded = @[@"publish_actions"];
     
     // Request the permissions the user currently has
-    [FBRequestConnection startWithGraphPath:@"/me/permissions"
-                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [FBSDKGraphRequestConnection startWithGraphPath:@"/me/permissions"
+                          completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                               if (!error){
                                   NSDictionary *currentPermissions= [(NSArray *)[result data] objectAtIndex:0];
                                   DDLogDebug(@"current permissions %@", currentPermissions);
@@ -252,22 +253,23 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
                                   // If we have permissions to request
                                   if ([requestPermissions count] > 0){
                                       // Ask for the missing permissions
-                                      [FBSession.activeSession requestNewPublishPermissions:requestPermissions
-                                                                            defaultAudience:FBSessionDefaultAudienceFriends
-                                                                          completionHandler:^(FBSession *session, NSError *err) {
-                                                                              if (!err) {
-                                                                                  // Permission granted
-                                                                                  DDLogInfo(@"new permissions %@", [FBSession.activeSession permissions]);
-                                                                                  // We can request the user information
-                                                          [EWServer makeRequestToPostStoryWithId:objectId andUrlString:url];
-                                                        //upload a graph and form a OG story
-                                                                                  
-                                                                              } else {
-                                                                                  // An error occurred, we need to handle the error
-                                                                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                                                                  DDLogError(@"error %@", err.description);
-                                                                              }
-                                                                          }];
+                                      //https://developers.facebook.com/docs/ios/upgrading-4.x#3to4
+//                                      [FBSession.activeSession requestNewPublishPermissions:requestPermissions
+//                                                                            defaultAudience:FBSessionDefaultAudienceFriends
+//                                                                          completionHandler:^(FBSession *session, NSError *err) {
+//                                                                              if (!err) {
+//                                                                                  // Permission granted
+//                                                                                  DDLogInfo(@"new permissions %@", [FBSession.activeSession permissions]);
+//                                                                                  // We can request the user information
+//                                                          [EWServer makeRequestToPostStoryWithId:objectId andUrlString:url];
+//                                                        //upload a graph and form a OG story
+//                                                                                  
+//                                                                              } else {
+//                                                                                  // An error occurred, we need to handle the error
+//                                                                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+//                                                                                  DDLogError(@"error %@", err.description);
+//                                                                              }
+//                                                                          }];
                                   } else {
                                       // Permissions are present
                                       // We can request the user information

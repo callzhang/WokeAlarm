@@ -4,7 +4,7 @@ inhibit_all_warnings!
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Woke' do
-  pod 'Facebook-iOS-SDK', '~> 3.23'
+#  pod 'Facebook-iOS-SDK', '~> 3.23'
   pod 'GPUImage', '~> 0.1.6'
   pod 'Parse', '~> 1.7.2'
   pod 'AFNetworking', '~> 2.5.1'
@@ -33,7 +33,8 @@ target 'Woke' do
   pod 'INTULocationManager', '~> 2.0'
   pod 'InflectorKit', '~> 0.0.1'
   pod 'FormatterKit', '~> 1.8.0'
-  pod 'ParseFacebookUtils', '~> 1.7.2'
+  pod 'ParseFacebookUtilsV4', '~> 1.7.4'
+  pod 'FBSDKShareKit', '~> 4.2.0'
   pod 'pop', '~> 1.0.7'
 end
 

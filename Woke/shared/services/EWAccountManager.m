@@ -12,7 +12,7 @@
 #import "EWPerson.h"
 #import "EWErrorManager.h"
 #import "EWSocialManager.h"
-#import "FBSession.h"
+//#import "FBSession.h"
 #import "EWServer.h"
 #import "ATConnect.h"
 #import "AppDelegate.h"
@@ -23,8 +23,9 @@
 #import "FBKVOController.h"
 #import <BlocksKit+UIKit.h>
 #import "UIAlertView+BlocksKit.h"
-#import "FBGraphLocation.h"
-#import "FBGraphPlace.h"
+#import "FBSDKGraphRequest.h"
+//#import "FBGraphLocation.h"
+//#import "FBGraphPlace.h"
 
 
 FBTweakAction(@"AccountManager", @"Action", @"Purge Core Data", ^{
@@ -93,6 +94,28 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         }
         else {
             if (error) {
+                /**
+                 *  if session is expired, FBErrorHTTPError
+                 */
+//                if ([error.domain isEqualToString:FacebookSDKDomain] && error.code == FBErrorHTTPError) {
+//                    [[PFFacebookUtils session] closeAndClearTokenInformation];
+//                    
+//                    [PFFacebookUtils reauthorizeUser:[PFUser currentUser] withPublishPermissions:[[self class] facebookPermissions] audience:FBSessionDefaultAudienceOnlyMe block:^(BOOL success, NSError *error) {
+//                        if (success) {
+//                            if (completion) {
+//                                completion(nil);
+//                            }
+//                        }
+//                        else {
+//                            [self logout];
+//                            if (completion) {
+//                                completion(error);
+//                            }
+//                        }
+//                    }];
+//                    
+//                    return ;
+//                }
                 [self logout];
                 if (completion) {
                     completion(error);
@@ -217,7 +240,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 	
     if (outDated && hasFacebook) {
 		self.isUpdatingFacebookInfo = YES;
-        [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *data, NSError *error) {
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                                                       parameters:nil];
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id data, NSError *error) {
             if (!data) {
                 [EWErrorManager handleError:error];
             } else{
@@ -230,6 +255,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             
             self.isUpdatingFacebookInfo = NO;
         }];
+        
     } else {
         DDLogInfo(@"Skipped updateing facebook info (last checked: %@)", lastUpdated.date2detailDateString);
         if (block) {
@@ -239,61 +265,61 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 }
 
 //after fb login, fetch user managed object
-- (void)updateUserWithFBData:(NSDictionary<FBGraphUser> *)user{
+- (void)updateUserWithFBData:(NSDictionary *)user{
     EWSocial *sg = [EWPerson mySocialGraph];
-    EWPerson *me = [EWPerson me];
-    
-    NSParameterAssert(me);
-    
-    //name
-    if (!me.firstName) me.firstName = user.first_name;
-    if (!me.lastName) me.lastName = user.last_name;
-    
-    //email
-    NSString *email = user[@"email"];
-    if (!me.email) me.email = [email lowercaseString];
-    
-    //birthday format: "01/21/1984";
-    if (!me.birthday) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"mm/dd/yyyy";
-        me.birthday = [formatter dateFromString:user[@"birthday"]];
-    }
-    //facebook link
-    sg.facebookID = user.objectID;
-    me.socialProfileID = [NSString stringWithFormat:@"%@%@", kFacebookIDPrefix, user.objectID];
-    //gender
-    me.gender = user[@"gender"];
-    //location
-    me.city = user.location.location.city;
-    me.country = user.location.location.country;
-    
-    if (!me.profilePic) {
-        //download profile picture if needed
-        //profile pic, async download, need to assign img to person before leave
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-            EWPerson *localMe = [me MR_inContext:localContext];
-            NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", user.objectID];
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
-            UIImage *img = [UIImage imageWithData:data];
-            if (!img) {
-                img = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];
-            }
-            localMe.profilePic = img;
-        }];
-    }
-
-    DDLogInfo(@"Updated user with facebook info");
-    //set location
-    if (![EWPerson me].location) {
-        [self setProxymateLocationForPerson:[EWPerson me]];
-    }
-    //save time
-    [[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:@"facebook_last_updated"];
-    //update friends
-    [[EWSocialManager sharedInstance] getFacebookFriendsWithCompletion:nil];
-    //save
-    [me save];
+//    EWPerson *me = [EWPerson me];
+//    
+//    NSParameterAssert(me);
+//    
+//    //name
+//    if (!me.firstName) me.firstName = user.first_name;
+//    if (!me.lastName) me.lastName = user.last_name;
+//    
+//    //email
+//    NSString *email = user[@"email"];
+//    if (!me.email) me.email = [email lowercaseString];
+//    
+//    //birthday format: "01/21/1984";
+//    if (!me.birthday) {
+//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//        formatter.dateFormat = @"mm/dd/yyyy";
+//        me.birthday = [formatter dateFromString:user[@"birthday"]];
+//    }
+//    //facebook link
+//    sg.facebookID = user.objectID;
+//    me.socialProfileID = [NSString stringWithFormat:@"%@%@", kFacebookIDPrefix, user.objectID];
+//    //gender
+//    me.gender = user[@"gender"];
+//    //location
+//    me.city = user.location.location.city;
+//    me.country = user.location.location.country;
+//    
+//    if (!me.profilePic) {
+//        //download profile picture if needed
+//        //profile pic, async download, need to assign img to person before leave
+//        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+//            EWPerson *localMe = [me MR_inContext:localContext];
+//            NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", user.objectID];
+//            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
+//            UIImage *img = [UIImage imageWithData:data];
+//            if (!img) {
+//                img = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", arc4random_uniform(15)]];
+//            }
+//            localMe.profilePic = img;
+//        }];
+//    }
+//
+//    DDLogInfo(@"Updated user with facebook info");
+//    //set location
+//    if (![EWPerson me].location) {
+//        [self setProxymateLocationForPerson:[EWPerson me]];
+//    }
+//    //save time
+//    [[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:@"facebook_last_updated"];
+//    //update friends
+//    [[EWSocialManager sharedInstance] getFacebookFriendsWithCompletion:nil];
+//    //save
+//    [me save];
 }
 
 

@@ -23,6 +23,7 @@
 /* Begin PBXBuildFile section */
 		09001F951A7EE8C400CFF6FB /* CGLAlphabetizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 09001F941A7EE8C400CFF6FB /* CGLAlphabetizer.m */; };
 		09001F971A7EF64D00CFF6FB /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09001F961A7EF64D00CFF6FB /* Lato-Thin.ttf */; };
+		09041D721B2674E800B7C2CD /* FacebookSDKWorkAround.m in Sources */ = {isa = PBXBuildFile; fileRef = 09041D711B2674E800B7C2CD /* FacebookSDKWorkAround.m */; };
 		090443621A7B191300E6CE79 /* AssetCatalogIdentifiers.m in Sources */ = {isa = PBXBuildFile; fileRef = 0904435F1A7B191300E6CE79 /* AssetCatalogIdentifiers.m */; };
 		090443631A7B191300E6CE79 /* StoryboardIdentifiers.m in Sources */ = {isa = PBXBuildFile; fileRef = 090443611A7B191300E6CE79 /* StoryboardIdentifiers.m */; };
 		090665531A3CD40800FF76E6 /* EWAlarmToneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 090665521A3CD40800FF76E6 /* EWAlarmToneViewController.m */; };
@@ -218,6 +219,8 @@
 		09001F931A7EE8C400CFF6FB /* CGLAlphabetizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGLAlphabetizer.h; sourceTree = "<group>"; };
 		09001F941A7EE8C400CFF6FB /* CGLAlphabetizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGLAlphabetizer.m; sourceTree = "<group>"; };
 		09001F961A7EF64D00CFF6FB /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Thin.ttf"; sourceTree = "<group>"; };
+		09041D701B2674E800B7C2CD /* FacebookSDKWorkAround.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookSDKWorkAround.h; sourceTree = "<group>"; };
+		09041D711B2674E800B7C2CD /* FacebookSDKWorkAround.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookSDKWorkAround.m; sourceTree = "<group>"; };
 		0904435E1A7B191300E6CE79 /* AssetCatalogIdentifiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetCatalogIdentifiers.h; sourceTree = "<group>"; };
 		0904435F1A7B191300E6CE79 /* AssetCatalogIdentifiers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetCatalogIdentifiers.m; sourceTree = "<group>"; };
 		090443601A7B191300E6CE79 /* StoryboardIdentifiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoryboardIdentifiers.h; sourceTree = "<group>"; };
@@ -821,6 +824,8 @@
 				096AAA9B1A195A3900B4CBFF /* UIView+Extend.m */,
 				096AAA9C1A195A3900B4CBFF /* UIView+Layout.h */,
 				096AAA9D1A195A3900B4CBFF /* UIView+Layout.m */,
+				09041D701B2674E800B7C2CD /* FacebookSDKWorkAround.h */,
+				09041D711B2674E800B7C2CD /* FacebookSDKWorkAround.m */,
 			);
 			path = categories;
 			sourceTree = "<group>";
@@ -1713,6 +1718,7 @@
 				096585C61B24E539001AB46F /* CrashlyticsLogger.m in Sources */,
 				9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */,
 				091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */,
+				09041D721B2674E800B7C2CD /* FacebookSDKWorkAround.m in Sources */,
 				096AAAED1A195A3900B4CBFF /* EWWakeUpManager.m in Sources */,
 				096AAAF01A195A3900B4CBFF /* PFQuery+EWQuery.m in Sources */,
 				096AAAEE1A195A3900B4CBFF /* EWServerObject+EWSync.m in Sources */,

@@ -54,6 +54,8 @@ UIViewController *rootViewController;
     [Parse enableLocalDatastore];
 	[Parse setApplicationId:kParseApplicationId clientKey:kParseClientKey];
 	
+    [PFFacebookUtils initializeFacebook];
+    
 	//apptentive
 	[ATConnect sharedConnection].apiKey = kATConnectKey;
 	
@@ -63,6 +65,7 @@ UIViewController *rootViewController;
 	
     //Init startup sequence and save launch options
     [EWStartUpSequence sharedInstance].launchOptions = launchOptions;
+    
     
     //Login process: https://www.lucidchart.com/documents/edit/47d70f1c-5306-dbab-81ce-6d480a005610
     if ([EWAccountManager isLoggedIn]) {
@@ -109,10 +112,12 @@ UIViewController *rootViewController;
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     // Logs 'install' and 'app activate' App Events.
-    [FBAppEvents activateApp];
+//    [FBAppEvents activateApp];
+    [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+    [[PFFacebookUtils session] close];
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
