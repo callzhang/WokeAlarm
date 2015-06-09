@@ -38,16 +38,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reload) name:kNotificationNew object:nil];
     
     // Data source
-    [self reload];
+    self.notifications = [EWPerson myNotifications];
     
-    //tableview
     //toolbar
-    _loading = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    _loading.hidesWhenStopped = YES;
-    UIBarButtonItem *refreshBtn = [[UIBarButtonItem alloc] initWithCustomView:_loading];
-    refreshBtn.action = @selector(refresh:);
-    refreshBtn.target = self;
-    //self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
+    //_loading = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+    //_loading.hidesWhenStopped = YES;
+    UIBarButtonItem *refreshBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];
     self.navigationItem.rightBarButtonItem = refreshBtn;
     
     @weakify(self);
@@ -58,7 +54,7 @@
             self.title = [NSString stringWithFormat:@"Notifications (%ld)",(unsigned long)nUnread];
         }
         else{
-            self.title = @"Notifications";
+            self.title = @"Notification";
         }
     }];
     
@@ -90,26 +86,17 @@
     return NO;
 }
 
-- (void)reload{
-    self.notifications = [EWPerson myNotifications];
-    [self.tableView reloadData];
-}
-
 #pragma mark - UI event
 - (IBAction)close:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)refresh:(id)sender{
-    if ([EWPerson me].isOutDated) {
-        [_loading startAnimating];
-        [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
-            
-            //notifications = array.mutableCopy;
-            [_loading stopAnimating];
-            [self reload];
-        }];
-    }
+    [EWUIUtil showWatingHUB];
+    [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
+        [EWUIUtil dismissHUD];
+        [self.tableView reloadData];
+    }];
 }
 
 #pragma mark - TableView
