@@ -90,7 +90,8 @@
     
     EWProfileViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:MainStoryboardIDs.viewControllers.EWProfile];
     vc.person = person;
-    [self presentWithBlur:vc withCompletion:NULL];
+    EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:vc];
+    [self presentWithBlur:nav withCompletion:NULL];
 //    EWBaseNavigationController *nav = [[EWBaseNavigationController alloc] initWithRootViewController:vc];
 //    [nav setNavigationBarTransparent:YES];
 //    @weakify(vc);

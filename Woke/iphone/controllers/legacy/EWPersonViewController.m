@@ -69,9 +69,7 @@ NSString *const activitiyCellIdentifier = @"ActivityCell";
     [super viewDidLoad];
 	
 	//set me
-	if (!person) {
-		self.person = [EWPerson me];
-	}
+    NSParameterAssert(person);
     
     //data source
     statsManager = [EWCachedInfoManager managerForPerson:person];

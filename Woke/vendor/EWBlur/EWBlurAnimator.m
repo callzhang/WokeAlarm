@@ -95,10 +95,6 @@ static const CGFloat initialDownSampling = 2;
 	}else{
 		vc = toViewController;
 	}
-	UIView *img = [vc.view viewWithTag:kBackgroundImageTag];
-	if ([img isKindOfClass:[UIImageView class]]) {
-		[img removeFromSuperview];
-	}
 	
     container = [transitionContext containerView];
     fromView = fromViewController.view;
@@ -124,6 +120,9 @@ static const CGFloat initialDownSampling = 2;
 	self.startTime = 0;
 	
     if (self.type == UINavigationControllerOperationPush || self.type == kModelViewPresent) {
+		//remove background
+		UIView *img = [vc.view viewWithTag:kBackgroundImageTag];
+		[img removeFromSuperview];
 		
         //pre animation toView set up
         toView.alpha = 0.01;

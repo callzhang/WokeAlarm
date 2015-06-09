@@ -366,8 +366,8 @@
 		096AAAFB1A1972B800B4CBFF /* EWFriendsViewController_old.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWFriendsViewController_old.m; sourceTree = "<group>"; };
 		096AAAFC1A1972B800B4CBFF /* EWLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWLogInViewController.h; sourceTree = "<group>"; };
 		096AAAFD1A1972B800B4CBFF /* EWLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWLogInViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		096AAAFE1A1972B800B4CBFF /* EWPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWPersonViewController.h; path = legacy/EWPersonViewController.h; sourceTree = "<group>"; };
-		096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = EWPersonViewController.m; path = legacy/EWPersonViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		096AAAFE1A1972B800B4CBFF /* EWPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPersonViewController.h; sourceTree = "<group>"; };
+		096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWPersonViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAB001A1972B800B4CBFF /* EWPostWakeUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWPostWakeUpViewController.h; sourceTree = "<group>"; };
 		096AAB011A1972B800B4CBFF /* EWPostWakeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWPostWakeUpViewController.m; sourceTree = "<group>"; };
 		096AAB021A1972B800B4CBFF /* EWRecordingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWRecordingViewController.h; path = legacy/EWRecordingViewController.h; sourceTree = "<group>"; };
@@ -730,8 +730,6 @@
 				093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */,
 				0912BEC11A7EC81B004DA529 /* EWProfileViewController.h */,
 				0912BEC21A7EC81B004DA529 /* EWProfileViewController.m */,
-				096AAAFE1A1972B800B4CBFF /* EWPersonViewController.h */,
-				096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */,
 				096AAB021A1972B800B4CBFF /* EWRecordingViewController.h */,
 				096AAB031A1972B800B4CBFF /* EWRecordingViewController.m */,
 				090C0BAE1A805D470006B01C /* EWAddFriendsViewController.h */,
@@ -901,6 +899,8 @@
 		096AAAF51A1972B800B4CBFF /* legacy */ = {
 			isa = PBXGroup;
 			children = (
+				096AAAFE1A1972B800B4CBFF /* EWPersonViewController.h */,
+				096AAAFF1A1972B800B4CBFF /* EWPersonViewController.m */,
 				9B8D75621A6397CC0013B011 /* EWNotificationViewController.xib */,
 				096AAAF61A1972B800B4CBFF /* EWAlarmScheduleViewController.h */,
 				096AAAF71A1972B800B4CBFF /* EWAlarmScheduleViewController.m */,

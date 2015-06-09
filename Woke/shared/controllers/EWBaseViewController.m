@@ -10,10 +10,6 @@
 #import "EWMainNavigationController.h"
 #import "EWBackgroundView.h"
 
-@interface EWBaseViewController ()
-
-@end
-
 @implementation EWBaseViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,6 +20,7 @@
     //add background
     UIView *bg = [[EWBackgroundView alloc] initWithFrame:self.view.frame];
     self.backgroundView = bg;
+    self.backgroundView.tag = 804;
     [self.view insertSubview:bg atIndex:0];
     NSArray *contraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[bg]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(bg)];
     //[self.constrants addObjectsFromArray:contraint];

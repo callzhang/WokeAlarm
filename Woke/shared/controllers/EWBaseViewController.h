@@ -9,16 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "EWMainNavigationController.h"
 //
-//@protocol EWBaseViewNavigationBarButtonsDelegate
-//- (IBAction)close:(id)sender;
-//@optional
-//- (IBAction)more:(id)sender;
-//@end
+@protocol EWBaseViewNavigationBarButtonsDelegate
+@optional
+- (IBAction)close:(id)sender;
+- (IBAction)more:(id)sender;
+@end
 
-@interface EWBaseViewController : UIViewController
+@interface EWBaseViewController : UIViewController<EWBaseViewNavigationBarButtonsDelegate>
 @property (nonatomic, strong) UIView *backgroundView;
 @property (nonatomic, readonly) EWMainNavigationController *mainNavigationController;
 - (void)addNavigationBarButtons;
-- (IBAction)close:(id)sender;
-- (IBAction)more:(id)sender;
 @end
