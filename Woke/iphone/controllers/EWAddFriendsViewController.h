@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "EWBaseViewController.h"
 
-@interface EWAddFriendsViewController : UIViewController
+@interface EWAddFriendsViewController : EWBaseViewController
 
 @end
