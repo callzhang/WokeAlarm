@@ -46,6 +46,14 @@
             self.tableViewBottomLayoutConstraint.constant = 80;
         }
     }];
+    
+    if (_person.isOutDated || [_person.updatedAt timeIntervalSinceNow] < -30) {
+        [EWUIUtil showWatingHUB];
+        [_person refreshInBackgroundWithCompletion:^(NSError *error) {
+            [self.tableView reloadData];
+            [EWUIUtil dismissHUD];
+        }];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -55,14 +63,6 @@
 
 
 #pragma mark - UI
-- (IBAction)close:(id)sender {
-    if (self.presentingViewController){
-        [self.presentingViewController dismissBlurViewControllerWithCompletionHandler:NULL];
-    }else{
-        [self.navigationController dismissBlurViewControllerWithCompletionHandler:NULL];
-    }
-}
-
 - (IBAction)more:(id)sender {
     UIActionSheet *sheet;
     if (_person.isMe) {
