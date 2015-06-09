@@ -18,11 +18,9 @@
 
 #define kNotificationCellIdentifier     @"NotificationCellIdentifier"
 
-@interface EWNotificationViewController (){
-    NSMutableArray *notifications;
-    UIActivityIndicatorView *loading;
-}
-
+@interface EWNotificationViewController ()
+@property (nonatomic, strong) NSArray *notifications;
+@property (nonatomic, strong) UIActivityIndicatorView *loading;
 @end
 
 @implementation EWNotificationViewController
@@ -44,21 +42,26 @@
     
     //tableview
     //toolbar
-    loading = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    loading.hidesWhenStopped = YES;
-    UIBarButtonItem *refreshBtn = [[UIBarButtonItem alloc] initWithCustomView:loading];
+    _loading = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+    _loading.hidesWhenStopped = YES;
+    UIBarButtonItem *refreshBtn = [[UIBarButtonItem alloc] initWithCustomView:_loading];
     refreshBtn.action = @selector(refresh:);
     refreshBtn.target = self;
     //self.navigationItem.leftBarButtonItem = [self.mainNavigationController menuBarButtonItem];
     self.navigationItem.rightBarButtonItem = refreshBtn;
     
-    NSInteger nUnread = notifications.count;
-    if (nUnread != 0){
-        self.title = [NSString stringWithFormat:@"Notifications (%ld)",(unsigned long)nUnread];
-    }
-    else{
-        self.title = @"Notifications";
-    }
+    @weakify(self);
+    [RACObserve(self, notifications) subscribeNext:^(NSArray *notifications) {
+        @strongify(self);
+        NSInteger nUnread = notifications.count;
+        if (nUnread != 0){
+            self.title = [NSString stringWithFormat:@"Notifications (%ld)",(unsigned long)nUnread];
+        }
+        else{
+            self.title = @"Notifications";
+        }
+    }];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -74,7 +77,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [notifications enumerateObjectsUsingBlock:^(EWNotification *noti, NSUInteger idx, BOOL *stop) {
+    [self.notifications enumerateObjectsUsingBlock:^(EWNotification *noti, NSUInteger idx, BOOL *stop) {
 		if (!noti.completed) {
 			noti.completed = [NSDate date];
 		}
@@ -88,7 +91,7 @@
 }
 
 - (void)reload{
-    notifications = [EWPerson myNotifications].mutableCopy;
+    self.notifications = [EWPerson myNotifications];
     [self.tableView reloadData];
 }
 
@@ -99,11 +102,11 @@
 
 - (IBAction)refresh:(id)sender{
     if ([EWPerson me].isOutDated) {
-        [loading startAnimating];
+        [_loading startAnimating];
         [[EWNotificationManager shared] findAllNotificationInBackgroundwithCompletion:^(NSArray *array, NSError *error) {
             
             //notifications = array.mutableCopy;
-            [loading stopAnimating];
+            [_loading stopAnimating];
             [self reload];
         }];
     }
@@ -113,7 +116,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EWNotificationCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWNotificationTalbeViewCell];
     
-    EWNotification *notification = notifications[indexPath.row];
+    EWNotification *notification = _notifications[indexPath.row];
     cell.notification = notification;
     
     if (indexPath.row % 2) {
@@ -127,13 +130,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWNotification *notice = notifications[indexPath.row];
+    EWNotification *notice = _notifications[indexPath.row];
     [[EWNotificationManager shared] notificationDidClicked:notice];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return notifications.count;
+    return _notifications.count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -142,11 +145,12 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        EWNotification *notice = notifications[indexPath.row];
+        EWNotification *notice = _notifications[indexPath.row];
         //remove from view with animation
+        NSUInteger nNotification = _notifications.count;
         [notice remove];
-		[notifications removeObject:notice];
-		[mainContext MR_saveToPersistentStoreAndWait];
+		self.notifications = [EWPerson myNotifications];
+        NSParameterAssert(nNotification == (_notifications.count+1));
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
