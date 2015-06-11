@@ -96,10 +96,17 @@
         DDLogError(@"EWMediaFile %@ missing media", self.serverID);
         good = NO;
     }
+<<<<<<< Updated upstream
     if (!self.owner){
         DDLogError(@"EWMediaFile %@ missing owner", self.serverID);
         good = NO;
     }
+=======
+	if (!self.owner) {
+		DDLogError(@"EWMediaFile %@ missing owner", self.serverID);
+		good = NO;
+	}
+>>>>>>> Stashed changes
     return good;
 }
 

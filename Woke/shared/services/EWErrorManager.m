@@ -30,6 +30,13 @@ NSString * const EWErrorInfoDescriptionKey = @"Description";
         DDLogError(str);
         EWAlert(str);
     }
+	else if ([error.domain isEqualToString:NSCocoaErrorDomain]){
+		if (error.code == 1570 || error.code == 1560) {
+			DDLogError(@"Failed to save core data: %@", error);
+		}else{
+			[NSException raise:@"UnhandledError" format:@"Core Data error passed in is not handled: %@", error];
+		}
+	}
     else {
         [NSException raise:@"UnhandledError" format:@"Error passed in is not handled: %@", error];
     }

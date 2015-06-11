@@ -48,15 +48,15 @@
     BOOL good = YES;
     if (!self.receiver) {
         good = NO;
-        DDLogError(@"EWNotification missing receiver");
+        DDLogError(@"EWNotification %@ missing receiver", self.serverID);
     }
     if (!self.type) {
         good = NO;
-        DDLogError(@"EWNotification missing type");
+        DDLogError(@"EWNotification %@ missing type", self.serverID);
     }
     if (!self.owner) {
         good = NO;
-        DDLogError(@"EWNotification missing owner");
+        DDLogError(@"EWNotification %@ missing owner", self.serverID);
     }
     
     return good;
