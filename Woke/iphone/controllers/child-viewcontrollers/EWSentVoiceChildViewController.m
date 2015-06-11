@@ -14,12 +14,15 @@
 #import "EWWakeUpManager.h"
 #import "EWAVManager.h"
 #import "EWActivity.h"
+#import "TMKit.h"
+#import "EWSentVoiceRowItem.h"
+#import "EWVoiceSectionHeaderRowItem.h"
 
-@interface EWSentVoiceChildViewController ()<UITableViewDataSource, UITableViewDelegate>
+@interface EWSentVoiceChildViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray* items;
 @property (nonatomic, weak) EWMedia *playingMedia;
-
+@property (nonatomic, strong) TMTableViewBuilder *tableViewBuilder;
 @end
 
 @implementation EWSentVoiceChildViewController
@@ -27,56 +30,38 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tableView.rowHeight = 70;
+    self.tableViewBuilder = [[TMTableViewBuilder alloc] initWithTableView:self.tableView];
+    @weakify(self);
+    self.tableViewBuilder.reloadBlock = ^(TMTableViewBuilder *builder) {
+        @strongify(self);
+//       outter: {@"date": date, @"items": objectInSameDate}
+//    innter: @{@"date": date, @"media": obj}
+        for (NSDictionary *item in self.items) {
+            TMSectionItem *section = [builder addedSectionItem];
+            EWVoiceSectionHeaderRowItem *headerRow = [EWVoiceSectionHeaderRowItem new];
+            headerRow.text = item[@"date"];
+            [section addRowItem:headerRow];
+            for (NSDictionary *innerItem in item[@"items"]) {
+                EWSentVoiceRowItem *rowItem = [[EWSentVoiceRowItem alloc] init];
+                rowItem.media = innerItem[@"media"];
+                [section addRowItem:rowItem];
+                [rowItem setDidSelectRowHandler:^(EWSentVoiceRowItem *rowItem) {
+                    EWMedia *targetMedia = rowItem.media;
+                    if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
+                        [[EWAVManager sharedManager] stopAllPlaying];
+                        self.playingMedia = nil;
+                    }
+                    else {
+                        [[EWAVManager sharedManager] playMedia:targetMedia];
+                        self.playingMedia = targetMedia;
+                        [EWWakeUpManager sharedInstance].currentMediaIndex = @(rowItem.indexPath.row);
+                    }
+                }];
+            }
+        }
+    };
     self.tableView.backgroundColor = [UIColor clearColor];
     self.view.backgroundColor = [UIColor clearColor];
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWSentVoiceTableViewCell *cell = (EWSentVoiceTableViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWSentVoiceTableViewCell];
-    
-    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
-    
-    return cell;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.items.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.items[section][@"items"] count];
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCellSectionHeader];
-    NSDictionary *sectionItem = self.items[section];
-    
-    UILabel *leftLabel = (UILabel *)[cell.contentView viewWithTag:101];
-    NSAssert([leftLabel isKindOfClass:[UILabel class]], @"left label is not a UILabel");
-    UILabel *rightLabel = (UILabel *)[cell.contentView viewWithTag:102];
-    NSAssert([rightLabel isKindOfClass:[UILabel class]], @"right label is not a UILabel");
-    
-    leftLabel.text = sectionItem[@"date"];
-    rightLabel.text = @"TBD";
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *dict = [self objectInItemsAtIndexPath:indexPath];
-    EWMedia *targetMedia = dict[@"media"];
-    
-    if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
-        [[EWAVManager sharedManager] stopAllPlaying];
-        self.playingMedia = nil;
-    }
-    else {
-        [[EWAVManager sharedManager] playMedia:targetMedia];
-        self.playingMedia = targetMedia;
-        [EWWakeUpManager sharedInstance].currentMediaIndex = @(indexPath.row);
-    }
 }
 
 - (NSArray *)items {
@@ -111,9 +96,5 @@
     }
     
     return _items;
-}
-
-- (NSDictionary *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
 }
 @end

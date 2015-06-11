@@ -1,0 +1,53 @@
+{
+  "name": "TMKit",
+  "version": "0.1.0",
+  "summary": "A short description of TMKit.",
+  "description": "                       An optional longer description of TMKit\n\n                       * Markdown format.\n                       * Don't worry about the indent, we strip it!\n",
+  "homepage": "https://github.com/nanaimostudio/TMKit",
+  "license": "MIT",
+  "authors": {
+    "Zitao Xiong": "caoer115@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/nanaimostudio/TMKit.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "requires_arc": true,
+  "source_files": [
+    "Pod/Classes/TableViewBuilder/**/*.{h,m}",
+    "Pod/Classes/Binding/**/*.{h,m}",
+    "Pod/Classes/*.{h,m}",
+    "Pod/Classes/PickerBuilder/**/*.{h,m}",
+    "Pod/Classes/UIKit/**/*.{h,m}",
+    "Pod/Classes/CollectionViewBuilder/**/*.{h,m}",
+    "Pod/Classes/Validation/**/*.{h,m}",
+    "Pod/Classes/Search/**/*.{h,m}"
+  ],
+  "resources": [
+    "Pod/Classes/TableViewBuilder/Views/*.xib",
+    "Pod/Classes/CollectionViewBuilder/Views/*.xib"
+  ],
+  "dependencies": {
+    "KVOController": [
+      "~> 1.0.3"
+    ],
+    "libextobjc/EXTScope": [
+      "~> 0.4.1"
+    ],
+    "libextobjc/EXTKeyPathCoding": [
+      "~> 0.4.1"
+    ],
+    "CocoaLumberjack": [
+      "~> 2.0.0"
+    ],
+    "AFNetworking": [
+      "~> 2.5.3"
+    ],
+    "MTDates": [
+      "~> 1.0.2"
+    ]
+  }
+}

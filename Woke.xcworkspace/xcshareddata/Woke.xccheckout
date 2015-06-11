@@ -12,6 +12,8 @@
 	<dict>
 		<key>55628C687A39F9A4DE15E22BD83F76A91216C65A</key>
 		<string>github.com:callzhang/WokeAlarm.git</string>
+		<key>B6B16A1CB4F4AC7D075E31E23284BC9068845155</key>
+		<string>https://github.com/nanaimostudio/TMKit.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Woke.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>55628C687A39F9A4DE15E22BD83F76A91216C65A</key>
 		<string>..</string>
+		<key>B6B16A1CB4F4AC7D075E31E23284BC9068845155</key>
+		<string>../../TMKit</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:callzhang/WokeAlarm.git</string>
@@ -28,6 +32,14 @@
 	<string>55628C687A39F9A4DE15E22BD83F76A91216C65A</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B6B16A1CB4F4AC7D075E31E23284BC9068845155</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TMKit</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

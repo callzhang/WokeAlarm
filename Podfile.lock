@@ -45,13 +45,13 @@ PODS:
   - Bolts/AppLinks (1.2.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.2.0)
-  - CocoaLumberjack (2.0.0-rc):
-    - CocoaLumberjack/Default (= 2.0.0-rc)
-    - CocoaLumberjack/Extensions (= 2.0.0-rc)
-  - CocoaLumberjack/Core (2.0.0-rc)
-  - CocoaLumberjack/Default (2.0.0-rc):
+  - CocoaLumberjack (2.0.0):
+    - CocoaLumberjack/Default (= 2.0.0)
+    - CocoaLumberjack/Extensions (= 2.0.0)
+  - CocoaLumberjack/Core (2.0.0)
+  - CocoaLumberjack/Default (2.0.0):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.0-rc):
+  - CocoaLumberjack/Extensions (2.0.0):
     - CocoaLumberjack/Default
   - DACircularProgress (2.3.1)
   - Expecta (0.3.2)
@@ -148,6 +148,13 @@ PODS:
     - ReactiveCocoa (~> 2.4)
   - RHAddressBook (1.1.1)
   - Shimmer (1.0.2)
+  - TMKit (0.1.0):
+    - AFNetworking (~> 2.5.3)
+    - CocoaLumberjack (~> 2.0.0)
+    - KVOController (~> 1.0.3)
+    - libextobjc/EXTKeyPathCoding (~> 0.4.1)
+    - libextobjc/EXTScope (~> 0.4.1)
+    - MTDates (~> 1.0.2)
   - Tweaks (1.1.0)
 
 DEPENDENCIES:
@@ -155,7 +162,7 @@ DEPENDENCIES:
   - apptentive-ios (~> 1.7)
   - APTimeZones (~> 1.1)
   - BlocksKit (~> 2.2.5)
-  - CocoaLumberjack (= 2.0.0-rc)
+  - CocoaLumberjack (= 2.0.0)
   - Expecta (~> 0.3.1)
   - Facebook-iOS-SDK (~> 3.23)
   - FormatterKit (~> 1.8.0)
@@ -179,7 +186,12 @@ DEPENDENCIES:
   - ReactiveViewModel (~> 0.3)
   - RHAddressBook (~> 1.1)
   - Shimmer (~> 1.0.2)
+  - TMKit (from `../TMKit`)
   - Tweaks (~> 1.1.0)
+
+EXTERNAL SOURCES:
+  TMKit:
+    :path: ../TMKit
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
@@ -187,7 +199,7 @@ SPEC CHECKSUMS:
   APTimeZones: ddb9aca50fff41d6313eb29d86d37b1edf9d2942
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
-  CocoaLumberjack: 04c5b9b7479dd4276a09700fcd6644423ea1751c
+  CocoaLumberjack: a6f77d987d65dc7ba86b0f84db7d0b9084f77bcb
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Expecta: 8c507baf13211207b1e9d0a741480600e6b4ed15
   Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
@@ -213,6 +225,7 @@ SPEC CHECKSUMS:
   ReactiveViewModel: 58918dcbcec2d3151195ab1ed9163c57a8163999
   RHAddressBook: 870e9e0b34cb917b9c4c600fc3b7d5b530b23b13
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
+  TMKit: 2dcdd4071b77a355b5429204ec058ade4633e02d
   Tweaks: fea40672d34a7185051b7786be0d587cd76d253c
 
 COCOAPODS: 0.37.2

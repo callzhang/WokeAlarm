@@ -14,12 +14,16 @@
 #import "EWWakeUpManager.h"
 #import "EWPerson+Woke.h"
 #import "EWActivity.h"
+#import "TMKit.h"
+#import "EWVoiceSectionHeaderRowItem.h"
+#import "EWSentVoiceRowItem.h"
+#import "NSDate+MTDates.h"
 
 @interface EWReceivedVoiceChildViewController ()<UITableViewDelegate, UITableViewDataSource>
 //@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray* items;
 @property (nonatomic, weak) EWMedia *playingMedia;
-
+@property (nonatomic, strong) TMTableViewBuilder *tableViewBuilder;
 @end
 
 @implementation EWReceivedVoiceChildViewController
@@ -27,7 +31,39 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tableView.rowHeight = 70;
+    self.tableViewBuilder = [[TMTableViewBuilder alloc] initWithTableView:self.tableView];
+    @weakify(self);
+    self.tableViewBuilder.reloadBlock = ^(TMTableViewBuilder *builder) {
+        @strongify(self);
+        //       outter: {@"date": date, @"items": objectInSameDate}
+        //    innter: @{@"date": date, @"media": obj}
+        for (EWActivity *item in self.items) {
+            TMSectionItem *section = [builder addedSectionItem];
+            EWVoiceSectionHeaderRowItem *headerRow = [EWVoiceSectionHeaderRowItem new];
+            EWActivity *activity = item;
+            NSDate *time = activity.completed;
+            headerRow.text = [time mt_stringFromDateWithFormat:@"MMM dd, yyyy" localized:YES];
+            headerRow.detailText = [NSString stringWithFormat:@"Woke up at %@", [time mt_stringFromDateWithHourAndMinuteFormat:MTDateHourFormat24Hour]];
+            [section addRowItem:headerRow];
+            for (EWMedia *innerItem in item.medias) {
+                EWSentVoiceRowItem *rowItem = [[EWSentVoiceRowItem alloc] init];
+                rowItem.media = innerItem;
+                [section addRowItem:rowItem];
+                [rowItem setDidSelectRowHandler:^(EWSentVoiceRowItem *rowItem) {
+                    EWMedia *targetMedia = rowItem.media;
+                    if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
+                        [[EWAVManager sharedManager] stopAllPlaying];
+                        self.playingMedia = nil;
+                    }
+                    else {
+                        [[EWAVManager sharedManager] playMedia:targetMedia];
+                        self.playingMedia = targetMedia;
+                        [EWWakeUpManager sharedInstance].currentMediaIndex = @(rowItem.indexPath.row);
+                    }
+                }];
+            }
+        }
+    };
     self.tableView.backgroundColor = [UIColor clearColor];
     self.view.backgroundColor = [UIColor clearColor];
 }
@@ -38,91 +74,9 @@
     [self.tableView reloadData];
 }
 
-#pragma mark - <TableView>
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWWakeUpViewCell *cell = (EWWakeUpViewCell *) [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCell];
-    
-    //    cell.media = [self objectInItemsAtIndexPath:indexPath][@"media"];
-//    EWActivity *activity = self.items[indexPath.section];
-//    cell.media = activity.medias[indexPath.row];
-    cell.media = [self objectInItemsAtIndexPath:indexPath];
-    
-    return cell;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.items.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    //    return [self.items[section][@"items"] count];
-    EWActivity *activity = self.items[section];
-    return activity.medias.count;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MainStoryboardIDs.reusables.EWWakeUpViewCellSectionHeader];
-    
-    EWActivity *activity = self.items[section];
-    
-    UILabel *leftLabel = (UILabel *)[cell.contentView viewWithTag:101];
-    NSAssert([leftLabel isKindOfClass:[UILabel class]], @"left label is not a UILabel");
-    UILabel *rightLabel = (UILabel *)[cell.contentView viewWithTag:102];
-    NSAssert([rightLabel isKindOfClass:[UILabel class]], @"right label is not a UILabel");
-    
-    NSDate *time = activity.completed;
-    NSString *leftText = [time mt_stringFromDateWithFormat:@"MMM dd, yyyy" localized:YES];
-    NSString *rightText = [NSString stringWithFormat:@"Woke up at %@", [time mt_stringFromDateWithHourAndMinuteFormat:MTDateHourFormat24Hour]];
-    leftLabel.text = leftText;
-    rightLabel.text = rightText;
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    EWMedia *targetMedia = [self objectInItemsAtIndexPath:indexPath];
-    if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
-        [[EWAVManager sharedManager] stopAllPlaying];
-        self.playingMedia = nil;
-    }
-    else {
-        [[EWAVManager sharedManager] playMedia:targetMedia];
-        self.playingMedia = targetMedia;
-        [EWWakeUpManager sharedInstance].currentMediaIndex = @(indexPath.row);
-    }
-}
-
 #pragma mark -
 - (NSArray *)items {
     if (!_items) {
-//        NSSet *medias = [[EWPerson me] receivedMedias];
-//        NSMutableSet *datesSet = [NSMutableSet set];
-//        NSSet *map = [medias bk_map:^id(EWMedia *obj) {
-//            //TODO: use createdAt, but currently it is nil, use updatedAt temporary
-//            NSString *date = [obj.updatedAt mt_stringFromDateWithFormat:@"MMM dd, yyyy" localized:YES] ? : @"";
-//            [datesSet addObject:date];
-//            return @{@"date": date, @"media": obj};
-//        }];
-//        
-//        NSMutableArray *__items = [NSMutableArray array];
-//        
-//        for (NSString *date in datesSet) {
-//            NSMutableArray *objectInSameDate = [NSMutableArray array];
-//            
-//            //iterate objects in map, added object has same <date> into <objectInSameDate>
-//            for (NSDictionary *dict in map) {
-//                NSString *inDate = dict[@"date"];
-//                
-//                if ([inDate isEqualToString:date]) {
-//                    [objectInSameDate addObject:dict];
-//                }
-//            }
-//            
-//            [__items addObject:@{@"date": date, @"items": objectInSameDate}];
-//        }
-//        
-//        _items = __items;
-        
         NSArray *activities = [EWPerson myActivities];
         NSMutableArray *noneEmptyActivies = [NSMutableArray array];
         for (EWActivity *activity in activities) {
@@ -136,9 +90,4 @@
     return _items;
 }
 
-- (EWMedia *)objectInItemsAtIndexPath:(NSIndexPath *)indexPath {
-    //    return [self.items[indexPath.section][@"items"] objectAtIndex:indexPath.row];
-    EWActivity *activity = self.items[indexPath.section];
-    return activity.medias[indexPath.row];
-}
 @end

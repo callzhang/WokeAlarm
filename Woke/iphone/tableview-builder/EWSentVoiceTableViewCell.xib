@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="Lato-Light.ttf">
+            <string>Lato-Light</string>
+        </mutableArray>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWSentVoiceTableViewCell" rowHeight="70" id="Ekc-k4-eY0" customClass="EWSentVoiceTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ekc-k4-eY0" id="dSD-bV-HxG">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RLk-rE-rt0" userLabel="people-view">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="70"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Iyo-mn-nZT">
+                                <rect key="frame" x="20" y="10" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="DIo-Mi-mLj"/>
+                                    <constraint firstAttribute="height" constant="50" id="EcX-c5-J08"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Misty Robertson Misty Robertson " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lKR-cT-IFd">
+                                <rect key="frame" x="85" y="15" width="197" height="20"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="16"/>
+                                <color key="textColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" image="playing-indicator" translatesAutoresizingMaskIntoConstraints="NO" id="Gju-p1-vzH">
+                                <rect key="frame" x="291" y="19" width="9" height="11"/>
+                            </imageView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="xZo-dz-tVd">
+                                <rect key="frame" x="85" y="45" width="197" height="1"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="P7h-ZS-DLv"/>
+                                </constraints>
+                            </progressView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dmx-0D-8YA" userLabel="repliedImageView">
+                                <rect key="frame" x="53" y="43" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="bQX-5x-lov"/>
+                                    <constraint firstAttribute="height" constant="20" id="bid-J7-ob6"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lKR-cT-IFd" firstAttribute="leading" secondItem="Iyo-mn-nZT" secondAttribute="trailing" constant="15" id="0KD-fi-Yzp"/>
+                            <constraint firstItem="xZo-dz-tVd" firstAttribute="top" secondItem="lKR-cT-IFd" secondAttribute="bottom" constant="10" id="3gb-7f-Rzp"/>
+                            <constraint firstItem="dmx-0D-8YA" firstAttribute="leading" secondItem="Iyo-mn-nZT" secondAttribute="leading" constant="33" id="7dN-GL-zJ5"/>
+                            <constraint firstItem="Gju-p1-vzH" firstAttribute="centerY" secondItem="lKR-cT-IFd" secondAttribute="centerY" id="A8J-d3-zdc"/>
+                            <constraint firstItem="xZo-dz-tVd" firstAttribute="leading" secondItem="Iyo-mn-nZT" secondAttribute="trailing" constant="15" id="Afd-WX-wK5"/>
+                            <constraint firstItem="xZo-dz-tVd" firstAttribute="leading" secondItem="lKR-cT-IFd" secondAttribute="leading" id="RgK-hw-K6r"/>
+                            <constraint firstAttribute="trailing" secondItem="Gju-p1-vzH" secondAttribute="trailing" id="aPP-BF-TNF"/>
+                            <constraint firstItem="dmx-0D-8YA" firstAttribute="top" secondItem="Iyo-mn-nZT" secondAttribute="top" constant="33" id="dMq-ar-cqA"/>
+                            <constraint firstAttribute="centerY" secondItem="Iyo-mn-nZT" secondAttribute="centerY" id="fYV-gb-EEr"/>
+                            <constraint firstItem="Iyo-mn-nZT" firstAttribute="centerY" secondItem="lKR-cT-IFd" secondAttribute="centerY" constant="10" id="m2x-yw-sa1"/>
+                            <constraint firstItem="lKR-cT-IFd" firstAttribute="trailing" secondItem="xZo-dz-tVd" secondAttribute="trailing" id="mha-ul-4Yc"/>
+                            <constraint firstItem="Iyo-mn-nZT" firstAttribute="leading" secondItem="RLk-rE-rt0" secondAttribute="leading" constant="20" id="sz7-yF-73a"/>
+                            <constraint firstItem="xZo-dz-tVd" firstAttribute="top" secondItem="Iyo-mn-nZT" secondAttribute="bottom" constant="-6" id="vSl-IX-OBX"/>
+                            <constraint firstItem="Gju-p1-vzH" firstAttribute="leading" secondItem="lKR-cT-IFd" secondAttribute="trailing" constant="9" id="xNq-OP-nLK"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Afd-WX-wK5"/>
+                                <exclude reference="vSl-IX-OBX"/>
+                            </mask>
+                        </variation>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="RLk-rE-rt0" secondAttribute="bottom" id="0jC-pH-u9e"/>
+                    <constraint firstItem="RLk-rE-rt0" firstAttribute="top" secondItem="dSD-bV-HxG" secondAttribute="top" id="5Vs-hj-T74"/>
+                    <constraint firstAttribute="trailing" secondItem="RLk-rE-rt0" secondAttribute="trailing" constant="20" id="FVy-ET-Hg3"/>
+                    <constraint firstItem="RLk-rE-rt0" firstAttribute="leading" secondItem="dSD-bV-HxG" secondAttribute="leading" id="cTD-nO-oEK"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+            <connections>
+                <outlet property="nameLabel" destination="lKR-cT-IFd" id="pn9-1Q-K9C"/>
+                <outlet property="playingIndicator" destination="Gju-p1-vzH" id="mgP-J1-FRm"/>
+                <outlet property="profileImageView" destination="Iyo-mn-nZT" id="jNs-FP-eMw"/>
+                <outlet property="progressView" destination="xZo-dz-tVd" id="YQE-c8-WS6"/>
+                <outlet property="repliedImageView" destination="dmx-0D-8YA" id="7J5-U9-JJ5"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="playing-indicator" width="9" height="11"/>
+    </resources>
+</document>
