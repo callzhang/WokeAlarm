@@ -26,6 +26,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSParameterAssert(_facebookChildViewController);
+    NSParameterAssert(_contactsChildViewController);
+    NSParameterAssert(_searchChildViewController);
     
     self.title = @"Add Friends";
     

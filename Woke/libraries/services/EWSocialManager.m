@@ -397,6 +397,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
         for (EWSocial *social in socials) {
 			EWPerson *person = social.owner;
             if (!person) {
+                //TODO: fix owner == nil
                 DDLogWarn(@"Failed to get owner for EWSocial (%@)", social.serverID);
                 continue;
             }

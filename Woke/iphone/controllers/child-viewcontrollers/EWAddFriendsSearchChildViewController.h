@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "EWBaseViewController.h"
 
-@interface EWAddFriendsSearchChildViewController : EWBaseViewController
+@interface EWAddFriendsSearchChildViewController : UIViewController
 @property (nonatomic, strong) UISearchController *searchController;
 @end
