@@ -340,7 +340,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
             // and achievedAccuracy has info on the accuracy/recency of the location in currentLocation.
             DDLogInfo(@"After 60s, we accept location %@ with accuracy of %.0fm", currentLocation, currentLocation.horizontalAccuracy);
         }
-		else if (status & (INTULocationStatusServicesDenied | INTULocationStatusServicesDisabled | INTULocationStatusServicesRestricted)){
+		else if (status == INTULocationStatusServicesDenied || status == INTULocationStatusServicesDisabled || status == INTULocationStatusServicesRestricted) {
 			DDLogError(@"Failed to get location with status of %ld and location of %@", status, currentLocation);
 			// An error occurred, more info is available by looking at the specific status returned.
 			[UIAlertView bk_showAlertViewWithTitle:@"Location Services Not Enabled" message:@"The app can’t access your current location.\n\nTo enable, please turn on location access in the Settings app under Location Services." cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Go"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
@@ -350,7 +350,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
 				}
 			}];
 		}
-        else {
+        else if (!currentLocation) {
 			DDLogError(@"Failed to get location with status of %ld and location of %@", status, currentLocation);
 			[EWUIUtil showText:@"Location update failed"];
         }

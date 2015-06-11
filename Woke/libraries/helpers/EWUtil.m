@@ -143,16 +143,15 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
 }
 
 + (void)addTestGesture{
+#ifdef DEBUG
     UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
         [EWUtil showTweakPanel];
     }];
     longGesture.numberOfTouchesRequired = 2;
     longGesture.minimumPressDuration = 1;
     [[UIWindow mainWindow] addGestureRecognizer:longGesture];
-	
-	//reset stored value
-	[[FBTweakStore sharedInstance] reset];
 	DDLogInfo(@"FBTweak stored value resetted");
+#endif
 }
 
 + (void)showTweakPanel{

@@ -21,11 +21,6 @@
 #import "FBTweakInline.h"
 @import MediaPlayer;
 
-FBTweakAction(@"AVManager", @"UI", @"Toggle max volume", ^{
-    [EWAVManager sharedManager].skipForceMaxVolume = ![EWAVManager sharedManager].skipForceMaxVolume;
-    DDLogInfo(@"Skip max volume: %@", [EWAVManager sharedManager].skipForceMaxVolume?@"YES":@"NO");
-});
-
 
 //NSString * const kEWAVManagerDidStopPlayNotification = @"kEWAVManagerDidStopPlayNotification";
 NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUpdateProgressNotification";
@@ -35,6 +30,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 }
 @property (nonatomic, weak) EWMedia *media;
 @property (nonatomic, strong) NSTimer *progressTimer;
+@property (nonatomic, assign) BOOL maxVolume;
 @end
 
 @implementation EWAVManager
@@ -53,7 +49,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     //static EWAVManager *sharedManager_ = nil;
     self = [super init];
     if (self) {
-        //regist the player
+        self.maxVolume = FBTweakValue(@"AVManager", @"Volume", @"Max Volume", YES);
         
         //recorder path
         NSString *tempDir = NSTemporaryDirectory ();
@@ -273,7 +269,6 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 		[data writeToFile:path atomically:YES];
 		[self playSystemSound:[NSURL URLWithString:path]];
 	}
-	
 }
 
 - (void)stopAllPlaying{
@@ -339,7 +334,9 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 - (void)startUpdateProgress {
     [self stopUpdateProgress];
     DDLogVerbose(@"Timer Start");
-    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(onProgressTimer) userInfo:nil repeats:YES];
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
+        self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(onProgressTimer) userInfo:nil repeats:YES];
+    }
 }
 
 - (void)stopUpdateProgress {
@@ -350,6 +347,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 
 - (void)onAVManagerDidStartPlaying {
     [self startUpdateProgress];
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
 - (void)onAVManagerDidStopPlaying {
@@ -474,7 +472,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 }
 
 - (void)setDeviceVolume:(float)volume{
-    if (self.skipForceMaxVolume) {
+    if (!self.maxVolume) {
         DDLogInfo(@"Skipped setting device volume");
         return;
     }

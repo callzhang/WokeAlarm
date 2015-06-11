@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "EWBaseViewController.h"
 
-@interface EWLoginGateViewController : EWBaseViewController
+@interface EWLoginGateViewController : UIViewController
 
 @end

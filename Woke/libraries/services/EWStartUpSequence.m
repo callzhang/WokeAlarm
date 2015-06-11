@@ -357,12 +357,12 @@
 				
 				//decide whether to update the MO async
 				//Note: download async at beginning is proved to b
-				BOOL sync = YES;//[kUserRelationSyncRequired containsObject:key];
+                BOOL sync = YES;//[kUserRelationSyncRequired containsObject:key];
 				
 				//update SO
 				if (relation.isToMany) {
 					NSArray *objects = (NSArray *)obj;
-					NSMutableSet *relatedSO = [localMe mutableSetValueForKey:key];
+					NSMutableSet *relatedMO = [localMe mutableSetValueForKey:key];
 					for (PFObject *PO in objects) {
 						if(!PO.isDataAvailable) {
 							DDLogError(@"Returned PO without data: %@", PO);
@@ -385,10 +385,10 @@
 							DDLogError(@"MO %@(%@) is not valid after download, delete to server!", MO.entity.name, MO.serverID);
 							[MO remove];
 						}
-						else if (![relatedSO containsObject:MO]) {
+						else if (![relatedMO containsObject:MO]) {
 							//add relation
-							[relatedSO addObject:MO];
-							[localMe setValue:relatedSO.copy forKey:key];
+							[relatedMO addObject:MO];
+							[localMe setValue:relatedMO.copy forKey:key];
 							DDLogVerbose(@"+++> Added relation Me->%@(%@)", key, PO.objectId);
 						}
 					}
