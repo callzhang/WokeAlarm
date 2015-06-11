@@ -143,21 +143,21 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
 }
 
 + (void)addTestGesture{
+#ifdef DEBUG
     UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
         [EWUtil showTweakPanel];
     }];
     longGesture.numberOfTouchesRequired = 2;
     longGesture.minimumPressDuration = 1;
     [[UIWindow mainWindow] addGestureRecognizer:longGesture];
-	
-	//reset stored value
-	[[FBTweakStore sharedInstance] reset];
 	DDLogInfo(@"FBTweak stored value resetted");
+#endif
 }
 
 + (void)showTweakPanel{
     FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
     viewController.tweaksDelegate = [EWUtil shared];
+    viewController.navigationBar.tintColor = [UIColor colorWithRed:0.127 green:0.256 blue:0.563 alpha:1.000];
     UIViewController *topController = [EWUIUtil topViewController];
     if (![topController isKindOfClass:NSClassFromString(@"_FBTweakCategoryViewController")]) {
         [topController presentViewController:viewController animated:YES completion:nil];

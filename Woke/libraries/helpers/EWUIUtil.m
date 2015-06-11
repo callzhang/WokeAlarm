@@ -360,6 +360,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
     UIView *rootView = [self topView];
     JGProgressHUD *hud = [rootView showLoopingWithTimeout:0];
     [[EWUIUtil shared].HUDs addObject:hud];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        hud.textLabel.text = @"Still working";
+    });
     return hud;
 }
 

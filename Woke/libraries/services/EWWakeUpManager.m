@@ -376,7 +376,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 - (void)playNextVoiceWithDelay {
     //no continue to play if status is not waking up
     if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWakingUp) {
-        DDLogVerbose(@"Continueus playing disabled for state other than waking up≥≥≥");
+        DDLogVerbose(@"Continueus playing disabled for state other than waking up");
         return;
     }
     EWMedia *currentMediaBackup = self.currentMedia;
@@ -468,7 +468,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 }
 
 - (EWMedia *)currentMedia {
-    if (_currentMediaIndex.unsignedIntegerValue >= self.medias.count) {
+    if (_currentMediaIndex.unsignedIntegerValue >= self.medias.count && [EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
         DDLogError(@"currentMedia index overflow");
         return nil;
     }

@@ -37,9 +37,6 @@ UIViewController *rootViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
-	//disable DYCI
-    //[NSClassFromString(@"SFDynamicCodeInjection") performSelector:@selector(disable)];
-	
     // Enable Crash Reporting
 	initLogging();
 	
@@ -82,7 +79,6 @@ UIViewController *rootViewController;
         //show login view controller
         EWLoginGateViewController *vc = [[UIStoryboard defaultStoryboard] instantiateViewControllerWithIdentifier:@"EWLoginGateViewController"];
         [[UIWindow mainWindow].rootNavigationController setViewControllers:@[vc]];
-        
     }
     
     //finish launching

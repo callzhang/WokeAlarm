@@ -21,11 +21,6 @@
 #import "FBTweakInline.h"
 @import MediaPlayer;
 
-FBTweakAction(@"AVManager", @"UI", @"Toggle max volume", ^{
-    [EWAVManager sharedManager].skipForceMaxVolume = ![EWAVManager sharedManager].skipForceMaxVolume;
-    DDLogInfo(@"Skip max volume: %@", [EWAVManager sharedManager].skipForceMaxVolume?@"YES":@"NO");
-});
-
 
 //NSString * const kEWAVManagerDidStopPlayNotification = @"kEWAVManagerDidStopPlayNotification";
 NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUpdateProgressNotification";
@@ -35,6 +30,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 }
 @property (nonatomic, weak) EWMedia *media;
 @property (nonatomic, strong) NSTimer *progressTimer;
+@property (nonatomic, assign) BOOL maxVolume;
 @end
 
 @implementation EWAVManager
@@ -53,7 +49,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     //static EWAVManager *sharedManager_ = nil;
     self = [super init];
     if (self) {
-        //regist the player
+        self.maxVolume = FBTweakValue(@"AVManager", @"Volume", @"Max Volume", YES);
         
         //recorder path
         NSString *tempDir = NSTemporaryDirectory ();
@@ -255,6 +251,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 	}
 	NSError *err;
 	_player = [[AVAudioPlayer alloc] initWithData:data error:&err];
+    _player.delegate = self;
 	_player.volume = 1.0;
 	
 	if (err) {
@@ -273,7 +270,6 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 		[data writeToFile:path atomically:YES];
 		[self playSystemSound:[NSURL URLWithString:path]];
 	}
-	
 }
 
 - (void)stopAllPlaying{
@@ -334,16 +330,20 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     CGFloat progress = self.playingProgress;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kEWAVManagerDidUpdateProgressNotification object:nil userInfo:@{@"progress": @(progress), @"media" : _media ? :[NSNull null]}];
+    
+    if ([EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    }
 }
 
 - (void)startUpdateProgress {
     [self stopUpdateProgress];
-    DDLogVerbose(@"Timer Start");
+    DDLogVerbose(@"Player Start");
     self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(onProgressTimer) userInfo:nil repeats:YES];
 }
 
 - (void)stopUpdateProgress {
-    DDLogVerbose(@"Timer Stop");
+    DDLogVerbose(@"Player Stop");
     [self.progressTimer invalidate];
     self.progressTimer = nil;
 }
@@ -474,7 +474,7 @@ void systemSoundFinished (SystemSoundID sound, void *bgTaskId){
 }
 
 - (void)setDeviceVolume:(float)volume{
-    if (self.skipForceMaxVolume) {
+    if (!self.maxVolume) {
         DDLogInfo(@"Skipped setting device volume");
         return;
     }

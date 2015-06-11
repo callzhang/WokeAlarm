@@ -61,6 +61,7 @@ NSManagedObjectContext *mainContext;
     //observe context change to update the modifiedData of that MO. (Only observe the main context)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preSaveAction:) name:NSManagedObjectContextWillSaveNotification object:_context];
     
+    
     //Observe background context saves so main context can perform upload
     [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification object:_context queue:nil usingBlock:^(NSNotification *note) {
         [_saveToServerDelayTimer invalidate];

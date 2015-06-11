@@ -96,6 +96,10 @@
         DDLogError(@"EWMediaFile %@ missing media", self.serverID);
         good = NO;
     }
+    if (!self.owner){
+        DDLogError(@"EWMediaFile %@ missing owner", self.serverID);
+        good = NO;
+    }
     return good;
 }
 
