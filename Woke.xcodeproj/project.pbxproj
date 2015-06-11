@@ -62,7 +62,6 @@
 		0929D7E91AA26FBC00FA1F8F /* EWSettingsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0929D7E81AA26FBC00FA1F8F /* EWSettingsTableViewCell.m */; };
 		093DB77F1A65FC8D0032E7EB /* EWPostWakeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 093DB77E1A65FC8D0032E7EB /* EWPostWakeUpViewController.m */; };
 		093DB7821A65FD970032E7EB /* EWPostWakeupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 093DB7811A65FD970032E7EB /* EWPostWakeupTableViewCell.m */; };
-		096585C21B24E4E4001AB46F /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 096585C01B24E4E4001AB46F /* Crashlytics.framework */; };
 		096585C31B24E4E4001AB46F /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 096585C11B24E4E4001AB46F /* Fabric.framework */; };
 		096585C61B24E539001AB46F /* CrashlyticsLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 096585C51B24E539001AB46F /* CrashlyticsLogger.m */; };
 		09660F9E1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09660F9D1AB4E7B400F1E3DA /* EWAddFriendTableViewCell.xib */; };
@@ -161,7 +160,6 @@
 		9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3895021A4FBA17004D4290 /* EWWakeUpViewCell.m */; };
 		9B3895071A513DF0004D4290 /* RDSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B840A261A170AE800D6C2A3 /* RDSelectionViewController.m */; };
 		9B3D24161A54BAB50026B824 /* CloudFunctionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */; };
-		9B49B1221B24EC4000D97EB0 /* SparkInspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B49B1211B24EC4000D97EB0 /* SparkInspector.framework */; };
 		9B49B1251B24F3E900D97EB0 /* EWBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B49B1241B24F3E900D97EB0 /* EWBackgroundView.m */; };
 		9B4C35271A75B8C800A1EAE6 /* SearchUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */; };
 		9B4D29691A833AD300C8559B /* bg.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9B4D29681A833AD300C8559B /* bg.caf */; };
@@ -190,6 +188,7 @@
 		9BB244B11A87205600B0B544 /* FriendshipTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB244B01A87205600B0B544 /* FriendshipTest.m */; };
 		9BB5669D1A327A7A004174B3 /* WakeUpProcessTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669C1A327A7A004174B3 /* WakeUpProcessTest.m */; };
 		9BB5669F1A327D31004174B3 /* WakeUpPlayingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5669E1A327D31004174B3 /* WakeUpPlayingTest.m */; };
+		9BE4C3CF1B2735860050436D /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 096585C01B24E4E4001AB46F /* Crashlytics.framework */; };
 		9BF1815D1A35222F00D25DBA /* Autumn Spring.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181551A35222F00D25DBA /* Autumn Spring.caf */; };
 		9BF1815E1A35222F00D25DBA /* Daybreak.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181561A35222F00D25DBA /* Daybreak.caf */; };
 		9BF1815F1A35222F00D25DBA /* Drive.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BF181571A35222F00D25DBA /* Drive.caf */; };
@@ -519,7 +518,7 @@
 		9B38950C1A51405A004D4290 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9B38950E1A514072004D4290 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		9B3D24151A54BAB50026B824 /* CloudFunctionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudFunctionTest.m; sourceTree = "<group>"; };
-		9B49B1211B24EC4000D97EB0 /* SparkInspector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SparkInspector.framework; sourceTree = "<group>"; };
+		9B49B1211B24EC4000D97EB0 /* SparkInspector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SparkInspector.framework; path = Woke/frameworks/SparkInspector.framework; sourceTree = "<group>"; };
 		9B49B1231B24F3E900D97EB0 /* EWBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBackgroundView.h; sourceTree = "<group>"; };
 		9B49B1241B24F3E900D97EB0 /* EWBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBackgroundView.m; sourceTree = "<group>"; };
 		9B4C35261A75B8C800A1EAE6 /* SearchUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchUserTest.m; sourceTree = "<group>"; };
@@ -618,8 +617,7 @@
 				096585C31B24E4E4001AB46F /* Fabric.framework in Frameworks */,
 				9B6AB81A1A16F201003372A8 /* CoreGraphics.framework in Frameworks */,
 				9B6AB8181A16F1F6003372A8 /* UIKit.framework in Frameworks */,
-				096585C21B24E4E4001AB46F /* Crashlytics.framework in Frameworks */,
-				9B49B1221B24EC4000D97EB0 /* SparkInspector.framework in Frameworks */,
+				9BE4C3CF1B2735860050436D /* Crashlytics.framework in Frameworks */,
 				7B1D6CD9E97B81DBD5B11C4A /* libPods-Woke.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
