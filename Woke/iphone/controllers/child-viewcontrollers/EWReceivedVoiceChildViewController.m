@@ -16,7 +16,7 @@
 #import "EWActivity.h"
 #import "TMKit.h"
 #import "EWVoiceSectionHeaderRowItem.h"
-#import "EWSentVoiceRowItem.h"
+#import "EWVoiceRowItem.h"
 #import "NSDate+MTDates.h"
 
 @interface EWReceivedVoiceChildViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -34,11 +34,10 @@
     self.tableViewBuilder = [[TMTableViewBuilder alloc] initWithTableView:self.tableView];
     @weakify(self);
     self.tableViewBuilder.reloadBlock = ^(TMTableViewBuilder *builder) {
+        [builder removeAllSectionItems];
         @strongify(self);
-        //       outter: {@"date": date, @"items": objectInSameDate}
-        //    innter: @{@"date": date, @"media": obj}
+        TMSectionItem *section = [builder addedSectionItem];
         for (EWActivity *item in self.items) {
-            TMSectionItem *section = [builder addedSectionItem];
             EWVoiceSectionHeaderRowItem *headerRow = [EWVoiceSectionHeaderRowItem new];
             EWActivity *activity = item;
             NSDate *time = activity.completed;
@@ -46,10 +45,11 @@
             headerRow.detailText = [NSString stringWithFormat:@"Woke up at %@", [time mt_stringFromDateWithHourAndMinuteFormat:MTDateHourFormat24Hour]];
             [section addRowItem:headerRow];
             for (EWMedia *innerItem in item.medias) {
-                EWSentVoiceRowItem *rowItem = [[EWSentVoiceRowItem alloc] init];
+                EWVoiceRowItem *rowItem = [[EWVoiceRowItem alloc] init];
                 rowItem.media = innerItem;
                 [section addRowItem:rowItem];
-                [rowItem setDidSelectRowHandler:^(EWSentVoiceRowItem *rowItem) {
+                [headerRow addRelatedRowItem:rowItem];
+                [rowItem setDidSelectRowHandler:^(EWVoiceRowItem *rowItem) {
                     EWMedia *targetMedia = rowItem.media;
                     if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
                         [[EWAVManager sharedManager] stopAllPlaying];
@@ -61,6 +61,12 @@
                         [EWWakeUpManager sharedInstance].currentMediaIndex = @(rowItem.indexPath.row);
                     }
                 }];
+                
+                [rowItem setOnDeleteRowHandler:^(EWVoiceRowItem *rowItem) {
+                    [rowItem deleteRowWithAnimation:UITableViewRowAnimationFade];
+                    [rowItem.media remove];
+                    [headerRow removeRelatedRowItem:rowItem];
+                }];
             }
         }
     };
@@ -71,7 +77,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.tableView reloadData];
+    [self.tableViewBuilder reloadData];
 }
 
 #pragma mark -

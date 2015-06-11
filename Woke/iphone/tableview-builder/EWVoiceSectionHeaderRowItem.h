@@ -9,5 +9,6 @@
 #import "TMRowItem.h"
 
 @interface EWVoiceSectionHeaderRowItem : TMRowItem
-
+- (void)removeRelatedRowItem:(TMRowItem *)rowItem;
+- (void)addRelatedRowItem:(TMRowItem *)rowItem;
 @end

@@ -1633,7 +1633,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWSentVoiceTableViewCell" rowHeight="70" id="hQa-ya-KbN" customClass="EWSentVoiceTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EWSentVoiceTableViewCell" rowHeight="70" id="hQa-ya-KbN" customClass="EWVoiceTableViewCell">
                                         <rect key="frame" x="0.0" y="249" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hQa-ya-KbN" id="VmO-a1-nd1">
@@ -2018,7 +2018,7 @@
                                     <segue destination="BcC-eX-WTH" kind="embed" identifier="peopleArrayChildViewController" id="fWu-BY-1M2"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gpM-jP-AUb" userLabel="center 40 spacer top">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gpM-jP-AUb" userLabel="center 40 spacer top">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="6Pg-dc-Es5"/>
@@ -2038,7 +2038,7 @@
                                     <constraint firstAttribute="width" constant="30" id="lRE-6N-yCS"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wQN-Cp-KEY" userLabel="center 40 spacer bottom">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQN-Cp-KEY" userLabel="center 40 spacer bottom">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="eaS-do-PaT"/>
@@ -3173,10 +3173,10 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="7lF-Wp-60q"/>
-        <segue reference="Rze-Xr-CCz"/>
-        <segue reference="e6y-LC-ugB"/>
+        <segue reference="v3V-jG-DGb"/>
+        <segue reference="CBy-Qp-dcT"/>
+        <segue reference="wLP-1t-7ZH"/>
         <segue reference="qEe-Vv-RSN"/>
-        <segue reference="tfZ-IS-2Ts"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

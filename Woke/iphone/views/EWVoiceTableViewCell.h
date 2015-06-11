@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EWSentVoiceTableViewCell : UITableViewCell
+@interface EWVoiceTableViewCell : UITableViewCell
 @property (nonatomic, strong) EWMedia *media;
 @end

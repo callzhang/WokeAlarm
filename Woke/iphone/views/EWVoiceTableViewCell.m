@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 wokealarm. All rights reserved.
 //
 
-#import "EWSentVoiceTableViewCell.h"
+#import "EWVoiceTableViewCell.h"
 #import "EWMedia.h"
 #import "EWWakeUpManager.h"
 #import "EWAVManager.h"
 #import "EWMediaFile.h"
 
-@interface EWSentVoiceTableViewCell()
+@interface EWVoiceTableViewCell()
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 @property (weak, nonatomic) IBOutlet UIImageView *playingIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -22,7 +22,7 @@
 @property (nonatomic, assign, getter=isPlaying) BOOL playing;
 @end
 
-@implementation EWSentVoiceTableViewCell
+@implementation EWVoiceTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

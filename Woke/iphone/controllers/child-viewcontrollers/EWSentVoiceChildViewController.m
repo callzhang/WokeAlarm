@@ -10,12 +10,12 @@
 #import "BlocksKit.h"
 #import "EWMedia.h"
 #import "EWWakeUpViewCell.h"
-#import "EWSentVoiceTableViewCell.h"
+#import "EWVoiceTableViewCell.h"
 #import "EWWakeUpManager.h"
 #import "EWAVManager.h"
 #import "EWActivity.h"
 #import "TMKit.h"
-#import "EWSentVoiceRowItem.h"
+#import "EWVoiceRowItem.h"
 #import "EWVoiceSectionHeaderRowItem.h"
 
 @interface EWSentVoiceChildViewController ()
@@ -36,16 +36,17 @@
         @strongify(self);
 //       outter: {@"date": date, @"items": objectInSameDate}
 //    innter: @{@"date": date, @"media": obj}
+        TMSectionItem *section = [builder addedSectionItem];
         for (NSDictionary *item in self.items) {
-            TMSectionItem *section = [builder addedSectionItem];
             EWVoiceSectionHeaderRowItem *headerRow = [EWVoiceSectionHeaderRowItem new];
             headerRow.text = item[@"date"];
             [section addRowItem:headerRow];
             for (NSDictionary *innerItem in item[@"items"]) {
-                EWSentVoiceRowItem *rowItem = [[EWSentVoiceRowItem alloc] init];
+                EWVoiceRowItem *rowItem = [[EWVoiceRowItem alloc] init];
                 rowItem.media = innerItem[@"media"];
                 [section addRowItem:rowItem];
-                [rowItem setDidSelectRowHandler:^(EWSentVoiceRowItem *rowItem) {
+                [headerRow addRelatedRowItem:rowItem];
+                [rowItem setDidSelectRowHandler:^(EWVoiceRowItem *rowItem) {
                     EWMedia *targetMedia = rowItem.media;
                     if ([targetMedia isEqual:self.playingMedia] && [EWAVManager sharedManager].isPlaying) {
                         [[EWAVManager sharedManager] stopAllPlaying];
@@ -56,6 +57,12 @@
                         self.playingMedia = targetMedia;
                         [EWWakeUpManager sharedInstance].currentMediaIndex = @(rowItem.indexPath.row);
                     }
+                }];
+                
+                [rowItem setOnDeleteRowHandler:^(EWVoiceRowItem *rowItem) {
+                    [rowItem deleteRowWithAnimation:UITableViewRowAnimationFade];
+                    [rowItem.media remove];
+                    [headerRow removeRelatedRowItem:rowItem];
                 }];
             }
         }

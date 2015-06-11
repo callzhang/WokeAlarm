@@ -19,6 +19,7 @@
     
     //add background
     UIView *bg = [[EWBackgroundView alloc] initWithFrame:self.view.frame];
+    bg.translatesAutoresizingMaskIntoConstraints = NO;
     self.backgroundView = bg;
     self.backgroundView.tag = 804;
     [self.view insertSubview:bg atIndex:0];

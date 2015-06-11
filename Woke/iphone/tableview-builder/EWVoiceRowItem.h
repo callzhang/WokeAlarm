@@ -8,6 +8,7 @@
 
 #import "TMRowItem.h"
 
-@interface EWSentVoiceRowItem : TMRowItem
+@interface EWVoiceRowItem : TMRowItem
 @property (nonatomic, strong) EWMedia *media;
+@property (nonatomic, copy) void (^onDeleteRowHandler)(EWVoiceRowItem *rowItem);
 @end

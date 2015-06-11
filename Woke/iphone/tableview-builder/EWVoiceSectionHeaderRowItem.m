@@ -8,6 +8,9 @@
 
 #import "EWVoiceSectionHeaderRowItem.h"
 #import "EWVoiceSectionHeaderTableViewCell.h"
+@interface EWVoiceSectionHeaderRowItem ()
+@property (nonatomic, strong) NSMutableArray *relatedRowItems;
+@end
 
 @implementation EWVoiceSectionHeaderRowItem
 + (NSString * __nonnull)reuseIdentifier {
@@ -19,6 +22,8 @@
     self = [super init];
     if (self) {
         self.heightForRow = 29;
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.relatedRowItems = [NSMutableArray array];
     }
     return self;
 }
@@ -28,5 +33,16 @@
     cell.cellTextLabel.text = self.text;
     cell.cellDetailTextLabel.text = self.detailText;
     return cell;
+}
+
+- (void)addRelatedRowItem:(TMRowItem *)rowItem {
+    [self.relatedRowItems addObject:rowItem];
+}
+
+- (void)removeRelatedRowItem:(TMRowItem *)rowItem {
+    [self.relatedRowItems removeObject:rowItem];
+    if (self.relatedRowItems.count == 0) {
+        [self deleteRowWithAnimation:UITableViewRowAnimationFade];
+    }
 }
 @end
