@@ -186,12 +186,17 @@ DEPENDENCIES:
   - ReactiveViewModel (~> 0.3)
   - RHAddressBook (~> 1.1)
   - Shimmer (~> 1.0.2)
-  - TMKit (from `../TMKit`)
+  - TMKit (from `https://github.com/nanaimostudio/TMKit`)
   - Tweaks (~> 1.1.0)
 
 EXTERNAL SOURCES:
   TMKit:
-    :path: ../TMKit
+    :git: https://github.com/nanaimostudio/TMKit
+
+CHECKOUT OPTIONS:
+  TMKit:
+    :commit: 1c3af4c9be05438620887ba2443fc9f280e57d1d
+    :git: https://github.com/nanaimostudio/TMKit
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e

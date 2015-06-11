@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="TMDatePickerTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Date Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="215" translatesAutoresizingMaskIntoConstraints="NO" id="0Oi-e7-5K5">
+                        <rect key="frame" x="90" y="13" width="215" height="18"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                        <color key="textColor" red="0.29593470692634583" green="0.29599151015281677" blue="0.2959311306476593" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TitleLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="75" translatesAutoresizingMaskIntoConstraints="NO" id="w56-1B-FwI">
+                        <rect key="frame" x="15" y="13" width="75" height="18"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                        <color key="textColor" red="0.4158225953578949" green="0.41589877009391785" blue="0.41581779718399048" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="0Oi-e7-5K5" secondAttribute="trailing" constant="15" id="0Ft-Zd-lYM"/>
+                    <constraint firstItem="w56-1B-FwI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="3JX-Mc-46h"/>
+                    <constraint firstAttribute="centerYWithinMargins" secondItem="w56-1B-FwI" secondAttribute="centerYWithinMargins" id="XGX-03-l5H"/>
+                    <constraint firstAttribute="centerYWithinMargins" secondItem="0Oi-e7-5K5" secondAttribute="centerYWithinMargins" id="XkS-c7-5vY"/>
+                    <constraint firstItem="0Oi-e7-5K5" firstAttribute="leading" secondItem="w56-1B-FwI" secondAttribute="trailing" id="aGj-M5-Q0K"/>
+                    <constraint firstItem="0Oi-e7-5K5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="90" id="aLo-ac-yYO"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="cellTextLabel" destination="0Oi-e7-5K5" id="ndB-lk-QtJ"/>
+                <outlet property="dateLabelToLeadingMinimumSpacingConstraint" destination="aLo-ac-yYO" id="Wtl-Qn-K2e"/>
+                <outlet property="titleLabelSpacingLayoutConstraint" destination="aGj-M5-Q0K" id="NhI-d7-Y4p"/>
+                <outlet property="titleTextLabel" destination="w56-1B-FwI" id="PBd-SD-B4c"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

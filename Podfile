@@ -31,7 +31,8 @@ target 'Woke' do
   pod 'FormatterKit', '~> 1.8.0'
   pod 'ParseFacebookUtils', '~> 1.7.2'
   pod 'pop', '~> 1.0.7'
-  pod 'TMKit', :path => "../TMKit"
+  pod 'TMKit', :git => 'https://github.com/nanaimostudio/TMKit'
+  # pod 'TMKit', :path => "../TMKit"
 end
 
 target 'WokeTests' do
