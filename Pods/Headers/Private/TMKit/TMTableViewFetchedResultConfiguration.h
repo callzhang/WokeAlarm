@@ -1,1 +1,0 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Core/TMTableViewFetchedResultConfiguration.h
