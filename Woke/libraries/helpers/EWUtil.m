@@ -157,6 +157,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUtil)
 + (void)showTweakPanel{
     FBTweakViewController *viewController = [[FBTweakViewController alloc] initWithStore:[FBTweakStore sharedInstance]];
     viewController.tweaksDelegate = [EWUtil shared];
+    viewController.navigationBar.tintColor = [UIColor colorWithRed:0.127 green:0.256 blue:0.563 alpha:1.000];
     UIViewController *topController = [EWUIUtil topViewController];
     if (![topController isKindOfClass:NSClassFromString(@"_FBTweakCategoryViewController")]) {
         [topController presentViewController:viewController animated:YES completion:nil];
