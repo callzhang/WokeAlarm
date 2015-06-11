@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/Binding/FBKVOController+Binding.h
+../../../TMKit/Pod/Classes/Binding/FBKVOController+Binding.h

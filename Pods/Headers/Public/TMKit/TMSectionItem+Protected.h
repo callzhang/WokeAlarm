@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Core/SectionItems/TMSectionItem+Protected.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Core/SectionItems/TMSectionItem+Protected.h

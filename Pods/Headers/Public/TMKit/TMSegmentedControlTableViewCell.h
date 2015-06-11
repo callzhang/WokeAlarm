@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMSegmentedControlTableViewCell.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMSegmentedControlTableViewCell.h

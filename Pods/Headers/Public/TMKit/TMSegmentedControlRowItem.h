@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/RowItems/TMSegmentedControlRowItem.h
+../../../TMKit/Pod/Classes/TableViewBuilder/RowItems/TMSegmentedControlRowItem.h

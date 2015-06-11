@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/RowItems/TMLabelRowItem.h
+../../../TMKit/Pod/Classes/TableViewBuilder/RowItems/TMLabelRowItem.h

@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Core/SectionItems/TMSectionItem.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Core/SectionItems/TMSectionItem.h

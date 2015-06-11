@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/Search/TMTableViewSearchResultsController.h
+../../../TMKit/Pod/Classes/Search/TMTableViewSearchResultsController.h

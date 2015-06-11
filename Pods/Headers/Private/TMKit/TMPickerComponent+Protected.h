@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/PickerBuilder/TMPickerComponent+Protected.h
+../../../TMKit/Pod/Classes/PickerBuilder/TMPickerComponent+Protected.h

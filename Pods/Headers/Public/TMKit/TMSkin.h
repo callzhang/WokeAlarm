@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/UIKit/TMSkin.h
+../../../TMKit/Pod/Classes/UIKit/TMSkin.h

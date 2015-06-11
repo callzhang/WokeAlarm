@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/UIKit/TMSimpleTableViewController.h
+../../../TMKit/Pod/Classes/UIKit/TMSimpleTableViewController.h

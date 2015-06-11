@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMBaseTableViewCell.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMBaseTableViewCell.h

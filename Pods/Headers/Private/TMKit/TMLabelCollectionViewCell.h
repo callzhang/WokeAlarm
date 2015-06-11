@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/CollectionViewBuilder/Views/TMLabelCollectionViewCell.h
+../../../TMKit/Pod/Classes/CollectionViewBuilder/Views/TMLabelCollectionViewCell.h

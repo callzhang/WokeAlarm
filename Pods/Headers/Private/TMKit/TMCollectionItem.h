@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/CollectionViewBuilder/Core/TMCollectionItem.h
+../../../TMKit/Pod/Classes/CollectionViewBuilder/Core/TMCollectionItem.h

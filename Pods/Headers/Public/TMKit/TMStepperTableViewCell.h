@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMStepperTableViewCell.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMStepperTableViewCell.h

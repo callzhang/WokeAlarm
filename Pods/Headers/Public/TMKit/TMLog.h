@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TMLog.h
+../../../TMKit/Pod/Classes/TMLog.h

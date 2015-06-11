@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Categories/UITableView+RegisterRowItem.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Categories/UITableView+RegisterRowItem.h

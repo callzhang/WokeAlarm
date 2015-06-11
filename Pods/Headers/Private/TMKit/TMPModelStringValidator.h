@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/Validation/validators/TMPModelStringValidator.h
+../../../TMKit/Pod/Classes/Validation/validators/TMPModelStringValidator.h

@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Core/TMTableViewDelegate.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Core/TMTableViewDelegate.h

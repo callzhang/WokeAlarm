@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/Validation/NSObject+TMPModelValidation.h
+../../../TMKit/Pod/Classes/Validation/NSObject+TMPModelValidation.h

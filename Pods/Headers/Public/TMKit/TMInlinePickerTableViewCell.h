@@ -1,1 +1,1 @@
-../../../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMInlinePickerTableViewCell.h
+../../../TMKit/Pod/Classes/TableViewBuilder/Views/TMInlinePickerTableViewCell.h
