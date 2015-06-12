@@ -134,9 +134,9 @@
 }
 
 - (void)enterForeground{
-	if (![EWSession sharedSession].wakeupStatus == EWWakeUpStatusWakingUp) {
-		//[self registerBackgroudingAudioSession];
-	}
+//	if ([EWSession sharedSession].wakeupStatus != EWWakeUpStatusWakingUp) {
+//		[self registerBackgroudingAudioSession];
+//	}
 	
     [backgroundingtimer invalidate];
     
