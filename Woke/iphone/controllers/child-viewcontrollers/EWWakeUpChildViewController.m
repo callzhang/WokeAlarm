@@ -91,6 +91,7 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 #pragma mark - Update progress
 - (void)updateProgress:(CADisplayLink *)link {
     CGFloat progress = 0.0;
+    self.waveView.alpha = 1;
 	AVAudioPlayer *player = [EWAVManager sharedManager].player;
     if(player.isPlaying) {
         progress = (CGFloat) player.currentTime / player.duration;
@@ -106,19 +107,19 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 	
 	if ([EWAVManager sharedManager].player.isPlaying) {
 		[[EWAVManager sharedManager].player updateMeters];
-		value = [[EWAVManager sharedManager].player peakPowerForChannel:0];
+		value = pow(10, [[EWAVManager sharedManager].player peakPowerForChannel:0]/30);
 	}
 	else if ([EWAVManager sharedManager].recorder.isRecording) {
 		[[EWAVManager sharedManager].recorder updateMeters];
-		value = [[EWAVManager sharedManager].recorder averagePowerForChannel:0];
+		value = pow(10, [[EWAVManager sharedManager].recorder averagePowerForChannel:0]/10);
 	}
 	
-    CGFloat normalizedValue = pow(10, value/30);
-    [self.waveView updateWithLevel:normalizedValue];
+    [self.waveView updateWithLevel:value];
 }
 
 - (void)stopWave {
     self.active = NO;
     [self.waveView updateWithLevel:0.0];
+    self.waveView.alpha = 0;
 }
 @end

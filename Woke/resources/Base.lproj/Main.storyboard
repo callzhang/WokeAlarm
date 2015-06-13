@@ -2018,7 +2018,7 @@
                                     <segue destination="BcC-eX-WTH" kind="embed" identifier="peopleArrayChildViewController" id="fWu-BY-1M2"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gpM-jP-AUb" userLabel="center 40 spacer top">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gpM-jP-AUb" userLabel="center 40 spacer top">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="6Pg-dc-Es5"/>
@@ -2038,7 +2038,7 @@
                                     <constraint firstAttribute="width" constant="30" id="lRE-6N-yCS"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQN-Cp-KEY" userLabel="center 40 spacer bottom">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wQN-Cp-KEY" userLabel="center 40 spacer bottom">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="eaS-do-PaT"/>
@@ -2149,7 +2149,7 @@
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B1U-kk-WzV" customClass="SCSiriWaveformView">
                                 <rect key="frame" x="0.0" y="336" width="320" height="90"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.25" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="z2d-jO-1KO"/>
                                 </constraints>
@@ -3173,9 +3173,9 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="7lF-Wp-60q"/>
-        <segue reference="v3V-jG-DGb"/>
         <segue reference="CBy-Qp-dcT"/>
         <segue reference="wLP-1t-7ZH"/>
+        <segue reference="v3V-jG-DGb"/>
         <segue reference="qEe-Vv-RSN"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

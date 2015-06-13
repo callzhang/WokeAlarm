@@ -62,6 +62,7 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
     //waveform
     [self.waveformView setWaveColor:[UIColor colorWithWhite:1.0 alpha:0.75]];
     [self.waveformView updateWithLevel:0.0f];
+    [self stopUpdatingProgress:nil];
     
     self.state = EWRecordingViewStateInitial;
 }
@@ -240,33 +241,33 @@ typedef NS_ENUM(NSUInteger, EWRecordingViewState) {
 #pragma mark - Update progress
 - (void)updateProgress:(CADisplayLink *)link {
     CGFloat progress = 0.0;
+    self.waveformView.alpha = 1;
     if ([EWAVManager sharedManager].recorder.isRecording) {
         progress = (CGFloat) [EWAVManager sharedManager].recorder.currentTime /kMaxRecordTime;
-        //set prpgress
-        if (progress<1) {
-            self.progressView.progress = progress;
-            [self updateMeters];
-        }
-    }
-    else if([EWAVManager sharedManager].player.isPlaying) {
+    } else if([EWAVManager sharedManager].player.isPlaying) {
         progress = (CGFloat) [EWAVManager sharedManager].player.currentTime /kMaxRecordTime;
-        //set prpgress
-        if (progress<1) {
-            self.progressView.progress = progress;
-            [self updateMeters];
-        }
+    }
+    //set prpgress
+    if (progress<1) {
+        self.progressView.progress = progress;
+        [self updateMeters];
     }
 }
 
 - (void)stopUpdatingProgress:(NSNotification *)note{
     self.progressView.progress = 1;
-    
+    self.waveformView.alpha = 0;
     [self onStopButton:nil];
 }
 
 - (void)updateMeters{
-    [[EWAVManager sharedManager].recorder updateMeters];
-    CGFloat normalizedValue = (float)pow (10, [[EWAVManager sharedManager].recorder averagePowerForChannel:0]/30);
+    CGFloat normalizedValue = 0;
+    if ([EWAVManager sharedManager].recorder.isRecording) {
+        [[EWAVManager sharedManager].recorder updateMeters];
+        normalizedValue = (float)pow (10, [[EWAVManager sharedManager].recorder averagePowerForChannel:0]/30);
+    } else if([EWAVManager sharedManager].player.isPlaying){
+        normalizedValue = (float)pow(10, [[EWAVManager sharedManager].player averagePowerForChannel:0]/10);
+    }
     [self.waveformView updateWithLevel:normalizedValue];
 }
 
