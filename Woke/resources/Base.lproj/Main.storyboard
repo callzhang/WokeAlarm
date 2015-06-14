@@ -774,13 +774,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="79" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Coh-WY-6tO">
-                                                    <rect key="frame" x="284" y="7" width="28" height="29"/>
+                                                    <rect key="frame" x="277" y="7" width="28" height="29"/>
                                                     <fontDescription key="fontDescription" name="Lato-Thin" family="Lato" pointSize="24"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Friends" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i6O-hi-NRZ">
-                                                    <rect key="frame" x="17" y="11" width="56" height="22"/>
+                                                    <rect key="frame" x="15" y="11" width="56" height="22"/>
                                                     <fontDescription key="fontDescription" name="Lato-Thin" family="Lato" pointSize="18"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -788,10 +788,10 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="i6O-hi-NRZ" firstAttribute="leading" secondItem="DZj-95-zlJ" secondAttribute="leading" constant="17" id="7iQ-hK-XU7"/>
-                                                <constraint firstAttribute="trailing" secondItem="Coh-WY-6tO" secondAttribute="trailing" constant="8" id="PFd-YC-uUT"/>
-                                                <constraint firstAttribute="centerYWithinMargins" secondItem="Coh-WY-6tO" secondAttribute="centerYWithinMargins" constant="0.5" id="nyA-KI-CkW"/>
-                                                <constraint firstAttribute="centerYWithinMargins" secondItem="i6O-hi-NRZ" secondAttribute="centerYWithinMargins" constant="0.5" id="tEA-BP-Ucb"/>
+                                                <constraint firstItem="i6O-hi-NRZ" firstAttribute="leading" secondItem="DZj-95-zlJ" secondAttribute="leading" constant="15" id="7iQ-hK-XU7"/>
+                                                <constraint firstAttribute="trailing" secondItem="Coh-WY-6tO" secondAttribute="trailing" constant="15" id="PFd-YC-uUT"/>
+                                                <constraint firstAttribute="centerYWithinMargins" secondItem="Coh-WY-6tO" secondAttribute="centerYWithinMargins" id="nyA-KI-CkW"/>
+                                                <constraint firstAttribute="centerYWithinMargins" secondItem="i6O-hi-NRZ" secondAttribute="centerYWithinMargins" id="tEA-BP-Ucb"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -806,7 +806,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Unf-1S-sZT" userLabel="picture">
-                                                    <rect key="frame" x="104" y="19" width="113" height="113"/>
+                                                    <rect key="frame" x="104" y="5" width="113" height="113"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="113" id="mOL-T3-90i"/>
                                                         <constraint firstAttribute="height" constant="113" id="uck-gb-qJK"/>
@@ -816,7 +816,7 @@
                                                     </state>
                                                 </button>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Misty Robertson" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tDD-T6-Yyg">
-                                                    <rect key="frame" x="103" y="139" width="114" height="25"/>
+                                                    <rect key="frame" x="103" y="125" width="114" height="25"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="25" id="U9N-bd-Oaa"/>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="290" id="XZE-JA-xnD"/>
@@ -826,7 +826,7 @@
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EJu-dG-MTM" userLabel="location-view">
-                                                    <rect key="frame" x="66" y="164" width="176" height="25"/>
+                                                    <rect key="frame" x="66" y="150" width="176" height="25"/>
                                                     <subviews>
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Lost Angeles, CA" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBe-F9-ebn">
                                                             <rect key="frame" x="0.0" y="0.0" width="104" height="25"/>
@@ -855,7 +855,7 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9em-Hn-WxM" userLabel="next-alarm-view">
-                                                    <rect key="frame" x="85" y="189" width="151" height="25"/>
+                                                    <rect key="frame" x="85" y="175" width="151" height="25"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivf-tQ-Wws">
                                                             <rect key="frame" x="0.0" y="0.0" width="136" height="25"/>
@@ -893,7 +893,7 @@
                                                     </variation>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uLL-PP-Ops">
-                                                    <rect key="frame" x="237" y="52" width="48" height="48"/>
+                                                    <rect key="frame" x="237" y="38" width="48" height="48"/>
                                                     <state key="normal" image="woke-user-profile-add-friend-button">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -902,7 +902,7 @@
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="248" text="“Sing me a happy song maybe?&quot;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ig2-i3-YjY">
-                                                    <rect key="frame" x="38" y="230" width="245" height="106"/>
+                                                    <rect key="frame" x="38" y="216" width="245" height="112"/>
                                                     <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="18"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -916,8 +916,8 @@
                                                 <constraint firstItem="uLL-PP-Ops" firstAttribute="leading" secondItem="Unf-1S-sZT" secondAttribute="trailing" constant="20" id="9aw-YS-qG7"/>
                                                 <constraint firstItem="9em-Hn-WxM" firstAttribute="top" secondItem="EJu-dG-MTM" secondAttribute="bottom" id="BXe-l9-5Uh"/>
                                                 <constraint firstAttribute="centerX" secondItem="Unf-1S-sZT" secondAttribute="centerX" id="DVi-ec-Z6G"/>
-                                                <constraint firstItem="Unf-1S-sZT" firstAttribute="top" secondItem="SR0-Jk-RKu" secondAttribute="top" constant="19" id="EcY-AR-5A8"/>
-                                                <constraint firstAttribute="bottom" secondItem="Ig2-i3-YjY" secondAttribute="bottom" constant="8" id="Eet-JH-VfL"/>
+                                                <constraint firstItem="Unf-1S-sZT" firstAttribute="top" secondItem="SR0-Jk-RKu" secondAttribute="top" constant="5" id="EcY-AR-5A8"/>
+                                                <constraint firstAttribute="bottom" secondItem="Ig2-i3-YjY" secondAttribute="bottom" constant="16" id="Eet-JH-VfL"/>
                                                 <constraint firstItem="EJu-dG-MTM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SR0-Jk-RKu" secondAttribute="leadingMargin" id="JCD-2k-7rs"/>
                                                 <constraint firstItem="tDD-T6-Yyg" firstAttribute="centerX" secondItem="Unf-1S-sZT" secondAttribute="centerX" id="OYc-fD-brN"/>
                                                 <constraint firstItem="Ig2-i3-YjY" firstAttribute="top" secondItem="9em-Hn-WxM" secondAttribute="bottom" constant="16" id="dap-QK-ueL"/>
@@ -3173,9 +3173,9 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="pRr-UO-GET"/>
+        <segue reference="Rze-Xr-CCz"/>
         <segue reference="7lF-Wp-60q"/>
         <segue reference="v3V-jG-DGb"/>
-        <segue reference="wLP-1t-7ZH"/>
         <segue reference="qEe-Vv-RSN"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
