@@ -76,7 +76,7 @@
 - (IBAction)onNextButton:(id)sender {
     [[EWPersonManager shared] nextWakeeWithCompletion:^(EWPerson *person) {
         self.nextWakee = person;
-        NSString *title = [NSString stringWithFormat:@"Wake %@", person.genderSubjectiveCaseString];
+        NSString *title = [NSString stringWithFormat:@"Wake %@ Up", person.genderSubjectiveCaseString];
         [self.wakeButton setTitle:title forState:UIControlStateNormal];
     }];
 }

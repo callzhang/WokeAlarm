@@ -659,7 +659,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vCK-ky-v90">
-                                <rect key="frame" x="165" y="505" width="139" height="48"/>
+                                <rect key="frame" x="109" y="505" width="195" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="sdK-Ob-ueL"/>
                                 </constraints>
@@ -676,7 +676,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEo-IB-dbM">
-                                <rect key="frame" x="16" y="505" width="139" height="48"/>
+                                <rect key="frame" x="16" y="505" width="83" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="Wzo-lQ-5oM"/>
                                 </constraints>
@@ -726,7 +726,7 @@
                             <constraint firstItem="vCK-ky-v90" firstAttribute="centerY" secondItem="HEo-IB-dbM" secondAttribute="centerY" id="gBg-2N-HMn"/>
                             <constraint firstAttribute="height" secondItem="vGP-Fp-b50" secondAttribute="height" multiplier="100/9.6" id="glz-iD-gD6"/>
                             <constraint firstAttribute="centerX" secondItem="eiI-YG-cDg" secondAttribute="centerX" id="uJn-Je-1yP"/>
-                            <constraint firstItem="vCK-ky-v90" firstAttribute="width" secondItem="HEo-IB-dbM" secondAttribute="width" id="ucI-yX-vmh"/>
+                            <constraint firstItem="vCK-ky-v90" firstAttribute="width" secondItem="HEo-IB-dbM" secondAttribute="width" multiplier="7/3" id="ucI-yX-vmh"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vCK-ky-v90" secondAttribute="trailing" id="vTh-Zr-vaD"/>
                             <constraint firstItem="vGP-Fp-b50" firstAttribute="top" secondItem="ZNX-QY-fw8" secondAttribute="bottom" id="x5K-JL-7ug"/>
                             <constraint firstItem="eiI-YG-cDg" firstAttribute="top" secondItem="P4K-aa-mhR" secondAttribute="bottom" id="xSm-re-AO4"/>
@@ -3172,10 +3172,10 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="pRr-UO-GET"/>
         <segue reference="7lF-Wp-60q"/>
-        <segue reference="CBy-Qp-dcT"/>
-        <segue reference="wLP-1t-7ZH"/>
         <segue reference="v3V-jG-DGb"/>
+        <segue reference="wLP-1t-7ZH"/>
         <segue reference="qEe-Vv-RSN"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
