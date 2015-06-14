@@ -99,7 +99,6 @@
                 }];
             }];
         }else{
-            
             [sheet bk_addButtonWithTitle:@"Send friendship request" handler:^{
                 [[EWPersonManager shared] requestFriend:_person completion:^(EWFriendshipStatus status, NSError *error) {
                     DDLogDebug(@"Friendship requested %@  error: %@", status == EWFriendshipStatusSent?@"YES":@"NO", error);
