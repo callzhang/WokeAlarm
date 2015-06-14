@@ -36,6 +36,7 @@
     XCTAssert(YES, @"Pass");
 }
 
+/*
 - (void)testSendFriendshipRequest {
     XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     NSMutableArray *people = [EWPerson MR_findAll].mutableCopy;
@@ -78,6 +79,8 @@
         }
     }];
 }
+ 
+ */
 
 - (void)testPerformanceExample {
     // This is an example of a performance test case.

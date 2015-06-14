@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+/*
 #import "EWWakeUpManager.h"
 #import "EWActivity.h"
 #import "EWAlarm.h"
@@ -106,3 +107,4 @@
 }
 
 @end
+*/
