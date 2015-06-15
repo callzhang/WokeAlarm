@@ -353,7 +353,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
         else if(!currentLocation){
 
 			DDLogError(@"Failed to get location with status of %ld and location of %@", status, currentLocation);
-			[EWUIUtil showText:@"Location update failed"];
+//			[EWUIUtil showText:@"Location update failed"];
         }
         
         //process location

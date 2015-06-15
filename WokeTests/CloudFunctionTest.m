@@ -29,6 +29,7 @@
     [super tearDown];
 }
 
+/*
 - (void)testSyncUser {
     XCTestExpectation *expectation = [self expectationWithDescription:@"High Expectations"];
     [[EWAccountManager sharedInstance] syncUserWithCompletion:^(NSError *error){
@@ -45,6 +46,7 @@
         }
     }];
 }
+ */
 
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
