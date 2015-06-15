@@ -291,7 +291,7 @@
 - (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block{
     __block PFObject *object;
     __block NSError *err;
-    [self.managedObjectContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [self.managedObjectContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *localMO = (EWServerObject *)[self MR_inContext:localContext];
         
         object = [[EWSync sharedInstance] getParseObjectWithClass:localMO.serverClassName ID:localMO.serverID error:&err];
@@ -314,7 +314,7 @@
     //network check
     
     __block NSError *err;
-    [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *currentMO = [self MR_inContext:localContext];
         if (!currentMO) {
             DDLogError(@"*** Failed to obtain object from database: %@", self);
@@ -361,10 +361,14 @@
     }else{
         if ([self changedKeys]) {
             DDLogWarn(@"===>>>> Refreshing MO %@(%@) HAS CHANGES, UNSAFE!(%@)", self.entity.name, self.serverID, self.changedKeys);
-        }else{
-            DDLogVerbose(@"===>>>> Refreshing MO %@(%@)", self.entity.name, self.serverID);
+            return YES;
+        }
+        else if([[EWSync sharedInstance] inQueueForObject:self]) {
+            DDLogWarn(@"Refreshing MO %@(%@) is in queue already", self.entity.name, self.serverID);
+            return YES;
         }
         
+        DDLogVerbose(@"===>>>> Refreshing MO %@(%@)", self.entity.name, self.serverID);
         
         //get the PO
         PFObject *object = self.parseObject;
@@ -448,7 +452,7 @@
     }
     
     NSManagedObjectID *ID = self.objectID;
-    [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
         NSError *err;
         NSManagedObject *backMO = [localContext existingObjectWithID:ID error:&err];
         if (err) {
@@ -598,15 +602,7 @@
 	[[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:self.objectID];
 	
 	//trigger save immediately
-	if ([NSThread isMainThread]) {
-		//upload immediately
-		[[EWSync sharedInstance] uploadToServer];
-	} else {
-		//delay 1s so the save action could be completed
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-			[[EWSync sharedInstance] uploadToServer];
-		});
-	}
+    [EWSync saveImmediately];
 }
 
 

@@ -131,7 +131,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 	}
 	
     __block NSArray *wakees;
-    [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
         
 		NSError *error;
         wakees = [self getWakeesInContext:localContext error:&error];
@@ -241,10 +241,25 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 
 - (void)requestFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion{
     EWAssertMainThread
+    if (![EWSync isReachable]) {
+        NSError *error = [EWErrorManager noInternetConnectError];
+        completion(EWFriendshipStatusUnknown, error);
+        return;
+    }
+    
+    //check if me is in queue to prevent override from local upload
+    if ([[EWSync sharedInstance] inQueueForObject:[EWPerson me]]) {
+        //add to completion block
+        NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[[EWPerson me].objectID] ?: [NSMutableArray array];
+        [moUploadCallbacks addObject:^{
+            [self requestFriend:person completion:completion];
+        }];
+        [[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:[EWPerson me].objectID];
+        [EWSync saveImmediately];
+        return;
+    }
     [self sendFriendRequestToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
         if (request) {
-            [[EWPerson me] addFriendshipRequestSentObject:request];
-            [[EWPerson me] saveToLocal];
             if (completion) {
                 if([request.status isEqualToString:EWFriendshipRequestPending]) {
                     completion(EWFriendshipStatusSent, error);
@@ -265,12 +280,29 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 - (void)acceptFriend:(EWPerson *)person completion:(void (^)(EWFriendshipStatus status, NSError *error))completion{
     
     EWAssertMainThread
+    if (![EWSync isReachable]) {
+        NSError *error = [EWErrorManager noInternetConnectError];
+        completion(EWFriendshipStatusUnknown, error);
+        return;
+    }
+    
+    //check if me is in queue to prevent override from local upload
+    if ([[EWSync sharedInstance] inQueueForObject:[EWPerson me]]) {
+        //add to completion block
+        NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[[EWPerson me].objectID] ?: [NSMutableArray array];
+        [moUploadCallbacks addObject:^{
+            [self acceptFriend:person completion:completion];
+        }];
+        [[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:[EWPerson me].objectID];
+        [EWSync saveImmediately];
+        return;
+    }
 	
     [self sendFriendAcceptToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
         //TODO: something is wrong when accepting request: got pending when friended
         if (request) {
-            [[EWPerson me] addFriendsObject:person];
-            [[EWPerson me] saveToLocal];
+            //[[EWPerson me] addFriendsObject:person];
+            //[[EWPerson me] saveToLocal];
             if (completion) {
                 if([request.status isEqualToString:EWFriendshipRequestPending]) {
                     completion(EWFriendshipStatusReceived, error);
@@ -290,7 +322,25 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 }
 
 - (void)unfriend:(EWPerson *)person completion:(BoolErrorBlock)completion{
+    
     EWAssertMainThread
+    if (![EWSync isReachable]) {
+        NSError *error = [EWErrorManager noInternetConnectError];
+        completion(EWFriendshipStatusUnknown, error);
+        return;
+    }
+    //check if me is in queue to prevent override from local upload
+    if ([[EWSync sharedInstance] inQueueForObject:[EWPerson me]]) {
+        //add to completion block
+        NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[[EWPerson me].objectID] ?: [NSMutableArray array];
+        [moUploadCallbacks addObject:^{
+            [self unfriend:person completion:completion];
+        }];
+        [[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:[EWPerson me].objectID];
+        [EWSync saveImmediately];
+        return;
+    }
+    
     [self sendUnfriendStatusToPerson:person completion:^(BOOL success, NSError *error) {
         if (success) {
             [[EWPerson me] removeFriendsObject:person];
@@ -300,12 +350,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }];
 }
 
+#pragma mark - Server method. Seperated for easy changing serverd in the future
 - (void)sendFriendRequestToPerson:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *))block {
-    if (![EWSync isReachable]) {
-        NSError *error = [EWErrorManager noInternetConnectError];
-        block(nil, error);
-        return;
-    }
+    
     /*
      call the cloud code
      server create a friendRequest and a notification object
@@ -329,24 +376,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
      {
          if (!object) {
              DDLogError(@"Failed sending friendship request: %@", error.description);
-             if (block) {
-                 block(nil, error);
-             }
+             if (block) block(nil, error);
+             return;
          }else{
              DDLogInfo(@"Cloud code sendFriendRequestToUser successful");
+             //the returned request might have inversed sender/receiver (i.e. the receiver is me) because the 'person' is already requested to me before
              EWFriendRequest *request = (EWFriendRequest *)[object managedObjectInContext:mainContext option:EWSyncOptionUpdateRelation completion:NULL];
-             NSAssert([[EWPerson me].friendshipRequestSent containsObject:request], @"Request not in my relation");
              block(request, error);
          }
      }];
 }
 
+
 - (void)sendFriendAcceptToPerson:(EWPerson *)person completion:(void (^)(EWFriendRequest *request, NSError *error))block {
-    if (![EWSync isReachable]) {
-        NSError *error = [EWErrorManager noInternetConnectError];
-        block(nil, error);
-        return;
-    }
     /*
      call the cloud code
      server updates the request status to friended

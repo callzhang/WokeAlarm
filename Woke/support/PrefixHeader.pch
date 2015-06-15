@@ -20,7 +20,7 @@
 #import "MagicalRecord.h"
 #import "EWDefines.h"
 #import "EWSync.h"
-#import "NSManagedObjectContext+ChainSave.h"
+//#import "NSManagedObjectContext+ChainSave.h"
 #import <MTDates/NSDate+MTDates.h>
 #import "EWSession.h"
 #import <CocoaLumberjack/DDLog.h>

@@ -82,13 +82,14 @@ extern NSString * const kEWSyncUploaded;
 
 #pragma mark - Server methods
 + (void)saveAllToLocal:(NSArray *)MOs;
+
 /**
  The main method of server update/insert/delete.
  And save ManagedObject.
  @discussion Please do not call this method directly. It is scheduled when you call save method.
  */
-- (void)uploadToServer;
-
+//- (void)uploadToServer;
++ (void)saveImmediately;
 /*
  Resume uploading at startup.
  **/
@@ -151,6 +152,7 @@ extern NSString * const kEWSyncUploaded;
 - (NSSet *)getObjectFromQueue:(NSString *)queue;
 - (void)appendObject:(EWServerObject *)mo toQueue:(NSString *)queue;
 - (BOOL)contains:(EWServerObject *)mo inQueue:(NSString *)queue;
+- (BOOL)inQueueForObject:(EWServerObject *)SO;
 
 #pragma mark - CoreData
 + (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;

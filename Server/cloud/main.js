@@ -194,15 +194,17 @@ Parse.Cloud.define("sendFriendshipRequestToUser", function(request, response) {
         console.log("request from "+receiverID+" to "+senderID+" already pending, accept now!");
         request.set("status", "friend_request_friended");
         request.save().then(function () {
-          response.success(request)
+          response.success(request);
         });
       } else if (status == "friend_request_friended") {
         //already friended
         console.log("request from "+receiverID+" to "+senderID+" already friended");
         response.success(request);
-      } else {
+      } else if (status == "friend_request_denied"){
         console.log("request from "+receiverID+" to "+senderID+" already denied");
         response.success(request);
+      } else {
+        console.log("Error: unknown friendship status: "+status+" for friendship request "+request.id);
       }
     }
 

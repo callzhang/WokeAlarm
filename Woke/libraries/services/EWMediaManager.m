@@ -102,7 +102,7 @@
         if (media) {
             DDLogInfo(@"Finished get woke voice request with media: %@", media);
             //check media
-            [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+            [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
                 [[EWPerson meInContext:localContext] addReceivedMediasObject:newMedia];
             } completion:^(BOOL contextDidSave, NSError *error2) {
@@ -136,7 +136,7 @@
 		if (media) {
 			DDLogInfo(@"Got random voice request with media: %@", media);
 			//check media
-			[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+			[mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
 				EWMedia *newMedia = [EWMedia getMediaByID:media.objectId inContext:localContext];
 				[[EWPerson meInContext:localContext] addReceivedMediasObject:newMedia];
 			} completion:^(BOOL contextDidSave, NSError *error2) {

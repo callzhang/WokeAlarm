@@ -271,7 +271,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWAccountManager)
     if (!me.profilePic) {
         //download profile picture if needed
         //profile pic, async download, need to assign img to person before leave
-        [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+        [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
             EWPerson *localMe = [me MR_inContext:localContext];
             NSString *imageUrl = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", user.objectID];
             NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];

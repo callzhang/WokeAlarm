@@ -42,16 +42,6 @@
     return alarm;
 }
 
-+ (void)deleteAll{
-    //delete
-    [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
-        for (EWAlarm *alarm in [EWPerson me].alarms) {
-            EWAlarm *localAlarm = [alarm MR_inContext:localContext];
-            [localAlarm remove];
-        }
-    }];
-}
-
 #pragma mark - Validate alarm
 - (BOOL)validate{
     BOOL good = YES;

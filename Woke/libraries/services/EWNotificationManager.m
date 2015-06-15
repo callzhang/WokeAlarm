@@ -214,7 +214,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 
 - (void)checkNotifications{
 	EWActivity *currentActivity = [EWPerson myCurrentAlarmActivity];
-	[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+	[mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
         
         //remove past new media notifications
 		EWActivity *localCurrentActivity = [currentActivity MR_inContext:localContext];
@@ -247,7 +247,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 		}
 	} completion:^(BOOL contextDidSave, NSError *error) {
 		DDLogVerbose(@"Finished checking notifications %@", error.localizedDescription);
-        [[EWSync sharedInstance] uploadToServer];
+        [EWSync saveImmediately];
 	}];
 	
 }
