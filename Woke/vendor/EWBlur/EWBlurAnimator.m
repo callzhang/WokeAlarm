@@ -58,7 +58,7 @@ static const CGFloat initialDownSampling = 2;
 
 - (void)setup
 {
-	//blurFilter->BrightnessFilter
+	//blurFilter->BrightnessFilter->GPUImageView
 	self.GPUImageViews = [NSMutableArray array];
     self.blurFilter = [[GPUImageiOSBlurFilter alloc] init];
     self.blurFilter.rangeReductionFactor = 0;
@@ -86,21 +86,22 @@ static const CGFloat initialDownSampling = 2;
 	fromView = fromViewController.view;
 	toView = toViewController.view;
 	
-	//remove background
-	toViewController.view.backgroundColor = [UIColor clearColor];
-	if ([toViewController isKindOfClass:[UINavigationController class]]) {
-		UINavigationController *nav = (UINavigationController *)toViewController;
-		nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
-	}
 	
 
 	//init timer
 	self.startTime = 0;
 	
     if (self.type == UINavigationControllerOperationPush || self.type == kModelViewPresent) {
-		//remove background
-		UIView *img = [toView viewWithTag:kBackgroundImageTag];
-		[img removeFromSuperview];
+		
+		//remove background color & image
+		toView.backgroundColor = [UIColor clearColor];
+		[[toView viewWithTag:kBackgroundImageTag] removeFromSuperview];
+		toViewController.view.backgroundColor = [UIColor clearColor];
+		if ([toViewController isKindOfClass:[UINavigationController class]]) {
+			UINavigationController *nav = (UINavigationController *)toViewController;
+			nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
+			[[nav.visibleViewController.view viewWithTag:kBackgroundImageTag] removeFromSuperview];
+		}
 		
 		//add GPU image view
 		self.currentGPUImageView = [[GPUImageView alloc] init];
@@ -128,6 +129,7 @@ static const CGFloat initialDownSampling = 2;
         //GPU image setup
         UIImage *fromViewImage = fromView.screenshot;
 		self.blurImage = [[GPUImagePicture alloc] initWithImage:fromViewImage];
+		[self.blurImage addTarget:self.blurFilter];
 		
 		//update first frame so the transition will be smoother
 		[self updateFrame:nil];
