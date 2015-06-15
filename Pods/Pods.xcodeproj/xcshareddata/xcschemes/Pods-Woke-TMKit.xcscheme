@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "90B7F7A40FB7160A23852189"
+               BlueprintIdentifier = "743BBB20CCB3E29A5A009643"
                BuildableName = "libPods-Woke-TMKit.a"
                BlueprintName = "Pods-Woke-TMKit"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -39,6 +39,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "743BBB20CCB3E29A5A009643"
+            BuildableName = "libPods-Woke-TMKit.a"
+            BlueprintName = "Pods-Woke-TMKit"
+            ReferencedContainer = "container:Pods.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

@@ -78,7 +78,7 @@ NSManagedObjectContext *mainContext;
     [self.reachability startMonitoring];
     [self.reachability setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status != 0) {
-            [EWUIUtil showSuccessHUBWithString:@"Online"];
+            //[EWUIUtil showSuccessHUBWithString:@"Online"];
             if (![EWSession sharedSession].isSyncingUser) {
                 DDLogDebug(@"====== Network is reachable. Start upload. ======");
                 //in background thread

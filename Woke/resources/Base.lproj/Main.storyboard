@@ -3172,10 +3172,10 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="pRr-UO-GET"/>
-        <segue reference="Rze-Xr-CCz"/>
         <segue reference="7lF-Wp-60q"/>
         <segue reference="v3V-jG-DGb"/>
+        <segue reference="e6y-LC-ugB"/>
+        <segue reference="Rze-Xr-CCz"/>
         <segue reference="qEe-Vv-RSN"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
