@@ -135,17 +135,20 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     [EWSession sharedSession].wakeupStatus = EWWakeUpStatusWakingUp;
     
     //update media
-    self.medias = [EWPerson myUnreadMedias];
+    self.medias = [EWPerson myUnreadMedias].mutableCopy;
+    NSParameterAssert(self.medias);
     
     //add Woke media is needed
     if (self.medias.count == 0) {
         //need to create some voice in sync
-        EWMedia *newMedia = [[EWMediaManager sharedInstance] getWokeVoice];
-		if (newMedia) {
-			self.medias = @[newMedia];
-		} else {
-			//TODO add a local fallback voice
-		}
+        [[EWMediaManager sharedInstance] getWokeVoiceWithCompletion:^(EWMedia *media, NSError *error) {
+            if (media) {
+                [self.medias addObject:media];
+            } else {
+                //TODO add a local fallback voice
+            }
+        }];
+		
     }
     
     //cancel local alarm
@@ -368,9 +371,23 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
 	
 	//volume
 	[EWAVManager sharedManager].player.volume = 0;
-    [[EWAVManager sharedManager] volumeTo:1 withCompletion:^{
-		DDLogVerbose(@"Volume adjusted to full");
-    }];
+    [[EWAVManager sharedManager] volumeTo:1 withCompletion:nil];
+    
+    [self stopPlayingRingtoneIfVoiceDownloaded];
+}
+
+- (void)stopPlayingRingtoneIfVoiceDownloaded{
+    //stop in 10s
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kRingtonePlayTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self.medias.count) {
+            [[EWAVManager sharedManager] volumeTo:0 withCompletion:^{
+                [[EWAVManager sharedManager] stopAllPlaying];
+            }];
+        }else {
+            EWAlert(@"Still downloading media, continue play ringtone");
+            [self stopPlayingRingtoneIfVoiceDownloaded];
+        }
+    });
 }
 
 - (void)playNextVoiceWithDelay {
@@ -399,9 +416,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         DDLogInfo(@"Next is disabled, stop playing next");
         return;
     }
-    //return if no  medias
+    //return if no medias
     if (!_medias.count) {
         DDLogWarn(@"%s No media to play", __FUNCTION__);
+        EWAlert(@"No voice to play!");
         return;
     }
 	
@@ -416,7 +434,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
         if ((self.loopCount)>0) {
             //play the first if loopCount > 0
             DDLogInfo(@"Looping, %ld loop left", (long)_loopCount);
-            self.loopCount++;
+            self.loopCount--;
             self.currentMediaIndex = @0;
             [[EWAVManager sharedManager] playMedia:self.currentMedia];
             [[NSNotificationCenter defaultCenter] postNotificationName:kEWWakeUpDidPlayNextMediaNotification object:nil];

@@ -15,6 +15,7 @@
 #define kMaxEarlySleepHours		3
 #define kMaxEarlyWakeHours      1.5
 #define kEWWakeEnabled          @"wake_enabled"
+#define kRingtonePlayTime       10
 
 @import UIKit;
 @class EWActivity, EWAlarm, EWPerson, EWWakeUpManager;
@@ -36,7 +37,7 @@ extern NSString * const kEWWakeUpDidStopPlayMediaNotification;
 
 
 @interface EWWakeUpManager : NSObject
-@property (nonatomic, copy) NSArray *medias;
+@property (nonatomic, copy) NSMutableArray *medias;
 @property (nonatomic, weak) NSObject<EWWakeUpDelegate> *delegate;
 @property (nonatomic, readonly) BOOL canStartToWakeUp;
 

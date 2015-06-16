@@ -14,8 +14,7 @@
 #import "EWNotification.h"
 #import "EWActivity.h"
 #import "NSArray+BlocksKit.h"
-//#import "EWAlarmManager.h"
-//#import "EWAlarm.h"
+#import "EWUIUtil.h"
 #import "NSDictionary+KeyPathAccess.h"
 #import "EWMediaFile.h"
 
@@ -223,7 +222,9 @@
     if (newMedia.count) {
         //notify user for the new media
         dispatch_async(dispatch_get_main_queue(), ^{
-            EWAlert(@"[DEBUG] got voice for next wake up");
+#ifdef DEBUG
+            [EWUIUtil showSuccessHUBWithString:@"Got voice for next wake up"];
+#endif
             [[NSNotificationCenter defaultCenter] postNotificationName:kNewMediaNotification object:nil];
         });
     }

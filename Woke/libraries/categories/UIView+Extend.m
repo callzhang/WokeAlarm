@@ -25,7 +25,7 @@
         
         JGProgressHUDFadeZoomAnimation *an = [JGProgressHUDFadeZoomAnimation animation];
         hud.animation = an;
-        hud.textLabel.text = alert;
+        if(alert) hud.textLabel.text = alert;
         switch (style) {
             case hudStyleSuccess:
                 hud.indicatorView = [JGProgressHUDSuccessIndicatorView new];
@@ -39,8 +39,17 @@
                 hud.indicatorView = [[JGProgressHUDIndicatorView alloc] initWithContentView:[[UIImageView alloc] initWithImage:[ImagesCatalog warning]]];
                 break;
 				
-			case HUDStyleInfo:
-				break;
+            case hudStyleLooping:{
+                hud.interactionType = JGProgressHUDInteractionTypeBlockTouchesOnHUDView;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [hud showInView:self];
+                    if (timeout > 0) {
+                        [hud dismissAfterDelay:timeout];
+                    }
+                });
+                break;
+            }
+                
                 
             default:
                 break;
@@ -63,16 +72,7 @@
 }
 
 - ( JGProgressHUD*)showLoopingWithTimeout:(float)timeout{
-    JGProgressHUD *hud = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
-    hud.interactionType = JGProgressHUDInteractionTypeBlockTouchesOnHUDView;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [hud showInView:self];
-        if (timeout > 0) {
-            [hud dismissAfterDelay:timeout];
-        }
-    });
-    
-    return hud;
+    return [self showNotification:nil WithStyle:hudStyleLooping audoHide:timeout];
 }
 
 - (void)dismissHUD{

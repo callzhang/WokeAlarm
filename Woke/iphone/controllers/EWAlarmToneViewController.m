@@ -91,8 +91,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.currentTone = self.items[indexPath.row];
     [EWSession sharedSession].currentAlarmTone = self.currentTone;
-    
-    [[EWAVManager sharedManager] playSoundFromURL:[[NSBundle mainBundle] URLForResource:self.currentTone withExtension:@"caf"]];
+    [[EWAVManager sharedManager] playSoundFromFileName:[NSString stringWithFormat:@"%@.caf", self.currentTone]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
