@@ -12,7 +12,8 @@ typedef enum{
     hudStyleSuccess,
     hudStyleFailed,
     hudStyleWarning,
-    HUDStyleInfo
+    hudStyleLooping,
+    hudStyleNone,
 }HUDStyle;
 @class JGProgressHUD;
 @interface UIView(HUD)

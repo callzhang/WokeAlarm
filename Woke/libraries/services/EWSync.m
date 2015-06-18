@@ -78,7 +78,7 @@ NSManagedObjectContext *mainContext;
     [self.reachability startMonitoring];
     [self.reachability setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status != 0) {
-            [EWUIUtil showSuccessHUBWithString:@"Online"];
+            //[EWUIUtil showSuccessHUBWithString:@"Online"];
             if (![EWSession sharedSession].isSyncingUser) {
                 DDLogDebug(@"====== Network is reachable. Start upload. ======");
                 //in background thread
@@ -119,6 +119,20 @@ NSManagedObjectContext *mainContext;
 }
 
 #pragma mark - ============== Parse Server methods ==============
++ (void)saveImmediately{
+    //trigger save immediately
+    if ([NSThread isMainThread]) {
+        //upload immediately
+        [[EWSync sharedInstance] uploadToServer];
+    } else {
+        //delay 1s so the save action could be completed
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[EWSync sharedInstance] uploadToServer];
+        });
+    }
+}
+
+
 - (BOOL)isUploading{
     return _isUploading;
 }
@@ -195,7 +209,7 @@ NSManagedObjectContext *mainContext;
     //self.uploadCompletionCallbacks = [NSMutableDictionary new];
     
     //start background update
-    [mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
         for (EWServerObject *MO in workingObjects) {
             EWServerObject *localMO = [MO MR_inContext:localContext];
             if (!localMO) {
@@ -675,6 +689,22 @@ NSManagedObjectContext *mainContext;
     return contain;
 }
 
+- (BOOL)inQueueForObject:(EWServerObject *)SO{
+    if ([self contains:SO inQueue:kParseQueueDelete]) {
+        return YES;
+    }
+    if ([self contains:SO inQueue:kParseQueueUpdate]) {
+        return YES;
+    }
+    if ([self contains:SO inQueue:kParseQueueInsert]) {
+        return YES;
+    }
+    if ([self contains:SO inQueue:kParseQueueWorking]) {
+        return YES;
+    }
+    return NO;
+}
+
 //DeletedQueue underlying is a dictionary of objectId:className
 - (NSSet *)deleteQueue{
     NSDictionary *dic = [[[NSUserDefaults standardUserDefaults] valueForKey:kParseQueueDelete] mutableCopy];
@@ -865,7 +895,7 @@ NSManagedObjectContext *mainContext;
 			//convert to MO
 			[PFObject pinAll:objects error:&error];
 			__block NSMutableArray *localMOs = [NSMutableArray array];
-			[mainContext saveWithBlock:^(NSManagedObjectContext *localContext) {
+			[mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
 				for (PFObject *PO in objects) {
 					EWServerObject *MO;
 					if ([PO.localClassName isEqualToString:kSyncUserClass] && PO.objectId != [PFUser currentUser].objectId) {

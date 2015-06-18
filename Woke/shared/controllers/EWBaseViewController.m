@@ -31,6 +31,9 @@
     [self.view addConstraints:contraints];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 
 - (void)addNavigationBarButtons{
 

@@ -34,15 +34,14 @@ static const CGFloat initialDownSampling = 2;
 }
 
 @property (nonatomic, strong) GPUImagePicture* blurImage;
-@property (nonatomic, strong) GPUImageTransformFilter *zoomFilter;
+//@property (nonatomic, strong) GPUImageTransformFilter *zoomFilter;
 @property (nonatomic, strong) GPUImageiOSBlurFilter* blurFilter;
 @property (nonatomic, strong) GPUImageToneCurveFilter* brightnessFilter;
-@property (nonatomic, strong) GPUImageView* imageView;
-//@property (nonatomic, strong) GPUImageNormalBlendFilter *blendFilter;
-//@property (nonatomic, strong) GPUImagePicture *baseImage;
+@property (nonatomic, strong) GPUImageView* currentGPUImageView;
 @property (nonatomic, strong) id <UIViewControllerContextTransitioning> context;
 @property (nonatomic) NSTimeInterval startTime;
 @property (nonatomic, strong) CADisplayLink* displayLink;
+@property (nonatomic, strong) NSMutableArray *GPUImageViews;
 @end
 
 @implementation EWBlurAnimator
@@ -59,14 +58,12 @@ static const CGFloat initialDownSampling = 2;
 
 - (void)setup
 {
-	//self.blendFilter = [[GPUImageNormalBlendFilter alloc] init];
-	self.zoomFilter = [[GPUImageTransformFilter alloc] init];
+	//blurFilter->BrightnessFilter->GPUImageView
+	self.GPUImageViews = [NSMutableArray array];
     self.blurFilter = [[GPUImageiOSBlurFilter alloc] init];
     self.blurFilter.rangeReductionFactor = 0;
     self.brightnessFilter = [[GPUImageToneCurveFilter alloc] init];
 	
-	//[self.zoomFilter addTarget:self.blendFilter];
-	[self.zoomFilter addTarget:self.blurFilter];
     [self.blurFilter addTarget:self.brightnessFilter];
     
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateFrame:)];
@@ -85,44 +82,44 @@ static const CGFloat initialDownSampling = 2;
     self.context = transitionContext;
     toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-	//remove background
-	toViewController.view.backgroundColor = [UIColor clearColor];
-	UIViewController *vc;
-	if ([toViewController isKindOfClass:[UINavigationController class]]) {
-		UINavigationController *nav = (UINavigationController *)toViewController;
-		nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
-		vc = nav.visibleViewController;
-	}else{
-		vc = toViewController;
-	}
+	container = [transitionContext containerView];
+	fromView = fromViewController.view;
+	toView = toViewController.view;
 	
-    container = [transitionContext containerView];
-    fromView = fromViewController.view;
-    toView = toViewController.view;
 	
-	//try to find GPUImageView in container first
-	GPUImageView *view = (GPUImageView*)[container viewWithTag:kGPUImageViewTag];
-	if (!view) {
-		self.imageView = [[GPUImageView alloc] init];
-		self.imageView.tag = kGPUImageViewTag;
-		self.imageView.frame = container.bounds;
-		self.imageView.backgroundColor = [UIColor clearColor];
-		[container addSubview:self.imageView];
-	}else{
-		self.imageView = view;
-		self.imageView.alpha = 1;
-	}
-	
-	[self.brightnessFilter removeAllTargets];
-	[self.brightnessFilter addTarget:self.imageView];
-	
+
 	//init timer
 	self.startTime = 0;
 	
     if (self.type == UINavigationControllerOperationPush || self.type == kModelViewPresent) {
-		//remove background
-		UIView *img = [vc.view viewWithTag:kBackgroundImageTag];
-		[img removeFromSuperview];
+		
+		//remove background color & image
+		toView.backgroundColor = [UIColor clearColor];
+		[[toView viewWithTag:kBackgroundImageTag] removeFromSuperview];
+		toViewController.view.backgroundColor = [UIColor clearColor];
+		if ([toViewController isKindOfClass:[UINavigationController class]]) {
+			UINavigationController *nav = (UINavigationController *)toViewController;
+			nav.visibleViewController.view.backgroundColor = [UIColor clearColor];
+			[[nav.visibleViewController.view viewWithTag:kBackgroundImageTag] removeFromSuperview];
+		}
+		
+		//add GPU image view
+		self.currentGPUImageView = [[GPUImageView alloc] init];
+		//self.currentGPUImageView.tag = kGPUImageViewTag;
+		self.currentGPUImageView.frame = container.bounds;
+		self.currentGPUImageView.backgroundColor = [UIColor clearColor];
+		self.currentGPUImageView.alpha = 1;
+		if (self.GPUImageViews.count) {
+			GPUImageView *lastGPUImageView = self.GPUImageViews.lastObject;
+			[container insertSubview:self.currentGPUImageView aboveSubview:lastGPUImageView];
+		}else{
+			[container insertSubview:self.currentGPUImageView atIndex:0];
+		}
+		[self.GPUImageViews addObject:self.currentGPUImageView];
+		
+		//add filter to current GPU image view
+		[self.brightnessFilter removeAllTargets];
+		[self.brightnessFilter addTarget:self.currentGPUImageView];
 		
         //pre animation toView set up
         toView.alpha = 0.01;
@@ -131,13 +128,8 @@ static const CGFloat initialDownSampling = 2;
         
         //GPU image setup
         UIImage *fromViewImage = fromView.screenshot;
-//		_baseImage = [[GPUImagePicture alloc] initWithImage:fromViewImage];
-//		[_baseImage processImage];
-//		[_baseImage addTarget:self.blendFilter];
-		self.blurImage = nil;
-        self.blurImage = [[GPUImagePicture alloc] initWithImage:fromViewImage];
-        [self.blurImage addTarget:self.zoomFilter];
-		//[self.zoomFilter addTarget:self.blendFilter];
+		self.blurImage = [[GPUImagePicture alloc] initWithImage:fromViewImage];
+		[self.blurImage addTarget:self.blurFilter];
 		
 		//update first frame so the transition will be smoother
 		[self updateFrame:nil];
@@ -154,14 +146,12 @@ static const CGFloat initialDownSampling = 2;
         
         
     }else if(self.type == UINavigationControllerOperationPop || self.type == kModelViewDismiss){
+		NSParameterAssert(self.GPUImageViews.count > 0);
+		self.currentGPUImageView = self.GPUImageViews.lastObject;
+		
 		//take a new screenshot and render the imageView
 		UIImage *toViewImage = toView.screenshot;
-//		_baseImage = [[GPUImagePicture alloc] initWithImage:toViewImage];
-//		[_baseImage processImage];
-//		[_baseImage addTarget:self.blendFilter];
 		self.blurImage = [[GPUImagePicture alloc] initWithImage:toViewImage];
-		[self.blurImage addTarget:self.zoomFilter];
-		//[self.zoomFilter addTarget:self.blendFilter];
 		[self updateFrame:nil];
 		
 		fromView.transform = CGAffineTransformIdentity;
@@ -227,12 +217,13 @@ static const CGFloat initialDownSampling = 2;
         //unhide to view'
         self.displayLink.paused = YES;
         [self.context completeTransition:YES];
+		[self.GPUImageViews removeObject:self.currentGPUImageView];
 		
         if (self.type == UINavigationControllerOperationPop) {
 			[[self.context containerView] addSubview:toView];
-			self.imageView.alpha = 0;
+			self.currentGPUImageView.alpha = 0;
 		}else{
-			[self.imageView removeFromSuperview];
+			[self.currentGPUImageView removeFromSuperview];
 		}
 		
 		//make toView visible
@@ -297,7 +288,6 @@ static const CGFloat initialDownSampling = 2;
 		__block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
 			DDLogInfo(@"Application did become active, render last frame of presenting blur image");
 			weakSelf.blurImage = [[GPUImagePicture alloc] initWithImage:fromView.screenshot];
-			[weakSelf.blurImage addTarget:weakSelf.zoomFilter];
 			[weakSelf.blurImage processImage];
 			[[NSNotificationCenter defaultCenter] removeObserver:observer];
 		}];

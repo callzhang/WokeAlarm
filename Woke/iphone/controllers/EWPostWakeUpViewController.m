@@ -47,6 +47,8 @@
     }];
     
     [self updateHeaderLabel];
+    //remove back button
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -57,6 +59,7 @@
 	else {
 		DDLogInfo(@"Snooze disabled, hide back button");
 		self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.backBarButtonItem = nil;
 	}
     [EWUIUtil applyAlphaGradientForView:_tableView withEndPoints:@[@0.1, @0.8]];
 }

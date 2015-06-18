@@ -344,14 +344,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
 
 + (JGProgressHUD *)showWarningHUBWithString:(NSString *)string{
 	UIView *rootView = [self topView];
-	JGProgressHUD *hud = [rootView showNotification:string WithStyle:hudStyleWarning audoHide:4];
+	JGProgressHUD *hud = [rootView showNotification:string WithStyle:hudStyleWarning audoHide:3];
     [[EWUIUtil shared].HUDs addObject:hud];
     return hud;
 }
 
 + (JGProgressHUD *)showText:(NSString *)text{
 	UIView *rootView = [self topView];
-	JGProgressHUD *hud = [rootView showNotification:text WithStyle:HUDStyleInfo	audoHide:10];
+	JGProgressHUD *hud = [rootView showNotification:text WithStyle:HUDStyleInfo	audoHide:3];
 	[[EWUIUtil shared].HUDs addObject:hud];
 	return hud;
 }

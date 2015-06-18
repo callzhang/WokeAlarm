@@ -16,7 +16,7 @@
 #import "EWAVManager.h"
 #import "FBTweakInline.h"
 
-FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
+FBTweakAction(@"Wake VC", @"Wakeup Child VC", @"Stop Wave", ^{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ew.stopwave" object:nil];
 });
 
@@ -107,11 +107,11 @@ FBTweakAction(@"Sleeping VC", @"Wakeup Child VC", @"Stop Wave", ^{
 	
 	if ([EWAVManager sharedManager].player.isPlaying) {
 		[[EWAVManager sharedManager].player updateMeters];
-		value = pow(10, [[EWAVManager sharedManager].player peakPowerForChannel:0]/30);
+		value = pow(10, [[EWAVManager sharedManager].player averagePowerForChannel:0]/10);
 	}
 	else if ([EWAVManager sharedManager].recorder.isRecording) {
 		[[EWAVManager sharedManager].recorder updateMeters];
-		value = pow(10, [[EWAVManager sharedManager].recorder averagePowerForChannel:0]/10);
+		value = pow(10, [[EWAVManager sharedManager].recorder averagePowerForChannel:0]/30);
 	}
 	
     [self.waveView updateWithLevel:value];

@@ -70,7 +70,6 @@
 		096AAA731A19593300B4CBFF /* EWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA4B1A19593300B4CBFF /* EWMainViewController.m */; };
 		096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */; };
 		096AAAD31A195A3900B4CBFF /* NSDate+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA931A195A3900B4CBFF /* NSDate+Extend.m */; };
-		096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA951A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m */; };
 		096AAAD51A195A3900B4CBFF /* NSString+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA971A195A3900B4CBFF /* NSString+Extend.m */; };
 		096AAAD71A195A3900B4CBFF /* UIView+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA9B1A195A3900B4CBFF /* UIView+Extend.m */; };
 		096AAAD81A195A3900B4CBFF /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = 096AAA9D1A195A3900B4CBFF /* UIView+Layout.m */; };
@@ -158,6 +157,7 @@
 		09DF4F8C1A1434AF00BEA328 /* _EWServerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DF4F441A1434AF00BEA328 /* _EWServerObject.m */; };
 		09E17B001A15C01800317F8D /* SCSiriWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E17AFF1A15C01800317F8D /* SCSiriWaveformView.m */; };
 		7B1D6CD9E97B81DBD5B11C4A /* libPods-Woke.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A325F4DFC3801DC840A58F /* libPods-Woke.a */; };
+		9B0287581B2E589E00052728 /* SparkInspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B49B1211B24EC4000D97EB0 /* SparkInspector.framework */; };
 		9B10F7871A999C8D004A7492 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B10F7861A999C8D004A7492 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9B1AABB01AC3CB7300B17654 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B1AABAF1AC3CB7300B17654 /* MediaPlayer.framework */; };
 		9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B25631E1A1952FA00010B9E /* _EWSocial.m */; };
@@ -317,8 +317,6 @@
 		096AAA8A1A195A2A00B4CBFF /* EWAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EWAccountManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		096AAA921A195A3900B4CBFF /* NSDate+Extend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Extend.h"; sourceTree = "<group>"; };
 		096AAA931A195A3900B4CBFF /* NSDate+Extend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Extend.m"; sourceTree = "<group>"; };
-		096AAA941A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+ChainSave.h"; sourceTree = "<group>"; };
-		096AAA951A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+ChainSave.m"; sourceTree = "<group>"; };
 		096AAA961A195A3900B4CBFF /* NSString+Extend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extend.h"; sourceTree = "<group>"; };
 		096AAA971A195A3900B4CBFF /* NSString+Extend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extend.m"; sourceTree = "<group>"; };
 		096AAA981A195A3900B4CBFF /* UIView+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Blur.h"; sourceTree = "<group>"; };
@@ -622,6 +620,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B0287581B2E589E00052728 /* SparkInspector.framework in Frameworks */,
 				9B1AABB01AC3CB7300B17654 /* MediaPlayer.framework in Frameworks */,
 				9B10F7871A999C8D004A7492 /* libsqlite3.dylib in Frameworks */,
 				9B6AB81C1A16F20B003372A8 /* QuartzCore.framework in Frameworks */,
@@ -859,8 +858,6 @@
 				09285A3E1A1F115000C808C0 /* UIStoryboard+Extensions.m */,
 				096AAA921A195A3900B4CBFF /* NSDate+Extend.h */,
 				096AAA931A195A3900B4CBFF /* NSDate+Extend.m */,
-				096AAA941A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.h */,
-				096AAA951A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m */,
 				096AAA961A195A3900B4CBFF /* NSString+Extend.h */,
 				096AAA971A195A3900B4CBFF /* NSString+Extend.m */,
 				096AAA981A195A3900B4CBFF /* UIView+Blur.h */,
@@ -1719,7 +1716,6 @@
 				0990EF7B1A22C606001AF099 /* MSReplaceFadeSegue.m in Sources */,
 				09DF4F891A1434AF00BEA328 /* _EWMessage.m in Sources */,
 				9B88293F1A317E3900EF572E /* UIViewController+Blur.m in Sources */,
-				096AAAD41A195A3900B4CBFF /* NSManagedObjectContext+ChainSave.m in Sources */,
 				09DF4F821A1434AF00BEA328 /* _EWAchievement.m in Sources */,
 				09A923B01A86DA1D007B2251 /* EWMenuReplaceFadeSegue.m in Sources */,
 				09229C9B1A6318BB008061E5 /* EWSleepingViewController.m in Sources */,

@@ -47,7 +47,7 @@
         }
     }];
     
-    if (_person.isOutDated || [_person.updatedAt timeIntervalSinceNow] < -30) {
+    if (!_person.isMe && [_person.updatedAt timeIntervalSinceNow] < -30) {
         [EWUIUtil showWatingHUB];
         [_person refreshInBackgroundWithCompletion:^(NSError *error) {
             [self.tableView reloadData];

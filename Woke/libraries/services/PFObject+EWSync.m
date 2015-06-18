@@ -307,7 +307,7 @@
         }
         else if (option == EWSyncOptionUpdateAsync){
             [MO assignValueFromParseObject:self];
-            [context saveWithBlock:^(NSManagedObjectContext *localContext) {
+            [context MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWServerObject *localSO = [MO MR_inContext:localContext];
                 [localSO updateValueAndRelationFromParseObject:self];
             } completion:^(BOOL contextDidSave, NSError *error) {

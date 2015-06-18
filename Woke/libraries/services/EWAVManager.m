@@ -204,12 +204,12 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
         file = [array firstObject];
         type = [array lastObject];
     }else {
-        DDLogWarn(@"Wrong file name(%@) passed to play sound", fileName);
+        EWAlert(@"Wrong file name(%@) passed to play sound", fileName);
         return;
     }
     NSString *str = [[NSBundle mainBundle] pathForResource:file ofType:type];
     if (!str) {
-        DDLogWarn(@"File doesn't exsits in main bundle");
+        EWAlert(@"File %@ doesn't exsits in main bundle", fileName);
         return;
     }
     NSURL *soundURL = [[NSURL alloc] initFileURLWithPath:str];
@@ -217,7 +217,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     [self playSoundFromURL:soundURL];
 }
 
-//Depreciated: play from url
+//play from url
 - (void)playSoundFromURL:(NSURL *)url{
 	if (!url) {
 		DDLogError(@"Url is empty, skip playing");
@@ -228,7 +228,9 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 	//data
 	NSError *err;
 	_player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&err];
-	_player.volume = 1.0;
+    _player.delegate = self;
+    _player.volume = 1.0;
+    _player.meteringEnabled = YES;
 	
 	if (err) {
 		DDLogVerbose(@"*** Cannot init player. Reason: %@", err);
@@ -250,9 +252,11 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 		return;
 	}
 	NSError *err;
+    //create player
 	_player = [[AVAudioPlayer alloc] initWithData:data error:&err];
     _player.delegate = self;
 	_player.volume = 1.0;
+    _player.meteringEnabled = YES;
 	
 	if (err) {
 		DDLogError(@"*** Cannot init AVAudioPlayer. Reason: %@", err);
@@ -277,9 +281,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 	//[qPlayer pause];
 	[avplayer pause];
 	//[updateTimer invalidate];
-	//remove target action
-    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kEWAVManagerDidStopPlayNotification object:nil];
+    self.media = nil;
 }
 
 #pragma mark - Record
@@ -359,12 +361,8 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 		self.audioFinishBlock(nil);
 		self.audioFinishBlock = nil;
 	}
-	else if (self.media) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:self.media];
-	}else{
-		//recording replay stopped
-		[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:nil];
-	}
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidFinishPlaying object:self.media];
 }
 
 
