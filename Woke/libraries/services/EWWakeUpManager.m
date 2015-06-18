@@ -153,6 +153,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWWakeUpManager)
     
     //cancel local alarm
     [alarm cancelLocalNotification];
+    //fire a new local notification
+    DDLogVerbose(@"=============> Firing Alarm timer notification <===============");
+    UILocalNotification *note = [[UILocalNotification alloc] init];
+    note.alertBody = [NSString stringWithFormat:@"It's time to wake up (%@)", [alarm.time date2String]];
+    note.alertAction = @"Wake up!";
+    note.userInfo = @{kLocalAlarmID: alarm.objectID.URIRepresentation.absoluteString,
+                      kLocalNotificationTypeKey: kLocalNotificationTypeAlarmTimer};
+    [[UIApplication sharedApplication] scheduleLocalNotification:note];
     
     //cancel alarm timer
     [self.alarmTimer invalidate];

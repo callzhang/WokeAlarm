@@ -70,7 +70,6 @@ NSManagedObjectContext *mainContext;
     
     [[NSNotificationCenter defaultCenter] addObserverForName:EWAccountDidLogoutNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueRefresh];
-
     }];
     
     //Reachability
