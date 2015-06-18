@@ -103,6 +103,9 @@
 		0971F73F1A71EA5B005A7709 /* EWDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = 0971F73E1A71EA5B005A7709 /* EWDefines.m */; };
 		097A82C91A2163FA0030A2E8 /* EWSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */; };
 		097A82CD1A2282980030A2E8 /* EWSleepViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */; };
+		0983F18C1B324E7200A9B2CF /* EWSettingRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0983F18B1B324E7200A9B2CF /* EWSettingRowItem.m */; };
+		0983F1901B324E8E00A9B2CF /* EWSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0983F18E1B324E8E00A9B2CF /* EWSettingTableViewCell.m */; };
+		0983F1911B324E8E00A9B2CF /* EWSettingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0983F18F1B324E8E00A9B2CF /* EWSettingTableViewCell.xib */; };
 		098BBC741A86FD9B0012CEED /* EWVoiceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 098BBC731A86FD9B0012CEED /* EWVoiceTableViewCell.m */; };
 		098D2EAA1A3D2F1000026D0C /* UIImage+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 098D2EA91A3D2F1000026D0C /* UIImage+Extensions.m */; };
 		0990EF711A22C3DB001AF099 /* UIWindow+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0990EF701A22C3DB001AF099 /* UIWindow+Extensions.m */; };
@@ -400,6 +403,11 @@
 		097A82C81A2163FA0030A2E8 /* EWSleepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewController.m; sourceTree = "<group>"; };
 		097A82CB1A2282980030A2E8 /* EWSleepViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSleepViewModel.h; sourceTree = "<group>"; };
 		097A82CC1A2282980030A2E8 /* EWSleepViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSleepViewModel.m; sourceTree = "<group>"; };
+		0983F18A1B324E7200A9B2CF /* EWSettingRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSettingRowItem.h; sourceTree = "<group>"; };
+		0983F18B1B324E7200A9B2CF /* EWSettingRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSettingRowItem.m; sourceTree = "<group>"; };
+		0983F18D1B324E8E00A9B2CF /* EWSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWSettingTableViewCell.h; sourceTree = "<group>"; };
+		0983F18E1B324E8E00A9B2CF /* EWSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSettingTableViewCell.m; sourceTree = "<group>"; };
+		0983F18F1B324E8E00A9B2CF /* EWSettingTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWSettingTableViewCell.xib; sourceTree = "<group>"; };
 		098BBC721A86FD9B0012CEED /* EWVoiceTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EWVoiceTableViewCell.h; path = ../views/EWVoiceTableViewCell.h; sourceTree = "<group>"; };
 		098BBC731A86FD9B0012CEED /* EWVoiceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EWVoiceTableViewCell.m; path = ../views/EWVoiceTableViewCell.m; sourceTree = "<group>"; };
 		098D2EA81A3D2F1000026D0C /* UIImage+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Extensions.h"; sourceTree = "<group>"; };
@@ -649,6 +657,11 @@
 				09041D7E1B26819B00B7C2CD /* EWVoiceSectionHeaderTableViewCell.h */,
 				09041D7F1B26819B00B7C2CD /* EWVoiceSectionHeaderTableViewCell.m */,
 				09041D801B26819B00B7C2CD /* EWVoiceSectionHeaderTableViewCell.xib */,
+				0983F18D1B324E8E00A9B2CF /* EWSettingTableViewCell.h */,
+				0983F18E1B324E8E00A9B2CF /* EWSettingTableViewCell.m */,
+				0983F18F1B324E8E00A9B2CF /* EWSettingTableViewCell.xib */,
+				0983F18A1B324E7200A9B2CF /* EWSettingRowItem.h */,
+				0983F18B1B324E7200A9B2CF /* EWSettingRowItem.m */,
 			);
 			path = "tableview-builder";
 			sourceTree = "<group>";
@@ -1519,6 +1532,7 @@
 				9BF1815E1A35222F00D25DBA /* Daybreak.caf in Resources */,
 				9BF181641A35222F00D25DBA /* Tropical Delight.caf in Resources */,
 				9BF7291E1A4DF5FF006C6C51 /* new.caf in Resources */,
+				0983F1911B324E8E00A9B2CF /* EWSettingTableViewCell.xib in Resources */,
 				09A777321A11E2BD004AF902 /* Settings.bundle in Resources */,
 				9BFFABE81A5B9AB3008E123F /* EWCollectionPersonCell.xib in Resources */,
 				09001F971A7EF64D00CFF6FB /* Lato-Thin.ttf in Resources */,
@@ -1729,6 +1743,7 @@
 				096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */,
 				096AAAD31A195A3900B4CBFF /* NSDate+Extend.m in Sources */,
 				9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */,
+				0983F18C1B324E7200A9B2CF /* EWSettingRowItem.m in Sources */,
 				090C0BBC1A80652A0006B01C /* EWAddFriendsSearchChildViewController.m in Sources */,
 				0912BECC1A7EE428004DA529 /* EWFriendsViewController.m in Sources */,
 				9BF1816A1A37FF0800D25DBA /* EWWaveformView.m in Sources */,
@@ -1739,6 +1754,7 @@
 				096AAADF1A195A3900B4CBFF /* EWBackgroundingManager.m in Sources */,
 				0990EF7A1A22C606001AF099 /* MSPushFadeSegue.m in Sources */,
 				9BF9CC7A1A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m in Sources */,
+				0983F1901B324E8E00A9B2CF /* EWSettingTableViewCell.m in Sources */,
 				09DF4F741A1434AF00BEA328 /* EarlyWorm.xcdatamodeld in Sources */,
 				09DF4F751A1434AF00BEA328 /* EWAchievement.m in Sources */,
 				09A923B31A86DD82007B2251 /* EWVoiceViewController.m in Sources */,

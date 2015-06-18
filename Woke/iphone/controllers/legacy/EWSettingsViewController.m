@@ -86,10 +86,6 @@
              @{
                 @"identifier": MainStoryboardIDs.reusables.settingTableViewSeparatorCell
                  },
-//             @{
-//                @"type": @(EWSettingsTableViewCellTypeDetail),
-//                @"text": @"Time"
-//                 },
              @{
                  @"identifier": MainStoryboardIDs.reusables.settingTableViewCell,
                  @"type": @(EWSettingsTableViewCellTypeDetail),

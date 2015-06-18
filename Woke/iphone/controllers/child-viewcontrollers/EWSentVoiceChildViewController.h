@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "EWBaseViewController.h"
 
-@interface EWSentVoiceChildViewController : EWBaseViewController
+@interface EWSentVoiceChildViewController : UIViewController
 
 @end
