@@ -140,6 +140,7 @@ FBTweakAction(@"Sleeping VC", @"Action", @"Add new voice to Wake up", ^{
     
     self.shimmeringView.contentView = self.slideLabel;
     self.shimmeringView.shimmering = YES;
+    [self.view bringSubviewToFront:self.shimmeringView];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGesture:)];
     [self.view addGestureRecognizer:panGesture];

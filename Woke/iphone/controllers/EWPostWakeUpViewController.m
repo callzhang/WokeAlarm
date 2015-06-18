@@ -48,7 +48,6 @@
     
     [self updateHeaderLabel];
     //remove back button
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated{

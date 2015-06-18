@@ -13,6 +13,7 @@ extern const struct MainStoryboardIDs {
         __unsafe_unretained NSString *profileToFriends;
         __unsafe_unretained NSString *menuToHome;
         __unsafe_unretained NSString *menuToVoice;
+        __unsafe_unretained NSString *wakeupFromNotification;
         __unsafe_unretained NSString *menuToFriends;
         __unsafe_unretained NSString *sleepingToPostWakeup;
         __unsafe_unretained NSString *friendsToAddFriends;

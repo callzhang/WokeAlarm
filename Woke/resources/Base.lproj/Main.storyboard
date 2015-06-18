@@ -100,10 +100,13 @@
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="ZRV-eL-WOE">
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
+                    <connections>
+                        <segue destination="EjM-Uw-AXO" kind="presentation" identifier="WakeupFromNotification" id="YvK-2Q-RlD"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kQZ-qo-Wi7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="63" y="578"/>
+            <point key="canvasLocation" x="148" y="511"/>
         </scene>
         <!--Login Gate View Controller-->
         <scene sceneID="ufC-wZ-h7g">
@@ -1873,7 +1876,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNK-8p-ka1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="532" y="3192"/>
+            <point key="canvasLocation" x="436" y="3475"/>
         </scene>
         <!--Time Child View Controller-->
         <scene sceneID="ZFl-Xt-KVU">
@@ -2115,7 +2118,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y1j-H2-zNk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="990" y="2948"/>
+            <point key="canvasLocation" x="990" y="2968"/>
         </scene>
         <!--Wake Up Child View Controller-->
         <scene sceneID="1u4-jG-AFL">
@@ -2204,7 +2207,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gML-II-VY3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="990" y="3657.5"/>
+            <point key="canvasLocation" x="1003" y="3729.5"/>
         </scene>
         <!--Small Time Child View Controller-->
         <scene sceneID="cTg-Vu-GNo">
@@ -2325,7 +2328,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wbZ-le-xzD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="990" y="4148"/>
+            <point key="canvasLocation" x="1425" y="3545"/>
         </scene>
         <!--Post Wake Up View Controller-->
         <scene sceneID="kYt-Fn-TMC">
@@ -3182,11 +3185,12 @@
         <image name="woke-user-profile-timezone-icon" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="YvK-2Q-RlD"/>
         <segue reference="7lF-Wp-60q"/>
         <segue reference="v3V-jG-DGb"/>
+        <segue reference="qEe-Vv-RSN"/>
         <segue reference="e6y-LC-ugB"/>
         <segue reference="Rze-Xr-CCz"/>
-        <segue reference="qEe-Vv-RSN"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
