@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
-@interface EWProfileViewController : EWBaseViewController
+@interface EWProfileViewController : EWManagedNavigiationItemsViewController
 
 @property (nonatomic, strong) EWPerson *person;
 @end

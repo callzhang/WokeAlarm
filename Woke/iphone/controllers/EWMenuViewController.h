@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
 typedef void(^MenuBackgroundTapHanlder)(void);
 @interface EWMenuViewController : UIViewController

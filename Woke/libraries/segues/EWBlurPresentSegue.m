@@ -9,7 +9,7 @@
 #import "EWBlurPresentSegue.h"
 #import "EWBlurNavigationControllerDelegate.h"
 #import "UIViewController+Blur.h"
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
 @implementation EWBlurPresentSegue
 - (void)perform {

@@ -10,7 +10,7 @@
 #import "EWBaseTableViewController.h"
 #import "EWAddFriendTableViewCell.h"
 #import "EWSocialManager.h"
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 #import "EWUIUtil.h"
 #import "NSTimer+BlocksKit.h"
 

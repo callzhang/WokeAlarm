@@ -9,11 +9,11 @@
 //#import "EWViewController.h"
 #import "EWAVManager.h"
 #import "UAProgressView.h"
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 @class SCSiriWaveformView;
 @class EWPerson;
 
-@interface EWRecordingViewController : EWBaseViewController
+@interface EWRecordingViewController : EWManagedNavigiationItemsViewController
 
 
 @property (weak, nonatomic) IBOutlet SCSiriWaveformView *waveformView;

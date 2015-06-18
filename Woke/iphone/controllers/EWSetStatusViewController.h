@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
-@interface EWSetStatusViewController : EWBaseViewController
+@interface EWSetStatusViewController : EWManagedNavigiationItemsViewController
 @property (nonatomic, strong) EWAlarm *alarm;
 @end

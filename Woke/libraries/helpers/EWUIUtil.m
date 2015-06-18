@@ -351,7 +351,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWUIUtil)
 
 + (JGProgressHUD *)showText:(NSString *)text{
 	UIView *rootView = [self topView];
-	JGProgressHUD *hud = [rootView showNotification:text WithStyle:HUDStyleInfo	audoHide:3];
+	JGProgressHUD *hud = [rootView showNotification:text WithStyle:hudStyleNone	audoHide:3];
 	[[EWUIUtil shared].HUDs addObject:hud];
 	return hud;
 }

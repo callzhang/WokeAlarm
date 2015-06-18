@@ -10,7 +10,7 @@
 #import "EWPerson.h"
 #import "EWRingtoneSelectionViewController.h"
 #import "EWBaseTableViewController.h"
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
 typedef enum {
     settingGroupProfile,
@@ -18,7 +18,7 @@ typedef enum {
     settingGroupAbout
 } settingGroupList;
 
-@interface EWSettingsViewController : EWBaseViewController <EWRingtoneSelectionDelegate, UIAlertViewDelegate> {
+@interface EWSettingsViewController : EWManagedNavigiationItemsViewController <EWRingtoneSelectionDelegate, UIAlertViewDelegate> {
     settingGroupList settingGroup;
     NSString *cellIdentifier;
     //preference
