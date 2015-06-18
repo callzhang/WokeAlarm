@@ -8,7 +8,7 @@
 
 #import "EWBlurPushSegue.h"
 #import "EWBaseNavigationController.h"
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
 //it must stay static otherwise it will dealloc prematurely
 static EWBlurNavigationControllerDelegate *delegate;

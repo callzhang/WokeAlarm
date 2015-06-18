@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
-@interface EWWakeUpChildViewController : EWBaseViewController
+@interface EWWakeUpChildViewController : EWManagedNavigiationItemsViewController
 @property (nonatomic, assign) BOOL active;
 @end

@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
-@interface EWNotificationViewController : EWBaseViewController <UITableViewDataSource, UITableViewDelegate>
+@interface EWNotificationViewController : EWManagedNavigiationItemsViewController <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 

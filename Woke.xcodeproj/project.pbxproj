@@ -126,7 +126,7 @@
 		09A923B31A86DD82007B2251 /* EWVoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A923B21A86DD82007B2251 /* EWVoiceViewController.m */; };
 		09A923B61A86DD90007B2251 /* EWSentVoiceChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A923B51A86DD90007B2251 /* EWSentVoiceChildViewController.m */; };
 		09A923B91A86DDA5007B2251 /* EWReceivedVoiceChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A923B81A86DDA5007B2251 /* EWReceivedVoiceChildViewController.m */; };
-		09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE17F1A13285400989ECA /* EWBaseViewController.m */; };
+		09ABE1801A13285400989ECA /* EWManagedNavigiationItemsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE17F1A13285400989ECA /* EWManagedNavigiationItemsViewController.m */; };
 		09ABE1871A132DF900989ECA /* EWBaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */; };
 		09B521011A25786C008FF7F6 /* UIView+Mask.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B521001A25786C008FF7F6 /* UIView+Mask.m */; };
 		09B521041A25825A008FF7F6 /* EWWakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B521031A25825A008FF7F6 /* EWWakeViewController.m */; };
@@ -207,6 +207,7 @@
 		9BF9CC7A1A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9CC791A78ACF300B76D92 /* EWPersonSearchResultTableViewController.m */; };
 		9BFF57121A4C8FB90067EE9B /* EWPerson+Woke.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BFF57111A4C8FB90067EE9B /* EWPerson+Woke.m */; };
 		9BFFABE81A5B9AB3008E123F /* EWCollectionPersonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */; };
+		AB54F8441B324DC2004A361E /* EWBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB54F8431B324DC2004A361E /* EWBaseViewController.m */; };
 		CD0439FAC853DF975B782F67 /* libPods-WokeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E018BA77E410F241B2D8087 /* libPods-WokeTests.a */; };
 /* End PBXBuildFile section */
 
@@ -445,8 +446,8 @@
 		09A923B51A86DD90007B2251 /* EWSentVoiceChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWSentVoiceChildViewController.m; sourceTree = "<group>"; };
 		09A923B71A86DDA5007B2251 /* EWReceivedVoiceChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWReceivedVoiceChildViewController.h; sourceTree = "<group>"; };
 		09A923B81A86DDA5007B2251 /* EWReceivedVoiceChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWReceivedVoiceChildViewController.m; sourceTree = "<group>"; };
-		09ABE17E1A13285400989ECA /* EWBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseViewController.h; sourceTree = "<group>"; };
-		09ABE17F1A13285400989ECA /* EWBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseViewController.m; sourceTree = "<group>"; };
+		09ABE17E1A13285400989ECA /* EWManagedNavigiationItemsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWManagedNavigiationItemsViewController.h; sourceTree = "<group>"; };
+		09ABE17F1A13285400989ECA /* EWManagedNavigiationItemsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWManagedNavigiationItemsViewController.m; sourceTree = "<group>"; };
 		09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseNavigationController.h; sourceTree = "<group>"; };
 		09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseNavigationController.m; sourceTree = "<group>"; };
 		09B520FF1A25786C008FF7F6 /* UIView+Mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Mask.h"; sourceTree = "<group>"; };
@@ -602,6 +603,8 @@
 		9BFF57101A4C8FB90067EE9B /* EWPerson+Woke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EWPerson+Woke.h"; sourceTree = "<group>"; };
 		9BFF57111A4C8FB90067EE9B /* EWPerson+Woke.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EWPerson+Woke.m"; sourceTree = "<group>"; };
 		9BFFABE71A5B9AB3008E123F /* EWCollectionPersonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EWCollectionPersonCell.xib; sourceTree = "<group>"; };
+		AB54F8421B324DC2004A361E /* EWBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBaseViewController.h; sourceTree = "<group>"; };
+		AB54F8431B324DC2004A361E /* EWBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBaseViewController.m; sourceTree = "<group>"; };
 		BFD3D4FF8172B08A51A3698C /* Pods-Woke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Woke.release.xcconfig"; path = "Pods/Target Support Files/Pods-Woke/Pods-Woke.release.xcconfig"; sourceTree = "<group>"; };
 		EE2BA4F3FE2C2B39738C8863 /* Pods-WokeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FC7409D798DBDB973D1F8366 /* Pods-WokeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WokeTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WokeTests/Pods-WokeTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -1101,8 +1104,10 @@
 		09A777231A11E2BD004AF902 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
-				09ABE17E1A13285400989ECA /* EWBaseViewController.h */,
-				09ABE17F1A13285400989ECA /* EWBaseViewController.m */,
+				AB54F8421B324DC2004A361E /* EWBaseViewController.h */,
+				AB54F8431B324DC2004A361E /* EWBaseViewController.m */,
+				09ABE17E1A13285400989ECA /* EWManagedNavigiationItemsViewController.h */,
+				09ABE17F1A13285400989ECA /* EWManagedNavigiationItemsViewController.m */,
 				09ABE1851A132DF900989ECA /* EWBaseNavigationController.h */,
 				09ABE1861A132DF900989ECA /* EWBaseNavigationController.m */,
 				09A86FD01A1ACDDB0075DFF4 /* EWMainNavigationController.h */,
@@ -1723,6 +1728,7 @@
 				09C5B1E61A166162006EA46C /* UAProgressView.m in Sources */,
 				096AAADC1A195A3900B4CBFF /* EWActivityManager.m in Sources */,
 				096AAA8E1A195A2A00B4CBFF /* EWAccountManager.m in Sources */,
+				AB54F8441B324DC2004A361E /* EWBaseViewController.m in Sources */,
 				096AAAD31A195A3900B4CBFF /* NSDate+Extend.m in Sources */,
 				9B3895031A4FBA17004D4290 /* EWWakeUpViewCell.m in Sources */,
 				090C0BBC1A80652A0006B01C /* EWAddFriendsSearchChildViewController.m in Sources */,
@@ -1743,7 +1749,7 @@
 				096AAAD81A195A3900B4CBFF /* UIView+Layout.m in Sources */,
 				096AAAD51A195A3900B4CBFF /* NSString+Extend.m in Sources */,
 				09DF4F7A1A1434AF00BEA328 /* EWMedia.m in Sources */,
-				09ABE1801A13285400989ECA /* EWBaseViewController.m in Sources */,
+				09ABE1801A13285400989ECA /* EWManagedNavigiationItemsViewController.m in Sources */,
 				096585C61B24E539001AB46F /* CrashlyticsLogger.m in Sources */,
 				9B25631F1A1952FA00010B9E /* _EWSocial.m in Sources */,
 				091C675F1A3523AF0091B8A6 /* EWMediaSlider.m in Sources */,

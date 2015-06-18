@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
-@interface EWVoiceViewController : EWBaseViewController
+@interface EWVoiceViewController : EWManagedNavigiationItemsViewController
 
 @end

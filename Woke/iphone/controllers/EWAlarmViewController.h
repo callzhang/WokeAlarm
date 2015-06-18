@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EWBaseViewController.h"
+#import "EWManagedNavigiationItemsViewController.h"
 
-@interface EWAlarmViewController : EWBaseViewController
+@interface EWAlarmViewController : EWManagedNavigiationItemsViewController
 @end
