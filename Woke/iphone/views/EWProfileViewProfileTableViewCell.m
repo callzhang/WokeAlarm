@@ -114,7 +114,7 @@
         self.statementLabel.text = person.statement;
         //location
         if (person.city) {
-            self.locationLabel.text =[NSString stringWithFormat:@"%@ | ",person.city];
+            self.locationLabel.text =[NSString stringWithFormat:@"%@ |   ",person.city];
         }
         else{
             self.locationLabel.text = @"";
