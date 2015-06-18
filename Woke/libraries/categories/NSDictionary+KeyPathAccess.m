@@ -11,36 +11,30 @@
 @implementation NSDictionary(KeyPathAccess)
 - (instancetype)setValue:(id)value forImmutableKeyPath:(NSArray *)paths{
 	NSMutableDictionary *mutableDictionary = [self mutableCopy];
-	@try {
-		if (!paths || paths.count == 0) {
-			DDLogError(@"%s passed in empty path", __func__);
-			return self;
-		}
-		
-		if (paths.count == 1) {
-			//last keypath, set value directly
-			if (value) {
-				mutableDictionary[paths.lastObject] = value;
-			}else{
-				[mutableDictionary removeObjectForKey:paths.lastObject];
-			}
-			
-		}else{
-			//divide the task
-			NSMutableArray *childPath = paths.mutableCopy;
-			[childPath removeObjectAtIndex:0];
-			NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];
-			childDic = [childDic setValue:value forImmutableKeyPath:childPath];
-			mutableDictionary[paths.firstObject] = childDic;
-		}
-	}
-	@catch (NSException *exception) {
-		DDLogError(@"Failed to set value: %@", exception);
-	}
-	@finally {
-		
-		return mutableDictionary.copy;
-	}
+
+    if (!paths || paths.count == 0) {
+        DDLogError(@"%s passed in empty path", __func__);
+        return self;
+    }
+    
+    if (paths.count == 1) {
+        //last keypath, set value directly
+        if (value) {
+            mutableDictionary[paths.lastObject] = value;
+        }else{
+            [mutableDictionary removeObjectForKey:paths.lastObject];
+        }
+        
+    }else{
+        //divide the task
+        NSMutableArray *childPath = paths.mutableCopy;
+        [childPath removeObjectAtIndex:0];
+        NSDictionary *childDic = self[paths.firstObject] ?: [NSDictionary new];
+        NSParameterAssert([childDic isKindOfClass:[NSDictionary class]]);
+        childDic = [childDic setValue:value forImmutableKeyPath:childPath];
+        mutableDictionary[paths.firstObject] = childDic;
+    }
+    return mutableDictionary.copy;
 	
 }
 

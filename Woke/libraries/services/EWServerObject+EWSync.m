@@ -140,7 +140,9 @@
     }];
     
     //update updatedAt
-    [self setValue:[NSDate date] forKey:kUpdatedDateKey];
+    if ([EWSync checkAccess:self]) {
+        self.updatedAt = [NSDate date];
+    }
     
     //save to local has been applied in assignValueFromParseObject:
 	[self saveToLocal];
@@ -561,7 +563,7 @@
 	//save
 	if ([NSThread isMainThread]) {
 		[self save];
-    } else{
+    } else if([EWSync checkAccess:self]){
         self.updatedAt = [NSDate date];
     }
 }

@@ -159,6 +159,7 @@ extern NSString * const kEWSyncUploaded;
 + (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
++ (BOOL)checkAccess:(EWServerObject *)SO;
 + (void)removeMOFromUpdating:(EWServerObject *)mo;
 
 #pragma mark - Parse helper methods

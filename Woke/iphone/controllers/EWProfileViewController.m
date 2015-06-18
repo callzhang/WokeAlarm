@@ -47,11 +47,11 @@
         }
     }];
     
-    if (!_person.isMe && [_person.updatedAt timeIntervalSinceNow] < -30) {
-        [EWUIUtil showWatingHUB];
+    if (!_person.isMe && self.person.isOutDated) {
+        //[EWUIUtil showWatingHUB];
         [_person refreshInBackgroundWithCompletion:^(NSError *error) {
             [self.tableView reloadData];
-            [EWUIUtil dismissHUD];
+            //[EWUIUtil dismissHUD];
         }];
     }
 }
@@ -110,6 +110,18 @@
                 }];
             }];
         }
+        [sheet bk_addButtonWithTitle:@"Refresh" handler:^{
+            if ([EWSync isReachable]) {
+                [EWUIUtil showWatingHUB];
+                [_person refreshInBackgroundWithCompletion:^(NSError *error) {
+                    [self.tableView reloadData];
+                    [EWUIUtil dismissHUD];
+                }];
+            }else {
+                [EWUIUtil showText:@"No network"];
+            }
+            
+        }];
     }
     [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
 }
