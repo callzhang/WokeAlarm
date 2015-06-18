@@ -56,8 +56,18 @@
 }
 
 - (TMSectionItem *)insertedFetchedResultsSectionItemAtIndex:(NSUInteger)index {
-    TMSectionItem *sectionItem = [TMSectionItem sectionItemWithType:TMSectionItemTypeFetchedResultsController];
-    
+//    TMSectionItem *sectionItem = [TMSectionItem sectionItemWithType:TMSectionItemTypeFetchedResultsController];
+    TMSectionItem *sectionItem;
+
+    if ([self.delegate respondsToSelector:@selector(createdSectionItemAtIndex:)]) {
+        sectionItem = [self.delegate createdSectionItemAtIndex:index];
+        NSParameterAssert(sectionItem);
+        NSParameterAssert(sectionItem.type == TMSectionItemTypeFetchedResultsController);
+    }
+    else {
+        sectionItem = [TMSectionItem sectionItemWithType:TMSectionItemTypeFetchedResultsController];
+    }
+
     //table view builder implemented this delegate to make sure
     //tableViewBuilder is set properly before fetchResultsController is set.
     if ([self.delegate respondsToSelector:@selector(fetchedResultsRowItemDataSource:didCreatedFetchedResultsSectionItem:)]) {
@@ -65,25 +75,17 @@
     }
     
     [self.sectionItems insertObject:sectionItem atIndex:index];
+
     sectionItem.fetchedResultsController = self.fetchedResultsController;
+    
+    if ([self.delegate respondsToSelector:@selector(didInsertSectionItem:)]) {
+        [self.delegate didInsertSectionItem:sectionItem];
+    }
     return sectionItem;
 }
 
 - (NSUInteger)indexOfSectionItem:(TMSectionItem *)sectionItem {
     return [self.sectionItems indexOfObject:sectionItem];
-//    NSArray *allKeys = [self.sectionItemsDictionary allKeysForObject:sectionItem];
-//    
-//    if (allKeys.count == 1) {
-//        NSUInteger index = [allKeys.firstObject unsignedIntegerValue];
-//        return index;
-//    }
-//    else if (allKeys.count == 0) {
-//        return NSNotFound;
-//    }
-//    else {
-//        NSAssert(false, @"duplicated key found");
-//        return -1;
-//    }
 }
 
 - (NSInteger)sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {

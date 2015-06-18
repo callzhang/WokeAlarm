@@ -113,6 +113,9 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextFieldTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextLabelTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/CollectionViewBuilder/Views/TMLabelCollectionViewCell.xib"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChange.xcdatamodel"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld/TICDSSyncChangeSet.xcdatamodel"
   install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -171,6 +174,9 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextFieldTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextLabelTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/CollectionViewBuilder/Views/TMLabelCollectionViewCell.xib"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChange.xcdatamodel"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld/TICDSSyncChangeSet.xcdatamodel"
   install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
 fi
 if [[ "$CONFIGURATION" == "adhoc" ]]; then
@@ -229,6 +235,9 @@ if [[ "$CONFIGURATION" == "adhoc" ]]; then
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextFieldTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextLabelTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/CollectionViewBuilder/Views/TMLabelCollectionViewCell.xib"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChange.xcdatamodel"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld/TICDSSyncChangeSet.xcdatamodel"
   install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
 fi
 if [[ "$CONFIGURATION" == "profiling" ]]; then
@@ -287,6 +296,9 @@ if [[ "$CONFIGURATION" == "profiling" ]]; then
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextFieldTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/TableViewBuilder/Views/TMTextLabelTableViewCell.xib"
   install_resource "TMKit/Pod/Classes/CollectionViewBuilder/Views/TMLabelCollectionViewCell.xib"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChange.xcdatamodel"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld"
+  install_resource "TMKit/Pod/Classes/CoreData/TICDSSyncChangeSet.xcdatamodeld/TICDSSyncChangeSet.xcdatamodel"
   install_resource "${BUILT_PRODUCTS_DIR}/ApptentiveResources.bundle"
 fi
 

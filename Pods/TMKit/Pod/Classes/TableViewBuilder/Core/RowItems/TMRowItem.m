@@ -105,8 +105,8 @@
     
     cell.selected = self.selected;
     
-    [cell unbind];
-    [self unbind];
+//    [cell unbind];
+//    [self unbind];
     cell.rowItem = self;
     self.cell = cell;
     

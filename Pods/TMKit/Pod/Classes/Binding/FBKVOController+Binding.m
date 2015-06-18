@@ -8,6 +8,9 @@
 
 #import "FBKVOController+Binding.h"
 #import "TMKit.h"
+#import "TMTuple.h"
+#import "TMBlockExecutor.h"
+//#import "NSObject+MTKObserving.h"
 
 
 @implementation FBKVOController (Binding)
@@ -131,5 +134,76 @@
 
 - (void)unbind {
     [self.KVOController unobserveAll];
+}
+
+- (void)bindKeypath:(NSString *)keyPath toKeyPath:(NSString *)anothKeyPath {
+    [self bindKeypath:keyPath toKeyPath:anothKeyPath tranformBlock:nil];
+}
+
+- (void)bindKeypath:(NSString *)keyPath toKeyPath:(NSString *)anothKeyPath tranformBlock:(id (^)(id))tranformBlock {
+   [self bindKeypath:keyPath withChangeBlock:^(id change) {
+       if (tranformBlock) {
+           change = tranformBlock(change);
+       }
+       [self setValue:change forKeyPath:anothKeyPath];
+   }];
+}
+#pragma mark - 
+- (void)tm_twoWayBindingWithSourceKeyPath:(NSString *)sourceKeyPath toKeyPath:(NSString *)destinationKeyPath {
+    [self tm_twoWayBindingWithSourceKeyPath:sourceKeyPath toKeyPath:destinationKeyPath transformationBlock:nil];
+}
+
+/**
+ *  TODO: transform block is not working. it needs to have reversed tranformation. which will 
+ *   be used when applied into changes from destination keypath
+ *
+ *  @param sourceKeyPath       source keypath
+ *  @param destinationKeyPath  destination keypath
+ *  @param transformationBlock transformed block appled to source change
+ */
+- (void)tm_twoWayBindingWithSourceKeyPath:(NSString *)sourceKeyPath toKeyPath:(NSString *)destinationKeyPath transformationBlock:(id (^)(id))transformationBlock {
+    [self bindKeypath:sourceKeyPath withChangeBlock:^(id change) {
+        id destinationValue = [self valueForKeyPath:destinationKeyPath];
+        id transformedValue = change;
+//        if (transformationBlock) {
+//            transformedValue = transformationBlock(change);
+//        }
+        if (![destinationValue isEqual:transformedValue]) {
+            [self setValue:transformedValue forKeyPath:destinationKeyPath];
+        }
+    }];
+
+    [self bindKeypath:destinationKeyPath withChangeBlock:^(id change) {
+        id sourceValue = [self valueForKeyPath:sourceKeyPath];
+        id tranformedValue = change;
+        if (![sourceValue isEqual:tranformedValue]) {
+            [self setValue:tranformedValue forKeyPath:sourceKeyPath];
+        }
+    }];
+}
+
+- (void)tm_bindKeyPaths:(NSArray *)keyPaths withChangeBlock:(void (^)())block {
+    [self.KVOController observe:self keyPaths:keyPaths block:^(id observer, id object, id change) {
+        NSArray *values = [self tm_valueForKeyPaths:keyPaths];
+        TMTuple *tuple = [TMTuple tupleWithObjectsFromArray:values];
+        [TMBlockExecutor invokeNoReturnBlock:block withArguments:tuple];
+    }];
+}
+
+- (void)tm_combineKeyPaths:(NSArray *)keyPaths toKeyPath:(NSString *)keyPath reduce:(id (^)())reduceBlock {
+    [self.KVOController observe:self keyPaths:keyPaths block:^(id observer, id object, id change) {
+        NSArray *values = [self tm_valueForKeyPaths:keyPaths];
+        TMTuple *tuple = [TMTuple tupleWithObjectsFromArray:values];
+        id reduced = [TMBlockExecutor invokeBlock:reduceBlock withArguments:tuple];
+        [self setValue:reduced forKeyPath:keyPath];
+    }];
+}
+
+- (NSArray *)tm_valueForKeyPaths:(NSArray *)keyPaths {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:keyPaths.count];
+    for (NSString *keyPath in keyPaths) {
+        [array addObject:[self valueForKeyPath:keyPath]];
+    }
+    return array.copy;
 }
 @end

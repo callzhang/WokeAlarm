@@ -15,11 +15,6 @@
 #import "TMKit.h"
 
 @implementation TMRadioRowItem
-+ (void)initialize {
-    [TMTableViewBuilder registerDefaultClass:[TMRadioOptionRowItem class] forType:TMTableViewBuilderClassTypeOptionRowItem];
-    [TMTableViewBuilder registerDefaultClass:[TMSimpleTableViewController class] forType:TMTableViewBuilderClassTypeSimpleTableViewController];
-}
-
 + (NSString *)reuseIdentifier {
     return @"TMRadioTableViewCell";
 }
@@ -82,7 +77,7 @@
             [simpleTableViewController.navigationController popViewControllerAnimated:YES];
             
             if (self.didChooseOptionHandler) {
-                self.didChooseOptionHandler(rowItem);
+                self.didChooseOptionHandler(self, rowItem);
             }
         }];
     }

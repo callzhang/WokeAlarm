@@ -95,14 +95,18 @@
 - (UITableViewCell *)cellForRow {
     TMDatePickerTableViewCell *cell = (id) [super cellForRow];
     
-    cell.titleLabelSpacingLayoutConstraint.constant = self.titleLabelSpacing;
-    cell.dateLabelToLeadingMinimumSpacingConstraint.constant = self.leadingConstantForDateLabel;
-    cell.titleTextLabel.text = self.title;
+    if ([cell isKindOfClass:[TMDatePickerTableViewCell class]]) {
+        cell.titleLabelSpacingLayoutConstraint.constant = self.titleLabelSpacing;
+        cell.dateLabelToLeadingMinimumSpacingConstraint.constant = self.leadingConstantForDateLabel;
+        cell.titleTextLabel.text = self.title;
+    }
     
     @weakify(self);
     [self bindKeypath:@keypath(self.configurator.date) withChangeBlock:^(id change) {
         @strongify(self);
-        cell.cellTextLabel.text = [self.configurator.date mt_stringFromDateWithFormat:self.format localized:self.localized];
+        if ([cell isKindOfClass:[TMDatePickerTableViewCell class]]) {
+            cell.cellTextLabel.text = [self.configurator.date mt_stringFromDateWithFormat:self.format localized:self.localized];
+        }
         if (self.didValueChangeHandler) {
             self.didValueChangeHandler(self);
         }

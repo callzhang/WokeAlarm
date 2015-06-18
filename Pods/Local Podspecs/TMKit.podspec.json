@@ -24,11 +24,13 @@
     "Pod/Classes/UIKit/**/*.{h,m}",
     "Pod/Classes/CollectionViewBuilder/**/*.{h,m}",
     "Pod/Classes/Validation/**/*.{h,m}",
-    "Pod/Classes/Search/**/*.{h,m}"
+    "Pod/Classes/Search/**/*.{h,m}",
+    "Pod/Classes/CoreData/**/*.{h,m}"
   ],
   "resources": [
     "Pod/Classes/TableViewBuilder/Views/*.xib",
-    "Pod/Classes/CollectionViewBuilder/Views/*.xib"
+    "Pod/Classes/CollectionViewBuilder/Views/*.xib",
+    "Pod/Classes/CoreData/**/*.{xcdatamodeld,xcdatamodel}"
   ],
   "dependencies": {
     "KVOController": [

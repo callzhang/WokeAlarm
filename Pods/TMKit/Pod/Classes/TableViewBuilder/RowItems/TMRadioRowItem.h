@@ -30,8 +30,8 @@
 
 - (instancetype)initWithSelectionListWithText:(NSArray *)texts selectedIndex:(NSNumber *)index NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, copy) void (^didChooseOptionHandler)(TMRadioOptionRowItem *rowItem);
-- (void)setDidChooseOptionHandler:(void (^)(TMRadioOptionRowItem *rowItem))didChooseOptionHandler;
+@property (nonatomic, copy) void (^didChooseOptionHandler)(TMRadioRowItem *radioRowItem, TMRadioOptionRowItem *optionRowItem);
+- (void)setDidChooseOptionHandler:(void (^)(TMRadioRowItem *radioRowItem, TMRadioOptionRowItem *optionRowItem))didChooseOptionHandler;
 
 @property (nonatomic, copy) void (^viewDidLoadForOptionViewController)(UITableViewController<TMSimpleTableViewController> *tableViewController, TMRadioRowItem *radioRow);
 @end

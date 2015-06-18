@@ -20,4 +20,11 @@
 - (void)didFetchSectionItem:(TMSectionItem *)object;
 
 - (void)fetchedResultsRowItemDataSource:(TMTableViewFetchedResultsSectionItemDataSource *)dataSrouce didCreatedFetchedResultsSectionItem:(TMSectionItem *)sectionItem;
+
+/**
+ *  return a newly created section item. 
+ *  this method gives delegate a chance to create it's customized TMSectionItem
+ *
+ */
+- (TMSectionItem *)createdSectionItemAtIndex:(NSInteger)index;
 @end

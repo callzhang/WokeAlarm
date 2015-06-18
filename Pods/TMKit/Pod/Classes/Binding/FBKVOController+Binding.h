@@ -30,5 +30,17 @@
 - (void)bindKeypath:(NSString *)keyPath toImageView:(UIImageView *)imageView;
 - (void)bindKeypath:(NSString *)keyPath toObject:(id)object withChangeBlock:(void (^)(id object, id change))block;
 - (void)bindKeypath:(NSString *)keyPath withChangeBlock:(void (^)(id change))block;
+
 - (void)unbind;
+
+
+- (void)bindKeypath:(NSString *)keyPath toKeyPath:(NSString *)anothKeyPath;
+- (void)bindKeypath:(NSString *)keyPath toKeyPath:(NSString *)anothKeyPath tranformBlock:(id (^)(id))tranformBlock;
+
+- (void)tm_bindKeyPaths:(NSArray *)keyPaths withChangeBlock:(void (^)())block;
+- (void)tm_combineKeyPaths:(NSArray *)keyPaths toKeyPath:(NSString *)keyPath reduce:(id (^)())reduceBlock;
+
+#pragma mark - Two Way Binding
+- (void)tm_twoWayBindingWithSourceKeyPath:(NSString *)sourceKeyPath toKeyPath:(NSString *)destinationKeyPath transformationBlock:(id (^)(id))transformationBlock;
+- (void)tm_twoWayBindingWithSourceKeyPath:(NSString *)sourceKeyPath toKeyPath:(NSString *)destinationKeyPath;
 @end

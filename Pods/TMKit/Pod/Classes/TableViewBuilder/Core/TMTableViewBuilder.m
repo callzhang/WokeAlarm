@@ -81,14 +81,29 @@ static NSMutableDictionary *defaultRegisterredClassMapping = nil;
 }
 
 - (void)didInsertSectionItem:(TMSectionItem *)sectionItem {
-    for (NSInteger i = 0; i < sectionItem.numberOfRows; i++) {
-        TMRowItem *rowItem = [sectionItem rowItemAtIndex:i];
-        [self addReuseIdentifierToRegister:[rowItem reuseIdentifier]];
+    if (sectionItem.type == TMSectionItemTypeArray) {
+        for (NSInteger i = 0; i < sectionItem.numberOfRows; i++) {
+            TMRowItem *rowItem = [sectionItem rowItemAtIndex:i];
+            [self addReuseIdentifierToRegister:[rowItem reuseIdentifier]];
+        }
     }
 }
 
 - (void)fetchedResultsRowItemDataSource:(TMTableViewFetchedResultsSectionItemDataSource *)dataSrouce didCreatedFetchedResultsSectionItem:(TMSectionItem *)sectionItem {
     sectionItem.tableViewBuilder = self;
+}
+
+- (TMSectionItem *)createdSectionItemAtIndex:(NSInteger)index {
+    TMSectionItem *sectionItem;
+    Class SectionItemClass = [self classForType:TMTableViewBuilderClassTypeSectionItemClassForFetchedResultsController];
+    if (SectionItemClass) {
+        sectionItem = [SectionItemClass sectionItemWithType:TMSectionItemTypeFetchedResultsController];
+    }
+    else {
+        sectionItem = [TMSectionItem sectionItemWithType:TMSectionItemTypeFetchedResultsController];
+    }
+
+    return sectionItem;
 }
 #pragma mark -
 - (NSMutableDictionary *)configurationsMapping {

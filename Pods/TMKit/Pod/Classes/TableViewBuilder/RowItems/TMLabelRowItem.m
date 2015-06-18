@@ -19,7 +19,8 @@
 
 - (UITableViewCell *)cellForRow {
     TMTextLabelTableViewCell *cell = (id) [super cellForRow];
-    [self bindKeypath:@keypath(TMLabelRowItem.new, text) toLabel:cell.titleLabel];
+//    [self bindKeypath:@keypath(TMLabelRowItem.new, text) toLabel:cell.titleLabel];
+    cell.titleLabel.text = self.text;
     return cell;
 }
 @end

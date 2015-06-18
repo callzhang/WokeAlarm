@@ -62,6 +62,7 @@ typedef NS_ENUM(NSUInteger, TMTableViewBuilderClassType) {
     TMTableViewBuilderClassTypeOptionRowItem, //protocol TMRadioOptionRow
     TMTableViewBuilderClassTypeSearchResultsController,
     TMTableViewBuilderClassTypeSearchController,
+    TMTableViewBuilderClassTypeSectionItemClassForFetchedResultsController,
 };
 
 typedef NS_ENUM(NSUInteger, TMTableViewBuilderManagedType) {

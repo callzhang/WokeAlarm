@@ -1,0 +1,1 @@
+../../../TMKit/Pod/Classes/CoreData/TIManagedObjectExtensions.h

@@ -195,7 +195,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   TMKit:
-    :commit: 1c3af4c9be05438620887ba2443fc9f280e57d1d
+    :commit: 8730dbdc795559ea73820b7f2c87e9f89934502f
     :git: https://github.com/nanaimostudio/TMKit
 
 SPEC CHECKSUMS:
@@ -230,7 +230,7 @@ SPEC CHECKSUMS:
   ReactiveViewModel: 58918dcbcec2d3151195ab1ed9163c57a8163999
   RHAddressBook: 870e9e0b34cb917b9c4c600fc3b7d5b530b23b13
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
-  TMKit: 2dcdd4071b77a355b5429204ec058ade4633e02d
+  TMKit: 67306915aa764d46c7b3e0caea38e0323b685b3e
   Tweaks: fea40672d34a7185051b7786be0d587cd76d253c
 
 COCOAPODS: 0.37.2
