@@ -208,7 +208,7 @@ NSManagedObjectContext *mainContext;
     //self.uploadCompletionCallbacks = [NSMutableDictionary new];
     
     //start background update
-    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         for (EWServerObject *MO in workingObjects) {
             EWServerObject *localMO = [MO MR_inContext:localContext];
             if (!localMO) {
@@ -319,6 +319,7 @@ NSManagedObjectContext *mainContext;
     for (EWServerObject *SO in objects) {
         //check if it's our guy
         if (![SO isKindOfClass:[EWServerObject class]]) {
+            DDLogWarn(@"Found non EWServerObject saving! %@", SO.entity.name);
             continue;
         }
         //First test MO exist
@@ -342,6 +343,7 @@ NSManagedObjectContext *mainContext;
 		}
 		
         //check ACL
+        //TODO: chenge the check access to server object level
         if (![EWSync checkAccess:SO]) {
             DDLogWarn(@"!!! Skip uploading object with no access rights %@ with changes %@", SO.serverID, SO.changedKeys.string);
             continue;
@@ -362,18 +364,15 @@ NSManagedObjectContext *mainContext;
             NSParameterAssert(SO.objectId);
             //check if updated keys exist
             NSMutableArray *changedKeys = SO.changedKeys.mutableCopy;
-			[changedKeys removeObjectsInArray:attributeUploadSkipped];
-            if (changedKeys.count > 0) {
-                
+            if (changedKeys) {
                 //add changed keys to record
                 NSMutableSet *changed = [NSMutableSet setWithArray:self.changedRecords[SO.serverID]] ?: [NSMutableSet new];
                 [changed addObjectsFromArray:changedKeys];
 				self.changedRecords = [self.changedRecords setValue:changed.allObjects forImmutableKeyPath:@[SO.serverID]];
                 //add to queue
                 [self appendUpdateQueue:SO];
-                
-                //change updatedAt: If MO already has updatedAt, then update the timestamp
-                [SO setValue:[NSDate date] forKeyPath:kUpdatedDateKey];
+                //change updatedAt
+                SO.syncInfo[kRelationUpdatedTime] = [NSDate date];
             }
         }
     }
@@ -385,7 +384,7 @@ NSManagedObjectContext *mainContext;
         if (SO.serverID) {
             DDLogInfo(@"~~~> MO %@(%@) is going to be DELETED, enqueue PO to delete queue.", SO.entity.name, [SO valueForKey:kParseObjectID]);
             //get PO reference
-            PFObject *PO = [PFObject objectWithoutDataWithClassName:SO.serverClassName objectId:SO.serverID];
+            PFObject *PO = [PFObject objectWithoutDataWithClassName:[[SO class] serverClassName] objectId:SO.serverID];
             //remove PO from PIN
 			//Not needed
             //add PO to delete queue
@@ -416,16 +415,16 @@ NSManagedObjectContext *mainContext;
     }
     
     NSString *parseObjectId = serverObject.serverID;
-    PFObject *object;
+    PFObject *PO;
     if (parseObjectId) {
         //download
-        object =[self getParseObjectWithClass:serverObject.serverClassName ID:parseObjectId error:error];
-        if ([object isNewerThanMO]) {
-            DDLogWarn(@"The PO %@(%@) being updated from MO is newer", object.parseClassName, object.objectId);
+        PO =[self getParseObjectWithClass:[[serverObject class] serverClassName] ID:parseObjectId error:error];
+        if ([PO isNewerThanMO]) {
+            DDLogWarn(@"The PO %@(%@) being updated from MO is newer", PO.parseClassName, PO.objectId);
         }
-        if (!object) {
+        if (!PO) {
             if ([*error code] == kPFErrorObjectNotFound) {
-                DDLogError(@"PO %@ couldn't be found!", serverObject.serverClassName);
+                DDLogError(@"PO %@ couldn't be found!", [[serverObject class] serverClassName]);
                 serverObject.objectId = nil;
             }
 			else if ([*error code] == kPFErrorConnectionFailed) {
@@ -443,49 +442,49 @@ NSManagedObjectContext *mainContext;
         }
     }
     
-    if (!object) {
+    if (!PO) {
         //insert
-        object = [PFObject objectWithClassName:serverObject.serverClassName];
-        [object pin:error];
+        PO = [PFObject objectWithClassName:[[serverObject class] serverClassName]];
+        [PO pin:error];
         //TODO: need to test if we can skip saving first. For example, if there is unsaved object related, the save process will throw exception
         @try {
             //need to save before working on PFRelation
-            [object save:error];
+            [PO save:error];
         }
         @catch (NSException *exception) {
-            DDLogError(@"Failed to save PO %@", object);
-            [object saveEventually];
+            DDLogError(@"Failed to save PO %@", PO);
+            [PO saveEventually];
             [serverObject uploadEventually];
         }
 		
         if (!*error) {
-            DDLogVerbose(@"+++> CREATED PO %@(%@)", object.parseClassName, object.objectId);
-            [serverObject setValue:object.objectId forKey:kParseObjectID];
+            DDLogVerbose(@"+++> CREATED PO %@(%@)", PO.parseClassName, PO.objectId);
+            [serverObject setValue:PO.objectId forKey:kParseObjectID];
         }
 		else{
-			DDLogError(@"Failed to save new PO %@: %@", object.parseClassName, *error);
+			DDLogError(@"Failed to save new PO %@: %@", PO.parseClassName, *error);
             [serverObject uploadEventually];
             return NO;
         }
     }
     
     //==========set Parse value/relation and callback block===========
-    BOOL success = [object updateFromManagedObject:serverObject withError:error];
+    BOOL success = [PO updateFromManagedObject:serverObject withError:error];
     //================================================================
     if (!success) {
         DDLogError(@"Failed to update PO from MO %@(%@): %@", serverObject.entity.name, serverObject.serverID, [*error localizedDescription]);
     }
     NSManagedObjectID *ID = serverObject.objectID;
-    [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *err) {
+    NSManagedObjectContext *localContext = serverObject.managedObjectContext;
+    [PO saveInBackgroundWithBlock:^(BOOL succeeded, NSError *err) {
         NSError *error1;
         EWServerObject *MO_main = (EWServerObject *)[mainContext existingObjectWithID:ID error:&error1];
         if (succeeded) {
             if (MO_main) {
                 //assign connection between MO and PO
-                [self performSaveCallbacksWithParseObject:object andManagedObjectID:MO_main.objectID];
+                [self performSaveCallbacksWithParseObject:PO andManagedObjectID:MO_main.objectID];
                 //set updated time
-                NSDate *updated = object.updatedAt;
-                MO_main.updatedAt = updated;
+                MO_main.updatedAt = PO.updatedAt;
             }
             else {
                 DDLogError(@"Failed to get %@(%@) on main thread: %@", serverObject.entity.name, serverObject.serverID, error1.localizedDescription);
@@ -496,11 +495,9 @@ NSManagedObjectContext *mainContext;
             *error = err;
             if (err.code == kPFErrorObjectNotFound){
                 DDLogError(@"*** PO not found for %@(%@), set to nil.", MO_main.entity.name, MO_main.serverID);
-                NSManagedObject *trueMO = [MO_main.managedObjectContext existingObjectWithID:MO_main.objectID error:NULL];
-                if (trueMO) {
-                    //need to check if the object is available
-                    MO_main.objectId = nil;
-                }
+                //need to check if the object is available
+                MO_main.objectId = nil;
+                [MO_main saveToLocal];
             }
             else{
                 DDLogError(@"*** Failed to save server object: %@", err.description);
@@ -758,7 +755,7 @@ NSManagedObjectContext *mainContext;
 	}
     EWServerObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectID inContext:context];
     if (!MO) {
-        PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className.serverClass ID:objectID error:error];
+        PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className ID:objectID error:error];
         MO = [PO managedObjectUpdatedInContext:context];
         if (!MO) {
             DDLogError(@"Failed getting MO with class (%@): %@", className, (*error).description);
@@ -832,7 +829,7 @@ NSManagedObjectContext *mainContext;
     }
     
     //first see if cached PO exist
-    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectWithClass:SO.serverClassName ID:SO.serverID];
+    PFObject *po = [[EWSync sharedInstance] getCachedParseObjectWithClass:[[SO class] serverClassName] ID:SO.serverID];
     if (po.ACL == nil) [po fetchIfNeededAndSaveToCache:nil];
     if (po.ACL != nil) {
         BOOL write = [po.ACL getPublicWriteAccess] || [po.ACL getWriteAccessForUser:[PFUser currentUser]];
@@ -1038,28 +1035,5 @@ NSManagedObjectContext *mainContext;
     }
     return info;
 }
-@end
-
-
-@implementation NSString (EWSync)
-
-- (NSString *)serverType{
-    NSDictionary *typeDic = kServerTransformTypes;
-	NSString *serverType = typeDic[self];
-    return serverType;
-}
-
-- (NSString *)serverClass{
-	NSDictionary *typeDic = kServerTransformClasses;
-	NSString *serverClass = typeDic[self]?:self;
-	return serverClass;
-}
-
-- (BOOL)skipUpload{
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF IN %@", attributeUploadSkipped];
-    BOOL result = [predicate evaluateWithObject:self];
-    return result;
-}
-
 @end
 

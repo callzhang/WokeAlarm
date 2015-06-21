@@ -71,10 +71,9 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
     [[EWPerson me] addNotificationsObject:notice];
 	
 	//save
-    [notice saveWithCompletion:^(BOOL success, NSError *error) {
-		//broadcast
-		[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationNew object:notice userInfo:nil];
-	}];
+    [notice save];
+    //broadcast
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationNew object:notice userInfo:nil];
     
     [self notificationDidClicked:notice];
 }
@@ -193,9 +192,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 		
     }
     else{
-        NSString *str = [NSString stringWithFormat:@"unknown type of notification: %@", notification.type];
-        DDLogError(str);
-        EWAlert(str);
+        EWAlert(@"unknown type of notification: %@", notification.type);
     }
     
     [self setCompletionForNotification:notification];
@@ -227,14 +224,14 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 //            return NO;
 //        }];
 		for (EWNotification *note in notificationForPastActivities) {
-			EWActivity *activity = (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([EWActivity class]) withID:note.userInfo[@"activity"] inContext:localContext error:nil];
+			EWActivity *activity = (EWActivity *)[EWSync findObjectWithClass:[[EWActivity class] serverClassName] withID:note.userInfo[@"activity"] inContext:localContext error:nil];
 			DDLogInfo(@"Removed redundant notification (%@) on %@", note.serverID, activity.time);
 			[note remove];
 		}
 		
 		//download related person
 		NSMutableSet *senderIDs = [[[EWPerson meInContext:localContext].notifications valueForKey:EWNotificationAttributes.sender] mutableCopy];
-		PFQuery *query = [PFQuery queryWithClassName:NSStringFromClass([EWPerson class]).serverClass];
+		PFQuery *query = [PFQuery queryWithClassName:[[EWPerson class] serverClassName]];
 		[query whereKeyExists:EWPersonAttributes.profilePic];
 		[query fromLocalDatastore];
 		NSArray *localPersonIDs = [[query findObjects:nil] valueForKey:kParseObjectID];

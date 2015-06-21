@@ -105,7 +105,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     
     //set category
     BOOL success = [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback
-													withOptions: AVAudioSessionCategoryOptionDefaultToSpeaker
+													withOptions: AVAudioSessionCategoryOptionDuckOthers
 														  error: &error];
     if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
 #ifdef DEBUG
@@ -119,9 +119,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     //set active
     success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
     if (!success){
-        DDLogInfo(@"Unable to activate ACTIVE audio session:%@", error);
-    }else{
-        DDLogInfo(@"ACTIVE Audio session activated!");
+        DDLogError(@"Unable to activate ACTIVE audio session:%@", error);
     }
 }
 
@@ -139,9 +137,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     //set active
     success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
     if (!success || error){
-        DDLogVerbose(@"Unable to activate ACTIVE audio session:%@", error);
-    }else{
-        DDLogVerbose(@"RECODING Audio session activated!");
+        DDLogError(@"Unable to activate ACTIVE audio session:%@", error);
     }
 }
 

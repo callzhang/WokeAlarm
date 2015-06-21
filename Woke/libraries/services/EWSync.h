@@ -28,9 +28,6 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 #define kEWSyncErrorNoPermission            257;
 
 #pragma mark - Sync parameters
-#define kServerTransformTypes               @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
-#define kServerTransformClasses             @{@"EWPerson": @"_User"} //localClass: serverClass
-#define attributeUploadSkipped              @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey, @"syncInfo"]
 #define kSyncUserClass                      @"EWPerson"
 
 //Server update time
@@ -174,13 +171,4 @@ extern NSString * const kEWSyncUploaded;
  */
 - (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error;
 
-@end
-
-
-
-
-@interface NSString (EWSync)
-- (NSString *)serverType;
-- (NSString *)serverClass;
-- (BOOL)skipUpload;
 @end

@@ -37,7 +37,7 @@
 #define EW_DEBUG_LEVEL                  3//defined logging level
 #define LOCALSTR(x)                     NSLocalizedString(x,nil)
 #ifdef DEBUG//work only on debug
-#define EWAlert(frmt, ...)				[[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%s", __FUNCTION__] message:[NSString stringWithFormat:frmt, ##__VA_ARGS__] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+#define EWAlert(frmt, ...)				[[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%s", __FUNCTION__] message:[NSString stringWithFormat:frmt, ##__VA_ARGS__] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show]; DDLogWarn(frmt, ##__VA_ARGS__)
 #else
 #define EWAlert(frmt, ...)				DDLogWarn(frmt, ##__VA_ARGS__)
 #endif

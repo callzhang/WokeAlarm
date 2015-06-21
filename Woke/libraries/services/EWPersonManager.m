@@ -45,10 +45,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 }
 
 #pragma mark - CREATE USER
--(EWPerson *)getPersonByServerID:(NSString *)ID error:(NSError *__autoreleasing *)error{
+- (EWPerson *)getPersonByServerID:(NSString *)ID error:(NSError *__autoreleasing *)error{
     EWAssertMainThread
     if(!ID) return nil;
-    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:NSStringFromClass([EWPerson class]) withID:ID error:error];
+    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:[[EWPerson class] serverClassName] withID:ID error:error];
     
     return person;
 }

@@ -39,19 +39,7 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
-- (NSString *)serverID{
-    return self.objectId;
-}
-
-- (NSString *)serverClassName{
-	return self.entity.name;
-}
-
 - (void)save{
-    if (self.updated && self.updatedAt) {
-        self.updatedAt = [NSDate date];
-    }
-    
     if ([NSThread isMainThread]) {
         [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     }
@@ -60,19 +48,8 @@
     }
 }
 
-- (void)saveWithCompletion:(BoolErrorBlock)block{
-    if (self.updated && self.updatedAt) {
-        self.updatedAt = [NSDate date];
-    }
-	[self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
-		if (block) {
-			block(contextDidSave, error);
-		}
-	}];
-}
 
-- (EWServerObject *)ownerObject{
-    return nil;
+- (NSString *)serverID{
+    return self.objectId;
 }
-
 @end

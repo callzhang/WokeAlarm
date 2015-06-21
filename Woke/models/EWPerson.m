@@ -65,8 +65,9 @@
     
     BOOL good = YES;
     NSParameterAssert(self.serverID);
-    NSParameterAssert(self.updatedAt);
-    //NSParameterAssert(self.firstName);
+    if (!self.updatedAt) {
+        DDLogError(@"EWPerson %@ missing updatedAt", self.serverID);
+    }
     NSParameterAssert(self.username);
     NSParameterAssert(self.cachedInfo);
     if(!self.profilePic){
@@ -87,7 +88,7 @@
     return good;
 }
 
-- (NSString *)serverClassName{
++ (NSString *)serverClassName{
 	return @"_User";
 }
 
@@ -102,6 +103,13 @@
         return ID;
     }
     return nil;
+}
+
+- (BOOL)fetchRelation{
+    if (self.isMe) {
+        return YES;
+    }
+    return NO;
 }
 
 @end

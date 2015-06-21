@@ -41,7 +41,7 @@
 		BOOL expectChange = [changeValues containsObject:key] ? YES : NO;
 		
         //check if need to skip
-        if (key.skipUpload) {
+        if ([[[managedObject class] propertiesSkippedToUpload] containsObject:key]) {
             return;
         }
         
@@ -104,12 +104,12 @@
                 for (EWServerObject *MO in relatedMOs) {
                     //PFObject *PO = [EWDataStore getCachedParseObjectForID:MO.serverID];
                     //if (!PO) {
-                    PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:MO.serverID];
+                    PFObject *PO = [PFObject objectWithoutDataWithClassName:[[MO class] serverClassName] objectId:MO.serverID];
                     //}
                     if (PO.objectId) {
                         [relatedPOs addObject:PO];
                     }else{
-                        DDLogError(@"PO %@(%@) not found", MO.serverClassName, MO.serverID);
+                        DDLogError(@"PO %@(%@) not found", [[MO class] serverClassName], MO.serverID);
                     }
                 }
                 DDLogInfo(@"Relation %@->%@ changed to %ld items", managedObject.entity.class, key, (unsigned long)relatedPOs.count);
@@ -120,7 +120,7 @@
             //========================== relation ==========================
             PFRelation *parseRelation = [self relationForKey:key];
             if (parseRelation.targetClass) {
-                NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name.serverClass], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
+                NSAssert([parseRelation.targetClass isEqualToString:[NSClassFromString(relation.destinationEntity.name) serverClassName]], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
             }
             
             //THOUGHTS: create a new PFRelation so that we don't need to deal with deletion
@@ -143,7 +143,7 @@
                 if (parseID) {
                     //the pfobject already exists, need to inspect PFRelation to determin add or remove
                     if (![[relatedParseObjects valueForKey:kParseObjectID] containsObject:parseID]) {
-                        PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
+                        PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:[[relatedManagedObject class] serverClassName] objectId:parseID];
                         
                         DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
                         if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
@@ -193,7 +193,7 @@
                 PFObject *relatedPO = self[key];
                 if (parseID) {
                     if (![parseID isEqualToString:relatedPO.objectId]) {
-                        relatedPO = [PFObject objectWithoutDataWithClassName:relatedMO.serverClassName objectId:parseID];
+                        relatedPO = [PFObject objectWithoutDataWithClassName:[[relatedMO class] serverClassName] objectId:parseID];
                         [self setObject:relatedPO forKey:key];
                         DDLogVerbose(@"+++> To-one relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], relation.name, relatedPO.objectId);
                         if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
@@ -338,7 +338,7 @@
 - (BOOL)isNewerThanMOInContext:(NSManagedObjectContext *)context{
     NSDate *updatedPO = [self valueForKey:kUpdatedDateKey];
     EWServerObject *mo = (EWServerObject *)[NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId inContext:context];
-    NSDate *updatedMO = mo.updatedAt;
+    NSDate *updatedMO = mo.syncInfo[kRelationUpdatedTime];
     if (updatedPO && updatedMO) {
         if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {
             //DDLogVerbose(@"PO is newer than MO: %@ > %@", updatedPO, updatedMO);

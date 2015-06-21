@@ -14,14 +14,7 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 - (BOOL)validate;
 - (void)remove;
 - (NSString *)serverID;
-- (void)save;
-- (void)saveWithCompletion:(BoolErrorBlock)block;
-- (NSString *)serverClassName;
 
-/**
- *  The owner of this object, used to determine if we need to fully download the object or upload this object to server.
- *  @attention EWPerson will return itself
- *  @return Owner
- */
-- (EWServerObject *)ownerObject;
+#pragma mark - Core Data local save
+- (void)save;
 @end

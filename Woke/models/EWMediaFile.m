@@ -20,7 +20,7 @@
 }
 
 + (EWMediaFile *)getMediaFileByID:(NSString *)ID error:(NSError *__autoreleasing *)error{
-    EWMediaFile *m = (EWMediaFile *)[EWSync findObjectWithClass:@"EWMediaFile" withID:ID error:error];
+    EWMediaFile *m = (EWMediaFile *)[EWSync findObjectWithClass:[self serverClassName] withID:ID error:error];
     return m;
 }
 

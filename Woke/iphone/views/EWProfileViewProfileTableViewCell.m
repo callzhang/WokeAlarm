@@ -84,6 +84,17 @@
     else if (status == EWFriendshipStatusSent) {
         [EWUIUtil showWarningHUBWithString:@"Already requested"];
     }
+    else if (status == EWFriendshipStatusReceived){
+        [EWUIUtil showWatingHUB];
+        //add friendship
+        [[EWPersonManager shared] acceptFriend:_person completion:^(EWFriendshipStatus status, NSError *error) {
+            if (status == EWFriendshipStatusFriended) {
+                [EWUIUtil showSuccessHUBWithString:@"Friend successful"];
+            } else {
+                [EWUIUtil dismissHUD];
+            }
+        }];
+    }
     else {
         [[EWPersonManager shared] requestFriend:self.person completion:^(EWFriendshipStatus status, NSError *error) {
             if (status == EWFriendshipStatusSent) {
@@ -121,7 +132,7 @@
         }
         //location
         self.distanceLabel.text = person.distanceString;
-        
+        //friend button
         if (person.isMe) {
             self.addFriendButton.hidden = YES;
         }
@@ -130,14 +141,22 @@
             self.addFriendButton.hidden = NO;
             self.addFriendButton.alpha = 1.0f;
             switch (person.friendshipStatus) {
-                case EWFriendshipStatusFriended:
+                case EWFriendshipStatusFriended:{
                     [self.addFriendButton setImage:[ImagesCatalog friendedIcon] forState:UIControlStateNormal];
                     break;
-                case EWFriendshipStatusSent:
+                }
+                case EWFriendshipStatusSent:{
                     [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestSentButton] forState:UIControlStateNormal];
+                    [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestSentHighlighted] forState:UIControlStateHighlighted];
                     break;
-                case EWFriendshipStatusReceived:
+                }
+                case EWFriendshipStatusReceived:{
                     [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestReceivedButton] forState:UIControlStateNormal];
+                    [self.addFriendButton setImage:[ImagesCatalog wokeUserProfileFriendRequestReceivedButtonHighlighted] forState:UIControlStateHighlighted];
+                    break;
+                }
+                case EWFriendshipStatusDenied:
+                    [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];
                     break;
                 default:
                     [self.addFriendButton setImage:[ImagesCatalog addFriendButton] forState:UIControlStateNormal];

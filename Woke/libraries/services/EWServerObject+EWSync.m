@@ -139,13 +139,9 @@
         }
     }];
     
-    //update updatedAt
-    if ([EWSync checkAccess:self]) {
-        self.updatedAt = [NSDate date];
-    }
-    
-    //save to local has been applied in assignValueFromParseObject:
-	[self saveToLocal];
+    //update updatedAtNSParameterAssert(self.syncInfo);
+    self.syncInfo[kRelationUpdatedTime] = [NSDate date];
+    [self saveToLocal];
 	
 	//remove from updating MO
 	[EWSync removeMOFromUpdating:self];
@@ -233,7 +229,8 @@
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
             //contains value
 			NSString *localClass = [self getPropertyClassByName:key];
-            if (localClass.serverType){
+            NSString *serverClass = [[self class] serverPropertyTypeForLocalType:localClass];
+            if (serverClass){
                 
                 //need to deal with local type
                 if ([parseValue isKindOfClass:[PFGeoPoint class]]) {
@@ -241,7 +238,7 @@
                     CLLocation *loc = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
                     [self setValue:loc forKey:key];
                 }else{
-                    [NSException raise:[NSString stringWithFormat:@"Server class %@ not handled (%@)", localClass.serverClass, key] format:@"Check your code!"];
+                    [NSException raise:[NSString stringWithFormat:@"Server class %@ not handled (%@)", serverClass, key] format:@"Check your code!"];
                 }
             }else{
                 @try {
@@ -252,17 +249,18 @@
                 }
             }
         }else{
-			if (key.skipUpload) return;
+            //skip property
+			if ([[[self class] propertiesSkippedToUpload] containsObject:key]) return;
             //parse value empty, delete
 			id MOValue = [self valueForKey:key];
             if (MOValue) {
-                DDLogVerbose(@"~~~> Delete attribute on MO %@(%@)->%@(%@)", self.entity.name, self.serverID, key, MOValue);
+                DDLogInfo(@"~~~> Delete attribute on MO %@(%@)->%@(%@)", self.entity.name, self.serverID, key, MOValue);
                 [self setValue:nil forKey:key];
             }
         }
     }];
     //assigned value from PO should not be considered complete, therefore we don't timestamp updatedAt on this SO
-    if (!self.syncInfo) self.syncInfo = [NSMutableDictionary new];
+    NSParameterAssert(self.syncInfo);
     self.syncInfo[kAttributeUpdatedTime] = [NSDate date];
 	[self saveToLocal];
 }
@@ -271,7 +269,7 @@
 - (PFObject *)parseObject{
     
     NSError *err;
-    PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:self.serverClassName ID:self.serverID error:&err];
+    PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:[[self class] serverClassName] ID:self.serverID error:&err];
     if (!object){
         DDLogError(@"Failed to find PO for MO %@(%@) with error: %@", self.entity.name, self.serverID, err.description);
         return nil;
@@ -296,7 +294,7 @@
     [self.managedObjectContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *localMO = (EWServerObject *)[self MR_inContext:localContext];
         
-        object = [[EWSync sharedInstance] getParseObjectWithClass:localMO.serverClassName ID:localMO.serverID error:&err];
+        object = [[EWSync sharedInstance] getParseObjectWithClass:[[localMO class] serverClassName] ID:localMO.serverID error:&err];
         //update value
         if ([object isNewerThanMOInContext:localContext]) {
             DDLogWarn(@"Getting PO(%@) newer than SO %@(%@)", object.objectId, localMO.entity.name, localMO.serverID);
@@ -534,16 +532,33 @@
     }];
 }
 
-#pragma mark - Network
-
+#pragma mark - Status
 - (NSArray *)changedKeys{
     NSMutableArray *changes = self.changedValues.allKeys.mutableCopy;
-    [changes removeObjectsInArray:attributeUploadSkipped];
+    [changes removeObjectsInArray: [[self class] propertiesSkippedToUpload]];
     if (changes.count > 0) {
         return changes;
     }
     return nil;
 }
+
+- (BOOL)isOutDated{
+    NSDate *date = self.updatedTime;
+    BOOL outdated = !(date.timeElapsed < kServerUpdateInterval);
+    return outdated;
+}
+
+- (NSDate *)updatedTime{
+    NSDate *date;
+    if ([[self class] fetchRelation]) {
+        date = self.syncInfo[kRelationUpdatedTime];
+    } else {
+        date = self.syncInfo[kAttributeUpdatedTime];
+    }
+    return date;
+}
+
+#pragma mark - Network
 
 - (void)saveToLocal{
 	if (self.changedKeys.count == 0) {
@@ -563,9 +578,10 @@
 	//save
 	if ([NSThread isMainThread]) {
 		[self save];
-    } else if([EWSync checkAccess:self]){
-        self.updatedAt = [NSDate date];
     }
+//    else if([EWSync checkAccess:self]){
+//        self.updatedAt = [NSDate date];
+//    }
 }
 
 - (void)saveToServer{
@@ -607,6 +623,28 @@
     [EWSync saveImmediately];
 }
 
+#pragma mark - Server translation
++ (NSString *)serverClassName{
+    return NSStringFromClass(self);
+}
+
+- (EWServerObject *)ownerObject{
+    return nil;
+}
+
++ (NSArray *)propertiesSkippedToUpload{
+    return @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey, @"syncInfo"];
+}
+
++ (NSString *)serverPropertyTypeForLocalType:(NSString *)localClass{
+    NSDictionary *typeDic = kServerTransformTypes;
+    NSString *serverType = typeDic[localClass] ?: localClass;
+    return serverType;
+}
+
++ (BOOL)fetchRelation{
+    return YES;
+}
 
 #pragma mark - Inspector methods
 - (NSString *)getPropertyClassByName:(NSString *)name{
@@ -621,12 +659,5 @@
     }
     return @"";
 }
-
-- (BOOL)isOutDated{
-    NSDate *date = self.updatedAt;
-    BOOL outdated = !(date.timeElapsed < kServerUpdateInterval);
-    return outdated;
-}
-
 
 @end
