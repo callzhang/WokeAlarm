@@ -112,14 +112,14 @@
 //- (EWServerObject *)ownerObject;
 
 #pragma mark - Transaction
-/**
- Mark MO as to save locally and remove MO from upload queue
- */
-- (void)saveToLocal;
-/**
- Mark MO to upload to server and insert MO to upload queue
- */
-- (void)saveToServer;
+///**
+// Mark MO as to save locally and remove MO from upload queue
+// */
+//- (void)saveToLocal;
+///**
+// Mark MO to upload to server and insert MO to upload queue
+// */
+//- (void)saveToServer;
 
 /**
  *  Upload to server immediately

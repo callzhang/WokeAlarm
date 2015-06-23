@@ -141,7 +141,7 @@
     
     //update updatedAtNSParameterAssert(self.syncInfo);
     self.syncInfo[kRelationUpdatedTime] = [NSDate date];
-    [self saveToLocal];
+    //[self saveToLocal];
 	
 	//remove from updating MO
 	[EWSync removeMOFromUpdating:self];
@@ -262,7 +262,7 @@
     //assigned value from PO should not be considered complete, therefore we don't timestamp updatedAt on this SO
     NSParameterAssert(self.syncInfo);
     self.syncInfo[kAttributeUpdatedTime] = [NSDate date];
-	[self saveToLocal];
+    //[self saveToLocal];
 }
 
 #pragma mark - Parse related
@@ -289,9 +289,10 @@
 }
 
 - (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block{
+    EWAssertMainThread
     __block PFObject *object;
     __block NSError *err;
-    [self.managedObjectContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *localMO = (EWServerObject *)[self MR_inContext:localContext];
         
         object = [[EWSync sharedInstance] getParseObjectWithClass:[[localMO class] serverClassName] ID:localMO.serverID error:&err];
@@ -560,38 +561,38 @@
 
 #pragma mark - Network
 
-- (void)saveToLocal{
-	if (self.changedKeys.count == 0) {
-		return;
-	}
-    DDLogVerbose(@"MO %@(%@) save to local with changes %@", self.entity.name, self.serverID, self.changedKeys.string);
-    //mark MO as save to local
-    if (self.objectID.isTemporaryID) {
-        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
-    }
-    [[EWSync sharedInstance].saveToLocalItems addObject:self.objectID];
-    
-    //remove from queue
-    [[EWSync sharedInstance] removeObjectFromInsertQueue:self];
-    [[EWSync sharedInstance] removeObjectFromUpdateQueue:self];
-	
-	//save
-	if ([NSThread isMainThread]) {
-		[self save];
-    }
-//    else if([EWSync checkAccess:self]){
-//        self.updatedAt = [NSDate date];
+//- (void)saveToLocal{
+//	if (self.changedKeys.count == 0) {
+//		return;
+//	}
+//    DDLogVerbose(@"MO %@(%@) save to local with changes %@", self.entity.name, self.serverID, self.changedKeys.string);
+//    //mark MO as save to local
+//    if (self.objectID.isTemporaryID) {
+//        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
 //    }
-}
-
-- (void)saveToServer{
-    if (self.objectID.isTemporaryID) {
-        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
-    }
-    [[EWSync sharedInstance].saveToLocalItems removeObject:self.objectID];
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:NULL];
-    //[[EWSync sharedInstance] appendUpdateQueue:self];
-}
+//    [[EWSync sharedInstance].saveToLocalItems addObject:self.objectID];
+//    
+//    //remove from queue
+//    [[EWSync sharedInstance] removeObjectFromInsertQueue:self];
+//    [[EWSync sharedInstance] removeObjectFromUpdateQueue:self];
+//	
+//	//save
+//	if ([NSThread isMainThread]) {
+//		[self save];
+//    }
+////    else if([EWSync checkAccess:self]){
+////        self.updatedAt = [NSDate date];
+////    }
+//}
+//
+//- (void)saveToServer{
+//    if (self.objectID.isTemporaryID) {
+//        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
+//    }
+//    [[EWSync sharedInstance].saveToLocalItems removeObject:self.objectID];
+//    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:NULL];
+//    //[[EWSync sharedInstance] appendUpdateQueue:self];
+//}
 
 
 - (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
@@ -638,7 +639,7 @@
 
 + (NSString *)serverPropertyTypeForLocalType:(NSString *)localClass{
     NSDictionary *typeDic = kServerTransformTypes;
-    NSString *serverType = typeDic[localClass] ?: localClass;
+    NSString *serverType = typeDic[localClass];
     return serverType;
 }
 
