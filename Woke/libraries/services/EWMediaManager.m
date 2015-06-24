@@ -201,7 +201,7 @@
 	NSSet *receivedMediaIDs = [localMe.receivedMedias valueForKey:kParseObjectID];
     if (receivedMediaIDs.count) [query whereKey:kParseObjectID notContainedIn:receivedMediaIDs.allObjects];
 	NSError *err;
-    NSArray *newMedia = [EWSync findObjectFromServerWithQuery:query inContext:context error:&err];
+    NSArray *newMedia = [EWSync findManagedObjectFromServerWithQuery:query saveInContext:context error:&err];
 
     for (EWMedia *media in newMedia) {
 		[media downloadMediaFile:nil];

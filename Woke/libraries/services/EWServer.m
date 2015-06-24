@@ -86,9 +86,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWServer)
     }
 	else{
 		// Other push type not supported
-		NSString *str = [NSString stringWithFormat:@"Unknown push type received: %@", payload];
-		DDLogError(@"Received unknown type of push msg: %@", str);
-		EWAlert(str);
+		EWAlert(@"Unknown push type received: %@", payload);
 	}
 }
 

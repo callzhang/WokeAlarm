@@ -58,19 +58,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_WITH_ACCESSOR(EWSession, sharedSession);
     return [[[NSUserDefaults standardUserDefaults] objectForKey:NSStringFromSelector(@selector(currentAlarmTone))] copy];
 }
 
-- (void)setCurrentUserObjectID:(NSString *)currentUserObjectID {
-    if (currentUserObjectID) {
-        EWPerson *me = [EWPerson MR_findFirstByAttribute:EWServerObjectAttributes.objectId withValue:currentUserObjectID];
-        NSParameterAssert([[PFUser currentUser].objectId isEqualToString:me.objectId]);
-        self.currentUser = me;
-    }
-    
-    [[NSUserDefaults standardUserDefaults] setObject:currentUserObjectID forKey:NSStringFromSelector(@selector(currentUserObjectID))];
-}
+//- (void)setCurrentUserObjectID:(NSString *)currentUserObjectID {
+//    if (currentUserObjectID) {
+//        EWPerson *me = [EWPerson MR_findFirstByAttribute:EWServerObjectAttributes.objectId withValue:currentUserObjectID];
+//        NSParameterAssert([[PFUser currentUser].objectId isEqualToString:me.objectId]);
+//        self.currentUser = me;
+//    }
+//    
+//    [[NSUserDefaults standardUserDefaults] setObject:currentUserObjectID forKey:NSStringFromSelector(@selector(currentUserObjectID))];
+//}
 
-- (NSString *)currentUserObjectID {
-    return [[[NSUserDefaults standardUserDefaults] objectForKey:NSStringFromSelector(@selector(currentUserObjectID))] copy];
-}
+//- (NSString *)currentUserObjectID {
+//    return [[[NSUserDefaults standardUserDefaults] objectForKey:NSStringFromSelector(@selector(currentUserObjectID))] copy];
+//}
 
 
 - (void)setSkippedWakees:(NSMutableDictionary *)skippedWakees {

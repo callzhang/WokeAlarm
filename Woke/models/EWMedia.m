@@ -150,7 +150,9 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 + (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context{
 	PFObject *mediaPO = [[EWSync sharedInstance] getParseObjectWithClass:NSStringFromClass([EWMedia class]) ID:mediaID error:nil];
     EWMedia *media = (EWMedia *)[mediaPO managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:nil];
-	[media downloadMediaFile:nil];
+    NSParameterAssert(media.mediaFile);
+    NSParameterAssert(media.mediaFile.audio);
+	//[media downloadMediaFile:nil];
 
 	if (![media validate]) {
 		DDLogError(@"Get new media but not valid: %@", media);
@@ -173,7 +175,7 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 			*error = [EWErrorManager invalidObjectError:self];
 			return NO;
 		}
-        [file saveToLocal];
+        //[file saveToLocal];
 		return YES;
 	}else if(!file.audio){
 		return [file refreshInContext:self.managedObjectContext withError:error];

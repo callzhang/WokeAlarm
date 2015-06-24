@@ -32,14 +32,14 @@
 /**
  Get conterparty Parse Object and refresh from server if needed
  */
-- (PFObject *)parseObject;
+//- (PFObject *)parseObject;
 
 /**
  *  get server(parse) object in background
  *
  *  @param block returns a PFObject and a NSError
  */
-- (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block;
+//- (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block;
 
 /**
  Refresh ManagedObject value from server in background
@@ -112,13 +112,13 @@
 //- (EWServerObject *)ownerObject;
 
 #pragma mark - Transaction
-///**
-// Mark MO as to save locally and remove MO from upload queue
-// */
+/**
+ Mark MO as to save locally and remove MO from upload queue
+ */
 //- (void)saveToLocal;
-///**
-// Mark MO to upload to server and insert MO to upload queue
-// */
+/**
+ Mark MO to upload to server and insert MO to upload queue
+ */
 //- (void)saveToServer;
 
 /**

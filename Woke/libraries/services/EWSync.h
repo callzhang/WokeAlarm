@@ -29,6 +29,8 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 
 #pragma mark - Sync parameters
 #define kSyncUserClass                      @"EWPerson"
+#define kUserID                             @"userId"
+#define kUsername                           @"username"
 
 //Server update time
 #define kStalelessInterval                  30
@@ -43,42 +45,31 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 #define kUpdatedDateKey                     @"updatedAt"
 //Not used
 #define kCreatedDateKey                     @"createdAt"
-//Parse update queue
-#define kParseQueueInsert                   @"parse_queue_insert"
-#define kParseQueueUpdate                   @"parse_queue_update"
-#define kParseQueueDelete                   @"parse_queue_delete"
-#define kParseQueueWorking                  @"parse_queue_working"
-#define kParseQueueRefresh                  @"parse_queue_refresh"//queue for refresh
-#define kChangedRecords						@"changed_records"
-#define kUserID                             @"userId"
-#define kUsername                           @"username"
 //events
 extern NSString * const kEWSyncUploaded;
 
 @interface EWSync : NSObject
 /**
- *  Dictionary of {MO_ObjectID, ARRAY of EWManagedObjectSaveBlock(s)}
- *  EWManagedObjectSaveCallbackBlock takes two parameters: MO_main_thread and NSError
+ * A dictionary holds pairs of {serverID: array of changedKeys};
+ * use dictionary so it can be saved to UserDefaults
  */
-@property (strong) NSMutableDictionary *uploadCompletionCallbacks;
-/**
- * A mutable dictionary holds pairs of {serverID: (NSSet)changedKeys};
- */
-@property (atomic, strong) NSDictionary *changedRecords; //{objectID: array of changed keys}
-@property (atomic, strong) NSMutableSet *saveToLocalItems;
-@property (atomic, strong) NSDictionary *managedObjectsUpdating;
+@property (atomic, strong) NSDictionary *changedRecords;
 @property BOOL isUploading;
 
 
-
+#pragma mark - Instance
 + (EWSync *)sharedInstance;
 - (void)setup;
 
-#pragma mark - Connectivity
+#pragma mark - Status
 + (BOOL)isReachable;
++ (void)addToUpdatingMarks:(EWServerObject *)SO;
++ (BOOL)isUpdating:(EWServerObject *)SO;
++ (void)removeMOFromUpdating:(EWServerObject *)SO;
++ (BOOL)isDownloading:(EWServerObject *)SO;
++ (BOOL)isInUpdatingQueue:(EWServerObject *)SO;
 
 #pragma mark - Server methods
-+ (void)saveAllToLocal:(NSArray *)MOs;
 
 /**
  The main method of server update/insert/delete.
@@ -114,19 +105,13 @@ extern NSString * const kEWSyncUploaded;
 //+ (NSManagedObject *)findOrCreateManagedObjectWithParseObjectID:(NSString *)objectId;
 
 /**
- Delete PFObject in server
- */
-- (void)deleteParseObject:(PFObject *)parseObject;
-
-/**
- Perform save callback for managedObject
- */
-//- (void)performSaveCallbacksWithParseObject:(PFObject *)parseObject andManagedObjectID:(NSManagedObjectID *)managedObjectID;
-/**
  Access Global Save Callback dictionary and add blcok with key of ManagedObjectID
  */
-- (void)addSaveCallback:(PFObjectResultBlock)callback forManagedObjectID:(NSManagedObjectID *)objectID;
-
++ (void)addParseSaveCallback:(PFObjectResultBlock)callback forManagedObjectID:(NSManagedObjectID *)objectID;
+/**
+ Add MO update completion callback
+ */
++ (void)addUploadingCompletionBlocks:(EWManagedObjectSaveCallbackBlock)block forServerObject:(EWServerObject *)SO;
 
 #pragma mark - Queue
 //update queue
@@ -145,11 +130,12 @@ extern NSString * const kEWSyncUploaded;
 - (NSSet *) deleteQueue;
 - (void)appendObjectToDeleteQueue:(PFObject *)object;
 - (void)removeObjectFromDeleteQueue:(PFObject *)object;
+//download queue
+- (void)appendToDownloadQueue:(EWServerObject *)mo;
 //worker
 - (NSSet *)getObjectFromQueue:(NSString *)queue;
 - (void)appendObject:(EWServerObject *)mo toQueue:(NSString *)queue;
 - (BOOL)contains:(EWServerObject *)mo inQueue:(NSString *)queue;
-- (BOOL)inQueueForObject:(EWServerObject *)SO;
 
 #pragma mark - CoreData
 + (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;
@@ -157,12 +143,11 @@ extern NSString * const kEWSyncUploaded;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
 + (BOOL)checkAccess:(EWServerObject *)SO;
-+ (void)removeMOFromUpdating:(EWServerObject *)mo;
 
 #pragma mark - Parse helper methods
 //PO query
-+ (NSArray *)findObjectFromServerWithQuery:(PFQuery *)query inContext:(NSManagedObjectContext *)context error:(NSError **)error;
-+ (void)findObjectsFromServerInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
++ (NSArray *)findManagedObjectFromServerWithQuery:(PFQuery *)query saveInContext:(NSManagedObjectContext *)context error:(NSError **)error;
++ (void)findManagedObjectsFromServerInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 - (PFObject *)getCachedParseObjectWithClass:(NSString *)className ID:(NSString *)objectId;
 - (void)setCachedParseObject:(PFObject *)PO;
 /**
@@ -171,4 +156,8 @@ extern NSString * const kEWSyncUploaded;
  */
 - (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error;
 
+/**
+ Delete PFObject in server
+ */
+- (void)deleteParseObject:(PFObject *)parseObject;
 @end

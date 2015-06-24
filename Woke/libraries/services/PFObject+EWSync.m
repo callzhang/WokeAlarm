@@ -18,7 +18,7 @@
             DDLogError(@"PO %@(%@) not found on server!", self.parseClassName, self.objectId);
             NSManagedObject *trueMO = [managedObject.managedObjectContext existingObjectWithID:managedObject.objectID error:NULL];
             if (trueMO) {
-                [managedObject setValue:nil forKeyPath:kParseObjectID];
+                managedObject.serverID = nil;
             }
         }
         else{
@@ -126,6 +126,7 @@
             //THOUGHTS: create a new PFRelation so that we don't need to deal with deletion
             
             //Find related PO to delete async
+            //TODO: optimize?
             NSMutableArray *relatedParseObjects = [[[parseRelation query] findObjects] mutableCopy];
             if (relatedParseObjects.count) {
                 NSArray *relatedParseObjectsToDelete = [relatedParseObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [relatedManagedObjects valueForKey:kParseObjectID]]];
@@ -175,10 +176,10 @@
                     };
                     
                     //add to global save callback distionary
-                    [[EWSync sharedInstance] addSaveCallback:connectRelationship forManagedObjectID:relatedManagedObject.objectID];
+                    [EWSync  addParseSaveCallback:connectRelationship forManagedObjectID:relatedManagedObject.objectID];
                     
                     //add relatedMO to insertQueue
-                    if (![[EWSync sharedInstance] contains:relatedManagedObject inQueue:kParseQueueWorking]) {
+                    if (![EWSync isInUpdatingQueue:relatedManagedObject]) {
                         DDLogWarn(@"Added missing insert object: %@(%@) when updating to-many relation %@", relatedManagedObject.entity.name, relatedManagedObject.serverID, key);
                         [[EWSync sharedInstance] appendInsertQueue:relatedManagedObject];
                     }
@@ -220,10 +221,10 @@
                         }];
                     };
                     //add to global save callback distionary
-                    [[EWSync sharedInstance] addSaveCallback:connectRelationship forManagedObjectID:relatedMO.objectID];
-                    
+                    [EWSync addParseSaveCallback:connectRelationship forManagedObjectID:relatedMO.objectID];
+                
                     //add relatedMO to insertQueue
-                    if (![[EWSync sharedInstance] contains:relatedMO inQueue:kParseQueueWorking]) {
+                    if (![EWSync isInUpdatingQueue:relatedMO]) {
                         DDLogDebug(@"Added missing insert object: %@(%@) when updating to-one relation %@", relatedMO.entity.name, relatedMO.serverID, key);
                         [[EWSync sharedInstance] appendInsertQueue:relatedMO];
                     }
@@ -235,6 +236,10 @@
             }
         }
     }];
+    
+    
+    managedObject.syncInfo[kAttributeUpdatedTime] = [NSDate date];
+    managedObject.syncInfo[kRelationUpdatedTime] = [NSDate date];
     return YES;
 }
 
@@ -307,7 +312,7 @@
         }
         else if (option == EWSyncOptionUpdateAsync){
             [MO assignValueFromParseObject:self];
-            [context MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+            [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWServerObject *localSO = [MO MR_inContext:localContext];
                 [localSO updateValueAndRelationFromParseObject:self];
             } completion:^(BOOL contextDidSave, NSError *error) {

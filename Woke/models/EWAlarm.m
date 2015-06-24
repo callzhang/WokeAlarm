@@ -37,7 +37,7 @@
 
 #pragma mark - Search
 + (instancetype)getAlarmByID:(NSString *)alarmID error:(NSError *__autoreleasing *)error{
-    EWAssertMainThread
+    
     EWAlarm *alarm = (EWAlarm *)[EWSync findObjectWithClass:[self serverClassName] withID:alarmID error:error];
     return alarm;
 }

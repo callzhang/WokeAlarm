@@ -9,11 +9,11 @@ typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thre
 
 @interface EWServerObject : _EWServerObject {}
 @property (nonatomic, strong) NSMutableDictionary *syncInfo;
+@property (nonatomic, strong) NSString *serverID;
 // Custom logic goes here.
 //@property (nonatomic) PFObject *serverObject;
 - (BOOL)validate;
 - (void)remove;
-- (NSString *)serverID;
 
 #pragma mark - Core Data local save
 - (void)save;

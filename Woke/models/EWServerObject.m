@@ -26,7 +26,7 @@
 }
 
 - (void)remove{
-    DDLogDebug(@"---> Deleted MO %@(%@)", self.entity.name, self.serverID);
+    DDLogInfo(@"---> Deleted MO %@(%@)", self.entity.name, self.serverID);
     NSManagedObjectID *selfID = self.objectID;
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[[NSNotificationCenter defaultCenter] postNotificationName:kManagedObjectDeleted object:selfID];
@@ -40,16 +40,23 @@
 }
 
 - (void)save{
+    if (!self.hasChanges) {
+        DDLogWarn(@"Saving MO %@(%@) with no changes, skip!", self.entity.name, self.serverID);
+        return;
+    }
     if ([NSThread isMainThread]) {
         [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     }
     else{
-        DDLogVerbose(@"Skip saving %@(%@) on background thread", self.entity.name, self.serverID);
+        DDLogInfo(@"Skip saving %@(%@) on background thread", self.entity.name, self.serverID);
     }
 }
 
 
 - (NSString *)serverID{
     return self.objectId;
+}
+- (void)setServerID:(NSString *)serverID{
+    self.objectId = serverID;
 }
 @end

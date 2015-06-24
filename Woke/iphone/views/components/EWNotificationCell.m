@@ -31,16 +31,8 @@
     _notification = notification;
 
     //time
-    if (notification.createdAt) {
-        self.time.text = [notification.createdAt.timeElapsedString stringByAppendingString:@" ago"];
-    }
-    else{
-        [_notification getParseObjectInBackgroundWithCompletion:^(PFObject *object, NSError *error) {
-            self.time.text = [object.createdAt.timeElapsedString stringByAppendingString:@" ago"];
-            _notification.createdAt = object.createdAt;
-            [_notification saveToLocal];
-        }];
-    }
+    NSParameterAssert (notification.createdAt);
+    self.time.text = [notification.createdAt.timeElapsedString stringByAppendingString:@" ago"];
     
     //type
     NSString *type = notification.type;

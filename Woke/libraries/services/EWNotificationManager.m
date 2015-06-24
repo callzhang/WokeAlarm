@@ -239,7 +239,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 		PFQuery *personQuery = [PFQuery queryWithClassName:NSStringFromClass([EWPerson class])];
 		if (senderIDs.count) {
 			[personQuery whereKey:kParseObjectID containedIn:senderIDs.allObjects];
-			NSArray *senders = [EWSync findObjectFromServerWithQuery:personQuery inContext:localContext error:nil];
+			NSArray *senders = [EWSync findManagedObjectFromServerWithQuery:personQuery saveInContext:localContext error:nil];
 			DDLogInfo(@"Found senders from checking notification: %@", [senders valueForKey:EWPersonAttributes.firstName]);
 		}
 	} completion:^(BOOL contextDidSave, NSError *error) {
@@ -328,7 +328,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
         [query whereKey:kParseObjectID notContainedIn:existingNotes.allObjects];
     }
 	[query whereKey:EWNotificationRelationships.owner equalTo:[PFUser objectWithoutDataWithObjectId:[PFUser currentUser].objectId]];//send PFUser directly maybe cause error
-    [EWSync findObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *notifications, NSError *error) {
+    [EWSync findManagedObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *notifications, NSError *error) {
         for (EWNotification *notification in notifications) {
 				NSAssert(notification.ownerObject == [EWPerson me], @"owner missing: %@", notification.ownerObject.serverID);
 				DDLogVerbose(@"Found new notification %@(%@)", notification.type, notification.objectId);

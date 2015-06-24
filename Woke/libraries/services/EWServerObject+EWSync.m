@@ -23,12 +23,11 @@
         DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
         return;
     }
-    NSString *class = [EWSync sharedInstance].managedObjectsUpdating[parseObject.objectId];
-	if (class && [class isEqualToString:parseObject.localClassName]) {
-		DDLogWarn(@"Found MO already refreshing %@(%@), skip!", parseObject.localClassName, parseObject.objectId);
+	if ([EWSync isUpdating:self]) {
+		DDLogWarn(@"Found MO already refreshing %@(%@), skip!", self.entity.class, self.serverID);
         return;
     }else {
-        [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:parseObject.localClassName forImmutableKeyPath:@[parseObject.objectId]];
+        [EWSync addToUpdatingMarks:self];
     }
     
     //download data: the fetch here is just a prevention or default state that data is only refreshed when absolutely necessary. If we need check new data, we should refresh PO before passed in here. For example, we fetch PO at app launch for current user update purpose.
@@ -249,8 +248,6 @@
                 }
             }
         }else{
-            //skip property
-			if ([[[self class] propertiesSkippedToUpload] containsObject:key]) return;
             //parse value empty, delete
 			id MOValue = [self valueForKey:key];
             if (MOValue) {
@@ -313,9 +310,9 @@
 
 - (void)refreshInBackgroundWithCompletion:(ErrorBlock)block{
     //network check
-    
+    EWAssertMainThread
     __block NSError *err;
-    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *currentMO = [self MR_inContext:localContext];
         if (!currentMO) {
             DDLogError(@"*** Failed to obtain object from database: %@", self);
@@ -335,7 +332,11 @@
 
 - (BOOL)refresh:(NSError *__autoreleasing *)error{
 	EWAssertMainThread
-    return [self refreshInContext:mainContext withError:error];
+    __block BOOL success = NO;
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        success = [self refreshInContext:localContext withError:error];
+    }];
+    return success;
 }
 
 - (BOOL)refreshInContext:(NSManagedObjectContext *)context withError:(NSError *__autoreleasing *)error{
@@ -360,14 +361,7 @@
 		return NO;
 
     }else{
-        if ([self changedKeys]) {
-            DDLogWarn(@"===>>>> Refreshing MO %@(%@) HAS CHANGES, UNSAFE!(%@)", self.entity.name, self.serverID, self.changedKeys);
-            return YES;
-        }
-        else if([[EWSync sharedInstance] inQueueForObject:self]) {
-            DDLogWarn(@"Refreshing MO %@(%@) is in queue already", self.entity.name, self.serverID);
-            return YES;
-        }
+        NSParameterAssert(!self.hasChanges);
         
         DDLogVerbose(@"===>>>> Refreshing MO %@(%@)", self.entity.name, self.serverID);
         
@@ -385,7 +379,7 @@
 }
 
 - (void)refreshEventually{
-    [[EWSync sharedInstance] appendObject:self toQueue:kParseQueueRefresh];
+    [[EWSync sharedInstance] appendToDownloadQueue:self];
 }
 
 - (void)refreshRelatedWithCompletion:(ErrorBlock)block{
@@ -453,7 +447,7 @@
     }
     
     NSManagedObjectID *ID = self.objectID;
-    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         NSError *err;
         NSManagedObject *backMO = [localContext existingObjectWithID:ID error:&err];
         if (err) {
@@ -596,30 +590,28 @@
 
 
 - (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
-	if (!self.hasChanges) {
-        if (!self.serverID) {
-            //add to upload queue
-            [[EWSync sharedInstance] appendInsertQueue:self];
-        } else {
-            DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
-            if (block) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    EWServerObject *MO_main = [self MR_inContext:mainContext];
-                    block(MO_main, nil);
-                });
-            }
-            return;
-        }
-	}
+//	if (!self.hasChanges) {
+//        if (!self.serverID) {
+//            //add to upload queue
+//            [[EWSync sharedInstance] appendInsertQueue:self];
+//        } else {
+//            DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
+//            if (block) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    EWServerObject *MO_main = [self MR_inContext:mainContext];
+//                    block(MO_main, nil);
+//                });
+//            }
+//            return;
+//        }
+//	}
 	
 	//save and persistant ID
 	[self save];
 	
 	//add to completion block
-    NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[self.objectID] ?: [NSMutableArray array];
-    [moUploadCallbacks addObject:block];
-	[[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:self.objectID];
-	
+    [EWSync addUploadingCompletionBlocks:block forServerObject:self];
+    
 	//trigger save immediately
     [EWSync saveImmediately];
 }
@@ -629,18 +621,19 @@
     return NSStringFromClass(self);
 }
 
-- (EWServerObject *)ownerObject{
-    return nil;
-}
-
 + (NSArray *)propertiesSkippedToUpload{
-    return @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey, @"syncInfo"];
+    return @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey, @"syncInfo", @"ACL"];
 }
 
 + (NSString *)serverPropertyTypeForLocalType:(NSString *)localClass{
     NSDictionary *typeDic = kServerTransformTypes;
     NSString *serverType = typeDic[localClass];
     return serverType;
+}
+
+//owner and relation
+- (EWServerObject *)ownerObject{
+    return nil;
 }
 
 + (BOOL)fetchRelation{

@@ -209,7 +209,7 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueInsert];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueUpdate];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueWorking];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueRefresh];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kParseQueueDownload];
     DDLogInfo(@"Cleaned local queue");
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EWAccountDidLogoutNotification object:self userInfo:nil];
