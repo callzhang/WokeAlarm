@@ -18,6 +18,7 @@ typedef enum : NSUInteger {
 
 @class EWServerObject;
 @interface PFObject(EWSync)
+#pragma mark -
 /**
  Update parse value and relation to server object. Create if no ParseID on ManagedObject.
  1) First assign the attribute value from ManagedObject
@@ -27,7 +28,7 @@ typedef enum : NSUInteger {
  @discussion The attributes are updated in sync, the relationship is updated async for new andn deleted related objects.
  */
 - (BOOL)updateFromManagedObject:(NSManagedObject *)managedObject withError:(NSError **)error;
-
+#pragma mark -
 /**
  The ManagedObject will only update attributes but not relations
  */
@@ -35,6 +36,13 @@ typedef enum : NSUInteger {
 //- (EWServerObject *)managedObjectRelationUpdatedInContext:(NSManagedObjectContext *)context;
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context option:(EWSyncOption)option completion:(void (^)(EWServerObject *SO, NSError *error))block;
 
+#pragma mark -
+/**
+ 1. Try to get PO from cache
+ 2. If not, then request a network call with query cache life of 1 hour
+ */
++ (PFObject *)getObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error;
+#pragma mark -
 //Helper
 - (BOOL)isNewerThanMO;
 - (BOOL)isNewerThanMOInContext:(NSManagedObjectContext *)context;

@@ -12,6 +12,7 @@
 #import "EWServerObject+EWSync.h"
 #import "PFObject+EWSync.h"
 #import "EWServerObject.h"
+#import "GCDSingleton.h"
 
 extern NSManagedObjectContext *mainContext;
 typedef void (^EWManagedObjectSaveCallbackBlock)(EWServerObject *MO_on_main_thread, NSError *error);
@@ -58,7 +59,8 @@ extern NSString * const kEWSyncUploaded;
 
 
 #pragma mark - Instance
-+ (EWSync *)sharedInstance;
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS_HEADER(EWSync);
+//+ (EWSync *)sharedInstance;
 - (void)setup;
 
 #pragma mark - Status
@@ -99,12 +101,6 @@ extern NSString * const kEWSyncUploaded;
 - (BOOL)updateParseObjectFromManagedObject:(NSManagedObject *)managedObject withError:(NSError **)error;
 
 /**
- Find or delete ManagedObject by Entity and by Server Object
- @discussion This method only updates attributes of MO, not relationship. So it is only used to refresh value of specific MO
- */
-//+ (NSManagedObject *)findOrCreateManagedObjectWithParseObjectID:(NSString *)objectId;
-
-/**
  Access Global Save Callback dictionary and add blcok with key of ManagedObjectID
  */
 + (void)addParseSaveCallback:(PFObjectResultBlock)callback forManagedObjectID:(NSManagedObjectID *)objectID;
@@ -140,21 +136,18 @@ extern NSString * const kEWSyncUploaded;
 #pragma mark - CoreData
 + (EWServerObject *)findObjectWithClass:(NSString *)className withServerID:(NSString *)objectID error:(NSError **)error;
 + (EWServerObject *)findObjectWithClass:(NSString *)className withServerID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
+#pragma mark -
++ (NSArray *)findManagedObjectFromServerWithQuery:(PFQuery *)query saveInContext:(NSManagedObjectContext *)context error:(NSError **)error;
++ (void)findManagedObjectsFromServerInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
+#pragma mark -
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
 + (BOOL)checkAccess:(EWServerObject *)SO;
 
 #pragma mark - Parse helper methods
 //PO query
-+ (NSArray *)findManagedObjectFromServerWithQuery:(PFQuery *)query saveInContext:(NSManagedObjectContext *)context error:(NSError **)error;
-+ (void)findManagedObjectsFromServerInBackgroundWithQuery:(PFQuery *)query completion:(PFArrayResultBlock)block;
 - (PFObject *)getCachedParseObjectWithClass:(NSString *)className ID:(NSString *)objectId;
 - (void)setCachedParseObject:(PFObject *)PO;
-/**
- 1. Try to get PO from cache
- 2. If not, then request a network call with query cache life of 1 hour
- */
-- (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error;
 
 /**
  Delete PFObject in server

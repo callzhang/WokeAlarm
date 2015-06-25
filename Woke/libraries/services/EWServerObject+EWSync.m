@@ -268,7 +268,7 @@
 - (PFObject *)parseObject{
     
     NSError *err;
-    PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:[[self class] serverClassName] ID:self.serverID error:&err];
+    PFObject *object = [PFObject getObjectWithClass:[[self class] serverClassName] ID:self.serverID error:&err];
     if (!object){
         DDLogError(@"Failed to find PO for MO %@(%@) with error: %@", self.entity.name, self.serverID, err.description);
         return nil;
@@ -294,7 +294,7 @@
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *localMO = (EWServerObject *)[self MR_inContext:localContext];
         
-        object = [[EWSync sharedInstance] getParseObjectWithClass:[[localMO class] serverClassName] ID:localMO.serverID error:&err];
+        object = [PFObject getObjectWithClass:[[localMO class] serverClassName] ID:localMO.serverID error:&err];
         //update value
         if ([object isNewerThanMOInContext:localContext]) {
             DDLogWarn(@"Getting PO(%@) newer than SO %@(%@)", object.objectId, localMO.entity.name, localMO.serverID);

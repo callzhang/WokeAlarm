@@ -148,8 +148,7 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 }
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context{
-	PFObject *mediaPO = [[EWSync sharedInstance] getParseObjectWithClass:NSStringFromClass([EWMedia class]) ID:mediaID error:nil];
-    EWMedia *media = (EWMedia *)[mediaPO managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:nil];
+    EWMedia *media = (EWMedia *)[EWSync findObjectWithClass:NSStringFromClass([self class]) withServerID:mediaID inContext:context error:nil];
     NSParameterAssert(media.mediaFile);
     NSParameterAssert(media.mediaFile.audio);
 	//[media downloadMediaFile:nil];

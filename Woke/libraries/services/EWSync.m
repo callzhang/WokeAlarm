@@ -54,15 +54,16 @@ NSManagedObjectContext *mainContext;
 @synthesize changedRecords = _changedRecords;
 @synthesize isUploading = _isUploading;
 
-+ (EWSync *)sharedInstance{
-    
-    static EWSync *sharedInstance_ = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance_ = [[EWSync alloc] init];
-    });
-    return sharedInstance_;
-}
+GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWSync)
+//+ (EWSync *)sharedInstance{
+//    
+//    static EWSync *sharedInstance_ = nil;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        sharedInstance_ = [[EWSync alloc] init];
+//    });
+//    return sharedInstance_;
+//}
 
 - (void)setup{
     
@@ -126,7 +127,7 @@ NSManagedObjectContext *mainContext;
 }
 
 
-#pragma mark - connectivity
+#pragma mark - Status
 + (BOOL)isReachable{
     return [EWSync sharedInstance].isReachable;
 }
@@ -165,6 +166,16 @@ NSManagedObjectContext *mainContext;
     return NO;
 }
 
+- (BOOL)isUploading{
+    return _isUploading;
+}
+
+- (void)setIsUploading:(BOOL)isUploading{
+    @synchronized(self){
+        _isUploading = isUploading;
+    }
+}
+
 #pragma mark - ============== Parse Server methods ==============
 + (void)saveImmediately{
     //trigger save immediately
@@ -179,16 +190,6 @@ NSManagedObjectContext *mainContext;
     }
 }
 
-
-- (BOOL)isUploading{
-    return _isUploading;
-}
-
-- (void)setIsUploading:(BOOL)isUploading{
-    @synchronized(self){
-        _isUploading = isUploading;
-    }
-}
 #pragma mark -
 - (void)uploadToServer{
     //make sure it is called on main thread
@@ -268,7 +269,7 @@ NSManagedObjectContext *mainContext;
 			
 			//=================>> Upload method <<===================
             NSError *error;
-            BOOL success = [self updateParseObjectFromManagedObject:localMO withError:&error];
+            BOOL success = [self uploadFromManagedObject:localMO withError:&error];
             //=======================================================
             
             if (!success) {
@@ -448,7 +449,7 @@ NSManagedObjectContext *mainContext;
 
 
 #pragma mark - Upload worker
-- (BOOL)updateParseObjectFromManagedObject:(EWServerObject *)serverObject withError:(NSError *__autoreleasing *)error{
+- (BOOL)uploadFromManagedObject:(EWServerObject *)serverObject withError:(NSError *__autoreleasing *)error{
 	if (!error) {
 		NSError __autoreleasing *err;
 		error = &err;
@@ -470,7 +471,7 @@ NSManagedObjectContext *mainContext;
     PFObject *PO;
     if (parseObjectId) {
         //download
-        PO =[self getParseObjectWithClass:[[serverObject class] serverClassName] ID:parseObjectId error:error];
+        PO =[PFObject getObjectWithClass:[[serverObject class] serverClassName] ID:parseObjectId error:error];
         if ([PO isNewerThanMO]) {
             DDLogWarn(@"The PO %@(%@) being updated from MO is newer", PO.parseClassName, PO.objectId);
         }
@@ -640,7 +641,7 @@ NSManagedObjectContext *mainContext;
     [self removeObject:mo fromQueue:kParseQueueUpdate];
 }
 
-//insert queue
+#pragma mark -
 - (NSSet *)insertQueue{
     return [self getObjectFromQueue:kParseQueueInsert];
 }
@@ -654,6 +655,7 @@ NSManagedObjectContext *mainContext;
 }
 
 //uploading queue
+#pragma mark -
 - (NSSet *)workingQueue{
     return [self getObjectFromQueue:kParseQueueWorking];
 }
@@ -666,36 +668,41 @@ NSManagedObjectContext *mainContext;
     [self removeObject:mo fromQueue:kParseQueueWorking];
 }
 
-//queue functions
-- (NSSet *)getObjectFromQueue:(NSString *)queue{
-    EWAssertMainThread
-    NSArray *array = [[NSUserDefaults standardUserDefaults] valueForKey:queue];
-    NSMutableArray *validMOs = [array mutableCopy];
+
+//DeletedQueue underlying is a dictionary of objectId:className
+#pragma mark -
+- (NSSet *)deleteQueue{
+    NSDictionary *dic = [[[NSUserDefaults standardUserDefaults] valueForKey:kParseQueueDelete] mutableCopy];
+    NSParameterAssert(!dic || [dic isKindOfClass:[NSDictionary class]]);
     NSMutableSet *set = [NSMutableSet new];
-    for (NSString *url in array) {
-		NSURL *URI = [NSURL URLWithString:url];
-        NSManagedObjectID *ID = [self.context.persistentStoreCoordinator managedObjectIDForURIRepresentation:URI];
-        if (!ID) {
-            DDLogError(@"@@@ ManagedObjectID not found: %@", url);
-            //remove from queue
-            [validMOs removeObject:url];
-            [[NSUserDefaults standardUserDefaults] setObject:[validMOs copy] forKey:queue];
-            continue;
-        }
-        NSError *error;
-        EWServerObject *MO = (EWServerObject *)[self.context existingObjectWithID:ID error:&error];
-        if (MO) {
-            [set addObject:MO];
-        }else{
-            DDLogError(@"*** Serious error: trying to fetch MO from main context failed. ObjectID:%@ \nError:%@", ID, error.description);
-            //remove from the queue
-			[validMOs removeObject:url];
-			[[NSUserDefaults standardUserDefaults] setObject:[validMOs copy] forKey:queue];
-        }
-    }
+    [dic enumerateKeysAndObjectsUsingBlock:^(NSString *ID, NSString *className, BOOL *stop) {
+        [set addObject:[PFObject objectWithoutDataWithClassName:className objectId:ID]];
+    }];
     return [set copy];
 }
 
+- (void)appendObjectToDeleteQueue:(PFObject *)object{
+    if (!object) return;
+    NSMutableDictionary *dic = [[[NSUserDefaults standardUserDefaults] valueForKey:kParseQueueDelete] mutableCopy]?:[NSMutableDictionary new];;
+    [dic setObject:object.parseClassName forKey:object.objectId];
+    [[NSUserDefaults standardUserDefaults] setObject:[dic copy] forKey:kParseQueueDelete];
+}
+
+
+- (void)removeObjectFromDeleteQueue:(PFObject *)object{
+    if (!object) return;
+    NSMutableDictionary *dic = [[[NSUserDefaults standardUserDefaults] valueForKey:kParseQueueDelete] mutableCopy];
+    [dic removeObjectForKey:object.objectId];
+    [[NSUserDefaults standardUserDefaults] setObject:[dic copy] forKey:kParseQueueDelete];
+}
+
+#pragma mark -
+- (void)appendToDownloadQueue:(EWServerObject *)mo {
+    [self appendObject:mo toQueue:kParseQueueDownload];
+}
+
+//underlying
+#pragma mark -
 - (void)appendObject:(EWServerObject *)mo toQueue:(NSString *)queue{
     
     NSArray *array = [[NSUserDefaults standardUserDefaults] valueForKey:queue];
@@ -738,32 +745,39 @@ NSManagedObjectContext *mainContext;
     return contain;
 }
 
-//DeletedQueue underlying is a dictionary of objectId:className
-- (NSSet *)deleteQueue{
-    NSDictionary *dic = [[[NSUserDefaults standardUserDefaults] valueForKey:kParseQueueDelete] mutableCopy];
-    NSParameterAssert(!dic || [dic isKindOfClass:[NSDictionary class]]);
+//queue functions
+#pragma mark -
+- (NSSet *)getObjectFromQueue:(NSString *)queue{
+    EWAssertMainThread
+    NSArray *array = [[NSUserDefaults standardUserDefaults] valueForKey:queue];
+    NSMutableArray *validMOs = [array mutableCopy];
     NSMutableSet *set = [NSMutableSet new];
-    [dic enumerateKeysAndObjectsUsingBlock:^(NSString *ID, NSString *className, BOOL *stop) {
-        [set addObject:[PFObject objectWithoutDataWithClassName:className objectId:ID]];
-    }];
+    for (NSString *url in array) {
+        NSURL *URI = [NSURL URLWithString:url];
+        NSManagedObjectID *ID = [self.context.persistentStoreCoordinator managedObjectIDForURIRepresentation:URI];
+        if (!ID) {
+            DDLogError(@"@@@ ManagedObjectID not found: %@", url);
+            //remove from queue
+            [validMOs removeObject:url];
+            [[NSUserDefaults standardUserDefaults] setObject:[validMOs copy] forKey:queue];
+            continue;
+        }
+        NSError *error;
+        EWServerObject *MO = (EWServerObject *)[self.context existingObjectWithID:ID error:&error];
+        if (MO) {
+            [set addObject:MO];
+        }else{
+            DDLogError(@"*** Serious error: trying to fetch MO from main context failed. ObjectID:%@ \nError:%@", ID, error.description);
+            //remove from the queue
+            [validMOs removeObject:url];
+            [[NSUserDefaults standardUserDefaults] setObject:[validMOs copy] forKey:queue];
+        }
+    }
     return [set copy];
 }
 
-- (void)appendObjectToDeleteQueue:(PFObject *)object{
-    if (!object) return;
-    NSMutableDictionary *dic = [[[NSUserDefaults standardUserDefaults] valueForKey:kParseQueueDelete] mutableCopy]?:[NSMutableDictionary new];;
-    [dic setObject:object.parseClassName forKey:object.objectId];
-    [[NSUserDefaults standardUserDefaults] setObject:[dic copy] forKey:kParseQueueDelete];
-}
-
-- (void)removeObjectFromDeleteQueue:(PFObject *)object{
-    if (!object) return;
-    NSMutableDictionary *dic = [[[NSUserDefaults standardUserDefaults] valueForKey:kParseQueueDelete] mutableCopy];
-    [dic removeObjectForKey:object.objectId];
-    [[NSUserDefaults standardUserDefaults] setObject:[dic copy] forKey:kParseQueueDelete];
-}
-
 //changed records
+#pragma mark -
 - (NSDictionary *)changedRecords{
     return [[[NSUserDefaults standardUserDefaults] valueForKey:kChangedRecords] mutableCopy] ?: [NSMutableDictionary new];
 }
@@ -791,7 +805,7 @@ NSManagedObjectContext *mainContext;
 	}
     EWServerObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:serverID inContext:context];
     if (!MO) {
-        PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className ID:serverID error:error];
+        PFObject *PO = [PFObject getObjectWithClass:className ID:serverID error:error];
         MO = [PO managedObjectInContext:context];
         if (!MO) {
             DDLogError(@"Failed getting MO with class (%@): %@", className, (*error).description);
@@ -964,40 +978,6 @@ NSManagedObjectContext *mainContext;
     }else{
         DDLogError(@"%s The PO passed in doesn't have data, please check!(%@)",__FUNCTION__, PO);
     }
-}
-
-//TODO: move to PFObject+EWSync
-- (PFObject *)getParseObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error{
-    if (!ID) {
-        DDLogError(@"%s Passed in empty ID, upload first!", __func__);
-        return nil;
-    }
-    
-    //try to find PO in the pool first
-    PFObject *object = [self getCachedParseObjectWithClass:class ID:ID];
-	if (!object) {
-		object = [PFObject objectWithoutDataWithClassName:class objectId:ID];
-	}
-    //if not found, then download
-    if (!object.isDataAvailable) {
-        NSEntityDescription *entity = [NSEntityDescription entityForName:object.localClassName inManagedObjectContext:mainContext];
-        //fetch from server if not found
-        //or if PO doesn't have data avaiable
-        //or if PO is older than MO
-        PFQuery *q = [PFQuery queryWithClassName:class];
-        [q whereKey:kParseObjectID equalTo:ID];
-        //add other uni-direction relationship as well (to masximize data per call)
-        [entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
-            if (obj.isToMany && !obj.inverseRelationship) {
-                [q includeKey:key];
-            }
-        }];
-        
-        //find on server
-		object = [q findObjects:error].firstObject;
-		[self setCachedParseObject:object];
-    }
-    return object;
 }
 
 

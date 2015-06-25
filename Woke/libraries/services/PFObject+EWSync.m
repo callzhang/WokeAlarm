@@ -10,6 +10,7 @@
 #import "EWSync.h"
 
 @implementation PFObject(EWSync)
+#pragma mark - Upload
 - (BOOL)updateFromManagedObject:(EWServerObject *)managedObject withError:(NSError *__autoreleasing *)error{
 
     [self fetchIfNeededAndSaveToCache:error];
@@ -40,10 +41,7 @@
     [managedObject.entity.attributesByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
 		BOOL expectChange = [changeValues containsObject:key] ? YES : NO;
 		
-        //check if need to skip
-        if ([[[managedObject class] propertiesSkippedToUpload] containsObject:key]) {
-            return;
-        }
+        
         
         //=============== ATTRIBUTES ===============
         id value = [managedObject valueForKey:key];
@@ -79,6 +77,10 @@
         }
         else{
             //value is nil, delete PO value
+            //check if need to skip
+            if ([[[managedObject class] propertiesSkippedToUpload] containsObject:key]) {
+                return;
+            }
             if ([self.allKeys containsObject:key]) {
                 DDLogWarn(@"~~~> Delete %@ on PO %@(%@) when updating from MO, please check!", key, managedObject.entity.name, managedObject.serverID);
                 [self removeObjectForKey:key];
@@ -243,6 +245,8 @@
     return YES;
 }
 
+#pragma mark - Download
+
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{
     EWSyncOption option;
     if ([self.localClassName isEqualToString:kSyncUserClass] && self != [PFUser currentUser]) {
@@ -347,6 +351,42 @@
     }
 	return MO;
 }
+
+#pragma mark - Search
++ (PFObject *)getObjectWithClass:(NSString *)class ID:(NSString *)ID error:(NSError **)error{
+    if (!ID) {
+        DDLogError(@"%s Passed in empty ID, upload first!", __func__);
+        return nil;
+    }
+    
+    //try to find PO in the pool first
+    PFObject *object = [[EWSync sharedInstance] getCachedParseObjectWithClass:class ID:ID];
+    if (!object) {
+        object = [PFObject objectWithoutDataWithClassName:class objectId:ID];
+    }
+    //if not found, then download
+    if (!object.isDataAvailable) {
+        NSEntityDescription *entity = [NSEntityDescription entityForName:object.localClassName inManagedObjectContext:mainContext];
+        //fetch from server if not found
+        //or if PO doesn't have data avaiable
+        //or if PO is older than MO
+        PFQuery *q = [PFQuery queryWithClassName:class];
+        [q whereKey:kParseObjectID equalTo:ID];
+        //add other uni-direction relationship as well (to masximize data per call)
+        [entity.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSRelationshipDescription *obj, BOOL *stop) {
+            if (obj.isToMany && !obj.inverseRelationship) {
+                [q includeKey:key];
+            }
+        }];
+        
+        //find on server
+        object = [q findObjects:error].firstObject;
+        [[EWSync shared] setCachedParseObject:object];
+    }
+    return object;
+}
+
+#pragma mark - Tools
 
 - (BOOL)isNewerThanMO{
     return [self isNewerThanMOInContext:mainContext];
