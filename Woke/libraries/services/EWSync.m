@@ -498,7 +498,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWSync)
     if (!PO) {
         //insert
         PO = [PFObject objectWithClassName:[[serverObject class] serverClassName]];
-        [PO pin:error];
+        [PO pinInBackground];
         //TODO: need to test if we can skip saving first. For example, if there is unsaved object related, the save process will throw exception
         @try {
             //need to save before working on PFRelation
@@ -963,15 +963,8 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWSync)
         return;
     }
     if (PO.isDataAvailable) {
-        NSError *err;
         DDLogVerbose(@"Pin PO %@(%@) to cache", PO.parseClassName, PO.objectId);
-        TICK
-        [PO pin:&err];
-        TOCK
-        if (err) {
-            DDLogError(@"Failed to set cached PO %@(%@):%@", PO.parseClassName, PO.objectId, err.localizedDescription);
-        }
-        //[self.serverObjectCache setObject:PO forKey:PO.objectId];
+        [PO pinInBackground];
         
 		//You can store a PFObject in the local datastore by pinning it. Pinning a PFObject is recursive, just like saving, so any objects that are pointed to by the one you are pinning will also be pinned.
 

@@ -182,31 +182,23 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 //	return YES;
 //}
 //
-//- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{
-//    EWMediaFile *file = self.mediaFile;
-//	BOOL good = self.mediaFile.audio != nil;
-//    if (!file) {
-//        PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
-//        [filePO fetchIfNeeded];
-//        [filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
-//            BOOL hasFile = self.mediaFile.audio != nil;
-//            if (block) {
-//                block(hasFile,error);
-//            }
-//        }];
-//    }else if(!file.audio){
-//        [file refreshInBackgroundWithCompletion:^(NSError *error){
-//            if (block) {
-//				BOOL hasFile = self.mediaFile.audio != nil;
-//                block(hasFile, error);
-//            }
-//        }];
-//    }else{
-//        if (block) {
-//            block(good, nil);
-//        }
-//    }
-//}
+- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{
+    EWMediaFile *file = self.mediaFile;
+	BOOL good = self.mediaFile.audio != nil;
+    NSParameterAssert(file);
+    if(!file.audio){
+        [file refreshInBackgroundWithCompletion:^(NSError *error){
+            if (block) {
+				BOOL hasFile = self.mediaFile.audio != nil;
+                block(hasFile, error);
+            }
+        }];
+    }else{
+        if (block) {
+            block(good, nil);
+        }
+    }
+}
 
 #pragma mark - Underlying data
 - (NSData *)audio{

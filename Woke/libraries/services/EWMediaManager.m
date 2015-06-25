@@ -205,10 +205,16 @@
     NSArray *newMedia = [EWSync findManagedObjectFromServerWithQuery:query saveInContext:context error:&err];
 
     for (EWMedia *media in newMedia) {
-        NSParameterAssert(media.mediaFile.audio);
+        NSParameterAssert(media.mediaFile);
         NSParameterAssert(media.receiver == [EWPerson meInContext:context]);
-		//[media downloadMediaFile:nil];
-        //[[EWPerson meInContext:context] addReceivedMediasObject:media];
+        
+        //mediaFile.audio may be empty due to not synced at beginning
+        if (!media.mediaFile.audio) {
+            [media downloadMediaFileWithCompletion:^(BOOL success, NSError *error) {
+                DDLogVerbose(@"MeidaFile->audio downloaded %@", media.serverID);
+            }];
+        }
+		
         //new media
 		DDLogInfo(@"Received media(%@) from %@", media.objectId, media.author.name);
         //EWNotification

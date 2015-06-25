@@ -28,7 +28,7 @@ extern NSString *emojiNameFromImageAssetName(NSString *name);
 - (void)createACL;
 //download
 //- (BOOL)downloadMediaFile:(NSError **)error;
-//- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block;
+- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block;
 
 //data
 - (NSData *)audio;

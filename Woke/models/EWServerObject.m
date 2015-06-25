@@ -26,6 +26,8 @@
 }
 
 - (void)remove{
+    if (!self.serverID) return;
+    
     DDLogInfo(@"---> Deleted MO %@(%@)", self.entity.name, self.serverID);
     NSManagedObjectID *selfID = self.objectID;
 	dispatch_async(dispatch_get_main_queue(), ^{
