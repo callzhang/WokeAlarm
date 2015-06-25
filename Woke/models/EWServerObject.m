@@ -13,8 +13,8 @@
 
 - (void)awakeFromInsert{
 	[super awakeFromInsert];
-    [self setPrimitiveValue:[NSMutableDictionary new] forKey:EWServerObjectAttributes.syncInfo];
-    [self setPrimitiveValue:[NSDate date] forKey:EWServerObjectAttributes.createdAt];
+    [self setPrimitiveSyncInfo:[NSMutableDictionary new]];
+    [self setPrimitiveCreatedAt:[NSDate date]];
     //Do not set updatedAt as this value is used to determine if object is updated properly
     //[self setPrimitiveValue:[NSDate date] forKey:EWServerObjectAttributes.updatedAt];
 }
@@ -26,7 +26,7 @@
 }
 
 - (void)remove{
-    DDLogDebug(@"---> Deleted MO %@(%@)", self.entity.name, self.serverID);
+    DDLogInfo(@"---> Deleted MO %@(%@)", self.entity.name, self.serverID);
     NSManagedObjectID *selfID = self.objectID;
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[[NSNotificationCenter defaultCenter] postNotificationName:kManagedObjectDeleted object:selfID];
@@ -39,40 +39,24 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
-- (NSString *)serverID{
-    return self.objectId;
-}
-
-- (NSString *)serverClassName{
-	return self.entity.name;
-}
-
 - (void)save{
-    if (self.updated && self.updatedAt) {
-        self.updatedAt = [NSDate date];
+    if (!self.hasChanges) {
+        DDLogWarn(@"Saving MO %@(%@) with no changes, skip!", self.entity.name, self.serverID);
+        return;
     }
-    
     if ([NSThread isMainThread]) {
         [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     }
     else{
-        DDLogVerbose(@"Skip saving %@(%@) on background thread", self.entity.name, self.serverID);
+        DDLogInfo(@"Skip saving %@(%@) on background thread", self.entity.name, self.serverID);
     }
 }
 
-- (void)saveWithCompletion:(BoolErrorBlock)block{
-    if (self.updated && self.updatedAt) {
-        self.updatedAt = [NSDate date];
-    }
-	[self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError *error) {
-		if (block) {
-			block(contextDidSave, error);
-		}
-	}];
-}
 
-- (EWServerObject *)ownerObject{
-    return nil;
+- (NSString *)serverID{
+    return self.objectId;
 }
-
+- (void)setServerID:(NSString *)serverID{
+    self.objectId = serverID;
+}
 @end

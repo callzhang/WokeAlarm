@@ -105,7 +105,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     
     //set category
     BOOL success = [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback
-													withOptions: AVAudioSessionCategoryOptionDefaultToSpeaker
+													withOptions: AVAudioSessionCategoryOptionDuckOthers
 														  error: &error];
     if (!success) DDLogVerbose(@"AVAudioSession error setting category:%@",error);
 #ifdef DEBUG
@@ -119,9 +119,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     //set active
     success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
     if (!success){
-        DDLogInfo(@"Unable to activate ACTIVE audio session:%@", error);
-    }else{
-        DDLogInfo(@"ACTIVE Audio session activated!");
+        DDLogError(@"Unable to activate ACTIVE audio session:%@", error);
     }
 }
 
@@ -139,9 +137,7 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
     //set active
     success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
     if (!success || error){
-        DDLogVerbose(@"Unable to activate ACTIVE audio session:%@", error);
-    }else{
-        DDLogVerbose(@"RECODING Audio session activated!");
+        DDLogError(@"Unable to activate ACTIVE audio session:%@", error);
     }
 }
 
@@ -169,16 +165,16 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 		[self displayNowPlayingInfoToLockScreen:mi];
 		
         if ([mi.type isEqualToString:kMediaTypeVoice] || !mi.type) {
-            if (mi.mediaFile.audio) {
-                [self playSoundFromData:mi.mediaFile.audio];
-            }else{
-				[mi downloadMediaFileWithCompletion:^(BOOL success, NSError *error){
-                    if (error) {
-                        DDLogError(@"Failed to download media file: %@", error.description);
-                    }
-                    [self playSoundFromData:mi.mediaFile.audio];
-                }];
-            }
+            NSParameterAssert (mi.mediaFile.audio);
+            [self playSoundFromData:mi.mediaFile.audio];
+//            }else{
+//				[mi downloadMediaFileWithCompletion:^(BOOL success, NSError *error){
+//                    if (error) {
+//                        DDLogError(@"Failed to download media file: %@", error.description);
+//                    }
+//                    [self playSoundFromData:mi.mediaFile.audio];
+//                }];
+//            }
             
 			[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:mi];
             

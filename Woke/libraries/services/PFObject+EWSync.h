@@ -32,7 +32,7 @@ typedef enum : NSUInteger {
  The ManagedObject will only update attributes but not relations
  */
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context;
-- (EWServerObject *)managedObjectUpdatedInContext:(NSManagedObjectContext *)context;
+//- (EWServerObject *)managedObjectRelationUpdatedInContext:(NSManagedObjectContext *)context;
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context option:(EWSyncOption)option completion:(void (^)(EWServerObject *SO, NSError *error))block;
 
 //Helper

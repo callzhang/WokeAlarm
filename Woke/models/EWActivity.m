@@ -24,7 +24,7 @@
 }
 
 + (EWActivity *)getActivityWithID:(NSString *)ID error:(NSError **)error{
-    return (EWActivity *)[EWSync findObjectWithClass:NSStringFromClass([self class]) withID:ID error:error];
+    return (EWActivity *)[EWSync findObjectWithClass:[[self class] serverClassName] withServerID:ID error:error];
 }
 
 - (NSArray *)medias{

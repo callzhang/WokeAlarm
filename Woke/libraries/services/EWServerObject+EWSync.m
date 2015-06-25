@@ -23,12 +23,11 @@
         DDLogError(@"%s PO is nil, please check!", __FUNCTION__);
         return;
     }
-    NSString *class = [EWSync sharedInstance].managedObjectsUpdating[parseObject.objectId];
-	if (class && [class isEqualToString:parseObject.localClassName]) {
-		DDLogWarn(@"Found MO already refreshing %@(%@), skip!", parseObject.localClassName, parseObject.objectId);
+	if ([EWSync isUpdating:self]) {
+		DDLogWarn(@"Found MO already refreshing %@(%@), skip!", self.entity.class, self.serverID);
         return;
     }else {
-        [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:parseObject.localClassName forImmutableKeyPath:@[parseObject.objectId]];
+        [EWSync addToUpdatingMarks:self];
     }
     
     //download data: the fetch here is just a prevention or default state that data is only refreshed when absolutely necessary. If we need check new data, we should refresh PO before passed in here. For example, we fetch PO at app launch for current user update purpose.
@@ -139,13 +138,9 @@
         }
     }];
     
-    //update updatedAt
-    if ([EWSync checkAccess:self]) {
-        self.updatedAt = [NSDate date];
-    }
-    
-    //save to local has been applied in assignValueFromParseObject:
-	[self saveToLocal];
+    //update updatedAtNSParameterAssert(self.syncInfo);
+    self.syncInfo[kRelationUpdatedTime] = [NSDate date];
+    //[self saveToLocal];
 	
 	//remove from updating MO
 	[EWSync removeMOFromUpdating:self];
@@ -176,7 +171,7 @@
     NSDictionary *managedObjectAttributes = self.entity.attributesByName;
     //add or delete some attributes here
     [managedObjectAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
-        id parseValue = [object objectForKey:key];
+        id parseValue = [object valueForKey:key];
         
         //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
@@ -233,7 +228,8 @@
         }else if(parseValue && ![parseValue isKindOfClass:[NSNull class]]){
             //contains value
 			NSString *localClass = [self getPropertyClassByName:key];
-            if (localClass.serverType){
+            NSString *serverClass = [[self class] serverPropertyTypeForLocalType:localClass];
+            if (serverClass){
                 
                 //need to deal with local type
                 if ([parseValue isKindOfClass:[PFGeoPoint class]]) {
@@ -241,7 +237,7 @@
                     CLLocation *loc = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
                     [self setValue:loc forKey:key];
                 }else{
-                    [NSException raise:[NSString stringWithFormat:@"Server class %@ not handled (%@)", localClass.serverClass, key] format:@"Check your code!"];
+                    [NSException raise:[NSString stringWithFormat:@"Server class %@ not handled (%@)", serverClass, key] format:@"Check your code!"];
                 }
             }else{
                 @try {
@@ -252,26 +248,27 @@
                 }
             }
         }else{
-			if (key.skipUpload) return;
+            //skip upload property will not be in the PO
+            if ([[[self class] propertiesSkippedToUpload] containsObject:key]) return;
             //parse value empty, delete
 			id MOValue = [self valueForKey:key];
             if (MOValue) {
-                DDLogVerbose(@"~~~> Delete attribute on MO %@(%@)->%@(%@)", self.entity.name, self.serverID, key, MOValue);
+                DDLogInfo(@"~~~> Delete attribute on MO %@(%@)->%@(%@)", self.entity.name, self.serverID, key, MOValue);
                 [self setValue:nil forKey:key];
             }
         }
     }];
     //assigned value from PO should not be considered complete, therefore we don't timestamp updatedAt on this SO
-    if (!self.syncInfo) self.syncInfo = [NSMutableDictionary new];
+    NSParameterAssert(self.syncInfo);
     self.syncInfo[kAttributeUpdatedTime] = [NSDate date];
-	[self saveToLocal];
+    self.updatedAt = [NSDate date];
 }
 
 #pragma mark - Parse related
 - (PFObject *)parseObject{
     
     NSError *err;
-    PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:self.serverClassName ID:self.serverID error:&err];
+    PFObject *object = [[EWSync sharedInstance] getParseObjectWithClass:[[self class] serverClassName] ID:self.serverID error:&err];
     if (!object){
         DDLogError(@"Failed to find PO for MO %@(%@) with error: %@", self.entity.name, self.serverID, err.description);
         return nil;
@@ -291,12 +288,13 @@
 }
 
 - (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block{
+    EWAssertMainThread
     __block PFObject *object;
     __block NSError *err;
-    [self.managedObjectContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *localMO = (EWServerObject *)[self MR_inContext:localContext];
         
-        object = [[EWSync sharedInstance] getParseObjectWithClass:localMO.serverClassName ID:localMO.serverID error:&err];
+        object = [[EWSync sharedInstance] getParseObjectWithClass:[[localMO class] serverClassName] ID:localMO.serverID error:&err];
         //update value
         if ([object isNewerThanMOInContext:localContext]) {
             DDLogWarn(@"Getting PO(%@) newer than SO %@(%@)", object.objectId, localMO.entity.name, localMO.serverID);
@@ -314,9 +312,9 @@
 
 - (void)refreshInBackgroundWithCompletion:(ErrorBlock)block{
     //network check
-    
+    EWAssertMainThread
     __block NSError *err;
-    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         EWServerObject *currentMO = [self MR_inContext:localContext];
         if (!currentMO) {
             DDLogError(@"*** Failed to obtain object from database: %@", self);
@@ -336,7 +334,11 @@
 
 - (BOOL)refresh:(NSError *__autoreleasing *)error{
 	EWAssertMainThread
-    return [self refreshInContext:mainContext withError:error];
+    __block BOOL success = NO;
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        success = [self refreshInContext:localContext withError:error];
+    }];
+    return success;
 }
 
 - (BOOL)refreshInContext:(NSManagedObjectContext *)context withError:(NSError *__autoreleasing *)error{
@@ -361,14 +363,7 @@
 		return NO;
 
     }else{
-        if ([self changedKeys]) {
-            DDLogWarn(@"===>>>> Refreshing MO %@(%@) HAS CHANGES, UNSAFE!(%@)", self.entity.name, self.serverID, self.changedKeys);
-            return YES;
-        }
-        else if([[EWSync sharedInstance] inQueueForObject:self]) {
-            DDLogWarn(@"Refreshing MO %@(%@) is in queue already", self.entity.name, self.serverID);
-            return YES;
-        }
+        NSParameterAssert(!self.hasChanges);
         
         DDLogVerbose(@"===>>>> Refreshing MO %@(%@)", self.entity.name, self.serverID);
         
@@ -386,7 +381,7 @@
 }
 
 - (void)refreshEventually{
-    [[EWSync sharedInstance] appendObject:self toQueue:kParseQueueRefresh];
+    [[EWSync sharedInstance] appendToDownloadQueue:self];
 }
 
 - (void)refreshRelatedWithCompletion:(ErrorBlock)block{
@@ -454,7 +449,7 @@
     }
     
     NSManagedObjectID *ID = self.objectID;
-    [mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         NSError *err;
         NSManagedObject *backMO = [localContext existingObjectWithID:ID error:&err];
         if (err) {
@@ -534,79 +529,118 @@
     }];
 }
 
-#pragma mark - Network
-
+#pragma mark - Status
 - (NSArray *)changedKeys{
     NSMutableArray *changes = self.changedValues.allKeys.mutableCopy;
-    [changes removeObjectsInArray:attributeUploadSkipped];
+    [changes removeObjectsInArray: [[self class] propertiesSkippedToUpload]];
     if (changes.count > 0) {
         return changes;
     }
     return nil;
 }
 
-- (void)saveToLocal{
-	if (self.changedKeys.count == 0) {
-		return;
-	}
-    DDLogVerbose(@"MO %@(%@) save to local with changes %@", self.entity.name, self.serverID, self.changedKeys.string);
-    //mark MO as save to local
-    if (self.objectID.isTemporaryID) {
-        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
-    }
-    [[EWSync sharedInstance].saveToLocalItems addObject:self.objectID];
-    
-    //remove from queue
-    [[EWSync sharedInstance] removeObjectFromInsertQueue:self];
-    [[EWSync sharedInstance] removeObjectFromUpdateQueue:self];
-	
-	//save
-	if ([NSThread isMainThread]) {
-		[self save];
-    } else if([EWSync checkAccess:self]){
-        self.updatedAt = [NSDate date];
-    }
+- (BOOL)isOutDated{
+    NSDate *date = self.updatedTime;
+    BOOL outdated = !(date.timeElapsed < kServerUpdateInterval);
+    return outdated;
 }
 
-- (void)saveToServer{
-    if (self.objectID.isTemporaryID) {
-        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
+- (NSDate *)updatedTime{
+    NSDate *date;
+    if ([[self class] fetchRelation]) {
+        date = self.syncInfo[kRelationUpdatedTime];
+    } else {
+        date = self.syncInfo[kAttributeUpdatedTime];
     }
-    [[EWSync sharedInstance].saveToLocalItems removeObject:self.objectID];
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:NULL];
-    //[[EWSync sharedInstance] appendUpdateQueue:self];
+    return date;
 }
+
+#pragma mark - Network
+
+//- (void)saveToLocal{
+//	if (self.changedKeys.count == 0) {
+//		return;
+//	}
+//    DDLogVerbose(@"MO %@(%@) save to local with changes %@", self.entity.name, self.serverID, self.changedKeys.string);
+//    //mark MO as save to local
+//    if (self.objectID.isTemporaryID) {
+//        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
+//    }
+//    [[EWSync sharedInstance].saveToLocalItems addObject:self.objectID];
+//    
+//    //remove from queue
+//    [[EWSync sharedInstance] removeObjectFromInsertQueue:self];
+//    [[EWSync sharedInstance] removeObjectFromUpdateQueue:self];
+//	
+//	//save
+//	if ([NSThread isMainThread]) {
+//		[self save];
+//    }
+////    else if([EWSync checkAccess:self]){
+////        self.updatedAt = [NSDate date];
+////    }
+//}
+//
+//- (void)saveToServer{
+//    if (self.objectID.isTemporaryID) {
+//        [self.managedObjectContext obtainPermanentIDsForObjects:@[self] error:NULL];
+//    }
+//    [[EWSync sharedInstance].saveToLocalItems removeObject:self.objectID];
+//    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:NULL];
+//    //[[EWSync sharedInstance] appendUpdateQueue:self];
+//}
 
 
 - (void)updateToServerWithCompletion:(EWManagedObjectSaveCallbackBlock)block{
-	if (!self.hasChanges) {
-        if (!self.serverID) {
-            //add to upload queue
-            [[EWSync sharedInstance] appendInsertQueue:self];
-        } else {
-            DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
-            if (block) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    EWServerObject *MO_main = [self MR_inContext:mainContext];
-                    block(MO_main, nil);
-                });
-            }
-            return;
-        }
-	}
+//	if (!self.hasChanges) {
+//        if (!self.serverID) {
+//            //add to upload queue
+//            [[EWSync sharedInstance] appendInsertQueue:self];
+//        } else {
+//            DDLogWarn(@"MO %@(%@) passed in for update has no changes", self.entity.name, self.serverID);
+//            if (block) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    EWServerObject *MO_main = [self MR_inContext:mainContext];
+//                    block(MO_main, nil);
+//                });
+//            }
+//            return;
+//        }
+//	}
 	
 	//save and persistant ID
 	[self save];
 	
 	//add to completion block
-    NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[self.objectID] ?: [NSMutableArray array];
-    [moUploadCallbacks addObject:block];
-	[[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:self.objectID];
-	
+    [EWSync addUploadingCompletionBlocks:block forServerObject:self];
+    
 	//trigger save immediately
     [EWSync saveImmediately];
 }
 
+#pragma mark - Server translation
++ (NSString *)serverClassName{
+    return NSStringFromClass(self);
+}
+
++ (NSArray *)propertiesSkippedToUpload{
+    return @[kParseObjectID, kUpdatedDateKey, kCreatedDateKey, @"syncInfo", @"ACL"];
+}
+
++ (NSString *)serverPropertyTypeForLocalType:(NSString *)localClass{
+    NSDictionary *typeDic = kServerTransformTypes;
+    NSString *serverType = typeDic[localClass];
+    return serverType;
+}
+
+//owner and relation
+- (EWServerObject *)ownerObject{
+    return nil;
+}
+
++ (BOOL)fetchRelation{
+    return YES;
+}
 
 #pragma mark - Inspector methods
 - (NSString *)getPropertyClassByName:(NSString *)name{
@@ -621,12 +655,5 @@
     }
     return @"";
 }
-
-- (BOOL)isOutDated{
-    NSDate *date = self.updatedAt;
-    BOOL outdated = !(date.timeElapsed < kServerUpdateInterval);
-    return outdated;
-}
-
 
 @end

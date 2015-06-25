@@ -106,29 +106,29 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
 }
 
 
-- (EWSocial *)socialGraphForPerson:(EWPerson *)person{
-    NSParameterAssert(person.isMe);
-    if (person.socialGraph) {
-        return person.socialGraph;
-    }
-    if (!person.isMe) {
-        return nil;
-    }
-	//try to find EWSocial from PO
-    PFUser *user = (PFUser *)person.parseObject;
-    PFObject *social = user[EWPersonRelationships.socialGraph];
-    [social fetchIfNeededAndSaveToCache:nil];
-    EWSocial *graph;
-    //create
-    if (social) {
-        graph = (EWSocial *)[social managedObjectInContext:person.managedObjectContext];
-    }else {
-        graph = [EWSocial newSocialForPerson:person];
-    }
-    person.socialGraph = graph;
-	
-    return graph;
-}
+//- (EWSocial *)socialGraphForPerson:(EWPerson *)person{
+//    NSParameterAssert(person.isMe);
+//    if (person.socialGraph) {
+//        return person.socialGraph;
+//    }
+//    if (!person.isMe) {
+//        return nil;
+//    }
+//	//try to find EWSocial from PO
+//    PFUser *user = (PFUser *)person.parseObject;
+//    PFObject *social = user[EWPersonRelationships.socialGraph];
+//    [social fetchIfNeededAndSaveToCache:nil];
+//    EWSocial *graph;
+//    //create
+//    if (social) {
+//        graph = (EWSocial *)[social managedObjectInContext:person.managedObjectContext];
+//    }else {
+//        graph = [EWSocial newSocialForPerson:person];
+//    }
+//    person.socialGraph = graph;
+//	
+//    return graph;
+//}
 
 #pragma mark - Addressbook
 
@@ -250,7 +250,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
     [emailQ whereKey:EWPersonAttributes.email containedIn:emails_];
     [emailQ setLimit:50];
     //[emailQ findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    [EWSync findObjectsFromServerInBackgroundWithQuery:emailQ completion:^(NSArray *peopleInEmail, NSError *error) {
+    [EWSync findManagedObjectsFromServerInBackgroundWithQuery:emailQ completion:^(NSArray *peopleInEmail, NSError *error) {
         if (completion) {
             completion(peopleInEmail, error);
         }
@@ -266,7 +266,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
         query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:q1, query, nil]];
     }
     [query setLimit:50];
-    [EWSync findObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *people, NSError *error) {
+    [EWSync findManagedObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *people, NSError *error) {
         DDLogDebug(@"===> Search phrase %@ with result of %@", name, [people valueForKey:EWPersonAttributes.firstName]);
 
         if (completion) {
@@ -339,7 +339,8 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
                 [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder withCompletion:block];
             }else{
                 DDLogInfo(@"Finished loading %ld friends from facebook, save to social graph.", (unsigned long)friendsHolder.count);
-                EWSocial *social = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
+                EWSocial *social = [EWPerson me].socialGraph;
+                NSParameterAssert(social);
                 social.facebookFriends = friendsHolder.mutableCopy;
                 social.facebookUpdated = [NSDate date];
                 
@@ -390,7 +391,7 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
 	}
 	[query includeKey:EWSocialRelationships.owner];
     //[query setLimit:50];
-    [EWSync findObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *socials, NSError *error) {
+    [EWSync findManagedObjectsFromServerInBackgroundWithQuery:query completion:^(NSArray *socials, NSError *error) {
         DDLogDebug(@"===> Found %ld new facebook friends%@", (unsigned long)socials.count, [socials valueForKeyPath:@"owner.name"]);
         NSMutableArray *resultPeople = [NSMutableArray new];
         EWSocial *mySocial = [EWPerson mySocialGraph];

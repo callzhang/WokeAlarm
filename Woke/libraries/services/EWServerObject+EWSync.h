@@ -9,7 +9,12 @@
 #import <CoreData/CoreData.h>
 #import <Parse/Parse.h>
 #import "EWServerObject.h"
+
 #define kAttributeUpdatedTime   @"attribute_update_time"
+#define kRelationUpdatedTime    @"relation_update_time"
+
+#define kServerTransformTypes       @{@"CLLocation": @"PFGeoPoint"} //localType: serverType
+#define kServerTransformClasses     @{@"EWPerson": @"_User"} //localClass: serverClass
 
 @interface EWServerObject(EWSync)
 /**
@@ -27,14 +32,14 @@
 /**
  Get conterparty Parse Object and refresh from server if needed
  */
-- (PFObject *)parseObject;
+//- (PFObject *)parseObject;
 
 /**
  *  get server(parse) object in background
  *
  *  @param block returns a PFObject and a NSError
  */
-- (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block;
+//- (void)getParseObjectInBackgroundWithCompletion:(PFObjectResultBlock)block;
 
 /**
  Refresh ManagedObject value from server in background
@@ -80,21 +85,41 @@
  */
 - (void)deleteEventually;
 
+#pragma mark - Sync Status
+
 /**
  Changed keys beyond those excluded.
  */
 - (NSArray *)changedKeys;
 
-#pragma mark - Network
+/**
+ Check if the MO's updatedAt time is more than the server refresh interval
+ */
+- (BOOL)isOutDated;
+
+/**
+ Updated time:
+ If need to update relation, return kRelationUpdatedTime
+ If only need to update properties, return kAttributeUpdatedTime
+ */
+- (NSDate *)updatedTime;
+
+/**
+ *  The owner of this object, used to determine if we need to fully download the object or upload this object to server.
+ *  @attention EWPerson will return itself
+ *  @return Owner
+ */
+//- (EWServerObject *)ownerObject;
+
+#pragma mark - Transaction
 /**
  Mark MO as to save locally and remove MO from upload queue
  */
-- (void)saveToLocal;
+//- (void)saveToLocal;
 /**
  Mark MO to upload to server and insert MO to upload queue
  */
-- (void)saveToServer;
-
+//- (void)saveToServer;
 
 /**
  *  Upload to server immediately
@@ -109,10 +134,14 @@
  */
 - (NSString *)getPropertyClassByName:(NSString *)name;
 
-/**
- Check if the MO's updatedAt time is more than the server refresh interval
- */
-- (BOOL)isOutDated;
+
+
+#pragma mark - server Translation
+- (EWServerObject *)ownerObject;
++ (NSString *)serverClassName;
++ (NSString *)serverPropertyTypeForLocalType:(NSString *)localClass;
++ (NSArray *)propertiesSkippedToUpload;
++ (BOOL)fetchRelation;
 
 @end
 

@@ -132,15 +132,15 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
     return good;
 }
 
-- (void)createACL{
-    PFObject *m = self.parseObject;
-    PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
-    PFObject *PO = self.receiver.parseObject;
-    [acl setReadAccess:YES forUser:(PFUser *)PO];
-    [acl setReadAccess:YES forUser:(PFUser *)PO];
-    m.ACL = acl;
-    DDLogVerbose(@"ACL created for media(%@) with access for %@", self.objectId, self.receiver.serverID);
-}
+//- (void)createACL{
+//    PFObject *m = self.parseObject;
+//    PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
+//    PFObject *PO = self.receiver.parseObject;
+//    [acl setReadAccess:YES forUser:(PFUser *)PO];
+//    [acl setReadAccess:YES forUser:(PFUser *)PO];
+//    m.ACL = acl;
+//    DDLogVerbose(@"ACL created for media(%@) with access for %@", self.objectId, self.receiver.serverID);
+//}
 
 + (EWMedia *)getMediaByID:(NSString *)mediaID{
     EWAssertMainThread
@@ -150,7 +150,9 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 + (EWMedia *)getMediaByID:(NSString *)mediaID inContext:(NSManagedObjectContext *)context{
 	PFObject *mediaPO = [[EWSync sharedInstance] getParseObjectWithClass:NSStringFromClass([EWMedia class]) ID:mediaID error:nil];
     EWMedia *media = (EWMedia *)[mediaPO managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:nil];
-	[media downloadMediaFile:nil];
+    NSParameterAssert(media.mediaFile);
+    NSParameterAssert(media.mediaFile.audio);
+	//[media downloadMediaFile:nil];
 
 	if (![media validate]) {
 		DDLogError(@"Get new media but not valid: %@", media);
@@ -161,51 +163,51 @@ NSString *emojiNameFromImageAssetName(NSString *name) {
 
 
 #pragma mark - Media File
-- (BOOL)downloadMediaFile:(NSError *__autoreleasing *)error{
-	createErrorIfNULL(error);
-	EWMediaFile *file = self.mediaFile;
-	if (!file) {
-		PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
-		[filePO fetchIfNeeded];
-		file = (EWMediaFile *)[filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateRelation completion:nil];
-		if (![file validate]) {
-			DDLogError(@"Failed to download media file: %@", file);
-			*error = [EWErrorManager invalidObjectError:self];
-			return NO;
-		}
-        [file saveToLocal];
-		return YES;
-	}else if(!file.audio){
-		return [file refreshInContext:self.managedObjectContext withError:error];
-	}
-	return YES;
-}
-
-- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{
-    EWMediaFile *file = self.mediaFile;
-	BOOL good = self.mediaFile.audio != nil;
-    if (!file) {
-        PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
-        [filePO fetchIfNeeded];
-        [filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
-            BOOL hasFile = self.mediaFile.audio != nil;
-            if (block) {
-                block(hasFile,error);
-            }
-        }];
-    }else if(!file.audio){
-        [file refreshInBackgroundWithCompletion:^(NSError *error){
-            if (block) {
-				BOOL hasFile = self.mediaFile.audio != nil;
-                block(hasFile, error);
-            }
-        }];
-    }else{
-        if (block) {
-            block(good, nil);
-        }
-    }
-}
+//- (BOOL)downloadMediaFile:(NSError *__autoreleasing *)error{
+//	createErrorIfNULL(error);
+//	EWMediaFile *file = self.mediaFile;
+//	if (!file) {
+//		PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
+//		[filePO fetchIfNeeded];
+//		file = (EWMediaFile *)[filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateRelation completion:nil];
+//		if (![file validate]) {
+//			DDLogError(@"Failed to download media file: %@", file);
+//			*error = [EWErrorManager invalidObjectError:self];
+//			return NO;
+//		}
+//        //[file saveToLocal];
+//		return YES;
+//	}else if(!file.audio){
+//		return [file refreshInContext:self.managedObjectContext withError:error];
+//	}
+//	return YES;
+//}
+//
+//- (void)downloadMediaFileWithCompletion:(BoolErrorBlock)block{
+//    EWMediaFile *file = self.mediaFile;
+//	BOOL good = self.mediaFile.audio != nil;
+//    if (!file) {
+//        PFObject *filePO = self.parseObject[EWMediaRelationships.mediaFile];
+//        [filePO fetchIfNeeded];
+//        [filePO managedObjectInContext:self.managedObjectContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
+//            BOOL hasFile = self.mediaFile.audio != nil;
+//            if (block) {
+//                block(hasFile,error);
+//            }
+//        }];
+//    }else if(!file.audio){
+//        [file refreshInBackgroundWithCompletion:^(NSError *error){
+//            if (block) {
+//				BOOL hasFile = self.mediaFile.audio != nil;
+//                block(hasFile, error);
+//            }
+//        }];
+//    }else{
+//        if (block) {
+//            block(good, nil);
+//        }
+//    }
+//}
 
 #pragma mark - Underlying data
 - (NSData *)audio{

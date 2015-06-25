@@ -209,7 +209,7 @@
 	[EWSession sharedSession].isSyncingUser = YES;
 	NSString *const userKey = @"user";
 	NSString *const deleteKey = @"delete";
-	
+    
 	//generate info dic
 	EWPerson *me = [EWPerson me];
 	NSMutableDictionary *graph = [NSMutableDictionary new];
@@ -280,74 +280,76 @@
 	
 	//send to cloud
 	[PFCloud callFunctionInBackground:@"syncUser" withParameters:graph block:^(NSDictionary *POGraph, NSError *error) {
-		NSMutableDictionary *POGraphInfo = [NSMutableDictionary new];
-		if (error) {
-			[EWSession sharedSession].isSyncingUser = NO;
-			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
-			block(error);
-			return;
-		}
-		//expecting a dictionary of objects needed to update
-		//return graph level: 1) relation name 2) Array of PFObjects or PFObject
-		//create a list of POs to pin
-		NSMutableSet *POtoPin = [NSMutableSet new];
-		[POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-			if ([key isEqualToString:userKey]) {
-				POGraphInfo[key] = @"me";
-				[[EWSync sharedInstance] setCachedParseObject:obj];
-                [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:@"syncData" forImmutableKeyPath:@[me.serverID]];
-				[me assignValueFromParseObject:obj];
-				return;
-			}
-            else if ([key isEqualToString:deleteKey]) {
-				POGraphInfo[key] = obj;
-				//delete all objects in this Dictionary
-				DDLogInfo(@"Deleting objects %@", obj);
-				[(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
-					NSRelationshipDescription *relation =  me.entity.relationshipsByName[relationName];
-					NSString *className = relation.destinationEntity.name;
-					EWServerObject *MO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:mainContext];
-					if (relation.isToMany) {
-						NSMutableSet *related = [me valueForKey:relationName];
-						[related removeObject:MO];
-						[me setValue:related forKey:relationName];
-					} else {
-						[me setValue:nil forKey:relationName];
-					}
-				}];
-				return;
-            }
-            else if ([key isEqualToString:@"mediaFiles"]) {
-                POGraphInfo[key] = [(NSArray *)[obj valueForKey:kParseObjectID] string];
-                DDLogInfo(@"Pin %@ to cache", key);
-                [POtoPin addObjectsFromArray:obj];
+        
+        TICK
+        //save me first so the sql has the me object for other threads
+        [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+            EWPerson *me_root = [EWPerson meInContext:localContext];
+            [EWSync addToUpdatingMarks:me_root];
+            //create a info dic for display
+            NSMutableDictionary *POGraphInfo = [NSMutableDictionary new];
+            if (error) {
+                [EWSession sharedSession].isSyncingUser = NO;
+                [[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:nil];
+                block(error);
                 return;
             }
-			NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
-			if (!relation && ![obj isKindOfClass:[PFObject class]]) {
-				DDLogError(@"Unecpected value from server: %@(%@)", key, obj);
-				return;
-			}
-			//save PO first
-			if (relation.isToMany) {
-				POGraphInfo[key] = [(NSArray *)[obj valueForKey:kParseObjectID] string];
-				DDLogInfo(@"Pin %@ to cache", key);
-				[POtoPin addObjectsFromArray:obj];
-			}else{
-				POGraphInfo[key] = [(PFObject *)obj valueForKey:kParseObjectID];
-				[[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
-				[POtoPin addObject:obj];
-			}
-		}];
-		TICK
-		[PFObject pinAll:POtoPin.allObjects error:&error];
-		if (error) DDLogError(@"Failed to Pin returned PO: %@", error);
-		
-		DDLogInfo(@"Server returned sync info: %@", POGraphInfo);
-		
-		//save me first so the sql has the me object for other threads
-		[me saveToLocal];
-		
+            //expecting a dictionary of objects needed to update
+            //return graph level: 1) relation name 2) Array of PFObjects or PFObject
+            //create a list of POs to pin
+            NSMutableSet *POtoPin = [NSMutableSet new];
+            [POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+                if ([key isEqualToString:userKey]) {
+                    POGraphInfo[key] = @"me";
+                    [[EWSync sharedInstance] setCachedParseObject:obj];
+                    [me assignValueFromParseObject:obj];
+                    return;
+                }
+                else if ([key isEqualToString:deleteKey]) {
+                    POGraphInfo[deleteKey] = obj;
+                    //delete all objects in this Dictionary
+                    DDLogInfo(@"Deleting objects %@", obj);
+                    [(NSDictionary *)obj enumerateKeysAndObjectsUsingBlock:^(NSString *objectId, NSString *relationName, BOOL *stop2) {
+                        NSRelationshipDescription *relation =  me.entity.relationshipsByName[relationName];
+                        NSString *className = relation.destinationEntity.name;
+                        EWServerObject *MO = (EWServerObject *)[NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectId inContext:mainContext];
+                        if (relation.isToMany) {
+                            NSMutableSet *related = [me valueForKey:relationName];
+                            [related removeObject:MO];
+                            [me setValue:related forKey:relationName];
+                        } else {
+                            [me setValue:nil forKey:relationName];
+                        }
+                    }];
+                    return;
+                }
+                
+                //pin POs
+                NSRelationshipDescription *relation = me.entity.relationshipsByName[key];
+                if (!relation && ![obj isKindOfClass:[PFObject class]]) {
+                    DDLogError(@"Unecpected value from server: %@(%@)", key, obj);
+                    return;
+                }
+                //save PO first
+                if (relation.isToMany || [obj isKindOfClass:[NSArray class]]) {
+                    POGraphInfo[key] = [(NSArray *)[obj valueForKey:kParseObjectID] string];
+                    DDLogInfo(@"Pin %@ to cache", key);
+                    [POtoPin addObjectsFromArray:obj];
+                }else if([obj isKindOfClass:[PFObject class]]){
+                    POGraphInfo[key] = [(PFObject *)obj valueForKey:kParseObjectID];
+                    [[EWSync sharedInstance] setCachedParseObject:(PFObject *)obj];
+                    [POtoPin addObject:obj];
+                }else{
+                    DDLogError(@"Unexpected object retuened from server: %@", obj);
+                }
+            }];
+            NSError *error;
+            [PFObject pinAll:POtoPin.allObjects error:&error];
+            if (error) DDLogError(@"Failed to Pin returned PO: %@", error);
+            //display sync info
+            DDLogInfo(@"Server returned sync info: %@", POGraphInfo);
+        }];
+        
 		[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
 			EWPerson *localMe = [me MR_inContext:localContext];
 			[POGraph enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
@@ -376,7 +378,6 @@
 							MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
 							DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
                         }else {
-                            [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:@"syncData" forImmutableKeyPath:@[PO.objectId]];
 							MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
 								DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
 							}];
@@ -408,7 +409,6 @@
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateRelation completion:nil];
 						DDLogInfo(@"Synced all for %@(%@)", MO.entity.name, MO.serverID);
 					}else {
-                        [EWSync sharedInstance].managedObjectsUpdating = [[EWSync sharedInstance].managedObjectsUpdating setValue:@"syncData" forImmutableKeyPath:@[PO.objectId]];
 						MO = [PO managedObjectInContext:localContext option:EWSyncOptionUpdateAsync completion:^(EWServerObject *SO, NSError *error) {
 							DDLogInfo(@"Synced in background %@(%@)", SO.entity.name, SO.serverID);
 						}];
@@ -426,19 +426,20 @@
 			}];
 			
 			//save to local so the updatedAt is assigned
-            [localMe saveToLocal];
-			
+            //[localMe saveToLocal];
+            localMe.syncInfo[kAttributeUpdatedTime] = [NSDate date];
+            localMe.syncInfo[kRelationUpdatedTime] = [NSDate date];
+            
         } completion:^(BOOL contextDidSave, NSError *error2) {
             DDLogDebug(@"========> Finished user syncing <=========");
             TOCK
+            NSParameterAssert([[EWPerson me] validate]);
 			[EWSession sharedSession].isSyncingUser = NO;
+            [EWSync removeMOFromUpdating:me];
 			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:error2];//TODO: remove this
             block(error2);
-			if (error2) {
-				NSString *str = [NSString stringWithFormat:@"========> Failed to save synced user \n This is a very serious error: %@", error2.description];
-				DDLogError(str);
-				EWAlert(str);
-			}
+            
+			if (error2) EWAlert(@"========> Failed to save synced user \n This is a serious error: %@", error2.description);
 		}];
 	}];
 }

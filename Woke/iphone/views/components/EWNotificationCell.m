@@ -31,16 +31,8 @@
     _notification = notification;
 
     //time
-    if (notification.createdAt) {
-        self.time.text = [notification.createdAt.timeElapsedString stringByAppendingString:@" ago"];
-    }
-    else{
-        [_notification getParseObjectInBackgroundWithCompletion:^(PFObject *object, NSError *error) {
-            self.time.text = [object.createdAt.timeElapsedString stringByAppendingString:@" ago"];
-            _notification.createdAt = object.createdAt;
-            [_notification saveToLocal];
-        }];
-    }
+    NSParameterAssert (notification.createdAt);
+    self.time.text = [notification.createdAt.timeElapsedString stringByAppendingString:@" ago"];
     
     //type
     NSString *type = notification.type;
@@ -64,7 +56,7 @@
         EWPerson *sender = [[EWPersonManager sharedInstance] getPersonByServerID:personID error:&error];
 		__block EWPerson *localPerson;
 		[mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
-			localPerson = (EWPerson *)[EWSync findObjectWithClass:NSStringFromClass([EWPerson class]) withID:personID inContext:localContext error:nil];
+			localPerson = (EWPerson *)[EWSync findObjectWithClass:[[EWPerson class] serverClassName] withServerID:personID inContext:localContext error:nil];
 			//NSParameterAssert(localPerson);
 		} completion:^(BOOL contextDidSave, NSError *error) {
 			EWPerson *sender = [localPerson MR_inContext:mainContext];

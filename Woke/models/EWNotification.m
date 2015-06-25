@@ -35,7 +35,7 @@
 
 
 + (EWNotification *)getNotificationByID:(NSString *)notificationID error:(NSError *__autoreleasing *)error{
-    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:@"EWNotification" withID:notificationID error:error];
+    EWNotification *notification = (EWNotification *)[EWSync findObjectWithClass:[self serverClassName] withServerID:notificationID error:error];
     if (!notification) {
         DDLogError(@"%s fail to get notification: %@", __FUNCTION__, (*error).description);
     }

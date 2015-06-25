@@ -45,10 +45,10 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
 }
 
 #pragma mark - CREATE USER
--(EWPerson *)getPersonByServerID:(NSString *)ID error:(NSError *__autoreleasing *)error{
+- (EWPerson *)getPersonByServerID:(NSString *)ID error:(NSError *__autoreleasing *)error{
     EWAssertMainThread
     if(!ID) return nil;
-    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:NSStringFromClass([EWPerson class]) withID:ID error:error];
+    EWPerson *person = (EWPerson *)[EWSync findObjectWithClass:[[EWPerson class] serverClassName] withServerID:ID error:error];
     
     return person;
 }
@@ -197,7 +197,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     PFQuery *query = [PFUser query];
     [query whereKey:kParseObjectID containedIn:list];
     //[query includeKey:@"friends"];
-    NSArray *people = [EWSync findObjectFromServerWithQuery:query inContext:context error:error];
+    NSArray *people = [EWSync findManagedObjectFromServerWithQuery:query saveInContext:context error:error];
     
     if (*error) {
         DDLogError(@"*** Failed to fetch wakees: %@", *error);
@@ -248,14 +248,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }
     
     //check if me is in queue to prevent override from local upload
-    if ([[EWSync sharedInstance] inQueueForObject:[EWPerson me]]) {
+    if ([EWSync isDownloading:[EWPerson me]]) {
         //add to completion block
-        NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[[EWPerson me].objectID] ?: [NSMutableArray array];
-        [moUploadCallbacks addObject:^{
+        [EWSync addUploadingCompletionBlocks:^(EWServerObject *MO_on_main_thread, NSError *error) {
             [self requestFriend:person completion:completion];
-        }];
-        [[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:[EWPerson me].objectID];
-        [EWSync saveImmediately];
+        } forServerObject:[EWPerson me]];
         return;
     }
     [self sendFriendRequestToPerson:person completion:^(EWFriendRequest *request, NSError *error) {
@@ -287,14 +284,11 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
     }
     
     //check if me is in queue to prevent override from local upload
-    if ([[EWSync sharedInstance] inQueueForObject:[EWPerson me]]) {
+    if ([EWSync isDownloading:[EWPerson me]]) {
         //add to completion block
-        NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[[EWPerson me].objectID] ?: [NSMutableArray array];
-        [moUploadCallbacks addObject:^{
+        [EWSync addUploadingCompletionBlocks:^(EWServerObject *MO_on_main_thread, NSError *error) {
             [self acceptFriend:person completion:completion];
-        }];
-        [[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:[EWPerson me].objectID];
-        [EWSync saveImmediately];
+        } forServerObject:[EWPerson me]];
         return;
     }
 	
@@ -330,21 +324,19 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWPersonManager)
         return;
     }
     //check if me is in queue to prevent override from local upload
-    if ([[EWSync sharedInstance] inQueueForObject:[EWPerson me]]) {
+    if ([EWSync isDownloading:[EWPerson me]]) {
         //add to completion block
-        NSMutableArray *moUploadCallbacks = [EWSync sharedInstance].uploadCompletionCallbacks[[EWPerson me].objectID] ?: [NSMutableArray array];
-        [moUploadCallbacks addObject:^{
+        [EWSync addUploadingCompletionBlocks:^(EWServerObject *MO_on_main_thread, NSError *error) {
             [self unfriend:person completion:completion];
-        }];
-        [[EWSync sharedInstance].uploadCompletionCallbacks setObject:moUploadCallbacks forKey:[EWPerson me].objectID];
-        [EWSync saveImmediately];
+        } forServerObject:[EWPerson me]];
         return;
     }
     
     [self sendUnfriendStatusToPerson:person completion:^(BOOL success, NSError *error) {
         if (success) {
-            [[EWPerson me] removeFriendsObject:person];
-            [[EWPerson me] saveToLocal];
+            [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+                [[EWPerson meInContext:localContext] removeFriendsObject:[person MR_inContext:localContext]];
+            }];
         }
         completion(success, error);
     }];

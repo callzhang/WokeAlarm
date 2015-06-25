@@ -18,7 +18,7 @@
             DDLogError(@"PO %@(%@) not found on server!", self.parseClassName, self.objectId);
             NSManagedObject *trueMO = [managedObject.managedObjectContext existingObjectWithID:managedObject.objectID error:NULL];
             if (trueMO) {
-                [managedObject setValue:nil forKeyPath:kParseObjectID];
+                managedObject.serverID = nil;
             }
         }
         else{
@@ -41,7 +41,7 @@
 		BOOL expectChange = [changeValues containsObject:key] ? YES : NO;
 		
         //check if need to skip
-        if (key.skipUpload) {
+        if ([[[managedObject class] propertiesSkippedToUpload] containsObject:key]) {
             return;
         }
         
@@ -104,12 +104,12 @@
                 for (EWServerObject *MO in relatedMOs) {
                     //PFObject *PO = [EWDataStore getCachedParseObjectForID:MO.serverID];
                     //if (!PO) {
-                    PFObject *PO = [PFObject objectWithoutDataWithClassName:MO.serverClassName objectId:MO.serverID];
+                    PFObject *PO = [PFObject objectWithoutDataWithClassName:[[MO class] serverClassName] objectId:MO.serverID];
                     //}
                     if (PO.objectId) {
                         [relatedPOs addObject:PO];
                     }else{
-                        DDLogError(@"PO %@(%@) not found", MO.serverClassName, MO.serverID);
+                        DDLogError(@"PO %@(%@) not found", [[MO class] serverClassName], MO.serverID);
                     }
                 }
                 DDLogInfo(@"Relation %@->%@ changed to %ld items", managedObject.entity.class, key, (unsigned long)relatedPOs.count);
@@ -120,12 +120,13 @@
             //========================== relation ==========================
             PFRelation *parseRelation = [self relationForKey:key];
             if (parseRelation.targetClass) {
-                NSAssert([parseRelation.targetClass isEqualToString:relation.destinationEntity.name.serverClass], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
+                NSAssert([parseRelation.targetClass isEqualToString:[NSClassFromString(relation.destinationEntity.name) serverClassName]], @"PFRelation target class(%@) is not equal to that from  entity info(%@)", parseRelation.targetClass, relation.entity.name);
             }
             
             //THOUGHTS: create a new PFRelation so that we don't need to deal with deletion
             
             //Find related PO to delete async
+            //TODO: optimize?
             NSMutableArray *relatedParseObjects = [[[parseRelation query] findObjects] mutableCopy];
             if (relatedParseObjects.count) {
                 NSArray *relatedParseObjectsToDelete = [relatedParseObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %K IN %@", kParseObjectID, [relatedManagedObjects valueForKey:kParseObjectID]]];
@@ -143,7 +144,7 @@
                 if (parseID) {
                     //the pfobject already exists, need to inspect PFRelation to determin add or remove
                     if (![[relatedParseObjects valueForKey:kParseObjectID] containsObject:parseID]) {
-                        PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:relatedManagedObject.serverClassName objectId:parseID];
+                        PFObject *relatedParseObject = [PFObject objectWithoutDataWithClassName:[[relatedManagedObject class] serverClassName] objectId:parseID];
                         
                         DDLogVerbose(@"+++> To-many relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, managedObject.serverID, key, relatedParseObject.objectId);
                         if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
@@ -175,10 +176,10 @@
                     };
                     
                     //add to global save callback distionary
-                    [[EWSync sharedInstance] addSaveCallback:connectRelationship forManagedObjectID:relatedManagedObject.objectID];
+                    [EWSync  addParseSaveCallback:connectRelationship forManagedObjectID:relatedManagedObject.objectID];
                     
                     //add relatedMO to insertQueue
-                    if (![[EWSync sharedInstance] contains:relatedManagedObject inQueue:kParseQueueWorking]) {
+                    if (![EWSync isInUpdatingQueue:relatedManagedObject]) {
                         DDLogWarn(@"Added missing insert object: %@(%@) when updating to-many relation %@", relatedManagedObject.entity.name, relatedManagedObject.serverID, key);
                         [[EWSync sharedInstance] appendInsertQueue:relatedManagedObject];
                     }
@@ -193,7 +194,7 @@
                 PFObject *relatedPO = self[key];
                 if (parseID) {
                     if (![parseID isEqualToString:relatedPO.objectId]) {
-                        relatedPO = [PFObject objectWithoutDataWithClassName:relatedMO.serverClassName objectId:parseID];
+                        relatedPO = [PFObject objectWithoutDataWithClassName:[[relatedMO class] serverClassName] objectId:parseID];
                         [self setObject:relatedPO forKey:key];
                         DDLogVerbose(@"+++> To-one relation on PO %@(%@)->%@(%@) added when updating from MO", managedObject.entity.name, [managedObject valueForKey:kParseObjectID], relation.name, relatedPO.objectId);
                         if (!expectChange) DDLogVerbose(@"Relation %@ doesn't expect to change!", key);
@@ -220,10 +221,10 @@
                         }];
                     };
                     //add to global save callback distionary
-                    [[EWSync sharedInstance] addSaveCallback:connectRelationship forManagedObjectID:relatedMO.objectID];
-                    
+                    [EWSync addParseSaveCallback:connectRelationship forManagedObjectID:relatedMO.objectID];
+                
                     //add relatedMO to insertQueue
-                    if (![[EWSync sharedInstance] contains:relatedMO inQueue:kParseQueueWorking]) {
+                    if (![EWSync isInUpdatingQueue:relatedMO]) {
                         DDLogDebug(@"Added missing insert object: %@(%@) when updating to-one relation %@", relatedMO.entity.name, relatedMO.serverID, key);
                         [[EWSync sharedInstance] appendInsertQueue:relatedMO];
                     }
@@ -235,16 +236,26 @@
             }
         }
     }];
+    
+    
+    managedObject.syncInfo[kAttributeUpdatedTime] = [NSDate date];
+    managedObject.syncInfo[kRelationUpdatedTime] = [NSDate date];
     return YES;
 }
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{
-	return [self managedObjectInContext:context option:EWSyncOptionUpdateAttributesOnly completion:NULL];
+    EWSyncOption option;
+    if ([self.localClassName isEqualToString:kSyncUserClass] && self != [PFUser currentUser]) {
+        option = EWSyncOptionUpdateAttributesOnly;
+    }else{
+        option = EWSyncOptionUpdateRelation;
+    }
+	return [self managedObjectInContext:context option:option completion:NULL];
 }
 
-- (EWServerObject *)managedObjectUpdatedInContext:(NSManagedObjectContext *)context{
-	return [self managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:NULL];
-}
+//- (EWServerObject *)managedObjectRelationUpdatedInContext:(NSManagedObjectContext *)context{
+//	return [self managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:NULL];
+//}
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context option:(EWSyncOption)option completion:(void (^)(EWServerObject *, NSError *))block{
 	if (!self.objectId) {
@@ -283,9 +294,11 @@
 		//if managedObject not exist, create it locally by assigning value from PO (quick)
 		//and assign relation in child context
 		MO = [NSClassFromString(self.localClassName) MR_createInContext:context];
+        NSParameterAssert(MO.syncInfo);
         if (option == EWSyncOptionUpdateNone) {
             [MO assignValueFromParseObject:self];
         }else {
+            MO.createdAt = self.createdAt;
             MO.createdAt = self.updatedAt;
             MO.objectId = self.objectId;
         }
@@ -295,7 +308,7 @@
     
     BOOL attrbutesNeedUpdate = [self needToUpdateMOAttributesInContext:context];
     BOOL relationNeedUpdate = [self isNewerThanMOInContext:context];
-    BOOL isUserClass = [MO.entity.name isEqualToString:kSyncUserClass];
+    //BOOL isUserClass = [MO.entity.name isEqualToString:kSyncUserClass];
     //try to sync relation
     if (relationNeedUpdate) {
         if (option == EWSyncOptionUpdateRelation) {
@@ -307,7 +320,7 @@
         }
         else if (option == EWSyncOptionUpdateAsync){
             [MO assignValueFromParseObject:self];
-            [context MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
+            [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
                 EWServerObject *localSO = [MO MR_inContext:localContext];
                 [localSO updateValueAndRelationFromParseObject:self];
             } completion:^(BOOL contextDidSave, NSError *error) {
@@ -316,14 +329,18 @@
                 }
             }];
             return MO;
-        }else if (!isUserClass) {
-            DDLogInfo(@"PO %@(%@) is newer than MO, but MO relation not updated with sync option %lu!", self.parseClassName, self.objectId, option);
         }
     }
     //try to assign value only
     if (attrbutesNeedUpdate && option == EWSyncOptionUpdateAttributesOnly) {
         [MO assignValueFromParseObject:self];
     }
+    
+    //cannot validate here cus MO might not be valid yet
+//    if (![MO validate]) {
+//        [MO remove];
+//        MO = nil;
+//    }
     
     if (block) {
         block(MO, error);
@@ -338,7 +355,7 @@
 - (BOOL)isNewerThanMOInContext:(NSManagedObjectContext *)context{
     NSDate *updatedPO = [self valueForKey:kUpdatedDateKey];
     EWServerObject *mo = (EWServerObject *)[NSClassFromString(self.localClassName) MR_findFirstByAttribute:kParseObjectID withValue:self.objectId inContext:context];
-    NSDate *updatedMO = mo.updatedAt;
+    NSDate *updatedMO = mo.syncInfo[kRelationUpdatedTime];
     if (updatedPO && updatedMO) {
         if ([updatedPO timeIntervalSinceDate:updatedMO]>1) {
             //DDLogVerbose(@"PO is newer than MO: %@ > %@", updatedPO, updatedMO);

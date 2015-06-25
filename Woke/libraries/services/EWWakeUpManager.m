@@ -53,8 +53,7 @@ FBTweakAction(@"WakeUpManager", @"Action", @"Remove unread medias", ^{
 
 FBTweakAction(@"WakeUpManager", @"Action", @"Unread medias count", ^{
 	NSArray *unread = [EWPerson myUnreadMedias];
-	NSString *str = [NSString stringWithFormat:@"Unread medias: %lu", (unsigned long)unread.count];
-	EWAlert(str);
+	EWAlert(@"Unread medias: %lu", (unsigned long)unread.count);
 });
 
 NSString * const kAlarmTimerDidFireNotification = @"kAlarmTimerDidFireNotification";

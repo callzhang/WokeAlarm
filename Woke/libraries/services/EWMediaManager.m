@@ -161,11 +161,12 @@
 	[medias addObjectsFromArray:person.unreadMedias];
 	//check
 	for (EWMedia *media in medias) {
-		[media downloadMediaFileWithCompletion:^(BOOL success, NSError *error) {
-			if (!success) {
-				DDLogWarn(@"Failed to update media %@", media.objectId);
-			}
-		}];
+        NSParameterAssert(media.audio);
+//		[media downloadMediaFileWithCompletion:^(BOOL success, NSError *error) {
+//			if (!success) {
+//				DDLogWarn(@"Failed to update media %@", media.objectId);
+//			}
+//		}];
 	}
 }
 
@@ -201,11 +202,13 @@
 	NSSet *receivedMediaIDs = [localMe.receivedMedias valueForKey:kParseObjectID];
     if (receivedMediaIDs.count) [query whereKey:kParseObjectID notContainedIn:receivedMediaIDs.allObjects];
 	NSError *err;
-    NSArray *newMedia = [EWSync findObjectFromServerWithQuery:query inContext:context error:&err];
+    NSArray *newMedia = [EWSync findManagedObjectFromServerWithQuery:query saveInContext:context error:&err];
 
     for (EWMedia *media in newMedia) {
-		[media downloadMediaFile:nil];
-        [[EWPerson meInContext:context] addReceivedMediasObject:media];
+        NSParameterAssert(media.mediaFile.audio);
+        NSParameterAssert(media.receiver == [EWPerson meInContext:context]);
+		//[media downloadMediaFile:nil];
+        //[[EWPerson meInContext:context] addReceivedMediasObject:media];
         //new media
 		DDLogInfo(@"Received media(%@) from %@", media.objectId, media.author.name);
         //EWNotification
