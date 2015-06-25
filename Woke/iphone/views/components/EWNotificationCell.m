@@ -56,7 +56,7 @@
         EWPerson *sender = [[EWPersonManager sharedInstance] getPersonByServerID:personID error:&error];
 		__block EWPerson *localPerson;
 		[mainContext MR_saveWithBlock:^(NSManagedObjectContext *localContext) {
-			localPerson = (EWPerson *)[EWSync findObjectWithClass:[[EWPerson class] serverClassName] withID:personID inContext:localContext error:nil];
+			localPerson = (EWPerson *)[EWSync findObjectWithClass:[[EWPerson class] serverClassName] withServerID:personID inContext:localContext error:nil];
 			//NSParameterAssert(localPerson);
 		} completion:^(BOOL contextDidSave, NSError *error) {
 			EWPerson *sender = [localPerson MR_inContext:mainContext];

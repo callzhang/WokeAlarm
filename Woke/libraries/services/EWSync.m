@@ -773,16 +773,15 @@ NSManagedObjectContext *mainContext;
 }
 
 #pragma mark - Core Data
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withServerID:(NSString *)serverID error:(NSError *__autoreleasing *)error{
 	EWAssertMainThread
-	
-    NSManagedObject * MO = [self findObjectWithClass:className withID:serverID inContext:mainContext error:error];
+    NSManagedObject * MO = [self findObjectWithClass:className withServerID:serverID inContext:mainContext error:error];
     return MO;
 }
 
-+ (NSManagedObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
++ (NSManagedObject *)findObjectWithClass:(NSString *)className withServerID:(NSString *)serverID inContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error{
     NSParameterAssert(className);
-    if (objectID == nil) {
+    if (serverID == nil) {
         DDLogError(@"%s !!! Passed in nil to get current MO", __func__);
         return nil;
 	}
@@ -790,10 +789,10 @@ NSManagedObjectContext *mainContext;
 		NSError __autoreleasing *err;
 		error = &err;
 	}
-    EWServerObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:objectID inContext:context];
+    EWServerObject * MO = [NSClassFromString(className) MR_findFirstByAttribute:kParseObjectID withValue:serverID inContext:context];
     if (!MO) {
-        PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className ID:objectID error:error];
-        MO = [PO managedObjectUpdatedInContext:context];
+        PFObject *PO = [[EWSync sharedInstance] getParseObjectWithClass:className ID:serverID error:error];
+        MO = [PO managedObjectInContext:context];
         if (!MO) {
             DDLogError(@"Failed getting MO with class (%@): %@", className, (*error).description);
         }
@@ -809,12 +808,7 @@ NSManagedObjectContext *mainContext;
     for (PFObject *PO in result) {
         //[[EWSync sharedInstance] setCachedParseObject:PO];
         EWServerObject *MO;
-        if ([PO.localClassName isEqualToString:kSyncUserClass] && PO.objectId != [PFUser currentUser].objectId) {
-            MO = [PO managedObjectInContext:context];
-        }
-        else {
-            MO = [PO managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:NULL];
-        }
+        MO = [PO managedObjectInContext:context];
         if ([MO validate]) {
             [resultMOs addObject:MO];
         } else {

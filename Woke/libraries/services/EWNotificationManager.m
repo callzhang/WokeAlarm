@@ -224,7 +224,7 @@ GCD_SYNTHESIZE_SINGLETON_FOR_CLASS(EWNotificationManager)
 //            return NO;
 //        }];
 		for (EWNotification *note in notificationForPastActivities) {
-			EWActivity *activity = (EWActivity *)[EWSync findObjectWithClass:[[EWActivity class] serverClassName] withID:note.userInfo[@"activity"] inContext:localContext error:nil];
+			EWActivity *activity = (EWActivity *)[EWSync findObjectWithClass:[[EWActivity class] serverClassName] withServerID:note.userInfo[@"activity"] inContext:localContext error:nil];
 			DDLogInfo(@"Removed redundant notification (%@) on %@", note.serverID, activity.time);
 			[note remove];
 		}

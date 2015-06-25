@@ -433,6 +433,7 @@
         } completion:^(BOOL contextDidSave, NSError *error2) {
             DDLogDebug(@"========> Finished user syncing <=========");
             TOCK
+            NSParameterAssert([[EWPerson me] validate]);
 			[EWSession sharedSession].isSyncingUser = NO;
             [EWSync removeMOFromUpdating:me];
 			[[NSNotificationCenter defaultCenter] postNotificationName:kUserSyncCompleted object:error2];//TODO: remove this

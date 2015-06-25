@@ -16,7 +16,7 @@
 
 + (EWSocialManager *)sharedInstance;
 
-- (EWSocial *)socialGraphForPerson:(EWPerson *)person;
+//- (EWSocial *)socialGraphForPerson:(EWPerson *)person;
 - (void)updateFriendshipTimeline;
 
 //Addressbook Search

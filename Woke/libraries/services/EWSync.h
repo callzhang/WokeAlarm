@@ -138,8 +138,8 @@ extern NSString * const kEWSyncUploaded;
 - (BOOL)contains:(EWServerObject *)mo inQueue:(NSString *)queue;
 
 #pragma mark - CoreData
-+ (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID error:(NSError **)error;
-+ (EWServerObject *)findObjectWithClass:(NSString *)className withID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
++ (EWServerObject *)findObjectWithClass:(NSString *)className withServerID:(NSString *)objectID error:(NSError **)error;
++ (EWServerObject *)findObjectWithClass:(NSString *)className withServerID:(NSString *)objectID inContext:(NSManagedObjectContext *)context error:(NSError **)error;
 + (BOOL)validateSO:(EWServerObject *)mo;
 + (BOOL)validateSO:(EWServerObject *)mo andTryToFix:(BOOL)tryFix;
 + (BOOL)checkAccess:(EWServerObject *)SO;

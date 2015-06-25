@@ -106,29 +106,29 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
 }
 
 
-- (EWSocial *)socialGraphForPerson:(EWPerson *)person{
-    NSParameterAssert(person.isMe);
-    if (person.socialGraph) {
-        return person.socialGraph;
-    }
-    if (!person.isMe) {
-        return nil;
-    }
-	//try to find EWSocial from PO
-    PFUser *user = (PFUser *)person.parseObject;
-    PFObject *social = user[EWPersonRelationships.socialGraph];
-    [social fetchIfNeededAndSaveToCache:nil];
-    EWSocial *graph;
-    //create
-    if (social) {
-        graph = (EWSocial *)[social managedObjectInContext:person.managedObjectContext];
-    }else {
-        graph = [EWSocial newSocialForPerson:person];
-    }
-    person.socialGraph = graph;
-	
-    return graph;
-}
+//- (EWSocial *)socialGraphForPerson:(EWPerson *)person{
+//    NSParameterAssert(person.isMe);
+//    if (person.socialGraph) {
+//        return person.socialGraph;
+//    }
+//    if (!person.isMe) {
+//        return nil;
+//    }
+//	//try to find EWSocial from PO
+//    PFUser *user = (PFUser *)person.parseObject;
+//    PFObject *social = user[EWPersonRelationships.socialGraph];
+//    [social fetchIfNeededAndSaveToCache:nil];
+//    EWSocial *graph;
+//    //create
+//    if (social) {
+//        graph = (EWSocial *)[social managedObjectInContext:person.managedObjectContext];
+//    }else {
+//        graph = [EWSocial newSocialForPerson:person];
+//    }
+//    person.socialGraph = graph;
+//	
+//    return graph;
+//}
 
 #pragma mark - Addressbook
 
@@ -339,7 +339,8 @@ FBTweakAction(@"Social Manager", @"Action", @"Invite facebook friends in web", ^
                 [self getFacebookFriendsWithPath:nextPage withReturnData:friendsHolder withCompletion:block];
             }else{
                 DDLogInfo(@"Finished loading %ld friends from facebook, save to social graph.", (unsigned long)friendsHolder.count);
-                EWSocial *social = [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
+                EWSocial *social = [EWPerson me].socialGraph;
+                NSParameterAssert(social);
                 social.facebookFriends = friendsHolder.mutableCopy;
                 social.facebookUpdated = [NSDate date];
                 

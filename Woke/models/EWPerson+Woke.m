@@ -133,7 +133,13 @@ NSString * const kFriendshipStatusChanged = @"friendship_status_changed";
 
 + (EWSocial *)mySocialGraph{
     EWAssertMainThread
-    return [[EWSocialManager sharedInstance] socialGraphForPerson:[EWPerson me]];
+    if ([EWPerson me].socialGraph) {
+        return [EWPerson me].socialGraph;
+    }
+    
+    EWSocial *social = [EWSocial newSocialForPerson:[EWPerson me]];
+    NSParameterAssert([EWPerson me].socialGraph);
+    return social;
 }
 
 #pragma mark - Helper methods

@@ -165,16 +165,16 @@ NSString * const kEWAVManagerDidUpdateProgressNotification = @"kEWAVManagerDidUp
 		[self displayNowPlayingInfoToLockScreen:mi];
 		
         if ([mi.type isEqualToString:kMediaTypeVoice] || !mi.type) {
-            if (mi.mediaFile.audio) {
-                [self playSoundFromData:mi.mediaFile.audio];
-            }else{
-				[mi downloadMediaFileWithCompletion:^(BOOL success, NSError *error){
-                    if (error) {
-                        DDLogError(@"Failed to download media file: %@", error.description);
-                    }
-                    [self playSoundFromData:mi.mediaFile.audio];
-                }];
-            }
+            NSParameterAssert (mi.mediaFile.audio);
+            [self playSoundFromData:mi.mediaFile.audio];
+//            }else{
+//				[mi downloadMediaFileWithCompletion:^(BOOL success, NSError *error){
+//                    if (error) {
+//                        DDLogError(@"Failed to download media file: %@", error.description);
+//                    }
+//                    [self playSoundFromData:mi.mediaFile.audio];
+//                }];
+//            }
             
 			[[NSNotificationCenter defaultCenter] postNotificationName:kAVManagerDidStartPlaying object:mi];
             

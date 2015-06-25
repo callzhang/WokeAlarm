@@ -13,8 +13,8 @@
 
 - (void)awakeFromInsert{
 	[super awakeFromInsert];
-    [self setPrimitiveValue:[NSMutableDictionary new] forKey:EWServerObjectAttributes.syncInfo];
-    [self setPrimitiveValue:[NSDate date] forKey:EWServerObjectAttributes.createdAt];
+    [self setPrimitiveSyncInfo:[NSMutableDictionary new]];
+    [self setPrimitiveCreatedAt:[NSDate date]];
     //Do not set updatedAt as this value is used to determine if object is updated properly
     //[self setPrimitiveValue:[NSDate date] forKey:EWServerObjectAttributes.updatedAt];
 }

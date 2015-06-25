@@ -244,12 +244,18 @@
 }
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context{
-	return [self managedObjectInContext:context option:EWSyncOptionUpdateAttributesOnly completion:NULL];
+    EWSyncOption option;
+    if ([self.localClassName isEqualToString:kSyncUserClass] && self != [PFUser currentUser]) {
+        option = EWSyncOptionUpdateAttributesOnly;
+    }else{
+        option = EWSyncOptionUpdateRelation;
+    }
+	return [self managedObjectInContext:context option:option completion:NULL];
 }
 
-- (EWServerObject *)managedObjectUpdatedInContext:(NSManagedObjectContext *)context{
-	return [self managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:NULL];
-}
+//- (EWServerObject *)managedObjectRelationUpdatedInContext:(NSManagedObjectContext *)context{
+//	return [self managedObjectInContext:context option:EWSyncOptionUpdateRelation completion:NULL];
+//}
 
 - (EWServerObject *)managedObjectInContext:(NSManagedObjectContext *)context option:(EWSyncOption)option completion:(void (^)(EWServerObject *, NSError *))block{
 	if (!self.objectId) {
@@ -288,9 +294,11 @@
 		//if managedObject not exist, create it locally by assigning value from PO (quick)
 		//and assign relation in child context
 		MO = [NSClassFromString(self.localClassName) MR_createInContext:context];
+        NSParameterAssert(MO.syncInfo);
         if (option == EWSyncOptionUpdateNone) {
             [MO assignValueFromParseObject:self];
         }else {
+            MO.createdAt = self.createdAt;
             MO.createdAt = self.updatedAt;
             MO.objectId = self.objectId;
         }
@@ -300,7 +308,7 @@
     
     BOOL attrbutesNeedUpdate = [self needToUpdateMOAttributesInContext:context];
     BOOL relationNeedUpdate = [self isNewerThanMOInContext:context];
-    BOOL isUserClass = [MO.entity.name isEqualToString:kSyncUserClass];
+    //BOOL isUserClass = [MO.entity.name isEqualToString:kSyncUserClass];
     //try to sync relation
     if (relationNeedUpdate) {
         if (option == EWSyncOptionUpdateRelation) {
@@ -321,14 +329,18 @@
                 }
             }];
             return MO;
-        }else if (!isUserClass) {
-            DDLogInfo(@"PO %@(%@) is newer than MO, but MO relation not updated with sync option %lu!", self.parseClassName, self.objectId, option);
         }
     }
     //try to assign value only
     if (attrbutesNeedUpdate && option == EWSyncOptionUpdateAttributesOnly) {
         [MO assignValueFromParseObject:self];
     }
+    
+    //cannot validate here cus MO might not be valid yet
+//    if (![MO validate]) {
+//        [MO remove];
+//        MO = nil;
+//    }
     
     if (block) {
         block(MO, error);

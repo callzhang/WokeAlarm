@@ -171,7 +171,7 @@
     NSDictionary *managedObjectAttributes = self.entity.attributesByName;
     //add or delete some attributes here
     [managedObjectAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSAttributeDescription *obj, BOOL *stop) {
-        id parseValue = [object objectForKey:key];
+        id parseValue = [object valueForKey:key];
         
         //special treatment for PFFile
         if ([parseValue isKindOfClass:[PFFile class]]) {
@@ -248,6 +248,8 @@
                 }
             }
         }else{
+            //skip upload property will not be in the PO
+            if ([[[self class] propertiesSkippedToUpload] containsObject:key]) return;
             //parse value empty, delete
 			id MOValue = [self valueForKey:key];
             if (MOValue) {
@@ -259,7 +261,7 @@
     //assigned value from PO should not be considered complete, therefore we don't timestamp updatedAt on this SO
     NSParameterAssert(self.syncInfo);
     self.syncInfo[kAttributeUpdatedTime] = [NSDate date];
-    //[self saveToLocal];
+    self.updatedAt = [NSDate date];
 }
 
 #pragma mark - Parse related

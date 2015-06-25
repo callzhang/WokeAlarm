@@ -81,7 +81,7 @@
 	if (self.isMe) {
 		if (self.alarms.count != 7) {
 			good = NO;
-			DDLogError(@"The person failed validation: alarms: %ld", (long)self.alarms.count);
+			DDLogError(@"The person %@ failed validation: alarms: %ld", self.name, (long)self.alarms.count);
         }
         NSParameterAssert(self.preference);
         NSParameterAssert(self.socialProfileID);
