@@ -30,3 +30,6 @@ dyci-main/
 Scripts/AmaroLib.pyc
 Woke.app.dSYM.zip
 Woke.ipa
+
+dev/
+Pods/
